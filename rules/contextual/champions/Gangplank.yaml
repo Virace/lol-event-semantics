@@ -1,0 +1,27 @@
+scope: champion
+owner: Gangplank
+aliases:
+  BilgewaterToken:
+    kind: champion_spell_component
+    spell: p
+    component: bilgewater_token
+    label: 比尔吉沃特代币
+    confidence: medium
+    source: manual_contextual_alias
+    note: BilgewaterToken 在 Gangplank 事件中对应银蛇币/升级资源状态。
+  SerpentCeremony:
+    kind: champion_spell_component
+    spell: p
+    component: serpent_ceremony
+    label: 银蛇仪式
+    confidence: medium
+    source: manual_contextual_alias
+    note: SerpentCeremony 在 Gangplank 事件中对应银蛇币/升级相关的仪式状态。
+  GangplankR:
+    kind: champion_spell
+    spell: r
+    component: cannon_barrage
+    label: 火炮轰击
+    confidence: high
+    source: manual_contextual_alias
+    note: GangplankR 是普朗克 R 技能 Cannon Barrage 的内部别名前缀，升级阶段由 residual modifier 表示。

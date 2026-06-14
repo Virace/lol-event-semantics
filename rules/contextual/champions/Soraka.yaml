@@ -1,0 +1,27 @@
+scope: champion
+owner: Soraka
+aliases:
+  OdinRecall:
+    kind: champion_spell_component
+    spell: p
+    component: odin_recall
+    label: 水晶之痕回城
+    confidence: medium
+    source: manual_contextual_alias
+    note: OdinRecall 在 ClericSoraka 事件中对应水晶之痕/Odin 地图旧回城表现。
+  OdinRecallImproved:
+    kind: champion_spell_component
+    spell: p
+    component: odin_recall_improved
+    label: 水晶之痕强化回城
+    confidence: medium
+    source: manual_contextual_alias
+    note: OdinRecallImproved 在 ClericSoraka 事件中对应水晶之痕/Odin 地图强化回城表现。
+  QMissile:
+    kind: champion_spell_component
+    spell: q
+    component: q_missile
+    label: Q 飞弹
+    confidence: medium
+    source: manual_contextual_alias
+    note: QMissile 在 Soraka 事件中对应 Q 技能 Starcall 的飞弹。

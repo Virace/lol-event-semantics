@@ -1,0 +1,19 @@
+scope: champion
+owner: MonkeyKing
+aliases:
+  Nimbus:
+    kind: champion_spell_component
+    spell: e
+    component: nimbus_strike
+    label: 腾云突击
+    confidence: medium
+    source: manual_contextual_alias
+    note: Nimbus 在 MonkeyKing/Wukong 事件中对应 E 技能 Nimbus Strike。
+  SpinToWin:
+    kind: champion_spell_component
+    spell: r
+    component: spin_to_win
+    label: 旋转大招
+    confidence: medium
+    source: manual_contextual_alias
+    note: SpinToWin 在 MonkeyKing/Wukong 事件中对应 R 技能 Cyclone 的旋转表现。

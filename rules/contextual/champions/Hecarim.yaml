@@ -1,0 +1,27 @@
+scope: champion
+owner: Hecarim
+aliases:
+  HecarimBasicAttack:
+    kind: champion_spell_component
+    spell: p
+    component: basic_attack
+    label: 普攻
+    confidence: medium
+    source: manual_contextual_alias
+    note: HecarimBasicAttack 在 HecarimArcade 事件中对应基础攻击。
+  HecarimCritAttack:
+    kind: champion_spell_component
+    spell: p
+    component: crit_attack
+    label: 暴击攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: HecarimCritAttack 在 HecarimArcade 事件中对应暴击攻击。
+  Ult:
+    kind: champion_spell_component
+    spell: r
+    component: ultimate_cast
+    label: 大招释放
+    confidence: medium
+    source: manual_contextual_alias
+    note: Ult 在 Hecarim 事件中按 R 技能 Onslaught of Shadows 处理，不泛化为全局 Ult 规则。

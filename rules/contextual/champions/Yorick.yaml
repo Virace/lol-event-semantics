@@ -1,0 +1,11 @@
+scope: champion
+owner: Yorick
+aliases:
+  PSpawn:
+    kind: champion_spell_component
+    spell: p
+    component: passive_spawn
+    label: 被动召唤
+    confidence: medium
+    source: manual_contextual_alias
+    note: PSpawn 在 Yorick 事件中对应被动墓穴/雾行者召唤状态。

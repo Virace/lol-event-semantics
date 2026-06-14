@@ -1,0 +1,11 @@
+scope: champion
+owner: Zilean
+aliases:
+  Chrono:
+    kind: champion_spell_component
+    spell: r
+    component: chrono_revive
+    label: 时光复活
+    confidence: medium
+    source: manual_contextual_alias
+    note: Chrono 在 Zilean 事件中对应 R 技能 Chronoshift 的复活状态。

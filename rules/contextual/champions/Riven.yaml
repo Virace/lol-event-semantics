@@ -1,0 +1,68 @@
+scope: champion
+owner: Riven
+aliases:
+  Feint:
+    kind: champion_spell_component
+    spell: e
+    component: dash_shield
+    label: 佯攻护盾
+    confidence: medium
+    source: manual_contextual_alias
+    note: Feint 在 Riven 事件中对应 E 技能 Valor 的位移护盾内部名。
+  FengShuiEngine:
+    kind: champion_spell_component
+    spell: r
+    component: ultimate_buff
+    label: 大招强化形态
+    confidence: medium
+    source: manual_contextual_alias
+    note: FengShuiEngine 在 Riven 事件中对应 R 技能 Blade of the Exile 的强化形态。
+  IzunaBlade:
+    kind: champion_spell_component
+    spell: r
+    component: wind_slash
+    label: 疾风斩
+    confidence: medium
+    source: manual_contextual_alias
+    note: IzunaBlade 在 Riven 事件中对应 R 技能二段 Wind Slash 投射表现。
+  LightsaberMissile:
+    kind: champion_spell_component
+    spell: r
+    component: wind_slash_projectile
+    label: 光剑飞弹
+    confidence: medium
+    source: manual_contextual_alias
+    note: LightsaberMissile 只在 Riven 上下文中作为 R 技能二段 Wind Slash 
+      的远程剑气/光剑飞弹表现，不作为全局词义。
+  Martyr:
+    kind: champion_spell_component
+    spell: w
+    component: ki_burst
+    label: 震魂怒吼
+    confidence: medium
+    source: manual_contextual_alias
+    note: Martyr 在 Riven 事件中对应 W 技能 Ki Burst 的旧/内部表现名。
+  TriCleaveSoundOne:
+    kind: champion_spell_component
+    spell: q
+    component: broken_wings_sequence
+    label: 折翼之舞一段音效
+    confidence: medium
+    source: manual_contextual_alias
+    note: TriCleaveSoundOne 在 Riven 事件中对应 Q 技能 Broken Wings 的分段音效。
+  TriCleaveSoundThree:
+    kind: champion_spell_component
+    spell: q
+    component: broken_wings_sequence
+    label: 折翼之舞三段音效
+    confidence: medium
+    source: manual_contextual_alias
+    note: TriCleaveSoundThree 在 Riven 事件中对应 Q 技能 Broken Wings 的分段音效。
+  TriCleaveSoundTwo:
+    kind: champion_spell_component
+    spell: q
+    component: broken_wings_sequence
+    label: 折翼之舞二段音效
+    confidence: medium
+    source: manual_contextual_alias
+    note: TriCleaveSoundTwo 在 Riven 事件中对应 Q 技能 Broken Wings 的分段音效。

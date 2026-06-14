@@ -1,0 +1,19 @@
+scope: champion
+owner: Sett
+aliases:
+  Recallin:
+    kind: champion_spell_component
+    spell: p
+    component: recall_in
+    label: 回城进入
+    confidence: medium
+    source: manual_contextual_alias
+    note: Recallin 在 SettSkin19 事件中对应回城进入阶段。
+  Recallout:
+    kind: champion_spell_component
+    spell: p
+    component: recall_out
+    label: 回城离开
+    confidence: medium
+    source: manual_contextual_alias
+    note: Recallout 在 SettSkin19 事件中对应回城离开阶段。

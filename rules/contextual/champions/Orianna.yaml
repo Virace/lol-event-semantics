@@ -1,0 +1,108 @@
+scope: champion
+owner: Orianna
+aliases:
+  Ball:
+    kind: champion_spell_component
+    spell: q
+    component: ball
+    label: 魔偶
+    confidence: medium
+    source: manual_contextual_alias
+    note: Ball 在 Orianna 事件中对应魔偶本体/位置机制音效。
+  BallFlash:
+    kind: champion_spell_component
+    spell: q
+    component: ball_flash
+    label: 魔偶闪光
+    confidence: medium
+    source: manual_contextual_alias
+    note: 'BallFlash 在 Orianna 事件中是魔偶移动/附着状态变化的闪光表现，按 Q 技能 Command: Attack 的魔偶位置机制处理。'
+  DetonateCommand:
+    kind: champion_spell_component
+    spell: r
+    component: shockwave_command
+    label: 指令：冲击波
+    confidence: medium
+    source: manual_contextual_alias
+    note: 'DetonateCommand 在 Orianna 事件中对应 R 技能 Command: Shockwave 的内部名。'
+  DissonanceCommand:
+    kind: champion_spell_component
+    spell: w
+    component: dissonance_command
+    label: 指令：杂音
+    confidence: medium
+    source: manual_contextual_alias
+    note: 'DissonanceCommand 在 Orianna 事件中对应 W 技能 Command: Dissonance 的内部名。'
+  GhostSelf:
+    kind: champion_spell_component
+    spell: e
+    component: protect_self_projection
+    label: 自身防卫投影
+    confidence: medium
+    source: manual_contextual_alias
+    note: 'GhostSelf 在 Orianna 事件中是魔偶/护盾附着自身的表现，按 E 技能 Command: Protect 上下文处理。'
+  Izuna:
+    kind: champion_spell_component
+    spell: q
+    component: command_attack_ball_hit
+    label: 指令：攻击魔偶命中
+    confidence: medium
+    source: manual_contextual_alias
+    note: 'Izuna 在 Orianna 事件中对应 Q 技能 Command: Attack 的魔偶移动/命中表现。'
+  IzunaCommand:
+    kind: champion_spell_component
+    spell: q
+    component: attack_command
+    label: 指令：攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: 'IzunaCommand 在 Orianna 事件中对应 Q 技能 Command: Attack 的内部名。'
+  NoBall:
+    kind: champion_spell_component
+    spell: p
+    component: ball_detached_state
+    label: 无球状态
+    confidence: medium
+    source: manual_contextual_alias
+    note: NoBall 在 Orianna 事件中表示魔偶未附着在本体的状态，用于区分带球/无球动作与音效。
+  OrianaGhostSelf:
+    kind: champion_spell_component
+    spell: e
+    component: protect_self_projection
+    label: 自身防卫投影
+    confidence: medium
+    source: manual_contextual_alias
+    note: OrianaGhostSelf 使用旧拼写 Oriana，语义同 Orianna GhostSelf。
+  OrianaRedactShield:
+    kind: champion_spell_component
+    spell: e
+    component: protect_shield
+    label: 指令：防卫护盾
+    confidence: medium
+    source: manual_contextual_alias
+    note: 'OrianaRedactShield 使用旧拼写 Oriana，语义同 Orianna RedactShield，对应 E 技能 Command:
+      Protect 的护盾表现。'
+  OriannaBasicAttack:
+    kind: champion_spell_component
+    spell: p
+    component: basic_attack
+    label: 普攻
+    confidence: medium
+    source: manual_contextual_alias
+    note: OriannaBasicAttack 在 Orianna 事件中对应基础攻击音效。
+  OriannaCritAttack:
+    kind: champion_spell_component
+    spell: p
+    component: crit_attack
+    label: 暴击攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: OriannaCritAttack 在 Orianna 事件中对应暴击基础攻击音效。
+  RedactShield:
+    kind: champion_spell_component
+    spell: e
+    component: protect_shield
+    label: 指令：防卫护盾
+    confidence: medium
+    source: manual_contextual_alias
+    note: 'RedactShield 在 Orianna 事件中对应 E 技能 Command: Protect 的护盾表现。'

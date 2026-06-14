@@ -1,0 +1,115 @@
+scope: champion
+owner: Elise
+aliases:
+  HumanDance:
+    kind: champion_spell_component
+    spell: r
+    component: human_form_dance
+    label: 人形态跳舞
+    confidence: medium
+    source: manual_contextual_alias
+    note: HumanDance 在 Elise 事件中对应人形态跳舞动作音效。
+  HumanDeath:
+    kind: champion_spell_component
+    spell: r
+    component: human_form_death
+    label: 人形态死亡
+    confidence: medium
+    source: manual_contextual_alias
+    note: HumanDeath 在 Elise 事件中对应人形态死亡动作音效。
+  HumanJoke:
+    kind: champion_spell_component
+    spell: r
+    component: human_form_joke
+    label: 人形态玩笑
+    confidence: medium
+    source: manual_contextual_alias
+    note: HumanJoke 在 Elise 事件中对应人形态玩笑动作音效。
+  HumanLaugh:
+    kind: champion_spell_component
+    spell: r
+    component: human_form_laugh
+    label: 人形态大笑
+    confidence: medium
+    source: manual_contextual_alias
+    note: HumanLaugh 在 Elise 事件中对应人形态大笑动作音效。
+  HumanRecall:
+    kind: champion_spell_component
+    spell: r
+    component: human_form_recall
+    label: 人形态回城
+    confidence: medium
+    source: manual_contextual_alias
+    note: HumanRecall 在 Elise 事件中对应人形态回城动作音效。
+  HumanTaunt:
+    kind: champion_spell_component
+    spell: r
+    component: human_form_taunt
+    label: 人形态嘲讽
+    confidence: medium
+    source: manual_contextual_alias
+    note: HumanTaunt 在 Elise 事件中对应人形态嘲讽动作音效。
+  SpiderDance:
+    kind: champion_spell_component
+    spell: r
+    component: spider_form_dance
+    label: 蜘蛛形态跳舞
+    confidence: medium
+    source: manual_contextual_alias
+    note: SpiderDance 在 Elise 事件中对应蜘蛛形态跳舞动作音效。
+  SpiderDeath:
+    kind: champion_spell_component
+    spell: r
+    component: spider_form_death
+    label: 蜘蛛形态死亡
+    confidence: medium
+    source: manual_contextual_alias
+    note: SpiderDeath 在 Elise 事件中对应蜘蛛形态死亡动作音效。
+  SpiderJoke:
+    kind: champion_spell_component
+    spell: r
+    component: spider_form_joke
+    label: 蜘蛛形态玩笑
+    confidence: medium
+    source: manual_contextual_alias
+    note: SpiderJoke 在 Elise 事件中对应蜘蛛形态玩笑动作音效。
+  SpiderLaugh:
+    kind: champion_spell_component
+    spell: r
+    component: spider_form_laugh
+    label: 蜘蛛形态大笑
+    confidence: medium
+    source: manual_contextual_alias
+    note: SpiderLaugh 在 Elise 事件中对应蜘蛛形态大笑动作音效。
+  SpiderQCast:
+    kind: champion_spell_component
+    spell: q
+    component: spider_q_cast
+    label: 蜘蛛形态 Q 释放
+    confidence: medium
+    source: manual_contextual_alias
+    note: SpiderQCast 在 Elise 事件中对应 Q 技能 Neurotoxin / Venomous Bite 的蜘蛛形态施放表现。
+  SpiderRecall:
+    kind: champion_spell_component
+    spell: r
+    component: spider_form_recall
+    label: 蜘蛛形态回城
+    confidence: medium
+    source: manual_contextual_alias
+    note: SpiderRecall 在 Elise 事件中对应蜘蛛形态回城动作音效。
+  SpiderTaunt:
+    kind: champion_spell_component
+    spell: r
+    component: spider_form_taunt
+    label: 蜘蛛形态嘲讽
+    confidence: medium
+    source: manual_contextual_alias
+    note: SpiderTaunt 在 Elise 事件中对应蜘蛛形态嘲讽动作音效。
+  Spiderling:
+    kind: champion_spell_component
+    spell: p
+    component: spiderling_death
+    label: 小蜘蛛死亡
+    confidence: medium
+    source: manual_contextual_alias
+    note: Spiderling 在 Elise 事件中对应小蜘蛛单位死亡音效。

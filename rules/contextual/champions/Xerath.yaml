@@ -1,0 +1,45 @@
+scope: champion
+owner: Xerath
+aliases:
+  ArcaneBarrage:
+    kind: champion_spell_component
+    spell: w
+    component: arcane_barrage
+    label: 奥术弹幕
+    confidence: medium
+    source: manual_contextual_alias
+    note: ArcaneBarrage 在 Xerath 事件中对应 W 技能 Eye of Destruction 的区域轰击内部名；数字尾缀作为 
+      spell_rank 保留。
+  Arcanopulse:
+    kind: champion_spell_component
+    spell: q
+    component: arcanopulse
+    label: 奥能脉冲
+    confidence: medium
+    source: manual_contextual_alias
+    note: Arcanopulse 是 Xerath Q 技能当前名称；数字尾缀作为 spell_rank 保留。
+  LocusOfPower:
+    kind: champion_spell_component
+    spell: r
+    component: artillery_mode
+    label: 炮台形态
+    confidence: medium
+    source: manual_contextual_alias
+    note: LocusOfPower 在 Xerath 事件中对应 R 技能 Rite of the Arcane 的远程炮击形态；数字尾缀作为 
+      spell_rank 保留。
+  MageSpear:
+    kind: champion_spell_component
+    spell: e
+    component: mage_spear
+    label: 法师之矛
+    confidence: medium
+    source: manual_contextual_alias
+    note: MageSpear 在 Xerath 事件中对应 E 技能 Shocking Orb 的飞行控制表现。
+  ManaAttack:
+    kind: champion_spell_component
+    spell: q
+    component: mana_attack
+    label: 法力攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: ManaAttack 在 Xerath 事件中对应 Q 技能 Arcanopulse 的法力炮击表现。

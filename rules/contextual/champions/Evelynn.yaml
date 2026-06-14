@@ -1,0 +1,19 @@
+scope: champion
+owner: Evelynn
+aliases:
+  Stealth:
+    kind: champion_spell_component
+    spell: p
+    component: stealth_state
+    label: 潜行状态
+    confidence: medium
+    source: manual_contextual_alias
+    note: Stealth 在 Evelynn 事件中对应被动 Demon Shade 的潜行/伪装状态。
+  StealthRing:
+    kind: champion_spell_component
+    spell: p
+    component: stealth_ring
+    label: 潜行圈
+    confidence: medium
+    source: manual_contextual_alias
+    note: StealthRing 在 Evelynn 事件中对应被动潜行/伪装的范围提示圈表现。

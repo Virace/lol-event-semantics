@@ -1,0 +1,59 @@
+scope: champion
+owner: Fizz
+aliases:
+  Jump:
+    kind: champion_spell_component
+    spell: e
+    component: playful_jump
+    label: 古灵精怪跳跃
+    confidence: medium
+    source: manual_contextual_alias
+    note: Jump 在 Fizz 事件中对应 E 技能 Playful / Trickster 的第一段跳跃。
+  JumpDelay:
+    kind: champion_spell_component
+    spell: e
+    component: delayed_trident_hit
+    label: 古灵精怪延迟三叉戟命中
+    confidence: medium
+    source: manual_contextual_alias
+    note: JumpDelay 在 Fizz 事件中是 E 技能相关的延迟三叉戟命中表现。
+  JumpTwo:
+    kind: champion_spell_component
+    spell: e
+    component: playful_trickster_second_jump
+    label: 古灵精怪二段跳
+    confidence: medium
+    source: manual_contextual_alias
+    note: JumpTwo 在 Fizz 事件中对应 E 技能 Playful / Trickster 的二段落地/位移表现。
+  MarinerDoomBomb:
+    kind: champion_spell_component
+    spell: r
+    component: chum_the_waters_impact
+    label: 巨鲨强袭命中爆发
+    confidence: medium
+    source: manual_contextual_alias
+    note: MarinerDoomBomb 在 Fizz 事件中对应 R 技能 Chum the Waters 命中后的爆发表现。
+  MarinerDoomMissile:
+    kind: champion_spell_component
+    spell: r
+    component: chum_the_waters_missile
+    label: 巨鲨强袭飞弹
+    confidence: medium
+    source: manual_contextual_alias
+    note: MarinerDoomMissile 在 Fizz 事件中对应 R 技能 Chum the Waters 的鱼饵/飞行物。
+  TrickSlam:
+    kind: champion_spell_component
+    spell: e
+    component: trickster_slam
+    label: 古灵精怪砸地
+    confidence: medium
+    source: manual_contextual_alias
+    note: TrickSlam 在 Fizz 事件中对应 E 技能 Playful / Trickster 的砸地命中表现。
+  TrickSlamSoundDummy:
+    kind: champion_spell_component
+    spell: e
+    component: trickster_slam_sound_dummy
+    label: 古灵精怪砸地音效占位
+    confidence: medium
+    source: manual_contextual_alias
+    note: TrickSlamSoundDummy 是 Fizz E 技能砸地音效占位事件。

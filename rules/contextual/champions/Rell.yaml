@@ -1,0 +1,19 @@
+scope: champion
+owner: Rell
+aliases:
+  FUTURE:
+    kind: champion_spell_component
+    spell: p
+    component: future_homeguard
+    label: 未来主题家园卫士
+    confidence: medium
+    source: manual_contextual_alias
+    note: FUTURE 在 RellSkin10 事件中对应皮肤未来主题的家园卫士移动状态。
+  RelW:
+    kind: champion_spell_component
+    spell: w
+    component: w_empowered_attack
+    label: W 强化攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: RelW 在 Rell 事件中对应 W 技能强化攻击表现。

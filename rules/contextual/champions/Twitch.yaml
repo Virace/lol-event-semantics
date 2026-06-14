@@ -1,0 +1,60 @@
+scope: champion
+owner: Twitch
+aliases:
+  FullAutomatic:
+    kind: champion_spell_component
+    spell: r
+    component: rapid_fire
+    label: 全自动火力
+    confidence: medium
+    source: manual_contextual_alias
+    note: FullAutomatic 在 Twitch 事件中对应 R 技能 Spray and Pray 的快速射击表现。
+  HideInShadows:
+    kind: champion_spell_component
+    spell: q
+    component: stealth_entry
+    label: 潜行进入
+    confidence: medium
+    source: manual_contextual_alias
+    note: HideInShadows 在 Twitch 事件中对应 Q 技能 Ambush 的潜行进入表现。
+  TwitchBasicAttack:
+    kind: champion_spell_component
+    spell: p
+    component: basic_attack
+    label: 普攻
+    confidence: medium
+    source: manual_contextual_alias
+    note: TwitchBasicAttack 在 Twitch 事件中对应基础攻击音效。
+  TwitchBasicAttack2:
+    kind: champion_spell_component
+    spell: p
+    component: basic_attack_variant_2
+    label: 普攻变体 2
+    confidence: medium
+    source: manual_contextual_alias
+    note: TwitchBasicAttack2 在 Twitch 事件中对应基础攻击第二套音效变体。
+  TwitchBasicAttack3:
+    kind: champion_spell_component
+    spell: p
+    component: basic_attack_variant_3
+    label: 普攻变体 3
+    confidence: medium
+    source: manual_contextual_alias
+    note: TwitchBasicAttack3 在 Twitch 事件中对应基础攻击第三套音效变体。
+  TwitchCritAttack:
+    kind: champion_spell_component
+    spell: p
+    component: crit_attack
+    label: 暴击攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: TwitchCritAttack 在 Twitch 事件中对应暴击基础攻击音效。
+  TwtichFullAutomatic:
+    kind: champion_spell_component
+    spell: r
+    component: rapid_fire
+    label: 全自动火力
+    confidence: medium
+    source: manual_contextual_alias
+    note: TwtichFullAutomatic 是 Twitch FullAutomatic 的历史拼写错误，对应 R 技能 Spray and 
+      Pray。

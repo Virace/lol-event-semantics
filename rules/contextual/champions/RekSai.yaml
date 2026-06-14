@@ -1,0 +1,11 @@
+scope: champion
+owner: RekSai
+aliases:
+  TSActive:
+    kind: champion_spell_component
+    spell: p
+    component: tremor_sense_active
+    label: 地听激活
+    confidence: medium
+    source: manual_contextual_alias
+    note: TSActive 在 RekSai 事件中对应被动 Tremor Sense/地听状态激活。

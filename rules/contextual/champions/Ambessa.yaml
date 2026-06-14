@@ -1,0 +1,11 @@
+scope: champion
+owner: Ambessa
+aliases:
+  SpecialAttack:
+    kind: champion_spell_component
+    spell: p
+    component: special_attack_ready
+    label: 特殊攻击就绪
+    confidence: medium
+    source: manual_contextual_alias
+    note: SpecialAttack 在 Ambessa 事件中对应特殊攻击就绪状态。

@@ -1,0 +1,35 @@
+scope: champion
+owner: Varus
+aliases:
+  VarusBasicAttack:
+    kind: champion_spell_component
+    spell: p
+    component: basic_attack
+    label: 普攻
+    confidence: medium
+    source: manual_contextual_alias
+    note: VarusBasicAttack 在 VarusAscended 事件中对应基础攻击。
+  VarusBasicAttacknoW:
+    kind: champion_spell_component
+    spell: p
+    component: basic_attack_no_w
+    label: 无 W 普攻
+    confidence: medium
+    source: manual_contextual_alias
+    note: VarusBasicAttacknoW 是 VarusBasicAttackNoW 的大小写变体。
+  VarusCritAttack:
+    kind: champion_spell_component
+    spell: p
+    component: crit_attack
+    label: 暴击攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: VarusCritAttack 在 VarusAscended 事件中对应暴击攻击。
+  VarusCritAttackNoW:
+    kind: champion_spell_component
+    spell: p
+    component: crit_attack_no_w
+    label: 无 W 暴击
+    confidence: medium
+    source: manual_contextual_alias
+    note: VarusCritAttackNoW 在 VarusAscended 事件中对应未带 W 状态的暴击攻击。

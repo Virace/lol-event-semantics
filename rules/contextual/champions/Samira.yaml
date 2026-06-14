@@ -1,0 +1,27 @@
+scope: champion
+owner: Samira
+aliases:
+  SheathGun:
+    kind: champion_spell_component
+    spell: p
+    component: sheath_gun
+    label: 收枪
+    confidence: medium
+    source: manual_contextual_alias
+    note: SheathGun 在 Samira 事件中对应武器收纳/切换到枪的表现。
+  SheathSword:
+    kind: champion_spell_component
+    spell: p
+    component: sheath_sword
+    label: 收剑
+    confidence: medium
+    source: manual_contextual_alias
+    note: SheathSword 在 Samira 事件中对应武器收纳/切换到剑的表现。
+  Walkover:
+    kind: champion_spell_component
+    spell: p
+    component: walkover
+    label: 跨步经过
+    confidence: medium
+    source: manual_contextual_alias
+    note: Walkover 在 Samira 事件中对应角色动作/移动表现。

@@ -1,0 +1,19 @@
+scope: champion
+owner: Malzahar
+aliases:
+  VoidGateSpawn:
+    kind: champion_spell_component
+    spell: r
+    component: void_gate_spawn
+    label: 虚空之门召唤
+    confidence: medium
+    source: manual_contextual_alias
+    note: VoidGateSpawn 在 Malzahar 事件中对应 R 技能 Nether Grasp 的虚空门/召唤表现。
+  Voidling:
+    kind: champion_spell_component
+    spell: p
+    component: voidling_summon
+    label: 虚灵
+    confidence: medium
+    source: manual_contextual_alias
+    note: Voidling 在 Malzahar 事件中对应被动召唤的虚灵单位表现。

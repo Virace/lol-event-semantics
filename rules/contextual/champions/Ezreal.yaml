@@ -1,0 +1,27 @@
+scope: champion
+owner: Ezreal
+aliases:
+  ChampDeath:
+    kind: champion_spell_component
+    spell: p
+    component: champion_death
+    label: 英雄死亡
+    confidence: medium
+    source: manual_contextual_alias
+    note: ChampDeath 在 EzrealSkin05 事件中对应击杀英雄/敌方死亡主题音效。
+  MinionDeath:
+    kind: champion_spell_component
+    spell: p
+    component: minion_death
+    label: 小兵死亡
+    confidence: medium
+    source: manual_contextual_alias
+    note: MinionDeath 在 EzrealSkin05 事件中对应击杀小兵/小兵死亡主题音效。
+  UpgradeR:
+    kind: champion_spell_component
+    spell: r
+    component: ultimate_upgrade
+    label: 大招升级
+    confidence: medium
+    source: manual_contextual_alias
+    note: UpgradeR 在 EzrealSkin05 事件中对应 R 技能升级或皮肤进化状态音效。

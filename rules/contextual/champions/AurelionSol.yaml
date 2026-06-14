@@ -1,0 +1,19 @@
+scope: champion
+owner: AurelionSol
+aliases:
+  AurelionSoRMissile:
+    kind: champion_spell_component
+    spell: r
+    component: r_missile
+    label: 大招飞弹
+    confidence: medium
+    source: manual_contextual_alias
+    note: AurelionSoRMissile 是 AurelionSol R Missile 的紧缩资源名，对应 R 技能飞弹。
+  Flight:
+    kind: champion_spell_component
+    spell: e
+    component: flight_swirl
+    label: 飞行盘旋
+    confidence: medium
+    source: manual_contextual_alias
+    note: Flight 在 AurelionSol 事件中对应长距离飞行/盘旋状态表现。

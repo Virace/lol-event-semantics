@@ -1,0 +1,51 @@
+scope: champion
+owner: Rumble
+aliases:
+  CarpetBomb:
+    kind: champion_spell_component
+    spell: r
+    component: carpet_bomb
+    label: 地毯轰炸
+    confidence: medium
+    source: manual_contextual_alias
+    note: CarpetBomb 在 Rumble 事件中对应 R 技能 The Equalizer 的轰炸轨迹表现。
+  FlameThrowerVO:
+    kind: champion_spell_component
+    spell: q
+    component: flamethrower
+    label: 火焰喷射器
+    confidence: medium
+    source: manual_contextual_alias
+    note: FlameThrowerVO 在 Rumble 事件中对应 Q 技能 Flamespitter。
+  FlameThrowerVODangerZone:
+    kind: champion_spell_component
+    spell: q
+    component: flamethrower_danger_zone
+    label: 危险温度火焰喷射器
+    confidence: medium
+    source: manual_contextual_alias
+    note: FlameThrowerVODangerZone 在 Rumble 事件中对应 Q 技能危险温度变体。
+  GrenadeVO:
+    kind: champion_spell_component
+    spell: e
+    component: electro_harpoon_grenade
+    label: 电子鱼叉语音
+    confidence: medium
+    source: manual_contextual_alias
+    note: GrenadeVO 在 RumbleSkin03 事件中对应 E 技能 Electro Harpoon/手雷主题语音触发。
+  REffect:
+    kind: champion_spell_component
+    spell: r
+    component: equalizer_effect
+    label: 大招效果
+    confidence: medium
+    source: manual_contextual_alias
+    note: REffect 在 Rumble 事件中对应 R 技能 The Equalizer 的飞弹/区域效果。
+  ShieldVO:
+    kind: champion_spell_component
+    spell: w
+    component: shield_voice
+    label: 护盾语音
+    confidence: medium
+    source: manual_contextual_alias
+    note: ShieldVO 在 Rumble 事件中对应 W 技能 Scrap Shield 的语音触发。

@@ -1,0 +1,19 @@
+scope: champion
+owner: Anivia
+aliases:
+  FrashFrostSpell:
+    kind: champion_spell_component
+    spell: q
+    component: flash_frost_stun
+    label: 寒冰闪耀眩晕
+    confidence: medium
+    source: manual_contextual_alias
+    note: FrashFrostSpell 是 Anivia Flash Frost 的旧/拼写变体，事件中对应命中眩晕表现。
+  GlobalWallMarker:
+    kind: champion_spell_component
+    spell: w
+    component: global_wall_marker
+    label: 冰墙全局标记
+    confidence: medium
+    source: manual_contextual_alias
+    note: GlobalWallMarker 在 Anivia 事件中对应 W 技能 Crystallize 的墙体标记状态。

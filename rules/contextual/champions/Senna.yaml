@@ -1,0 +1,11 @@
+scope: champion
+owner: Senna
+aliases:
+  Soul:
+    kind: champion_spell_component
+    spell: p
+    component: soul_collection
+    label: 灵魂收集
+    confidence: medium
+    source: manual_contextual_alias
+    note: Soul 在 Senna 事件中对应被动 Absolution 的灵魂掉落/收集状态。

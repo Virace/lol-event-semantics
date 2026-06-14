@@ -1,0 +1,27 @@
+scope: champion
+owner: Kennen
+aliases:
+  DoubleStrikeLive:
+    kind: champion_spell_component
+    spell: p
+    component: double_strike_live
+    label: 双重打击生效
+    confidence: medium
+    source: manual_contextual_alias
+    note: DoubleStrikeLive 在 Kennen 事件中对应被动 Electrical Surge 的生效/就绪状态。
+  MegaProc:
+    kind: champion_spell_component
+    spell: p
+    component: mega_proc
+    label: 被动触发
+    confidence: medium
+    source: manual_contextual_alias
+    note: MegaProc 在 Kennen 事件中对应被动 Electrical Surge 的触发表现。
+  ShurikenHurlMissile:
+    kind: champion_spell_component
+    spell: q
+    component: shuriken_missile
+    label: 手里剑投射物
+    confidence: medium
+    source: manual_contextual_alias
+    note: ShurikenHurlMissile 在 Kennen 事件中对应 Q 技能 Thundering Shuriken 的飞行物。

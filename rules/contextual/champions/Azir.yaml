@@ -1,0 +1,43 @@
+scope: champion
+owner: Azir
+aliases:
+  IsChannelingPassive:
+    kind: champion_spell_component
+    spell: p
+    component: passive_channel_state
+    label: 被动引导状态
+    confidence: medium
+    source: manual_contextual_alias
+    note: IsChannelingPassive 在 Azir 事件中对应被动引导/沙兵相关的状态变化。
+  ObeliskSound:
+    kind: champion_spell_component
+    spell: p
+    component: passive_obelisk_sound
+    label: 太阳圆盘音效
+    confidence: medium
+    source: manual_contextual_alias
+    note: ObeliskSound 在 Azir 事件中对应被动 Shurima's Legacy 的太阳圆盘/防御塔音效状态。
+  ObeliskVOAlly:
+    kind: champion_spell_component
+    spell: p
+    component: passive_obelisk
+    label: 友方太阳圆盘语音
+    confidence: medium
+    source: manual_contextual_alias
+    note: ObeliskVOAlly 在 Azir 事件中对应被动 Shurima's Legacy 的圆盘/防御塔语音。
+  ObeliskVOEnemy:
+    kind: champion_spell_component
+    spell: p
+    component: passive_obelisk
+    label: 敌方太阳圆盘语音
+    confidence: medium
+    source: manual_contextual_alias
+    note: ObeliskVOEnemy 在 Azir 事件中对应被动 Shurima's Legacy 的圆盘/防御塔语音。
+  SoldierMissile:
+    kind: champion_spell_component
+    spell: q
+    component: soldier_missile
+    label: 沙兵飞弹
+    confidence: medium
+    source: manual_contextual_alias
+    note: SoldierMissile 在 Azir 事件中对应沙兵攻击飞弹表现。

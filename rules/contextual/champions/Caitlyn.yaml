@@ -1,0 +1,11 @@
+scope: champion
+owner: Caitlyn
+aliases:
+  WalkVar:
+    kind: champion_spell_component
+    spell: p
+    component: walk_variant
+    label: 行走变体
+    confidence: medium
+    source: manual_contextual_alias
+    note: WalkVar 在 CaitlynSkin22 事件中对应皮肤行走状态变体音效。

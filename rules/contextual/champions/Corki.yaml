@@ -1,0 +1,99 @@
+scope: champion
+owner: Corki
+aliases:
+  CarpetBomb:
+    kind: champion_spell_component
+    spell: w
+    component: carpet_bomb
+    label: 瓦尔基里俯冲
+    confidence: medium
+    source: manual_contextual_alias
+    note: CarpetBomb 在 Corki 事件中对应 W 技能 Valkyrie/包裹俯冲表现。
+  CarpetBombMega:
+    kind: champion_spell_component
+    spell: w
+    component: carpet_bomb_mega
+    label: 超级瓦尔基里俯冲
+    confidence: medium
+    source: manual_contextual_alias
+    note: CarpetBombMega 在 Corki 事件中对应强化 W Valkyrie/包裹俯冲表现。
+  CorkiBasicAttack:
+    kind: champion_spell_component
+    spell: p
+    component: basic_attack
+    label: 普攻
+    confidence: medium
+    source: manual_contextual_alias
+    note: CorkiBasicAttack 在 Corki 事件中对应基础攻击音效。
+  CorkiCritAttack:
+    kind: champion_spell_component
+    spell: p
+    component: crit_attack
+    label: 暴击攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: CorkiCritAttack 在 Corki 事件中对应暴击基础攻击音效。
+  GGun:
+    kind: champion_spell_component
+    spell: e
+    component: gatling_gun
+    label: 格林机枪
+    confidence: medium
+    source: manual_contextual_alias
+    note: GGun 在 Corki 事件中对应 E 技能 Gatling Gun 的内部名。
+  LoadUp:
+    kind: champion_spell_component
+    spell: r
+    component: gatling_gun_load_up
+    label: 加载
+    confidence: medium
+    source: manual_contextual_alias
+    note: LoadUp 在 Corki 事件中对应火箭/加特林相关的加载准备状态。
+  Loaded:
+    kind: champion_spell_component
+    spell: r
+    component: missile_loaded
+    label: 导弹装填完成
+    confidence: medium
+    source: manual_contextual_alias
+    note: Loaded 在 Corki 事件中对应 R 技能 Missile Barrage 的导弹装填状态。
+  MissileBarrage:
+    kind: champion_spell_component
+    spell: r
+    component: missile_barrage
+    label: 火箭轰击
+    confidence: medium
+    source: manual_contextual_alias
+    note: MissileBarrage 在 Corki 事件中对应 R 技能 Missile Barrage。
+  MissileBarrageMissile:
+    kind: champion_spell_component
+    spell: r
+    component: missile_barrage_missile
+    label: 火箭轰击飞弹
+    confidence: medium
+    source: manual_contextual_alias
+    note: MissileBarrageMissile 在 Corki 事件中对应 R 技能 Missile Barrage 的飞弹。
+  PhosphorusBomb:
+    kind: champion_spell_component
+    spell: q
+    component: phosphorus_bomb
+    label: 磷光炸弹
+    confidence: medium
+    source: manual_contextual_alias
+    note: PhosphorusBomb 在 Corki 事件中对应 Q 技能 Phosphorus Bomb。
+  Valkyrie:
+    kind: champion_spell_component
+    spell: w
+    component: valkyrie
+    label: 瓦尔基里俯冲
+    confidence: medium
+    source: manual_contextual_alias
+    note: Valkyrie 在 Corki 事件中对应 W 技能 Valkyrie。
+  ValkyrieSound:
+    kind: champion_spell_component
+    spell: w
+    component: valkyrie_sound
+    label: 瓦尔基里俯冲音效
+    confidence: medium
+    source: manual_contextual_alias
+    note: ValkyrieSound 在 Corki 事件中对应 W 技能 Valkyrie 的音效表现。

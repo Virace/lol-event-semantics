@@ -1,0 +1,35 @@
+scope: champion
+owner: Yasuo
+aliases:
+  DashWrapper:
+    kind: champion_spell_component
+    spell: e
+    component: sweeping_blade_dash
+    label: 踏前斩冲刺
+    confidence: medium
+    source: manual_contextual_alias
+    note: DashWrapper 在 Yasuo 事件中对应 E 技能 Sweeping Blade 的冲刺/命中包装事件。
+  SheathSpark:
+    kind: champion_spell_component
+    spell: q
+    component: steel_tempest_ready
+    label: 斩钢闪蓄势火花
+    confidence: medium
+    source: manual_contextual_alias
+    note: SheathSpark 在 Yasuo 事件中对应 Q 技能 Steel Tempest 的蓄势/就绪状态音效。
+  onbuffdeactivate:
+    kind: champion_spell_component
+    spell: r
+    component: armor_penetration_deactivate
+    label: 大招护甲穿透结束
+    confidence: medium
+    source: manual_contextual_alias
+    note: onbuffdeactivate 在 yasuorarmorpen 事件中对应 Yasuo R 护甲穿透增益结束。
+  yasuorarmorpen:
+    kind: champion_spell_component
+    spell: r
+    component: armor_penetration
+    label: 大招护甲穿透
+    confidence: medium
+    source: manual_contextual_alias
+    note: yasuorarmorpen 是 Yasuo R 技能 Last Breath 后护甲穿透状态的历史资源名。

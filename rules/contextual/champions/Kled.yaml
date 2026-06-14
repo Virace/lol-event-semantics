@@ -1,0 +1,19 @@
+scope: champion
+owner: Kled
+aliases:
+  DismountDash:
+    kind: champion_spell_component
+    spell: p
+    component: dismount_dash
+    label: 下马冲刺
+    confidence: medium
+    source: manual_contextual_alias
+    note: DismountDash 在 Kled 事件中对应下马/脱离坐骑后的冲刺表现。
+  MountReturn:
+    kind: champion_spell_component
+    spell: p
+    component: mount_return
+    label: 坐骑返回
+    confidence: medium
+    source: manual_contextual_alias
+    note: MountReturn 在 Kled 事件中对应斯嘎尔返回上马状态。

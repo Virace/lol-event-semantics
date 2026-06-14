@@ -1,0 +1,19 @@
+scope: champion
+owner: Janna
+aliases:
+  JannaBasicAttack:
+    kind: champion_spell_component
+    spell: p
+    component: basic_attack
+    label: 普攻
+    confidence: medium
+    source: manual_contextual_alias
+    note: JannaBasicAttack 在 JannaForecast 事件中对应基础攻击。
+  JannaCritAttack:
+    kind: champion_spell_component
+    spell: p
+    component: crit_attack
+    label: 暴击攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: JannaCritAttack 在 JannaForecast 事件中对应暴击攻击。

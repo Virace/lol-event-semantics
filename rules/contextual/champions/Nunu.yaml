@@ -1,0 +1,75 @@
+scope: champion
+owner: Nunu
+aliases:
+  BloodBoil:
+    kind: champion_spell_component
+    spell: w
+    component: blood_boil
+    label: 血之沸腾
+    confidence: medium
+    source: manual_contextual_alias
+    note: BloodBoil 在 Nunu 事件中对应 W 技能 Blood Boil 的增益状态。
+  BloodBoilAttack:
+    kind: champion_spell_component
+    spell: w
+    component: attack_variant
+    label: 血之沸腾攻击变体
+    confidence: medium
+    source: manual_contextual_alias
+    note: BloodBoilAttack 是努努旧版/内部 W 技能相关攻击变体；数字尾缀作为 spell_rank 保留。
+  BloodBoilMissile:
+    kind: champion_spell_component
+    spell: w
+    component: blood_boil_missile
+    label: 血之沸腾飞弹
+    confidence: medium
+    source: manual_contextual_alias
+    note: BloodBoilMissile 在 Nunu 事件中对应 W 技能的飞行/投掷表现。
+  BloodBoilRoar:
+    kind: champion_spell_component
+    spell: w
+    component: blood_boil_roar
+    label: 血之沸腾咆哮
+    confidence: medium
+    source: manual_contextual_alias
+    note: BloodBoilRoar 在 Nunu 事件中对应 W 技能的咆哮/释放音效。
+  Haste:
+    kind: champion_spell_component
+    spell: w
+    component: haste_state
+    label: 加速状态
+    confidence: medium
+    source: manual_contextual_alias
+    note: Haste 在 Nunu 事件中对应 Blood Boil 带来的加速状态。
+  HasteIntro:
+    kind: champion_spell_component
+    spell: w
+    component: haste_intro
+    label: 加速开始
+    confidence: medium
+    source: manual_contextual_alias
+    note: HasteIntro 在 Nunu 事件中对应 Blood Boil 的起始段。
+  HasteLoop:
+    kind: champion_spell_component
+    spell: w
+    component: haste_loop
+    label: 加速循环
+    confidence: medium
+    source: manual_contextual_alias
+    note: HasteLoop 在 Nunu 事件中对应 Blood Boil 的循环段。
+  Horn:
+    kind: champion_spell_component
+    spell: p
+    component: horn
+    label: 号角
+    confidence: medium
+    source: manual_contextual_alias
+    note: Horn 在 NunuSkin04 事件中对应皮肤号角释放音效。
+  StructureAttack:
+    kind: champion_spell_component
+    spell: p
+    component: structure_attack
+    label: 建筑攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: StructureAttack 在 Nunu 事件中对应攻击建筑的基础攻击变体。

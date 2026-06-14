@@ -1,0 +1,59 @@
+scope: champion
+owner: Graves
+aliases:
+  AutoAttackRecoilCastEDummy:
+    kind: champion_spell_component
+    spell: p
+    component: auto_attack_recoil_dummy
+    label: 普攻后坐力占位
+    confidence: medium
+    source: manual_contextual_alias
+    note: AutoAttackRecoilCastEDummy 在 Graves 事件中对应普攻后坐力 cast 占位音效。
+  ClusterShot:
+    kind: champion_spell_component
+    spell: q
+    component: cluster_shot
+    label: 散弹射击
+    confidence: medium
+    source: manual_contextual_alias
+    note: ClusterShot 在 Graves 事件中对应 Q 技能 End of the Line 的旧/内部表现名。
+  ClusterShotAttack:
+    kind: champion_spell_component
+    spell: q
+    component: cluster_shot_attack
+    label: 集束射击攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: ClusterShotAttack 在 Graves 事件中对应霰弹/集束射击攻击表现。
+  ClusterShotSoundMissile:
+    kind: champion_spell_component
+    spell: q
+    component: cluster_shot_sound_missile
+    label: 散弹飞弹
+    confidence: medium
+    source: manual_contextual_alias
+    note: ClusterShotSoundMissile 在 Graves 事件中对应 Q 技能终极爆弹的声音/飞弹表现。
+  GravesBasicAttack:
+    kind: champion_spell_component
+    spell: p
+    component: basic_attack
+    label: 普攻
+    confidence: medium
+    source: manual_contextual_alias
+    note: GravesBasicAttack 在 Graves 皮肤别名事件中对应基础攻击。
+  GravesCritAttack:
+    kind: champion_spell_component
+    spell: p
+    component: crit_attack
+    label: 暴击攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: GravesCritAttack 在 Graves 皮肤别名事件中对应暴击攻击。
+  SmokeGrenade:
+    kind: champion_spell_component
+    spell: w
+    component: smoke_screen_projectile
+    label: 烟幕弹
+    confidence: medium
+    source: manual_contextual_alias
+    note: SmokeGrenade 是 Graves W 技能 Smoke Screen 的旧/内部表现名。

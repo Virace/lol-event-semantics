@@ -1,0 +1,19 @@
+scope: champion
+owner: Blitzcrank
+aliases:
+  RocketGrab:
+    kind: champion_spell_component
+    spell: q
+    component: rocket_grab
+    label: 机械飞爪
+    confidence: medium
+    source: manual_contextual_alias
+    note: RocketGrab 在 Blitzcrank/iBlitz 事件中对应 Q 技能 Rocket Grab。
+  RocketGrabMissile:
+    kind: champion_spell_component
+    spell: q
+    component: rocket_grab_missile
+    label: 机械飞爪飞弹
+    confidence: medium
+    source: manual_contextual_alias
+    note: RocketGrabMissile 在 Blitzcrank/iBlitz 事件中对应 Q 技能飞爪飞弹。

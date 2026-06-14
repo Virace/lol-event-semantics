@@ -1,0 +1,696 @@
+# 没有稳定官方结构源的外部实体词条。
+# 如果后续接入 Riot/CommunityDragon 的结构化地区、种族、野怪或建筑数据，
+# 这些 manual_untrusted 词条应被上游可信源替换或降级为兼容别名。
+entities:
+  region:
+    Noxus:
+      label: Noxus
+      trust: manual_untrusted
+    Demacia:
+      label: Demacia
+      trust: manual_untrusted
+    Ionia:
+      label: Ionia
+      trust: manual_untrusted
+    ShadowIsles:
+      label: Shadow Isles
+      trust: manual_untrusted
+    Shurima:
+      label: Shurima
+      trust: manual_untrusted
+    Freljord:
+      label: Freljord
+      trust: manual_untrusted
+    Targon:
+      label: Targon
+      trust: manual_untrusted
+    Ixtal:
+      label: Ixtal
+      trust: manual_untrusted
+    Bilgewater:
+      label: Bilgewater
+      trust: manual_untrusted
+    Piltover:
+      label: Piltover
+      trust: manual_untrusted
+    Zaun:
+      label: Zaun
+      trust: manual_untrusted
+    Void:
+      kind: region_or_faction
+      label: Void
+      trust: manual_untrusted
+    MtTargon:
+      kind: region
+      label: Mount Targon
+      trust: manual_untrusted
+    PiltoverZaun:
+      kind: region_pair
+      label: Piltover / Zaun
+      trust: manual_untrusted
+  species_or_faction:
+    Yordle:
+      kind: species
+      label: Yordle
+      trust: manual_untrusted
+    Darkin:
+      kind: species_or_faction
+      label: Darkin
+      trust: manual_untrusted
+    Ascended:
+      kind: species_or_faction
+      label: Ascended
+      trust: manual_untrusted
+    Demon:
+      kind: species
+      label: Demon
+      trust: manual_untrusted
+    Vastaya:
+      kind: species
+      label: Vastaya
+      trust: manual_untrusted
+    Sentinel:
+      kind: faction
+      label: Sentinel
+      trust: manual_untrusted
+    Sentinels:
+      kind: faction
+      label: Sentinels
+      trust: manual_untrusted
+    Demacians:
+      kind: region_or_faction
+      label: Demacians
+      trust: manual_untrusted
+    Lunari:
+      kind: faction
+      label: Lunari
+      trust: manual_untrusted
+    BlackRose:
+      kind: faction
+      label: Black Rose
+      trust: manual_untrusted
+    Aspect:
+      kind: species_or_title
+      label: Aspect
+      trust: manual_untrusted
+    Celestial:
+      kind: species_or_faction
+      label: Celestial
+      trust: manual_untrusted
+    Human:
+      kind: species
+      label: Human
+      trust: manual_untrusted
+    Demigod:
+      kind: species_or_title
+      label: Demigod
+      trust: manual_untrusted
+    FreljordDemigod:
+      kind: lore_group
+      label: Freljord Demigod
+      trust: manual_untrusted
+    IonianVastaya:
+      kind: lore_group
+      label: Ionian Vastaya
+      trust: manual_untrusted
+    Rhaast:
+      kind: darkin_character
+      label: Rhaast
+      trust: manual_untrusted
+    Undead:
+      kind: species_or_state
+      label: Undead
+      trust: manual_untrusted
+  neutral_objective:
+    RedBrambleback:
+      kind: neutral_monster
+      label: Red Brambleback
+      trust: manual_untrusted
+    JungleBuff:
+      kind: neutral_monster_class
+      label: Jungle Buff
+      trust: manual_untrusted
+    JungleCamp:
+      kind: neutral_monster_class
+      label: Jungle Camp
+      trust: manual_untrusted
+    Camp:
+      kind: neutral_monster_class
+      label: Camp
+      trust: manual_untrusted
+    Atakhan:
+      kind: neutral_monster
+      label: Atakhan
+      trust: manual_untrusted
+    Turret:
+      kind: structure
+      label: Turret
+      trust: manual_untrusted
+    Baron:
+      kind: neutral_monster
+      label: Baron
+      trust: manual_untrusted
+    Dragon:
+      kind: neutral_monster
+      label: Dragon
+      trust: manual_untrusted
+    Herald:
+      kind: neutral_monster
+      label: Rift Herald
+      trust: manual_untrusted
+    Gromp:
+      kind: neutral_monster
+      label: Gromp
+      trust: manual_untrusted
+    Krug:
+      kind: neutral_monster
+      label: Krug
+      trust: manual_untrusted
+    Krugs:
+      kind: neutral_monster
+      label: Krugs
+      trust: manual_untrusted
+    Raptor:
+      kind: neutral_monster
+      label: Raptor
+      trust: manual_untrusted
+    Raptors:
+      kind: neutral_monster
+      label: Raptors
+      trust: manual_untrusted
+    Murkwolf:
+      kind: neutral_monster
+      label: Murkwolf
+      trust: manual_untrusted
+    Wolves:
+      kind: neutral_monster
+      label: Wolves
+      trust: manual_untrusted
+    RiftScuttler:
+      kind: neutral_monster
+      label: Rift Scuttler
+      trust: manual_untrusted
+    BlueSentinel:
+      kind: neutral_monster
+      label: Blue Sentinel
+      trust: manual_untrusted
+    Brambleback:
+      kind: neutral_monster
+      label: Red Brambleback
+      trust: manual_untrusted
+    ElementalDragon:
+      kind: neutral_monster
+      label: Elemental Dragon
+      trust: manual_untrusted
+    CloudDrake:
+      kind: neutral_monster
+      label: Cloud Drake
+      trust: manual_untrusted
+    ElderDrake:
+      kind: neutral_monster
+      label: Elder Drake
+      trust: manual_untrusted
+    InfernalDrake:
+      kind: neutral_monster
+      label: Infernal Drake
+      trust: manual_untrusted
+    MountainDrake:
+      kind: neutral_monster
+      label: Mountain Drake
+      trust: manual_untrusted
+    OceanDrake:
+      kind: neutral_monster
+      label: Ocean Drake
+      trust: manual_untrusted
+    ElderDragon:
+      kind: neutral_monster
+      label: Elder Dragon
+      trust: manual_untrusted
+    Ward:
+      kind: object
+      label: Ward
+      trust: manual_untrusted
+    EpicDragon:
+      kind: neutral_monster
+      label: Epic Dragon
+      trust: manual_untrusted
+    Nexus:
+      kind: structure
+      label: Nexus
+      trust: manual_untrusted
+    Inhibitor:
+      kind: structure
+      label: Inhibitor
+      trust: manual_untrusted
+  map_context:
+    HowlingAbyss:
+      kind: map_or_location
+      label: Howling Abyss
+      trust: manual_untrusted
+  target_class:
+    Ally:
+      kind: team_or_relation
+      label: Ally
+      trust: manual_untrusted
+    Male:
+      kind: gender_category
+      label: Male
+      trust: manual_untrusted
+    Female:
+      kind: gender_category
+      label: Female
+      trust: manual_untrusted
+    Minion:
+      kind: target_class
+      label: Minion
+      trust: manual_untrusted
+    NeutralMinion:
+      kind: target_class
+      label: Neutral Minion
+      trust: manual_untrusted
+    NonChampion:
+      kind: target_class
+      label: Non-Champion
+      trust: manual_untrusted
+    EpicMonster:
+      kind: target_class
+      label: Epic Monster
+      trust: manual_untrusted
+    EpicEnemyTeam:
+      kind: target_or_score_context
+      label: Epic Enemy Team
+      trust: manual_untrusted
+    SwordChampion:
+      kind: target_class
+      label: Sword Champion
+      trust: manual_untrusted
+    GunChamps:
+      kind: target_class
+      label: Gun Champions
+      trust: manual_untrusted
+    AxeWielder:
+      kind: target_class
+      label: Axe Wielder
+      trust: manual_untrusted
+    Assassin:
+      kind: class_or_role
+      label: Assassin
+      trust: manual_untrusted
+    Enchanter:
+      kind: class_or_role
+      label: Enchanter
+      trust: manual_untrusted
+    Fighter:
+      kind: class_or_role
+      label: Fighter
+      trust: manual_untrusted
+    Marksmen:
+      kind: class_or_role
+      label: Marksmen
+      trust: manual_untrusted
+    Tank:
+      kind: class_or_role
+      label: Tank
+      trust: manual_untrusted
+    Neutral:
+      kind: team_or_target_class
+      label: Neutral
+      trust: manual_untrusted
+    Monster:
+      kind: target_class
+      label: Monster
+      trust: manual_untrusted
+    Mage:
+      kind: class_or_role
+      label: Mage
+      trust: manual_untrusted
+    Shield:
+      kind: equipment_or_defense_target
+      label: Shield
+      trust: manual_untrusted
+    Axe:
+      kind: weapon_target
+      label: Axe
+      trust: manual_untrusted
+    GunWielder:
+      kind: target_class
+      label: Gun Wielder
+      trust: manual_untrusted
+    PlantChampion:
+      kind: target_class
+      label: Plant Champion
+      trust: manual_untrusted
+    WaterChampion:
+      kind: target_class
+      label: Water Champion
+      trust: manual_untrusted
+    CondescendingChamp:
+      kind: personality_target_class
+      label: Condescending Champion
+      trust: manual_untrusted
+    Gentleman:
+      kind: personality_target_class
+      label: Gentleman
+      trust: manual_untrusted
+    Handsome:
+      kind: appearance_target_class
+      label: Handsome Champion
+      trust: manual_untrusted
+    Muscular:
+      kind: appearance_target_class
+      label: Muscular Champion
+      trust: manual_untrusted
+    Crazies:
+      kind: personality_target_class
+      label: Crazies
+      trust: manual_untrusted
+    Dogs:
+      kind: animal_or_target_class
+      label: Dogs
+      trust: manual_untrusted
+    Robots:
+      kind: species_or_target_class
+      label: Robots
+      trust: manual_untrusted
+    Engineers:
+      kind: profession_target_class
+      label: Engineers
+      trust: manual_untrusted
+    EnemyCorpse:
+      kind: target_state
+      label: Enemy Corpse
+      trust: manual_untrusted
+  event_context:
+    StealDragon:
+      kind: objective_steal_context
+      label: Dragon Steal
+      trust: manual_untrusted
+    EpicSteal:
+      kind: objective_steal_context
+      label: Epic Objective Steal
+      trust: manual_untrusted
+    BaronSteal:
+      kind: objective_steal_context
+      label: Baron Steal
+      trust: manual_untrusted
+    LowHealth:
+      kind: health_state_context
+      label: Low Health
+      trust: manual_untrusted
+    Ultimate:
+      kind: spell_context
+      label: Ultimate
+      trust: manual_untrusted
+    Multi:
+      kind: count_context
+      label: Multi
+      trust: manual_untrusted
+    Five:
+      kind: count_context
+      label: Five
+      trust: manual_untrusted
+    Ten:
+      kind: count_context
+      label: Ten
+      trust: manual_untrusted
+    Fifteen:
+      kind: count_context
+      label: Fifteen
+      trust: manual_untrusted
+    Twenty:
+      kind: count_context
+      label: Twenty
+      trust: manual_untrusted
+    Gank:
+      kind: combat_context
+      label: Gank
+      trust: manual_untrusted
+    MirrorMatch:
+      kind: matchup_context
+      label: Mirror Match
+      trust: manual_untrusted
+    NoMirrorMatch:
+      kind: matchup_context
+      label: Non-Mirror Match
+      trust: manual_untrusted
+    Nemesis:
+      kind: rivalry_context
+      label: Nemesis
+      trust: manual_untrusted
+    Dark:
+      kind: theme_or_state
+      label: Dark
+      trust: manual_untrusted
+    Light:
+      kind: theme_or_state
+      label: Light
+      trust: manual_untrusted
+    Magic:
+      kind: theme_or_damage_context
+      label: Magic
+      trust: manual_untrusted
+    Rare:
+      kind: rarity_or_state_context
+      label: Rare
+      trust: manual_untrusted
+    Twentyfour:
+      kind: season_or_year_context
+      label: Twenty Four
+      trust: manual_untrusted
+    AmbessasType:
+      kind: character_archetype_context
+      label: Ambessa's Type
+      trust: manual_untrusted
+  skinline_context:
+    PajamaGuardian:
+      kind: skinline
+      label: Pajama Guardian
+      trust: manual_untrusted
+    GunGoddess:
+      kind: skinline
+      label: Gun Goddess
+      trust: manual_untrusted
+    Dragonslayer:
+      kind: skinline
+      label: Dragonslayer
+      trust: manual_untrusted
+    Firecracker:
+      kind: skinline
+      label: Firecracker
+      trust: manual_untrusted
+    KDAAllOut:
+      kind: skinline
+      label: K/DA ALL OUT
+      trust: manual_untrusted
+    OldGod:
+      kind: skinline
+      label: Old God
+      trust: manual_untrusted
+    DarkCosmic:
+      kind: skinline
+      label: Dark Cosmic
+      trust: manual_untrusted
+    CosmicPaladin:
+      kind: skinline
+      label: Cosmic Paladin
+      trust: manual_untrusted
+    MechaMechaKingdoms:
+      kind: skinline
+      label: Mecha / Mecha Kingdoms
+      trust: manual_untrusted
+    BattleBoss:
+      kind: skinline
+      label: Battle Boss
+      trust: manual_untrusted
+    Arcade:
+      kind: skinline
+      label: Arcade
+      trust: manual_untrusted
+    SKT:
+      kind: skinline_or_esports_team
+      label: SKT
+      trust: manual_untrusted
+    AppearanceDragon:
+      kind: skinline_or_appearance_context
+      label: Appearance Dragon
+      trust: manual_untrusted
+    Babylon:
+      kind: skinline_or_thematic_context
+      label: Babylon
+      trust: manual_untrusted
+    Durandal:
+      kind: skinline_or_thematic_context
+      label: Durandal
+      trust: manual_untrusted
+    Labrys:
+      kind: skinline_or_thematic_context
+      label: Labrys
+      trust: manual_untrusted
+    Harbinger:
+      kind: skinline_or_thematic_context
+      label: Harbinger
+      trust: manual_untrusted
+    Akana:
+      kind: skinline_faction
+      label: Akana
+      trust: manual_untrusted
+      note: Spirit Blossom 语境中的精神阵营/类别，当前没有独立官方结构源。
+    Kanmei:
+      kind: skinline_faction
+      label: Kanmei
+      trust: manual_untrusted
+      note: Spirit Blossom 语境中的精神阵营/类别，当前没有独立官方结构源。
+    BeastHunter:
+      kind: skinline
+      label: Beast Hunter
+      trust: manual_untrusted
+    GodKing:
+      kind: skinline
+      label: God-King
+      trust: manual_untrusted
+    HighNoonVillain:
+      kind: skinline_target_group
+      label: High Noon Villain
+      trust: manual_untrusted
+    Mafia:
+      kind: skinline_or_legacy_skinline
+      label: Mafia
+      trust: manual_untrusted
+    Prehistoric:
+      kind: skinline
+      label: Prehistoric
+      trust: manual_untrusted
+    Resistance:
+      kind: skinline_or_faction
+      label: Resistance
+      trust: manual_untrusted
+    Snowdown:
+      kind: skinline_or_event
+      label: Snowdown
+      trust: manual_untrusted
+    Soccer:
+      kind: skinline_or_sports_theme
+      label: Soccer
+      trust: manual_untrusted
+    WarringKingdoms:
+      kind: skinline
+      label: Warring Kingdoms
+      trust: manual_untrusted
+    OrderVsChaos:
+      kind: skinline_or_event_theme
+      label: Order vs Chaos
+      trust: manual_untrusted
+    LCS:
+      kind: esports_or_skinline_context
+      label: LCS
+      trust: manual_untrusted
+    Gnetic:
+      kind: skinline_faction
+      label: G/NETIC
+      trust: manual_untrusted
+      note: PROJECT 皮肤线语境中的阵营/群体写法，当前 game-data 没有独立结构字段。
+  lore_context:
+    Kinkou:
+      kind: faction
+      label: Kinkou
+      trust: manual_untrusted
+    Solari:
+      kind: faction
+      label: Solari
+      trust: manual_untrusted
+    Devout:
+      kind: faction_or_role
+      label: Devout
+      trust: manual_untrusted
+    Yordles:
+      kind: species
+      label: Yordles
+      trust: manual_untrusted
+    Noxian:
+      kind: region_or_faction_adjective
+      label: Noxian
+      trust: manual_untrusted
+    ForeignDemacian:
+      kind: region_or_faction_context
+      label: Foreign Demacian
+      trust: manual_untrusted
+    AspectDarkin:
+      kind: lore_group
+      label: Aspect / Darkin
+      trust: manual_untrusted
+    AscendedDarkin:
+      kind: lore_group
+      label: Ascended Darkin
+      trust: manual_untrusted
+    Darkin2025S:
+      kind: lore_group
+      label: Darkin 2025 S3
+      trust: manual_untrusted
+    FreljordianDemigod:
+      kind: lore_group
+      label: Freljordian Demigod
+      trust: manual_untrusted
+    IonianLoners:
+      kind: lore_group
+      label: Ionian Loners
+      trust: manual_untrusted
+    IonianVillians:
+      kind: lore_group
+      label: Ionian Villains
+      trust: manual_untrusted
+    Prisoners:
+      kind: lore_group
+      label: Prisoners
+      trust: manual_untrusted
+    Machines:
+      kind: species_or_target_group
+      label: Machines
+      trust: manual_untrusted
+    Spirit:
+      kind: species_or_theme
+      label: Spirit
+      trust: manual_untrusted
+    Water:
+      kind: elemental_or_theme
+      label: Water
+      trust: manual_untrusted
+    Aquatic:
+      kind: elemental_or_theme
+      label: Aquatic
+      trust: manual_untrusted
+    Elemental:
+      kind: elemental_or_theme
+      label: Elemental
+      trust: manual_untrusted
+    Dog:
+      kind: animal_or_species
+      label: Dog
+      trust: manual_untrusted
+    Cat:
+      kind: animal_or_species
+      label: Cat
+      trust: manual_untrusted
+    Animal:
+      kind: animal_or_species
+      label: Animal
+      trust: manual_untrusted
+    BirdChampion:
+      kind: animal_or_target_class
+      label: Bird Champion
+      trust: manual_untrusted
+  announcer_persona:
+    Ringcaller:
+      kind: announcer_persona
+      label: Ringcaller
+      trust: manual_untrusted
+      note: 特殊模式通告员 persona，缺少官方统一结构源。
+    Maverick:
+      kind: announcer_persona
+      label: Maverick
+      trust: manual_untrusted
+      note: 特殊模式通告员 persona，缺少官方统一结构源。
+    Pundit:
+      kind: announcer_persona
+      label: Pundit
+      trust: manual_untrusted
+      note: 特殊模式通告员 persona，缺少官方统一结构源。

@@ -1,0 +1,11 @@
+scope: champion
+owner: Leona
+aliases:
+  SolarBarrier:
+    kind: champion_spell_component
+    spell: w
+    component: solar_barrier
+    label: 日蚀屏障
+    confidence: medium
+    source: manual_contextual_alias
+    note: SolarBarrier 在 Leona 事件中对应 W 技能 Eclipse 的护盾/屏障表现。

@@ -1,0 +1,75 @@
+scope: champion
+owner: Zed
+aliases:
+  FastIn:
+    kind: champion_spell_component
+    spell: p
+    component: fast_in
+    label: 快速进入
+    confidence: medium
+    source: manual_contextual_alias
+    note: FastIn 在 Zed 事件中对应皮肤状态进入音效。
+  HasteIn:
+    kind: champion_spell_component
+    spell: p
+    component: haste_in
+    label: 加速进入
+    confidence: medium
+    source: manual_contextual_alias
+    note: HasteIn 在 Zed 事件中对应皮肤加速状态进入音效。
+  KillerCut:
+    kind: champion_spell_component
+    spell: p
+    component: low_health_passive_proc
+    label: 低血量被动斩击
+    confidence: medium
+    source: manual_contextual_alias
+    note: KillerCut 在 Zed 事件中对应被动 Contempt for the Weak 对低血量目标的额外伤害触发。
+  Marker:
+    kind: champion_spell_component
+    spell: r
+    component: death_mark_marker
+    label: 死亡印记标记
+    confidence: medium
+    source: manual_contextual_alias
+    note: Marker 在 Zed 事件中对应 R 技能 Death Mark 的标记命中表现。
+  ShurikenMisOne:
+    kind: champion_spell_component
+    spell: q
+    component: shuriken_missile
+    label: 手里剑飞弹一
+    confidence: medium
+    source: manual_contextual_alias
+    note: ShurikenMisOne 在 Zed 事件中对应 Q 技能 Razor Shuriken 的飞行物变体。
+  ShurikenMisTwo:
+    kind: champion_spell_component
+    spell: q
+    component: shuriken_missile
+    label: 手里剑飞弹二
+    confidence: medium
+    source: manual_contextual_alias
+    note: ShurikenMisTwo 在 Zed 事件中对应 Q 技能 Razor Shuriken 的飞行物变体。
+  Ult:
+    kind: champion_spell_component
+    spell: r
+    component: death_mark_hit
+    label: 死亡印记命中
+    confidence: medium
+    source: manual_contextual_alias
+    note: Ult 在 Zed 事件中按 R 技能 Death Mark 的命中表现处理，不泛化为全局 Ult。
+  UltExecute:
+    kind: champion_spell_component
+    spell: r
+    component: death_mark_execute
+    label: 死亡印记处决
+    confidence: medium
+    source: manual_contextual_alias
+    note: UltExecute 在 Zed 事件中对应 R 技能 Death Mark 的爆发/处决结算状态，不作为全局 execute 规则。
+  ZedShuriken:
+    kind: champion_spell_component
+    spell: q
+    component: shuriken_cast
+    label: 手里剑释放
+    confidence: medium
+    source: manual_contextual_alias
+    note: ZedShuriken 在 ZedStormNinja 事件中对应 Q 技能 Razor Shuriken 释放。

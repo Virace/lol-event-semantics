@@ -1,0 +1,27 @@
+scope: champion
+owner: Lux
+aliases:
+  LightstrikeToggle:
+    kind: champion_spell_component
+    spell: e
+    component: light_strike_toggle
+    label: 光辉奇点切换
+    confidence: medium
+    source: manual_contextual_alias
+    note: LightstrikeToggle 在 Lux 事件中沿用 E 技能资源名 LightStrike，不作为全局 Toggle 规则。
+  MaliceCannon:
+    kind: champion_spell_component
+    spell: r
+    component: malice_cannon
+    label: 恶意火炮
+    confidence: medium
+    source: manual_contextual_alias
+    note: MaliceCannon 在 LuxSkin19 事件中对应终极技能主题化炮击表现。
+  Transform:
+    kind: champion_spell_component
+    spell: p
+    component: elementalist_transform
+    label: 元素形态切换
+    confidence: medium
+    source: manual_contextual_alias
+    note: Transform 在 LuxSkin07 事件中对应元素使皮肤形态切换。

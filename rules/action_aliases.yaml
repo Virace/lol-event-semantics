@@ -1,0 +1,126 @@
+global:
+  BasicAttack3:
+    name: 普攻3
+    category: action
+  DoubleAttack:
+    name: 连击
+    category: action
+  DoubleAttackHit:
+    name: 连击命中
+    category: action
+  TransformCast:
+    name: 变身
+    category: action
+
+champions:
+  Kayle:
+    Enrage:
+      name: 狂暴
+      category: state
+    EnrageReady:
+      name: 狂暴就绪
+      category: state
+    EnrageSwing:
+      name: 狂暴挥击
+      category: action
+    EnrageConeMis:
+      name: 狂暴锥形飞行物
+      category: action
+    EAttack:
+      spell: e
+      modifiers:
+        - 攻击
+    EAttackMelee:
+      spell: e
+      modifiers:
+        - 近战攻击
+    EAttackUpgrade:
+      spell: e
+      modifiers:
+        - 强化攻击
+    EMagic:
+      spell: e
+      modifiers:
+        - 魔法
+    QMis:
+      spell: q
+      modifiers:
+        - 飞行物
+    WHeal:
+      spell: w
+      modifiers:
+        - 治疗
+    RCastBladesDown:
+      spell: r
+      modifiers:
+        - 剑刃下降
+    RCastBladesUp:
+      spell: r
+      modifiers:
+        - 剑刃升起
+  Olaf:
+    AxeThrow:
+      spell: q
+      note: reviewed legacy english alias for Olaf Q
+    AxeThrowCast:
+      spell: q
+      note: reviewed legacy english alias for Olaf Q
+    FrenziedStrikes:
+      spell: w
+      note: reviewed legacy english alias for Olaf W
+    RecklessStrike:
+      spell: e
+      note: reviewed legacy english alias for Olaf E
+    Ragnarok:
+      spell: r
+      note: direct english spell name for Olaf R
+  Shyvana:
+    Fireball:
+      spell: e
+      note: reviewed alias for Shyvana E
+    FireballDragon2:
+      spell: e
+      modifiers:
+        - 龙形态
+    FireballDragonFxMissile:
+      spell: e
+      modifiers:
+        - 龙形态
+        - 导弹
+    FireballMissile:
+      spell: e
+      modifiers:
+        - 导弹
+    FireballMissileMinion:
+      spell: e
+      modifiers:
+        - 导弹
+        - 小兵
+    ImmolateDragon:
+      spell: w
+      modifiers:
+        - 龙形态
+    ImmolationAura:
+      spell: w
+    TransformCast:
+      spell: r
+    TransformLeap:
+      spell: r
+      modifiers:
+        - 跃击
+    DoubleAttack:
+      name: 连击
+      category: action
+    DoubleAttackHit:
+      name: 连击命中
+      category: action
+    DoubleAttackDragon:
+      name: 连击
+      category: action
+      modifiers:
+        - 龙形态
+    DoubleAttackHitDragon:
+      name: 连击命中
+      category: action
+      modifiers:
+        - 龙形态

@@ -1,0 +1,35 @@
+scope: champion
+owner: Jax
+aliases:
+  Fish:
+    kind: champion_spell_component
+    spell: p
+    component: fish_prop
+    label: 鱼道具
+    confidence: medium
+    source: manual_contextual_alias
+    note: Fish 在 Jax/JaxSkin 事件中对应专属鱼道具的 cast/catch/idle 表现。
+  TowerAttack:
+    kind: champion_spell_component
+    spell: p
+    component: tower_attack
+    label: 攻击防御塔
+    confidence: medium
+    source: manual_contextual_alias
+    note: TowerAttack 在 Jax 事件中对应攻击防御塔的基础攻击变体。
+  UltTransform:
+    kind: champion_spell_component
+    spell: r
+    component: ult_transform
+    label: 大招变身
+    confidence: medium
+    source: manual_contextual_alias
+    note: UltTransform 在 Jax 事件中对应 R 技能 Grandmaster-at-Arms 的变身/强化表现。
+  UltUnlock:
+    kind: champion_spell_component
+    spell: r
+    component: ult_unlock
+    label: 大招解锁
+    confidence: medium
+    source: manual_contextual_alias
+    note: UltUnlock 在 JaxSkin14 事件中对应大招强化状态解锁提示。

@@ -1,0 +1,27 @@
+scope: champion
+owner: Nasus
+aliases:
+  NasusCritAttack:
+    kind: champion_spell_component
+    spell: p
+    component: crit_attack
+    label: 暴击攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: NasusCritAttack 在 Nasus 事件中对应暴击基础攻击音效。
+  UltDance:
+    kind: champion_spell_component
+    spell: r
+    component: ultimate_dance
+    label: 大招舞蹈
+    confidence: medium
+    source: manual_contextual_alias
+    note: UltDance 在 NasusSkin05 事件中对应大招形态下的舞蹈表现。
+  laughult:
+    kind: champion_spell_component
+    spell: r
+    component: ultimate_laugh
+    label: 大招笑声
+    confidence: medium
+    source: manual_contextual_alias
+    note: laughult 在 NasusSkin05 事件中对应大招形态下的笑声表现。

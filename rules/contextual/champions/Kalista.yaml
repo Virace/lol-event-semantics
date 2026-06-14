@@ -1,0 +1,59 @@
+scope: champion
+owner: Kalista
+aliases:
+  CoopStrikeProc:
+    kind: champion_spell_component
+    spell: e
+    component: rend_proc
+    label: 协同打击触发
+    confidence: medium
+    source: manual_contextual_alias
+    note: CoopStrikeProc 在 Kalista 事件中对应 E 技能 Rend 的协同/撕裂触发表现。
+  KalistaPAltarBuff:
+    kind: champion_spell_component
+    spell: p
+    component: altar_buff
+    label: 祭坛增益
+    confidence: medium
+    source: manual_contextual_alias
+    note: KalistaPAltarBuff 在 Kalista 事件中对应被动/祭坛增益状态。
+  KalistaPAltarBuffRise:
+    kind: champion_spell_component
+    spell: p
+    component: altar_buff_rise
+    label: 祭坛增益升起
+    confidence: medium
+    source: manual_contextual_alias
+    note: KalistaPAltarBuffRise 在 Kalista 事件中对应被动/祭坛增益升起状态。
+  KalistaW:
+    kind: champion_spell_component
+    spell: w
+    component: w_state
+    label: W 技能状态
+    confidence: medium
+    source: manual_contextual_alias
+    note: KalistaW 在 Kalista 事件中对应 W 技能状态音效。
+  VOEHighStack:
+    kind: champion_spell_component
+    spell: e
+    component: high_stack_voice
+    label: E 高层数语音
+    confidence: medium
+    source: manual_contextual_alias
+    note: VOEHighStack 在 Kalista 事件中明确带有 E 技能键，表示 E 技能 Rend 高层数语音条件。
+  VORAllyLowHealth:
+    kind: champion_spell_component
+    spell: r
+    component: ally_low_health_voice
+    label: R 友方低血量语音
+    confidence: medium
+    source: manual_contextual_alias
+    note: VORAllyLowHealth 在 Kalista 事件中明确带有 R 技能键，表示 R 技能友方低血量语音条件。
+  VORNormal:
+    kind: champion_spell_component
+    spell: r
+    component: normal_voice
+    label: R 普通语音
+    confidence: medium
+    source: manual_contextual_alias
+    note: VORNormal 在 Kalista 事件中明确带有 R 技能键，表示 R 技能普通语音条件。

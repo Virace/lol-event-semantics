@@ -1,0 +1,19 @@
+scope: champion
+owner: Urgot
+aliases:
+  RunHaste:
+    kind: champion_spell_component
+    spell: p
+    component: run_haste
+    label: 加速奔跑
+    confidence: medium
+    source: manual_contextual_alias
+    note: RunHaste 在 Urgot 事件中对应移动加速/奔跑状态音效。
+  UrgotCritAttack:
+    kind: champion_spell_component
+    spell: p
+    component: crit_attack
+    label: 暴击攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: UrgotCritAttack 在 Urgot 事件中对应暴击基础攻击音效。

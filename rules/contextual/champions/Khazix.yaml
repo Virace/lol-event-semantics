@@ -1,0 +1,19 @@
+scope: champion
+owner: Khazix
+aliases:
+  Hunt:
+    kind: champion_spell_component
+    spell: p
+    component: hunt_state
+    label: 狩猎状态
+    confidence: medium
+    source: manual_contextual_alias
+    note: Hunt 在 Khazix 事件中对应被动 Unseen Threat / 孤立无援相关的狩猎状态。
+  HuntEnemy:
+    kind: champion_spell_component
+    spell: p
+    component: hunt_enemy_state
+    label: 狩猎敌方状态
+    confidence: medium
+    source: manual_contextual_alias
+    note: HuntEnemy 在 Khazix 事件中对应对敌方目标的狩猎/孤立状态。

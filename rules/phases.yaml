@@ -1,0 +1,73 @@
+phases:
+  OnCast:
+    key: cast
+    name: 施放
+  cast:
+    key: cast
+    name: 施放
+  cast3D:
+    key: cast
+    name: 施放
+  OnHit:
+    key: hit
+    name: 命中
+  hit:
+    key: hit
+    name: 命中
+  OnHitLocation:
+    key: hit_location
+    name: 命中位置
+  OnMissileLaunch:
+    key: missile_launch
+    name: 导弹发射
+  missilelaunch:
+    key: missile_launch
+    name: 导弹发射
+  OnMissileCast:
+    key: missile_cast
+    name: 导弹施放
+  missilecast:
+    key: missile_cast
+    name: 导弹施放
+  OnBuffActivate:
+    key: buff_activate
+    name: 效果激活
+  buffactivate:
+    key: buff_activate
+    name: 效果激活
+  buffac:
+    key: buff_activate
+    name: 效果激活
+  OnBuffCast:
+    key: buff_cast
+    name: 效果触发
+  OnBuffDeactivate:
+    key: buff_deactivate
+    name: 效果结束
+  buffdeactivate:
+    key: buff_deactivate
+    name: 效果结束
+  loop:
+    key: loop
+    name: 循环
+  leadin:
+    key: leadin
+    name: 引入
+
+modifiers:
+  ally: 友方触发
+  enemy: 敌方触发
+  far: 远处
+  loop: 循环
+  self: 自身
+  primed: 就绪
+  enraged: 狂暴
+  dragon: 龙形态
+  human: 人形态
+  minion: 小兵
+  windup: 前摇
+  in: 入场
+  out: 退场
+  up: 升起
+  down: 下降
+  oba: 触发

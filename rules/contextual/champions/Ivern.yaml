@@ -1,0 +1,11 @@
+scope: champion
+owner: Ivern
+aliases:
+  MinionHarvest:
+    kind: champion_spell_component
+    spell: p
+    component: minion_harvest
+    label: 野怪收割
+    confidence: medium
+    source: manual_contextual_alias
+    note: MinionHarvest 在 Ivern 事件中对应被动 Friend of the Forest 对野怪营地的收获/释放阶段。

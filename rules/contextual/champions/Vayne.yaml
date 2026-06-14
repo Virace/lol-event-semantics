@@ -1,0 +1,27 @@
+scope: champion
+owner: Vayne
+aliases:
+  Inquisition:
+    kind: champion_spell_component
+    spell: r
+    component: ultimate_cast
+    label: 终极审判
+    confidence: medium
+    source: manual_contextual_alias
+    note: Inquisition 在 Vayne 事件中按 R 技能 Final Hour 的旧/内部表现名处理。
+  UltAttack:
+    kind: champion_spell_component
+    spell: r
+    component: final_hour_attack
+    label: 大招强化攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: UltAttack 在 Vayne 事件中对应 R 技能 Final Hour 的强化攻击表现。
+  mask:
+    kind: champion_spell_component
+    spell: r
+    component: mask
+    label: 面具
+    confidence: medium
+    source: manual_contextual_alias
+    note: mask 在 VayneSkin11 事件中对应大招/皮肤面具状态音效。

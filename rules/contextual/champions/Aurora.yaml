@@ -1,0 +1,11 @@
+scope: champion
+owner: Aurora
+aliases:
+  Passive3D:
+    kind: champion_spell_component
+    spell: p
+    component: passive_cast
+    label: 被动触发
+    confidence: medium
+    source: manual_contextual_alias
+    note: Passive3D 在 Aurora 事件中表示被动触发语音，3D 仅作为音频维度信息保留在原始事件名中。

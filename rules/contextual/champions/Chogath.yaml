@@ -1,0 +1,44 @@
+scope: champion
+owner: Chogath
+aliases:
+  Feast:
+    kind: champion_spell_component
+    spell: r
+    component: feast
+    label: 盛宴
+    confidence: medium
+    source: manual_contextual_alias
+    note: Feast 在 ChoGath 事件中对应 R 技能 Feast。
+  FeralScream:
+    kind: champion_spell_component
+    spell: w
+    component: feral_scream
+    label: 野性尖叫
+    confidence: medium
+    source: manual_contextual_alias
+    note: FeralScream 在 ChoGath 事件中对应 W 技能 Feral Scream。
+  Rupture:
+    kind: champion_spell_component
+    spell: q
+    component: rupture
+    label: 破裂
+    confidence: medium
+    source: manual_contextual_alias
+    note: Rupture 在 ChoGath 事件中对应 Q 技能 Rupture。
+  VorpalSpikes:
+    kind: champion_spell_component
+    spell: e
+    component: vorpal_spikes
+    label: 恐惧之刺
+    confidence: medium
+    source: manual_contextual_alias
+    note: VorpalSpikes 在 ChoGath 事件中对应 E 技能 Vorpal Spikes。
+  VorpalSpikesMissle:
+    kind: champion_spell_component
+    spell: e
+    component: vorpal_spikes_missile
+    label: 恐惧之刺飞弹
+    confidence: medium
+    source: manual_contextual_alias
+    note: VorpalSpikesMissle 在 ChoGath 事件中对应 E 技能 Vorpal Spikes 的飞弹，保留原始 Missle 
+      拼写。

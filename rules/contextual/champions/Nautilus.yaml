@@ -1,0 +1,19 @@
+scope: champion
+owner: Nautilus
+aliases:
+  BackSwingAttack:
+    kind: champion_spell_component
+    spell: q
+    component: backswing_attack
+    label: 回摆攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: BackSwingAttack 在 Nautilus 事件中对应基础攻击回摆阶段的内部命名。
+  SplashZone:
+    kind: champion_spell_component
+    spell: e
+    component: splash_zone
+    label: 溅射区域
+    confidence: medium
+    source: manual_contextual_alias
+    note: SplashZone 在 Nautilus 事件中对应 E 技能 Riptide 的范围溅射表现。

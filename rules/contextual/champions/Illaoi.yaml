@@ -1,0 +1,27 @@
+scope: champion
+owner: Illaoi
+aliases:
+  TentacleActive:
+    kind: champion_spell_component
+    spell: p
+    component: tentacle_active
+    label: 触手激活
+    confidence: medium
+    source: manual_contextual_alias
+    note: TentacleActive 在 Illaoi 事件中对应被动触手激活/存在状态。
+  TentacleAttack:
+    kind: champion_spell_component
+    spell: p
+    component: tentacle_attack
+    label: 触手攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: TentacleAttack 在 Illaoi 事件中对应被动 Prophet of an Elder God 生成的触手攻击表现。
+  TentacleDance:
+    kind: champion_spell_component
+    spell: p
+    component: tentacle_dance
+    label: 触手跳舞
+    confidence: medium
+    source: manual_contextual_alias
+    note: TentacleDance 在 Illaoi 事件中对应触手单位跳舞动作音效。

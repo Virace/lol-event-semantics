@@ -1,0 +1,131 @@
+scope: champion
+owner: Shyvana
+aliases:
+  DoubleAttack:
+    kind: champion_spell_component
+    spell: q
+    component: double_attack
+    label: 双重攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: DoubleAttack 在 Shyvana 事件中对应 Q 技能 Emberstrike / Twin Bite 的强化双击状态。
+  DoubleAttackDragon:
+    kind: champion_spell_component
+    spell: q
+    component: dragon_double_attack
+    label: 龙形态双重攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: DoubleAttackDragon 在 Shyvana 事件中对应 Q 技能龙形态强化双击状态。
+  DoubleAttackHit:
+    kind: champion_spell_component
+    spell: q
+    component: double_attack_hit
+    label: 双重攻击命中
+    confidence: medium
+    source: manual_contextual_alias
+    note: DoubleAttackHit 在 Shyvana 事件中对应 Q 技能 Twin Bite 的命中表现。
+  DoubleAttackHitDragon:
+    kind: champion_spell_component
+    spell: q
+    component: dragon_double_attack_hit
+    label: 龙形态双重攻击命中
+    confidence: medium
+    source: manual_contextual_alias
+    note: DoubleAttackHitDragon 在 Shyvana 龙形态事件中对应 Q 技能 Twin Bite 的龙形态命中表现。
+  Fireball:
+    kind: champion_spell_component
+    spell: e
+    component: fireball
+    label: 火球
+    confidence: medium
+    source: manual_contextual_alias
+    note: Fireball 在 Shyvana 事件中对应 E 技能 Flame Breath 的飞行物表现。
+  FireballDragon:
+    kind: champion_spell_component
+    spell: e
+    component: dragon_fireball
+    label: 龙形态火球
+    confidence: medium
+    source: manual_contextual_alias
+    note: FireballDragon 在 Shyvana 龙形态事件中对应 E 技能 Flame Breath 的龙形态飞行物表现。
+  FireballMissile:
+    kind: champion_spell_component
+    spell: e
+    component: fireball_missile
+    label: 火球飞行物
+    confidence: medium
+    source: manual_contextual_alias
+    note: FireballMissile 在 Shyvana 事件中对应 E 技能 Molten Burst / Flame Breath 的飞行物。
+  FireballMissileMinion:
+    kind: champion_spell_component
+    spell: e
+    component: minion_fireball_missile
+    label: 小兵火球飞行物
+    confidence: medium
+    source: manual_contextual_alias
+    note: FireballMissileMinion 在 Shyvana 事件中对应 E 技能对小兵相关的火球飞行物表现。
+  Immolate:
+    kind: champion_spell_component
+    spell: w
+    component: immolate_hit
+    label: 灼烧命中
+    confidence: medium
+    source: manual_contextual_alias
+    note: Immolate 在 Shyvana 事件中对应 W 技能 Inferno Aegis 的灼烧命中表现。
+  ImmolateDragon:
+    kind: champion_spell_component
+    spell: w
+    component: dragon_immolate
+    label: 龙形态灼烧
+    confidence: medium
+    source: manual_contextual_alias
+    note: ImmolateDragon 在 Shyvana 事件中对应龙形态 W 技能灼烧表现。
+  ImmolationAura:
+    kind: champion_spell_component
+    spell: w
+    component: immolation_aura
+    label: 灼烧光环
+    confidence: medium
+    source: manual_contextual_alias
+    note: ImmolationAura 在 Shyvana 事件中对应 W 技能 Inferno Aegis 的持续灼烧光环。
+  ShyvanaBasicAttack:
+    kind: champion_spell_component
+    spell: p
+    component: dragon_basic_attack
+    label: 龙形态普攻
+    confidence: medium
+    source: manual_contextual_alias
+    note: ShyvanaBasicAttack 在 ShyvanaDragon 事件中对应龙形态基础攻击。
+  ShyvanaCritAttack:
+    kind: champion_spell_component
+    spell: p
+    component: dragon_crit_attack
+    label: 龙形态暴击
+    confidence: medium
+    source: manual_contextual_alias
+    note: ShyvanaCritAttack 在 ShyvanaDragon 事件中对应龙形态暴击攻击。
+  ShyvanaIDDamage:
+    kind: champion_spell_component
+    spell: p
+    component: id_damage
+    label: 额外伤害
+    confidence: medium
+    source: manual_contextual_alias
+    note: ShyvanaIDDamage 在 FrostShyvana 事件中对应希瓦娜龙形态/皮肤额外伤害状态音效。
+  Transform:
+    kind: champion_spell_component
+    spell: r
+    component: dragon_transform
+    label: 龙形态变身
+    confidence: medium
+    source: manual_contextual_alias
+    note: Transform 在 Shyvana 上下文中对应 R 技能 Dragon's Descent 的变身状态。
+  TransformLeap:
+    kind: champion_spell_component
+    spell: r
+    component: dragon_descent_leap
+    label: 魔龙降世跃击
+    confidence: medium
+    source: manual_contextual_alias
+    note: TransformLeap 在 Shyvana 事件中对应 R 技能 Dragon's Descent 的跃击/冲刺段。

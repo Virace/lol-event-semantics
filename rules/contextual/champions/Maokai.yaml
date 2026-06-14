@@ -1,0 +1,27 @@
+scope: champion
+owner: Maokai
+aliases:
+  E:
+    kind: champion_spell_component
+    spell: e
+    component: sapling_aggro_sound
+    label: 树苗仇恨音效
+    confidence: medium
+    source: manual_contextual_alias
+    note: E_AggroSound 在 Maokai 事件中对应 E 技能树苗仇恨音效。
+  MaokaiDrain:
+    kind: champion_spell_component
+    spell: p
+    component: drain
+    label: 吸取
+    confidence: medium
+    source: manual_contextual_alias
+    note: MaokaiDrain 在 GraveDiggerMaokai 事件中对应皮肤主题吸取/循环音效。
+  SaplingRun:
+    kind: champion_spell_component
+    spell: e
+    component: sapling_run
+    label: 树苗奔跑
+    confidence: medium
+    source: manual_contextual_alias
+    note: SaplingRun 在 Maokai 事件中对应 E 技能 Sapling Toss 的树苗奔跑状态。

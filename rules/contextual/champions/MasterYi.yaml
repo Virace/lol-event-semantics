@@ -1,0 +1,19 @@
+scope: champion
+owner: MasterYi
+aliases:
+  Foley:
+    kind: champion_spell_component
+    spell: p
+    component: foley
+    label: 动作拟音
+    confidence: medium
+    source: manual_contextual_alias
+    note: Foley 在 MasterYiSkin89 事件中对应舞蹈/动作拟音循环。
+  In:
+    kind: champion_spell_component
+    spell: p
+    component: dance_in
+    label: 舞蹈进入
+    confidence: medium
+    source: manual_contextual_alias
+    note: In 在 MasterYiSkin89 事件中对应舞蹈动作进入阶段。

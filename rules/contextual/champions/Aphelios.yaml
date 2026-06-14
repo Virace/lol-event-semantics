@@ -1,0 +1,87 @@
+scope: champion
+owner: Aphelios
+aliases:
+  CalibrumQMarkRed:
+    kind: champion_spell_component
+    spell: q
+    component: calibrum_q_mark
+    label: 步枪 Q 标记
+    confidence: medium
+    source: manual_contextual_alias
+    note: CalibrumQMarkRed 在 Aphelios 事件中对应 Calibrum Q 命中后的标记表现。
+  CalibrumQMisChainStar:
+    kind: champion_spell_component
+    spell: q
+    component: calibrum_q_chain_star
+    label: 步枪 Q 连锁星弹
+    confidence: medium
+    source: manual_contextual_alias
+    note: CalibrumQMisChainStar 在 Aphelios 事件中对应 Calibrum Q 的飞行/连锁星弹表现。
+  CrescendumOrbitManager:
+    kind: champion_spell_component
+    spell: q
+    component: crescendum_orbit_manager
+    label: 飞轮环绕管理
+    confidence: medium
+    source: manual_contextual_alias
+    note: CrescendumOrbitManager 在 Aphelios 事件中对应 Crescendum 飞轮环绕/回收状态管理。
+  CrescendumQCalibrum:
+    kind: champion_spell_component
+    spell: q
+    component: crescendum_q_calibrum_mark
+    label: 飞轮 Q 步枪标记
+    confidence: medium
+    source: manual_contextual_alias
+    note: CrescendumQCalibrum 表示 Aphelios 副武器为 Crescendum、主武器为 Calibrum 时 Q 
+      触发的标记/增益生效音效。
+  CrescendumQGravitum:
+    kind: champion_spell_component
+    spell: q
+    component: crescendum_q_gravitum_mark
+    label: 飞轮 Q 重力炮标记
+    confidence: medium
+    source: manual_contextual_alias
+    note: CrescendumQGravitum 表示 Aphelios 副武器为 Crescendum、主武器为 Gravitum 时 Q 
+      触发的标记/增益生效音效。
+  CrescendumQInfernum:
+    kind: champion_spell_component
+    spell: q
+    component: crescendum_q_infernum_mark
+    label: 飞轮 Q 火舌枪标记
+    confidence: medium
+    source: manual_contextual_alias
+    note: CrescendumQInfernum 表示 Aphelios 副武器为 Crescendum、主武器为 Infernum 时 Q 
+      触发的标记/增益生效音效。
+  CrescendumQSeverum:
+    kind: champion_spell_component
+    spell: q
+    component: crescendum_q_severum_mark
+    label: 飞轮 Q 短镰枪标记
+    confidence: medium
+    source: manual_contextual_alias
+    note: CrescendumQSeverum 表示 Aphelios 副武器为 Crescendum、主武器为 Severum 时 Q 
+      触发的标记/增益生效音效。
+  GravitumQBeam:
+    kind: champion_spell_component
+    spell: q
+    component: gravitum_q_beam
+    label: 重力炮 Q 光束
+    confidence: medium
+    source: manual_contextual_alias
+    note: GravitumQBeam 在 Aphelios 事件中对应 Gravitum Q 的光束/飞行表现。
+  InfernumQCastBurst:
+    kind: champion_spell_component
+    spell: q
+    component: infernum_q_burst
+    label: 火舌枪 Q 爆发
+    confidence: medium
+    source: manual_contextual_alias
+    note: InfernumQCastBurst 在 Aphelios 事件中对应 Infernum Q 释放时的爆发音效。
+  Lunari:
+    kind: champion_spell_component
+    spell: p
+    component: lunari_thrust
+    label: 皎月教派动作
+    confidence: medium
+    source: manual_contextual_alias
+    note: Lunari 在 Aphelios 事件中对应皮肤/角色专属的 Lunari 动作表现。

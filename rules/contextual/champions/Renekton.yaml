@@ -1,0 +1,43 @@
+scope: champion
+owner: Renekton
+aliases:
+  Cleave:
+    kind: champion_spell_component
+    spell: q
+    component: cleave
+    label: 横扫斩击
+    confidence: medium
+    source: manual_contextual_alias
+    note: Cleave 在 Renekton 事件中对应 Q 技能 Cull the Meek 的范围斩击表现，不作为全局 Cleave。
+  Dice:
+    kind: champion_spell_component
+    spell: e
+    component: second_dash
+    label: 横冲二段
+    confidence: medium
+    source: manual_contextual_alias
+    note: Dice 在 Renekton 事件中对应 E 技能 Slice and Dice 的 Dice 段。
+  SuperExecute:
+    kind: champion_spell_component
+    spell: r
+    component: super_execute
+    label: 终极处决
+    confidence: medium
+    source: manual_contextual_alias
+    note: SuperExecute 在 Renekton 事件中对应 R 技能 Dominus 的处决表现。
+  VolcanoGod:
+    kind: champion_spell_component
+    spell: p
+    component: volcano_god_theme
+    label: 火山神主题
+    confidence: medium
+    source: manual_contextual_alias
+    note: VolcanoGod 在 Renekton 事件中对应皮肤主题化血溅/命中特效。
+  helmet:
+    kind: champion_spell_component
+    spell: p
+    component: helmet
+    label: 头盔
+    confidence: medium
+    source: manual_contextual_alias
+    note: helmet 在 RenektonSkin26 事件中对应皮肤头盔状态音效。

@@ -1,0 +1,27 @@
+scope: champion
+owner: Lillia
+aliases:
+  Homegaurd:
+    kind: champion_spell_component
+    spell: p
+    component: homeguard
+    label: 家园卫士
+    confidence: medium
+    source: manual_contextual_alias
+    note: Homegaurd 是 Homeguard 的历史拼写错误，对应家园卫士移动状态。
+  LilliaBasicAttack:
+    kind: champion_spell_component
+    spell: p
+    component: basic_attack
+    label: 普攻
+    confidence: medium
+    source: manual_contextual_alias
+    note: LilliaBasicAttack 在 Lillia 事件中对应基础攻击音效。
+  LilliaCritAttack:
+    kind: champion_spell_component
+    spell: p
+    component: crit_attack
+    label: 暴击攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: LilliaCritAttack 在 Lillia 事件中对应暴击基础攻击音效。

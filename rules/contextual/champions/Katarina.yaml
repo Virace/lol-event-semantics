@@ -1,0 +1,35 @@
+scope: champion
+owner: Katarina
+aliases:
+  Dagger:
+    kind: champion_spell_component
+    spell: p
+    component: dagger_pickup_pbaoe
+    label: 匕首拾取范围
+    confidence: medium
+    source: manual_contextual_alias
+    note: Dagger 在 Katarina 事件中对应被动匕首拾取的 PBAoE 表现。
+  Katarina:
+    kind: champion_spell_component
+    spell: q
+    component: q_hit
+    label: Q 命中
+    confidence: medium
+    source: manual_contextual_alias
+    note: Katarina_Q_OnHit 这类事件中单独的 Katarina 片段对应 Q 技能弹射匕首命中音效。
+  Toggle:
+    kind: champion_spell_component
+    spell: p
+    component: toggle_state
+    label: 切换状态
+    confidence: medium
+    source: manual_contextual_alias
+    note: Toggle 在 KatarinaSkin29 事件中对应皮肤/角色状态切换语音条件。
+  W:
+    kind: champion_spell_component
+    spell: w
+    component: w_hit
+    label: W 技能命中
+    confidence: medium
+    source: manual_contextual_alias
+    note: W_hit 在 Katarina 事件中按 W 技能 Preparation 的命中/状态音效处理。

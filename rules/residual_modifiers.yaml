@@ -1,0 +1,94 @@
+modifiers:
+  Recast:
+    key: recast
+    kind: spell_stage
+    label: 再次释放
+    confidence: medium
+    source: residual_modifier_rule
+  Missile:
+    key: missile
+    kind: projectile
+    label: 弹道
+    confidence: medium
+    source: residual_modifier_rule
+    display: omit
+    note: raw 层保留弹道/投射物阶段；默认中文显示层可省略。
+  Attack:
+    key: attack
+    kind: action_phase
+    label: 攻击段
+    confidence: medium
+    source: residual_modifier_rule
+  Buff:
+    key: buff
+    kind: buff_state
+    label: 增益
+    confidence: medium
+    source: residual_modifier_rule
+  Counter:
+    key: counter
+    kind: counter
+    label: 计数器
+    confidence: medium
+    source: residual_modifier_rule
+  CountDown:
+    key: countdown
+    kind: timer
+    label: 倒计时
+    confidence: medium
+    source: residual_modifier_rule
+  Sleep:
+    key: sleep
+    kind: crowd_control
+    label: 睡眠
+    confidence: medium
+    source: residual_modifier_rule
+  Slow:
+    key: slow
+    kind: speed_state
+    label: 减速
+    confidence: medium
+    source: residual_modifier_rule
+  Empowered:
+    key: empowered
+    kind: empowered_state
+    label: 强化
+    confidence: medium
+    source: residual_modifier_rule
+  UpgradeOne:
+    key: upgrade_1
+    kind: spell_upgrade
+    label: 升级一阶
+    confidence: medium
+    source: residual_modifier_rule
+    display: 大招升级一阶
+    note: Gangplank R Cannon Barrage first upgrade.
+  UpgradeTwo:
+    key: upgrade_2
+    kind: spell_upgrade
+    label: 升级二阶
+    confidence: medium
+    source: residual_modifier_rule
+    display: 大招升级二阶
+    note: Gangplank R Cannon Barrage second upgrade.
+  UpgradeThree:
+    key: upgrade_3
+    kind: spell_upgrade
+    label: 升级三阶
+    confidence: medium
+    source: residual_modifier_rule
+    display: 大招升级三阶
+    note: Gangplank R Cannon Barrage third upgrade.
+  LongDistance:
+    key: long_distance
+    kind: range
+    label: 远距离
+    confidence: medium
+    source: residual_modifier_rule
+  Long:
+    key: long
+    kind: movement_distance
+    label: 长距离移动
+    confidence: medium
+    source: tail_modifier_rule
+    note: Move2DLong 这类移动事件的尾部修饰，推测为远距离移动触发。

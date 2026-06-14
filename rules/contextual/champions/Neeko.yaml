@@ -1,0 +1,11 @@
+scope: champion
+owner: Neeko
+aliases:
+  Stun:
+    kind: champion_spell_component
+    spell: e
+    component: stun
+    label: 禁锢/眩晕
+    confidence: medium
+    source: manual_contextual_alias
+    note: Stun 在 NeekoSkin49 事件中对应技能控制状态音效。

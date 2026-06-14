@@ -1,0 +1,11 @@
+scope: champion
+owner: Lulu
+aliases:
+  FaerieBurn:
+    kind: champion_spell_component
+    spell: w
+    component: faerie_burn
+    label: 仙灵燃烧
+    confidence: medium
+    source: manual_contextual_alias
+    note: FaerieBurn 在 Lulu 事件中对应 W 技能 Whimsy 的变形/控制效果旧命名。

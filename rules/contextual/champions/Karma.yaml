@@ -1,0 +1,19 @@
+scope: champion
+owner: Karma
+aliases:
+  SolKimShield:
+    kind: champion_spell_component
+    spell: e
+    component: shield
+    label: 护盾
+    confidence: medium
+    source: manual_contextual_alias
+    note: SolKimShield 在 Karma 事件中对应护盾类技能表现，按 E 技能 Inspire 的护盾上下文处理。
+  SpiritBind:
+    kind: champion_spell_component
+    spell: w
+    component: tether
+    label: 灵链
+    confidence: medium
+    source: manual_contextual_alias
+    note: SpiritBind 在 Karma 事件中对应 W 技能 Focused Resolve 的链结/束缚表现。

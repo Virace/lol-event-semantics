@@ -1,0 +1,73 @@
+scope: sfx
+owner: global
+aliases:
+  Channel:
+    kind: generic_sfx_effect
+    component: channel
+    label: 引导
+    confidence: medium
+    source: manual_sfx_alias
+    note: Channel 是公共 SFX 状态词，表示引导状态。
+  Fall:
+    kind: generic_sfx_effect
+    component: fall
+    label: 落下
+    confidence: medium
+    source: manual_sfx_alias
+    note: Fall 是公共 SFX 动作词，表示下落。
+  Homegaurd:
+    kind: generic_sfx_effect
+    component: homeguard
+    label: 家园卫士
+    confidence: medium
+    source: manual_sfx_alias
+    note: Homegaurd 是 Homeguard 的历史拼写错误，表示家园卫士移动状态。
+  Idles:
+    kind: generic_sfx_effect
+    component: idles
+    label: 待机
+    confidence: medium
+    source: manual_sfx_alias
+    note: Idles 是公共 SFX 动作词，表示待机动作。
+  Level:
+    kind: generic_sfx_effect
+    component: level
+    label: 等级
+    confidence: medium
+    source: manual_sfx_alias
+    note: Level 是公共 SFX 状态词，常用于等级或熟练度表现。
+  Overdrive:
+    kind: generic_sfx_effect
+    component: overdrive
+    label: 超载
+    confidence: medium
+    source: manual_sfx_alias
+    note: Overdrive 是公共 SFX 状态词，表示超载或加速状态。
+  Run:
+    kind: generic_sfx_effect
+    component: run
+    label: 奔跑
+    confidence: medium
+    source: manual_sfx_alias
+    note: Run 是公共 SFX 动作词，表示奔跑或移动循环。
+  Spawn:
+    kind: generic_sfx_effect
+    component: spawn
+    label: 出生/生成
+    confidence: medium
+    source: manual_sfx_alias
+    note: Spawn 是公共 SFX 效果词，表示出生、生成或入场。
+  SpawnIn:
+    kind: generic_sfx_effect
+    component: spawn_in
+    label: 入场生成
+    confidence: medium
+    source: manual_sfx_alias
+    note: SpawnIn 是公共 SFX 效果词，表示入场生成阶段。
+  Transform:
+    kind: generic_sfx_effect
+    component: transform
+    label: 变形/切换
+    confidence: medium
+    source: manual_sfx_alias
+    note: Transform 是公共 SFX 动作词，表示变形或形态切换。

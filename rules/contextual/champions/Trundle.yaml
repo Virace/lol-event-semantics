@@ -1,0 +1,11 @@
+scope: champion
+owner: Trundle
+aliases:
+  TrollSmash:
+    kind: champion_spell_component
+    spell: q
+    component: troll_smash
+    label: 巨魔重击
+    confidence: medium
+    source: manual_contextual_alias
+    note: TrollSmash 在 Trundle 事件中对应 Q 技能 Chomp 的旧/内部表现名。

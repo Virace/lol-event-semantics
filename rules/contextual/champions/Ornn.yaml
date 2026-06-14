@@ -1,0 +1,11 @@
+scope: champion
+owner: Ornn
+aliases:
+  VulnerableDebuff:
+    kind: champion_spell_component
+    spell: p
+    component: vulnerable_debuff
+    label: 易损减益
+    confidence: medium
+    source: manual_contextual_alias
+    note: VulnerableDebuff 在 Ornn 事件中对应 Brittle 的易损状态。

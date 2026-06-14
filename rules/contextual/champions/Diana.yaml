@@ -1,0 +1,35 @@
+scope: champion
+owner: Diana
+aliases:
+  Orbs:
+    kind: champion_spell_component
+    spell: w
+    component: orbiting_orbs
+    label: 环绕法球
+    confidence: medium
+    source: manual_contextual_alias
+    note: Orbs 在 Diana 事件中对应 W 技能 Pale Cascade 的环绕球体表现。
+  Shield:
+    kind: champion_spell_component
+    spell: w
+    component: pale_cascade_shield
+    label: 苍白之瀑护盾
+    confidence: medium
+    source: manual_contextual_alias
+    note: Shield 在 Diana 事件中对应 W 技能 Pale Cascade 的护盾状态。
+  Teleport:
+    kind: champion_spell_component
+    spell: e
+    component: dash_or_teleport
+    label: 冲刺位移
+    confidence: medium
+    source: manual_contextual_alias
+    note: Teleport 在 Diana 事件中对应 Lunar Rush 的位移表现；该词只在 Diana 上下文中绑定到技能。
+  VortexUlt:
+    kind: champion_spell_component
+    spell: r
+    component: vortex_ultimate
+    label: 旋涡大招
+    confidence: medium
+    source: manual_contextual_alias
+    note: VortexUlt 在 Diana 事件中带有 Ult 后缀，按 R 技能 Moonfall 的聚拢/落月表现处理。

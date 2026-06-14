@@ -1,0 +1,11 @@
+scope: champion
+owner: Bard
+aliases:
+  meep:
+    kind: champion_spell_component
+    spell: p
+    component: meep
+    label: 友谊礼物
+    confidence: medium
+    source: manual_contextual_alias
+    note: meep 在 Bard 事件中对应被动 Meeps 的小写内部命名。

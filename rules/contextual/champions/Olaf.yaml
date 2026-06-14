@@ -1,0 +1,19 @@
+scope: champion
+owner: Olaf
+aliases:
+  AxeThrowCast:
+    kind: champion_spell_component
+    spell: q
+    component: axe_throw
+    label: 飞斧投掷
+    confidence: medium
+    source: manual_contextual_alias
+    note: AxeThrowCast 在 Olaf 事件中对应 Q 技能 Undertow 的投掷释放。
+  FrenziedStrikes:
+    kind: champion_spell_component
+    spell: w
+    component: attack_speed_steroid
+    label: 狂怒打击
+    confidence: medium
+    source: manual_contextual_alias
+    note: FrenziedStrikes 在 Olaf 事件中对应 W 技能旧/内部攻击强化表现。

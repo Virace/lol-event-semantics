@@ -1,0 +1,91 @@
+scope: champion
+owner: Skarner
+aliases:
+  E:
+    kind: champion_spell_component
+    spell: e
+    component: e_state
+    label: E 技能状态
+    confidence: medium
+    source: manual_contextual_alias
+    note: E 在 SkarnerSkin03 事件中按英雄上下文解析为 E 技能状态音效。
+  Q:
+    kind: champion_spell_component
+    spell: q
+    component: q_cast
+    label: Q 技能
+    confidence: medium
+    source: manual_contextual_alias
+    note: Q 在 Skarner 事件中按英雄上下文解析为 Q 技能状态音效。
+  QRockThrow:
+    kind: champion_spell_component
+    spell: q
+    component: rock_throw
+    label: 巨石投掷
+    confidence: medium
+    source: manual_contextual_alias
+    note: QRockThrow 在 Skarner 事件中对应 Q 技能巨石投掷。
+  SkarnerBasicAttack:
+    kind: champion_spell_component
+    spell: p
+    component: basic_attack
+    label: 普攻
+    confidence: medium
+    source: manual_contextual_alias
+    note: SkarnerBasicAttack 在 Skarner 事件中对应基础攻击音效。
+  SkarnerBasicAttack2:
+    kind: champion_spell_component
+    spell: p
+    component: basic_attack_variant_2
+    label: 普攻变体 2
+    confidence: medium
+    source: manual_contextual_alias
+    note: SkarnerBasicAttack2 在 Skarner 事件中对应基础攻击第二套音效变体。
+  SkarnerCritAttack:
+    kind: champion_spell_component
+    spell: p
+    component: crit_attack
+    label: 暴击攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: SkarnerCritAttack 在 Skarner 事件中对应暴击基础攻击音效。
+  SkarnerPassiveAttack:
+    kind: champion_spell_component
+    spell: p
+    component: passive_attack
+    label: 被动攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: SkarnerPassiveAttack 在 Skarner 事件中对应被动强化攻击表现。
+  SkarnerQClawAttack:
+    kind: champion_spell_component
+    spell: q
+    component: claw_attack
+    label: 水晶蝎爪击
+    confidence: medium
+    source: manual_contextual_alias
+    note: SkarnerQClawAttack 在 Skarner 事件中对应 Q 技能近战爪击表现。
+  SkarnerQRockAttack:
+    kind: champion_spell_component
+    spell: q
+    component: rock_attack
+    label: 巨石攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: SkarnerQRockAttack 在 Skarner 事件中对应 Q 技能举石后的攻击表现。
+  SkarnerTurretAttack:
+    kind: champion_spell_component
+    spell: p
+    component: turret_attack
+    label: 攻击防御塔
+    confidence: medium
+    source: manual_contextual_alias
+    note: SkarnerTurretAttack 在 Skarner 事件中对应攻击防御塔的基础攻击变体。
+  TurretAttack:
+    kind: champion_spell_component
+    spell: p
+    component: turret_attack
+    label: 攻击防御塔
+    confidence: medium
+    source: manual_contextual_alias
+    note: TurretAttack 在 Skarner 事件中对应攻击防御塔的基础攻击变体。

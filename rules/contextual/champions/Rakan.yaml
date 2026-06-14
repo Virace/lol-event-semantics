@@ -1,0 +1,83 @@
+scope: champion
+owner: Rakan
+aliases:
+  DuoRecallA:
+    kind: champion_spell_component
+    spell: p
+    component: duo_recall_a
+    label: 双人回城A
+    confidence: medium
+    source: manual_contextual_alias
+    note: DuoRecallA 在 Rakan 事件中对应与 Xayah 的双人回城阶段。
+  DuoRecallB:
+    kind: champion_spell_component
+    spell: p
+    component: duo_recall_b
+    label: 双人回城B
+    confidence: medium
+    source: manual_contextual_alias
+    note: DuoRecallB 在 Rakan 事件中对应与 Xayah 的双人回城阶段。
+  DuoRecallC:
+    kind: champion_spell_component
+    spell: p
+    component: duo_recall_c
+    label: 双人回城C
+    confidence: medium
+    source: manual_contextual_alias
+    note: DuoRecallC 在 Rakan 事件中对应与 Xayah 的双人回城阶段。
+  DuoRecallLeadIn:
+    kind: champion_spell_component
+    spell: p
+    component: duo_recall_lead_in
+    label: 双人回城起始
+    confidence: medium
+    source: manual_contextual_alias
+    note: DuoRecallLeadIn 在 Rakan 事件中对应双人回城的起始阶段。
+  SGDuoRecall:
+    kind: champion_spell_component
+    spell: p
+    component: star_guardian_duo_recall
+    label: 星守双人回城
+    confidence: medium
+    source: manual_contextual_alias
+    note: SGDuoRecall 在 Rakan 事件中对应星之守护者皮肤的双人回城状态。
+  SGDuoRecallA:
+    kind: champion_spell_component
+    spell: p
+    component: star_guardian_duo_recall_a
+    label: 星守双人回城A
+    confidence: medium
+    source: manual_contextual_alias
+    note: SGDuoRecallA 在 Rakan 事件中对应星之守护者皮肤的双人回城阶段。
+  SGDuoRecallB:
+    kind: champion_spell_component
+    spell: p
+    component: star_guardian_duo_recall_b
+    label: 星守双人回城B
+    confidence: medium
+    source: manual_contextual_alias
+    note: SGDuoRecallB 在 Rakan 事件中对应星之守护者皮肤的双人回城阶段。
+  SGDuoRecallC:
+    kind: champion_spell_component
+    spell: p
+    component: star_guardian_duo_recall_c
+    label: 星守双人回城C
+    confidence: medium
+    source: manual_contextual_alias
+    note: SGDuoRecallC 在 Rakan 事件中对应星之守护者皮肤的双人回城阶段。
+  SGDuoRecallD:
+    kind: champion_spell_component
+    spell: p
+    component: star_guardian_duo_recall_d
+    label: 星守双人回城D
+    confidence: medium
+    source: manual_contextual_alias
+    note: SGDuoRecallD 在 Rakan 事件中对应星之守护者皮肤的双人回城阶段。
+  SGDuoRecallE:
+    kind: champion_spell_component
+    spell: p
+    component: star_guardian_duo_recall_e
+    label: 星守双人回城E
+    confidence: medium
+    source: manual_contextual_alias
+    note: SGDuoRecallE 在 Rakan 事件中对应星之守护者皮肤的双人回城阶段。

@@ -1,0 +1,27 @@
+scope: champion
+owner: Ekko
+aliases:
+  QReturn:
+    kind: champion_spell_component
+    spell: q
+    component: q_return
+    label: Q 回返
+    confidence: medium
+    source: manual_contextual_alias
+    note: QReturn 在 Ekko 事件中对应 Q 技能 Timewinder 回返飞行。
+  VOCaitlyn:
+    kind: champion_spell_component
+    spell: p
+    component: voice_caitlyn
+    label: 凯特琳语音条件
+    confidence: medium
+    source: manual_contextual_alias
+    note: VOCaitlyn 在 Ekko 事件中对应与 Caitlyn 相关的语音条件。
+  VOZilean:
+    kind: champion_spell_component
+    spell: p
+    component: voice_zilean
+    label: 基兰语音条件
+    confidence: medium
+    source: manual_contextual_alias
+    note: VOZilean 在 Ekko 事件中对应与 Zilean 相关的语音条件。

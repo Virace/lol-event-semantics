@@ -1,0 +1,27 @@
+scope: champion
+owner: Malphite
+aliases:
+  Cleave:
+    kind: champion_spell_component
+    spell: w
+    component: thunderclap_cleave
+    label: 雷霆拍击顺劈
+    confidence: medium
+    source: manual_contextual_alias
+    note: Cleave 在 Malphite 事件中对应 W 技能 Thunderclap 的顺劈强化攻击。
+  CleaveArc:
+    kind: champion_spell_component
+    spell: w
+    component: thunderclap_cleave_arc
+    label: 雷霆拍击顺劈弧光
+    confidence: medium
+    source: manual_contextual_alias
+    note: CleaveArc 在 Malphite 事件中对应 W 技能 Thunderclap 的顺劈命中特效。
+  ShieldEffect:
+    kind: champion_spell_component
+    spell: p
+    component: granite_shield
+    label: 花岗岩护盾
+    confidence: medium
+    source: manual_contextual_alias
+    note: ShieldEffect 在 Malphite 事件中对应被动 Granite Shield 的护盾特效。

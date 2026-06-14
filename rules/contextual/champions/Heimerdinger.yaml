@@ -1,0 +1,35 @@
+scope: champion
+owner: Heimerdinger
+aliases:
+  HeimerTurretShutdown:
+    kind: champion_spell_component
+    spell: q
+    component: turret_shutdown
+    label: 炮台关闭
+    confidence: medium
+    source: manual_contextual_alias
+    note: HeimerTurretShutdown 在 Heimerdinger 炮台事件中对应 Q 炮台关闭状态。
+  HeimerdingerTurretBigEnergyBlast:
+    kind: champion_spell_component
+    spell: q
+    component: big_turret_energy_blast
+    label: 大型炮台能量弹
+    confidence: medium
+    source: manual_contextual_alias
+    note: HeimerdingerTurretBigEnergyBlast 在 Heimerdinger 炮台事件中对应升级炮台能量弹。
+  HeimerdingerTurretEnergyBlast:
+    kind: champion_spell_component
+    spell: q
+    component: turret_energy_blast
+    label: 炮台能量弹
+    confidence: medium
+    source: manual_contextual_alias
+    note: HeimerdingerTurretEnergyBlast 在 Heimerdinger 炮台事件中对应 Q 炮台能量弹。
+  SuperTurret:
+    kind: champion_spell_component
+    spell: r
+    component: super_turret
+    label: 超级炮台
+    confidence: medium
+    source: manual_contextual_alias
+    note: SuperTurret 在 Heimerdinger 事件中对应 R 强化 Q 炮台。

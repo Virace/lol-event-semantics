@@ -1,0 +1,11 @@
+scope: champion
+owner: Annie
+aliases:
+  AnnieTibbersBasicAttack:
+    kind: champion_spell_component
+    spell: r
+    component: tibbers_basic_attack
+    label: 提伯斯普攻
+    confidence: medium
+    source: manual_contextual_alias
+    note: AnnieTibbersBasicAttack 在 Tibbers owner 事件中对应安妮 R 召唤物提伯斯的基础攻击。

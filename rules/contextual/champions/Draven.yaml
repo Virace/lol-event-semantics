@@ -1,0 +1,45 @@
+scope: champion
+owner: Draven
+aliases:
+  DoubleShot:
+    kind: champion_spell_component
+    spell: e
+    component: twin_axe_projectile
+    label: 双斧投射物
+    confidence: medium
+    source: manual_contextual_alias
+    note: DoubleShot 在 Draven 事件中对应 E 技能 Stand Aside 的双斧投射表现，不作为全局 DoubleShot 
+      词义。
+  DravenAttackP:
+    kind: champion_spell_component
+    spell: p
+    component: passive_attack
+    label: 被动攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: P 在 DravenAttackP 中按被动处理；后续 LQC/RC 等片段仍需保留上下文。
+  NewPassive:
+    kind: champion_spell_component
+    spell: p
+    component: new_passive
+    label: 新被动
+    confidence: medium
+    source: manual_contextual_alias
+    note: NewPassive 在 Draven 事件中对应被动 League of Draven 的旧/内部表现名。
+  SpinningAttack:
+    kind: champion_spell_component
+    spell: q
+    component: spinning_axe_attack
+    label: 旋转飞斧攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: SpinningAttack 在 Draven 事件中对应 Q 技能 Spinning Axe 的攻击变体；数字尾缀作为 
+      spell_rank 保留。
+  SpinningAttack2Crit:
+    kind: champion_spell_component
+    spell: q
+    component: spinning_axe_crit
+    label: 旋转飞斧暴击
+    confidence: medium
+    source: manual_contextual_alias
+    note: SpinningAttack2Crit 是 Draven Q 技能攻击变体的暴击事件，保留在 Draven 局部上下文内。

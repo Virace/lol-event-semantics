@@ -1,0 +1,27 @@
+scope: champion
+owner: Kayn
+aliases:
+  BlueMonster:
+    kind: champion_spell_component
+    spell: p
+    component: blue_form_monster
+    label: 蓝色形态怪物
+    confidence: medium
+    source: manual_contextual_alias
+    note: BlueMonster 在 KaynSkin20 事件中对应蓝色形态/皮肤主题怪物状态音效。
+  InfestKill:
+    kind: champion_spell_component
+    spell: r
+    component: ultimate_kill
+    label: 大招击杀
+    confidence: medium
+    source: manual_contextual_alias
+    note: InfestKill 在 Kayn 事件中对应 R 技能 Umbral Trespass 的侵入击杀结果；3D 只作为音频维度处理。
+  RedMonster:
+    kind: champion_spell_component
+    spell: p
+    component: red_form_monster
+    label: 红色形态怪物
+    confidence: medium
+    source: manual_contextual_alias
+    note: RedMonster 在 KaynSkin20 事件中对应红色形态/皮肤主题怪物状态音效。

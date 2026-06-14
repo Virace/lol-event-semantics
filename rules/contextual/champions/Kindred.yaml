@@ -1,0 +1,19 @@
+scope: champion
+owner: Kindred
+aliases:
+  FakeCastTimeSpell:
+    kind: champion_spell_component
+    spell: q
+    component: fake_cast_time_spell
+    label: 假施法时间技能
+    confidence: medium
+    source: manual_contextual_alias
+    note: FakeCastTimeSpell 在 Kindred 事件中对应假施法时间表现。
+  LegendPassive:
+    kind: champion_spell_component
+    spell: p
+    component: passive_mark
+    label: 被动印记
+    confidence: medium
+    source: manual_contextual_alias
+    note: LegendPassive 在 Kindred 事件中对应被动 Mark of the Kindred。

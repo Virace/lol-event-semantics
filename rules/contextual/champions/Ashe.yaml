@@ -1,0 +1,19 @@
+scope: champion
+owner: Ashe
+aliases:
+  CritChance:
+    kind: champion_spell_component
+    spell: p
+    component: crit_chance_ready
+    label: 暴击准备
+    confidence: medium
+    source: manual_contextual_alias
+    note: CritChance 在 Ashe 事件中对应被动 Frost Shot 的暴击/强化准备状态。
+  Helm:
+    kind: champion_spell_component
+    spell: p
+    component: helm
+    label: 头盔
+    confidence: medium
+    source: manual_contextual_alias
+    note: Helm 在 AsheSkin08 事件中对应皮肤头盔状态音效。

@@ -1,0 +1,19 @@
+scope: champion
+owner: Zyra
+aliases:
+  BrambleZoneSplash:
+    kind: champion_spell_component
+    spell: e
+    component: bramble_zone_splash
+    label: 荆棘区域溅射
+    confidence: medium
+    source: manual_contextual_alias
+    note: BrambleZoneSplash 在 Zyra 事件中对应荆棘/植物区域效果的溅射音效。
+  hellvine:
+    kind: champion_spell_component
+    spell: p
+    component: hellvine_basic_attack
+    label: 地狱藤蔓普攻
+    confidence: medium
+    source: manual_contextual_alias
+    note: hellvine 在 Zyra 事件中对应植物/藤蔓单位的普攻表现。

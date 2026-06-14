@@ -1,0 +1,44 @@
+scope: champion
+owner: Darius
+aliases:
+  AxeGrabCone:
+    kind: champion_spell_component
+    spell: e
+    component: axe_grab_cone
+    label: 斧钩锥形范围
+    confidence: medium
+    source: manual_contextual_alias
+    note: AxeGrabCone 在 Darius 事件中对应 E 技能 Apprehend 的锥形抓取范围。
+  Cleave:
+    kind: champion_spell_component
+    spell: q
+    component: cleave
+    label: 斩击
+    confidence: medium
+    source: manual_contextual_alias
+    note: DariusCleave 在旧内部命名中对应 Q 技能斩击表现，不作为全局 Cleave 词义。
+  Hemo:
+    kind: champion_spell_component
+    spell: p
+    component: hemorrhage_stack
+    label: 出血层数
+    confidence: medium
+    source: manual_contextual_alias
+    note: Hemo 在 Darius 事件中对应被动 Hemorrhage 的出血层数/最大层数状态。
+  NoxianTacticsONH:
+    kind: champion_spell_component
+    spell: w
+    component: noxian_tactics_onhit
+    label: 诺克萨斯战术命中强化
+    confidence: medium
+    source: manual_contextual_alias
+    note: NoxianTacticsONH 在 Darius 事件中表现为 on-hit 强化状态，按 W 技能 Crippling Strike 
+      的旧/内部名处理。
+  NoxianTacticsONHAttack:
+    kind: champion_spell_component
+    spell: w
+    component: noxian_tactics_attack
+    label: 诺克萨斯战术强化攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: NoxianTacticsONHAttack 在 Darius 事件中表现为 W 技能强化攻击，不作为全局 ONH 规则。

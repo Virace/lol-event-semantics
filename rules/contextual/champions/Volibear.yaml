@@ -1,0 +1,19 @@
+scope: champion
+owner: Volibear
+aliases:
+  Celebrate:
+    kind: champion_spell_component
+    spell: p
+    component: celebrate
+    label: 庆祝动作
+    confidence: medium
+    source: manual_contextual_alias
+    note: Celebrate 在 Volibear 事件中对应角色专属庆祝动作音效。
+  Roar:
+    kind: champion_spell_component
+    spell: p
+    component: roar
+    label: 咆哮
+    confidence: medium
+    source: manual_contextual_alias
+    note: Roar 在 Volibear 事件中对应角色专属咆哮动作音效。

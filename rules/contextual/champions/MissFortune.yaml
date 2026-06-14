@@ -1,0 +1,43 @@
+scope: champion
+owner: MissFortune
+aliases:
+  Bullets:
+    kind: champion_spell_component
+    spell: q
+    component: double_up_bullets
+    label: 子弹
+    confidence: medium
+    source: manual_contextual_alias
+    note: Bullets 在 MissFortune 事件中对应 Q 技能 Double Up 的子弹表现。
+  MissFortuneBasicAttack:
+    kind: champion_spell_component
+    spell: p
+    component: basic_attack
+    label: 普攻
+    confidence: medium
+    source: manual_contextual_alias
+    note: MissFortuneBasicAttack 在 Miss Fortune 事件中对应基础攻击音效。
+  MissFortuneCritAttack:
+    kind: champion_spell_component
+    spell: p
+    component: crit_attack
+    label: 暴击攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: MissFortuneCritAttack 在 Miss Fortune 事件中对应暴击基础攻击音效。
+  ScatterShot:
+    kind: champion_spell_component
+    spell: e
+    component: scatter_shot
+    label: 散射弹幕
+    confidence: medium
+    source: manual_contextual_alias
+    note: ScatterShot 在 Miss Fortune 事件中对应 E 技能 Make It Rain 的范围弹幕表现。
+  ViciousStrikes:
+    kind: champion_spell_component
+    spell: w
+    component: vicious_strikes
+    label: 攻击强化
+    confidence: medium
+    source: manual_contextual_alias
+    note: ViciousStrikes 在 Miss Fortune 事件中对应 W 技能 Strut 的旧/内部攻击强化表现。

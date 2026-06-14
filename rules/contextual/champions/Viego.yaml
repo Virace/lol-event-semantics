@@ -1,0 +1,27 @@
+scope: champion
+owner: Viego
+aliases:
+  Pentakill:
+    kind: champion_spell_component
+    spell: p
+    component: pentakill_theme
+    label: 五杀摇滚主题
+    confidence: medium
+    source: manual_contextual_alias
+    note: Pentakill 在 ViegoSkin43 事件中对应五杀摇滚皮肤主题命中特效。
+  SwordSwap:
+    kind: champion_spell_component
+    spell: p
+    component: sword_swap
+    label: 剑刃切换
+    confidence: medium
+    source: manual_contextual_alias
+    note: SwordSwap 在 Viego 事件中对应换魂/武器切换的内部命名。
+  SwordUnlock:
+    kind: champion_spell_component
+    spell: p
+    component: sword_unlock
+    label: 剑刃解锁
+    confidence: medium
+    source: manual_contextual_alias
+    note: SwordUnlock 在 Viego 事件中对应 Pentakill 皮肤武器/剑刃解锁状态。

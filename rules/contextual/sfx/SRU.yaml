@@ -1,0 +1,87 @@
+scope: sfx
+owner: SRU
+aliases:
+  Blue:
+    kind: map_unit
+    component: blue_sentinel
+    label: 蓝 buff 野怪
+    confidence: medium
+    source: manual_sfx_alias
+    note: Blue 在 SRU 事件中对应召唤师峡谷蓝 buff 野怪。
+  BlueBasicAttack:
+    kind: map_unit_action
+    component: blue_basic_attack
+    label: 蓝 buff 普攻
+    confidence: medium
+    source: manual_sfx_alias
+    note: BlueBasicAttack 在 SRU 事件中对应蓝 buff 野怪基础攻击。
+  ChaosMinionMelee:
+    kind: map_unit
+    component: chaos_melee_minion
+    label: 混沌方近战小兵
+    confidence: medium
+    source: manual_sfx_alias
+    note: ChaosMinionMelee 在 SRU 事件中对应混沌方近战小兵。
+  ChaosMinionRanged:
+    kind: map_unit
+    component: chaos_ranged_minion
+    label: 混沌方远程小兵
+    confidence: medium
+    source: manual_sfx_alias
+    note: ChaosMinionRanged 在 SRU 事件中对应混沌方远程小兵。
+  ChaosMinionSiege:
+    kind: map_unit
+    component: chaos_siege_minion
+    label: 混沌方炮车
+    confidence: medium
+    source: manual_sfx_alias
+    note: ChaosMinionSiege 在 SRU 事件中对应混沌方炮车。
+  ChaosMinionSuper:
+    kind: map_unit
+    component: chaos_super_minion
+    label: 混沌方超级兵
+    confidence: medium
+    source: manual_sfx_alias
+    note: ChaosMinionSuper 在 SRU 事件中对应混沌方超级兵。
+  OrderMinionMelee:
+    kind: map_unit
+    component: order_melee_minion
+    label: 秩序方近战小兵
+    confidence: medium
+    source: manual_sfx_alias
+    note: OrderMinionMelee 在 SRU 事件中对应秩序方近战小兵。
+  OrderMinionRanged:
+    kind: map_unit
+    component: order_ranged_minion
+    label: 秩序方远程小兵
+    confidence: medium
+    source: manual_sfx_alias
+    note: OrderMinionRanged 在 SRU 事件中对应秩序方远程小兵。
+  OrderMinionSiege:
+    kind: map_unit
+    component: order_siege_minion
+    label: 秩序方炮车
+    confidence: medium
+    source: manual_sfx_alias
+    note: OrderMinionSiege 在 SRU 事件中对应秩序方炮车。
+  OrderMinionSuper:
+    kind: map_unit
+    component: order_super_minion
+    label: 秩序方超级兵
+    confidence: medium
+    source: manual_sfx_alias
+    note: OrderMinionSuper 在 SRU 事件中对应秩序方超级兵。
+  Red:
+    kind: map_unit
+    component: red_brambeback
+    label: 红 buff 野怪
+    confidence: medium
+    source: manual_sfx_alias
+    note: Red 在 SRU 事件中对应召唤师峡谷红 buff 野怪。
+  RedBasicAttack:
+    kind: map_unit_action
+    component: red_basic_attack
+    label: 红 buff 普攻
+    confidence: medium
+    source: manual_sfx_alias
+    note: RedBasicAttack 在 SRU 事件中对应红 buff 野怪基础攻击。

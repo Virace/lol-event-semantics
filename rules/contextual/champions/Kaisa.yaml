@@ -1,0 +1,11 @@
+scope: champion
+owner: Kaisa
+aliases:
+  FoleyAttack:
+    kind: champion_spell_component
+    spell: p
+    component: foley_attack
+    label: 语音攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: FoleyAttack 在 Kaisa 事件中对应基础攻击的内部 Foley 音频表现名。

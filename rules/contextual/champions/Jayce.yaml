@@ -1,0 +1,36 @@
+scope: champion
+owner: Jayce
+aliases:
+  AcceleratorBeam:
+    kind: champion_spell_component
+    spell: e
+    component: accelerator_beam
+    label: 速度之门光束
+    confidence: medium
+    source: manual_contextual_alias
+    note: AcceleratorBeam 在 Jayce 事件中对应 E 技能 Acceleration Gate 的增益光束表现。
+  AcceleratorChampionBuff:
+    kind: champion_spell_component
+    spell: e
+    component: accelerator_champion_buff
+    label: 速度之门英雄增益
+    confidence: medium
+    source: manual_contextual_alias
+    note: AcceleratorChampionBuff 在 Jayce 事件中对应 E 技能 Acceleration Gate 
+      施加到英雄的增益状态。
+  StanceGtH:
+    kind: champion_spell_component
+    spell: r
+    component: stance_swap
+    label: 形态切换
+    confidence: medium
+    source: manual_contextual_alias
+    note: StanceGtH 在 Jayce 事件中表示炮形态到锤形态切换，对应 R 技能形态切换。
+  StanceHtG:
+    kind: champion_spell_component
+    spell: r
+    component: stance_swap
+    label: 形态切换
+    confidence: medium
+    source: manual_contextual_alias
+    note: StanceHtG 在 Jayce 事件中表示锤形态到炮形态切换，对应 R 技能形态切换。

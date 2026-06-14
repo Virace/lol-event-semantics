@@ -1,0 +1,11 @@
+scope: champion
+owner: Jinx
+aliases:
+  ItemHurricaneJinxAttack:
+    kind: champion_spell_component
+    spell: p
+    component: hurricane_attack
+    label: 飓风普攻
+    confidence: medium
+    source: manual_contextual_alias
+    note: ItemHurricaneJinxAttack 在 Jinx 事件中对应卢安娜飓风触发的普攻音效。

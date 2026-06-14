@@ -1,0 +1,59 @@
+scope: sfx
+owner: HA
+aliases:
+  ChaosMinionMeleeBasicAttack:
+    kind: map_unit_action
+    component: chaos_melee_minion_basic_attack
+    label: 混沌方近战小兵普攻
+    confidence: medium
+    source: manual_sfx_alias
+    note: ChaosMinionMeleeBasicAttack 在 HA 事件中对应混沌方近战小兵基础攻击。
+  ChaosMinionRangedBasicAttack:
+    kind: map_unit_action
+    component: chaos_ranged_minion_basic_attack
+    label: 混沌方远程小兵普攻
+    confidence: medium
+    source: manual_sfx_alias
+    note: ChaosMinionRangedBasicAttack 在 HA 事件中对应混沌方远程小兵基础攻击。
+  ChaosMinionSiegeBasicAttack:
+    kind: map_unit_action
+    component: chaos_siege_minion_basic_attack
+    label: 混沌方炮车普攻
+    confidence: medium
+    source: manual_sfx_alias
+    note: ChaosMinionSiegeBasicAttack 在 HA 事件中对应混沌方炮车基础攻击。
+  ChaosMinionSuperBasicAttack:
+    kind: map_unit_action
+    component: chaos_super_minion_basic_attack
+    label: 混沌方超级兵普攻
+    confidence: medium
+    source: manual_sfx_alias
+    note: ChaosMinionSuperBasicAttack 在 HA 事件中对应混沌方超级兵基础攻击。
+  OrderMinionMeleeBasicAttack:
+    kind: map_unit_action
+    component: order_melee_minion_basic_attack
+    label: 秩序方近战小兵普攻
+    confidence: medium
+    source: manual_sfx_alias
+    note: OrderMinionMeleeBasicAttack 在 HA 事件中对应秩序方近战小兵基础攻击。
+  OrderMinionRangedBasicAttack:
+    kind: map_unit_action
+    component: order_ranged_minion_basic_attack
+    label: 秩序方远程小兵普攻
+    confidence: medium
+    source: manual_sfx_alias
+    note: OrderMinionRangedBasicAttack 在 HA 事件中对应秩序方远程小兵基础攻击。
+  OrderMinionSiegeBasicAttack:
+    kind: map_unit_action
+    component: order_siege_minion_basic_attack
+    label: 秩序方炮车普攻
+    confidence: medium
+    source: manual_sfx_alias
+    note: OrderMinionSiegeBasicAttack 在 HA 事件中对应秩序方炮车基础攻击。
+  OrderMinionSuperBasicAttack:
+    kind: map_unit_action
+    component: order_super_minion_basic_attack
+    label: 秩序方超级兵普攻
+    confidence: medium
+    source: manual_sfx_alias
+    note: OrderMinionSuperBasicAttack 在 HA 事件中对应秩序方超级兵基础攻击。

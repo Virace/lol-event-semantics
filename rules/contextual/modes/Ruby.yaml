@@ -1,0 +1,12 @@
+scope: mode
+owner: Ruby
+aliases:
+  Boss:
+    kind: mode_boss
+    mode: ruby
+    mode_label: 末日人机
+    component: final_boss
+    label: 最终 Boss
+    confidence: medium
+    source: manual_contextual_alias
+    note: Ruby_Boss 只在末日人机/Ruby 模式中表示最终 Boss，不泛化到其它模式。

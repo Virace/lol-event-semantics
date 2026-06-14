@@ -1,0 +1,19 @@
+scope: champion
+owner: TwistedFate
+aliases:
+  Gate:
+    kind: champion_spell_component
+    spell: r
+    component: portal
+    label: 传送门
+    confidence: medium
+    source: manual_contextual_alias
+    note: Gate 在卡牌大师事件中指向 R 技能传送门组件，不作为全局 Gate 词义。
+  SealFateMissile:
+    kind: champion_spell_component
+    spell: q
+    component: seal_fate_missile
+    label: 命运封印飞弹
+    confidence: medium
+    source: manual_contextual_alias
+    note: SealFateMissile 在 TwistedFate 事件中对应 Q 技能 Wild Cards 的飞弹表现。
