@@ -1,0 +1,175 @@
+name: Update Raw Events
+
+on:
+  workflow_dispatch:
+    inputs:
+      game_version:
+        description: GAME/game-data main version, for example 16.12
+        required: true
+        type: string
+      game_data_base_url:
+        description: Online GAME data snapshot root that contains global/{locale}/v1
+        required: true
+        type: string
+      raw_input_artifact:
+        description: Artifact name containing extracted raw round txt files
+        required: false
+        default: raw-events-round
+        type: string
+      raw_source_mode:
+        description: raw round source, artifact or manifest
+        required: true
+        default: artifact
+        type: choice
+        options:
+          - artifact
+          - manifest
+      game_manifest_url:
+        description: GAME manifest URL for raw_source_mode=manifest
+        required: false
+        type: string
+      manifest_request_file:
+        description: JSON request file path for raw_source_mode=manifest
+        required: false
+        default: .github/raw-event-requests.example.json
+        type: string
+      commit_changes:
+        description: Commit updated raw/reference data back to this branch
+        required: true
+        default: false
+        type: boolean
+      allow_quality_regression:
+        description: Allow the quality ratchet to regress without failing the run
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Set up Python
+        run: uv python install
+
+      - name: Sync dependencies
+        run: uv sync --dev
+
+      - name: Run tests
+        run: uv run python -m pytest tests/ -q
+
+      - name: Install optional GAME manifest extractor
+        if: ${{ inputs.raw_source_mode == 'manifest' }}
+        run: uv pip install riotmanifest
+
+      - name: Download extracted raw round
+        if: ${{ inputs.raw_source_mode == 'artifact' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.raw_input_artifact }}
+          path: .temp/raw-events-round
+
+      - name: Extract raw round from GAME manifest
+        if: ${{ inputs.raw_source_mode == 'manifest' }}
+        run: |
+          uv run python scripts/extract_raw_events_from_game.py \
+            --mode manifest \
+            --game-manifest-url "${{ inputs.game_manifest_url }}" \
+            --request-file "${{ inputs.manifest_request_file }}" \
+            --cache-root .temp/game-manifest \
+            --output-root .temp/raw-events-round
+
+      - name: Update cumulative data
+        run: |
+          uv run python scripts/update_raw_events.py \
+            --mode online \
+            --reference-root reference \
+            --raw-root raw/events \
+            --state-file raw/update-state.json \
+            --raw-input-root .temp/raw-events-round \
+            --game-version "${{ inputs.game_version }}" \
+            --game-data-base-url "${{ inputs.game_data_base_url }}" \
+            --cache-root .temp/reference-sources \
+            --report-root .temp/update-report
+
+      - name: Smoke test updated decomposition
+        run: |
+          uv run python scripts/decompose_events.py \
+            --raw-root raw/events \
+            --reference-root reference \
+            --output-root .temp/event-decomposition \
+            --report-root .temp/decomposition-report \
+            --limit 500
+
+      - name: Full decomposition
+        run: |
+          uv run python scripts/decompose_events.py \
+            --raw-root raw/events \
+            --reference-root reference \
+            --output-root .temp/event-decomposition-full \
+            --report-root dist/reports/runs/latest
+
+      - name: Build normalized outputs
+        run: |
+          uv run python scripts/build_normalized_outputs.py \
+            --decomposition-root .temp/event-decomposition-full \
+            --output-root dist/normalized \
+            --reference-version cumulative
+
+      - name: Validate normalized outputs
+        run: |
+          uv run python scripts/validate_normalized_outputs.py \
+            --normalized-root dist/normalized \
+            --output-json dist/reports/runs/latest/normalized-validation.json
+
+      - name: Report quality metrics
+        if: always()
+        run: |
+          uv run python scripts/report_quality_metrics.py \
+            --normalized-root dist/normalized \
+            --validation-json dist/reports/runs/latest/normalized-validation.json \
+            --output-json dist/reports/runs/latest/quality-metrics.json
+
+      - name: Check quality ratchet
+        continue-on-error: ${{ inputs.allow_quality_regression }}
+        run: |
+          uv run python scripts/check_quality_ratchet.py \
+            --baseline data/quality-baseline.json \
+            --normalized-root dist/normalized \
+            --validation-json dist/reports/runs/latest/normalized-validation.json
+
+      - name: Upload normalized dataset
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: normalized-dataset
+          path: |
+            dist/normalized
+            dist/reports/runs/latest
+          if-no-files-found: ignore
+
+      - name: Upload update report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw-events-update-report
+          path: |
+            .temp/update-report
+            .temp/decomposition-report
+          if-no-files-found: ignore
+
+      - name: Commit updated data
+        if: ${{ inputs.commit_changes }}
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(data): update raw events and reference data"
+          file_pattern: raw/events raw/update-state.json reference
