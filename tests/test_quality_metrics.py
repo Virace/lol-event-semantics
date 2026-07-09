@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from lol_event_semantics.quality_metrics import collect_quality_metrics
+from lol_event_semantics.quality_metrics import collect_quality_metrics, compare_quality_metrics
 
 
 def build_record(
@@ -170,6 +170,275 @@ class QualityMetricsTests(unittest.TestCase):
         metrics = self.collect()
 
         json.dumps(metrics, ensure_ascii=False, sort_keys=True)
+
+
+def build_metrics(
+    *,
+    record_count: int = 100,
+    error_count: int = 0,
+    fallback_ratio: float = 0.2,
+    residual_ratio: float = 0.5,
+    issue_counts: dict[str, int] | None = None,
+) -> dict[str, object]:
+    """构造棘轮比较用的最小指标 dict。
+
+    Args:
+        record_count: 记录总数。
+        error_count: validation error 计数。
+        fallback_ratio: 纯兜底比例。
+        residual_ratio: 残留英文比例。
+        issue_counts: 按 code 分组的 issue 计数。
+
+    Returns:
+        与 collect_quality_metrics 输出同构的指标 dict。
+    """
+
+    counts = dict(issue_counts or {})
+    return {
+        "record_count": record_count,
+        "fallback_label": {"record_count": round(record_count * fallback_ratio), "ratio": fallback_ratio},
+        "residual_english": {"record_count": round(record_count * residual_ratio), "ratio": residual_ratio},
+        "validation": {
+            "error_count": error_count,
+            "warning_count": sum(counts.values()),
+            "issue_counts_by_code": counts,
+        },
+    }
+
+
+class CompareQualityMetricsTests(unittest.TestCase):
+    """验证棘轮比较的判定口径。"""
+
+    @staticmethod
+    def verdicts(result: dict[str, object]) -> dict[str, str]:
+        """把逐项 checks 折叠成 metric -> verdict 映射。"""
+
+        return {check["metric"]: check["verdict"] for check in result["checks"]}
+
+    def test_equal_metrics_pass(self) -> None:
+        """指标持平时整体通过，受门禁项全部 ok。"""
+
+        metrics = build_metrics(issue_counts={"suspicious_champion_alias": 3})
+
+        result = compare_quality_metrics(metrics, build_metrics(issue_counts={"suspicious_champion_alias": 3}))
+
+        self.assertTrue(result["passed"])
+        self.assertEqual(result["failed_metrics"], [])
+        verdicts = self.verdicts(result)
+        self.assertEqual(verdicts["validation.error_count"], "ok")
+        self.assertEqual(verdicts["fallback_label.ratio"], "ok")
+        self.assertEqual(verdicts["residual_english.ratio"], "ok")
+        self.assertEqual(verdicts["validation.issue_counts_by_code.suspicious_champion_alias"], "ok")
+        self.assertEqual(verdicts["record_count"], "info")
+
+    def test_worse_metrics_fail(self) -> None:
+        """error 上升、比例上升、受门禁 code 上升均判恶化。"""
+
+        baseline = build_metrics(issue_counts={"low_confidence_output": 5})
+
+        result = compare_quality_metrics(
+            baseline,
+            build_metrics(
+                error_count=1,
+                fallback_ratio=0.25,
+                residual_ratio=0.55,
+                issue_counts={"low_confidence_output": 6},
+            ),
+        )
+
+        self.assertFalse(result["passed"])
+        # failed_metrics 顺序跟随 checks 的固定声明顺序（error_count → 比例 →
+        # 受门禁 code），属输出契约，故用精确顺序断言。
+        self.assertEqual(
+            result["failed_metrics"],
+            [
+                "validation.error_count",
+                "fallback_label.ratio",
+                "residual_english.ratio",
+                "validation.issue_counts_by_code.low_confidence_output",
+            ],
+        )
+
+    def test_improved_metrics_and_record_growth_pass(self) -> None:
+        """比例下降、受门禁 code 下降通过；record_count 变化只报告。"""
+
+        baseline = build_metrics(record_count=100, issue_counts={"unknown_entity_output": 4})
+
+        result = compare_quality_metrics(
+            baseline,
+            build_metrics(
+                record_count=200,
+                fallback_ratio=0.1,
+                residual_ratio=0.4,
+                issue_counts={"unknown_entity_output": 2},
+            ),
+        )
+
+        self.assertTrue(result["passed"])
+        verdicts = self.verdicts(result)
+        self.assertEqual(verdicts["record_count"], "info")
+        record_check = next(check for check in result["checks"] if check["metric"] == "record_count")
+        self.assertEqual(record_check["baseline"], 100)
+        self.assertEqual(record_check["current"], 200)
+
+    def test_error_count_must_be_zero(self) -> None:
+        """即使低于基线，error_count 非 0 仍判恶化。"""
+
+        result = compare_quality_metrics(build_metrics(error_count=2), build_metrics(error_count=1))
+
+        self.assertFalse(result["passed"])
+        self.assertEqual(result["failed_metrics"], ["validation.error_count"])
+
+    def test_missing_gated_metric_fails(self) -> None:
+        """基线存在但当前缺失的受门禁指标判 missing 并整体失败。"""
+
+        current = build_metrics()
+        del current["residual_english"]
+
+        result = compare_quality_metrics(build_metrics(), current)
+
+        self.assertFalse(result["passed"])
+        self.assertIn("residual_english.ratio", result["failed_metrics"])
+        self.assertEqual(self.verdicts(result)["residual_english.ratio"], "missing")
+
+    def test_missing_issue_counts_map_fails(self) -> None:
+        """当前指标缺 issue_counts_by_code 时受门禁 code 全部判 missing。"""
+
+        current = build_metrics()
+        del current["validation"]["issue_counts_by_code"]
+
+        result = compare_quality_metrics(build_metrics(), current)
+
+        self.assertFalse(result["passed"])
+        self.assertEqual(
+            self.verdicts(result)["validation.issue_counts_by_code.suspicious_champion_alias"],
+            "missing",
+        )
+
+    def test_empty_baseline_fails_all_gated_metrics(self) -> None:
+        """空基线 vs 正常当前指标：受门禁项全部判 missing 并整体失败。"""
+
+        result = compare_quality_metrics({}, build_metrics())
+
+        self.assertFalse(result["passed"])
+        self.assertEqual(
+            result["failed_metrics"],
+            [
+                "validation.error_count",
+                "fallback_label.ratio",
+                "residual_english.ratio",
+                "validation.issue_counts_by_code.low_confidence_output",
+                "validation.issue_counts_by_code.suspicious_champion_alias",
+                "validation.issue_counts_by_code.unknown_entity_output",
+            ],
+        )
+        self.assertEqual(self.verdicts(result)["validation.error_count"], "missing")
+
+    def test_missing_baseline_gated_key_fails(self) -> None:
+        """基线侧缺单个受门禁键同样判 missing，畸形基线不得静默通过。"""
+
+        baseline = build_metrics()
+        del baseline["fallback_label"]
+
+        result = compare_quality_metrics(baseline, build_metrics())
+
+        self.assertFalse(result["passed"])
+        self.assertEqual(result["failed_metrics"], ["fallback_label.ratio"])
+        self.assertEqual(self.verdicts(result)["fallback_label.ratio"], "missing")
+
+    def test_absent_code_counts_as_zero(self) -> None:
+        """受门禁 code 在两侧 issue_counts_by_code 中缺失时按 0 比较。"""
+
+        result = compare_quality_metrics(build_metrics(issue_counts={}), build_metrics(issue_counts={}))
+
+        self.assertTrue(result["passed"])
+        check = next(
+            item
+            for item in result["checks"]
+            if item["metric"] == "validation.issue_counts_by_code.unknown_entity_output"
+        )
+        self.assertEqual(check["baseline"], 0)
+        self.assertEqual(check["current"], 0)
+        self.assertEqual(check["verdict"], "ok")
+
+
+class QualityMetricsEdgeTests(unittest.TestCase):
+    """验证指标采集的边界行为。"""
+
+    def setUp(self) -> None:
+        """准备空目录与最小 validation 报告。"""
+
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        self.root = Path(self._tmp.name)
+
+        self.validation_json = self.root / "normalized-validation.json"
+        self.write_validation({"issues": [], "summary": {"error_count": 0, "warning_count": 0}})
+
+    def write_validation(self, report: dict[str, object]) -> None:
+        """写出 validation 报告 JSON。"""
+
+        self.validation_json.write_text(json.dumps(report), encoding="utf-8")
+
+    def write_shard(self, normalized_root: Path, text: str) -> None:
+        """在 by-entity 下写出单个 JSONL 分片。"""
+
+        shard_dir = normalized_root / "by-entity" / "champions"
+        shard_dir.mkdir(parents=True)
+        (shard_dir / "Aatrox.jsonl").write_text(text, encoding="utf-8")
+
+    def test_missing_manifest_yields_none(self) -> None:
+        """无 manifest.json 时 manifest_record_count 为 None，实扫计数不受影响。"""
+
+        normalized_root = self.root / "normalized"
+        record = build_record("Play_sfx_Aatrox_Q", "Aatrox", "champion", "high", "Aatrox普攻")
+        self.write_shard(normalized_root, json.dumps(record, ensure_ascii=False) + "\n")
+
+        metrics = collect_quality_metrics(normalized_root, self.validation_json)
+
+        self.assertIsNone(metrics["manifest_record_count"])
+        self.assertEqual(metrics["record_count"], 1)
+
+    def test_empty_root_yields_zero_counts_and_ratios(self) -> None:
+        """空 normalized root 计数为 0，比例回落 0.0 而非除零。"""
+
+        normalized_root = self.root / "normalized"
+        normalized_root.mkdir()
+
+        metrics = collect_quality_metrics(normalized_root, self.validation_json)
+
+        self.assertEqual(metrics["record_count"], 0)
+        self.assertEqual(metrics["fallback_label"], {"record_count": 0, "ratio": 0.0})
+        self.assertEqual(metrics["residual_english"], {"record_count": 0, "ratio": 0.0})
+
+    def test_bad_json_line_raises(self) -> None:
+        """坏 JSON 行的解析异常向上传播，不被吞掉。"""
+
+        normalized_root = self.root / "normalized"
+        self.write_shard(normalized_root, "{not valid json}\n")
+
+        with self.assertRaises(ValueError):
+            collect_quality_metrics(normalized_root, self.validation_json)
+
+    def test_validation_summary_missing_error_count_raises(self) -> None:
+        """summary 缺 error_count 时立即抛 ValueError。"""
+
+        normalized_root = self.root / "normalized"
+        normalized_root.mkdir()
+        self.write_validation({"issues": [], "summary": {"warning_count": 0}})
+
+        with self.assertRaises(ValueError):
+            collect_quality_metrics(normalized_root, self.validation_json)
+
+    def test_validation_summary_non_int_warning_count_raises(self) -> None:
+        """summary 的 warning_count 非整数时立即抛 ValueError。"""
+
+        normalized_root = self.root / "normalized"
+        normalized_root.mkdir()
+        self.write_validation({"issues": [], "summary": {"error_count": 0, "warning_count": "2"}})
+
+        with self.assertRaises(ValueError):
+            collect_quality_metrics(normalized_root, self.validation_json)
 
 
 if __name__ == "__main__":

@@ -13,6 +13,13 @@ from .normalized_lookup import iter_normalized_rows
 # 纯兜底短文案模板：alias 后缀固定为这三种之一时视为无语义增量。
 FALLBACK_LABEL_SUFFIXES = ("事件", "音效事件", "语音事件")
 
+# 棘轮盯防的 validation issue code：这三类计数不得上升。
+RATCHET_WARNING_CODES = (
+    "low_confidence_output",
+    "suspicious_champion_alias",
+    "unknown_entity_output",
+)
+
 LATIN_LETTER_PATTERN = re.compile(r"[A-Za-z]")
 
 
@@ -103,7 +110,8 @@ def has_residual_english(zh_cn_short: str, alias: str) -> bool:
 
     棘轮口径（必须确定性，改动即改变基线含义）：
     1. 仅移除 `entity.alias` 的字面出现，大小写不敏感（`re.escape(alias)` +
-       `IGNORECASE`），替换为空串，不做分词、不做空白归一化；
+       `IGNORECASE | ASCII`，锁定 ASCII 大小写折叠，不随 Unicode 版本漂移），
+       替换为空串，不做分词、不做空白归一化；
     2. alias 为空串时不移除任何内容；
     3. 移除后若仍匹配 `[A-Za-z]`（任一 ASCII 拉丁字母）即计为残留英文。
 
@@ -117,7 +125,7 @@ def has_residual_english(zh_cn_short: str, alias: str) -> bool:
 
     stripped = zh_cn_short
     if alias:
-        stripped = re.sub(re.escape(alias), "", stripped, flags=re.IGNORECASE)
+        stripped = re.sub(re.escape(alias), "", stripped, flags=re.IGNORECASE | re.ASCII)
 
     return bool(LATIN_LETTER_PATTERN.search(stripped))
 
@@ -147,16 +155,28 @@ def read_manifest_record_count(normalized_root: Path) -> int | None:
 def read_validation_metrics(validation_json: Path) -> dict[str, Any]:
     """提取 validation 报告的 error/warning 与按 code 分组计数。
 
+    `issue_counts_by_code` 对全部严重级（error 与 warning）按 code 合并计数，
+    不按 severity 拆分。
+
     Args:
         validation_json: normalized 校验报告 JSON 路径。
 
     Returns:
         含 error_count、warning_count、issue_counts_by_code 的 dict。
+
+    Raises:
+        ValueError: summary 的 error_count 或 warning_count 缺失或非整数。
     """
 
     report = json.loads(validation_json.read_text(encoding="utf-8"))
     summary = report.get("summary") if isinstance(report.get("summary"), dict) else {}
     issues = report.get("issues") if isinstance(report.get("issues"), list) else []
+
+    # 失败前移：计数缺失或类型漂移直接抛错，避免 None 混入基线与棘轮比较。
+    for name in ("error_count", "warning_count"):
+        value = summary.get(name)
+        if isinstance(value, bool) or not isinstance(value, int):
+            raise ValueError(f"{validation_json} summary.{name} 缺失或非整数：{value!r}")
 
     counts_by_code: Counter[str] = Counter()
     for issue in issues:
@@ -170,6 +190,146 @@ def read_validation_metrics(validation_json: Path) -> dict[str, Any]:
         "warning_count": summary.get("warning_count"),
         "issue_counts_by_code": dict(sorted(counts_by_code.items())),
     }
+
+
+def compare_quality_metrics(baseline: dict[str, Any], current: dict[str, Any]) -> dict[str, Any]:
+    """按棘轮规则比较当前质量指标与基线。
+
+    棘轮规则：
+    1. `validation.error_count` 必须为 0 且不得高于基线；
+    2. `fallback_label.ratio` 与 `residual_english.ratio` 不得上升
+       （比较比例而非计数，record_count 允许增长）；
+    3. `RATCHET_WARNING_CODES` 各 code 的计数不得上升（code 缺失视为 0）；
+    4. `record_count` 仅报告（verdict=info），不参与判定；
+    5. 受门禁指标数值缺失或非数值（含基线有而当前无的口径漂移）判
+       missing，整体失败。
+
+    Args:
+        baseline: 基线指标 dict（collect_quality_metrics 输出结构）。
+        current: 当前指标 dict（同上）。
+
+    Returns:
+        `{"passed": bool, "failed_metrics": [...], "checks": [...]}`；
+        每项 check 含 metric/baseline/current/verdict（ok|worse|missing|info）。
+    """
+
+    checks = [
+        build_ratchet_check(
+            "validation.error_count",
+            metric_number(baseline, "validation", "error_count"),
+            metric_number(current, "validation", "error_count"),
+            require_zero=True,
+        ),
+        build_ratchet_check(
+            "fallback_label.ratio",
+            metric_number(baseline, "fallback_label", "ratio"),
+            metric_number(current, "fallback_label", "ratio"),
+        ),
+        build_ratchet_check(
+            "residual_english.ratio",
+            metric_number(baseline, "residual_english", "ratio"),
+            metric_number(current, "residual_english", "ratio"),
+        ),
+    ]
+    checks.extend(
+        build_ratchet_check(
+            f"validation.issue_counts_by_code.{code}",
+            warning_code_count(baseline, code),
+            warning_code_count(current, code),
+        )
+        for code in RATCHET_WARNING_CODES
+    )
+    # record_count 允许任意方向变化（新数据会增长），只报告不判失败。
+    checks.append(
+        {
+            "metric": "record_count",
+            "baseline": baseline.get("record_count"),
+            "current": current.get("record_count"),
+            "verdict": "info",
+        }
+    )
+
+    failed = [check["metric"] for check in checks if check["verdict"] in ("worse", "missing")]
+    return {"passed": not failed, "failed_metrics": failed, "checks": checks}
+
+
+def build_ratchet_check(
+    metric: str,
+    baseline_value: int | float | None,
+    current_value: int | float | None,
+    *,
+    require_zero: bool = False,
+) -> dict[str, Any]:
+    """构造单项棘轮比较结果。
+
+    Args:
+        metric: 指标名（点分路径）。
+        baseline_value: 基线数值；None 表示缺失或非数值。
+        current_value: 当前数值；None 表示缺失或非数值。
+        require_zero: 是否额外要求当前值必须为 0。
+
+    Returns:
+        含 metric/baseline/current/verdict 的 check 项。
+    """
+
+    if baseline_value is None or current_value is None:
+        verdict = "missing"
+    elif current_value > baseline_value or (require_zero and current_value > 0):
+        verdict = "worse"
+    else:
+        verdict = "ok"
+
+    return {"metric": metric, "baseline": baseline_value, "current": current_value, "verdict": verdict}
+
+
+def metric_number(metrics: dict[str, Any], *path: str) -> int | float | None:
+    """按点分路径读取指标数值。
+
+    Args:
+        metrics: 指标 dict。
+        path: 逐层 key。
+
+    Returns:
+        int/float 数值；路径缺失或值非数值（bool 视为非数值）返回 None。
+    """
+
+    value: Any = metrics
+    for key in path:
+        if not isinstance(value, dict):
+            return None
+        value = value.get(key)
+
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return None
+
+    return value
+
+
+def warning_code_count(metrics: dict[str, Any], code: str) -> int | None:
+    """读取指定 code 的 validation issue 计数。
+
+    Args:
+        metrics: 指标 dict。
+        code: validation issue code。
+
+    Returns:
+        计数；`issue_counts_by_code` 中缺该 code 视为 0；
+        `issue_counts_by_code` 本身缺失或计数非整数返回 None。
+    """
+
+    counts = metrics.get("validation", {}) if isinstance(metrics.get("validation"), dict) else {}
+    counts = counts.get("issue_counts_by_code")
+    if not isinstance(counts, dict):
+        return None
+
+    if code not in counts:
+        return 0
+
+    value = counts[code]
+    if isinstance(value, bool) or not isinstance(value, int):
+        return None
+
+    return value
 
 
 def safe_ratio(numerator: int, denominator: int) -> float:
