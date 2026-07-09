@@ -13,8 +13,11 @@ from .normalized_lookup import iter_normalized_rows
 # 纯兜底短文案模板：alias 后缀固定为这三种之一时视为无语义增量。
 FALLBACK_LABEL_SUFFIXES = ("事件", "音效事件", "语音事件")
 
-# 棘轮盯防的 validation issue code：这三类计数不得上升。
+# 棘轮盯防的 validation issue code：这几类计数不得上升。
+# display_drops_parsed_slot 首次入基线前按 0 处理，重建后 FAIL 属预期，
+# 由控制器人工判定后 update-baseline 收录。
 RATCHET_WARNING_CODES = (
+    "display_drops_parsed_slot",
     "low_confidence_output",
     "suspicious_champion_alias",
     "unknown_entity_output",

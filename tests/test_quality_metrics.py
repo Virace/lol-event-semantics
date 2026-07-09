@@ -327,6 +327,7 @@ class CompareQualityMetricsTests(unittest.TestCase):
                 "validation.error_count",
                 "fallback_label.ratio",
                 "residual_english.ratio",
+                "validation.issue_counts_by_code.display_drops_parsed_slot",
                 "validation.issue_counts_by_code.low_confidence_output",
                 "validation.issue_counts_by_code.suspicious_champion_alias",
                 "validation.issue_counts_by_code.unknown_entity_output",
@@ -345,6 +346,30 @@ class CompareQualityMetricsTests(unittest.TestCase):
         self.assertFalse(result["passed"])
         self.assertEqual(result["failed_metrics"], ["fallback_label.ratio"])
         self.assertEqual(self.verdicts(result)["fallback_label.ratio"], "missing")
+
+    def test_display_drop_code_is_ratcheted(self) -> None:
+        """display_drops_parsed_slot 进入棘轮：基线缺 key 按 0，当前上升即失败。"""
+
+        baseline = build_metrics(issue_counts={})
+
+        result = compare_quality_metrics(
+            baseline,
+            build_metrics(issue_counts={"display_drops_parsed_slot": 1}),
+        )
+
+        self.assertFalse(result["passed"])
+        self.assertIn(
+            "validation.issue_counts_by_code.display_drops_parsed_slot",
+            result["failed_metrics"],
+        )
+        check = next(
+            item
+            for item in result["checks"]
+            if item["metric"] == "validation.issue_counts_by_code.display_drops_parsed_slot"
+        )
+        self.assertEqual(check["baseline"], 0)
+        self.assertEqual(check["current"], 1)
+        self.assertEqual(check["verdict"], "worse")
 
     def test_absent_code_counts_as_zero(self) -> None:
         """受门禁 code 在两侧 issue_counts_by_code 中缺失时按 0 比较。"""
