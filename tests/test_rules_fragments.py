@@ -213,5 +213,59 @@ class RuleFragmentTests(unittest.TestCase):
         (overrides / "legacy_aliases.yaml").write_text("aliases: {}\n", encoding="utf-8")
 
 
+class SpellMatchConstraintRuleTests(unittest.TestCase):
+    """验证普攻改写技能白名单加载。"""
+
+    def test_attack_modifier_spells_load_and_query(self) -> None:
+        """白名单条目可按英雄和技能槽命中。"""
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            rules = root / "rules"
+            overrides = root / "overrides"
+            rules.mkdir()
+            overrides.mkdir()
+            RuleFragmentTests().write_minimal_rule_files(rules, overrides)
+            (rules / "spell_match_constraints.yaml").write_text(
+                "\n".join(
+                    [
+                        "attack_modifier_spells:",
+                        "  Aatrox:",
+                        "    p:",
+                        "      note: 被动周期性强化下次普攻。",
+                        "",
+                    ]
+                ),
+                encoding="utf-8",
+            )
+
+            book = RuleBook.load(rules, overrides)
+
+            entry = book.attack_modifier_spell_for("Aatrox", "p")
+            self.assertIsNotNone(entry)
+            self.assertEqual(entry.note, "被动周期性强化下次普攻。")
+            self.assertIsNone(book.attack_modifier_spell_for("Aatrox", "q"))
+            self.assertIsNone(book.attack_modifier_spell_for("MasterYi", "p"))
+            self.assertIsNone(book.attack_modifier_spell_for(None, "p"))
+
+    def test_invalid_attack_modifier_slot_raises(self) -> None:
+        """非法技能槽应 fail-fast。"""
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            rules = root / "rules"
+            overrides = root / "overrides"
+            rules.mkdir()
+            overrides.mkdir()
+            RuleFragmentTests().write_minimal_rule_files(rules, overrides)
+            (rules / "spell_match_constraints.yaml").write_text(
+                "attack_modifier_spells:\n  Aatrox:\n    x:\n      note: 非法槽位。\n",
+                encoding="utf-8",
+            )
+
+            with self.assertRaises(ValueError):
+                RuleBook.load(rules, overrides)
+
+
 if __name__ == "__main__":
     unittest.main()

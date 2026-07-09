@@ -18,7 +18,8 @@ from .decomposition_model import (
 )
 from .game_data import compact
 from .match_audit import MatchAuditEvent, record_match
-from .rules import ContextualAlias, RuleBook
+from .reference_collection import load_reference_collection
+from .rules import ContextualAlias, LowTrustEventRule, RuleBook
 
 
 SKIN_CONTEXT_PREFIXES = {
@@ -88,6 +89,8 @@ class ReferenceIndex:
     maps_by_id: dict[int, ReferenceEntity] = field(default_factory=dict)
     champions_by_alias: dict[str, ReferenceEntity] = field(default_factory=dict)
     champions_by_id: dict[int, ReferenceEntity] = field(default_factory=dict)
+    skins_by_alias: dict[str, ReferenceEntity] = field(default_factory=dict)
+    skins_by_champion_token: dict[tuple[str, str], ReferenceEntity] = field(default_factory=dict)
     champion_spells_by_alias: dict[str, list[ReferenceSpell]] = field(default_factory=dict)
     rules: RuleBook | None = None
 
@@ -127,6 +130,153 @@ class ReferenceIndex:
             index.load_dragontail(normalize_dragontail_root(Path(dragontail_root)))
 
         return index
+
+    @classmethod
+    def from_reference_collection(
+        cls,
+        root: Path | str,
+        rules_root: Path | str | None = None,
+        overrides_root: Path | str | None = None,
+    ) -> "ReferenceIndex":
+        """从仓库内部 reference 合集构建参考索引。"""
+
+        collection = load_reference_collection(root)
+        index = cls(rules=load_rulebook(rules_root, overrides_root))
+        index.add_builtin_entities()
+        index.add_external_entities()
+        index.load_reference_collection_maps(collection.maps)
+        index.load_reference_collection_skinlines(collection.skinlines)
+        index.load_reference_collection_champions(collection.champions)
+        index.load_reference_collection_skins(collection.skins)
+        return index
+
+    def load_reference_collection_maps(self, rows: dict[str, dict[str, Any]]) -> None:
+        """读取内部 reference maps 分组。"""
+
+        for row in rows.values():
+            entity_data = row.get("entity")
+
+            if not isinstance(entity_data, dict):
+                continue
+
+            id_value = parse_int(str(entity_data.get("id") or ""))
+
+            if id_value is None:
+                continue
+
+            label = first_reference_label(entity_data)
+            entity = ReferenceEntity(
+                key=f"map{id_value}",
+                kind="map",
+                label=label or f"Map {id_value}",
+                source="reference/maps",
+                id=id_value,
+                alias=string_or_none(entity_data.get("alias")),
+                metadata={"reference_alias": entity_data.get("alias")},
+            )
+            self.maps_by_id[id_value] = entity
+            self.entities[entity.key] = entity
+
+    def load_reference_collection_skinlines(self, rows: dict[str, dict[str, Any]]) -> None:
+        """读取内部 reference skinlines 分组。"""
+
+        for row in rows.values():
+            entity_data = row.get("entity")
+
+            if not isinstance(entity_data, dict):
+                continue
+
+            label = first_reference_label(entity_data)
+
+            if label is None:
+                continue
+
+            entity = ReferenceEntity(
+                key=compact(label),
+                kind="skinline",
+                label=label,
+                source="reference/skinlines",
+                id=parse_int(str(entity_data.get("id") or "")),
+                alias=string_or_none(entity_data.get("alias")),
+                metadata={"reference_alias": entity_data.get("alias")},
+            )
+
+            for alias in skinline_aliases(label):
+                self.entities.setdefault(alias, entity)
+
+    def load_reference_collection_champions(self, rows: dict[str, dict[str, Any]]) -> None:
+        """读取内部 reference champions 分组。"""
+
+        for row in rows.values():
+            entity_data = row.get("entity")
+
+            if not isinstance(entity_data, dict):
+                continue
+
+            alias = string_or_none(entity_data.get("alias"))
+
+            if alias is None:
+                continue
+
+            id_value = parse_int(str(entity_data.get("id") or ""))
+            label = first_reference_label(entity_data) or alias
+            entity = ReferenceEntity(
+                key=compact(alias),
+                kind="champion",
+                label=label,
+                source="reference/champions",
+                id=id_value,
+                alias=alias,
+            )
+            self.add_champion_entity(entity)
+            spells = reference_collection_spells(row, entity)
+
+            if spells:
+                self.champion_spells_by_alias[entity.key] = spells
+
+    def load_reference_collection_skins(self, rows: dict[str, dict[str, Any]]) -> None:
+        """读取内部 reference skins 分组。"""
+
+        for row in rows.values():
+            entity_data = row.get("entity")
+
+            if not isinstance(entity_data, dict):
+                continue
+
+            alias = string_or_none(entity_data.get("alias"))
+            champion_alias = string_or_none(entity_data.get("champion_alias"))
+            skin_token = string_or_none(entity_data.get("skin_token"))
+
+            if alias is None or champion_alias is None or skin_token is None:
+                continue
+
+            skin_number = parse_int(str(entity_data.get("skin_number") or ""))
+            entity = ReferenceEntity(
+                key=compact(alias),
+                kind="skin",
+                label=first_reference_label(entity_data) or alias,
+                source="reference/skins",
+                id=parse_int(str(entity_data.get("id") or "")),
+                alias=alias,
+                metadata={
+                    "champion_alias": champion_alias,
+                    "champion_id": parse_int(str(entity_data.get("champion_id") or "")),
+                    "skin_number": skin_number,
+                    "skin_token": skin_token,
+                    "reference_alias": alias,
+                    "skinlines": row.get("skinlines") if isinstance(row.get("skinlines"), list) else [],
+                },
+            )
+            aliases = [entity.key, alias, f"{champion_alias}{skin_token}"]
+
+            if skin_number is not None:
+                aliases.append(f"{champion_alias}Skin{skin_number}")
+
+            for item in row.get("aliases") or []:
+                if isinstance(item, str):
+                    aliases.append(item)
+
+            self.add_skin_entity(entity, aliases)
 
     def resolve_token(self, token: str, raw_event_name: str = "") -> ReferenceEntity | None:
         """根据完整事件上下文解析单个 token。"""
@@ -269,6 +419,25 @@ class ReferenceIndex:
 
         skin_number = int(match.group("number"))
         skin_token = f"Skin{skin_number:02d}"
+        registered = self.resolve_champion_skin(champion.alias or champion.label, skin_token)
+
+        if registered is not None:
+            if context_prefix is None:
+                return registered
+
+            metadata = dict(registered.metadata)
+            metadata["context_prefix"] = context_prefix
+            metadata["raw_token"] = raw_token
+            return ReferenceEntity(
+                key=compact(raw_token),
+                kind=registered.kind,
+                label=registered.label,
+                source=registered.source,
+                id=registered.id,
+                alias=raw_token,
+                metadata=metadata,
+            )
+
         metadata: dict[str, Any] = {
             "champion_alias": champion.alias,
             "champion_id": champion.id,
@@ -290,6 +459,11 @@ class ReferenceIndex:
             alias=raw_token,
             metadata=metadata,
         )
+
+    def resolve_champion_skin(self, champion_alias: str, skin_token: str) -> ReferenceEntity | None:
+        """按英雄 alias 和 SkinNN token 查找具体皮肤实体。"""
+
+        return self.skins_by_champion_token.get((compact(champion_alias), compact(skin_token)))
 
     def find_champion_alias(self, token: str, *, allow_short_prefix: bool = False) -> ReferenceEntity | None:
         """从 token 中按最长安全前缀匹配英雄 alias。"""
@@ -380,6 +554,13 @@ class ReferenceIndex:
     def add_skin_entity(self, entity: ReferenceEntity, aliases: list[str]) -> None:
         """注册皮肤实体的后置反查别名。"""
 
+        self.skins_by_alias.setdefault(entity.key, entity)
+
+        champion_alias = entity.metadata.get("champion_alias")
+        skin_token = entity.metadata.get("skin_token")
+        if isinstance(champion_alias, str) and isinstance(skin_token, str):
+            self.skins_by_champion_token.setdefault((compact(champion_alias), compact(skin_token)), entity)
+
         for alias in aliases:
             key = compact(alias)
 
@@ -387,6 +568,7 @@ class ReferenceIndex:
                 continue
 
             self.entities.setdefault(key, entity)
+            self.skins_by_alias.setdefault(key, entity)
 
     def load_maps(self, base: Path) -> None:
         """读取 maps.json。"""
@@ -626,6 +808,7 @@ def enrich_with_reference(
     add_inferred_champion_spell_candidate(record, reference)
     add_spell_combo_candidate(record, reference)
     add_composite_owner_candidate(record, reference)
+    apply_low_trust_event_rule(record, reference)
     return record
 
 
@@ -780,6 +963,18 @@ def apply_sfx_contextual_alias(record: EventDecompositionRecord, reference: Refe
     return True
 
 
+def backfill_skin_token_from_owner(record: EventDecompositionRecord, owner_alias: str) -> None:
+    """从复合 owner alias 中提取皮肤段回填 skin_token。
+
+    仅在 record 尚无 skin_token 时回填，避免覆盖 lexer 已解析的值。
+    """
+    if record.semantic_slots.get("skin_token"):
+        return
+    match = re.search(r"Skin[0-9]+", owner_alias)
+    if match is not None:
+        record.semantic_slots["skin_token"] = match.group(0)
+
+
 def apply_champion_contextual_alias(record: EventDecompositionRecord, reference: ReferenceIndex) -> bool:
     """应用英雄上下文别名。"""
 
@@ -808,6 +1003,7 @@ def apply_champion_contextual_alias(record: EventDecompositionRecord, reference:
                         "form": owner_form,
                         "source": "owner_suffix_heuristic",
                     }
+                    backfill_skin_token_from_owner(record, owner_alias)
 
                 append_candidate(record, contextual_alias_candidate(record, atom.raw, rule, subject))
                 audit_contextual_alias_hit(record, rule, atom.raw)
@@ -831,6 +1027,7 @@ def apply_champion_contextual_alias(record: EventDecompositionRecord, reference:
                     "form": owner_form,
                     "source": "owner_suffix_heuristic",
                 }
+                backfill_skin_token_from_owner(record, owner_alias)
 
             atom = LexicalAtom(
                 raw=token,
@@ -1018,6 +1215,7 @@ def add_mode_champion_actor_candidate(record: EventDecompositionRecord, referenc
         record.semantic_slots["unresolved_context"] = unresolved
 
     record.confidence = max_confidence(record.confidence, DecompositionConfidence.MEDIUM)
+    backfill_phase(record)
     clear_unknowns_by_keys(record, {actor.key, compact(actor_atom.raw), compact(spell_atom.raw), spell_key})
 
 
@@ -1253,6 +1451,28 @@ def add_composite_owner_candidate(record: EventDecompositionRecord, reference: R
     set_composite_owner_profile(record, entity)
 
 
+def apply_low_trust_event_rule(record: EventDecompositionRecord, reference: ReferenceIndex) -> None:
+    """把已审阅但仍低信任的整句事件名从低置信噪声中移出。"""
+
+    if record.confidence is not DecompositionConfidence.LOW:
+        return
+
+    if record.unknowns:
+        return
+
+    if reference.rules is None:
+        return
+
+    rule = reference.rules.low_trust_event_for(record.raw_event_name)
+
+    if rule is None:
+        return
+
+    record.semantic_slots["low_trust_rule"] = rule.to_metadata()
+    record.confidence = max_confidence(record.confidence, confidence_value(rule.confidence))
+    audit_low_trust_event_rule_hit(record, rule)
+
+
 def owner_champion_entity(
     record: EventDecompositionRecord,
     reference: ReferenceIndex,
@@ -1353,6 +1573,7 @@ def set_spell_combo_profile(
     record.semantic_slots["spell_sequence_modifiers"] = sequence_modifiers or []
     record.semantic_slots["requires_champion_mechanic_context"] = True
     record.confidence = max_confidence(record.confidence, DecompositionConfidence.MEDIUM)
+    backfill_phase(record)
     clear_unknowns_by_keys(record, {compact(raw)})
 
 
@@ -1394,6 +1615,7 @@ def set_inferred_spell_profile(record: EventDecompositionRecord, candidate: dict
         record.confidence,
         DecompositionConfidence.HIGH if score >= 90 else DecompositionConfidence.MEDIUM,
     )
+    backfill_phase(record)
     clear_spell_unknown(record, str(candidate["raw"]))
 
 
@@ -1425,12 +1647,18 @@ def set_champion_contextual_alias_profile(
         "confidence": rule.confidence,
         "note": rule.note,
     }
+    rank = first_number(atom)
+
+    if rank is not None and "spell_rank" not in record.semantic_slots:
+        record.semantic_slots["spell_rank"] = rank
+
     unresolved = unresolved_context_after(record, atom_index)
 
     if unresolved:
         record.semantic_slots["unresolved_context"] = unresolved
 
     record.confidence = max_confidence(record.confidence, confidence_value(rule.confidence))
+    backfill_phase(record)
     clear_contextual_unknowns(record, atom.raw, rule)
 
 
@@ -2054,6 +2282,148 @@ def load_spell_from_row(
     )
 
 
+def reference_collection_spells(row: dict[str, Any], entity: ReferenceEntity) -> list[ReferenceSpell]:
+    """从内部 reference 英雄分组构建技能参考词条。"""
+
+    spells: list[ReferenceSpell] = []
+    raw_spells = row.get("spells")
+
+    if not isinstance(raw_spells, list):
+        return spells
+
+    for raw_spell in raw_spells:
+        if not isinstance(raw_spell, dict):
+            continue
+
+        slot = str(raw_spell.get("slot") or "").lower()
+
+        if slot not in {"p", "q", "w", "e", "r"}:
+            continue
+
+        name = first_language_value(raw_spell.get("names")) or slot.upper()
+        terms: dict[str, str] = {}
+        add_spell_term(terms, name, "reference_spell_name", entity.alias)
+        add_spell_name_parts(terms, name, "reference_spell_name", entity.alias)
+        add_spell_key_terms(terms, slot, entity.alias)
+
+        for id_value in reference_values(raw_spell.get("ids")):
+            add_spell_term(terms, id_value, "reference_spell_id", entity.alias)
+            add_spell_term(terms, f"{entity.alias or ''}{id_value}", "reference_spell_id", entity.alias)
+
+        keywords = reference_description_keywords(raw_spell, name)
+        flags = reference_description_flags(raw_spell)
+
+        if terms:
+            spells.append(
+                ReferenceSpell(
+                    champion_key=entity.key,
+                    spell_key=slot,
+                    name=name,
+                    source="reference/champions",
+                    terms=terms,
+                    keywords=keywords,
+                    flags=flags,
+                )
+            )
+
+    return spells
+
+
+def first_reference_label(entity_data: dict[str, Any]) -> str | None:
+    """从 entity.names 选择英文优先的标签。"""
+
+    return first_language_value(entity_data.get("names"))
+
+
+def first_language_value(language_rows: Any) -> str | None:
+    """从语言映射中读取 en_US 优先的第一个 value。"""
+
+    if not isinstance(language_rows, dict):
+        return None
+
+    for language in ["en_US", "zh_CN", *sorted(language_rows)]:
+        rows = language_rows.get(language)
+
+        for value in reference_values(rows):
+            return value
+
+    return None
+
+
+def reference_values(rows: Any) -> list[str]:
+    """读取 reference value 数组。"""
+
+    if not isinstance(rows, list):
+        return []
+
+    values: list[str] = []
+    for row in rows:
+        if isinstance(row, dict) and isinstance(row.get("value"), str):
+            values.append(row["value"])
+
+    return values
+
+
+def reference_description_keywords(raw_spell: dict[str, Any], name: str) -> list[str]:
+    """从内部 reference 描述快照生成弱匹配关键词。"""
+
+    text_parts = [name]
+    descriptions = raw_spell.get("descriptions")
+
+    if isinstance(descriptions, dict):
+        for language_data in descriptions.values():
+            if not isinstance(language_data, dict):
+                continue
+
+            snapshots = language_data.get("snapshots")
+
+            if not isinstance(snapshots, list):
+                continue
+
+            for snapshot in snapshots:
+                if isinstance(snapshot, dict) and isinstance(snapshot.get("value"), str):
+                    text_parts.append(snapshot["value"])
+
+    words: set[str] = set()
+
+    for part in text_parts:
+        for word in split_identifier(strip_markup(part)):
+            if is_spell_keyword(word):
+                words.add(compact(word))
+
+    return sorted(words)
+
+
+def reference_description_flags(raw_spell: dict[str, Any]) -> list[str]:
+    """从内部 reference 描述快照生成机制标记。"""
+
+    text_parts: list[str] = []
+    descriptions = raw_spell.get("descriptions")
+
+    if isinstance(descriptions, dict):
+        for language_data in descriptions.values():
+            if not isinstance(language_data, dict):
+                continue
+
+            for snapshot in language_data.get("snapshots") or []:
+                if isinstance(snapshot, dict) and isinstance(snapshot.get("value"), str):
+                    text_parts.append(snapshot["value"])
+
+    text = " ".join(text_parts).lower()
+    flags: list[str] = []
+
+    if "recast" in text:
+        flags.append("recast")
+
+    return flags
+
+
+def string_or_none(value: Any) -> str | None:
+    """返回字符串或 None。"""
+
+    return value if isinstance(value, str) else None
+
+
 def add_spell_term(
     terms: dict[str, str],
     raw: str,
@@ -2283,6 +2653,10 @@ def infer_spell_candidate_for_subject(
 
         keyword_match = description_keyword_match(stripped_raw, spell)
 
+        # BasicAttack/CritAttack 类通用词极易把普攻音效误标成技能，仅白名单英雄槽位放行
+        if keyword_match is not None and not generic_attack_inference_allowed(keyword_match, subject, spell, reference.rules):
+            keyword_match = None
+
         if keyword_match is not None:
             score, components = score_spell_match(record, spell, keyword_match, owner_matches, subject_prefix)
 
@@ -2376,6 +2750,48 @@ def description_keyword_match(stripped_key: str, spell: ReferenceSpell) -> Spell
     )
 
 
+# 普攻类事件 token 拆出的通用词；描述关键词弱匹配只命中这些词时证据不足
+GENERIC_ATTACK_KEYWORDS = {"attack", "attacks", "basic", "crit", "crits"}
+
+
+def is_generic_attack_keyword_match(match: SpellTermMatch) -> bool:
+    """判断描述关键词命中是否全部由普攻类通用词构成。"""
+
+    return bool(match.keyword_hits) and all(hit in GENERIC_ATTACK_KEYWORDS for hit in match.keyword_hits)
+
+
+def generic_attack_inference_allowed(
+    match: SpellTermMatch,
+    subject: ReferenceEntity,
+    spell: ReferenceSpell,
+    rules: RuleBook | None,
+) -> bool:
+    """判断普攻类通用词弱命中能否保留为技能候选。"""
+
+    if not is_generic_attack_keyword_match(match):
+        return True
+
+    if rules is None:
+        return False
+
+    return rules.attack_modifier_spell_for(subject.alias or subject.key, spell.spell_key) is not None
+
+
+# 皮肤待机/命名状态事件家族；裸 Passive token 在这些事件里指动画状态而非 P 技能
+ANIMATION_STATE_FAMILIES = {"skin_named_state", "skin_idle_state"}
+
+
+def is_bare_passive_state_match(record: EventDecompositionRecord, match: SpellTermMatch) -> bool:
+    """判断动画状态事件里的裸 Passive exact 命中。"""
+
+    return (
+        match.source == "passive_key"
+        and match.term == "passive"
+        and not match.residual
+        and record.profile.primary_family in ANIMATION_STATE_FAMILIES
+    )
+
+
 def stage_from_term(term: str) -> int | None:
     """从 q1/qone 这类 term 中解析技能阶段。"""
 
@@ -2406,6 +2822,10 @@ def score_spell_match(
     subject_prefix: bool,
 ) -> tuple[int, list[str]]:
     """按上下文证据给技能候选打分。"""
+
+    # 动画状态事件里的裸 Passive 是待机/状态动画命名，不足以证明 P 技能，压到阈值下丢弃
+    if is_bare_passive_state_match(record, match):
+        return 0, ["bare_passive_state_token"]
 
     score = 0
     components: list[str] = []
@@ -2830,6 +3250,21 @@ def audit_residual_modifier_hit(record: EventDecompositionRecord, modifier: dict
     )
 
 
+def audit_low_trust_event_rule_hit(record: EventDecompositionRecord, rule: LowTrustEventRule) -> None:
+    """记录整句低信任规则命中。"""
+
+    record_match(
+        MatchAuditEvent(
+            matcher_kind="manual_low_trust_event_rule",
+            rule_id=f"low_trust_event:{rule.rule_id}",
+            source_path=rule.source_path,
+            raw_event_name=record.raw_event_name,
+            owner=record.owner.alias or record.owner.raw_owner_token,
+            token=record.raw_event_name,
+        )
+    )
+
+
 def entity_key_from_mapping(value: Any) -> str:
     """从候选中的实体字典取稳定 key。"""
 
@@ -3020,6 +3455,15 @@ def first_phase_value(record: EventDecompositionRecord) -> str | None:
     return None
 
 
+def backfill_phase(record: EventDecompositionRecord) -> None:
+    """把 lexer 已识别但 builder 重建 slots 时漏掉的 phase 回填。"""
+
+    phase = first_phase_value(record)
+
+    if phase is not None and "phase" not in record.semantic_slots:
+        record.semantic_slots["phase"] = phase
+
+
 def phase_alias_from_atom(atom: LexicalAtom) -> str | None:
     """把 OnCast 等完整 atom 映射为阶段值。"""
 
@@ -3033,6 +3477,10 @@ def phase_alias_from_atom(atom: LexicalAtom) -> str | None:
         "cast": "cast",
         "hit": "hit",
         "missilelaunch": "missile_launch",
+        "onmissilelaunch": "missile_launch",
+        "oml": "missile_launch",
+        "misslelaunch": "missile_launch",
+        "launch": "launch",
         "missilecast": "missile_cast",
         "oncast": "cast",
         "activate": "activate",

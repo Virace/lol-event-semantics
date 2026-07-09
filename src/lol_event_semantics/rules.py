@@ -129,6 +129,51 @@ class ExternalEntity:
 
 
 @dataclass(slots=True)
+class AttackModifierSpell:
+    """确认会改写普攻的英雄技能槽白名单条目。"""
+
+    champion: str
+    spell_key: str
+    note: str | None = None
+
+
+@dataclass(slots=True)
+class LowTrustEventRule:
+    """整条事件名级别的低信任解释规则。"""
+
+    rule_id: str
+    raw_event_name: str
+    category: str
+    label_zh: str
+    confidence: str = "medium"
+    trust: str = "low"
+    source: str = "manual_low_trust_event_rule"
+    source_path: str = "rules/low_trust_events.yaml"
+    category_zh: str | None = None
+    note: str | None = None
+    evidence: str | None = None
+    suggestion: str | None = None
+
+    def to_metadata(self) -> dict[str, str | None]:
+        """返回语义 slot 中保存的规则元数据。"""
+
+        return {
+            "rule_id": self.rule_id,
+            "raw_event_name": self.raw_event_name,
+            "category": self.category,
+            "category_zh": self.category_zh,
+            "label_zh": self.label_zh,
+            "confidence": self.confidence,
+            "trust": self.trust,
+            "source": self.source,
+            "source_path": self.source_path,
+            "note": self.note,
+            "evidence": self.evidence,
+            "suggestion": self.suggestion,
+        }
+
+
+@dataclass(slots=True)
 class RuleBook:
     """规则集合。"""
 
@@ -144,6 +189,8 @@ class RuleBook:
     contextual_aliases: dict[tuple[str, str, str], ContextualAlias] = field(default_factory=dict)
     residual_modifiers: dict[str, ResidualModifier] = field(default_factory=dict)
     external_entities: dict[str, ExternalEntity] = field(default_factory=dict)
+    low_trust_event_rules: dict[str, LowTrustEventRule] = field(default_factory=dict)
+    attack_modifier_spells: dict[tuple[str, str], AttackModifierSpell] = field(default_factory=dict)
 
     @classmethod
     def load(cls, rules_root: Path, overrides_root: Path) -> RuleBook:
@@ -157,6 +204,8 @@ class RuleBook:
         contextual_fragments = read_contextual_fragments(rules_root)
         residual_data = read_yaml(rules_root / "residual_modifiers.yaml")
         external_entity_data = read_yaml(rules_root / "external_entities.yaml")
+        low_trust_event_data = read_yaml(rules_root / "low_trust_events.yaml")
+        spell_constraint_data = read_yaml(rules_root / "spell_match_constraints.yaml")
         legacy_data = read_yaml(overrides_root / "legacy_aliases.yaml")
 
         return cls(
@@ -208,6 +257,11 @@ class RuleBook:
             contextual_aliases=build_contextual_aliases(contextual_data, contextual_fragments),
             residual_modifiers=build_residual_modifiers(residual_data),
             external_entities=build_external_entities(external_entity_data),
+            low_trust_event_rules=build_low_trust_event_rules(
+                low_trust_event_data,
+                rules_root / "low_trust_events.yaml",
+            ),
+            attack_modifier_spells=build_attack_modifier_spells(spell_constraint_data),
         )
 
     def normalize_token(self, token: str) -> str:
@@ -281,6 +335,19 @@ class RuleBook:
         """按 token 查找外部实体词条。"""
 
         return self.external_entities.get(rule_key(token))
+
+    def low_trust_event_for(self, raw_event_name: str) -> LowTrustEventRule | None:
+        """按完整事件名查找低信任解释规则。"""
+
+        return self.low_trust_event_rules.get(event_rule_key(raw_event_name))
+
+    def attack_modifier_spell_for(self, champion: str | None, spell_key: str) -> AttackModifierSpell | None:
+        """按英雄和技能槽查找普攻改写白名单条目。"""
+
+        if champion is None:
+            return None
+
+        return self.attack_modifier_spells.get((rule_key(champion), str(spell_key).lower()))
 
 
 def read_yaml(path: Path) -> dict[str, Any]:
@@ -535,7 +602,94 @@ def build_external_entities(data: dict[str, Any]) -> dict[str, ExternalEntity]:
     return result
 
 
+def build_low_trust_event_rules(data: dict[str, Any], path: Path) -> dict[str, LowTrustEventRule]:
+    """构造整句低信任事件规则索引。"""
+
+    result: dict[str, LowTrustEventRule] = {}
+    rows = data.get("events", [])
+    source_path = rule_source_path(path)
+
+    if not isinstance(rows, list):
+        return result
+
+    for index, value in enumerate(rows, start=1):
+        if not isinstance(value, dict):
+            continue
+
+        raw_event_name = str(value.get("raw_event_name") or "").strip()
+
+        if not raw_event_name:
+            continue
+
+        rule = LowTrustEventRule(
+            rule_id=str(value.get("rule_id") or value.get("id") or f"low_trust_event_{index:04d}"),
+            raw_event_name=raw_event_name,
+            category=str(value.get("category") or "reviewed_low_trust_event"),
+            category_zh=str(value["category_zh"]) if value.get("category_zh") is not None else None,
+            label_zh=str(value.get("label_zh") or value.get("translation_zh") or raw_event_name),
+            confidence=str(value.get("confidence") or "medium"),
+            trust=str(value.get("trust") or "low"),
+            source=str(value.get("source") or "manual_low_trust_event_rule"),
+            source_path=str(value.get("source_path") or source_path),
+            note=str(value["note"]) if value.get("note") is not None else None,
+            evidence=str(value["evidence"]) if value.get("evidence") is not None else None,
+            suggestion=str(value["suggestion"]) if value.get("suggestion") is not None else None,
+        )
+        key = event_rule_key(raw_event_name)
+
+        if key in result:
+            existing = result[key]
+            raise ValueError(f"重复低信任事件规则: raw={raw_event_name}, old={existing.rule_id}, new={rule.rule_id}")
+
+        result[key] = rule
+
+    return result
+
+
+def build_attack_modifier_spells(data: dict[str, Any]) -> dict[tuple[str, str], AttackModifierSpell]:
+    """构造普攻改写技能白名单索引。"""
+
+    result: dict[tuple[str, str], AttackModifierSpell] = {}
+    rows = data.get("attack_modifier_spells", {})
+
+    if not isinstance(rows, dict):
+        return result
+
+    for champion, slots in rows.items():
+        if not isinstance(slots, dict):
+            continue
+
+        for spell_key, value in slots.items():
+            slot = str(spell_key).lower()
+
+            # 白名单直接决定普攻事件能否展示为技能，槽位写错必须立即暴露
+            if slot not in {"p", "q", "w", "e", "r"}:
+                raise ValueError(f"非法普攻改写技能槽: champion={champion}, spell_key={spell_key}")
+
+            note = value.get("note") if isinstance(value, dict) else None
+            entry = AttackModifierSpell(
+                champion=str(champion),
+                spell_key=slot,
+                note=str(note) if note is not None else None,
+            )
+            key = (rule_key(champion), slot)
+
+            if key in result:
+                existing = result[key]
+                raise ValueError(f"重复普攻改写技能白名单: key={key}, old={existing.champion}, new={entry.champion}")
+
+            result[key] = entry
+
+    return result
+
+
 def rule_key(value: object) -> str:
     """生成规则查找用的保守 key。"""
 
     return "".join(char for char in str(value).lower() if char.isalnum())
+
+
+def event_rule_key(value: object) -> str:
+    """生成完整事件名规则查找 key。"""
+
+    return str(value).casefold()

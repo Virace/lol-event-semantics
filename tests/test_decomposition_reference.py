@@ -11,6 +11,14 @@ from lol_event_semantics.decomposition_lexer import decompose_event_name
 from lol_event_semantics.decomposition_model import SemanticProfile
 from lol_event_semantics.decomposition_profiles import normalize_semantics
 from lol_event_semantics.decomposition_reference import ReferenceIndex, enrich_with_reference
+from lol_event_semantics.reference_collection import (
+    ReferenceCollection,
+    ReferenceEntityInput,
+    ReferenceMapInput,
+    ReferenceSkinInput,
+    ReferenceSpellInput,
+    TextSnapshotInput,
+)
 
 
 class ReferenceIndexTests(unittest.TestCase):
@@ -106,6 +114,7 @@ class ReferenceIndexTests(unittest.TestCase):
                     {"id": 21, "alias": "MissFortune", "name": "Miss Fortune"},
                     {"id": 75, "alias": "Nasus", "name": "Nasus"},
                     {"id": 202, "alias": "Jhin", "name": "Jhin"},
+                    {"id": 27, "alias": "Singed", "name": "Singed"},
                     {"id": 11, "alias": "MasterYi", "name": "Master Yi"},
                     {"id": 117, "alias": "Lulu", "name": "Lulu"},
                     {"id": 30, "alias": "Karthus", "name": "Karthus"},
@@ -559,6 +568,73 @@ class ReferenceIndexTests(unittest.TestCase):
             ),
             encoding="utf-8",
         )
+        # 末句 "The extra basic attack can also crit." 为测试构造，真实描述无 crit 一词；
+        # 仅用于让 CritAttack 走 description_keywords 门路径（test_masteryi_crit_attack_*），勿与 reference 同步。
+        (champion_root / "11.json").write_text(
+            json.dumps(
+                {
+                    "id": 11,
+                    "alias": "MasterYi",
+                    "name": "Master Yi",
+                    "passive": {
+                        "name": "Double Strike",
+                        "abilityIconPath": "/lol-game-data/assets/ASSETS/Characters/MasterYi/HUD/Icons2D/MasterYi_Passive1.png",
+                        "description": "Every few basic attacks, Master Yi strikes twice. The extra basic attack can also crit.",
+                    },
+                    "spells": [],
+                }
+            ),
+            encoding="utf-8",
+        )
+        (champion_root / "266.json").write_text(
+            json.dumps(
+                {
+                    "id": 266,
+                    "alias": "Aatrox",
+                    "name": "Aatrox",
+                    "passive": {
+                        "name": "Deathbringer Stance",
+                        "abilityIconPath": "/lol-game-data/assets/ASSETS/Characters/Aatrox/HUD/Icons2D/Aatrox_Passive.png",
+                        # 逐字摘自 reference/champions/Aatrox.yaml 的 en_US 描述快照
+                        "description": "Periodically, Aatrox's next basic attack deals bonus <magicDamage>magic damage</magicDamage> and heals him, based on the target's max health.",
+                    },
+                    "spells": [],
+                }
+            ),
+            encoding="utf-8",
+        )
+        (champion_root / "202.json").write_text(
+            json.dumps(
+                {
+                    "id": 202,
+                    "alias": "Jhin",
+                    "name": "Jhin",
+                    "passive": {
+                        "name": "Whisper",
+                        "abilityIconPath": "/lol-game-data/assets/ASSETS/Characters/Jhin/HUD/Icons2D/Jhin_P.png",
+                        "description": "Jhin's hand cannon is a precise instrument. It fires at a fixed rate and holds 4 shots.",
+                    },
+                    "spells": [],
+                }
+            ),
+            encoding="utf-8",
+        )
+        (champion_root / "27.json").write_text(
+            json.dumps(
+                {
+                    "id": 27,
+                    "alias": "Singed",
+                    "name": "Singed",
+                    "passive": {
+                        "name": "Noxious Slipstream",
+                        "abilityIconPath": "/lol-game-data/assets/ASSETS/Characters/Singed/HUD/Icons2D/Singed_Passive.png",
+                        "description": "Singed drafts off nearby champions, gaining a burst of movement speed.",
+                    },
+                    "spells": [],
+                }
+            ),
+            encoding="utf-8",
+        )
         return root
 
     def test_resolves_map_id_token(self) -> None:
@@ -571,6 +647,106 @@ class ReferenceIndexTests(unittest.TestCase):
         self.assertEqual(entity.kind, "map")
         self.assertEqual(entity.id, 12)
         self.assertEqual(entity.label, "Howling Abyss")
+
+    def test_from_reference_collection_resolves_map_champion_and_spell(self) -> None:
+        """内部 reference 合集可构建解释索引。"""
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "reference"
+            collection = ReferenceCollection(root)
+            collection.merge_champion(
+                ReferenceEntityInput(
+                    id=38,
+                    alias="Kassadin",
+                    names={"en_US": "Kassadin"},
+                    source="game_data",
+                    version="16.5",
+                )
+            )
+            collection.merge_spell(
+                "Kassadin",
+                ReferenceSpellInput(
+                    slot="Q",
+                    id="NullLance",
+                    names={"en_US": "Null Sphere"},
+                    source="data_dragon",
+                    version="16.5.1",
+                ),
+            )
+            collection.merge_description(
+                "Kassadin",
+                "Q",
+                TextSnapshotInput(
+                    language="en_US",
+                    value="Kassadin fires an orb of void energy.",
+                    source="data_dragon",
+                    version="16.5.1",
+                ),
+            )
+            collection.merge_map(
+                ReferenceMapInput(
+                    id=12,
+                    alias="HowlingAbyss",
+                    names={"en_US": "Howling Abyss"},
+                    source="game_data",
+                    version="16.5",
+                )
+            )
+            collection.merge_skinline(
+                ReferenceEntityInput(
+                    id=19,
+                    alias="Skinline19",
+                    names={"en_US": "Star Guardian Season 1"},
+                    source="game_data",
+                    version="16.5",
+                )
+            )
+            collection.write()
+
+            index = ReferenceIndex.from_reference_collection(root)
+
+        self.assertEqual(index.maps_by_id[12].label, "Howling Abyss")
+        self.assertEqual(index.champions_by_id[38].alias, "Kassadin")
+        skinline = index.resolve_token("StarGuardian")
+        self.assertIsNotNone(skinline)
+        self.assertEqual(skinline.kind, "skinline")
+        self.assertEqual(skinline.source, "reference/skinlines")
+        spell = index.champion_spells_by_alias["kassadin"][0]
+        self.assertEqual(spell.spell_key, "q")
+        self.assertEqual(spell.terms["nulllance"], "reference_spell_id")
+
+    def test_reference_collection_resolves_champion_skin_token(self) -> None:
+        """reference collection 中的具体皮肤可按 GalioSkin13 解析。"""
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "reference"
+            collection = ReferenceCollection(root)
+            collection.merge_skin(
+                ReferenceSkinInput(
+                    champion_alias="Galio",
+                    champion_id=3,
+                    skin_number=13,
+                    skin_token="Skin13",
+                    id=3013,
+                    alias="GalioSkin13",
+                    names={"en_US": "Infernal Galio", "zh_CN": "地狱火 加里奥"},
+                    skinlines=[{"id": 8}],
+                    source="game_data",
+                    version="16.5",
+                )
+            )
+            collection.write()
+
+            index = ReferenceIndex.from_reference_collection(root)
+            entity = index.resolve_token("GalioSkin13")
+
+        self.assertIsNotNone(entity)
+        self.assertEqual(entity.kind, "skin")
+        self.assertEqual(entity.alias, "GalioSkin13")
+        self.assertEqual(entity.label, "Infernal Galio")
+        self.assertEqual(entity.source, "reference/skins")
+        self.assertEqual(entity.metadata["champion_alias"], "Galio")
+        self.assertEqual(entity.metadata["skin_token"], "Skin13")
 
     def test_resolves_missing_map_id_as_fallback_map(self) -> None:
         root = self.make_game_data_root()
@@ -969,6 +1145,33 @@ class ReferenceEnrichmentTests(unittest.TestCase):
         self.assertGreaterEqual(candidate["score"], 75)
         self.assertIn("description_keywords", candidate["components"])
 
+    def test_masteryi_basic_attack_is_not_inferred_as_passive_spell(self) -> None:
+        """普攻类通用词命中未入白名单英雄时不得产出技能候选。"""
+
+        record = self.enrich("Play_sfx_MasterYiSkin02_MasterYiBasicAttack_OnCast")
+
+        self.assertFalse(any(candidate["kind"] == "inferred_champion_spell" for candidate in record.candidates))
+        self.assertIsNone(record.semantic_slots.get("spell_key"))
+
+    def test_masteryi_crit_attack_is_not_inferred_as_passive_spell(self) -> None:
+        """CritAttack 类通用词命中同样受白名单门限约束。"""
+
+        record = self.enrich("Play_sfx_MasterYiSkin02_MasterYiCritAttack_OnHit")
+
+        self.assertFalse(any(candidate["kind"] == "inferred_champion_spell" for candidate in record.candidates))
+        self.assertIsNone(record.semantic_slots.get("spell_key"))
+
+    def test_aatrox_basic_attack_keeps_whitelisted_passive_inference(self) -> None:
+        """白名单内英雄的普攻类关键词命中保持原有技能推断。"""
+
+        record = self.enrich("Play_sfx_AatroxSkin01_AatroxBasicAttack_OnCast")
+
+        candidate = next(candidate for candidate in record.candidates if candidate["kind"] == "inferred_champion_spell")
+        self.assertEqual(candidate["subject"]["alias"], "Aatrox")
+        self.assertEqual(candidate["spell_key"], "p")
+        self.assertEqual(candidate["match_source"], "description_keywords")
+        self.assertEqual(record.semantic_slots["spell_key"], "p")
+
     def test_ashe_volley_rank_matches_spell_name_with_rank_residual(self) -> None:
         record = self.enrich("Play_vo_AsheSkin08_VolleyRank2_cast3D")
 
@@ -992,6 +1195,28 @@ class ReferenceEnrichmentTests(unittest.TestCase):
         self.assertEqual(candidate["residual"], "souls")
         self.assertGreaterEqual(candidate["score"], 75)
         self.assertIn("description_keywords", candidate["components"])
+
+    def test_jhin_idle_passive_state_is_not_inferred_as_passive_spell(self) -> None:
+        """皮肤命名状态事件里的裸 Passive 是动画状态命名，不得推断为 P 技能。"""
+
+        record = self.enrich("Play_sfx_JhinSkin05_Idle_Passive_buffactivate")
+
+        self.assertEqual(record.profile.primary_family, "skin_named_state")
+        self.assertEqual(record.semantic_slots["state_key"], "passive_idle")
+        self.assertIsNone(record.semantic_slots.get("spell_key"))
+        self.assertFalse(any(candidate["kind"] == "inferred_champion_spell" for candidate in record.candidates))
+
+    def test_singed_bare_passive_buff_keeps_passive_key_inference(self) -> None:
+        """非动画状态事件的裸 Passive 命中仍保持 passive_key 推断。"""
+
+        record = self.enrich("Play_sfx_SingedSkin09_Passive_buffactivate")
+
+        candidate = next(candidate for candidate in record.candidates if candidate["kind"] == "inferred_champion_spell")
+        self.assertEqual(candidate["subject"]["alias"], "Singed")
+        self.assertEqual(candidate["spell_key"], "p")
+        self.assertEqual(candidate["match_source"], "passive_key")
+        self.assertEqual(candidate["matched_term"], "passive")
+        self.assertEqual(record.semantic_slots["spell_key"], "p")
 
     def test_owner_context_scores_spell_name_without_champion_prefix(self) -> None:
         record = self.enrich("Play_sfx_AsheSkin06_EnchantedCrystalArrow_OnCast")
@@ -1236,6 +1461,8 @@ class ReferenceEnrichmentTests(unittest.TestCase):
                 record = self.enrich(raw)
 
                 self.assertEqual(record.profile.semantic_profile, SemanticProfile.SPELL_EVENT)
+                self.assertIsNotNone(record.semantic_slots.get("subject"))
+                self.assertIsNotNone(record.semantic_slots.get("contextual_alias"))
                 self.assertEqual(record.semantic_slots["subject"]["alias"], owner)
                 self.assertEqual(record.semantic_slots["spell_key"], spell_key)
                 self.assertEqual(record.semantic_slots["contextual_alias"]["component"], component)
@@ -1280,6 +1507,198 @@ class ReferenceEnrichmentTests(unittest.TestCase):
                 self.assertEqual(record.semantic_slots["sfx_alias"]["component"], component)
                 self.assertNotEqual(record.confidence.value, "low")
                 self.assertNotIn("subject", record.semantic_slots)
+
+    def test_low_trust_event_rule_promotes_reviewed_control_state(self) -> None:
+        """已人工审阅的内部控制事件仍可走低信任 exact fallback。"""
+
+        record = self.enrich("_RESET_ALL_FX")
+
+        self.assertEqual(record.confidence.value, "medium")
+        rule = record.semantic_slots["low_trust_rule"]
+        self.assertEqual(rule["rule_id"], "low_trust_event_0001")
+        self.assertEqual(rule["category"], "technical_audio_control")
+        self.assertEqual(rule["trust"], "low")
+
+    def test_skin_recall_state_uses_general_profile(self) -> None:
+        """皮肤回城资源状态应使用通用 profile，而不是 exact low_trust fallback。"""
+
+        cases = [
+            ("Play_fizz_skin_04_recall_leadin_01", "Fizz", "Skin04", "leadin", "01"),
+            ("Play_fizz_skin_04_recall_leadout_01", "Fizz", "Skin04", "leadout", "01"),
+            ("Play_lux_skin61_recall3d_buffactivate", "Lux", "Skin61", "buff_activate", None),
+            ("play_sfx_SettSkin01_Recall3D_buffactivate", "Sett", "Skin01", "buff_activate", None),
+            ("Play_sxf_YuumiSkin11_Recall3D_winddown", "Yuumi", "Skin11", "winddown", None),
+            ("Play_UrgotSkin09_Recall_efforts01", "Urgot", "Skin09", "efforts", "01"),
+        ]
+
+        for raw, subject, skin_token, phase, variant_index in cases:
+            with self.subTest(raw=raw):
+                record = self.enrich(raw)
+
+                self.assertEqual(record.confidence.value, "medium")
+                self.assertEqual(record.profile.primary_family, "skin_recall_state")
+                self.assertEqual(record.profile.semantic_profile, SemanticProfile.SELF_ACTION)
+                self.assertEqual(record.semantic_slots["trigger_family"], "skin_recall_state")
+                self.assertEqual(record.semantic_slots["subject_hint"], subject)
+                self.assertEqual(record.semantic_slots["skin_token"], skin_token)
+                self.assertEqual(record.semantic_slots["recall_action"], "recall")
+                self.assertEqual(record.semantic_slots["phase"], phase)
+                self.assertNotIn("low_trust_rule", record.semantic_slots)
+
+                if variant_index is not None:
+                    self.assertEqual(record.semantic_slots["recall_variant"]["index"], variant_index)
+
+    def test_skin_idle_weapon_and_spell_state_uses_general_profile(self) -> None:
+        """皮肤待机状态中的武器名和技能键应作为可信语义解析。"""
+
+        cases = [
+            ("Play_jinx_skin60_idle_Powpow_in", "q", "weapon", "powpow"),
+            ("Play_jinx_skin60_idle_R_in", "r", "spell", "r"),
+        ]
+
+        for raw, spell_key, component_kind, component in cases:
+            with self.subTest(raw=raw):
+                record = self.enrich(raw)
+
+                self.assertEqual(record.confidence.value, "medium")
+                self.assertEqual(record.profile.primary_family, "skin_idle_state")
+                self.assertEqual(record.profile.semantic_profile, SemanticProfile.SELF_ACTION)
+                self.assertEqual(record.semantic_slots["trigger_family"], "skin_idle_state")
+                self.assertEqual(record.semantic_slots["subject_hint"], "Jinx")
+                self.assertEqual(record.semantic_slots["skin_token"], "Skin60")
+                self.assertEqual(record.semantic_slots["spell_key"], spell_key)
+                self.assertEqual(record.semantic_slots["idle_component"]["kind"], component_kind)
+                self.assertEqual(record.semantic_slots["idle_component"]["key"], component)
+                self.assertEqual(record.semantic_slots["phase"], "in")
+                self.assertNotIn("low_trust_rule", record.semantic_slots)
+
+    def test_skin_action_state_strips_terminal_dimension_only(self) -> None:
+        """皮肤动作状态只把动作 token 词尾 2D/3D 作为发声方向剥离。"""
+
+        cases = [
+            ("play_sfx_SettSkin01_Death3D_cast", "death", "3D", "cast"),
+            ("play_sfx_SettSkin01_Taunt3D_buffactivate", "taunt", "3D", "buff_activate"),
+        ]
+
+        for raw, action, dimension, phase in cases:
+            with self.subTest(raw=raw):
+                record = self.enrich(raw)
+
+                self.assertEqual(record.confidence.value, "medium")
+                self.assertEqual(record.profile.primary_family, "skin_action_state")
+                self.assertEqual(record.profile.semantic_profile, SemanticProfile.SELF_ACTION)
+                self.assertEqual(record.semantic_slots["trigger_family"], "skin_action_state")
+                self.assertEqual(record.semantic_slots["subject_hint"], "Sett")
+                self.assertEqual(record.semantic_slots["skin_token"], "Skin01")
+                self.assertEqual(record.semantic_slots["action"], action)
+                self.assertEqual(record.semantic_slots["dimension_token"], dimension)
+                self.assertEqual(record.semantic_slots["phase"], phase)
+                self.assertNotIn("low_trust_rule", record.semantic_slots)
+
+        negative_cases = [
+            "play_sfx_SettSkin01_3DTaunt_buffactivate",
+            "play_sfx_SettSkin01_Taunt3DExtra_buffactivate",
+        ]
+
+        for raw in negative_cases:
+            with self.subTest(raw=raw):
+                record = self.enrich(raw)
+
+                self.assertNotEqual(record.profile.primary_family, "skin_action_state")
+
+    def test_structured_state_events_migrate_from_low_trust_exact_rules(self) -> None:
+        """可读的皮肤/英雄状态和玩法阶段应使用结构化 profile。"""
+
+        cases = [
+            (
+                "Play_ziggs_skin05_idle3_01",
+                "skin_idle_state",
+                {"subject_hint": "Ziggs", "skin_token": "Skin05", "idle_variant.index": 3, "segment_index": "01"},
+            ),
+            (
+                "Play_SonaSkin06_Genre2_Transition_leadin_01",
+                "skin_audio_transition",
+                {"subject_hint": "Sona", "skin_token": "Skin06", "genre_index": 2, "transition_phase": "leadin"},
+            ),
+            (
+                "Play_jinx_skin60_slotmachine_buffactivate_hextech",
+                "skin_named_state",
+                {"subject_hint": "Jinx", "skin_token": "Skin60", "state_key": "slotmachine", "state_variant": "hextech"},
+            ),
+            (
+                "UnMute_sfx_JhinSkin25_Idle_Passive_buffactivate",
+                "skin_named_state",
+                {"subject_hint": "Jhin", "skin_token": "Skin25", "state_key": "passive_idle", "phase": "buff_activate"},
+            ),
+            (
+                "Play_sfx_SionSkin05_SionSlowStun_buffactivate",
+                "champion_status_state",
+                {"subject_hint": "Sion", "skin_token": "Skin05", "status_key": "slow_stun", "phase": "buff_activate"},
+            ),
+            (
+                "Play_sfx_Corki_RapidReload_OnBuffDeactivate",
+                "champion_status_state",
+                {"subject_hint": "Corki", "status_key": "rapid_reload", "phase": "buff_deactivate"},
+            ),
+            (
+                "Play_vo_Kled_AnimalThreshold",
+                "champion_status_state",
+                {"subject_hint": "Kled", "status_key": "animal_threshold"},
+            ),
+            (
+                "map12_FirstBlood_phase_select",
+                "gameplay_phase_control",
+                {"map_id": 12, "gameplay_event": "first_blood", "phase_action": "select"},
+            ),
+        ]
+
+        for raw, profile, expected_slots in cases:
+            with self.subTest(raw=raw):
+                record = self.enrich(raw)
+
+                self.assertEqual(record.confidence.value, "medium")
+                self.assertEqual(record.profile.primary_family, profile)
+                self.assertNotIn("low_trust_rule", record.semantic_slots)
+
+                for path, expected in expected_slots.items():
+                    value = record.semantic_slots
+                    for part in path.split("."):
+                        value = value[part]
+
+                    self.assertEqual(value, expected)
+
+    def test_reviewed_spell_aliases_migrate_to_contextual_spell_rules(self) -> None:
+        """已确认技能别名应使用正常上下文规则，而不是低信任 exact fallback。"""
+
+        cases = [
+            ("Play_vo_AsheSkin08_VolleyRank2_cast3D", "Ashe", "w", "volley_rank", 2),
+            ("Play_vo_LeeSinSkin31_BlindMonkQOne_cast3D", "LeeSin", "q", "sonic_wave", None),
+            ("Play_sfx_AsheSkin08_VolleyRank2_OnCast", "Ashe", "w", "volley_rank", 2),
+            ("Play_sfx_AsheSkin08_FrostArrow_OnCast", "Ashe", "p", "frost_arrow", None),
+            ("Play_sfx_LuluSkin04_LuluFaerieShield_OnBuffActivate", "Lulu", "e", "faerie_shield", None),
+            ("Play_sfx_MasterYiSkin02_WujuStyleSuperCharged_OnBuffActivate", "MasterYi", "e", "super_charged", None),
+            ("Play_sfx_MalphiteSkin02_ObduracyAttack_OnCast", "Malphite", "w", "obduracy_attack", None),
+            ("Play_sfx_TwistedFateSkin10_CardmasterStackParticle_OnBuffActivate", "TwistedFate", "e", "cardmaster_stack_particle", None),
+            ("Play_sfx_ZedSkin03_ZedShadowDash_OnCast", "Zed", "w", "shadow_dash", None),
+            ("Play_sfx_JannaSkin07_SowTheWindCastMarker_cast", "Janna", "w", "sow_the_wind_cast_marker", None),
+        ]
+
+        for raw, owner, spell_key, component, spell_rank in cases:
+            with self.subTest(raw=raw):
+                record = self.enrich(raw)
+
+                self.assertEqual(record.profile.semantic_profile, SemanticProfile.SPELL_EVENT)
+                subject = record.semantic_slots.get("subject")
+                alias = record.semantic_slots.get("contextual_alias")
+                self.assertIsInstance(subject, dict)
+                self.assertIsInstance(alias, dict)
+                self.assertEqual(subject["alias"], owner)
+                self.assertEqual(record.semantic_slots["spell_key"], spell_key)
+                self.assertEqual(alias["component"], component)
+                self.assertNotIn("low_trust_rule", record.semantic_slots)
+
+                if spell_rank is not None:
+                    self.assertEqual(record.semantic_slots["spell_rank"], spell_rank)
 
     def test_map_unit_sfx_aliases_are_not_champion_spell_events(self) -> None:
         cases = [
@@ -1508,6 +1927,11 @@ class ReferenceEnrichmentTests(unittest.TestCase):
         self.assertEqual(record.semantic_slots["counterpart"]["theme"], "dark")
         self.assertEqual(record.semantic_slots["counterpart"]["entity"]["alias"], "Jhin")
         self.assertFalse(record.unknowns)
+
+    def test_composite_owner_backfills_skin_token(self) -> None:
+        """英雄+皮肤+形态复合 owner 应把皮肤段回填到 semantic_slots。"""
+        record = self.enrich("Play_sfx_AnnieSkin08Tibbers_AnnieTibbersBasicAttack_OnHit")
+        self.assertEqual(record.semantic_slots.get("skin_token"), "Skin08")
 
     def test_manual_untrusted_voice_targets_resolve_from_external_entities(self) -> None:
         index = ReferenceIndex.builtins()
