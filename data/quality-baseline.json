@@ -1,38 +1,38 @@
 {
   "confidence_counts": {
-    "high": 53768,
-    "low": 117,
-    "medium": 48342
+    "high": 53664,
+    "low": 118,
+    "medium": 48445
   },
   "fallback_label": {
-    "ratio": 0.177546,
-    "record_count": 18150
+    "ratio": 0.163558,
+    "record_count": 16720
   },
   "manifest_record_count": 102227,
   "record_count": 102227,
   "residual_english": {
-    "ratio": 0.496053,
-    "record_count": 50710
+    "ratio": 0.488071,
+    "record_count": 49894
   },
   "translation": {
     "by_entity_kind": {
-      "champion": 58084,
+      "champion": 57293,
       "map_or_system": 22
     },
-    "record_count": 58106
+    "record_count": 57315
   },
   "validation": {
     "error_count": 0,
     "issue_counts_by_code": {
       "duplicate_raw_event_name": 49,
-      "low_confidence_output": 117,
+      "low_confidence_output": 118,
       "low_trust_rule_in_output": 12,
       "suspicious_champion_alias": 92,
-      "translation_argument_low_confidence": 242,
-      "translation_label_fallback": 242,
-      "translation_missing_for_supported_frame": 7005,
+      "translation_argument_low_confidence": 240,
+      "translation_label_fallback": 240,
+      "translation_missing_for_supported_frame": 7038,
       "unknown_entity_output": 4
     },
-    "warning_count": 7763
+    "warning_count": 7793
   }
 }
