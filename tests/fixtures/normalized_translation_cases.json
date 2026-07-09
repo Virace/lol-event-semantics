@@ -1,0 +1,170 @@
+[
+  {
+    "raw_event_name": "Play_sfx_GalioSkin13WPassiveDefense_OnBuffDeactivate",
+    "expected_frame_type": "ability_state_change",
+    "required_roles": ["champion", "skin", "ability_slot", "ability_component", "phase"],
+    "zh_cn_default": "加里奥 地狱火 W技能被动防御状态结束",
+    "zh_cn_main": "W技能被动防御状态结束",
+    "notes": "皮肤名已由 reference 解析（Skin13=地狱火 加里奥，渲染去重英雄名）。"
+  },
+  {
+    "raw_event_name": "Play_lux_skin61_recall3d_buffactivate",
+    "expected_frame_type": "skin_recall_state",
+    "required_roles": ["champion", "skin", "action", "phase"],
+    "zh_cn_default": "拉克丝 花仙子 回城状态启动",
+    "zh_cn_main": "回城状态启动",
+    "notes": "3D 是音频维度，不进入普通文案。"
+  },
+  {
+    "raw_event_name": "Play_jinx_skin60_idle_Powpow_in",
+    "expected_frame_type": "skin_idle_state",
+    "required_roles": ["champion", "skin", "ability_component", "phase"],
+    "zh_cn_default": "金克丝 双城之战2 破碎者 Q武器待机进入",
+    "zh_cn_main": "Q武器待机进入",
+    "notes": "Powpow 是金克丝 Q 武器。"
+  },
+  {
+    "raw_event_name": "Play_jinx_skin60_idle_R_in",
+    "expected_frame_type": "skin_idle_state",
+    "required_roles": ["champion", "skin", "ability_slot", "phase"],
+    "zh_cn_default": "金克丝 双城之战2 破碎者 R技能待机进入",
+    "zh_cn_main": "R技能待机进入",
+    "notes": "R 是技能槽位，不是权威来源问题。"
+  },
+  {
+    "raw_event_name": "Play_ziggs_skin05_idle3_01",
+    "expected_frame_type": "skin_idle_state",
+    "required_roles": ["champion", "skin", "variant"],
+    "zh_cn_default": "吉格斯 奥术大师 待机3片段01",
+    "zh_cn_main": "待机3片段01",
+    "notes": "编号待机片段。"
+  },
+  {
+    "raw_event_name": "play_sfx_SettSkin01_Taunt3D_buffactivate",
+    "expected_frame_type": "skin_action_state",
+    "required_roles": ["champion", "skin", "action", "phase"],
+    "zh_cn_default": "瑟提 机神苍狼 嘲讽状态启动",
+    "zh_cn_main": "嘲讽状态启动",
+    "notes": "3D 仅为音频维度。"
+  },
+  {
+    "raw_event_name": "play_sfx_SettSkin01_Death3D_cast",
+    "expected_frame_type": "skin_action_state",
+    "required_roles": ["champion", "skin", "action", "phase"],
+    "zh_cn_default": "瑟提 机神苍狼 死亡释放",
+    "zh_cn_main": "死亡释放",
+    "notes": "cast 映射为释放。"
+  },
+  {
+    "raw_event_name": "Play_sfx_SionSkin05_SionSlowStun_buffactivate",
+    "expected_frame_type": "ability_state_change",
+    "required_roles": ["champion", "skin", "ability_component", "phase"],
+    "zh_cn_default": "赛恩 霸天零式 减速/眩晕状态启动",
+    "zh_cn_main": "减速/眩晕状态启动",
+    "notes": "状态组件来自规则。"
+  },
+  {
+    "raw_event_name": "map12_FirstBlood_phase_select",
+    "expected_frame_type": "gameplay_phase_control",
+    "required_roles": ["map", "gameplay_event", "phase"],
+    "zh_cn_default": "Map12 一血阶段选择",
+    "zh_cn_main": "一血阶段选择",
+    "notes": "玩法阶段。"
+  },
+  {
+    "raw_event_name": "Play_sfx_SonaSkin06_Genre3_Transition_LeadIn",
+    "expected_frame_type": "skin_audio_transition",
+    "required_roles": ["champion", "skin", "variant", "phase"],
+    "zh_cn_default": "Sona Skin06 音乐风格3过渡引入",
+    "zh_cn_main": "音乐风格3过渡引入",
+    "pending_frame": true,
+    "notes": "音频风格状态。"
+  },
+  {
+    "raw_event_name": "Play_sfx_JinxSkin04_SlotMachine_Anomaly_buffactivate",
+    "expected_frame_type": "skin_named_state",
+    "required_roles": ["champion", "skin", "action", "variant", "phase"],
+    "zh_cn_default": "Jinx Skin04 老虎机异常状态启动",
+    "zh_cn_main": "老虎机异常状态启动",
+    "pending_frame": true,
+    "notes": "命名状态。"
+  },
+  {
+    "raw_event_name": "Play_sfx_JhinSkin05_Idle_Passive_buffactivate",
+    "expected_frame_type": "skin_named_state",
+    "required_roles": ["champion", "skin", "action", "phase"],
+    "zh_cn_default": "Jhin Skin05 被动待机状态启动",
+    "zh_cn_main": "被动待机状态启动",
+    "pending_frame": true,
+    "notes": "被动待机。"
+  },
+  {
+    "raw_event_name": "Play_sfx_CorkiSkin18_RapidReload_buffactivate",
+    "expected_frame_type": "ability_state_change",
+    "required_roles": ["champion", "skin", "ability_component", "phase"],
+    "zh_cn_default": "库奇 柯基 快速装填状态启动",
+    "zh_cn_main": "快速装填状态启动",
+    "notes": "冠军状态组件。"
+  },
+  {
+    "raw_event_name": "Play_sfx_KledSkin01_AnimalThreshold_buffactivate",
+    "expected_frame_type": "ability_state_change",
+    "required_roles": ["champion", "skin", "ability_component", "phase"],
+    "zh_cn_default": "克烈 爵士 斯嘎尔阈值状态启动",
+    "zh_cn_main": "斯嘎尔阈值状态启动",
+    "notes": "特殊状态。"
+  },
+  {
+    "raw_event_name": "Play_vo_AsheSkin06_Attack2DGeneral",
+    "expected_frame_type": "voice_event",
+    "required_roles": ["champion", "skin", "action"],
+    "zh_cn_default": "艾希 觅心女王 攻击语音",
+    "zh_cn_main": "攻击语音",
+    "notes": "2D 不进普通文案。"
+  },
+  {
+    "raw_event_name": "Play_sfx_GangplankSkin01_GangplankRUpgradeOne_OnCast",
+    "expected_frame_type": "ability_component_event",
+    "required_roles": ["champion", "skin", "ability_slot", "ability_component", "phase"],
+    "zh_cn_default": "Gangplank Skin01 R技能升级一释放",
+    "zh_cn_main": "R技能升级一释放",
+    "pending_frame": true,
+    "notes": "R 升级组件。"
+  },
+  {
+    "raw_event_name": "Play_vo_UltBook_AhriR_OnCast",
+    "expected_frame_type": "borrowed_ability_event",
+    "required_roles": ["mode", "champion", "ability_slot", "phase"],
+    "zh_cn_default": "终极魔典 Ahri R技能释放",
+    "zh_cn_main": "Ahri R技能释放",
+    "pending_frame": true,
+    "notes": "借用大招，actor 与 borrowed champion 不能混淆。"
+  },
+  {
+    "raw_event_name": "Play_sfx_HUD_HoL_camera_pan",
+    "expected_frame_type": "system_or_audio_control",
+    "required_roles": ["system", "action"],
+    "zh_cn_default": "HUD 镜头平移",
+    "zh_cn_main": "镜头平移",
+    "pending_frame": true,
+    "notes": "系统事件，不误归 champion。"
+  },
+  {
+    "raw_event_name": "Play_sfx_ENV_ChaosTurret_break01",
+    "expected_frame_type": "system_or_audio_control",
+    "required_roles": ["system", "action", "variant"],
+    "zh_cn_default": "ENV 混沌防御塔破坏片段01",
+    "zh_cn_main": "混沌防御塔破坏片段01",
+    "pending_frame": true,
+    "notes": "环境事件。"
+  },
+  {
+    "raw_event_name": "Play_mus_Skin06_Aggressive_select",
+    "expected_frame_type": "system_or_audio_control",
+    "required_roles": ["system", "action"],
+    "zh_cn_default": "Skin06 激进音乐选择",
+    "zh_cn_main": "激进音乐选择",
+    "pending_frame": true,
+    "notes": "非 champion token，应保留系统/音乐语义。"
+  }
+]
