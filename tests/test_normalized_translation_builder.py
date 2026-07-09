@@ -10,7 +10,7 @@ from pathlib import Path
 from lol_event_semantics.decomposition_lexer import decompose_event_name
 from lol_event_semantics.decomposition_profiles import normalize_semantics
 from lol_event_semantics.decomposition_reference import ReferenceIndex, enrich_with_reference
-from lol_event_semantics.normalized_translation_builder import build_translation
+from lol_event_semantics.normalized_translation_builder import ChampionLabelEntry, build_translation
 from lol_event_semantics.normalized_translation_model import TranslationBuildContext
 
 FIXTURE = Path(__file__).parent / "fixtures" / "normalized_translation_cases.json"
@@ -390,6 +390,97 @@ class NormalizedTranslationBuilderPhaseAllowlistRenderTests(unittest.TestCase):
         for phase, key in expected.items():
             with self.subTest(phase=phase):
                 self.assertEqual(phase_key(phase, "ability_cast_event"), key)
+
+
+class ChampionArgumentNameSystemTests(unittest.TestCase):
+    """验证 champion argument 的 label 来源标记与名称多形式接线。"""
+
+    @staticmethod
+    def build_champion_argument(entry: dict[str, str]) -> dict[str, object]:
+        """用给定 label entry 构建 Annie Q 施放 frame 并返回 champion argument。
+
+        Args:
+            entry: Annie 的多语言 label 映射（可为 ChampionLabelEntry）。
+
+        Returns:
+            champion argument 字典。
+        """
+
+        record = enriched_record("Play_sfx_Annie_AnnieQ_cast")
+        translation = build_translation(record, TranslationBuildContext(champion_labels={"Annie": entry}))
+        assert translation is not None
+        argument = translation["arguments"]["champion"]
+        assert isinstance(argument, dict)
+        return argument
+
+    def test_reference_sourced_label_is_not_fallback(self) -> None:
+        """reference 直取的 zh label 不标 fallback，来源写入 provenance。"""
+
+        argument = self.build_champion_argument(
+            ChampionLabelEntry(
+                {"zh_CN": "安妮", "en_US": "Annie"},
+                label_sources={"zh_CN": "reference_names", "en_US": "reference_names"},
+            )
+        )
+
+        self.assertEqual(argument["labels"]["zh_CN"], "安妮")
+        self.assertFalse(argument["fallback"])
+        self.assertNotIn("fallback_reason", argument)
+        self.assertEqual(
+            argument["provenance"]["label_sources"],
+            {"zh_CN": "reference_names", "en_US": "reference_names"},
+        )
+
+    def test_vote_sourced_zh_label_marks_fallback(self) -> None:
+        """（用例 B）皮肤投票回填的 zh label 必须标 fallback 并写明原因。"""
+
+        argument = self.build_champion_argument(
+            ChampionLabelEntry(
+                {"zh_CN": "安妮", "en_US": "Annie"},
+                label_sources={"zh_CN": "skin_label_vote", "en_US": "reference_names"},
+            )
+        )
+
+        self.assertTrue(argument["fallback"])
+        self.assertEqual(argument["fallback_reason"], "champion_zh_label_from_skin_vote")
+        self.assertEqual(argument["provenance"]["label_sources"]["zh_CN"], "skin_label_vote")
+
+    def test_name_forms_carry_title_and_nicknames(self) -> None:
+        """（用例 C）name_forms 无损带上称号与俗称列表。"""
+
+        argument = self.build_champion_argument(
+            ChampionLabelEntry(
+                {"zh_CN": "亚托克斯", "en_US": "Aatrox"},
+                name_forms={"title": {"zh_CN": ["暗裔剑魔"]}, "nicknames": {"zh_CN": ["剑魔"]}},
+            )
+        )
+
+        self.assertEqual(
+            argument["name_forms"],
+            {"title": {"zh_CN": ["暗裔剑魔"]}, "nicknames": {"zh_CN": ["剑魔"]}},
+        )
+
+    def test_missing_nicknames_not_written_as_empty_field(self) -> None:
+        """（用例 D）无俗称时 name_forms 不含 nicknames；全空时不写 name_forms。"""
+
+        title_only = self.build_champion_argument(
+            ChampionLabelEntry({"zh_CN": "阿卡丽"}, name_forms={"title": {"zh_CN": ["离群之刺"]}})
+        )
+        self.assertEqual(title_only["name_forms"], {"title": {"zh_CN": ["离群之刺"]}})
+        self.assertNotIn("nicknames", title_only["name_forms"])
+
+        empty = self.build_champion_argument(ChampionLabelEntry({"zh_CN": "安妮"}))
+        self.assertNotIn("name_forms", empty)
+
+    def test_plain_dict_entry_keeps_legacy_behavior(self) -> None:
+        """普通 dict entry 保持既有行为：不标 fallback、不写 name_forms。"""
+
+        argument = self.build_champion_argument({"zh_CN": "安妮", "en_US": "Annie"})
+
+        self.assertEqual(argument["labels"]["zh_CN"], "安妮")
+        self.assertFalse(argument["fallback"])
+        self.assertNotIn("name_forms", argument)
+        self.assertNotIn("label_sources", argument["provenance"])
 
 
 if __name__ == "__main__":

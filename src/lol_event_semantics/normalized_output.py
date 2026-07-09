@@ -12,7 +12,12 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from .decomposition_model import EventDecompositionRecord
-from .normalized_translation_builder import build_translation
+from .normalized_translation_builder import (
+    LABEL_SOURCE_REFERENCE,
+    LABEL_SOURCE_SKIN_VOTE,
+    ChampionLabelEntry,
+    build_translation,
+)
 from .normalized_translation_model import TranslationBuildContext
 from .normalized_translation_renderer import build_compat_display
 from .reference_collection import load_reference_collection, read_yaml
@@ -784,11 +789,19 @@ def build_translation_context(reference_root: Path = DEFAULT_REFERENCE_ROOT) -> 
         return TranslationBuildContext()
 
     collection = load_reference_collection(reference_root)
-    champion_labels = {
-        str(row.get("entity", {}).get("alias")): reference_labels(row.get("entity", {}))
-        for row in collection.champions.values()
-        if isinstance(row.get("entity"), dict) and row.get("entity", {}).get("alias")
-    }
+    champion_labels: dict[str, ChampionLabelEntry] = {}
+    for row in collection.champions.values():
+        entity = row.get("entity")
+        if not isinstance(entity, dict) or not entity.get("alias"):
+            continue
+
+        labels = reference_labels(entity)
+        # 主 label 直取 reference names（zh=俗名，en=官方名），并留来源与名称多形式。
+        champion_labels[str(entity["alias"])] = ChampionLabelEntry(
+            labels,
+            label_sources={language: LABEL_SOURCE_REFERENCE for language in labels},
+            name_forms=reference_name_forms(entity),
+        )
     skin_labels: dict[tuple[str, str], dict[str, str]] = {}
     for row in collection.skins.values():
         entity = row.get("entity")
@@ -807,13 +820,13 @@ def build_translation_context(reference_root: Path = DEFAULT_REFERENCE_ROOT) -> 
 
 
 def infer_champion_labels_from_skin_labels(
-    champion_labels: dict[str, dict[str, str]],
+    champion_labels: dict[str, ChampionLabelEntry],
     skin_labels: dict[tuple[str, str], dict[str, str]],
 ) -> None:
-    """从中文皮肤全名中反推英雄中文名。
+    """从中文皮肤全名投票回填缺失的英雄中文名。
 
-    Data Dragon zh_CN champion `name` 是称号，`title` 才是英雄名；当前
-    reference 尚未保存 title，因此先从“皮肤名 英雄名”格式回填英雄名。
+    reference `names.zh_CN` 已是权威俗名来源，本函数只在 reference 缺 zh 名
+    时才用“皮肤名 英雄名”众数投票补位，并在 entry 上标记低可信来源。
 
     Args:
         champion_labels: 待更新的英雄 label 映射。
@@ -833,8 +846,13 @@ def infer_champion_labels_from_skin_labels(
         if not counts:
             continue
 
-        label = max(sorted(counts), key=lambda value: counts[value])
-        champion_labels.setdefault(champion_alias, {})["zh_CN"] = label
+        entry = champion_labels.setdefault(champion_alias, ChampionLabelEntry())
+        if entry.get("zh_CN"):
+            continue
+
+        entry["zh_CN"] = max(sorted(counts), key=lambda value: counts[value])
+        if isinstance(entry, ChampionLabelEntry):
+            entry.label_sources["zh_CN"] = LABEL_SOURCE_SKIN_VOTE
 
 
 def chinese_name_suffix(value: str | None) -> str | None:
@@ -887,6 +905,45 @@ def reference_labels(entity: dict[str, Any]) -> dict[str, str]:
                 break
 
     return labels
+
+
+# 名称多形式列全备齐（北极星）：称号与俗称随 champion argument 无损带出。
+NAME_FORM_FIELDS = ("title", "nicknames")
+
+
+def reference_name_forms(entity: dict[str, Any]) -> dict[str, dict[str, list[str]]]:
+    """从 reference entity 读取称号与俗称等名称多形式。
+
+    Args:
+        entity: reference entity 字典。
+
+    Returns:
+        名称形式到语言到值列表的映射；无数据的形式与语言不出现。
+    """
+
+    forms: dict[str, dict[str, list[str]]] = {}
+    for form in NAME_FORM_FIELDS:
+        rows_by_language = entity.get(form)
+        if not isinstance(rows_by_language, dict):
+            continue
+
+        languages: dict[str, list[str]] = {}
+        for language, rows in rows_by_language.items():
+            if not isinstance(language, str) or not isinstance(rows, list):
+                continue
+
+            values = [
+                row["value"]
+                for row in rows
+                if isinstance(row, dict) and isinstance(row.get("value"), str) and row["value"]
+            ]
+            if values:
+                languages[language] = values
+
+        if languages:
+            forms[form] = languages
+
+    return forms
 
 
 @lru_cache(maxsize=4)

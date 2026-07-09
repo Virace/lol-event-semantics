@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Mapping
 from typing import Any
 
 from .decomposition_model import EventDecompositionRecord
@@ -13,6 +14,52 @@ from .normalized_translation_model import (
     TranslationBuildContext,
     argument_to_dict,
 )
+
+# 英雄 label 来源标记：reference names 为权威来源，皮肤全名投票是缺名时的低可信回填。
+LABEL_SOURCE_REFERENCE = "reference_names"
+LABEL_SOURCE_SKIN_VOTE = "skin_label_vote"
+CHAMPION_ZH_VOTE_FALLBACK_REASON = "champion_zh_label_from_skin_vote"
+
+
+class ChampionLabelEntry(dict):
+    """带 label 来源与名称多形式的英雄多语言 label 映射。
+
+    dict 本体仍是 locale 到主 label 的映射，兼容
+    ``TranslationBuildContext.champion_labels`` 的既有类型；附加属性只做
+    additive 数据（信息无损列全），不改变主 label 语义。
+
+    注意：经 ``dict()`` / ``{**entry}`` 复制只保留 label 映射，会丢弃
+    ``label_sources`` / ``name_forms`` 附加属性；需保留时用 ``copy.copy``
+    或直接传对象本身。
+
+    Attributes:
+        label_sources: locale 到 label 来源（reference_names / skin_label_vote）的映射。
+        name_forms: 名称形式（title/nicknames）到 locale 到值列表的映射。
+    """
+
+    __slots__ = ("label_sources", "name_forms")
+
+    def __init__(
+        self,
+        labels: Mapping[str, str] | None = None,
+        *,
+        label_sources: Mapping[str, str] | None = None,
+        name_forms: Mapping[str, Mapping[str, list[str]]] | None = None,
+    ) -> None:
+        """初始化 label 映射与附加名称数据。
+
+        Args:
+            labels: locale 到主 label 的映射。
+            label_sources: locale 到 label 来源的映射。
+            name_forms: 名称形式到 locale 到值列表的映射。
+        """
+
+        super().__init__(labels or {})
+        self.label_sources = dict(label_sources or {})
+        self.name_forms = {
+            form: {locale: list(values) for locale, values in locales.items()}
+            for form, locales in (name_forms or {}).items()
+        }
 
 STATE_ACTIVATE_PHASES = {"on_buff_activate", "buff_activate", "buffactivate", "activate"}
 STATE_DEACTIVATE_PHASES = {"on_buff_deactivate", "buff_deactivate", "buffdeactivate", "deactivate"}
@@ -521,17 +568,55 @@ def champion_argument(
             label = cleaned_alias
         alias = cleaned_alias
 
-    labels = locale_labels((context or TranslationBuildContext()).champion_labels.get(alias), label or alias)
-    return argument_to_dict(
+    entry = (context or TranslationBuildContext()).champion_labels.get(alias)
+    labels = locale_labels(entry, label or alias)
+    provenance: dict[str, object] = {"source": source}
+    fallback = False
+    fallback_reason = None
+
+    if isinstance(entry, ChampionLabelEntry) and entry.label_sources:
+        provenance["label_sources"] = dict(entry.label_sources)
+        # reference 缺 zh 名时的皮肤投票回填是低可信 label，必须留 fallback 痕迹。
+        if entry.label_sources.get("zh_CN") == LABEL_SOURCE_SKIN_VOTE:
+            fallback = True
+            fallback_reason = CHAMPION_ZH_VOTE_FALLBACK_REASON
+
+    argument = argument_to_dict(
         TranslationArgument(
             role="champion",
             labels=labels,
             confidence="high",
-            provenance={"source": source},
+            provenance=provenance,
             alias=alias,
+            fallback=fallback,
+            fallback_reason=fallback_reason,
             omit_when_context_known=("champion",),
         )
     )
+    name_forms = champion_name_forms(entry)
+    if name_forms:
+        argument["name_forms"] = name_forms
+    return argument
+
+
+def champion_name_forms(entry: object) -> dict[str, dict[str, list[str]]]:
+    """读取 entry 携带的名称多形式（称号/俗称）。
+
+    Args:
+        entry: champion_labels 中的 label entry。
+
+    Returns:
+        名称形式到 locale 到值列表的映射；无数据时返回空 dict。
+    """
+
+    if not isinstance(entry, ChampionLabelEntry):
+        return {}
+
+    return {
+        form: {locale: list(values) for locale, values in locales.items()}
+        for form, locales in entry.name_forms.items()
+        if locales
+    }
 
 
 def skin_argument(

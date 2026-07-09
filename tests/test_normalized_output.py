@@ -730,6 +730,122 @@ class ChineseNameSuffixTests(unittest.TestCase):
         self.assertEqual(chinese_name_suffix("灰烬领主 奥瑞利安·索尔"), "奥瑞利安·索尔")
 
 
+class TranslationContextNameSystemTests(unittest.TestCase):
+    """验证 translation 上下文的英雄名称体系接线。"""
+
+    def test_champion_zh_label_follows_reference_names(self) -> None:
+        """（用例 A）zh 主 label 直取 names.zh_CN，不被皮肤投票覆盖，并跟随 reference 改名。"""
+
+        from lol_event_semantics.normalized_output import build_translation_context
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            write_reference_champion(root, "Testo", names={"en_US": "Testo", "zh_CN": "参考俗名"})
+            write_reference_skins(root, "Testo", ["星域 投票旧名", "深海 投票旧名"])
+            context = build_translation_context(root)
+
+        entry = context.champion_labels["Testo"]
+        self.assertEqual(entry["zh_CN"], "参考俗名")
+        self.assertEqual(entry["en_US"], "Testo")
+        self.assertEqual(getattr(entry, "label_sources")["zh_CN"], "reference_names")
+
+    def test_missing_reference_zh_name_falls_back_to_skin_vote(self) -> None:
+        """（用例 B）reference 缺 zh 名时回填皮肤投票结果并标记来源。"""
+
+        from lol_event_semantics.normalized_output import build_translation_context
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            write_reference_champion(root, "Testo", names={"en_US": "Testo"})
+            write_reference_skins(root, "Testo", ["星域 投票名", "深海 投票名"])
+            context = build_translation_context(root)
+
+        entry = context.champion_labels["Testo"]
+        self.assertEqual(entry["zh_CN"], "投票名")
+        self.assertEqual(getattr(entry, "label_sources")["zh_CN"], "skin_label_vote")
+        self.assertEqual(getattr(entry, "label_sources")["en_US"], "reference_names")
+
+    def test_aatrox_name_forms_from_real_reference(self) -> None:
+        """（用例 C）真实 reference 的 Aatrox 携带俗名、称号与俗称。"""
+
+        from lol_event_semantics.normalized_output import build_translation_context
+
+        context = build_translation_context()
+        entry = context.champion_labels["Aatrox"]
+
+        # 断言硬编码真实 reference（亚托克斯/暗裔剑魔/剑魔），reference 刷新时会影响。
+        self.assertEqual(entry["zh_CN"], "亚托克斯")
+        self.assertEqual(
+            getattr(entry, "name_forms"),
+            {"title": {"zh_CN": ["暗裔剑魔"]}, "nicknames": {"zh_CN": ["剑魔"]}},
+        )
+
+    def test_champion_without_nicknames_omits_field(self) -> None:
+        """（用例 D）真实 reference 中无俗称的 Akali 不写空 nicknames 字段。"""
+
+        from lol_event_semantics.normalized_output import build_translation_context
+
+        context = build_translation_context()
+        entry = context.champion_labels["Akali"]
+
+        # 断言硬编码真实 reference（阿卡丽有称号"离群之刺"、无俗称），reference 刷新时会影响。
+        name_forms = getattr(entry, "name_forms")
+        self.assertEqual(name_forms.get("title"), {"zh_CN": ["离群之刺"]})
+        self.assertNotIn("nicknames", name_forms)
+
+
+def write_reference_champion(root: Path, alias: str, *, names: dict[str, str]) -> None:
+    """写出临时 reference 英雄 YAML。
+
+    Args:
+        root: 临时 reference 根目录。
+        alias: 英雄 alias。
+        names: 语言到英雄名的映射。
+    """
+
+    from lol_event_semantics.reference_collection import write_yaml
+
+    entity = {
+        "type": "champion",
+        "id": 9999,
+        "alias": alias,
+        "names": {
+            language: [{"value": value, "sources": [{"source": "test", "version": "1"}]}]
+            for language, value in names.items()
+        },
+    }
+    write_yaml(root / "champions" / f"{alias}.yaml", {"schema_version": 1, "entity": entity})
+
+
+def write_reference_skins(root: Path, champion_alias: str, zh_full_names: list[str]) -> None:
+    """写出临时 reference 皮肤 YAML 序列。
+
+    Args:
+        root: 临时 reference 根目录。
+        champion_alias: 皮肤所属英雄 alias。
+        zh_full_names: 各皮肤的中文全名（"皮肤名 英雄名" 格式）。
+    """
+
+    from lol_event_semantics.reference_collection import write_yaml
+
+    for index, zh_name in enumerate(zh_full_names, start=1):
+        token = f"Skin{index:02d}"
+        entity = {
+            "type": "skin",
+            "champion_alias": champion_alias,
+            "champion_id": 9999,
+            "skin_number": index,
+            "skin_token": token,
+            "id": 9999000 + index,
+            "alias": f"{champion_alias}{token}",
+            "names": {"zh_CN": [{"value": zh_name, "sources": [{"source": "test", "version": "1"}]}]},
+        }
+        write_yaml(
+            root / "skins" / champion_alias / f"{token}.yaml",
+            {"schema_version": 1, "entity": entity},
+        )
+
+
 class NormalizedDisplayEndToEndTests(unittest.TestCase):
     """验证问题事件经完整链路后的 display 文案。"""
 
