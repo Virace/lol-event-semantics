@@ -767,8 +767,9 @@ class ProfileClassifierAmbiguityTests(unittest.TestCase):
         record = self.normalize("Play_vo_Kled_AnimalThreshold")
 
         self.assertEqual(record.profile.semantic_profile, SemanticProfile.SELF_ACTION)
-        self.assertEqual(record.semantic_slots["trigger_family"], "threshold_state")
-        self.assertEqual(record.semantic_slots["threshold"]["raw"], "AnimalThreshold")
+        self.assertEqual(record.profile.primary_family, "champion_status_state")
+        self.assertEqual(record.semantic_slots["trigger_family"], "champion_status_state")
+        self.assertEqual(record.semantic_slots["status_key"], "animal_threshold")
         self.assertFalse(record.unknowns)
 
     def test_ownerless_kill_penta_voice_is_milestone(self) -> None:
@@ -880,12 +881,14 @@ class ProfileClassifierAmbiguityTests(unittest.TestCase):
         self.assertFalse(record.unknowns)
 
     def test_bare_switch_event_is_technical_control(self) -> None:
+        """壳不再吞掉 owner 段后，开关组保留原始大小写并归属 owner。"""
+
         record = self.normalize("Switch_MaokaiSaplings_Brush")
 
         self.assertEqual(record.profile.semantic_profile, SemanticProfile.TECHNICAL_CONTROL)
-        self.assertEqual(record.semantic_slots["trigger_family"], "audio_switch")
-        self.assertEqual(record.semantic_slots["switch_group"], "maokaisaplings")
-        self.assertEqual(record.semantic_slots["switch_value"], "Brush")
+        self.assertEqual(record.semantic_slots["trigger_family"], "switch")
+        self.assertEqual(record.semantic_slots["switch_group"], "MaokaiSaplings")
+        self.assertEqual(record.semantic_slots["switch_target"], "Brush")
         self.assertFalse(record.unknowns)
 
     def test_item_audio_event_is_structured_system_event(self) -> None:
@@ -963,9 +966,10 @@ class ProfileClassifierAmbiguityTests(unittest.TestCase):
     def test_unprefixed_effect_event_is_structured_other_control(self) -> None:
         record = self.normalize("Play_jinx_skin60_slotmachine_buffactivate")
 
-        self.assertEqual(record.profile.semantic_profile, SemanticProfile.TECHNICAL_CONTROL)
-        self.assertEqual(record.semantic_slots["trigger_family"], "audio_control_or_music")
-        self.assertEqual(record.semantic_slots["control_scope"], "control")
+        self.assertEqual(record.profile.semantic_profile, SemanticProfile.SELF_ACTION)
+        self.assertEqual(record.profile.primary_family, "skin_named_state")
+        self.assertEqual(record.semantic_slots["trigger_family"], "skin_named_state")
+        self.assertEqual(record.semantic_slots["state_key"], "slotmachine")
         self.assertEqual(record.semantic_slots["cue_path"], ["slotmachine", "buffactivate"])
         self.assertFalse(record.unknowns)
 

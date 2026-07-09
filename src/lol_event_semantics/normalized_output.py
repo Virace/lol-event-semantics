@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import json
+import re
 from collections import defaultdict
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from functools import lru_cache
 from pathlib import Path
@@ -13,11 +15,22 @@ from .decomposition_model import EventDecompositionRecord
 from .normalized_translation_builder import build_translation
 from .normalized_translation_model import TranslationBuildContext
 from .normalized_translation_renderer import build_compat_display
-from .reference_collection import load_reference_collection
+from .reference_collection import load_reference_collection, read_yaml
 
 SCHEMA_VERSION = 1
 TECHNICAL_DISPLAY_TOKENS = ("Play_vo", "Play_sfx", "cast3D", "2D", "3D", "voProcessing")
 DEFAULT_REFERENCE_ROOT = Path("reference")
+DEFAULT_OVERRIDES_ROOT = Path("overrides")
+ENTITY_ATTRIBUTION_FILENAME = "entity_attribution.yaml"
+ENTITY_ATTRIBUTION_DECISIONS = {"keep", "champion", "downgrade"}
+ENTITY_DOWNGRADE_KINDS = {"unknown", "map_or_system"}
+# 英雄音频 bank 文件名就是英雄数字 id（raw/events/champions/<id>.txt）。
+CHAMPION_SOURCE_FILE_PATTERN = re.compile(r"[\\/]champions[\\/]([0-9]+)\.txt$", re.IGNORECASE)
+# 剥离 alias 尾部 SkinNN（含尾随残段）后再尝试精确匹配英雄。
+SKIN_SUFFIX_ALIAS_PATTERN = re.compile(r"^(?P<base>[A-Za-z][A-Za-z0-9]*?)skin[0-9]+[A-Za-z0-9]*$", re.IGNORECASE)
+# 前后缀挂靠的最小 alias 长度，避免 Vi 这类超短名误挂。
+AFFIX_PREFIX_MIN_LENGTH = 3
+AFFIX_SUFFIX_MIN_LENGTH = 4
 
 
 def build_normalized_record(
@@ -178,7 +191,7 @@ def playback_verb_suffix(verb: object) -> str:
     if not isinstance(verb, str):
         return ""
 
-    labels = {"stop": "停止", "mute": "静音"}
+    labels = {"stop": "停止", "mute": "静音", "unmute": "取消静音"}
     return labels.get(verb.lower(), "")
 
 
@@ -718,6 +731,7 @@ def write_normalized_outputs(
     clear_generated_outputs(output_root)
     output_root.mkdir(parents=True, exist_ok=True)
     reference_aliases = load_reference_entity_aliases(DEFAULT_REFERENCE_ROOT)
+    resolver = load_champion_entity_resolver(DEFAULT_REFERENCE_ROOT, DEFAULT_OVERRIDES_ROOT)
     translation_context = build_translation_context(DEFAULT_REFERENCE_ROOT)
     pending_rows: dict[tuple[str, str], list[dict[str, object]]] = defaultdict(list)
 
@@ -728,6 +742,20 @@ def write_normalized_outputs(
             continue
         kind = str(entity["kind"])
         alias = str(entity["alias"])
+
+        if kind == "champion":
+            resolution = resolve_champion_entity(alias, record.source_paths, resolver)
+            kind, resolved = resolution.kind, resolution.alias
+            # 信息无损：只要归一改变了 alias，就把原始 alias 留在记录里。
+            if resolved != alias:
+                entity["raw_alias"] = alias
+            entity["kind"] = kind
+            entity["alias"] = resolved
+            if resolution.diagnostic is not None:
+                append_quality_diagnostic(normalized, resolution.diagnostic)
+            pending_rows[(kind, resolved.casefold())].append(normalized)
+            continue
+
         canonical = reference_aliases.get((kind, alias.casefold()), alias)
         pending_rows[(kind, canonical.casefold())].append(normalized)
 
@@ -906,6 +934,262 @@ def add_reference_aliases(
         aliases[(kind, value.casefold())] = value
 
 
+@dataclass(frozen=True)
+class ChampionEntityResolver:
+    """champion 实体归一所需的 reference 与人工决策索引。"""
+
+    aliases: dict[str, str]
+    ids: dict[int, str]
+    manual: dict[str, dict[str, str]]
+
+
+@dataclass(frozen=True)
+class ChampionEntityResolution:
+    """champion 实体归一结果；diagnostic 记录挂靠与 bank 证据的矛盾。"""
+
+    kind: str
+    alias: str
+    diagnostic: str | None = None
+
+
+@lru_cache(maxsize=4)
+def load_champion_entity_resolver(reference_root: Path, overrides_root: Path) -> ChampionEntityResolver:
+    """构建 champion 实体归一解析器。
+
+    Args:
+        reference_root: 仓库 reference 合集根目录。
+        overrides_root: 人工 overrides 根目录。
+
+    Returns:
+        含英雄 alias / id 索引与人工决策的解析器。
+    """
+
+    aliases: dict[str, str] = {}
+    ids: dict[int, str] = {}
+
+    if reference_root.exists():
+        collection = load_reference_collection(reference_root)
+        for row in collection.champions.values():
+            entity = row.get("entity")
+            if not isinstance(entity, dict) or not entity.get("alias"):
+                continue
+
+            canonical = sanitize_entity_alias(str(entity["alias"]))
+            aliases[canonical.casefold()] = canonical
+            if isinstance(entity.get("id"), int):
+                ids[entity["id"]] = canonical
+
+    manual = load_entity_attribution_overrides(overrides_root)
+    for key, row in manual.items():
+        if row["decision"] == "champion" and str(row.get("champion", "")).casefold() not in aliases:
+            raise ValueError(
+                f"entity_attribution.yaml alias {row['alias']} 指向的英雄不在 reference 中：{row.get('champion')}"
+            )
+
+        if key in aliases:
+            raise ValueError(f"entity_attribution.yaml alias 与 reference 英雄冲突：{row['alias']}")
+
+    return ChampionEntityResolver(aliases=aliases, ids=ids, manual=manual)
+
+
+@lru_cache(maxsize=4)
+def load_entity_attribution_overrides(overrides_root: Path) -> dict[str, dict[str, str]]:
+    """读取人工实体归属决策表并做 fail-fast 校验。
+
+    Args:
+        overrides_root: 人工 overrides 根目录。
+
+    Returns:
+        casefold alias 到决策行的映射。
+    """
+
+    path = overrides_root / ENTITY_ATTRIBUTION_FILENAME
+    if not path.is_file():
+        return {}
+
+    data = read_yaml(path)
+    rows = data.get("champion_aliases")
+    if not isinstance(rows, list):
+        raise ValueError(f"entity_attribution.yaml 缺少 champion_aliases 列表：{path}")
+
+    decisions: dict[str, dict[str, str]] = {}
+    for row in rows:
+        if not isinstance(row, dict):
+            raise ValueError(f"champion_aliases 条目必须是 mapping：{row!r}")
+
+        alias = str(row.get("alias") or "")
+        decision = row.get("decision")
+        if not alias or decision not in ENTITY_ATTRIBUTION_DECISIONS:
+            raise ValueError(f"champion_aliases 条目缺少合法 alias/decision：{row!r}")
+
+        if not str(row.get("note") or "").strip():
+            raise ValueError(f"champion_aliases 条目必须带 note 说明证据：{alias}")
+
+        if decision == "champion" and not str(row.get("champion") or "").strip():
+            raise ValueError(f"decision=champion 的条目必须指定 champion：{alias}")
+
+        if decision == "downgrade" and row.get("kind") not in ENTITY_DOWNGRADE_KINDS:
+            raise ValueError(f"decision=downgrade 的条目 kind 必须是 unknown/map_or_system：{alias}")
+
+        key = alias.casefold()
+        if key in decisions:
+            raise ValueError(f"champion_aliases 存在重复 alias：{alias}")
+
+        decisions[key] = {str(k): str(v) for k, v in row.items()}
+
+    return decisions
+
+
+def resolve_champion_entity(
+    alias: str,
+    source_paths: list[str],
+    resolver: ChampionEntityResolver,
+) -> ChampionEntityResolution:
+    """把 champion 实体 alias 归一到 reference 英雄或诚实降级。
+
+    归一链：reference 精确匹配 → 人工决策 → SkinNN 剥离 → 英雄名前后缀
+    挂靠（宠物/召唤物/皮肤别名）→ 单一英雄 bank 文件 id 回退；全部
+    失败时保留原 alias。挂靠结论与唯一 bank 文件 id 结论矛盾时不改变
+    优先级，只附带 diagnostic 供 validation 以 warning 暴露。
+
+    Args:
+        alias: 实体 alias。
+        source_paths: 记录来源路径。
+        resolver: champion 实体归一解析器。
+
+    Returns:
+        归一结果（kind/alias/可选 diagnostic）。
+    """
+
+    key = alias.casefold()
+    canonical = resolver.aliases.get(key)
+    if canonical is not None:
+        return ChampionEntityResolution("champion", canonical)
+
+    manual = resolver.manual.get(key)
+    if manual is not None:
+        if manual["decision"] == "keep":
+            return ChampionEntityResolution("champion", alias)
+
+        if manual["decision"] == "champion":
+            return ChampionEntityResolution("champion", resolver.aliases[manual["champion"].casefold()])
+
+        return ChampionEntityResolution(manual["kind"], alias)
+
+    stripped = SKIN_SUFFIX_ALIAS_PATTERN.match(alias)
+    if stripped is not None:
+        canonical = resolver.aliases.get(stripped.group("base").casefold())
+        if canonical is not None:
+            return ChampionEntityResolution("champion", canonical)
+
+    canonical = champion_by_alias_affix(key, resolver)
+    if canonical is not None:
+        return ChampionEntityResolution(
+            "champion",
+            canonical,
+            affix_source_conflict_diagnostic(alias, canonical, source_paths, resolver),
+        )
+
+    canonical = champion_by_source_file(source_paths, resolver)
+    if canonical is not None:
+        return ChampionEntityResolution("champion", canonical)
+
+    return ChampionEntityResolution("champion", alias)
+
+
+def affix_source_conflict_diagnostic(
+    alias: str,
+    affix_champion: str,
+    source_paths: list[str],
+    resolver: ChampionEntityResolver,
+) -> str | None:
+    """挂靠结论与唯一 bank 文件 id 结论矛盾时生成 diagnostic。
+
+    Args:
+        alias: 归一前实体 alias。
+        affix_champion: 前后缀挂靠命中的英雄。
+        source_paths: 记录来源路径。
+        resolver: champion 实体归一解析器。
+
+    Returns:
+        矛盾说明；无 bank 结论或两者一致时返回 None。
+    """
+
+    source_champion = champion_by_source_file(source_paths, resolver)
+    if source_champion is None or source_champion == affix_champion:
+        return None
+
+    return f"entity_affix_source_conflict:alias={alias} affix={affix_champion} source_file={source_champion}"
+
+
+def champion_by_alias_affix(alias_key: str, resolver: ChampionEntityResolver) -> str | None:
+    """按最长英雄名前后缀挂靠宠物/召唤物/皮肤别名实体。
+
+    Args:
+        alias_key: casefold 后的实体 alias。
+        resolver: champion 实体归一解析器。
+
+    Returns:
+        命中的 reference 英雄 alias；未命中返回 None。
+    """
+
+    best: tuple[int, int, str] | None = None
+    for ref_key, canonical in resolver.aliases.items():
+        # 余段必须非空，否则应已被精确匹配命中。
+        if len(ref_key) >= len(alias_key):
+            continue
+
+        is_prefix = len(ref_key) >= AFFIX_PREFIX_MIN_LENGTH and alias_key.startswith(ref_key)
+        is_suffix = len(ref_key) >= AFFIX_SUFFIX_MIN_LENGTH and alias_key.endswith(ref_key)
+        if not is_prefix and not is_suffix:
+            continue
+
+        candidate = (len(ref_key), int(is_prefix), canonical)
+        if best is None or candidate > best:
+            best = candidate
+
+    return best[2] if best is not None else None
+
+
+def append_quality_diagnostic(normalized: dict[str, object], diagnostic: str) -> None:
+    """把 diagnostic 追加进 normalized 记录的 quality.diagnostics。
+
+    Args:
+        normalized: normalized 记录。
+        diagnostic: 待追加的 diagnostic 文本。
+    """
+
+    quality = normalized.get("quality")
+    if isinstance(quality, dict) and isinstance(quality.get("diagnostics"), list):
+        quality["diagnostics"].append(diagnostic)
+
+
+def champion_by_source_file(source_paths: list[str], resolver: ChampionEntityResolver) -> str | None:
+    """当记录只来自单一英雄音频 bank 文件时按文件 id 归属。
+
+    同名事件可能同时出现在英雄 bank 与地图 bank；地图路径不构成
+    反证，只要求英雄 bank 文件 id 唯一。
+
+    Args:
+        source_paths: 记录来源路径。
+        resolver: champion 实体归一解析器。
+
+    Returns:
+        文件 id 对应的 reference 英雄 alias；id 缺失或不唯一时返回 None。
+    """
+
+    file_ids: set[int] = set()
+    for path in source_paths:
+        match = CHAMPION_SOURCE_FILE_PATTERN.search(str(path))
+        if match is not None:
+            file_ids.add(int(match.group(1)))
+
+    if len(file_ids) != 1:
+        return None
+
+    return resolver.ids.get(file_ids.pop())
+
+
 def canonicalize_entity_groups(
     pending_rows: dict[tuple[str, str], list[dict[str, object]]],
     reference_aliases: dict[tuple[str, str], str],
@@ -929,6 +1213,10 @@ def canonicalize_entity_groups(
         for row in rows:
             entity = row.get("entity")
             if isinstance(entity, dict):
+                original = entity.get("alias")
+                # 大小写变体合并同样属于归一，未记录过原值时补 raw_alias。
+                if original and original != canonical and "raw_alias" not in entity:
+                    entity["raw_alias"] = original
                 entity["kind"] = kind
                 entity["alias"] = canonical
             grouped[(kind, canonical)].append(row)

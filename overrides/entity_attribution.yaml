@@ -1,0 +1,25 @@
+# 人工实体归属决策（champion 实体归一的最后一道人工闸门）。
+#
+# 来源：人工 review dist/normalized/entity-summary.json 中无法自动归一的 champion alias。
+# 匹配大小写不敏感；decision 取值：
+#   keep      —— 确认为独立实体，保留原 alias，不参与前后缀/文件 id 回退归并。
+#   champion  —— 直接归入指定 reference 英雄（champion 字段必填，须存在于 reference/champions）。
+#   downgrade —— 无法证明是英雄，诚实降级到 kind 字段指定的实体类型（unknown / map_or_system）。
+# 每条必须带 note 说明证据；加载时 fail-fast 校验。
+version: curated
+champion_aliases:
+  - alias: Ruby
+    decision: keep
+    note: 教程 bot 独立实体；reference 收录 Ruby_Amumu 等分身条目，但事件 owner 是 Ruby 本体，保留独立不归并。
+  - alias: "578"
+    decision: downgrade
+    kind: unknown
+    note: Switch_CHAMP_578_* 开关值（Kaisa bank 145.txt），578 在 reference/champions 无对应 id，无法证明指向英雄。
+  - alias: "7232"
+    decision: downgrade
+    kind: unknown
+    note: Switch_CHAMP_7232_* 开关值（Kaisa bank 145.txt），7232 在 reference/champions 无对应 id，无法证明指向英雄。
+  - alias: New
+    decision: downgrade
+    kind: unknown
+    note: New_Event 是 Wwise 编辑器占位事件（低信任规则 low_trust_event_0004），不是英雄实体。

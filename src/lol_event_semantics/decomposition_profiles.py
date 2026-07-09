@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import re
+from typing import Any
 
+from .decomposition_lexer import SHELL_VERBS
 from .decomposition_model import (
     DecompositionConfidence,
     EventDecompositionRecord,
@@ -40,6 +42,13 @@ SIMPLE_ACTION_TRIGGERS = {
     "unique",
     "useitem",
     "winddown",
+}
+SKIN_ACTION_STATE_TRIGGERS = {
+    "death",
+    "joke",
+    "laugh",
+    "respawn",
+    "taunt",
 }
 LEADING_ACTION_QUALIFIERS = {
     "skineasteregg": {
@@ -135,7 +144,15 @@ def normalize_semantics(record: EventDecompositionRecord) -> EventDecompositionR
         return record
     elif fill_system_voice_group(record, first_atom):
         return record
+    elif fill_structured_state_event(record):
+        return record
     elif trigger is None and should_prefer_generic_sfx(record, first_atom, trigger) and fill_sfx_event(record, first_atom):
+        return record
+    elif fill_skin_recall_state_event(record):
+        return record
+    elif fill_skin_idle_state_event(record):
+        return record
+    elif fill_skin_action_state_event(record):
         return record
     elif fill_other_audio_or_control_event(record, first_atom):
         return record
@@ -1446,6 +1463,917 @@ def fill_untrusted_spell_alias_slots(
         record.semantic_slots["alias_residual"] = owner_spell_hint["residual"]
 
     record.confidence = DecompositionConfidence.MEDIUM if owner_spell_hint is not None else DecompositionConfidence.LOW
+
+
+def fill_skin_recall_state_event(record: EventDecompositionRecord) -> bool:
+    """识别皮肤回城资源状态，避免落入技术控制或 buff fallback。"""
+
+    skin_recall = parse_skin_recall_state(record.raw_event_name)
+
+    if skin_recall is None:
+        return False
+
+    record.profile = EventProfile(
+        primary_family="skin_recall_state",
+        semantic_profile=SemanticProfile.SELF_ACTION,
+        requires_context=True,
+        reason="matched skin recall resource state",
+    )
+    record.semantic_slots = {
+        "trigger_family": "skin_recall_state",
+        "subject_hint": skin_recall["subject_hint"],
+        "skin_token": skin_recall["skin_token"],
+        "recall_action": "recall",
+        "recall_dimension": skin_recall.get("dimension"),
+        "phase": skin_recall["phase"],
+        "owner_context": record.owner.to_dict(),
+        "asset_kind": record.shell.asset_kind,
+        "verb": record.shell.verb,
+        "cue_path": skin_recall["cue_path"],
+        "source": "skin_recall_event_name",
+    }
+
+    if skin_recall.get("variant") is not None:
+        record.semantic_slots["recall_variant"] = skin_recall["variant"]
+
+    record.confidence = DecompositionConfidence.MEDIUM
+    return True
+
+
+def parse_skin_recall_state(raw_event_name: str) -> dict[str, Any] | None:
+    """从整条事件名中提取皮肤回城状态信息。"""
+
+    tokens = [token for token in raw_event_name.split("_") if token]
+    skin = parse_skin_subject(tokens)
+
+    if skin is None:
+        return None
+
+    recall_index = first_recall_token_index(tokens)
+
+    if recall_index is None:
+        return None
+
+    phase, variant = parse_recall_state_tail(tokens[recall_index + 1 :])
+
+    if phase is None:
+        return None
+
+    recall_token = tokens[recall_index]
+    return {
+        "subject_hint": skin["subject_hint"],
+        "skin_token": skin["skin_token"],
+        "dimension": "3D" if "3d" in recall_token.lower() else None,
+        "phase": phase,
+        "variant": variant,
+        "cue_path": tokens[recall_index:],
+    }
+
+
+def parse_skin_subject(tokens: list[str]) -> dict[str, str] | None:
+    """从 token 序列中解析英雄和皮肤编号。"""
+
+    for token in tokens:
+        match = re.fullmatch(r"(?P<subject>[A-Za-z][A-Za-z0-9]*?)Skin(?P<skin>\d+)", token, flags=re.IGNORECASE)
+
+        if match is not None:
+            return {
+                "subject_hint": canonical_subject_hint(match.group("subject")),
+                "skin_token": f"Skin{match.group('skin')}",
+            }
+
+    for index, token in enumerate(tokens):
+        match = re.fullmatch(r"skin_?(?P<skin>\d+)", token, flags=re.IGNORECASE)
+
+        if match is None or index == 0:
+            continue
+
+        subject = previous_subject_token(tokens, index)
+
+        if subject is None:
+            continue
+
+        return {
+            "subject_hint": canonical_subject_hint(subject),
+            "skin_token": f"Skin{match.group('skin')}",
+        }
+
+    for index, token in enumerate(tokens):
+        if token.lower() != "skin" or index == 0 or index + 1 >= len(tokens) or not tokens[index + 1].isdigit():
+            continue
+
+        subject = previous_subject_token(tokens, index)
+
+        if subject is None:
+            continue
+
+        return {
+            "subject_hint": canonical_subject_hint(subject),
+            "skin_token": f"Skin{tokens[index + 1]}",
+        }
+
+    return None
+
+
+def previous_subject_token(tokens: list[str], skin_index: int) -> str | None:
+    """返回 skin token 前最像英雄名的 token。"""
+
+    ignored = {"play", "stop", "pause", "unpause", "mute", "unmute", "sfx", "vo"}
+
+    for token in reversed(tokens[:skin_index]):
+        if token.lower() not in ignored and re.fullmatch(r"[A-Za-z][A-Za-z0-9]*", token):
+            return token
+
+    return None
+
+
+def canonical_subject_hint(raw: str) -> str:
+    """保留驼峰英雄别名；全小写 token 转为首字母大写。"""
+
+    if raw.islower():
+        return raw[:1].upper() + raw[1:]
+
+    return raw
+
+
+def first_recall_token_index(tokens: list[str]) -> int | None:
+    """返回第一个独立 Recall/Recall3D token 的位置。"""
+
+    for index, token in enumerate(tokens):
+        if re.fullmatch(r"recall(?:3d)?", token, flags=re.IGNORECASE):
+            return index
+
+    return None
+
+
+def parse_recall_state_tail(tokens: list[str]) -> tuple[str | None, dict[str, str] | None]:
+    """解析 Recall 后的状态段和资源变体。"""
+
+    phase_aliases = {
+        "leadin": "leadin",
+        "leadout": "leadout",
+        "winddown": "winddown",
+        "buffactivate": "buff_activate",
+        "buffdeactivate": "buff_deactivate",
+    }
+    phase: str | None = None
+    variant: dict[str, str] | None = None
+
+    for token in tokens:
+        compact = compact_text(token)
+
+        if phase is None and compact in phase_aliases:
+            phase = phase_aliases[compact]
+            continue
+
+        effort = re.fullmatch(r"efforts?(?P<index>\d*)", compact)
+        if phase is None and effort is not None:
+            phase = "efforts"
+            variant = {"raw": token, "kind": "efforts"}
+
+            if effort.group("index"):
+                variant["index"] = effort.group("index")
+
+            continue
+
+        if phase is not None and variant is None and token.isdigit():
+            variant = {"raw": token, "kind": "stage_index", "index": token}
+
+    return phase, variant
+
+
+def fill_skin_idle_state_event(record: EventDecompositionRecord) -> bool:
+    """识别皮肤待机状态中的武器或技能片段。"""
+
+    idle_state = parse_skin_idle_state(record.raw_event_name)
+
+    if idle_state is None:
+        return False
+
+    record.profile = EventProfile(
+        primary_family="skin_idle_state",
+        semantic_profile=SemanticProfile.SELF_ACTION,
+        requires_context=True,
+        reason="matched skin idle resource state",
+    )
+    record.semantic_slots = {
+        "trigger_family": "skin_idle_state",
+        "subject_hint": idle_state["subject_hint"],
+        "skin_token": idle_state["skin_token"],
+        "idle_action": "idle",
+        "idle_component": idle_state["component"],
+        "phase": idle_state["phase"],
+        "owner_context": record.owner.to_dict(),
+        "asset_kind": record.shell.asset_kind,
+        "verb": record.shell.verb,
+        "cue_path": idle_state["cue_path"],
+        "source": "skin_idle_event_name",
+    }
+
+    if idle_state.get("spell_key") is not None:
+        record.semantic_slots["spell_key"] = idle_state["spell_key"]
+
+    if idle_state.get("idle_variant") is not None:
+        record.semantic_slots["idle_variant"] = idle_state["idle_variant"]
+
+    if idle_state.get("segment_index") is not None:
+        record.semantic_slots["segment_index"] = idle_state["segment_index"]
+
+    record.confidence = DecompositionConfidence.MEDIUM
+    return True
+
+
+def parse_skin_idle_state(raw_event_name: str) -> dict[str, Any] | None:
+    """从整条事件名中提取皮肤待机状态信息。"""
+
+    tokens = [token for token in raw_event_name.split("_") if token]
+    skin = parse_skin_subject(tokens)
+
+    if skin is None:
+        return None
+
+    variant_index = first_idle_variant_token_index(tokens)
+
+    if variant_index is not None and variant_index + 1 < len(tokens) and tokens[variant_index + 1].isdigit():
+        variant = parse_idle_variant_token(tokens[variant_index])
+        return {
+            "subject_hint": skin["subject_hint"],
+            "skin_token": skin["skin_token"],
+            "component": {
+                "kind": "idle_variant",
+                "key": "idle",
+                "index": variant["index"],
+            },
+            "phase": "segment",
+            "idle_variant": variant,
+            "segment_index": tokens[variant_index + 1],
+            "cue_path": tokens[variant_index:],
+        }
+
+    idle_index = first_compact_token_index(tokens, "idle")
+
+    if idle_index is None or idle_index + 2 >= len(tokens):
+        return None
+
+    component = parse_idle_component(tokens[idle_index + 1])
+    phase = parse_idle_state_phase(tokens[idle_index + 2])
+
+    if component is None or phase is None:
+        return None
+
+    return {
+        "subject_hint": skin["subject_hint"],
+        "skin_token": skin["skin_token"],
+        "component": component["component"],
+        "spell_key": component.get("spell_key"),
+        "phase": phase,
+        "cue_path": tokens[idle_index:],
+    }
+
+
+def first_compact_token_index(tokens: list[str], value: str) -> int | None:
+    """返回第一个 compact 后等于 value 的 token 下标。"""
+
+    for index, token in enumerate(tokens):
+        if compact_text(token) == value:
+            return index
+
+    return None
+
+
+def first_idle_variant_token_index(tokens: list[str]) -> int | None:
+    """返回第一个 idleN 待机变体 token 下标。"""
+
+    for index, token in enumerate(tokens):
+        if parse_idle_variant_token(token) is not None:
+            return index
+
+    return None
+
+
+def parse_idle_variant_token(raw: str) -> dict[str, int] | None:
+    """解析 idle2 / idle3 这类待机编号。"""
+
+    match = re.fullmatch(r"idle(?P<index>\d+)", raw, flags=re.IGNORECASE)
+
+    if match is None:
+        return None
+
+    return {"index": int(match.group("index"))}
+
+
+def parse_idle_component(raw: str) -> dict[str, Any] | None:
+    """解析待机状态中的武器名或技能键。"""
+
+    compact = compact_text(raw)
+
+    if compact == "powpow":
+        return {
+            "spell_key": "q",
+            "component": {
+                "kind": "weapon",
+                "key": "powpow",
+                "label": "Pow-Pow",
+                "label_zh": "砰砰",
+            },
+        }
+
+    if compact in {"q", "w", "e", "r", "p"}:
+        return {
+            "spell_key": compact,
+            "component": {
+                "kind": "spell",
+                "key": compact,
+                "label": compact.upper(),
+            },
+        }
+
+    return None
+
+
+def parse_idle_state_phase(raw: str) -> str | None:
+    """解析待机状态片段阶段。"""
+
+    values = {
+        "in": "in",
+        "out": "out",
+    }
+    return values.get(compact_text(raw))
+
+
+# 皮肤动作状态兜底的历史行为锚点：规范大小写壳（Play_sfx_*）交给 trigger
+# 路径，小写壳（play_sfx_*）继续走皮肤动作状态解析。
+# 动词表从 lexer 的 SHELL_VERBS 派生，消除双处手工同步。
+CANONICAL_SHELL_VERB_HEADS = frozenset(SHELL_VERBS)
+
+
+def has_canonical_cased_shell_verb(record: EventDecompositionRecord) -> bool:
+    """判断 raw 事件名是否以规范大小写壳动词开头。
+
+    Args:
+        record: 拆解记录。
+
+    Returns:
+        首段是规范大小写壳动词时返回 True。
+    """
+
+    return record.raw_event_name.split("_", 1)[0] in CANONICAL_SHELL_VERB_HEADS
+
+
+def fill_skin_action_state_event(record: EventDecompositionRecord) -> bool:
+    """识别皮肤动作状态中的词尾方向标记和阶段。"""
+
+    if has_canonical_cased_shell_verb(record) and record.shell.asset_kind in {"sfx", "vo"}:
+        return False
+
+    action_state = parse_skin_action_state(record.raw_event_name)
+
+    if action_state is None:
+        return False
+
+    record.profile = EventProfile(
+        primary_family="skin_action_state",
+        semantic_profile=SemanticProfile.SELF_ACTION,
+        requires_context=True,
+        reason="matched skin action state with terminal dimension",
+    )
+    record.semantic_slots = {
+        "trigger_family": "skin_action_state",
+        "subject_hint": action_state["subject_hint"],
+        "skin_token": action_state["skin_token"],
+        "action": action_state["action"],
+        "dimension_token": action_state["dimension"],
+        "phase": action_state["phase"],
+        "owner_context": record.owner.to_dict(),
+        "asset_kind": record.shell.asset_kind,
+        "verb": record.shell.verb,
+        "cue_path": action_state["cue_path"],
+        "source": "skin_action_event_name",
+    }
+    record.confidence = DecompositionConfidence.MEDIUM
+    return True
+
+
+def parse_skin_action_state(raw_event_name: str) -> dict[str, Any] | None:
+    """从整条事件名中提取皮肤动作状态。
+
+    只把动作 token 末尾的 2D/3D 视为发声方向，避免误伤词中或词首的 3D。
+    """
+
+    tokens = [token for token in raw_event_name.split("_") if token]
+    skin = parse_skin_subject(tokens)
+    skin_index = first_skin_subject_end_index(tokens)
+
+    if skin is None or skin_index is None:
+        return None
+
+    for index, token in enumerate(tokens[skin_index + 1 :], start=skin_index + 1):
+        action = parse_terminal_dimension_action(token)
+
+        if action is None:
+            continue
+
+        phase = parse_skin_action_phase(tokens[index + 1 :])
+
+        if phase is None:
+            return None
+
+        return {
+            "subject_hint": skin["subject_hint"],
+            "skin_token": skin["skin_token"],
+            "action": action["action"],
+            "dimension": action["dimension"],
+            "phase": phase,
+            "cue_path": tokens[index:],
+        }
+
+    return None
+
+
+def first_skin_subject_end_index(tokens: list[str]) -> int | None:
+    """返回皮肤主体 token 结束位置，用于限制后续动作解析范围。"""
+
+    for index, token in enumerate(tokens):
+        if re.fullmatch(r"[A-Za-z][A-Za-z0-9]*?Skin\d+", token, flags=re.IGNORECASE):
+            return index
+
+    for index, token in enumerate(tokens):
+        if re.fullmatch(r"skin_?\d+", token, flags=re.IGNORECASE):
+            return index
+
+    for index, token in enumerate(tokens):
+        if token.lower() == "skin" and index + 1 < len(tokens) and tokens[index + 1].isdigit():
+            return index + 1
+
+    return None
+
+
+def parse_terminal_dimension_action(raw: str) -> dict[str, str] | None:
+    """解析动作词尾的 2D/3D 方向标记。"""
+
+    match = re.fullmatch(r"(?P<action>[A-Za-z]+)(?P<dimension>[23]D)", raw, flags=re.IGNORECASE)
+
+    if match is None:
+        return None
+
+    action = compact_text(match.group("action"))
+
+    if action not in SKIN_ACTION_STATE_TRIGGERS:
+        return None
+
+    return {
+        "action": normalize_trigger_family(action),
+        "dimension": match.group("dimension").upper(),
+    }
+
+
+def parse_skin_action_phase(tokens: list[str]) -> str | None:
+    """解析皮肤动作状态后续阶段。"""
+
+    values = {
+        "buffactivate": "buff_activate",
+        "buffdeactivate": "buff_deactivate",
+        "cast": "cast",
+        "oncast": "cast",
+        "activate": "activate",
+        "deactivate": "deactivate",
+    }
+
+    for token in tokens:
+        phase = values.get(compact_text(token))
+
+        if phase is not None:
+            return phase
+
+    return None
+
+
+def fill_structured_state_event(record: EventDecompositionRecord) -> bool:
+    """识别已可结构化解释的皮肤、英雄状态和玩法阶段事件。"""
+
+    if fill_gameplay_phase_control_event(record):
+        return True
+
+    if fill_skin_audio_transition_event(record):
+        return True
+
+    if fill_skin_named_state_event(record):
+        return True
+
+    if fill_champion_status_state_event(record):
+        return True
+
+    return False
+
+
+def fill_gameplay_phase_control_event(record: EventDecompositionRecord) -> bool:
+    """识别 Map12_FirstBlood_phase_select 这类玩法阶段控制。"""
+
+    parsed = parse_gameplay_phase_control(record.raw_event_name)
+
+    if parsed is None:
+        return False
+
+    record.profile = EventProfile(
+        primary_family="gameplay_phase_control",
+        semantic_profile=SemanticProfile.MAP_OR_SYSTEM,
+        requires_context=False,
+        reason="matched gameplay phase control event",
+    )
+    record.semantic_slots = {
+        "trigger_family": "gameplay_phase_control",
+        "map_id": parsed["map_id"],
+        "gameplay_event": parsed["gameplay_event"],
+        "phase_action": parsed["phase_action"],
+        "cue_path": parsed["cue_path"],
+        "source": "gameplay_phase_event_name",
+    }
+    record.confidence = DecompositionConfidence.MEDIUM
+    record.unknowns.clear()
+    return True
+
+
+def parse_gameplay_phase_control(raw_event_name: str) -> dict[str, Any] | None:
+    """解析地图玩法阶段控制事件。"""
+
+    match = re.fullmatch(r"map(?P<map_id>\d+)_FirstBlood_phase_select", raw_event_name, flags=re.IGNORECASE)
+
+    if match is None:
+        return None
+
+    return {
+        "map_id": int(match.group("map_id")),
+        "gameplay_event": "first_blood",
+        "phase_action": "select",
+        "cue_path": raw_event_name.split("_"),
+    }
+
+
+def fill_skin_audio_transition_event(record: EventDecompositionRecord) -> bool:
+    """识别 DJ Sona 这类皮肤音乐风格过渡片段。"""
+
+    parsed = parse_skin_audio_transition(record.raw_event_name)
+
+    if parsed is None:
+        return False
+
+    record.profile = EventProfile(
+        primary_family="skin_audio_transition",
+        semantic_profile=SemanticProfile.SELF_ACTION,
+        requires_context=True,
+        reason="matched skin audio transition state",
+    )
+    record.semantic_slots = {
+        "trigger_family": "skin_audio_transition",
+        "subject_hint": parsed["subject_hint"],
+        "skin_token": parsed["skin_token"],
+        "control_action": parsed["control_action"],
+        "genre_index": parsed["genre_index"],
+        "transition_phase": parsed["transition_phase"],
+        "segment_index": parsed["segment_index"],
+        "cue_path": parsed["cue_path"],
+        "source": "skin_audio_transition_event_name",
+    }
+    record.confidence = DecompositionConfidence.MEDIUM
+    record.unknowns.clear()
+    return True
+
+
+def parse_skin_audio_transition(raw_event_name: str) -> dict[str, Any] | None:
+    """解析 SonaSkin06_GenreN_Transition_leadin_01 结构。"""
+
+    tokens = raw_tokens(raw_event_name)
+    skin = parse_skin_subject(tokens)
+
+    if skin is None:
+        return None
+
+    genre_index = first_token_match_index(tokens, r"Genre(?P<index>\d+)")
+
+    if genre_index is None or genre_index + 3 >= len(tokens):
+        return None
+
+    genre_match = re.fullmatch(r"Genre(?P<index>\d+)", tokens[genre_index], flags=re.IGNORECASE)
+    transition = compact_text(tokens[genre_index + 1])
+    phase = parse_named_state_phase(tokens[genre_index + 2])
+    segment = tokens[genre_index + 3]
+
+    if genre_match is None or transition != "transition" or phase is None or not segment.isdigit():
+        return None
+
+    return {
+        "subject_hint": skin["subject_hint"],
+        "skin_token": skin["skin_token"],
+        "control_action": parse_control_action(tokens),
+        "genre_index": int(genre_match.group("index")),
+        "transition_phase": phase,
+        "segment_index": segment,
+        "cue_path": tokens[genre_index:],
+    }
+
+
+def fill_skin_named_state_event(record: EventDecompositionRecord) -> bool:
+    """识别 slotmachine、Idle Passive 这类皮肤命名状态。"""
+
+    parsed = parse_skin_named_state(record.raw_event_name)
+
+    if parsed is None:
+        return False
+
+    record.profile = EventProfile(
+        primary_family="skin_named_state",
+        semantic_profile=SemanticProfile.SELF_ACTION,
+        requires_context=True,
+        reason="matched named skin state event",
+    )
+    record.semantic_slots = {
+        "trigger_family": "skin_named_state",
+        "subject_hint": parsed["subject_hint"],
+        "skin_token": parsed.get("skin_token"),
+        "control_action": parsed["control_action"],
+        "state_key": parsed["state_key"],
+        "phase": parsed["phase"],
+        "cue_path": parsed["cue_path"],
+        "source": "skin_named_state_event_name",
+    }
+
+    if parsed.get("state_variant") is not None:
+        record.semantic_slots["state_variant"] = parsed["state_variant"]
+
+    if parsed.get("segment_index") is not None:
+        record.semantic_slots["segment_index"] = parsed["segment_index"]
+
+    record.confidence = DecompositionConfidence.MEDIUM
+    record.unknowns.clear()
+    return True
+
+
+def parse_skin_named_state(raw_event_name: str) -> dict[str, Any] | None:
+    """解析可读的皮肤命名状态。"""
+
+    tokens = raw_tokens(raw_event_name)
+    slotmachine = parse_slotmachine_state(tokens)
+
+    if slotmachine is not None:
+        return slotmachine
+
+    return parse_idle_passive_state(tokens)
+
+
+def parse_slotmachine_state(tokens: list[str]) -> dict[str, Any] | None:
+    """解析 Jinx skin60 slotmachine 状态。"""
+
+    skin = parse_skin_subject(tokens)
+    state_index = first_compact_token_index(tokens, "slotmachine")
+
+    if skin is None or state_index is None or state_index + 1 >= len(tokens):
+        return None
+
+    phase = parse_named_state_phase(tokens[state_index + 1])
+
+    if phase is None:
+        return None
+
+    variant = compact_text(tokens[state_index + 2]) if state_index + 2 < len(tokens) else None
+
+    return {
+        "subject_hint": skin["subject_hint"],
+        "skin_token": skin["skin_token"],
+        "control_action": parse_control_action(tokens),
+        "state_key": "slotmachine",
+        "state_variant": variant,
+        "phase": phase,
+        "cue_path": tokens[state_index:],
+    }
+
+
+def parse_idle_passive_state(tokens: list[str]) -> dict[str, Any] | None:
+    """解析 Jhin Idle_Passive_buffactivate 状态。"""
+
+    idle_index = first_compact_token_index(tokens, "idle")
+
+    if idle_index is None or idle_index + 2 >= len(tokens):
+        return None
+
+    if compact_text(tokens[idle_index + 1]) != "passive":
+        return None
+
+    phase = parse_named_state_phase(tokens[idle_index + 2])
+    subject = parse_subject_context(tokens, idle_index)
+
+    if phase is None or subject is None:
+        return None
+
+    result = {
+        "subject_hint": subject["subject_hint"],
+        "skin_token": subject.get("skin_token"),
+        "control_action": parse_control_action(tokens),
+        "state_key": "passive_idle",
+        "phase": phase,
+        "cue_path": tokens[idle_index:],
+    }
+
+    if idle_index + 3 < len(tokens) and tokens[idle_index + 3].isdigit():
+        result["segment_index"] = tokens[idle_index + 3]
+
+    return result
+
+
+def fill_champion_status_state_event(record: EventDecompositionRecord) -> bool:
+    """识别英雄状态资源名。"""
+
+    parsed = parse_champion_status_state(record.raw_event_name, record)
+
+    if parsed is None:
+        return False
+
+    record.profile = EventProfile(
+        primary_family="champion_status_state",
+        semantic_profile=SemanticProfile.SELF_ACTION,
+        requires_context=True,
+        reason="matched champion status state event",
+    )
+    record.semantic_slots = {
+        "trigger_family": "champion_status_state",
+        "subject_hint": parsed["subject_hint"],
+        "skin_token": parsed.get("skin_token"),
+        "control_action": parsed["control_action"],
+        "status_key": parsed["status_key"],
+        "phase": parsed.get("phase"),
+        "cue_path": parsed["cue_path"],
+        "source": "champion_status_event_name",
+    }
+    record.confidence = DecompositionConfidence.MEDIUM
+    record.unknowns.clear()
+    return True
+
+
+def parse_champion_status_state(
+    raw_event_name: str,
+    record: EventDecompositionRecord,
+) -> dict[str, Any] | None:
+    """解析 SlowStun、RapidReload、AnimalThreshold 这类英雄状态。"""
+
+    tokens = raw_tokens(raw_event_name)
+
+    for index, token in enumerate(tokens):
+        compact = compact_text(token)
+
+        if compact.endswith("slowstun"):
+            subject = parse_subject_context(tokens, index) or prefixed_status_subject(token, "slowstun")
+
+            if subject is None:
+                continue
+
+            return {
+                "subject_hint": subject["subject_hint"],
+                "skin_token": subject.get("skin_token"),
+                "control_action": parse_control_action(tokens),
+                "status_key": "slow_stun",
+                "phase": first_named_state_phase(tokens[index + 1 :]),
+                "cue_path": tokens[index:],
+            }
+
+        if compact == "rapidreload":
+            subject = parse_subject_context(tokens, index) or record_owner_subject(record)
+
+            if subject is None:
+                continue
+
+            return {
+                "subject_hint": subject["subject_hint"],
+                "skin_token": subject.get("skin_token"),
+                "control_action": parse_control_action(tokens),
+                "status_key": "rapid_reload",
+                "phase": first_named_state_phase(tokens[index + 1 :]),
+                "cue_path": tokens[index:],
+            }
+
+        if compact == "animalthreshold":
+            subject = parse_subject_context(tokens, index) or record_owner_subject(record)
+
+            if subject is None:
+                continue
+
+            return {
+                "subject_hint": subject["subject_hint"],
+                "skin_token": subject.get("skin_token"),
+                "control_action": parse_control_action(tokens),
+                "status_key": "animal_threshold",
+                "phase": None,
+                "cue_path": tokens[index:],
+            }
+
+    return None
+
+
+def raw_tokens(raw_event_name: str) -> list[str]:
+    """返回原始事件名的非空下划线 token。"""
+
+    return [token for token in raw_event_name.split("_") if token]
+
+
+def first_token_match_index(tokens: list[str], pattern: str) -> int | None:
+    """返回第一个匹配正则的 token 下标。"""
+
+    for index, token in enumerate(tokens):
+        if re.fullmatch(pattern, token, flags=re.IGNORECASE):
+            return index
+
+    return None
+
+
+def parse_control_action(tokens: list[str]) -> str | None:
+    """解析事件壳中的控制动作。"""
+
+    if not tokens:
+        return None
+
+    values = {
+        "play": "play",
+        "stop": "stop",
+        "unmute": "unmute",
+        "mute": "mute",
+        "pause": "pause",
+        "unpause": "unpause",
+    }
+    return values.get(compact_text(tokens[0]))
+
+
+def parse_named_state_phase(raw: str) -> str | None:
+    """解析命名状态常见阶段。"""
+
+    values = {
+        "buffactivate": "buff_activate",
+        "onbuffactivate": "buff_activate",
+        "buffdeactivate": "buff_deactivate",
+        "onbuffdeactivate": "buff_deactivate",
+        "leadin": "leadin",
+        "leadout": "leadout",
+        "winddown": "winddown",
+        "cast": "cast",
+        "oncast": "cast",
+        "activate": "activate",
+        "deactivate": "deactivate",
+    }
+    return values.get(compact_text(raw))
+
+
+def first_named_state_phase(tokens: list[str]) -> str | None:
+    """返回 token 序列里的第一个命名状态阶段。"""
+
+    for token in tokens:
+        phase = parse_named_state_phase(token)
+
+        if phase is not None:
+            return phase
+
+    return None
+
+
+def parse_subject_context(tokens: list[str], before_index: int) -> dict[str, str | None] | None:
+    """解析 before_index 前的英雄/皮肤主体。"""
+
+    skin = parse_skin_subject(tokens[: before_index + 1])
+
+    if skin is not None:
+        return skin
+
+    subject = previous_subject_token(tokens, before_index)
+
+    if subject is None:
+        return None
+
+    return {
+        "subject_hint": canonical_subject_hint(subject),
+        "skin_token": None,
+    }
+
+
+def prefixed_status_subject(raw: str, suffix: str) -> dict[str, str | None] | None:
+    """从 SionSlowStun 这类状态 token 前缀中恢复主体。"""
+
+    match = re.fullmatch(rf"(?P<subject>[A-Za-z][A-Za-z0-9]*?){suffix}", raw, flags=re.IGNORECASE)
+
+    if match is None:
+        return None
+
+    return {
+        "subject_hint": canonical_subject_hint(match.group("subject")),
+        "skin_token": None,
+    }
+
+
+def record_owner_subject(record: EventDecompositionRecord) -> dict[str, str | None] | None:
+    """从标准 shell owner 中读取主体。"""
+
+    if record.owner.alias is None:
+        return None
+
+    return {
+        "subject_hint": record.owner.alias,
+        "skin_token": record.owner.skin_token,
+    }
 
 
 def is_untrusted_spell_alias_atom(record: EventDecompositionRecord, atom: LexicalAtom) -> bool:
@@ -3033,9 +3961,8 @@ def parse_owner_spell_token(raw: str) -> dict[str, object] | None:
 
 
 def phase_alias_from_atom(atom: LexicalAtom) -> str | None:
-    """从 OnBuffActivate / buffactivate / activate 等 atom 中提取阶段。"""
+    """把 OnCast 等完整 atom 映射为阶段值。"""
 
-    raw = atom.raw.lower()
     values = {
         "onbuffactivate": "on_buff_activate",
         "onbuffdeactivate": "on_buff_deactivate",
@@ -3046,12 +3973,16 @@ def phase_alias_from_atom(atom: LexicalAtom) -> str | None:
         "cast": "cast",
         "hit": "hit",
         "missilelaunch": "missile_launch",
+        "onmissilelaunch": "missile_launch",
+        "oml": "missile_launch",
+        "misslelaunch": "missile_launch",
+        "launch": "launch",
         "missilecast": "missile_cast",
         "oncast": "cast",
         "activate": "activate",
         "deactivate": "deactivate",
     }
-    return values.get(raw)
+    return values.get(atom.raw.lower())
 
 
 def next_phase_atom(record: EventDecompositionRecord, start_index: int) -> LexicalAtom | None:

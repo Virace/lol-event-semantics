@@ -22,8 +22,34 @@ TRAILING_PHASE_DIMENSION_PATTERN = re.compile(
     re.IGNORECASE,
 )
 PHASE_SUFFIX_PATTERN = re.compile(r"(Cast|Hit|End|Ready|Root|Stun|Max|Revive|RankOne|RankTwo|RankThree|RankFour|RankFive)$")
+# 仅当整个 chunk 恰好是某个高置信相位词时才识别（大小写不敏感），避免把
+# SwordSwap / GameStart 这类复合残留按后缀错切成相位。
+LONE_PHASE_WORD_PATTERN = re.compile(
+    r"(?:Cast|Hit|End|Start|Land|Detonate|FullCharge|Charge|Stop|Miss|Catch|Return|Ready|Swap|Reset)",
+    re.IGNORECASE,
+)
 SPELL_KEY_PREFIX_PATTERN = re.compile(r"^([QWERP])([0-9]*)(.*)$")
 MAP_OR_SYSTEM_OWNER_TOKENS = {"HA", "SRU"}
+# 规范壳动词表（单一事实源）：SHELL_VERB_PATTERN 与 profiles 的
+# CANONICAL_SHELL_VERB_HEADS 均由此派生；SetState 放在 Set 前避免歧义。
+SHELL_VERBS = ("Play", "Stop", "SetState", "Set", "Switch", "UnMute", "Mute", "Post")
+# 壳动词大小写不敏感。
+SHELL_VERB_PATTERN = re.compile(
+    rf"^(?P<verb>{'|'.join(SHELL_VERBS)})_(?P<rest>.+_.+)$",
+    re.IGNORECASE,
+)
+# 控制类动词的第二段只允许已知资产段或 Wwise 控制组段；
+# Switch_Rakan_*、SetState_EkkoSkin19_* 的第二段属于 body（owner），不能被壳吞掉。
+# Play/Stop/Mute 保留历史通配剥离：下游 profile/reference 语义
+#（如 Play_UrgotSkin09_Recall_* 的 skin_recall_state）依赖这一形态。
+SHELL_ASSET_KINDS = {"vo", "sfx", "sxf", "mus", "music"}
+SHELL_CONTROL_GROUPS = {"switch", "state", "champ", "event", "rtpc", "item", "npe", "ui", "voicepitch"}
+SHELL_WILDCARD_ASSET_VERBS = {"play", "stop", "mute"}
+OWNER_TOKEN_PATTERN = re.compile(r"^(?P<alias>[A-Za-z][A-Za-z0-9]*?)(?P<skin>Skin[0-9]+)?$", re.IGNORECASE)
+BARE_SKIN_OWNER_PATTERN = re.compile(r"^Skin([0-9]+)$", re.IGNORECASE)
+# 刻意只收 QWERP 五个大写单键：raw 语料中仅 Switch_VO_E_* 出现此类 owner，
+# 扩收其他单字母前需先审语料，避免把未知单字母 owner 误判为技能键。
+SPELL_KEY_OWNER_TOKENS = {"Q", "W", "E", "R", "P"}
 
 
 def decompose_event_name(
@@ -79,16 +105,20 @@ def decompose_event_name(
 
 
 def parse_shell(raw_event_name: str) -> EventShell:
-    """解析 Play_vo_* 这类外壳。"""
+    """解析 Play_vo_* 这类外壳；壳动词与资产段匹配大小写不敏感。"""
 
-    match = re.match(r"^(Play|Stop|Set|Switch|SetState|Mute)_([^_]+)_(.+)$", raw_event_name)
+    verb_match = SHELL_VERB_PATTERN.match(raw_event_name)
 
-    if match is not None:
-        return EventShell(
-            verb=match.group(1).lower(),
-            asset_kind=match.group(2).lower(),
-            body=match.group(3),
-        )
+    if verb_match is not None:
+        verb = verb_match.group("verb").lower()
+        rest = verb_match.group("rest")
+        head, _, tail = rest.partition("_")
+        known_second = head.lower() in SHELL_ASSET_KINDS | SHELL_CONTROL_GROUPS
+
+        if tail and (known_second or verb in SHELL_WILDCARD_ASSET_VERBS):
+            return EventShell(verb=verb, asset_kind=head.lower(), body=tail)
+
+        return EventShell(verb=verb, body=rest)
 
     implicit_asset_match = re.match(r"^(vo|sfx|mus)_(.+)$", raw_event_name, re.IGNORECASE)
 
@@ -183,7 +213,17 @@ def parse_owner(owner_token: str, scope: str) -> EventOwnerRef:
     if scope == "map" or owner_token in MAP_OR_SYSTEM_OWNER_TOKENS:
         return EventOwnerRef(kind="map_or_system", alias=owner_token or None, raw_owner_token=owner_token or None)
 
-    match = re.match(r"^(?P<alias>[A-Za-z][A-Za-z0-9]*?)(?P<skin>Skin[0-9]+)?$", owner_token)
+    # Switch_VO_E_* 这类壳后直接跟技能键，不是英雄 alias。
+    if owner_token in SPELL_KEY_OWNER_TOKENS:
+        return EventOwnerRef(kind="unknown", raw_owner_token=owner_token)
+
+    # Play_mus_Skin06_* 这类纯 SkinNN owner 只有皮肤信息，没有英雄 alias。
+    bare_skin = BARE_SKIN_OWNER_PATTERN.match(owner_token)
+
+    if bare_skin is not None:
+        return EventOwnerRef(kind="champion", skin_token=f"Skin{bare_skin.group(1)}", raw_owner_token=owner_token)
+
+    match = OWNER_TOKEN_PATTERN.match(owner_token)
 
     if match is None:
         return EventOwnerRef(kind="unknown", raw_owner_token=owner_token or None)
@@ -191,9 +231,18 @@ def parse_owner(owner_token: str, scope: str) -> EventOwnerRef:
     return EventOwnerRef(
         kind="champion",
         alias=match.group("alias"),
-        skin_token=match.group("skin"),
+        skin_token=normalize_skin_token(match.group("skin")),
         raw_owner_token=owner_token,
     )
+
+
+def normalize_skin_token(token: str | None) -> str | None:
+    """把 skin04 / SKin04 等写法规整为 SkinNN；原始写法保留在 raw_owner_token。"""
+
+    if not token:
+        return None
+
+    return f"Skin{token[4:]}"
 
 
 def lex_chunk(chunk: str, chunk_index: int, owner_alias: str | None) -> LexicalAtom:
@@ -366,6 +415,8 @@ def split_suffix_parts(suffix: str, allow_spell_key: bool = True) -> list[Lexica
 
         append_residue_or_number(parts, prefix)
         parts.append(LexicalPart(kind="phase_or_state_token", raw=phase, value=phase.lower()))
+    elif work and LONE_PHASE_WORD_PATTERN.fullmatch(work):
+        parts.append(LexicalPart(kind="phase_or_state_token", raw=work, value=work.lower()))
     elif work:
         append_residue_or_number(parts, work)
 
