@@ -13,6 +13,14 @@ dependencies = [
     "ruamel-yaml>=0.19.1",
 ]
 
+[project.scripts]
+lookup-normalized-event = "lol_event_semantics.normalized_lookup_cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
