@@ -1,6 +1,6 @@
 # BasicAttack/CritAttack 类通用关键词允许推断为英雄技能的白名单。
 # 只作用于 match_source=description_keywords 且关键词命中全部为普攻类通用词
-# (basic/attack/crit) 的弱匹配；未列入的英雄槽位会丢弃该候选，
+# (basic/attack/attacks/crit/crits，见 GENERIC_ATTACK_KEYWORDS) 的弱匹配；未列入的英雄槽位会丢弃该候选，
 # 事件回落 basic_attack / crit_attack 家族展示。
 # 裁决标准：技能按时间/冷却周期强化普攻本体，或常驻改写每次普攻的判定；
 # 计数触发(每第N次)、施法后触发、主动开启、目标标记/位置条件类不入选。

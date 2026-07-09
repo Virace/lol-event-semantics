@@ -21,7 +21,7 @@ from lol_event_semantics.match_audit import (
     write_match_hit_summary,
     write_zero_hit_rules,
 )
-from lol_event_semantics.rules import ContextualAlias, ResidualModifier, RuleBook
+from lol_event_semantics.rules import AttackModifierSpell, ContextualAlias, ResidualModifier, RuleBook
 
 
 class MatchAuditTests(unittest.TestCase):
@@ -136,6 +136,37 @@ class MatchAuditTests(unittest.TestCase):
 
         self.assertEqual(written_rows[0]["reason_hint"], "not matched by current input; not a deletion signal")
 
+    def test_zero_hit_rules_includes_unhit_attack_modifier_whitelist(self) -> None:
+        """普攻改写白名单条目未命中时应进入 0 命中报告。"""
+
+        rulebook = RuleBook(
+            attack_modifier_spells={
+                ("aatrox", "p"): AttackModifierSpell(champion="Aatrox", spell_key="p"),
+                ("ziggs", "p"): AttackModifierSpell(champion="Ziggs", spell_key="p"),
+            },
+        )
+        events = [
+            MatchAuditEvent(
+                matcher_kind="manual_spell_constraint",
+                rule_id="spell_constraint:attack_modifier:Aatrox:p",
+                source_path="rules/spell_match_constraints.yaml",
+                raw_event_name="Play_sfx_AatroxSkin01_AatroxBasicAttack_OnCast",
+                owner="Aatrox",
+                token="AatroxBasicAttack",
+            )
+        ]
+
+        rows = summarize_zero_hit_rules(rulebook, events)
+        rule_ids = {row["rule_id"] for row in rows}
+
+        self.assertNotIn("spell_constraint:attack_modifier:Aatrox:p", rule_ids)
+        self.assertIn("spell_constraint:attack_modifier:Ziggs:p", rule_ids)
+        ziggs_row = next(row for row in rows if row["rule_id"] == "spell_constraint:attack_modifier:Ziggs:p")
+        self.assertEqual(ziggs_row["source_path"], "rules/spell_match_constraints.yaml")
+        self.assertEqual(ziggs_row["scope"], "spell_constraint")
+        self.assertEqual(ziggs_row["owner"], "Ziggs")
+        self.assertEqual(ziggs_row["token"], "p")
+
     def test_write_manifest_records_run_scope(self) -> None:
         """manifest 应记录输入范围和参考路径。"""
 
@@ -146,8 +177,7 @@ class MatchAuditTests(unittest.TestCase):
                 input_scope="full_raw_root",
                 raw_count=10,
                 reference_version="16.5",
-                game_data_root=Path("dist/reference/16.5/game-data"),
-                dragontail_root=None,
+                reference_root=Path("reference"),
                 command="scripts/decompose_events.py ...",
             )
 
@@ -156,7 +186,7 @@ class MatchAuditTests(unittest.TestCase):
         self.assertEqual(payload["schema_version"], 1)
         self.assertEqual(payload["input_scope"], "full_raw_root")
         self.assertEqual(payload["raw_count"], 10)
-        self.assertEqual(payload["game_data_root"], "dist/reference/16.5/game-data")
+        self.assertEqual(payload["reference_root"], "reference")
 
     def test_reference_and_contextual_hits_are_recorded_from_enrichment(self) -> None:
         """参考实体和人工上下文规则命中应进入审计 recorder。"""

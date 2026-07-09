@@ -11,6 +11,7 @@ from lol_event_semantics.decomposition_lexer import decompose_event_name
 from lol_event_semantics.decomposition_model import SemanticProfile
 from lol_event_semantics.decomposition_profiles import normalize_semantics
 from lol_event_semantics.decomposition_reference import ReferenceIndex, enrich_with_reference
+from lol_event_semantics.match_audit import MatchAuditRecorder, audit_context
 from lol_event_semantics.reference_collection import (
     ReferenceCollection,
     ReferenceEntityInput,
@@ -1172,6 +1173,20 @@ class ReferenceEnrichmentTests(unittest.TestCase):
         self.assertEqual(candidate["match_source"], "description_keywords")
         self.assertEqual(record.semantic_slots["spell_key"], "p")
 
+    def test_aatrox_whitelisted_basic_attack_records_spell_constraint_audit(self) -> None:
+        """白名单放行普攻类关键词推断时应记录 manual_spell_constraint 审计事件。"""
+
+        recorder = MatchAuditRecorder()
+
+        with audit_context(recorder):
+            self.enrich("Play_sfx_AatroxSkin01_AatroxBasicAttack_OnCast")
+
+        hits = [event for event in recorder.events if event.matcher_kind == "manual_spell_constraint"]
+        self.assertTrue(hits)
+        self.assertEqual(hits[0].rule_id, "spell_constraint:attack_modifier:Aatrox:p")
+        self.assertEqual(hits[0].source_path, "rules/spell_match_constraints.yaml")
+        self.assertEqual(hits[0].raw_event_name, "Play_sfx_AatroxSkin01_AatroxBasicAttack_OnCast")
+
     def test_ashe_volley_rank_matches_spell_name_with_rank_residual(self) -> None:
         record = self.enrich("Play_vo_AsheSkin08_VolleyRank2_cast3D")
 
@@ -1205,6 +1220,19 @@ class ReferenceEnrichmentTests(unittest.TestCase):
         self.assertEqual(record.semantic_slots["state_key"], "passive_idle")
         self.assertIsNone(record.semantic_slots.get("spell_key"))
         self.assertFalse(any(candidate["kind"] == "inferred_champion_spell" for candidate in record.candidates))
+
+    def test_jhin_idle_passive_gate_drop_records_audit_reason(self) -> None:
+        """裸 Passive 门丢弃候选时应留下可审计的丢弃原因。"""
+
+        recorder = MatchAuditRecorder()
+
+        with audit_context(recorder):
+            self.enrich("Play_sfx_JhinSkin05_Idle_Passive_buffactivate")
+
+        drops = [event for event in recorder.events if event.matcher_kind == "inference_gate"]
+        self.assertTrue(drops)
+        self.assertEqual(drops[0].rule_id, "spell_gate:bare_passive_state_token")
+        self.assertEqual(drops[0].owner, "Jhin")
 
     def test_singed_bare_passive_buff_keeps_passive_key_inference(self) -> None:
         """非动画状态事件的裸 Passive 命中仍保持 passive_key 推断。"""

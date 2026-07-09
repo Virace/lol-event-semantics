@@ -12,6 +12,9 @@ from typing import Iterator
 
 from .rules import RuleBook
 
+# 普攻改写白名单的规则来源文件；命中留痕与 zero-hit 枚举共用，保证 rule_id/source_path 对得上
+SPELL_MATCH_CONSTRAINTS_SOURCE_PATH = "rules/spell_match_constraints.yaml"
+
 
 @dataclass(slots=True)
 class MatchAuditEvent:
@@ -142,6 +145,23 @@ def summarize_zero_hit_rules(
             }
         )
 
+    for entry in rulebook.attack_modifier_spells.values():
+        rule_id = f"spell_constraint:attack_modifier:{entry.champion}:{entry.spell_key}"
+
+        if rule_id in hit_rule_ids:
+            continue
+
+        rows.append(
+            {
+                "rule_id": rule_id,
+                "source_path": SPELL_MATCH_CONSTRAINTS_SOURCE_PATH,
+                "scope": "spell_constraint",
+                "owner": entry.champion,
+                "token": entry.spell_key,
+                "reason_hint": "not matched by current input; not a deletion signal",
+            }
+        )
+
     return sorted(rows, key=lambda row: row["rule_id"])
 
 
@@ -186,8 +206,7 @@ def write_match_audit_manifest(
     input_scope: str,
     raw_count: int,
     reference_version: str,
-    game_data_root: Path | None,
-    dragontail_root: Path | None,
+    reference_root: Path | None,
     command: str,
 ) -> None:
     """写出规则审计 manifest。"""
@@ -198,8 +217,7 @@ def write_match_audit_manifest(
         "input_scope": input_scope,
         "raw_count": raw_count,
         "reference_version": reference_version,
-        "game_data_root": game_data_root.as_posix() if game_data_root is not None else None,
-        "dragontail_root": dragontail_root.as_posix() if dragontail_root is not None else None,
+        "reference_root": reference_root.as_posix() if reference_root is not None else None,
         "command": command,
     }
     output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

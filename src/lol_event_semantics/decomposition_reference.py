@@ -17,7 +17,7 @@ from .decomposition_model import (
     UnknownKind,
 )
 from .game_data import compact
-from .match_audit import MatchAuditEvent, record_match
+from .match_audit import SPELL_MATCH_CONSTRAINTS_SOURCE_PATH, MatchAuditEvent, record_match
 from .reference_collection import load_reference_collection
 from .rules import ContextualAlias, LowTrustEventRule, RuleBook
 
@@ -2643,6 +2643,10 @@ def infer_spell_candidate_for_subject(
             score, components = score_spell_match(record, spell, match, owner_matches, subject_prefix)
 
             if score < 70:
+                # 裸 Passive 门(Gate②)的哨兵 reason 不落 record，这里显式留审计痕使丢弃可见
+                if BARE_PASSIVE_GATE_REASON in components:
+                    audit_bare_passive_gate_drop(record, subject, atom_raw)
+
                 continue
 
             candidate = inferred_spell_candidate(record, subject, spell, atom_raw, match, score, components)
@@ -2656,6 +2660,9 @@ def infer_spell_candidate_for_subject(
         # BasicAttack/CritAttack 类通用词极易把普攻音效误标成技能，仅白名单英雄槽位放行
         if keyword_match is not None and not generic_attack_inference_allowed(keyword_match, subject, spell, reference.rules):
             keyword_match = None
+        elif keyword_match is not None and is_generic_attack_keyword_match(keyword_match):
+            # 白名单放行留痕在调用点记录，generic_attack_inference_allowed 谓词保持无副作用
+            audit_attack_modifier_whitelist_hit(record, reference.rules, subject, spell, atom_raw)
 
         if keyword_match is not None:
             score, components = score_spell_match(record, spell, keyword_match, owner_matches, subject_prefix)
@@ -2751,6 +2758,7 @@ def description_keyword_match(stripped_key: str, spell: ReferenceSpell) -> Spell
 
 
 # 普攻类事件 token 拆出的通用词；描述关键词弱匹配只命中这些词时证据不足
+# 成员需与事件 token 分词后的词汇对齐（含 attacks/crits 等复数形态），而非技能描述原文词形
 GENERIC_ATTACK_KEYWORDS = {"attack", "attacks", "basic", "crit", "crits"}
 
 
@@ -2779,6 +2787,9 @@ def generic_attack_inference_allowed(
 
 # 皮肤待机/命名状态事件家族；裸 Passive token 在这些事件里指动画状态而非 P 技能
 ANIMATION_STATE_FAMILIES = {"skin_named_state", "skin_idle_state"}
+
+# score_spell_match 压分丢弃裸 Passive 候选时返回的哨兵 reason；调用点据此留审计痕
+BARE_PASSIVE_GATE_REASON = "bare_passive_state_token"
 
 
 def is_bare_passive_state_match(record: EventDecompositionRecord, match: SpellTermMatch) -> bool:
@@ -2825,7 +2836,7 @@ def score_spell_match(
 
     # 动画状态事件里的裸 Passive 是待机/状态动画命名，不足以证明 P 技能，压到阈值下丢弃
     if is_bare_passive_state_match(record, match):
-        return 0, ["bare_passive_state_token"]
+        return 0, [BARE_PASSIVE_GATE_REASON]
 
     score = 0
     components: list[str] = []
@@ -3261,6 +3272,47 @@ def audit_low_trust_event_rule_hit(record: EventDecompositionRecord, rule: LowTr
             raw_event_name=record.raw_event_name,
             owner=record.owner.alias or record.owner.raw_owner_token,
             token=record.raw_event_name,
+        )
+    )
+
+
+def audit_attack_modifier_whitelist_hit(
+    record: EventDecompositionRecord,
+    rules: RuleBook | None,
+    subject: ReferenceEntity,
+    spell: ReferenceSpell,
+    raw: str,
+) -> None:
+    """记录普攻改写白名单放行普攻类关键词推断。"""
+
+    entry = rules.attack_modifier_spell_for(subject.alias or subject.key, spell.spell_key) if rules is not None else None
+
+    if entry is None:
+        return
+
+    record_match(
+        MatchAuditEvent(
+            matcher_kind="manual_spell_constraint",
+            rule_id=f"spell_constraint:attack_modifier:{entry.champion}:{entry.spell_key}",
+            source_path=SPELL_MATCH_CONSTRAINTS_SOURCE_PATH,
+            raw_event_name=record.raw_event_name,
+            owner=entry.champion,
+            token=raw,
+        )
+    )
+
+
+def audit_bare_passive_gate_drop(record: EventDecompositionRecord, subject: ReferenceEntity, raw: str) -> None:
+    """记录动画状态事件里裸 Passive 候选被压分丢弃。"""
+
+    record_match(
+        MatchAuditEvent(
+            matcher_kind="inference_gate",
+            rule_id=f"spell_gate:{BARE_PASSIVE_GATE_REASON}",
+            source_path="decomposition_reference.score_spell_match",
+            raw_event_name=record.raw_event_name,
+            owner=subject.alias or subject.key,
+            token=raw,
         )
     )
 
