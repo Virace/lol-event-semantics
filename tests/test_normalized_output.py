@@ -1041,6 +1041,44 @@ class DisplayTierTests(unittest.TestCase):
                 self.assertIsInstance(display["zh_cn_short"], str)
                 self.assertTrue(display["zh_cn_short"])
 
+    def test_tier1_vo_asset_within_technical_families(self) -> None:
+        """普攻/暴击/待机/材质开关家族里混入的 vo 语音判 Tier1，不随家族误判 Tier3。
+
+        这几个家族多数记录是纯技术 sfx（见 test_tier3_pure_technical_families_
+        drop_short_display），但各自混有少量真实台词：Akali 被动攻击台词、
+        Ambessa 连击暴击台词、Ahri 待机彩蛋台词、Ivern 换形态台词（verb=play
+        的材质/状态切换，不是控制信号）。
+        """
+
+        cases = [
+            "Play_vo_AkaliSkin14_AkaliBasicAttackPassiveMelee_cast3D",  # basic_attack
+            "Play_vo_AmbessaSkin01_AmbessaCritAttackChained1_cast3D",  # crit_attack
+            "Play_vo_AhriSkin14_Idle3DGeneral",  # idle
+            "Play_vo_IvernSkin01_IvernP_Switch_Blue",  # switch，verb=play
+        ]
+
+        for raw in cases:
+            with self.subTest(raw=raw):
+                normalized = self.build(raw)
+                display = normalized["display"]
+                self.assertIsInstance(display, dict)
+                self.assertEqual(display["tier"], 1)
+                self.assertIsInstance(display["zh_cn_short"], str)
+                self.assertTrue(display["zh_cn_short"])
+
+    def test_tier3_control_verb_overrides_vo_asset(self) -> None:
+        """控制类壳动词优先于 vo 例外：即使资产段解析成 vo 也仍是 Tier3。
+
+        Switch_vo_Yuumi_Base_Attached 的 verb=switch，是亚穆的附体/脱离状态
+        切换信号，不是播放的台词，不应被“vo 资产判 Tier1”的例外放行。
+        """
+
+        normalized = self.build("Switch_vo_Yuumi_Base_Attached")
+        display = normalized["display"]
+
+        self.assertEqual(display["tier"], 3)
+        self.assertIsNone(display["zh_cn_short"])
+
     def test_tier3_pure_technical_families_drop_short_display(self) -> None:
         """纯技术家族判 Tier3，zh_cn_short 置 null，detail/debug_label 不丢。"""
 
