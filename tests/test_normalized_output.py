@@ -997,6 +997,36 @@ class DisplayTierTests(unittest.TestCase):
         )
         return build_normalized_record(record, translation_context=self.context)
 
+    def test_tier3_map_ambience_emitters_drop_short_display(self) -> None:
+        """地图纯氛围发声器（Emitter/Bloom/Ambience）判 Tier3，退出短文案。
+
+        这些是地图环境循环声（大龙坑锁链、泉水树木），无玩家事件语义
+        （T3.5 处置决策，20_DECISIONS 2026-07-17）。
+        """
+
+        cases = [
+            "Play_sfx_Env_Map10_Emitter_bigchains",
+            "Play_sfx_Env_Map11_Bloom_TreeGroans_Fountain",
+            "Play_sfx_Env_Map10_Ambience_base",
+        ]
+
+        for raw in cases:
+            with self.subTest(raw=raw):
+                normalized = self.build(raw)
+                display = normalized["display"]
+                self.assertEqual(display["tier"], 3)
+                self.assertIsNone(display["zh_cn_short"])
+
+    def test_tier2_map_gameplay_semantic_events_keep_short_display(self) -> None:
+        """有玩家语义的地图事件（塔摧毁等）不随氛围规则降级，短文案保留。"""
+
+        normalized = self.build("Play_sfx_ENV_map10_ChaosTurret_break01")
+        display = normalized["display"]
+
+        self.assertEqual(display["tier"], 2)
+        self.assertIsInstance(display["zh_cn_short"], str)
+        self.assertTrue(display["zh_cn_short"])
+
     def test_tier1_vo_dialogue_and_action_families(self) -> None:
         """vo 资产的可感知台词/动作家族判 Tier1，短文案保留。"""
 

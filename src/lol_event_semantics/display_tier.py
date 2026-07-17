@@ -80,6 +80,12 @@ TIER3_IF_NOT_VO_FAMILIES: Final[frozenset[str]] = frozenset(
 # 控制信号（切换素材、设置参数）而非播放台词，统一按纯技术处理。
 TIER3_CONTROL_VERBS: Final[frozenset[str]] = frozenset({"set", "setstate", "switch"})
 
+# 地图纯氛围发声器的 cue 类别词（cue_path 第二段）：大龙坑锁链、泉水树木等
+# 环境循环声，无玩家事件语义（T3.5 处置决策，20_DECISIONS 2026-07-17）。
+# 塔摧毁等有玩家语义的 map 家族记录 cue_path 第二段是具体对象名（如
+# ChaosTurret），不在本集合内；语义存疑的子类（SRX/Crepe 等）保守保留 Tier2。
+MAP_AMBIENCE_CUE_TOKENS: Final[frozenset[str]] = frozenset({"ambience", "bloom", "emitter"})
+
 
 def classify_display_tier(record: EventDecompositionRecord, *, has_translation: bool) -> int:
     """按语义槽位/家族/资产类型给 normalized 记录打展示分层。
@@ -110,6 +116,17 @@ def classify_display_tier(record: EventDecompositionRecord, *, has_translation: 
 
     if primary_family in TIER3_IF_NOT_VO_FAMILIES and asset_kind != "vo":
         return 3
+
+    # 地图环境发声器：map 家族里 cue 类别为 Emitter/Bloom/Ambience 的纯氛围
+    # 循环声。vo 例外与其他家族一致（当前语料该子集无 vo 实例，防御未来语料）。
+    if primary_family == "map" and asset_kind != "vo":
+        cue_path = slots.get("cue_path")
+        if (
+            isinstance(cue_path, (list, tuple))
+            and len(cue_path) > 1
+            and str(cue_path[1]).lower() in MAP_AMBIENCE_CUE_TOKENS
+        ):
+            return 3
 
     # 放在两个“非 vo”判定之后：vo 资产命中控制类壳动词（如 Yuumi 附体状态
     # 切换事件 Switch_vo_Yuumi_Base_Attached）仍是控制信号而非台词，即使
