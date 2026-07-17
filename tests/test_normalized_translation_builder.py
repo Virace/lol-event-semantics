@@ -10,7 +10,14 @@ from pathlib import Path
 from lol_event_semantics.decomposition_lexer import decompose_event_name
 from lol_event_semantics.decomposition_profiles import normalize_semantics
 from lol_event_semantics.decomposition_reference import ReferenceIndex, enrich_with_reference
-from lol_event_semantics.normalized_translation_builder import ChampionLabelEntry, build_translation
+from lol_event_semantics.display_labels import DisplayLabels
+from lol_event_semantics.normalized_translation_builder import (
+    ChampionLabelEntry,
+    build_translation,
+    gameplay_event_argument,
+    map_argument,
+    phase_argument,
+)
 from lol_event_semantics.normalized_translation_model import TranslationBuildContext
 
 FIXTURE = Path(__file__).parent / "fixtures" / "normalized_translation_cases.json"
@@ -481,6 +488,68 @@ class ChampionArgumentNameSystemTests(unittest.TestCase):
         self.assertFalse(argument["fallback"])
         self.assertNotIn("name_forms", argument)
         self.assertNotIn("label_sources", argument["provenance"])
+
+
+class DisplayLabelsInjectionTests(unittest.TestCase):
+    """验证 builder 展示词条可通过注入 DisplayLabels 覆盖（T3.3 词表外置）。"""
+
+    def test_missing_phase_entry_falls_back_to_key_without_raising(self) -> None:
+        """①: 注入词表缺一个 phase 词条时，label 回落为 key 本身且不抛错。"""
+
+        empty_labels = DisplayLabels(phase={})
+        argument = phase_argument("cast", "ability_cast_event", labels=empty_labels)
+        self.assertIsNotNone(argument)
+        assert argument is not None
+        self.assertEqual(argument["labels"]["zh_CN"], "cast")
+        self.assertEqual(argument["labels"]["en_US"], "cast")
+
+    def test_added_gameplay_event_entry_renders(self) -> None:
+        """②: 注入词表新增一个 gameplay_event 词条应正确渲染，无需改代码。"""
+
+        labels = DisplayLabels(gameplay_event={"second_blood": ("二血", "second blood")})
+        argument = gameplay_event_argument("second_blood", labels=labels)
+        self.assertIsNotNone(argument)
+        assert argument is not None
+        self.assertEqual(argument["labels"]["zh_CN"], "二血")
+        self.assertEqual(argument["labels"]["en_US"], "second blood")
+
+
+class MapArgumentDisplayLabelsTests(unittest.TestCase):
+    """验证 map argument 真名解析与词表外 id 的占位 fallback（T3.3）。"""
+
+    def test_curated_map_renders_real_chinese_and_english_name(self) -> None:
+        """③: map11 的 zh/en 应分别渲染召唤师峡谷 / Summoner's Rift。"""
+
+        argument = map_argument(11)
+        self.assertIsNotNone(argument)
+        assert argument is not None
+        self.assertEqual(argument["labels"]["zh_CN"], "召唤师峡谷")
+        self.assertEqual(argument["labels"]["en_US"], "Summoner's Rift")
+        self.assertFalse(argument["fallback"])
+        self.assertEqual(argument["provenance"]["zh_source"], "display_labels.maps")
+        self.assertEqual(argument["provenance"]["en_source"], "reference_maps")
+
+    def test_unknown_map_id_keeps_placeholder(self) -> None:
+        """④: 词表与 reference 都没有的 id（如 999）应保留 Map999 占位，不得瞎猜。"""
+
+        argument = map_argument(999)
+        self.assertIsNotNone(argument)
+        assert argument is not None
+        self.assertEqual(argument["labels"]["zh_CN"], "Map999")
+        self.assertEqual(argument["labels"]["en_US"], "Map999")
+        self.assertTrue(argument["fallback"])
+
+    def test_curated_map_end_to_end_through_gameplay_phase_control_frame(self) -> None:
+        """map11 经完整 gameplay_phase_control frame 构建后 argument 同样是真名。"""
+
+        record = enriched_record("map11_FirstBlood_phase_select")
+        translation = build_translation(record, TranslationBuildContext())
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        self.assertEqual(translation["frame_type"], "gameplay_phase_control")
+        args = translation["arguments"]
+        self.assertEqual(args["map"]["labels"]["zh_CN"], "召唤师峡谷")
+        self.assertEqual(args["map"]["labels"]["en_US"], "Summoner's Rift")
 
 
 if __name__ == "__main__":

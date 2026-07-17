@@ -1,0 +1,69 @@
+# normalized translation 展示词表。
+#
+# 本文件承载 normalized_translation_builder.py 中 phase / action /
+# ability_component / gameplay_event 四类 translation argument 的中英文展示
+# label，原为代码内联 dict（T3.3 外置），扩展词条改这里、不改代码。
+# loader：src/lol_event_semantics/display_labels.py；词表缺词条时按既有
+# key/token fallback 兜底、不抛错（详见 loader 与 builder 对应函数）。
+
+phase:
+  # phase argument：技能/状态/流程阶段展示词；key 为 phase_key() 产出的规范阶段键。
+  state_activate: {zh_CN: 状态启动, en_US: state started}
+  state_deactivate: {zh_CN: 状态结束, en_US: state ended}
+  cast: {zh_CN: 释放, en_US: cast}
+  in: {zh_CN: 进入, en_US: in}
+  out: {zh_CN: 退出, en_US: out}
+  segment: {zh_CN: 片段, en_US: segment}
+  leadin: {zh_CN: 引入, en_US: lead in}
+  leadout: {zh_CN: 引出, en_US: lead out}
+  winddown: {zh_CN: 收尾, en_US: wind down}
+  hit: {zh_CN: 命中, en_US: hit}
+  phase_select: {zh_CN: 阶段选择, en_US: phase select}
+  missile_launch: {zh_CN: 弹道发射, en_US: missile launch}
+  launch: {zh_CN: 发射, en_US: launch}
+  end: {zh_CN: 结束, en_US: end}
+  start: {zh_CN: 开始, en_US: start}
+  land: {zh_CN: 落地, en_US: land}
+  detonate: {zh_CN: 引爆, en_US: detonate}
+  charge: {zh_CN: 蓄力, en_US: charge}
+  fullcharge: {zh_CN: 满蓄力, en_US: full charge}
+  stop: {zh_CN: 停止, en_US: stop}
+  miss: {zh_CN: 落空, en_US: miss}
+  catch: {zh_CN: 抓取, en_US: catch}
+  return: {zh_CN: 返回, en_US: return}
+  ready: {zh_CN: 就绪, en_US: ready}
+  swap: {zh_CN: 切换, en_US: swap}
+  reset: {zh_CN: 重置, en_US: reset}
+
+action:
+  # action argument：皮肤动作/招式展示词；key 为小写 action 原值。
+  recall: {zh_CN: 回城, en_US: recall}
+  taunt: {zh_CN: 嘲讽, en_US: taunt}
+  death: {zh_CN: 死亡, en_US: death}
+  joke: {zh_CN: 玩笑, en_US: joke}
+  laugh: {zh_CN: 大笑, en_US: laugh}
+  respawn: {zh_CN: 重生, en_US: respawn}
+
+ability_component:
+  # ability_component argument 的组件中文兜底词，供 contextual_alias 缺 raw_label
+  # 时使用；key 为组件规范键。英文由 key 派生（title case），不在此维护。
+  passive_defense: 被动防御
+  slow_stun: 减速/眩晕
+  rapid_reload: 快速装填
+  animal_threshold: 斯嘎尔阈值
+
+gameplay_event:
+  # gameplay_event argument：玩法事件展示词；key 为小写事件名。
+  first_blood: {zh_CN: 一血, en_US: first blood}
+
+maps:
+  # map argument 的人工核对高置信地图中文名（T3.3 新增）。宁缺毋错：未列出的
+  # id 不得瞎猜，由 loader 回落到 reference 英文真名，再无则保留 Map{id}。
+  # key 为 reference/maps 中的 entity.id；英文名不在此维护，取自
+  # reference/maps/*.yaml 的 entity.names.en_US[0].value。
+  11: 召唤师峡谷
+  12: 嚎哭深渊
+  21: 极限闪击
+  30: 斗魂竞技场
+  22: 云顶之弈
+  0: 通用

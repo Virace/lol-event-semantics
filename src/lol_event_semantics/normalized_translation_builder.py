@@ -7,6 +7,7 @@ from collections.abc import Mapping
 from typing import Any
 
 from .decomposition_model import EventDecompositionRecord
+from .display_labels import DisplayLabels, get_display_labels, get_reference_map_names
 from .normalized_translation_model import (
     FRAME_VERSION,
     TRANSLATION_SCHEMA_VERSION,
@@ -683,11 +684,16 @@ def ability_slot_argument(spell_key: object) -> dict[str, object] | None:
     )
 
 
-def ability_component_argument(slots: dict[str, object]) -> dict[str, object] | None:
+def ability_component_argument(
+    slots: dict[str, object],
+    *,
+    labels: DisplayLabels | None = None,
+) -> dict[str, object] | None:
     """构建技能组件 argument。
 
     Args:
         slots: 拆解记录 semantic slots。
+        labels: 展示词表；为 None 时使用进程内缓存的默认词表（供测试注入替代词表）。
 
     Returns:
         ability_component 参数；无组件时返回 None。
@@ -719,7 +725,7 @@ def ability_component_argument(slots: dict[str, object]) -> dict[str, object] | 
         status_key = string_or_none(slots.get("status_key"))
         if status_key is not None:
             component_key = status_key
-            raw_label = component_label_zh(status_key, None, None)
+            raw_label = component_label_zh(status_key, None, None, labels=labels)
             source = "semantic_slots.status_key"
 
     if component_key is None:
@@ -728,7 +734,7 @@ def ability_component_argument(slots: dict[str, object]) -> dict[str, object] | 
     if source == "semantic_slots.idle_component" and raw_label:
         zh_label = raw_label
     else:
-        zh_label = component_label_zh(component_key, raw_label, slots.get("spell_key"))
+        zh_label = component_label_zh(component_key, raw_label, slots.get("spell_key"), labels=labels)
     return argument_to_dict(
         TranslationArgument(
             role="ability_component",
@@ -740,12 +746,18 @@ def ability_component_argument(slots: dict[str, object]) -> dict[str, object] | 
     )
 
 
-def phase_argument(phase: object, frame_type: str) -> dict[str, object] | None:
+def phase_argument(
+    phase: object,
+    frame_type: str,
+    *,
+    labels: DisplayLabels | None = None,
+) -> dict[str, object] | None:
     """构建翻译层 phase argument。
 
     Args:
         phase: profile 或 reference 写入的阶段值。
         frame_type: 当前 frame 类型。
+        labels: 展示词表；为 None 时使用进程内缓存的默认词表（供测试注入替代词表）。
 
     Returns:
         phase 参数；不支持的阶段返回 None。
@@ -755,66 +767,14 @@ def phase_argument(phase: object, frame_type: str) -> dict[str, object] | None:
     if key is None:
         return None
 
-    zh_labels = {
-        "state_activate": "状态启动",
-        "state_deactivate": "状态结束",
-        "cast": "释放",
-        "in": "进入",
-        "out": "退出",
-        "segment": "片段",
-        "leadin": "引入",
-        "leadout": "引出",
-        "winddown": "收尾",
-        "hit": "命中",
-        "phase_select": "阶段选择",
-        "missile_launch": "弹道发射",
-        "launch": "发射",
-        "end": "结束",
-        "start": "开始",
-        "land": "落地",
-        "detonate": "引爆",
-        "charge": "蓄力",
-        "fullcharge": "满蓄力",
-        "stop": "停止",
-        "miss": "落空",
-        "catch": "抓取",
-        "return": "返回",
-        "ready": "就绪",
-        "swap": "切换",
-        "reset": "重置",
-    }
-    en_labels = {
-        "state_activate": "state started",
-        "state_deactivate": "state ended",
-        "cast": "cast",
-        "in": "in",
-        "out": "out",
-        "segment": "segment",
-        "leadin": "lead in",
-        "leadout": "lead out",
-        "winddown": "wind down",
-        "hit": "hit",
-        "phase_select": "phase select",
-        "missile_launch": "missile launch",
-        "launch": "launch",
-        "end": "end",
-        "start": "start",
-        "land": "land",
-        "detonate": "detonate",
-        "charge": "charge",
-        "fullcharge": "full charge",
-        "stop": "stop",
-        "miss": "miss",
-        "catch": "catch",
-        "return": "return",
-        "ready": "ready",
-        "swap": "swap",
-        "reset": "reset",
-    }
+    active_labels = labels if labels is not None else get_display_labels()
+    # phase_key() 是严格 allowlist，理论上 key 必在词表中；词表被误删词条时
+    # 回落为 key 本身，保持“不抛错”而不是 KeyError 崩溃整条记录。
+    zh_label, en_label = active_labels.phase.get(key, (key, key))
     return argument_to_dict(
         TranslationArgument(
             role="phase",
-            labels={"zh_CN": zh_labels[key], "en_US": en_labels[key]},
+            labels={"zh_CN": zh_label, "en_US": en_label},
             confidence="high",
             provenance={"source": "semantic_slots.phase", "frame_type": frame_type, "raw_phase": phase},
             key=key,
@@ -822,12 +782,18 @@ def phase_argument(phase: object, frame_type: str) -> dict[str, object] | None:
     )
 
 
-def action_argument(action: object, frame_type: str) -> dict[str, object] | None:
+def action_argument(
+    action: object,
+    frame_type: str,
+    *,
+    labels: DisplayLabels | None = None,
+) -> dict[str, object] | None:
     """构建动作 argument。
 
     Args:
         action: 原始动作键。
         frame_type: 当前 frame 类型。
+        labels: 展示词表；为 None 时使用进程内缓存的默认词表（供测试注入替代词表）。
 
     Returns:
         action 参数；没有动作时返回 None。
@@ -836,15 +802,8 @@ def action_argument(action: object, frame_type: str) -> dict[str, object] | None
     if not isinstance(action, str) or not action:
         return None
 
-    labels = {
-        "recall": ("回城", "recall"),
-        "taunt": ("嘲讽", "taunt"),
-        "death": ("死亡", "death"),
-        "joke": ("玩笑", "joke"),
-        "laugh": ("大笑", "laugh"),
-        "respawn": ("重生", "respawn"),
-    }
-    zh, en = labels.get(action.lower(), (action, action))
+    active_labels = labels if labels is not None else get_display_labels()
+    zh, en = active_labels.action.get(action.lower(), (action, action))
     return argument_to_dict(
         TranslationArgument(
             role="action",
@@ -890,11 +849,23 @@ def variant_argument(slots: dict[str, object], frame_type: str) -> dict[str, obj
     )
 
 
-def map_argument(map_id: object) -> dict[str, object] | None:
-    """构建 map argument。
+def map_argument(
+    map_id: object,
+    *,
+    labels: DisplayLabels | None = None,
+    reference_map_names: Mapping[int, str] | None = None,
+) -> dict[str, object] | None:
+    """构建 map argument，优先使用真实地图名而不是 Map{id} 占位。
+
+    zh_CN 优先取词表人工核对名；缺失时退到 reference 英文真名；再无则保留
+    Map{id}。en_US 直接取 reference 英文真名；缺失时保留 Map{id}。地图中文
+    名错误比显示英文名更严重，因此词表只收录高置信 id，宁缺毋错。
 
     Args:
         map_id: 地图 ID。
+        labels: 展示词表；为 None 时使用进程内缓存的默认词表（供测试注入替代词表）。
+        reference_map_names: 地图 id 到 reference 英文真名的映射；为 None 时使用
+            进程内缓存的默认索引（供测试注入替代数据）。
 
     Returns:
         map 参数；无地图 ID 时返回 None。
@@ -903,23 +874,64 @@ def map_argument(map_id: object) -> dict[str, object] | None:
     if not isinstance(map_id, int):
         return None
 
+    active_labels = labels if labels is not None else get_display_labels()
+    active_reference_names = (
+        reference_map_names if reference_map_names is not None else get_reference_map_names()
+    )
+
+    placeholder = f"Map{map_id}"
+    reference_name = active_reference_names.get(map_id)
+    curated_zh = active_labels.maps.get(map_id)
+
+    if curated_zh is not None:
+        zh_label, zh_source = curated_zh, "display_labels.maps"
+    elif reference_name is not None:
+        zh_label, zh_source = reference_name, "reference_maps"
+    else:
+        zh_label, zh_source = placeholder, "placeholder"
+
+    if reference_name is not None:
+        en_label, en_source = reference_name, "reference_maps"
+    else:
+        en_label, en_source = placeholder, "placeholder"
+
+    # 只有 zh 来自人工核对词表且 en 有 reference 真名支撑时才算“确认无误”；
+    # 其余情形（英文真名回填中文、或彻底未知 id）都要在 provenance 留痕。
+    fallback = zh_source != "display_labels.maps" or en_source != "reference_maps"
+    fallback_reason = None
+    if fallback:
+        fallback_reason = (
+            "missing_map_label" if zh_source == "placeholder" and en_source == "placeholder" else "map_label_incomplete"
+        )
+
     return argument_to_dict(
         TranslationArgument(
             role="map",
-            labels={"zh_CN": f"Map{map_id}", "en_US": f"Map{map_id}"},
+            labels={"zh_CN": zh_label, "en_US": en_label},
             confidence="medium",
-            provenance={"source": "semantic_slots.map_id"},
+            provenance={
+                "source": "semantic_slots.map_id",
+                "zh_source": zh_source,
+                "en_source": en_source,
+            },
             key=f"map{map_id}",
             value=str(map_id),
+            fallback=fallback,
+            fallback_reason=fallback_reason,
         )
     )
 
 
-def gameplay_event_argument(event: object) -> dict[str, object] | None:
+def gameplay_event_argument(
+    event: object,
+    *,
+    labels: DisplayLabels | None = None,
+) -> dict[str, object] | None:
     """构建玩法事件 argument。
 
     Args:
         event: 玩法事件键。
+        labels: 展示词表；为 None 时使用进程内缓存的默认词表（供测试注入替代词表）。
 
     Returns:
         gameplay_event 参数；无事件时返回 None。
@@ -928,10 +940,8 @@ def gameplay_event_argument(event: object) -> dict[str, object] | None:
     if not isinstance(event, str) or not event:
         return None
 
-    labels = {
-        "first_blood": ("一血", "first blood"),
-    }
-    zh, en = labels.get(event.lower(), (event, event))
+    active_labels = labels if labels is not None else get_display_labels()
+    zh, en = active_labels.gameplay_event.get(event.lower(), (event, event))
     return argument_to_dict(
         TranslationArgument(
             role="gameplay_event",
@@ -1028,13 +1038,20 @@ def normalize_skin_token(token: str) -> str:
     return f"Skin{int(match.group(1)):02d}"
 
 
-def component_label_zh(component_key: str, raw_label: str | None, spell_key: object) -> str:
+def component_label_zh(
+    component_key: str,
+    raw_label: str | None,
+    spell_key: object,
+    *,
+    labels: DisplayLabels | None = None,
+) -> str:
     """返回技能组件中文标签。
 
     Args:
         component_key: 组件规范键。
         raw_label: contextual alias 中的原始中文标签。
         spell_key: 当前技能键位。
+        labels: 展示词表；为 None 时使用进程内缓存的默认词表（供测试注入替代词表）。
 
     Returns:
         去掉冗余技能槽位后的中文组件标签。
@@ -1047,13 +1064,8 @@ def component_label_zh(component_key: str, raw_label: str | None, spell_key: obj
         if label:
             return label
 
-    labels = {
-        "passive_defense": "被动防御",
-        "slow_stun": "减速/眩晕",
-        "rapid_reload": "快速装填",
-        "animal_threshold": "斯嘎尔阈值",
-    }
-    return labels.get(component_key, component_key.replace("_", " "))
+    active_labels = labels if labels is not None else get_display_labels()
+    return active_labels.ability_component.get(component_key, component_key.replace("_", " "))
 
 
 def idle_weapon_component_label(slots: dict[str, object], component: dict[str, object]) -> str:
