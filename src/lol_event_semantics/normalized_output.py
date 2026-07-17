@@ -11,7 +11,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Iterable
 
-from .decomposition_model import EventDecompositionRecord
+from .decomposition_model import EventDecompositionRecord, SemanticProfile
 from .display_tier import classify_display_tier
 from .normalized_translation_builder import (
     LABEL_SOURCE_REFERENCE,
@@ -22,11 +22,16 @@ from .normalized_translation_builder import (
 from .normalized_translation_model import TranslationBuildContext
 from .normalized_translation_renderer import build_compat_display
 from .reference_collection import load_reference_collection, read_yaml
+from .rules import RuleBook, rule_key
 
 SCHEMA_VERSION = 1
 TECHNICAL_DISPLAY_TOKENS = ("Play_vo", "Play_sfx", "cast3D", "2D", "3D", "voProcessing")
 DEFAULT_REFERENCE_ROOT = Path("reference")
 DEFAULT_OVERRIDES_ROOT = Path("overrides")
+DEFAULT_RULES_ROOT = Path("rules")
+# rules/contextual/sfx 中承载“实体自身”中文词条分片的保留 owner 值，
+# 与 HA.yaml/SRU.yaml 里描述实体内部子 token 的 owner=HA/SRU 互不冲突。
+MAP_SYSTEM_ENTITY_OWNER = "entity"
 ENTITY_ATTRIBUTION_FILENAME = "entity_attribution.yaml"
 ENTITY_ATTRIBUTION_DECISIONS = {"keep", "champion", "downgrade"}
 ENTITY_DOWNGRADE_KINDS = {"unknown", "map_or_system"}
@@ -288,7 +293,70 @@ def build_short_display_core(record: EventDecompositionRecord) -> str:
         skin = f" {skin_token}" if skin_token else ""
         return compact_display(f"{owner}{skin} 回城{skin_recall_phase_label(phase)}")
 
+    if record.profile.semantic_profile == SemanticProfile.MAP_OR_SYSTEM:
+        return compact_display(f"{owner}{map_system_fallback_label(record)}")
+
     return compact_display(f"{owner}{family_label(record.profile.primary_family)}")
+
+
+def map_system_fallback_label(record: EventDecompositionRecord) -> str:
+    """返回 map/系统域兜底短文案的核心后缀。
+
+    优先渲染已解析的阶段/通用后缀（释放/命中/状态启动/循环等，见
+    map_system_phase_label，复用既有阶段词表不新造措辞）；识别到独立
+    loop token（如 homeguard_..._loop）但未归一进 phase 槽位时按同一份
+    既有措辞渲染"循环"；都没有命中时回落到事件族标签，与其它域兜底路径
+    一致，不丢失已解析信息。
+
+    Args:
+        record: 拆解记录。
+
+    Returns:
+        兜底短文案后缀。
+    """
+
+    phase_text = map_system_phase_label(record.semantic_slots.get("phase"))
+    if phase_text:
+        return phase_text
+
+    if any(atom.raw.lower() == "loop" for atom in record.lexical_atoms):
+        return "循环"
+
+    return family_label(record.profile.primary_family)
+
+
+def map_system_phase_label(phase: object) -> str:
+    """返回 map/系统域兜底短文案可渲染的阶段中文词。
+
+    先复用既有阶段词表：phase_label 的 cast/hit/发射类词，以及
+    skin_action_phase_label 的 buff_activate/buff_deactivate（状态启动/
+    状态结束）；再补齐这两个词表缺的下划线归一键形（missile_launch/
+    missile_cast/on_buff_activate/on_buff_deactivate/loop），指向同一份
+    既有中文措辞（rules/phases.yaml 的 loop→循环），不新造翻译。
+
+    Args:
+        phase: 语义槽中的阶段值。
+
+    Returns:
+        中文阶段词；未命中任何已有词表时返回空串。
+    """
+
+    if phase is None:
+        return ""
+
+    key = str(phase).lower()
+    direct = phase_label(key) or skin_action_phase_label(key)
+    if direct:
+        return direct
+
+    underscored_aliases = {
+        "missile_launch": "发射",
+        "missile_cast": "发射",
+        "on_buff_activate": "状态启动",
+        "on_buff_deactivate": "状态结束",
+        "loop": "循环",
+    }
+    return underscored_aliases.get(key, "")
 
 
 def build_detail_display(record: EventDecompositionRecord) -> str:
@@ -338,6 +406,10 @@ def build_debug_label(record: EventDecompositionRecord) -> str:
 def display_owner(record: EventDecompositionRecord) -> str:
     """返回适合展示的 owner 名称。
 
+    map/系统域记录没有具体 subject 时，优先用 T3.4 头部词条表把 owner
+    英文 alias（Announcer/Env/Cherry 等）渲染成人工核对的中文名；表外
+    别名保留英文，不新造翻译。
+
     Args:
         record: 拆解记录。
 
@@ -349,7 +421,56 @@ def display_owner(record: EventDecompositionRecord) -> str:
     if subject:
         return subject
 
-    return record.owner.alias or record.owner.raw_owner_token or "未知实体"
+    alias = record.owner.alias or record.owner.raw_owner_token or "未知实体"
+
+    if record.owner.kind == "map_or_system":
+        label = map_system_entity_label(alias)
+        if label is not None:
+            return label
+
+    return alias
+
+
+def map_system_entity_label(alias: str) -> str | None:
+    """把 map/系统域实体英文别名渲染成人工核对的中文词条。
+
+    Args:
+        alias: map/系统域实体的原始英文别名（owner.alias）。
+
+    Returns:
+        中文词条；别名不在 T3.4 头部词条表内时返回 None，调用方原样保留
+        英文 alias（宁可保留英文，不硬造翻译——仓库红线）。
+    """
+
+    return get_map_system_entity_labels().get(rule_key(alias))
+
+
+@lru_cache(maxsize=1)
+def get_map_system_entity_labels(
+    rules_root: Path = DEFAULT_RULES_ROOT,
+    overrides_root: Path = DEFAULT_OVERRIDES_ROOT,
+) -> dict[str, str]:
+    """读取并缓存 map/系统域实体级中文词条表（T3.4 头部词条表）。
+
+    词条来自 rules/contextual/sfx 下 owner="entity" 的分片，key 为规则
+    引擎归一后的实体别名（rule_key），value 为人工核对的中文名。
+
+    Args:
+        rules_root: 仓库规则根目录。
+        overrides_root: 人工 overrides 根目录（RuleBook.load 需要，与
+            champion 实体归一使用的路径一致）。
+
+    Returns:
+        规范化实体别名到中文词条的映射；分片缺失时返回空表。
+    """
+
+    rulebook = RuleBook.load(rules_root, overrides_root)
+    entity_owner_key = rule_key(MAP_SYSTEM_ENTITY_OWNER)
+    return {
+        token: alias.label
+        for (scope, owner, token), alias in rulebook.contextual_aliases.items()
+        if scope == "sfx" and owner == entity_owner_key
+    }
 
 
 def display_subject(slots: dict[str, Any]) -> str | None:

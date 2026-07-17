@@ -1,0 +1,139 @@
+scope: sfx
+# owner 取值 "entity" 是本文件专用的保留占位符，不对应任何真实事件 owner
+# 前缀：这里的每个 token 就是 map/系统域实体自身的英文 alias（不是某个
+# owner 下的子 token），对应 normalized entity.kind == map_or_system 的
+# 记录。normalized_output.py 的 map_system_entity_label() 按记录
+# owner.alias 直接查这张表渲染成中文；HA.yaml / SRU.yaml 里 owner: HA /
+# owner: SRU 的词条描述的是这两个实体内部的子组件（Blue/Red 等），两者
+# 互不冲突。
+#
+# 词条为主代理人工裁决（T3.4 头部词条表，逐字使用，不得增改中文名）；
+# 表外别名一律保留英文 alias，不新造翻译（仓库红线）。
+owner: entity
+aliases:
+  Announcer:
+    kind: map_system_entity
+    component: announcer
+    label: 播报员
+    confidence: high
+    source: manual_sfx_alias
+    note: 全场播报语音（Ace/FirstBlood 等），主代理裁决词条（T3.4 头部词条表）。
+  Shopkeeper:
+    kind: map_system_entity
+    component: shopkeeper
+    label: 商店老板
+    confidence: high
+    source: manual_sfx_alias
+    note: 地图商人台词，主代理裁决词条（T3.4 头部词条表）。
+  Tutorial:
+    kind: map_system_entity
+    component: tutorial
+    label: 新手教程
+    confidence: high
+    source: manual_sfx_alias
+    note: 教程语音，主代理裁决词条（T3.4 头部词条表）。
+  Tutorial2:
+    kind: map_system_entity
+    component: tutorial2
+    label: 新手教程
+    confidence: high
+    source: manual_sfx_alias
+    note: 教程语音（第二批），主代理裁决词条（T3.4 头部词条表）。
+  Env:
+    kind: map_system_entity
+    component: env
+    label: 环境音效
+    confidence: high
+    source: manual_sfx_alias
+    note: 地图环境事件（塔摧毁等），主代理裁决词条（T3.4 头部词条表）；ENV 大写写法按 rule_key 归一同表。
+  Emotes:
+    kind: map_system_entity
+    component: emotes
+    label: 表情
+    confidence: high
+    source: manual_sfx_alias
+    note: 表情系统音效，主代理裁决词条（T3.4 头部词条表）。
+  Augment:
+    kind: map_system_entity
+    component: augment
+    label: 强化符文
+    confidence: high
+    source: manual_sfx_alias
+    note: ARAM/斗魂竞技场强化符文，主代理裁决词条（T3.4 头部词条表）。
+  Cherry:
+    kind: map_system_entity
+    component: cherry
+    label: 斗魂竞技场
+    confidence: high
+    source: manual_sfx_alias
+    note: Arena 模式内部代号，主代理裁决词条（T3.4 头部词条表）。
+  NexusBlitz:
+    kind: map_system_entity
+    component: nexus_blitz
+    label: 极限闪击
+    confidence: high
+    source: manual_sfx_alias
+    note: Nexus Blitz 模式，主代理裁决词条（T3.4 头部词条表）。
+  HUD:
+    kind: map_system_entity
+    component: hud
+    label: 界面
+    confidence: high
+    source: manual_sfx_alias
+    note: HUD/界面反馈音，主代理裁决词条（T3.4 头部词条表）。
+  Perks:
+    kind: map_system_entity
+    component: perks
+    label: 符文
+    confidence: high
+    source: manual_sfx_alias
+    note: 符文系统（如黑暗收割触发），主代理裁决词条（T3.4 头部词条表）。
+  Atakhan:
+    kind: map_system_entity
+    component: atakhan
+    label: 阿塔坎
+    confidence: high
+    source: manual_sfx_alias
+    note: S15 史诗野怪，主代理裁决词条（T3.4 头部词条表）。
+  GameMode:
+    kind: map_system_entity
+    component: game_mode
+    label: 游戏模式
+    confidence: high
+    source: manual_sfx_alias
+    note: 模式专属系统音，主代理裁决词条（T3.4 头部词条表）。
+  SummonerDot:
+    kind: map_system_entity
+    component: summoner_dot
+    label: 点燃
+    confidence: high
+    source: manual_sfx_alias
+    note: 召唤师技能，主代理裁决词条（T3.4 头部词条表）。
+  SummonerTeleport:
+    kind: map_system_entity
+    component: summoner_teleport
+    label: 传送
+    confidence: high
+    source: manual_sfx_alias
+    note: 召唤师技能，主代理裁决词条（T3.4 头部词条表）。
+  SummonerSnowball:
+    kind: map_system_entity
+    component: summoner_snowball
+    label: 标记(雪球)
+    confidence: high
+    source: manual_sfx_alias
+    note: 极地大乱斗召唤师技能，主代理裁决词条（T3.4 头部词条表）。
+  SRU:
+    kind: map_system_entity
+    component: sru
+    label: 召唤师峡谷单位
+    confidence: high
+    source: manual_sfx_alias
+    note: SRU_ 前缀单位实体本身（区别于 SRU.yaml 内 owner=SRU 的子 token 词条），主代理裁决词条（T3.4 头部词条表）。
+  HA:
+    kind: map_system_entity
+    component: ha
+    label: 嚎哭深渊单位
+    confidence: high
+    source: manual_sfx_alias
+    note: HA_ 前缀单位实体本身（区别于 HA.yaml 内 owner=HA 的子 token 词条），主代理裁决词条（T3.4 头部词条表）。

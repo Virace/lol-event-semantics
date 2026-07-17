@@ -24,6 +24,7 @@ from lol_event_semantics.normalized_output import (
     DEFAULT_REFERENCE_ROOT,
     ChampionEntityResolver,
     build_normalized_record,
+    build_short_display,
     champion_by_alias_affix,
     load_champion_entity_resolver,
     load_entity_attribution_overrides,
@@ -180,6 +181,50 @@ class NormalizedOutputTests(unittest.TestCase):
                 {row["raw_event_name"] for row in rows},
                 {"Play_vo_BelVeth_TestA", "Play_vo_Belveth_TestB"},
             )
+
+
+class MapSystemEntityDisplayTests(unittest.TestCase):
+    """验证 map/系统域头部实体词条与通用后缀渲染（T3.4）。"""
+
+    def test_announcer_owner_renders_chinese_label(self) -> None:
+        """Announcer 属于 T3.4 头部词条表，短文案渲染中文名而非英文 alias。"""
+
+        record = normalize_semantics(
+            decompose_event_name(
+                "Play_vo_Announcer_Brawl_Ace",
+                game_version="16.5",
+                source_path="raw/events/maps/12.txt",
+            )
+        )
+
+        self.assertIn("播报员", build_short_display(record))
+
+    def test_untabled_owner_keeps_english_alias(self) -> None:
+        """表外别名（如 Ruby）不硬造中文，短文案继续保留英文 alias 现状。"""
+
+        record = normalize_semantics(
+            decompose_event_name(
+                "Play_sfx_Ruby_Boss_Test_OnHit",
+                game_version="16.5",
+                source_path="raw/events/maps/12.txt",
+            )
+        )
+
+        short = build_short_display(record)
+        self.assertTrue(short.startswith("Ruby"))
+        self.assertEqual(short, "Ruby命中")
+
+    def test_loop_suffix_renders_chinese_loop_word(self) -> None:
+        """已解析的 loop 通用后缀渲染成"循环"，复用既有阶段词表措辞。"""
+
+        record = normalize_semantics(
+            decompose_event_name(
+                "Play_sfx_Env_Map11_SRX_Chemtech_Dragon_Zone_Subtle_loop",
+                game_version="16.5",
+            )
+        )
+
+        self.assertIn("循环", build_short_display(record))
 
 
 class ChampionEntityAttributionTests(unittest.TestCase):
