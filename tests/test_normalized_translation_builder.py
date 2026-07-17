@@ -19,6 +19,7 @@ from lol_event_semantics.normalized_translation_builder import (
     phase_argument,
 )
 from lol_event_semantics.normalized_translation_model import TranslationBuildContext
+from lol_event_semantics.normalized_translation_renderer import build_compat_display
 
 FIXTURE = Path(__file__).parent / "fixtures" / "normalized_translation_cases.json"
 
@@ -84,6 +85,8 @@ class NormalizedTranslationBuilderFixtureTests(unittest.TestCase):
             "gameplay_phase_control",
             "voice_event",
             "ability_cast_event",
+            "kill_or_destroy_event",
+            "champion_interaction_cue",
         }
         for case in cases:
             if case["expected_frame_type"] not in supported:
@@ -512,6 +515,165 @@ class DisplayLabelsInjectionTests(unittest.TestCase):
         assert argument is not None
         self.assertEqual(argument["labels"]["zh_CN"], "二血")
         self.assertEqual(argument["labels"]["en_US"], "second blood")
+
+
+class CounterpartFrameGoldenDisplayTests(unittest.TestCase):
+    """验证 T3.2 两个 counterpart frame 的黄金样例文本逐字一致（SPEC 硬门）。"""
+
+    def test_fixture_golden_cases_render_exact_display(self) -> None:
+        """fixture 黄金样例经真实 reference 上下文渲染出逐字 default/main 文本。"""
+
+        cases = json.loads(FIXTURE.read_text(encoding="utf-8"))
+        target_types = {"kill_or_destroy_event", "champion_interaction_cue"}
+        seen = 0
+        for case in cases:
+            if case["expected_frame_type"] not in target_types:
+                continue
+
+            seen += 1
+            with self.subTest(raw=case["raw_event_name"]):
+                record = enriched_record(case["raw_event_name"])
+                translation = build_translation(record, reference_translation_context())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], case["expected_frame_type"])
+
+                display = build_compat_display(translation, raw_event_name=case["raw_event_name"])
+                self.assertEqual(display["zh_cn_detail"], case["zh_cn_default"])
+                self.assertEqual(display["zh_cn_short"], case["zh_cn_main"])
+
+        self.assertGreaterEqual(seen, 7)
+
+
+class CounterpartFrameDispatchTests(unittest.TestCase):
+    """验证 profile 分派：interaction/kill_or_score 走新 frame，self_action 不受影响。"""
+
+    def test_interaction_attack_builds_champion_interaction_cue(self) -> None:
+        """interaction profile 的 attack 家族不再被 voice_event 抢走。"""
+
+        record = enriched_record("Play_vo_AatroxSkin01_Attack2DPantheon")
+        self.assertEqual(record.profile.semantic_profile.value, "interaction")
+
+        translation = build_translation(record, TranslationBuildContext())
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        self.assertEqual(translation["frame_type"], "champion_interaction_cue")
+
+    def test_self_action_attack_and_taunt_keep_voice_event(self) -> None:
+        """（回归）self_action 的 attack/taunt 仍构建 voice_event。"""
+
+        for raw in ["Play_vo_AsheSkin06_Attack2DGeneral", "Play_vo_AsheSkin06_Taunt2DGeneral"]:
+            with self.subTest(raw=raw):
+                record = enriched_record(raw)
+                self.assertEqual(record.profile.semantic_profile.value, "self_action")
+
+                translation = build_translation(record, TranslationBuildContext())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], "voice_event")
+
+    def test_unsupported_interaction_families_build_no_frame(self) -> None:
+        """encounter/recall/nearby_event/interactive 本批返回 None 不建 frame。"""
+
+        for raw in [
+            "Play_vo_Yunara_SecondEncounter3DKennen",
+            "Play_vo_XayahSkin57_Recal3DRakan",
+            "Play_vo_Urgot_Nearby3DDeathsAlly",
+        ]:
+            with self.subTest(raw=raw):
+                record = enriched_record(raw)
+                self.assertEqual(record.profile.semantic_profile.value, "interaction")
+                self.assertIsNone(build_translation(record, TranslationBuildContext()))
+
+
+class CounterpartArgumentResolutionTests(unittest.TestCase):
+    """验证 counterpart 名称解析链：champion/skin/词表/fallback。"""
+
+    def test_vocab_counterpart_resolves_chinese_label(self) -> None:
+        """词表 kind（Baron）解析为官方中文词条。"""
+
+        record = enriched_record("Play_vo_Ezreal_Kill3DBaron")
+        translation = build_translation(record, reference_translation_context())
+        assert translation is not None
+        counterpart = translation["arguments"]["counterpart"]
+        self.assertEqual(counterpart["labels"]["zh_CN"], "纳什男爵")
+        self.assertFalse(counterpart["fallback"])
+
+    def test_unmatched_counterpart_falls_back_to_english(self) -> None:
+        """词表未命中（count_context Fifteen）直出英文 label，不硬造中文。"""
+
+        record = enriched_record("Play_vo_KaisaSkin40_Kill3DFifteen")
+        translation = build_translation(record, reference_translation_context())
+        assert translation is not None
+        counterpart = translation["arguments"]["counterpart"]
+        self.assertEqual(counterpart["labels"]["zh_CN"], "Fifteen")
+        self.assertTrue(counterpart["fallback"])
+        self.assertEqual(counterpart["fallback_reason"], "missing_counterpart_zh_label")
+        self.assertEqual(counterpart["confidence"], "low")
+
+    def test_general_counterpart_is_treated_as_no_counterpart(self) -> None:
+        """FirstEncounter3DGeneral 的 kind=general 视为无特定对象。"""
+
+        record = enriched_record("Play_vo_AatroxSkin01_FirstEncounter3DGeneral")
+        translation = build_translation(record, reference_translation_context())
+        assert translation is not None
+        self.assertNotIn("counterpart", translation["arguments"])
+        self.assertEqual(translation["arguments"]["trigger"]["labels"]["zh_CN"], "初遇语音")
+
+    def test_objective_steal_bakes_spec_wording(self) -> None:
+        """objective_steal 按措辞表渲染「抢夺 巨龙 语音」。"""
+
+        record = enriched_record("Play_vo_MasterYiSkin89_Kill3DDragonSteal")
+        translation = build_translation(record, reference_translation_context())
+        assert translation is not None
+        args = translation["arguments"]
+        self.assertEqual(args["trigger"]["labels"]["zh_CN"], "抢夺 巨龙 语音")
+        self.assertIn("objective_steal", args)
+
+    def test_non_single_letter_kill_method_keeps_raw(self) -> None:
+        """kill_method 归一失败（RActive）时 raw 原样保留在 argument。"""
+
+        record = enriched_record("Play_vo_MasterYiSkin89_Kill3DRActive")
+        translation = build_translation(record, reference_translation_context())
+        assert translation is not None
+        args = translation["arguments"]
+        self.assertEqual(args["trigger"]["labels"]["zh_CN"], "击杀语音")
+        self.assertEqual(args["kill_method"]["labels"]["zh_CN"], "RActive")
+
+    def test_single_letter_kill_method_renders_spec_wording_in_detail_only(self) -> None:
+        """QWER 击杀键 detail 按「R技能击杀语音」展开，short 保持零拉丁字母。"""
+
+        record = enriched_record("Play_vo_Teemo_Kill3DR")
+        translation = build_translation(record, reference_translation_context())
+        assert translation is not None
+        self.assertEqual(translation["arguments"]["kill_method"]["labels"]["zh_CN"], "R技能")
+
+        display = build_compat_display(translation, raw_event_name="Play_vo_Teemo_Kill3DR")
+        self.assertEqual(display["zh_cn_detail"], "提莫 R技能击杀语音")
+        self.assertEqual(display["zh_cn_short"], "击杀语音")
+
+    def test_ownerless_kill_with_technical_owner_label_builds_no_frame(self) -> None:
+        """ownerless 事件（owner 段即事件体）的 champion label 残留 3D token，不建 frame。"""
+
+        record = enriched_record("Play_vo_Kill3DPenta")
+        self.assertIsNone(build_translation(record, reference_translation_context()))
+
+    def test_sfx_kill_uses_sound_effect_word(self) -> None:
+        """asset_kind=sfx 的 kill 记录按音效措辞替换「语音」。"""
+
+        record = enriched_record("Play_sfx_AhriSkin85_KillCounter_10_buffactivate")
+        translation = build_translation(record, reference_translation_context())
+        assert translation is not None
+        self.assertEqual(translation["arguments"]["trigger"]["labels"]["zh_CN"], "击杀音效")
+
+
+@lru_cache(maxsize=1)
+def reference_translation_context() -> TranslationBuildContext:
+    """返回测试共享的真实 reference translation 上下文。"""
+
+    from lol_event_semantics.normalized_output import build_translation_context
+
+    return build_translation_context(Path("reference"))
 
 
 class MapArgumentDisplayLabelsTests(unittest.TestCase):

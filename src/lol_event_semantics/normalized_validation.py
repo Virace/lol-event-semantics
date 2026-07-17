@@ -45,6 +45,10 @@ SUPPORTED_TRANSLATION_PRIMARY_FAMILIES = {
     "laugh",
     "dance",
     "spell",
+    "first_encounter",
+    "kill",
+    "move",
+    "assist",
 }
 # display 无损性校验：detail 必须体现这三个壳动词的中文语义
 #（unmute 的「取消静音」含「静音」，与 mute 共用同一判据）。
@@ -484,8 +488,11 @@ def validate_display_losslessness(
        且 zh_cn_detail 为纯兜底模板时判丢，判据与 2 相同（英文 alias 与中文
        译名之间同样没有可靠映射可查，不做名字包含类启发式）。
 
-    一条记录只发一条 warning，message 列出全部被丢弃的槽位；交互对象槽位
-    附带对象名（alias/label/raw 首个非空值）方便人工排查。
+    一条记录只发一条问题，message 列出全部被丢弃的槽位；交互对象槽位附带
+    对象名（alias/label/raw 首个非空值）方便人工排查。severity：counterpart
+    槽位丢弃且 primary_family 属于已承接 translation 家族时升 error（T3.2
+    收紧门禁——覆盖承诺范围内的 counterpart 丢弃是回归）；未承接家族
+    （encounter/recall 等）与 chat_partner/phase/壳动词类维持 warning。
 
     Args:
         row: normalized 记录。
@@ -501,6 +508,7 @@ def validate_display_losslessness(
         return
 
     dropped: list[str] = []
+    dropped_counterpart = False
 
     if raw is not None:
         verb = parse_shell(raw).verb
@@ -510,6 +518,7 @@ def validate_display_losslessness(
     entity = row.get("entity")
     alias = string_or_none(entity.get("alias")) if isinstance(entity, dict) else None
     semantic = row.get("semantic")
+    primary_family = string_or_none(semantic.get("primary_family")) if isinstance(semantic, dict) else None
     slots = semantic.get("slots") if isinstance(semantic, dict) else None
     slots = slots if isinstance(slots, dict) else {}
 
@@ -522,10 +531,17 @@ def validate_display_losslessness(
             value = slots.get(key)
             if isinstance(value, dict) and value:
                 dropped.append(f"{key}={partner_display_name(value)}")
+                if key == "counterpart":
+                    dropped_counterpart = True
 
     if dropped:
+        make_issue = (
+            error
+            if dropped_counterpart and primary_family in SUPPORTED_TRANSLATION_PRIMARY_FAMILIES
+            else warning
+        )
         issues.append(
-            warning(
+            make_issue(
                 "display_drops_parsed_slot",
                 row_path,
                 f"展示 detail 丢弃已解析语义槽位：{'，'.join(dropped)}。",

@@ -316,6 +316,42 @@ class DisplayLosslessnessTests(unittest.TestCase):
         self.assertEqual(len(issues), 1)
         self.assertIn("counterpart=Akali", issues[0].message)
 
+    def test_counterpart_drop_in_supported_family_is_error(self) -> None:
+        """已承接家族（first_encounter）的 counterpart 丢弃升为硬错误（T3.2 收紧门禁）。"""
+
+        record = minimal_record("Play_vo_Annie_FirstEncounter3DAkali")
+        record["semantic"]["primary_family"] = "first_encounter"
+        record["semantic"]["slots"] = {
+            "trigger_family": "first_encounter",
+            "counterpart": {"alias": "Akali", "kind": "champion", "label": "Akali"},
+        }
+        record["display"]["zh_cn_short"] = "Annie语音事件"
+        record["display"]["zh_cn_detail"] = "Annie语音事件"
+
+        issues = self.drop_issues(record)
+
+        self.assertEqual(len(issues), 1)
+        self.assertEqual(issues[0].severity, "error")
+        self.assertIn("counterpart=Akali", issues[0].message)
+
+    def test_counterpart_drop_in_uncovered_family_stays_warning(self) -> None:
+        """未承接家族（encounter）的 counterpart 丢弃维持 warning。"""
+
+        record = minimal_record("Play_vo_Yunara_SecondEncounter3DKennen", alias="Yunara")
+        record["semantic"]["primary_family"] = "encounter"
+        record["semantic"]["slots"] = {
+            "trigger_family": "encounter",
+            "counterpart": {"kind": "unresolved_entity", "raw": "Kennen"},
+        }
+        record["display"]["zh_cn_short"] = "Yunara事件"
+        record["display"]["zh_cn_detail"] = "Yunara事件"
+
+        issues = self.drop_issues(record)
+
+        self.assertEqual(len(issues), 1)
+        self.assertEqual(issues[0].severity, "warning")
+        self.assertIn("counterpart=Kennen", issues[0].message)
+
     def test_chat_partner_with_pure_fallback_detail_is_warning(self) -> None:
         """chat_partner 非空且 detail 为纯兜底模板时报警。"""
 

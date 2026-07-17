@@ -6,7 +6,7 @@ import re
 from collections.abc import Mapping
 from typing import Any
 
-from .decomposition_model import EventDecompositionRecord
+from .decomposition_model import EventDecompositionRecord, SemanticProfile
 from .display_labels import DisplayLabels, get_display_labels, get_reference_map_names
 from .normalized_translation_model import (
     FRAME_VERSION,
@@ -15,6 +15,7 @@ from .normalized_translation_model import (
     TranslationBuildContext,
     argument_to_dict,
 )
+from .rules import rule_key
 
 # 英雄 label 来源标记：reference names 为权威来源，皮肤全名投票是缺名时的低可信回填。
 LABEL_SOURCE_REFERENCE = "reference_names"
@@ -82,6 +83,40 @@ ASSET_KIND_WORDS = {
     "sfx": ("音效", "sfx"),
     "mus": ("音乐", "music"),
 }
+# T3.2 counterpart frames：interaction/kill_or_score 本批承接的 trigger 家族。
+# nearby_event/interactive/recall/encounter 与 objective_destroy 本批返回 None
+# 不建 frame（SPEC 裁决；objective_destroy 无中文措辞，不硬造，见任务报告）。
+INTERACTION_CUE_FAMILIES = frozenset({"first_encounter", "attack", "move", "taunt", "assist"})
+KILL_OR_DESTROY_FAMILIES = frozenset({"kill"})
+# 家族核心词（主代理拍板措辞，「语音」等亚词按 asset kind 追加）。
+INTERACTION_TRIGGER_WORDS = {
+    "first_encounter": ("初遇", "first encounter"),
+    "attack": ("攻击", "attack"),
+    "taunt": ("嘲讽", "taunt"),
+    "assist": ("协助", "assist"),
+}
+KILL_MILESTONE_WORDS = {
+    "first": ("首次击杀", "first kill"),
+    "first_blood": ("一血", "first blood"),
+    "double": ("双杀", "double kill"),
+    "triple": ("三杀", "triple kill"),
+    "quadra": ("四杀", "quadra kill"),
+    "penta": ("五杀", "penta kill"),
+    "ace": ("团灭", "ace"),
+    "assist": ("助攻", "kill assist"),
+}
+OBJECTIVE_STEAL_WORDS = {
+    "dragon": ("巨龙", "dragon"),
+    "baron": ("纳什男爵", "baron"),
+    "epic_objective": ("史诗野怪", "epic objective"),
+}
+TIMING_WORDS = {"first": ("首次", "first"), "second": ("再次", "second")}
+RELATION_WORDS = {"ally": ("队友", "ally"), "enemy": ("敌方", "enemy")}
+KILL_METHOD_SPELL_KEYS = frozenset({"Q", "W", "E", "R"})
+COUNTERPART_FALLBACK_REASON = "missing_counterpart_zh_label"
+# ownerless 事件（Play_vo_Kill3DPenta 等）的 owner 段是事件体本身，champion
+# label 会残留维度/壳 token；这类主体进不了用户文案，保守放弃建 frame。
+TECHNICAL_CHAMPION_LABEL_MARKERS = ("3D", "2D", "_", "Play")
 
 
 def build_translation(
@@ -111,7 +146,7 @@ def build_translation_frame(
     record: EventDecompositionRecord,
     context: TranslationBuildContext,
 ) -> dict[str, object] | None:
-    """按 primary family 分发到具体 frame builder。
+    """按 semantic profile 与 primary family 分发到具体 frame builder。
 
     Args:
         record: 拆解记录。
@@ -120,6 +155,23 @@ def build_translation_frame(
     Returns:
         translation frame 字典；未覆盖的语义返回 None。
     """
+
+    # profile 分派必须在 family 分派之前：attack/taunt 家族同时出现在
+    # interaction 与 self_action 两类 profile 中，按 family 先分派会被
+    # VOICE_EVENT_FAMILIES 抢走 counterpart 语义（T3.2 SPEC 裁决）。
+    if record.profile.semantic_profile is SemanticProfile.INTERACTION:
+        return build_champion_interaction_cue(record, context)
+
+    if record.profile.semantic_profile is SemanticProfile.KILL_OR_SCORE:
+        return build_kill_or_destroy_event(record, context)
+
+    if (
+        record.profile.primary_family == "move"
+        and record.profile.semantic_profile is SemanticProfile.QUALIFIED_ACTION
+    ):
+        # Move2DFirst:无交互对象的首次移动台词(qualified_action),
+        # 与 interaction 的 move 共用同一措辞(「首次移动语音」)。
+        return build_champion_interaction_cue(record, context)
 
     builders = {
         "skin_recall_state": build_skin_recall_state,
@@ -412,6 +464,564 @@ def build_voice_event(
             skin_argument(record, context),
             action,
         ],
+    )
+
+
+def build_champion_interaction_cue(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+) -> dict[str, object] | None:
+    """构建英雄交互语音 frame（interaction profile）。
+
+    Args:
+        record: 拆解记录。
+        context: translation 构建上下文。
+
+    Returns:
+        champion_interaction_cue frame；本批未承接的家族或缺主体时返回 None。
+    """
+
+    family = record.profile.primary_family
+    if family not in INTERACTION_CUE_FAMILIES:
+        return None
+
+    champion = champion_argument(record, context)
+    trigger = interaction_trigger_argument(record)
+    if champion is None or trigger is None or has_technical_champion_label(champion):
+        return None
+
+    slots = record.semantic_slots
+    return build_frame(
+        record,
+        "champion_interaction_cue",
+        [
+            champion,
+            skin_argument(record, context),
+            trigger,
+            counterpart_argument(record, context),
+            timing_argument(slots.get("timing")),
+            relation_argument(slots.get("relation")),
+        ],
+    )
+
+
+def build_kill_or_destroy_event(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+) -> dict[str, object] | None:
+    """构建击杀/摧毁事件 frame（kill_or_score profile）。
+
+    Args:
+        record: 拆解记录。
+        context: translation 构建上下文。
+
+    Returns:
+        kill_or_destroy_event frame；本批未承接的家族或缺主体时返回 None。
+    """
+
+    family = record.profile.primary_family
+    if family not in KILL_OR_DESTROY_FAMILIES:
+        return None
+
+    champion = champion_argument(record, context)
+    trigger = kill_trigger_argument(record)
+    if champion is None or trigger is None or has_technical_champion_label(champion):
+        return None
+
+    slots = record.semantic_slots
+    return build_frame(
+        record,
+        "kill_or_destroy_event",
+        [
+            champion,
+            skin_argument(record, context),
+            trigger,
+            counterpart_argument(record, context),
+            kill_milestone_argument(slots.get("milestone"), record.shell.asset_kind),
+            kill_method_argument(slots.get("kill_method")),
+            objective_steal_argument(slots.get("objective_steal")),
+            qualifier_argument(slots.get("qualifier")),
+            counter_argument(slots.get("counter")),
+        ],
+    )
+
+
+def has_technical_champion_label(champion: dict[str, object]) -> bool:
+    """判断 champion argument 的 zh label 是否残留技术 token。
+
+    Args:
+        champion: champion argument 字典。
+
+    Returns:
+        label 含维度/壳 token（3D/2D/下划线等）时返回 True。
+    """
+
+    labels = champion.get("labels")
+    label = labels.get("zh_CN") if isinstance(labels, dict) else None
+    if not isinstance(label, str):
+        return True
+
+    return any(marker in label for marker in TECHNICAL_CHAMPION_LABEL_MARKERS)
+
+
+def interaction_trigger_argument(record: EventDecompositionRecord) -> dict[str, object] | None:
+    """构建 interaction 家族 trigger argument（核心短语，不含 counterpart）。
+
+    Args:
+        record: 拆解记录。
+
+    Returns:
+        trigger 参数；不属于本批承接家族时返回 None。
+    """
+
+    family = record.profile.primary_family
+    zh_word, en_word = asset_kind_words(record.shell.asset_kind)
+
+    if family == "move":
+        timing = string_or_none(record.semantic_slots.get("timing"))
+        timing_zh, timing_en = TIMING_WORDS.get(timing or "", ("", ""))
+        zh = f"{timing_zh}移动{zh_word}"
+        en = f"{timing_en} move {en_word}".strip()
+    else:
+        words = INTERACTION_TRIGGER_WORDS.get(family)
+        if words is None:
+            return None
+
+        zh = f"{words[0]}{zh_word}"
+        en = f"{words[1]} {en_word}"
+
+    return argument_to_dict(
+        TranslationArgument(
+            role="trigger",
+            labels={"zh_CN": zh, "en_US": en},
+            confidence="high",
+            provenance={"source": "semantic_slots.trigger_family", "frame_type": "champion_interaction_cue"},
+            key=family,
+        )
+    )
+
+
+def kill_trigger_argument(record: EventDecompositionRecord) -> dict[str, object] | None:
+    """构建 kill 家族 trigger argument（核心短语，不含 counterpart）。
+
+    milestone 存在时替换击杀核心词；objective_steal 渲染「抢夺 {对象} 」。
+    kill_method（含 QWER 单字母键）不进本短语，由 renderer 在 default/debug/
+    audit 模式前置（「R技能击杀语音」/「REmpowered 击杀语音」），main 短文案
+    保持零拉丁字母（residual_english 棘轮口径）。
+
+    Args:
+        record: 拆解记录。
+
+    Returns:
+        trigger 参数。
+    """
+
+    slots = record.semantic_slots
+    zh_word, en_word = asset_kind_words(record.shell.asset_kind)
+
+    milestone = string_or_none(slots.get("milestone"))
+    milestone_words = KILL_MILESTONE_WORDS.get(milestone or "")
+    steal_words = objective_steal_words(slots.get("objective_steal"))
+    if milestone_words is not None:
+        zh, en = f"{milestone_words[0]}{zh_word}", f"{milestone_words[1]} {en_word}"
+    elif steal_words is not None:
+        zh, en = f"抢夺 {steal_words[0]} {zh_word}", f"steal {steal_words[1]} {en_word}"
+    else:
+        zh, en = f"击杀{zh_word}", f"kill {en_word}"
+
+    return argument_to_dict(
+        TranslationArgument(
+            role="trigger",
+            labels={"zh_CN": zh, "en_US": en},
+            confidence="high",
+            provenance={"source": "semantic_slots.trigger_family", "frame_type": "kill_or_destroy_event"},
+            key=record.profile.primary_family,
+        )
+    )
+
+
+def kill_method_spell_letter(kill_method: object) -> str | None:
+    """从 kill_method 槽位归一出单字母技能键。
+
+    Args:
+        kill_method: kill_method 槽位值。
+
+    Returns:
+        QWER 单字母；raw 非单字母（REmpowered/Ultimate/QW 等）时返回 None。
+    """
+
+    if not isinstance(kill_method, dict):
+        return None
+
+    raw = string_or_none(kill_method.get("raw"))
+    if raw is not None and raw.upper() in KILL_METHOD_SPELL_KEYS:
+        return raw.upper()
+
+    return None
+
+
+def objective_steal_words(steal: object) -> tuple[str, str] | None:
+    """返回 objective_steal 对象的中英文措辞。
+
+    Args:
+        steal: objective_steal 槽位值。
+
+    Returns:
+        `(zh, en)` 措辞；objective 不在措辞表时返回 None（不硬造）。
+    """
+
+    if not isinstance(steal, dict):
+        return None
+
+    return OBJECTIVE_STEAL_WORDS.get(string_or_none(steal.get("objective")) or "")
+
+
+def counterpart_argument(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+    *,
+    labels: DisplayLabels | None = None,
+) -> dict[str, object] | None:
+    """构建 counterpart argument，按 SPEC 解析链取中文名。
+
+    解析顺序：kind=champion 走 ``context.champion_labels``（俗名体系）；
+    kind=skin 用皮肤 zh 全名（含英雄名，无歧义）；其他 kind 查外置词表
+    （label 精确匹配优先，rule_key 归一 key 兜底）；未命中直接用英文
+    label/raw，不硬造中文。
+
+    Args:
+        record: 拆解记录。
+        context: translation 构建上下文。
+        labels: 展示词表；为 None 时使用进程内缓存的默认词表（供测试注入替代词表）。
+
+    Returns:
+        counterpart 参数；无 counterpart 或 kind=general（无特定对象）时返回 None。
+    """
+
+    counterpart = record.semantic_slots.get("counterpart")
+    if not isinstance(counterpart, dict) or not counterpart:
+        return None
+
+    kind = string_or_none(counterpart.get("kind"))
+    if kind == "general":
+        return None
+
+    alias = string_or_none(counterpart.get("alias"))
+    key = string_or_none(counterpart.get("key"))
+    raw = string_or_none(counterpart.get("raw"))
+    english = (
+        string_or_none(counterpart.get("label"))
+        or raw
+        or alias
+        or key
+    )
+    if english is None:
+        return None
+
+    zh = None
+    zh_source = "fallback"
+    confidence = "low"
+    fallback = False
+    fallback_reason = None
+
+    if kind == "champion":
+        entry = context.champion_labels.get(alias or "")
+        zh = string_or_none(entry.get("zh_CN")) if isinstance(entry, Mapping) else None
+        if zh is not None:
+            zh_source, confidence = "champion_labels", "high"
+            if isinstance(entry, ChampionLabelEntry) and entry.label_sources.get("zh_CN") == LABEL_SOURCE_SKIN_VOTE:
+                fallback = True
+                fallback_reason = CHAMPION_ZH_VOTE_FALLBACK_REASON
+    elif kind == "skin":
+        zh = counterpart_skin_zh_label(counterpart, context)
+        if zh is not None:
+            zh_source, confidence = "skin_labels", "high"
+    else:
+        zh = counterpart_vocab_zh(key, english, labels=labels)
+        if zh is not None:
+            zh_source, confidence = "display_labels.counterpart", "medium"
+
+    if zh is None:
+        fallback = True
+        fallback_reason = COUNTERPART_FALLBACK_REASON
+
+    return argument_to_dict(
+        TranslationArgument(
+            role="counterpart",
+            labels={"zh_CN": zh or english, "en_US": english},
+            confidence=confidence,
+            provenance={
+                "source": "semantic_slots.counterpart",
+                "counterpart_kind": kind,
+                "counterpart_source": string_or_none(counterpart.get("source")),
+                "zh_source": zh_source,
+            },
+            alias=alias,
+            key=key,
+            token=raw,
+            fallback=fallback,
+            fallback_reason=fallback_reason,
+        )
+    )
+
+
+def counterpart_skin_zh_label(counterpart: dict[str, object], context: TranslationBuildContext) -> str | None:
+    """按 metadata 的英雄 alias 与 skin token 查皮肤 zh 全名。
+
+    Args:
+        counterpart: counterpart 槽位字典。
+        context: translation 构建上下文。
+
+    Returns:
+        皮肤 zh 全名；reference 缺该皮肤时返回 None。
+    """
+
+    metadata = counterpart.get("metadata")
+    if not isinstance(metadata, dict):
+        return None
+
+    champion_alias = string_or_none(metadata.get("champion_alias"))
+    skin_token = string_or_none(metadata.get("skin_token"))
+    if champion_alias is None or skin_token is None:
+        return None
+
+    labels = context.skin_labels.get((champion_alias, normalize_skin_token(skin_token)))
+    if not isinstance(labels, Mapping):
+        return None
+
+    return string_or_none(labels.get("zh_CN"))
+
+
+def counterpart_vocab_zh(
+    key: str | None,
+    label: str | None,
+    *,
+    labels: DisplayLabels | None = None,
+) -> str | None:
+    """查 counterpart 外置词表（第一批官方译名）。
+
+    Args:
+        key: 规则引擎归一 key。
+        label: 英文 label。
+        labels: 展示词表；为 None 时使用进程内缓存的默认词表（供测试注入替代词表）。
+
+    Returns:
+        中文词条；未命中返回 None（fallback 直出英文，不硬造）。
+    """
+
+    vocab = (labels if labels is not None else get_display_labels()).counterpart
+    if label is not None and label in vocab:
+        return vocab[label]
+
+    if key is not None:
+        normalized = rule_key(key)
+        for vocab_label, zh in vocab.items():
+            if rule_key(vocab_label) == normalized:
+                return zh
+
+    return None
+
+
+def kill_milestone_argument(milestone: object, asset_kind: object) -> dict[str, object] | None:
+    """构建击杀里程碑 argument（数据角色，文案由 trigger 短语承载）。
+
+    Args:
+        milestone: milestone 槽位值。
+        asset_kind: 事件外壳音频类型。
+
+    Returns:
+        milestone 参数；无里程碑或措辞表未收录时返回 None。
+    """
+
+    key = string_or_none(milestone)
+    words = KILL_MILESTONE_WORDS.get(key or "")
+    if key is None or words is None:
+        return None
+
+    zh_word, en_word = asset_kind_words(asset_kind)
+    return argument_to_dict(
+        TranslationArgument(
+            role="milestone",
+            labels={"zh_CN": f"{words[0]}{zh_word}", "en_US": f"{words[1]} {en_word}"},
+            confidence="high",
+            provenance={"source": "semantic_slots.milestone"},
+            key=key,
+        )
+    )
+
+
+def kill_method_argument(kill_method: object) -> dict[str, object] | None:
+    """构建击杀方式 argument。
+
+    Args:
+        kill_method: kill_method 槽位值。
+
+    Returns:
+        kill_method 参数；无击杀方式时返回 None。
+    """
+
+    if not isinstance(kill_method, dict):
+        return None
+
+    raw = string_or_none(kill_method.get("raw"))
+    if raw is None:
+        return None
+
+    letter = kill_method_spell_letter(kill_method)
+    zh = f"{letter}技能" if letter is not None else raw
+    return argument_to_dict(
+        TranslationArgument(
+            role="kill_method",
+            labels={"zh_CN": zh, "en_US": raw},
+            confidence="medium",
+            provenance={"source": "semantic_slots.kill_method"},
+            key=string_or_none(kill_method.get("kind")),
+            value=string_or_none(kill_method.get("spell_key")),
+            token=raw,
+        )
+    )
+
+
+def objective_steal_argument(steal: object) -> dict[str, object] | None:
+    """构建抢夺目标 argument。
+
+    Args:
+        steal: objective_steal 槽位值。
+
+    Returns:
+        objective_steal 参数；无抢夺目标时返回 None。
+    """
+
+    if not isinstance(steal, dict):
+        return None
+
+    objective = string_or_none(steal.get("objective"))
+    raw = string_or_none(steal.get("raw"))
+    if objective is None and raw is None:
+        return None
+
+    words = objective_steal_words(steal)
+    zh = words[0] if words is not None else (objective or raw or "")
+    en = words[1] if words is not None else (objective or raw or "")
+    return argument_to_dict(
+        TranslationArgument(
+            role="objective_steal",
+            labels={"zh_CN": zh, "en_US": en},
+            confidence="medium",
+            provenance={"source": "semantic_slots.objective_steal"},
+            key=objective,
+            token=raw,
+        )
+    )
+
+
+def qualifier_argument(qualifier: object) -> dict[str, object] | None:
+    """构建 qualifier argument（general 等修饰，数据角色）。
+
+    Args:
+        qualifier: qualifier 槽位值。
+
+    Returns:
+        qualifier 参数；无修饰时返回 None。
+    """
+
+    value = string_or_none(qualifier)
+    if value is None:
+        return None
+
+    return argument_to_dict(
+        TranslationArgument(
+            role="qualifier",
+            labels={"zh_CN": value, "en_US": value},
+            confidence="high",
+            provenance={"source": "semantic_slots.qualifier"},
+            key=value,
+        )
+    )
+
+
+def counter_argument(counter: object) -> dict[str, object] | None:
+    """构建计数器 argument；raw 提得出数字时 value 存数字供渲染尾缀。
+
+    Args:
+        counter: counter 槽位值。
+
+    Returns:
+        counter 参数；无计数器时返回 None。
+    """
+
+    if not isinstance(counter, dict):
+        return None
+
+    raw = string_or_none(counter.get("raw"))
+    kind = string_or_none(counter.get("kind"))
+    if raw is None and kind is None:
+        return None
+
+    digits = re.search(r"[0-9]+", raw or "")
+    zh = string_or_none(counter.get("label")) or raw or kind or ""
+    return argument_to_dict(
+        TranslationArgument(
+            role="counter",
+            labels={"zh_CN": zh, "en_US": raw or kind or ""},
+            confidence="medium",
+            provenance={"source": "semantic_slots.counter"},
+            key=kind,
+            value=digits.group(0) if digits is not None else None,
+            token=raw,
+        )
+    )
+
+
+def timing_argument(timing: object) -> dict[str, object] | None:
+    """构建交互时机 argument（first→首次 / second→再次，数据角色）。
+
+    Args:
+        timing: timing 槽位值。
+
+    Returns:
+        timing 参数；无时机时返回 None。
+    """
+
+    value = string_or_none(timing)
+    if value is None:
+        return None
+
+    zh, en = TIMING_WORDS.get(value, (value, value))
+    return argument_to_dict(
+        TranslationArgument(
+            role="timing",
+            labels={"zh_CN": zh, "en_US": en},
+            confidence="high",
+            provenance={"source": "semantic_slots.timing"},
+            key=value,
+        )
+    )
+
+
+def relation_argument(relation: object) -> dict[str, object] | None:
+    """构建交互关系 argument（ally→队友 / enemy→敌方）。
+
+    Args:
+        relation: relation 槽位值。
+
+    Returns:
+        relation 参数；无关系时返回 None。
+    """
+
+    value = string_or_none(relation)
+    if value is None:
+        return None
+
+    zh, en = RELATION_WORDS.get(value, (value, value))
+    return argument_to_dict(
+        TranslationArgument(
+            role="relation",
+            labels={"zh_CN": zh, "en_US": en},
+            confidence="high",
+            provenance={"source": "semantic_slots.relation"},
+            key=value,
+        )
     )
 
 

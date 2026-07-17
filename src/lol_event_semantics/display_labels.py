@@ -34,6 +34,8 @@ class DisplayLabels:
             英文由调用方从 key 派生，不在此维护。
         gameplay_event: gameplay_event 原值（小写）到 ``(zh_CN, en_US)`` 展示词的映射。
         maps: 地图 id 到人工核对中文名的映射（宁缺毋错，只收录高置信项）。
+        counterpart: counterpart 英文 label 到官方中文词条的映射
+            （T3.2 第一批，宁缺毋错，表外一律 fallback 直出英文）。
     """
 
     phase: Mapping[str, tuple[str, str]] = field(default_factory=dict)
@@ -41,6 +43,7 @@ class DisplayLabels:
     ability_component: Mapping[str, str] = field(default_factory=dict)
     gameplay_event: Mapping[str, tuple[str, str]] = field(default_factory=dict)
     maps: Mapping[int, str] = field(default_factory=dict)
+    counterpart: Mapping[str, str] = field(default_factory=dict)
 
 
 def parse_display_labels(data: Mapping[str, Any]) -> DisplayLabels:
@@ -59,6 +62,7 @@ def parse_display_labels(data: Mapping[str, Any]) -> DisplayLabels:
         ability_component=_parse_scalar_section(data.get("ability_component")),
         gameplay_event=_parse_pair_section(data.get("gameplay_event")),
         maps=_parse_map_section(data.get("maps")),
+        counterpart=_parse_scalar_section(data.get("counterpart")),
     )
 
 

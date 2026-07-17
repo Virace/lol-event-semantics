@@ -67,3 +67,44 @@ maps:
   30: 斗魂竞技场
   22: 云顶之弈
   0: 通用
+
+counterpart:
+  # counterpart argument 的官方译名词条（T3.2 第一批，主代理裁决，逐字使用）。
+  # key 为 counterpart 槽位的英文 label（精确匹配优先，rule_key 归一 key 兜底），
+  # value 为中文词条。防错优先：表外 kind/label 一律 fallback 直出英文，
+  # 不硬造中文；扩词条改这里、不改代码。
+  # region
+  Noxus: 诺克萨斯
+  Demacia: 德玛西亚
+  Ionia: 艾欧尼亚
+  Piltover: 皮尔特沃夫
+  Shurima: 恕瑞玛
+  Targon: 巨神峰
+  Shadow Isles: 暗影岛
+  Zaun: 祖安
+  Freljord: 弗雷尔卓德
+  Bilgewater: 比尔吉沃特
+  Ixtal: 以绪塔尔
+  Bandle City: 班德尔城
+  Void: 虚空
+  # neutral_monster
+  Baron: 纳什男爵
+  Dragon: 巨龙
+  Rift Herald: 峡谷先锋
+  # structure
+  Turret: 防御塔
+  Nexus: 水晶枢纽
+  # species
+  Yordle: 约德尔人
+  Yordles: 约德尔人
+  Vastaya: 瓦斯塔亚
+  Demon: 恶魔
+  Human: 人类
+  # species_or_faction
+  Darkin: 暗裔
+  Ascended: 飞升者
+  # skinline（精确词；「Star Guardian Season 3」这类带修饰的 label 不命中则 fallback 直出）
+  Anima Squad: 无畏战队
+  Dark Star: 暗星
+  PROJECT: 源计划
+  Star Guardian: 星之守护者

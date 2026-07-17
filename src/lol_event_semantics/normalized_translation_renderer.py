@@ -105,9 +105,40 @@ TEMPLATES: dict[str, dict[str, dict[str, tuple[str, ...]]]] = {
             "audit": ("champion", "skin", "ability_slot", "phase"),
         },
     },
+    "kill_or_destroy_event": {
+        "zh_CN": {
+            "default": ("champion", "skin", "kill_method", "trigger", "counterpart", "counter"),
+            "main": ("kill_method", "trigger", "counterpart", "counter"),
+            "debug": ("champion", "skin", "kill_method", "trigger", "counterpart", "counter"),
+            "audit": ("champion", "skin", "kill_method", "trigger", "counterpart", "counter"),
+        },
+        "en_US": {
+            "default": ("champion", "skin", "kill_method", "trigger", "counterpart"),
+            "main": ("kill_method", "trigger", "counterpart"),
+            "debug": ("champion", "skin", "kill_method", "trigger", "counterpart"),
+            "audit": ("champion", "skin", "kill_method", "trigger", "counterpart"),
+        },
+    },
+    "champion_interaction_cue": {
+        "zh_CN": {
+            "default": ("champion", "skin", "trigger", "relation", "counterpart"),
+            "main": ("trigger", "relation", "counterpart"),
+            "debug": ("champion", "skin", "trigger", "relation", "counterpart"),
+            "audit": ("champion", "skin", "trigger", "relation", "counterpart"),
+        },
+        "en_US": {
+            "default": ("champion", "skin", "trigger", "counterpart"),
+            "main": ("trigger", "counterpart"),
+            "debug": ("champion", "skin", "trigger", "counterpart"),
+            "audit": ("champion", "skin", "trigger", "counterpart"),
+        },
+    },
 }
 CONTEXT_ROLES = {"champion", "skin", "map", "mode"}
 TECHNICAL_USER_TOKENS = ("Play_", "OnBuffDeactivate", "buffactivate", "3D", "2D")
+# counterpart frame 短语的亚词后缀（builder ASSET_KIND_WORDS 的 zh 侧），
+# 定制 join 用它把 counterpart 中缀进「击杀 {cp} 语音」类措辞。
+ASSET_WORD_SUFFIXES = ("语音", "音效", "音乐")
 
 
 def render_translation(
@@ -163,7 +194,7 @@ def render_translation(
             role_texts.append((role, text))
             used_roles.append(role)
 
-    text = render_role_texts(frame_type, active_options.locale, role_texts)
+    text = render_role_texts(frame_type, active_options.locale, role_texts, arguments, active_options.mode)
     if active_options.mode not in {"debug", "audit"}:
         text = strip_technical_user_tokens(text)
 
@@ -177,14 +208,37 @@ def render_translation(
     )
 
 
-def render_role_texts(frame_type: str, locale: str, role_texts: list[tuple[str, str]]) -> str:
-    """按 frame 和语言合并 role 文案。"""
+def render_role_texts(
+    frame_type: str,
+    locale: str,
+    role_texts: list[tuple[str, str]],
+    arguments: dict[str, Any] | None = None,
+    mode: str = "default",
+) -> str:
+    """按 frame、语言和模式合并 role 文案。
+
+    Args:
+        frame_type: translation frame 类型。
+        locale: 目标语言。
+        role_texts: `(role, text)` 列表。
+        arguments: translation arguments 字典，供定制 join 读取结构信息。
+        mode: 渲染模式；counterpart frame 的英文回退片段只进 default/debug/audit。
+
+    Returns:
+        合并后的文案。
+    """
 
     if locale != "zh_CN":
         return " ".join(text for _role, text in role_texts)
 
     if frame_type == "skin_idle_state":
         return join_skin_idle_zh_cn(role_texts)
+
+    if frame_type == "kill_or_destroy_event":
+        return join_kill_or_destroy_zh_cn(role_texts, arguments or {}, mode)
+
+    if frame_type == "champion_interaction_cue":
+        return join_interaction_cue_zh_cn(role_texts, arguments or {}, mode)
 
     return join_zh_cn(role_texts)
 
@@ -308,6 +362,166 @@ def join_skin_idle_zh_cn(role_texts: list[tuple[str, str]]) -> str:
         return f"{context_text} {core_text}"
 
     return core_text or context_text
+
+
+def join_kill_or_destroy_zh_cn(
+    role_texts: list[tuple[str, str]],
+    arguments: dict[str, Any],
+    mode: str,
+) -> str:
+    """合并击杀/摧毁 frame 的中文文案（T3.2 措辞表）。
+
+    kill + cp 中缀「击杀 {cp} 语音」；milestone/kill_method/objective_steal
+    存在时 cp 后置全角括号；kill_method 只在 default/debug/audit 前置
+    （QWER 归一键紧贴「R技能击杀语音」，归一失败 raw 空格直出
+    「REmpowered 击杀语音」；main 短文案保持零拉丁字母，棘轮口径）；
+    counter 提得出数字时渲染尾缀「（变体N）」，否则忽略进 debug。
+
+    Args:
+        role_texts: `(role, text)` 列表。
+        arguments: translation arguments 字典。
+        mode: 渲染模式。
+
+    Returns:
+        中文文案。
+    """
+
+    values = {role: text for role, text in role_texts}
+    context_text = join_zh_cn([(role, text) for role, text in role_texts if role in CONTEXT_ROLES])
+    core = values.get("trigger", "")
+
+    kill_method_text = values.get("kill_method", "")
+    if kill_method_text and mode != "main":
+        separator = "" if has_cjk_text(kill_method_text) else " "
+        core = f"{kill_method_text}{separator}{core}".strip()
+
+    counterpart_text = values.get("counterpart", "")
+    if counterpart_visible(counterpart_text, mode):
+        postfix_roles = ("milestone", "kill_method", "objective_steal")
+        if any(isinstance(arguments.get(role), dict) for role in postfix_roles):
+            core = f"{core}（{counterpart_text}）"
+        else:
+            core = insert_before_asset_word(core, counterpart_text)
+
+    counter = arguments.get("counter")
+    counter_number = string_or_none(counter.get("value")) if isinstance(counter, dict) else None
+    if counter_number is not None:
+        core = f"{core}（变体{counter_number}）"
+    elif mode in {"debug", "audit"} and values.get("counter"):
+        core = f"{core}（{values['counter']}）"
+
+    core = f"{core}{values.get('playback', '')}"
+    if context_text and core:
+        return f"{context_text} {core}"
+
+    return core or context_text
+
+
+def join_interaction_cue_zh_cn(
+    role_texts: list[tuple[str, str]],
+    arguments: dict[str, Any],
+    mode: str,
+) -> str:
+    """合并英雄交互 frame 的中文文案（T3.2 措辞表）。
+
+    非 move 家族 cp 中缀「初遇 {cp} 语音」；move 家族用全角括号措辞
+    「{timing}移动语音（{relation} {cp} 在场）」（timing 已由 builder 拼进
+    trigger 短语）。英文回退 cp 只进 default/debug/audit。
+
+    Args:
+        role_texts: `(role, text)` 列表。
+        arguments: translation arguments 字典。
+        mode: 渲染模式。
+
+    Returns:
+        中文文案。
+    """
+
+    values = {role: text for role, text in role_texts}
+    context_text = join_zh_cn([(role, text) for role, text in role_texts if role in CONTEXT_ROLES])
+    core = values.get("trigger", "")
+
+    counterpart_text = values.get("counterpart", "")
+    if counterpart_visible(counterpart_text, mode):
+        trigger = arguments.get("trigger")
+        family = string_or_none(trigger.get("key")) if isinstance(trigger, dict) else None
+        if family == "move":
+            parts = [part for part in (values.get("relation", ""), counterpart_text) if part]
+            core = f"{core}（{' '.join(parts)} 在场）"
+        else:
+            core = insert_before_asset_word(core, counterpart_text)
+
+    core = f"{core}{values.get('playback', '')}"
+    if context_text and core:
+        return f"{context_text} {core}"
+
+    return core or context_text
+
+
+def has_cjk_text(text: str) -> bool:
+    """判断文本是否含 CJK 字符。
+
+    Args:
+        text: 待判断文本。
+
+    Returns:
+        含中文字符时返回 True。
+    """
+
+    return any("一" <= char <= "鿿" for char in text)
+
+
+def counterpart_visible(text: str, mode: str) -> bool:
+    """判断 counterpart 文案是否进入当前模式。
+
+    纯中文 cp 任何模式都不省略（北极星：联动是特殊情况）；含拉丁字母的
+    cp（英文回退、DJ 娑娜/T1 杰斯这类官方混排名）保留在 default/debug/
+    audit 详细文案，不进 main 短文案（residual_english 棘轮口径，
+    argument 数据不受影响）。
+
+    Args:
+        text: counterpart 文案。
+        mode: 渲染模式。
+
+    Returns:
+        应渲染时返回 True。
+    """
+
+    if not text:
+        return False
+
+    return mode != "main" or not has_latin_text(text)
+
+
+def has_latin_text(text: str) -> bool:
+    """判断文本是否含 ASCII 拉丁字母（residual_english 棘轮同口径）。
+
+    Args:
+        text: 待判断文本。
+
+    Returns:
+        含拉丁字母时返回 True。
+    """
+
+    return any("A" <= char <= "Z" or "a" <= char <= "z" for char in text)
+
+
+def insert_before_asset_word(base: str, insert: str) -> str:
+    """把 counterpart 中缀进核心短语的亚词（语音/音效/音乐）之前。
+
+    Args:
+        base: 核心短语（如「击杀语音」）。
+        insert: counterpart 文案。
+
+    Returns:
+        中缀后的短语（如「击杀 奥恩 语音」）；无亚词后缀时空格追加兜底。
+    """
+
+    for word in ASSET_WORD_SUFFIXES:
+        if base.endswith(word):
+            return f"{base[: -len(word)]} {insert} {word}"
+
+    return f"{base} {insert}".strip()
 
 
 def strip_repeated_champion_from_skin(skin_text: str, champion_text: str) -> str:

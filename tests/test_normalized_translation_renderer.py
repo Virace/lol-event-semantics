@@ -234,6 +234,198 @@ class NormalizedTranslationRendererTests(unittest.TestCase):
                 self.assertNotIn("missing_render_template", default_result.diagnostics)
 
 
+def counterpart_arg(label: str, *, fallback: bool = False) -> dict[str, object]:
+    """构造 counterpart argument。"""
+
+    argument: dict[str, object] = {
+        "role": "counterpart",
+        "labels": {"zh_CN": label, "en_US": label},
+        "confidence": "low" if fallback else "high",
+        "provenance": {"kind": "test"},
+        "fallback": fallback,
+    }
+    if fallback:
+        argument["fallback_reason"] = "missing_counterpart_zh_label"
+    return argument
+
+
+class CounterpartFrameRendererTests(unittest.TestCase):
+    """验证两个 counterpart frame 的中文定制 join。"""
+
+    def render_pair(self, translation: dict[str, object]) -> tuple[str, str]:
+        """返回 (default, main) 中文文案。"""
+
+        default_result = render_translation(translation, RenderOptions(locale="zh_CN", mode="default"))
+        main_result = render_translation(
+            translation,
+            RenderOptions(locale="zh_CN", mode="main", known_context=frozenset({"champion", "skin"})),
+        )
+        return default_result.text, main_result.text
+
+    def test_kill_with_counterpart_uses_infix_wording(self) -> None:
+        """kill + cp 按「击杀 {cp} 语音」中缀。"""
+
+        translation = frame_translation(
+            "kill_or_destroy_event",
+            {
+                "champion": arg("champion", "亚托克斯"),
+                "skin": arg("skin", "仲裁圣骑 亚托克斯"),
+                "trigger": arg("trigger", "击杀语音"),
+                "counterpart": counterpart_arg("奥恩"),
+            },
+        )
+
+        default_text, main_text = self.render_pair(translation)
+        self.assertEqual(default_text, "亚托克斯 仲裁圣骑 击杀 奥恩 语音")
+        self.assertEqual(main_text, "击杀 奥恩 语音")
+
+    def test_milestone_with_counterpart_uses_postfix_bracket(self) -> None:
+        """milestone 存在时 cp 后置：「五杀语音（{cp}）」。"""
+
+        translation = frame_translation(
+            "kill_or_destroy_event",
+            {
+                "champion": arg("champion", "阿狸"),
+                "trigger": arg("trigger", "五杀语音"),
+                "milestone": arg("milestone", "五杀语音"),
+                "counterpart": counterpart_arg("奥恩"),
+            },
+        )
+
+        default_text, main_text = self.render_pair(translation)
+        self.assertEqual(default_text, "阿狸 五杀语音（奥恩）")
+        self.assertEqual(main_text, "五杀语音（奥恩）")
+
+    def test_move_bracket_wording_with_relation(self) -> None:
+        """move 家族按全角括号措辞拼 relation 与 cp。"""
+
+        translation = frame_translation(
+            "champion_interaction_cue",
+            {
+                "champion": arg("champion", "莫甘娜"),
+                "skin": arg("skin", "灵魂莲华 莫甘娜"),
+                "trigger": {**arg("trigger", "首次移动语音"), "key": "move"},
+                "relation": arg("relation", "队友"),
+                "counterpart": counterpart_arg("灵魂莲华 凯尔"),
+            },
+        )
+
+        default_text, main_text = self.render_pair(translation)
+        self.assertEqual(default_text, "莫甘娜 灵魂莲华 首次移动语音（队友 灵魂莲华 凯尔 在场）")
+        self.assertEqual(main_text, "首次移动语音（队友 灵魂莲华 凯尔 在场）")
+
+    def test_move_bracket_without_relation_keeps_counterpart_only(self) -> None:
+        """move 无 relation 时括号内只有 cp（保留在场语义）。"""
+
+        translation = frame_translation(
+            "champion_interaction_cue",
+            {
+                "champion": arg("champion", "亚托克斯"),
+                "trigger": {**arg("trigger", "首次移动语音"), "key": "move"},
+                "counterpart": counterpart_arg("潘森"),
+            },
+        )
+
+        default_text, main_text = self.render_pair(translation)
+        self.assertEqual(default_text, "亚托克斯 首次移动语音（潘森 在场）")
+        self.assertEqual(main_text, "首次移动语音（潘森 在场）")
+
+    def test_fallback_english_counterpart_stays_out_of_main_text(self) -> None:
+        """英文 fallback cp 进 default 详细文案，不进 main 短文案（棘轮口径）。"""
+
+        translation = frame_translation(
+            "kill_or_destroy_event",
+            {
+                "champion": arg("champion", "卡莎"),
+                "trigger": arg("trigger", "击杀语音"),
+                "counterpart": counterpart_arg("Fifteen", fallback=True),
+            },
+        )
+
+        default_text, main_text = self.render_pair(translation)
+        self.assertEqual(default_text, "卡莎 击杀 Fifteen 语音")
+        self.assertEqual(main_text, "击杀语音")
+
+    def test_english_kill_method_prefix_stays_out_of_main_text(self) -> None:
+        """归一失败的 kill_method raw 前缀只进 default 详细文案。"""
+
+        translation = frame_translation(
+            "kill_or_destroy_event",
+            {
+                "champion": arg("champion", "易"),
+                "trigger": arg("trigger", "击杀语音"),
+                "kill_method": arg("kill_method", "RActive"),
+            },
+        )
+
+        default_text, main_text = self.render_pair(translation)
+        self.assertEqual(default_text, "易 RActive 击杀语音")
+        self.assertEqual(main_text, "击杀语音")
+
+    def test_spell_key_kill_method_prefix_stays_out_of_main_text(self) -> None:
+        """QWER 归一键紧贴前缀「R技能击杀语音」，同样只进 default 详细文案。"""
+
+        translation = frame_translation(
+            "kill_or_destroy_event",
+            {
+                "champion": arg("champion", "提莫"),
+                "trigger": arg("trigger", "击杀语音"),
+                "kill_method": arg("kill_method", "R技能"),
+            },
+        )
+
+        default_text, main_text = self.render_pair(translation)
+        self.assertEqual(default_text, "提莫 R技能击杀语音")
+        self.assertEqual(main_text, "击杀语音")
+
+    def test_latin_mixed_official_counterpart_stays_out_of_main_text(self) -> None:
+        """含拉丁字母的官方混排 cp 名（DJ 娑娜）只进 default 详细文案。"""
+
+        translation = frame_translation(
+            "kill_or_destroy_event",
+            {
+                "champion": arg("champion", "阿狸"),
+                "trigger": arg("trigger", "击杀语音"),
+                "counterpart": counterpart_arg("DJ 娑娜"),
+            },
+        )
+
+        default_text, main_text = self.render_pair(translation)
+        self.assertEqual(default_text, "阿狸 击杀 DJ 娑娜 语音")
+        self.assertEqual(main_text, "击杀语音")
+
+    def test_playback_appends_to_counterpart_frames(self) -> None:
+        """定制 join 不得丢 playback 壳语义。"""
+
+        translation = frame_translation(
+            "kill_or_destroy_event",
+            {
+                "champion": arg("champion", "厄运小姐"),
+                "trigger": arg("trigger", "击杀音效"),
+                "playback": arg("playback", "停止"),
+            },
+        )
+
+        default_text, main_text = self.render_pair(translation)
+        self.assertEqual(default_text, "厄运小姐 击杀音效停止")
+        self.assertEqual(main_text, "击杀音效停止")
+
+    def test_first_encounter_without_counterpart_keeps_base_phrase(self) -> None:
+        """无 cp 的初遇按「初遇语音」直出。"""
+
+        translation = frame_translation(
+            "champion_interaction_cue",
+            {
+                "champion": arg("champion", "亚托克斯"),
+                "trigger": {**arg("trigger", "初遇语音"), "key": "first_encounter"},
+            },
+        )
+
+        default_text, main_text = self.render_pair(translation)
+        self.assertEqual(default_text, "亚托克斯 初遇语音")
+        self.assertEqual(main_text, "初遇语音")
+
+
 class StripRepeatedChampionFromSkinTests(unittest.TestCase):
     """验证皮肤名去重英雄名的整名匹配边界。"""
 

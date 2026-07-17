@@ -166,5 +166,69 @@
     "zh_cn_main": "激进音乐选择",
     "pending_frame": true,
     "notes": "非 champion token，应保留系统/音乐语义。"
+  },
+  {
+    "raw_event_name": "Play_vo_AatroxSkin01_Kill3DOrnn",
+    "expected_frame_type": "kill_or_destroy_event",
+    "required_roles": ["champion", "skin", "trigger", "counterpart"],
+    "zh_cn_default": "亚托克斯 仲裁圣骑 击杀 奥恩 语音",
+    "zh_cn_main": "击杀 奥恩 语音",
+    "notes": "T3.2 黄金样例：kill + champion counterpart，俗名走 reference。"
+  },
+  {
+    "raw_event_name": "Play_vo_AatroxSkin01_Kill3DGeneral",
+    "expected_frame_type": "kill_or_destroy_event",
+    "required_roles": ["champion", "skin", "trigger"],
+    "zh_cn_default": "亚托克斯 仲裁圣骑 击杀语音",
+    "zh_cn_main": "击杀语音",
+    "notes": "T3.2 黄金样例：qualifier=general 视为无 counterpart。"
+  },
+  {
+    "raw_event_name": "Play_vo_AatroxSkin01_FirstEncounter3DAkali",
+    "expected_frame_type": "champion_interaction_cue",
+    "required_roles": ["champion", "skin", "trigger", "counterpart"],
+    "zh_cn_default": "亚托克斯 仲裁圣骑 初遇 阿卡丽 语音",
+    "zh_cn_main": "初遇 阿卡丽 语音",
+    "notes": "T3.2 黄金样例：first_encounter + champion counterpart。"
+  },
+  {
+    "raw_event_name": "Play_vo_MorganaSkin80_Move2DFirstAllyKayleSkin78",
+    "expected_frame_type": "champion_interaction_cue",
+    "required_roles": ["champion", "skin", "trigger", "counterpart", "timing", "relation"],
+    "zh_cn_default": "莫甘娜 灵魂莲华 首次移动语音（队友 灵魂莲华 凯尔 在场）",
+    "zh_cn_main": "首次移动语音（队友 灵魂莲华 凯尔 在场）",
+    "notes": "T3.2 黄金样例：move 家族括号措辞，counterpart 用皮肤 zh 全名。"
+  },
+  {
+    "raw_event_name": "Play_vo_Ezreal_Kill3DBaron",
+    "expected_frame_type": "kill_or_destroy_event",
+    "required_roles": ["champion", "trigger", "counterpart"],
+    "zh_cn_default": "伊泽瑞尔 击杀 纳什男爵 语音",
+    "zh_cn_main": "击杀 纳什男爵 语音",
+    "notes": "T3.2 黄金样例：counterpart 走外置词表（Baron→纳什男爵），无皮肤 role。"
+  },
+  {
+    "raw_event_name": "Play_vo_AhriSkin14_Kill3DPenta",
+    "expected_frame_type": "kill_or_destroy_event",
+    "required_roles": ["champion", "skin", "trigger", "milestone"],
+    "zh_cn_default": "阿狸 星之守护者 五杀语音",
+    "zh_cn_main": "五杀语音",
+    "notes": "T3.2 实现者补选：真实 penta milestone 事件，按措辞表机械展开。"
+  },
+  {
+    "raw_event_name": "Play_vo_AatroxSkin01_Attack2DPantheon",
+    "expected_frame_type": "champion_interaction_cue",
+    "required_roles": ["champion", "skin", "trigger", "counterpart"],
+    "zh_cn_default": "亚托克斯 仲裁圣骑 攻击 潘森 语音",
+    "zh_cn_main": "攻击 潘森 语音",
+    "notes": "T3.2 实现者补选：attack + champion counterpart，按措辞表机械展开。"
+  },
+  {
+    "raw_event_name": "Play_vo_Taliyah_Move2DFirst",
+    "expected_frame_type": "champion_interaction_cue",
+    "required_roles": ["champion", "trigger"],
+    "zh_cn_default": "塔莉垭 首次移动语音",
+    "zh_cn_main": "首次移动语音",
+    "notes": "T3.2 回炉修复：Move2DFirst 曾被 dimension-prefixed 里程碑分支误标为 kill/milestone=first（337 条），应为 move+timing=first 的首次移动台词，无交互对象。"
   }
 ]
