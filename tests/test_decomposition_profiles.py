@@ -122,6 +122,21 @@ class ProfileClassifierSlotTests(unittest.TestCase):
         self.assertEqual(record.semantic_slots["relation"], "ally")
         self.assertEqual(record.semantic_slots["counterpart"]["raw"], "Qiyana")
 
+    def test_move_first_without_target_is_move_not_kill_milestone(self) -> None:
+        record = self.normalize("Play_vo_Taliyah_Move2DFirst")
+
+        self.assertEqual(record.profile.primary_family, "move")
+        self.assertEqual(record.profile.semantic_profile, SemanticProfile.QUALIFIED_ACTION)
+        self.assertEqual(record.semantic_slots["trigger_family"], "move")
+        self.assertEqual(record.semantic_slots["timing"], "first")
+        self.assertNotIn("milestone", record.semantic_slots)
+
+    def test_kill_first_still_maps_to_kill_milestone(self) -> None:
+        record = self.normalize("Play_vo_Hwei_Kill3DFirst")
+
+        self.assertEqual(record.profile.primary_family, "kill")
+        self.assertEqual(record.semantic_slots["milestone"], "first")
+
     def test_move_location_residue_becomes_movement_context(self) -> None:
         record = self.normalize("Play_vo_AatroxSkin33_Move2DRiver")
 

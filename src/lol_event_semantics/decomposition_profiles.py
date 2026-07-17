@@ -949,6 +949,12 @@ def fill_rally_team_event(record: EventDecompositionRecord, atom: LexicalAtom) -
 def fill_dimension_prefixed_kill_milestone(record: EventDecompositionRecord, atom: LexicalAtom) -> bool:
     """识别 Pentakill3D 这类没有 Kill 前缀的击杀里程碑。"""
 
+    trigger = first_part_value(atom, "trigger_token")
+    if trigger not in (None, "kill", "killchampion"):
+        # Move2DFirst 这类带非击杀动作词头的 atom,First 是该动作的时序
+        # 修饰,不是击杀里程碑,须让位给对应动作的 fill_*。
+        return False
+
     dimension = first_part_raw(atom, "dimension_token")
     residue = first_part_raw(atom, "residue_token")
     milestone = normalize_kill_milestone(residue)
