@@ -44,6 +44,7 @@ def collect_quality_metrics(normalized_root: Path, validation_json: Path) -> dic
     translation_by_kind: Counter[str] = Counter()
     fallback_count = 0
     residual_english_count = 0
+    tier_counts: Counter[str] = Counter()
 
     for _shard_path, _line_number, row in iter_normalized_rows(normalized_root):
         record_count += 1
@@ -62,6 +63,7 @@ def collect_quality_metrics(normalized_root: Path, validation_json: Path) -> dic
 
         display = row.get("display") if isinstance(row.get("display"), dict) else {}
         short = display.get("zh_cn_short") if isinstance(display.get("zh_cn_short"), str) else ""
+        tier_counts[display_tier_bucket(display.get("tier"))] += 1
 
         if is_fallback_label(short, alias):
             fallback_count += 1
@@ -84,8 +86,27 @@ def collect_quality_metrics(normalized_root: Path, validation_json: Path) -> dic
             "record_count": residual_english_count,
             "ratio": safe_ratio(residual_english_count, record_count),
         },
+        "display_tier_counts": dict(sorted(tier_counts.items())),
         "validation": read_validation_metrics(validation_json),
     }
+
+
+def display_tier_bucket(value: Any) -> str:
+    """把 `display.tier` 原始值归一成指标分组 key。
+
+    Args:
+        value: 记录 `display.tier` 字段原始值。
+
+    Returns:
+        "1"/"2"/"3"；缺失、非法或 bool 值一律归入 "unknown"，避免静默
+        把旧产物（无 tier 字段）或异常值计入某个具体分层。
+    """
+
+    if isinstance(value, bool):
+        return "unknown"
+    if isinstance(value, int) and value in (1, 2, 3):
+        return str(value)
+    return "unknown"
 
 
 def is_fallback_label(zh_cn_short: str, alias: str) -> bool:

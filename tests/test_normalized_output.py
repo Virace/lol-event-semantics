@@ -975,6 +975,109 @@ class NormalizedOutputCliTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(manifest["reference_version"], "cumulative")
 
+
+class DisplayTierTests(unittest.TestCase):
+    """验证 display.tier 分层与 Tier3 短文案退出。"""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        """加载共享 reference index 与 translation 上下文（同生产链路）。"""
+
+        cls.reference = ReferenceIndex.from_reference_collection("reference")
+        from lol_event_semantics.normalized_output import build_translation_context
+
+        cls.context = build_translation_context()
+
+    def build(self, raw_event_name: str) -> dict[str, object]:
+        """按生产链路构造 normalized 记录。"""
+
+        record = enrich_with_reference(
+            normalize_semantics(decompose_event_name(raw_event_name, game_version="16.5")),
+            self.reference,
+        )
+        return build_normalized_record(record, translation_context=self.context)
+
+    def test_tier1_vo_dialogue_and_action_families(self) -> None:
+        """vo 资产的可感知台词/动作家族判 Tier1，短文案保留。"""
+
+        cases = [
+            "Play_vo_AatroxSkin01_FirstEncounter3DAkali",  # first_encounter
+            "Play_vo_AatroxSkin01_Kill3DAatrox",  # kill
+            "Play_vo_AatroxSkin01_Move2DStandard",  # move
+            "Play_vo_AhriSkin86_BuyItem2DGeneral",  # buy_item
+        ]
+
+        for raw in cases:
+            with self.subTest(raw=raw):
+                normalized = self.build(raw)
+                display = normalized["display"]
+                self.assertIsInstance(display, dict)
+                self.assertEqual(display["tier"], 1)
+                self.assertIsInstance(display["zh_cn_short"], str)
+                self.assertTrue(display["zh_cn_short"])
+
+    def test_tier1_covers_translation_covered_family(self) -> None:
+        """已被 translation frame 覆盖的家族（如皮肤回城）判 Tier1。"""
+
+        normalized = self.build("Play_lux_skin61_recall3d_buffactivate")
+
+        self.assertIn("translation", normalized)
+        self.assertEqual(normalized["display"]["tier"], 1)
+
+    def test_tier2_ambiguous_named_sfx(self) -> None:
+        """存疑但保留短文案：spell sfx 与其它命名 sfx 判 Tier2。"""
+
+        cases = [
+            "Mute_sfx_AkshanSkin01_AkshanWRevive_buffcast",  # spell sfx
+            "Play_sfx_Cherry_Augment_BannerOfCommand_buffactivate",  # augment_system sfx
+        ]
+
+        for raw in cases:
+            with self.subTest(raw=raw):
+                normalized = self.build(raw)
+                display = normalized["display"]
+                self.assertIsInstance(display, dict)
+                self.assertEqual(display["tier"], 2)
+                self.assertIsInstance(display["zh_cn_short"], str)
+                self.assertTrue(display["zh_cn_short"])
+
+    def test_tier3_pure_technical_families_drop_short_display(self) -> None:
+        """纯技术家族判 Tier3，zh_cn_short 置 null，detail/debug_label 不丢。"""
+
+        cases = [
+            "Play_sfx_AatroxSkin01_AatroxBasicAttack2_OnCast",  # basic_attack
+            "Play_sfx_AatroxSkin01_AatroxCritAttack_OnCast",  # crit_attack
+            "Play_sfx_AhriSkin04_Idle3D_buffactivate",  # idle
+            "AkshanSkin01_Switch_AkshanTerrain_Brush",  # 材质开关
+            "Set_RTPC_SeraphineSkin43_RHits1",  # 音频总线 RTPC 控制
+            "Play_mus_map01_phase_select_base",  # mus 背景音乐控制
+        ]
+
+        for raw in cases:
+            with self.subTest(raw=raw):
+                normalized = self.build(raw)
+                display = normalized["display"]
+                self.assertIsInstance(display, dict)
+                self.assertEqual(display["tier"], 3)
+                self.assertIsNone(display["zh_cn_short"])
+                self.assertTrue(display["zh_cn_detail"])
+                self.assertNotIn("translation", normalized)
+
+    def test_tier3_does_not_drop_lexical_atoms_or_slots(self) -> None:
+        """Tier3 退出短文案不得删除已解析 token/slot（无损原则）。"""
+
+        record = enrich_with_reference(
+            normalize_semantics(
+                decompose_event_name("Play_sfx_AatroxSkin01_AatroxBasicAttack2_OnCast", game_version="16.5")
+            ),
+            self.reference,
+        )
+        normalized = build_normalized_record(record, translation_context=self.context)
+
+        self.assertEqual(normalized["semantic"]["slots"], record.semantic_slots)
+        self.assertTrue(normalized["display"]["debug_label"])
+
+
 def decomposition_record_with_subject(raw_event_name: str, subject_hint: str) -> EventDecompositionRecord:
     """构造带指定主体的最小拆解记录。"""
 

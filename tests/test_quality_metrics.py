@@ -18,6 +18,7 @@ def build_record(
     zh_cn_short: str,
     *,
     with_translation: bool = False,
+    tier: int | None = None,
 ) -> dict[str, object]:
     """构造一条最小 normalized 记录。
 
@@ -28,15 +29,20 @@ def build_record(
         confidence: 语义置信度。
         zh_cn_short: 短展示文案。
         with_translation: 是否附带顶层 translation 对象。
+        tier: display.tier 分层值；None 表示不写入该字段（模拟旧产物）。
 
     Returns:
         可写入 JSONL 的记录 dict。
     """
 
+    display: dict[str, object] = {"zh_cn_short": zh_cn_short}
+    if tier is not None:
+        display["tier"] = tier
+
     record: dict[str, object] = {
         "raw_event_name": raw,
         "entity": {"alias": alias, "kind": kind},
-        "display": {"zh_cn_short": zh_cn_short},
+        "display": display,
         "semantic": {"confidence": confidence},
     }
     if with_translation:
@@ -170,6 +176,53 @@ class QualityMetricsTests(unittest.TestCase):
         metrics = self.collect()
 
         json.dumps(metrics, ensure_ascii=False, sort_keys=True)
+
+    def test_display_tier_distribution_defaults_to_unknown_without_tier_field(self) -> None:
+        """本 fixture 记录均未写 display.tier，全部归入 unknown 桶。"""
+
+        metrics = self.collect()
+
+        self.assertEqual(metrics["display_tier_counts"], {"unknown": 5})
+
+
+class QualityMetricsDisplayTierTests(unittest.TestCase):
+    """验证 display.tier 分布统计。"""
+
+    def setUp(self) -> None:
+        """构造覆盖 tier1/tier2/tier3 与缺失 tier 的合成 normalized 输出。"""
+
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        root = Path(self._tmp.name)
+
+        self.normalized_root = root / "normalized"
+        champions_dir = self.normalized_root / "by-entity" / "champions"
+        champions_dir.mkdir(parents=True)
+
+        records = [
+            build_record("Play_vo_Aatrox_Kill3DAatrox", "Aatrox", "champion", "high", "击杀语音", tier=1),
+            build_record("Play_vo_Aatrox_FirstEncounter3DAkali", "Aatrox", "champion", "high", "遭遇语音", tier=1),
+            build_record("Mute_sfx_Aatrox_AatroxWRevive_buffcast", "Aatrox", "champion", "medium", "W技能音效", tier=2),
+            build_record("Play_sfx_Aatrox_AatroxBasicAttack2_OnCast", "Aatrox", "champion", "medium", "", tier=3),
+            build_record("Play_sfx_Aatrox_legacy_no_tier", "Aatrox", "champion", "low", "Aatrox事件"),
+        ]
+        (champions_dir / "Aatrox.jsonl").write_text(
+            "".join(json.dumps(record, ensure_ascii=False) + "\n" for record in records),
+            encoding="utf-8",
+        )
+
+        self.validation_json = root / "normalized-validation.json"
+        self.validation_json.write_text(
+            json.dumps({"issues": [], "summary": {"error_count": 0, "warning_count": 0}}),
+            encoding="utf-8",
+        )
+
+    def test_tier_counts_split_by_value_and_unknown_bucket(self) -> None:
+        """tier1/2/3 分别计数，缺失字段归入 unknown，不静默吞掉。"""
+
+        metrics = collect_quality_metrics(self.normalized_root, self.validation_json)
+
+        self.assertEqual(metrics["display_tier_counts"], {"1": 2, "2": 1, "3": 1, "unknown": 1})
 
 
 def build_metrics(

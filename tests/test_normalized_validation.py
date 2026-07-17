@@ -368,6 +368,68 @@ class DisplayLosslessnessTests(unittest.TestCase):
         self.assertIn("counterpart=Ahri", issues[0].message)
 
 
+class DisplayTierValidationTests(unittest.TestCase):
+    """验证 display_short_missing 按 tier 区分 error 门槛。"""
+
+    def validate(self, record: dict[str, object]) -> object:
+        """写出单记录 fixture 并执行校验。"""
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            write_normalized_fixture(root, [record])
+            return validate_normalized_root(root)
+
+    def test_tier3_null_short_is_not_error(self) -> None:
+        """tier3 记录 zh_cn_short=null 合法，不报 display_short_missing。"""
+
+        record = minimal_record("Play_sfx_AatroxSkin01_AatroxBasicAttack2_OnCast")
+        record["display"]["tier"] = 3
+        record["display"]["zh_cn_short"] = None
+
+        report = self.validate(record)
+
+        codes = {issue.code for issue in report.issues}
+        self.assertNotIn("display_short_missing", codes)
+        self.assertEqual(report.error_count, 0)
+
+    def test_tier1_null_short_is_still_error(self) -> None:
+        """tier1 记录缺 zh_cn_short 仍是硬错误。"""
+
+        record = minimal_record("Play_vo_Annie_AnnieQ_OnCast")
+        record["display"]["tier"] = 1
+        record["display"]["zh_cn_short"] = None
+
+        report = self.validate(record)
+
+        codes = {issue.code for issue in report.issues}
+        self.assertIn("display_short_missing", codes)
+        self.assertGreaterEqual(report.error_count, 1)
+
+    def test_tier2_null_short_is_still_error(self) -> None:
+        """tier2 记录缺 zh_cn_short 仍是硬错误（只有 tier3 豁免）。"""
+
+        record = minimal_record("Play_sfx_AkshanSkin01_AkshanWRevive_buffcast")
+        record["display"]["tier"] = 2
+        record["display"]["zh_cn_short"] = None
+
+        report = self.validate(record)
+
+        codes = {issue.code for issue in report.issues}
+        self.assertIn("display_short_missing", codes)
+        self.assertGreaterEqual(report.error_count, 1)
+
+    def test_missing_tier_field_still_requires_short(self) -> None:
+        """没有 display.tier 字段时按旧契约要求 zh_cn_short（向后兼容）。"""
+
+        record = minimal_record("Play_vo_Annie_AnnieQ_OnCast")
+        record["display"]["zh_cn_short"] = None
+
+        report = self.validate(record)
+
+        codes = {issue.code for issue in report.issues}
+        self.assertIn("display_short_missing", codes)
+
+
 class NormalizedValidationCliTests(unittest.TestCase):
     """验证 normalized 校验 CLI。"""
 

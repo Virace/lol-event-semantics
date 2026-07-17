@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from .decomposition_model import EventDecompositionRecord
+from .display_tier import classify_display_tier
 from .normalized_translation_builder import (
     LABEL_SOURCE_REFERENCE,
     LABEL_SOURCE_SKIN_VOTE,
@@ -59,6 +60,18 @@ def build_normalized_record(
         "zh_cn_detail": build_detail_display(record),
         "debug_label": build_debug_label(record),
     }
+    display = build_compat_display(
+        translation,
+        legacy_display=legacy_display,
+        raw_event_name=record.raw_event_name,
+    )
+    tier = classify_display_tier(record, has_translation=translation is not None)
+    display["tier"] = tier
+    if tier == 3:
+        # Tier3 纯技术事件退出短文案：不再伪造“<alias>(音效|语音)?事件”这类
+        # 兜底用户文案；zh_cn_detail/debug_label 继续保留既有生成逻辑，
+        # 不因此丢失任何已解析 token（无损原则）。
+        display["zh_cn_short"] = None
     normalized: dict[str, object] = {
         "schema_version": SCHEMA_VERSION,
         "raw_event_name": record.raw_event_name,
@@ -71,11 +84,7 @@ def build_normalized_record(
             "confidence": record.confidence.value,
             "requires_context": record.profile.requires_context,
         },
-        "display": build_compat_display(
-            translation,
-            legacy_display=legacy_display,
-            raw_event_name=record.raw_event_name,
-        ),
+        "display": display,
         "quality": {
             "unknown_count": len(record.unknowns),
             "candidate_count": len(record.candidates),

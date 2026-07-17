@@ -443,9 +443,13 @@ def validate_record_display(
 
     short = string_or_none(display.get("zh_cn_short"))
     detail = string_or_none(display.get("zh_cn_detail"))
+    tier = display.get("tier")
 
     if short is None:
-        issues.append(error("display_short_missing", row_path, "display.zh_cn_short 不能为空。", raw))
+        # Tier3（纯技术事件）合法退出短文案；tier 缺失或非 3 时仍按旧契约
+        # 要求 zh_cn_short 非空，不放宽历史保证。
+        if tier != 3:
+            issues.append(error("display_short_missing", row_path, "display.zh_cn_short 不能为空。", raw))
     elif has_technical_display_token(short):
         issues.append(warning("technical_token_in_display", row_path, f"短展示疑似残留技术 token：{short}", raw))
 
