@@ -299,66 +299,6 @@ def build_short_display_core(record: EventDecompositionRecord) -> str:
     return compact_display(f"{owner}{family_label(record.profile.primary_family)}")
 
 
-def map_system_fallback_label(record: EventDecompositionRecord) -> str:
-    """返回 map/系统域兜底短文案的核心后缀。
-
-    优先渲染已解析的阶段/通用后缀（释放/命中/状态启动/循环等，见
-    map_system_phase_label，复用既有阶段词表不新造措辞）；识别到独立
-    loop token（如 homeguard_..._loop）但未归一进 phase 槽位时按同一份
-    既有措辞渲染"循环"；都没有命中时回落到事件族标签，与其它域兜底路径
-    一致，不丢失已解析信息。
-
-    Args:
-        record: 拆解记录。
-
-    Returns:
-        兜底短文案后缀。
-    """
-
-    phase_text = map_system_phase_label(record.semantic_slots.get("phase"))
-    if phase_text:
-        return phase_text
-
-    if any(atom.raw.lower() == "loop" for atom in record.lexical_atoms):
-        return "循环"
-
-    return family_label(record.profile.primary_family)
-
-
-def map_system_phase_label(phase: object) -> str:
-    """返回 map/系统域兜底短文案可渲染的阶段中文词。
-
-    先复用既有阶段词表：phase_label 的 cast/hit/发射类词，以及
-    skin_action_phase_label 的 buff_activate/buff_deactivate（状态启动/
-    状态结束）；再补齐这两个词表缺的下划线归一键形（missile_launch/
-    missile_cast/on_buff_activate/on_buff_deactivate/loop），指向同一份
-    既有中文措辞（rules/phases.yaml 的 loop→循环），不新造翻译。
-
-    Args:
-        phase: 语义槽中的阶段值。
-
-    Returns:
-        中文阶段词；未命中任何已有词表时返回空串。
-    """
-
-    if phase is None:
-        return ""
-
-    key = str(phase).lower()
-    direct = phase_label(key) or skin_action_phase_label(key)
-    if direct:
-        return direct
-
-    underscored_aliases = {
-        "missile_launch": "发射",
-        "missile_cast": "发射",
-        "on_buff_activate": "状态启动",
-        "on_buff_deactivate": "状态结束",
-        "loop": "循环",
-    }
-    return underscored_aliases.get(key, "")
-
-
 def build_detail_display(record: EventDecompositionRecord) -> str:
     """生成详细展示文案。
 
@@ -445,12 +385,8 @@ def map_system_entity_label(alias: str) -> str | None:
     return get_map_system_entity_labels().get(rule_key(alias))
 
 
-@lru_cache(maxsize=1)
-def get_map_system_entity_labels(
-    rules_root: Path = DEFAULT_RULES_ROOT,
-    overrides_root: Path = DEFAULT_OVERRIDES_ROOT,
-) -> dict[str, str]:
-    """读取并缓存 map/系统域实体级中文词条表（T3.4 头部词条表）。
+def load_map_system_entity_labels(rules_root: Path, overrides_root: Path) -> dict[str, str]:
+    """读取 map/系统域实体级中文词条表（T3.4 头部词条表）。
 
     词条来自 rules/contextual/sfx 下 owner="entity" 的分片，key 为规则
     引擎归一后的实体别名（rule_key），value 为人工核对的中文名。
@@ -471,6 +407,17 @@ def get_map_system_entity_labels(
         for (scope, owner, token), alias in rulebook.contextual_aliases.items()
         if scope == "sfx" and owner == entity_owner_key
     }
+
+
+@lru_cache(maxsize=1)
+def get_map_system_entity_labels() -> dict[str, str]:
+    """返回进程内缓存的 map/系统域实体词条表。
+
+    Returns:
+        从默认规则目录加载的词条映射；同一进程内只读一次规则目录。
+    """
+
+    return load_map_system_entity_labels(DEFAULT_RULES_ROOT, DEFAULT_OVERRIDES_ROOT)
 
 
 def display_subject(slots: dict[str, Any]) -> str | None:
@@ -713,6 +660,66 @@ def skin_action_phase_label(phase: object) -> str:
         return ""
 
     return labels.get(str(phase).lower(), "")
+
+
+def map_system_fallback_label(record: EventDecompositionRecord) -> str:
+    """返回 map/系统域兜底短文案的核心后缀。
+
+    优先渲染已解析的阶段/通用后缀（释放/命中/状态启动/循环等，见
+    map_system_phase_label，复用既有阶段词表不新造措辞）；识别到独立
+    loop token（如 homeguard_..._loop）但未归一进 phase 槽位时按同一份
+    既有措辞渲染“循环”；都没有命中时回落到事件族标签，与其它域兜底路径
+    一致，不丢失已解析信息。
+
+    Args:
+        record: 拆解记录。
+
+    Returns:
+        兜底短文案后缀。
+    """
+
+    phase_text = map_system_phase_label(record.semantic_slots.get("phase"))
+    if phase_text:
+        return phase_text
+
+    if any(atom.raw.lower() == "loop" for atom in record.lexical_atoms):
+        return "循环"
+
+    return family_label(record.profile.primary_family)
+
+
+def map_system_phase_label(phase: object) -> str:
+    """返回 map/系统域兜底短文案可渲染的阶段中文词。
+
+    先复用既有阶段词表：phase_label 的 cast/hit/发射类词，以及
+    skin_action_phase_label 的 buff_activate/buff_deactivate（状态启动/
+    状态结束）；再补齐这两个词表缺的下划线归一键形（missile_launch/
+    missile_cast/on_buff_activate/on_buff_deactivate/loop），指向同一份
+    既有中文措辞（rules/phases.yaml 的 loop→循环），不新造翻译。
+
+    Args:
+        phase: 语义槽中的阶段值。
+
+    Returns:
+        中文阶段词；未命中任何已有词表时返回空串。
+    """
+
+    if phase is None:
+        return ""
+
+    key = str(phase).lower()
+    direct = phase_label(key) or skin_action_phase_label(key)
+    if direct:
+        return direct
+
+    underscored_aliases = {
+        "missile_launch": "发射",
+        "missile_cast": "发射",
+        "on_buff_activate": "状态启动",
+        "on_buff_deactivate": "状态结束",
+        "loop": "循环",
+    }
+    return underscored_aliases.get(key, "")
 
 
 def champion_status_label(status_key: object) -> str:

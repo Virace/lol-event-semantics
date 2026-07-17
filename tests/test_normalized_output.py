@@ -210,12 +210,10 @@ class MapSystemEntityDisplayTests(unittest.TestCase):
             )
         )
 
-        short = build_short_display(record)
-        self.assertTrue(short.startswith("Ruby"))
-        self.assertEqual(short, "Ruby命中")
+        self.assertEqual(build_short_display(record), "Ruby命中")
 
     def test_loop_suffix_renders_chinese_loop_word(self) -> None:
-        """已解析的 loop 通用后缀渲染成"循环"，复用既有阶段词表措辞。"""
+        """已解析的 loop 通用后缀渲染成“循环”，复用既有阶段词表措辞。"""
 
         record = normalize_semantics(
             decompose_event_name(
