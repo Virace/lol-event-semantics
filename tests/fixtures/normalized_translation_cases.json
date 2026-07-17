@@ -230,5 +230,61 @@
     "zh_cn_default": "塔莉垭 首次移动语音",
     "zh_cn_main": "首次移动语音",
     "notes": "T3.2 回炉修复：Move2DFirst 曾被 dimension-prefixed 里程碑分支误标为 kill/milestone=first（337 条），应为 move+timing=first 的首次移动台词，无交互对象。"
+  },
+  {
+    "raw_event_name": "Play_vo_AatroxSkin01_Move2DLong",
+    "expected_frame_type": "voice_event",
+    "required_roles": ["champion", "skin", "action"],
+    "zh_cn_default": "亚托克斯 仲裁圣骑 远距离移动语音",
+    "zh_cn_main": "远距离移动语音",
+    "notes": "批次3 黄金样例：move distance=long 按 SPEC 措辞表展开为远距离移动。"
+  },
+  {
+    "raw_event_name": "Play_vo_AatroxSkin01_Death3D",
+    "expected_frame_type": "voice_event",
+    "required_roles": ["champion", "skin", "action"],
+    "zh_cn_default": "亚托克斯 仲裁圣骑 死亡语音",
+    "zh_cn_main": "死亡语音",
+    "notes": "批次3 黄金样例：death 家族核心词死亡。"
+  },
+  {
+    "raw_event_name": "Play_vo_AatroxSkin33_Recall3DGeneral",
+    "expected_frame_type": "voice_event",
+    "required_roles": ["champion", "skin", "action"],
+    "zh_cn_default": "亚托克斯 海魔至尊 回城语音",
+    "zh_cn_main": "回城语音",
+    "notes": "批次3 黄金样例：recall 家族核心词回城，General 视为无修饰。"
+  },
+  {
+    "raw_event_name": "Play_vo_AatroxSkin33_Respawn2DGeneral",
+    "expected_frame_type": "voice_event",
+    "required_roles": ["champion", "skin", "action"],
+    "zh_cn_default": "亚托克斯 海魔至尊 重生语音",
+    "zh_cn_main": "重生语音",
+    "notes": "批次3 黄金样例：respawn 家族核心词重生。"
+  },
+  {
+    "raw_event_name": "Play_vo_Ezreal_BuyItem2DGeneral",
+    "expected_frame_type": "voice_event",
+    "required_roles": ["champion", "action"],
+    "zh_cn_default": "伊泽瑞尔 购买装备语音",
+    "zh_cn_main": "购买装备语音",
+    "notes": "批次3 实现者补选：buy_item General 按措辞表机械展开，待主代理裁决。"
+  },
+  {
+    "raw_event_name": "Play_vo_AatroxSkin33_Ping2DOnMyWay",
+    "expected_frame_type": "voice_event",
+    "required_roles": ["champion", "skin", "action", "qualifier"],
+    "zh_cn_default": "亚托克斯 海魔至尊 信号语音",
+    "zh_cn_main": "信号语音",
+    "notes": "批次3 实现者补选：ping 细分词 OnMyWay 本批不译（官方轮盘措辞未核验），无损保留在 qualifier argument，不进文案；待主代理裁决。"
+  },
+  {
+    "raw_event_name": "Play_vo_AatroxSkin33_Shop2DOpen",
+    "expected_frame_type": "voice_event",
+    "required_roles": ["champion", "skin", "action"],
+    "zh_cn_default": "亚托克斯 海魔至尊 打开商店语音",
+    "zh_cn_main": "打开商店语音",
+    "notes": "批次3 实现者补选：shop qualifier=Open 按措辞表展开为打开商店，待主代理裁决。"
   }
 ]

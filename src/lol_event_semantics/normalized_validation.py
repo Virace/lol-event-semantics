@@ -49,6 +49,17 @@ SUPPORTED_TRANSLATION_PRIMARY_FAMILIES = {
     "kill",
     "move",
     "assist",
+    # 批次3 self_action 家族（voice_event frame 承接；move/assist 已在上方）。
+    "death",
+    "buy_item",
+    "recall",
+    "respawn",
+    "taunt_response",
+    "ping",
+    "joke_response",
+    "use_item",
+    "shop",
+    "level_up",
 }
 # display 无损性校验：detail 必须体现这三个壳动词的中文语义
 #（unmute 的「取消静音」含「静音」，与 mute 共用同一判据）。

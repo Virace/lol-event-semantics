@@ -239,6 +239,130 @@ class NormalizedTranslationBuilderVoiceAssetKindTests(unittest.TestCase):
         self.assertEqual(asset_kind_words("lux")[0], "语音")
 
 
+class SelfActionVoiceEventTests(unittest.TestCase):
+    """验证批次3 self_action 家族接入 voice_event（SPEC 2026-07-18 措辞表）。"""
+
+    def test_families_build_voice_event_with_core_wording(self) -> None:
+        """12 家族 vo 记录构建 voice_event，action label 用 SPEC 核心词加语音尾词。"""
+
+        cases = [
+            ("Play_vo_AatroxSkin33_Move2DStandard", "移动语音"),
+            ("Play_vo_AatroxSkin01_Death3D", "死亡语音"),
+            ("Play_vo_Ezreal_BuyItem2DGeneral", "购买装备语音"),
+            ("Play_vo_AatroxSkin33_Recall3DGeneral", "回城语音"),
+            ("Play_vo_AatroxSkin33_Respawn2DGeneral", "重生语音"),
+            ("Play_vo_AatroxSkin33_TauntResponse3DGeneral", "嘲讽回应语音"),
+            ("Play_vo_AatroxSkin33_Ping2DOnMyWay", "信号语音"),
+            ("Play_vo_AatroxSkin33_JokeResponse3DGeneral", "玩笑回应语音"),
+            ("Play_vo_Aatrox_UseItem3DGuardianAngelR", "使用装备语音"),
+            ("Play_vo_AhriSkin86_LevelUp2DGeneral", "升级语音"),
+            ("Play_vo_Kalista_Assist3DGeneral", "协助语音"),
+        ]
+        for raw, action_zh in cases:
+            with self.subTest(raw=raw):
+                translation = build_translation(enriched_record(raw), TranslationBuildContext())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], "voice_event")
+                self.assertEqual(translation["arguments"]["action"]["labels"]["zh_CN"], action_zh)
+
+    def test_qualifier_specials_render_spec_wording(self) -> None:
+        """qualifier 特例（long/Cancel/Ward/Potion/Open/Close/级别词）逐字按 SPEC 展开。"""
+
+        cases = [
+            ("Play_vo_AatroxSkin01_Move2DLong", "远距离移动语音"),
+            ("Play_vo_Ornn_Recall3DCancel", "取消回城语音"),
+            ("Play_vo_Azir_UseItem2DWard", "使用守卫语音"),
+            ("Play_vo_AhriSkin14_UseItem2DPotion", "使用药水语音"),
+            ("Play_vo_CaitlynSkin11_UseItem2DHealthPotion", "使用药水语音"),
+            ("Play_vo_AatroxSkin33_Shop2DOpen", "打开商店语音"),
+            ("Play_vo_Taliyah_Shop2DClose", "关闭商店语音"),
+            ("Play_vo_ChogathSkin05_LevelUp2DSix", "升至6级语音"),
+            ("Play_vo_ChogathSkin05_LevelUp2DEleven", "升至11级语音"),
+            ("Play_vo_ChogathSkin05_LevelUp2DFifteen", "升至15级语音"),
+            ("Play_vo_Azir_LevelUp2DEighteen", "升至18级语音"),
+        ]
+        for raw, action_zh in cases:
+            with self.subTest(raw=raw):
+                translation = build_translation(enriched_record(raw), TranslationBuildContext())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], "voice_event")
+                self.assertEqual(translation["arguments"]["action"]["labels"]["zh_CN"], action_zh)
+
+    def test_uncovered_qualifier_kept_lossless_out_of_display(self) -> None:
+        """未译 qualifier（ping 细分词/装备名）无损进 qualifier argument，不进双档文案。"""
+
+        cases = [
+            ("Play_vo_AatroxSkin33_Ping2DOnMyWay", "OnMyWay"),
+            ("Play_vo_AsheSkin08_BuyItem2DInfinityEdge", "InfinityEdge"),
+        ]
+        for raw, token in cases:
+            with self.subTest(raw=raw):
+                translation = build_translation(enriched_record(raw), TranslationBuildContext())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                qualifier = translation["arguments"]["qualifier"]
+                self.assertEqual(qualifier["labels"]["en_US"], token)
+                self.assertEqual(qualifier["token"], token)
+
+                display = build_compat_display(translation, raw_event_name=raw)
+                self.assertNotIn(token, display["zh_cn_detail"])
+                self.assertNotIn(token, display["zh_cn_short"])
+
+    def test_move_context_qualifier_kept_lossless(self) -> None:
+        """move 位置/状态 qualifier（River 等）核心词仍移动，context 无损进 argument。"""
+
+        translation = build_translation(
+            enriched_record("Play_vo_AatroxSkin33_Move2DRiver"), TranslationBuildContext()
+        )
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        args = translation["arguments"]
+        self.assertEqual(args["action"]["labels"]["zh_CN"], "移动语音")
+        self.assertEqual(args["qualifier"]["labels"]["en_US"], "River")
+        self.assertEqual(args["qualifier"]["key"], "river")
+
+    def test_generic_qualifier_not_emitted(self) -> None:
+        """General/Standard 等通用 qualifier 不产生 qualifier argument。"""
+
+        for raw in ["Play_vo_AatroxSkin33_Recall3DGeneral", "Play_vo_AatroxSkin33_Move2DStandard"]:
+            with self.subTest(raw=raw):
+                translation = build_translation(enriched_record(raw), TranslationBuildContext())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertNotIn("qualifier", translation["arguments"])
+
+    def test_non_vo_records_build_no_frame_and_keep_legacy_display(self) -> None:
+        """非 vo 记录不建 frame（维持 Tier3 兜底），legacy display 字节不变。"""
+
+        from lol_event_semantics.normalized_output import build_normalized_record
+
+        record = enriched_record("Play_sfx_AatroxSkin07_Death3D_cast")
+        self.assertIsNone(build_translation(record, TranslationBuildContext()))
+
+        normalized = build_normalized_record(record)
+        display = normalized["display"]
+        assert isinstance(display, dict)
+        self.assertEqual(display["tier"], 3)
+        self.assertIsNone(display["zh_cn_short"])
+        self.assertEqual(display["zh_cn_detail"], "Aatrox死亡（皮肤 Skin07）")
+
+    def test_spell_slot_records_keep_ability_frames(self) -> None:
+        """（回归）带技能槽位的同族记录仍走 ability builder，不被 voice_event 抢占。"""
+
+        cases = [
+            ("Play_vo_Graves_GravesMove_cast3D", "ability_cast_event"),
+            ("Play_sfx_Karthus_KarthusDeathDefiedBuff_OnBuffActivate", "ability_state_change"),
+        ]
+        for raw, frame_type in cases:
+            with self.subTest(raw=raw):
+                translation = build_translation(enriched_record(raw), TranslationBuildContext())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], frame_type)
+
+
 class NormalizedTranslationBuilderOwnerSkinTokenTests(unittest.TestCase):
     """验证 owner alias 内嵌皮肤号（GalioSKin04 大小写 typo）不进 champion 文案。"""
 

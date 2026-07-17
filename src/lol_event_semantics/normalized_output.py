@@ -16,6 +16,7 @@ from .display_tier import classify_display_tier
 from .normalized_translation_builder import (
     LABEL_SOURCE_REFERENCE,
     LABEL_SOURCE_SKIN_VOTE,
+    SELF_ACTION_VOICE_FAMILIES,
     SHELL_PLAYBACK_VERBS,
     VOICE_EVENT_FAMILIES,
     ChampionLabelEntry,
@@ -289,10 +290,13 @@ def build_short_display_core(record: EventDecompositionRecord) -> str:
         return compact_display(f"{owner}移动")
 
     voice_action = VOICE_EVENT_FAMILIES.get(record.profile.primary_family)
-    if voice_action is not None:
+    if voice_action is not None and record.profile.primary_family not in SELF_ACTION_VOICE_FAMILIES:
         # 与 builder 的 voice_event frame 同措辞：动作词 + asset kind 亚词
         # （嘲讽语音/攻击音效）。此前该 legacy 路径缺资产类型字样；当前全量
         # 数据中这五个家族均有 translation frame 覆盖，本分支仅作兜底。
+        # 批次3 家族刻意跳过本分支：它们仅 vo 记录建 frame，剩余非 vo 兜底
+        # 记录（Tier3 sfx 死亡/回城/重生等）维持 family_label 既有措辞，
+        # 避免 display 漂移（SPEC 硬门：范围外记录 display 零变化）。
         return compact_display(f"{owner}{voice_action}{audio_kind_label(record.shell.asset_kind)}")
 
     if record.profile.primary_family == "emote":
