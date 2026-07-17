@@ -465,6 +465,22 @@ class StripRepeatedChampionFromSkinTests(unittest.TestCase):
         self.assertEqual(strip_repeated_champion_from_skin("魔龙布兰德", "布兰德"), "魔龙布兰德")
         self.assertEqual(strip_repeated_champion_from_skin("加里奥", "加里奥"), "加里奥")
 
+    def test_keeps_champion_name_in_middle_segment(self) -> None:
+        """英雄名出现在皮肤名中间段时不剥离，只处理末尾重复。"""
+
+        self.assertEqual(
+            strip_repeated_champion_from_skin("暗焰 布兰德 典狱长", "布兰德"),
+            "暗焰 布兰德 典狱长",
+        )
+
+    def test_keeps_multi_segment_label_equal_to_champion_name(self) -> None:
+        """多段皮肤名整体等于英雄名时不剥成空串（间隔号整名写法）。"""
+
+        self.assertEqual(
+            strip_repeated_champion_from_skin("奥瑞利安 · 索尔", "奥瑞利安·索尔"),
+            "奥瑞利安 · 索尔",
+        )
+
 
 class NormalizedTranslationRendererPlaybackTests(unittest.TestCase):
     """验证 playback（停止/静音）壳语义参与渲染，不被静默丢弃。"""

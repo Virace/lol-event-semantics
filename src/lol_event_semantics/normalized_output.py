@@ -16,7 +16,10 @@ from .display_tier import classify_display_tier
 from .normalized_translation_builder import (
     LABEL_SOURCE_REFERENCE,
     LABEL_SOURCE_SKIN_VOTE,
+    SHELL_PLAYBACK_VERBS,
+    VOICE_EVENT_FAMILIES,
     ChampionLabelEntry,
+    asset_kind_words,
     build_translation,
 )
 from .normalized_translation_model import TranslationBuildContext
@@ -200,18 +203,21 @@ def build_short_display(record: EventDecompositionRecord) -> str:
 def playback_verb_suffix(verb: object) -> str:
     """返回壳动词对应的中文文案后缀。
 
+    措辞唯一来源是 translation builder 的 SHELL_PLAYBACK_VERBS，legacy 路径
+    只取 zh 侧，保证两条展示路径逐字节一致。
+
     Args:
         verb: 事件外壳动词。
 
     Returns:
-        stop/mute 返回停止/静音；默认播放语义返回空串。
+        stop/mute/unmute 返回停止/静音/取消静音；默认播放语义返回空串。
     """
 
     if not isinstance(verb, str):
         return ""
 
-    labels = {"stop": "停止", "mute": "静音", "unmute": "取消静音"}
-    return labels.get(verb.lower(), "")
+    labels = SHELL_PLAYBACK_VERBS.get(verb.lower())
+    return labels[0] if labels is not None else ""
 
 
 def build_short_display_core(record: EventDecompositionRecord) -> str:
@@ -282,8 +288,12 @@ def build_short_display_core(record: EventDecompositionRecord) -> str:
     if record.profile.primary_family == "move":
         return compact_display(f"{owner}移动")
 
-    if record.profile.primary_family == "attack":
-        return compact_display(f"{owner}攻击")
+    voice_action = VOICE_EVENT_FAMILIES.get(record.profile.primary_family)
+    if voice_action is not None:
+        # 与 builder 的 voice_event frame 同措辞：动作词 + asset kind 亚词
+        # （嘲讽语音/攻击音效）。此前该 legacy 路径缺资产类型字样；当前全量
+        # 数据中这五个家族均有 translation frame 覆盖，本分支仅作兜底。
+        return compact_display(f"{owner}{voice_action}{audio_kind_label(record.shell.asset_kind)}")
 
     if record.profile.primary_family == "emote":
         return compact_display(f"{owner}表情{audio_kind_label(record.shell.asset_kind)}")
@@ -471,6 +481,9 @@ def first_spell_modifier(slots: dict[str, Any]) -> dict[str, Any] | None:
 def audio_kind_label(asset_kind: object) -> str:
     """返回音频类型中文措辞。
 
+    措辞唯一来源是 translation builder 的 ASSET_KIND_WORDS（经 asset_kind_words
+    读取），legacy 路径只取 zh 侧，保证两条展示路径逐字节一致。
+
     Args:
         asset_kind: 事件外壳音频类型（vo/sfx/mus）。
 
@@ -478,11 +491,7 @@ def audio_kind_label(asset_kind: object) -> str:
         音频类型措辞；未识别时按语音处理。
     """
 
-    if isinstance(asset_kind, str):
-        labels = {"sfx": "音效", "mus": "音乐"}
-        return labels.get(asset_kind.lower(), "语音")
-
-    return "语音"
+    return asset_kind_words(asset_kind)[0]
 
 
 def phase_label(phase: object) -> str:

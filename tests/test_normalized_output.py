@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from functools import lru_cache
 from pathlib import Path
 
 from lol_event_semantics.decomposition_lexer import decompose_event_name
@@ -693,14 +694,14 @@ class NormalizedShellVerbDisplayTests(unittest.TestCase):
     """验证 Stop/Mute 壳动词进入 legacy 展示文案。"""
 
     def test_stop_event_legacy_short_display_marks_stop(self) -> None:
-        """Stop_ 事件 legacy 短文案带停止语义，不得渲染成播放语义。"""
+        """Stop_ 事件 legacy 短文案带停止语义与资产类型字样，不得渲染成播放语义。"""
 
         from lol_event_semantics.normalized_output import build_short_display
 
         record = normalize_semantics(
             decompose_event_name("Stop_sfx_AuroraSkin11_Dance3D_leadin", game_version="16.5")
         )
-        self.assertEqual(build_short_display(record), "Aurora跳舞停止")
+        self.assertEqual(build_short_display(record), "Aurora跳舞音效停止")
 
     def test_emote_legacy_display_uses_asset_kind_word(self) -> None:
         """emote legacy 文案按 asset kind 选词，sfx 不得写成语音。"""
@@ -898,7 +899,7 @@ class NormalizedDisplayEndToEndTests(unittest.TestCase):
 
         from lol_event_semantics.normalized_output import build_translation_context
 
-        cls.reference = ReferenceIndex.from_reference_collection("reference")
+        cls.reference = reference_index()
         cls.context = build_translation_context()
 
     def build_display(self, raw_event_name: str) -> dict[str, str]:
@@ -1026,7 +1027,7 @@ class DisplayTierTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         """加载共享 reference index 与 translation 上下文（同生产链路）。"""
 
-        cls.reference = ReferenceIndex.from_reference_collection("reference")
+        cls.reference = reference_index()
         from lol_event_semantics.normalized_output import build_translation_context
 
         cls.context = build_translation_context()
@@ -1215,8 +1216,15 @@ def enriched_record(raw_event_name: str) -> EventDecompositionRecord:
 
     return enrich_with_reference(
         normalize_semantics(decompose_event_name(raw_event_name, game_version="16.5")),
-        ReferenceIndex.from_reference_collection("reference"),
+        reference_index(),
     )
+
+
+@lru_cache(maxsize=1)
+def reference_index() -> ReferenceIndex:
+    """返回测试共享的 reference index（对齐 builder 测试的缓存模式）。"""
+
+    return ReferenceIndex.from_reference_collection("reference")
 
 
 if __name__ == "__main__":

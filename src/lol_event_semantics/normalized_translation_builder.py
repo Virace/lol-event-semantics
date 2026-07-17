@@ -72,12 +72,18 @@ VOICE_EVENT_FAMILIES = {
     "laugh": "大笑",
     "dance": "跳舞",
 }
-# 壳动词只有偏离默认播放语义的才需要出现在文案里（信息无损：stop/mute 不可反转为播放）。
+# 壳动词只有偏离默认播放语义的才需要出现在文案里（信息无损：stop/mute/unmute
+# 都不可反转为播放）。本表是壳动词中文措辞的单一来源：playback argument 与
+# normalized_output.playback_verb_suffix（legacy 短文案后缀）共用，两条路径措辞
+# 逐字节一致。unmute 目前只出现在 legacy 路径（无 translation frame 覆盖的记录）。
 SHELL_PLAYBACK_VERBS = {
     "stop": ("停止", "stopped"),
     "mute": ("静音", "muted"),
+    "unmute": ("取消静音", "unmuted"),
 }
 # sfx/vo/mus 是音频类型标志：动作措辞必须跟随 asset kind，未识别时保守按语音处理。
+# 本表是资产类型中文措辞的单一来源：asset_kind_words 与
+# normalized_output.audio_kind_label（legacy 短文案）共用。
 ASSET_KIND_WORDS = {
     "vo": ("语音", "voice"),
     "sfx": ("音效", "sfx"),
