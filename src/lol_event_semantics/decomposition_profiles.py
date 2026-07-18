@@ -3244,6 +3244,20 @@ def fill_dialogue_chain(record: EventDecompositionRecord) -> None:
     partner = first_part_raw(first_atom, "residue_token")
     base_atom = record.lexical_atoms[1] if len(record.lexical_atoms) > 1 else None
     turn_atom = record.lexical_atoms[-1] if record.lexical_atoms else None
+    chat_take = None
+    # Chat2_01 形态：尾 atom 是纯数字（无 chat 词头）时，它是该轮次的变体
+    # take 号而非轮次本身，真正轮次在前一个 Chat{N} atom；take 号无损存
+    # chat_take，不进文案（否则「第2句」的变体会被错标成「第1句」）。
+    if (
+        turn_atom is not None
+        and len(record.lexical_atoms) >= 2
+        and first_part_value(turn_atom, "trigger_token") is None
+        and first_number(turn_atom) is not None
+        and first_part_value(record.lexical_atoms[-2], "trigger_token") == "chat"
+        and first_number(record.lexical_atoms[-2]) is not None
+    ):
+        chat_take = first_number(turn_atom)
+        turn_atom = record.lexical_atoms[-2]
     fill_dialogue_chain_slots(
         record=record,
         chat_partner=partner,
@@ -3251,6 +3265,7 @@ def fill_dialogue_chain(record: EventDecompositionRecord) -> None:
         turn_atom=turn_atom,
         precondition=None,
         reason="matched chat trigger",
+        chat_take=chat_take,
     )
 
 
@@ -3261,8 +3276,13 @@ def fill_dialogue_chain_slots(
     turn_atom: LexicalAtom | None,
     precondition: dict[str, object] | None,
     reason: str,
+    chat_take: int | None = None,
 ) -> None:
-    """统一填充普通对话链与带前置条件的对话链。"""
+    """统一填充普通对话链与带前置条件的对话链。
+
+    Args:
+        chat_take: 轮次的变体 take 号（Chat2_01 尾数字），无损入 slot、不进文案。
+    """
 
     base_trigger = summarize_nested_trigger(base_atom)
     line_variant = base_trigger.get("line_variant") if base_trigger is not None else first_number(base_atom)
@@ -3277,6 +3297,7 @@ def fill_dialogue_chain_slots(
         "chat_partner": unresolved_counterpart(chat_partner),
         "base_trigger": base_trigger,
         "chat_turn": first_number(turn_atom) if turn_atom else None,
+        "chat_take": chat_take,
         "line_variant": line_variant,
     }
 

@@ -320,6 +320,14 @@
     "notes": "批次4 主代理裁决（改实现者补选）：Near/Far 是距离触发条件（同 2D/3D 技术 token，本形态占 dialogue 家族 690/812），剥离后按 champion 解析；限定词存 provenance.proximity，原 token 无损保留。真正未命中的 partner 仍走英文 fallback，main 零拉丁字母口径不变。"
   },
   {
+    "raw_event_name": "Play_vo_Xayah_Chat3DRakanNear_Taunt3DGeneral01_Chat2_01",
+    "expected_frame_type": "champion_dialogue_event",
+    "required_roles": ["champion", "partner", "base_trigger", "turn"],
+    "zh_cn_default": "霞 与 洛 对话语音（嘲讽 第2句）",
+    "zh_cn_main": "与 洛 对话语音（嘲讽 第2句）",
+    "notes": "review 修复黄金样例：Chat2_01 尾数字是轮次的变体 take 号（slots.chat_take=1 无损），轮次取 Chat2，不得错标「第1句」。"
+  },
+  {
     "raw_event_name": "Play_vo_Announcer_Female1_AceEnemyTeam",
     "expected_frame_type": "announcer_event",
     "required_roles": ["event", "team"],

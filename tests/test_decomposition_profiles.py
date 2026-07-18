@@ -267,6 +267,24 @@ class ProfileClassifierSlotTests(unittest.TestCase):
         self.assertEqual(record.semantic_slots["chat_turn"], 2)
         self.assertFalse(record.unknowns)
 
+    def test_dialogue_chain_trailing_take_number_keeps_real_turn(self) -> None:
+        """Chat2_01 形态：尾数字是轮次的变体 take 号，轮次仍取 Chat{N}。"""
+
+        record = self.normalize("Play_vo_Xayah_Chat3DRakanNear_Taunt3DGeneral01_Chat2_01")
+
+        self.assertEqual(record.profile.semantic_profile, SemanticProfile.DIALOGUE_CHAIN)
+        self.assertEqual(record.semantic_slots["chat_turn"], 2)
+        self.assertEqual(record.semantic_slots["chat_take"], 1)
+        self.assertEqual(record.semantic_slots["base_trigger"]["family"], "taunt")
+
+    def test_dialogue_chain_without_take_number_has_no_chat_take(self) -> None:
+        """普通 Chat{N} 结尾不产出 chat_take。"""
+
+        record = self.normalize("Play_vo_Xayah_Chat3DRakanNear_Taunt3DGeneral01_Chat2")
+
+        self.assertEqual(record.semantic_slots["chat_turn"], 2)
+        self.assertIsNone(record.semantic_slots["chat_take"])
+
     def test_dialogue_chain_with_nearby_champion_context(self) -> None:
         record = self.normalize("Play_vo_SennaSkin16_WithLucianNear_FirstEncounter3D01Thresh_Chat02")
 
