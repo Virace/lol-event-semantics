@@ -126,13 +126,18 @@ class DefaultDisplayLabelsTests(unittest.TestCase):
         self.assertGreaterEqual(len(labels.maps), 6)
 
     def test_default_announcer_section_matches_batch5a_vocab(self) -> None:
-        """announcer 段词条数与批次5a 第一批词表一致（表外词第二批再收）。"""
+        """announcer 段词条数与批次5a 词表一致（第一批 20 + 第二批 19）。"""
 
         labels = load_display_labels(REPO_ROOT / DEFAULT_DISPLAY_LABELS_PATH)
-        self.assertEqual(len(labels.announcer_event), 20)
+        self.assertEqual(len(labels.announcer_event), 39)
         self.assertEqual(len(labels.announcer_team), 6)
         self.assertEqual(labels.announcer_event["ChampionPentaKill"], "五杀")
         self.assertEqual(labels.announcer_team["YourTeam"], "己方")
+        # 第二批反社区惯称词条：Godlike=接近神、Legendary=超神（勿混淆）。
+        self.assertEqual(labels.announcer_event["Godlike"], "接近神")
+        self.assertEqual(labels.announcer_event["Legendary"], "超神")
+        self.assertEqual(labels.announcer_event["KillingSpreeSet6"], "超神")
+        self.assertEqual(labels.announcer_event["DampenerDie"], "召唤水晶被摧毁")
 
     def test_get_display_labels_is_cached_singleton(self) -> None:
         """默认词表应进程内缓存，两次调用返回同一对象。"""

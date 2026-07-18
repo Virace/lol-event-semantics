@@ -159,8 +159,17 @@ announcer:
   # value 为中文词条；team 的 key 为队伍尾缀规范写法（builder 按大小写
   # 不敏感剥一个尾缀），value 为中文方位词。防错优先：表外词干一律不建
   # frame，维持 legacy「播报员事件」展示，不硬造中文也不放英文 fallback。
-  # KillingSpree 系/Dominating/Godlike/Shutdown/Dampener 系/包名等留待
-  # 第二批网搜核验后再收；扩词条改这里、不改代码。
+  # 第二批（2026-07-18 网搜核验后收录）：连杀系/Shutdown/UnrealKill/
+  # Dampener 系/TurretLostFirstBlood，一手证据为国服客户端字符串表
+  # （CommunityDragon 镜像，9.10 fontconfig 与最新 stringtable 中英同键
+  # 对照）。三个反社区惯称修正：Godlike=接近神（非「超神」）、
+  # Legendary=超神、Rampage=接近暴走（非「暴走」）。Dampener 经同键
+  # 中英互证为 Inhibitor（召唤水晶）引擎旧名；TurretLostFirstBlood
+  # 官方文案「摧毁了第一座（防御）塔」，「一血塔」判为非官方不用。
+  # You/Hero 中缀变体（RampageYouYourTeam 等）语义未证实，不入表；
+  # 包名（Worlds23=2023全球总决赛/Brawl=神木之门/NexusBlitz=极限闪击/
+  # Maverick=进步之桥播报员内部代号无官方中文名）已核验但本域不进
+  # arguments，留 mode role 设计时接入。扩词条改这里、不改代码。
   event:
     Ace: 团灭
     FirstBlood: 一血
@@ -182,6 +191,25 @@ announcer:
     GameStart: 游戏开始
     Reconnect: 重新连接
     LowHealth: 生命值过低
+    KillingSpree: 大杀特杀
+    KillingSpreeSet1: 大杀特杀
+    KillingSpreeSet2: 接近暴走
+    KillingSpreeSet3: 无人能挡
+    KillingSpreeSet4: 主宰比赛
+    KillingSpreeSet5: 接近神
+    KillingSpreeSet6: 超神
+    Rampage: 接近暴走
+    Unstoppable: 无人能挡
+    Dominating: 主宰比赛
+    Godlike: 接近神
+    Legendary: 超神
+    Shutdown: 终结
+    UnrealKill: 不可思议的击杀
+    ChampionUnrealKill: 不可思议的击杀
+    DampenerDie: 召唤水晶被摧毁
+    DampenerRespawn: 召唤水晶已重生
+    DampenerRespawnSoon: 召唤水晶即将重生
+    TurretLostFirstBlood: 第一座防御塔被摧毁
   team:
     YourTeam: 己方
     AllyTeam: 己方

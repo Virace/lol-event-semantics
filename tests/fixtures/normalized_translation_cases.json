@@ -358,5 +358,37 @@
     "zh_cn_default": "敌方双杀播报",
     "zh_cn_main": "敌方双杀播报",
     "notes": "批次5a 黄金样例：announcer_persona 家族（Maverick）同走双条件分派。表外负例（Play_vo_Announcer_Female1_PentaKillHeroBlue 不建 frame）因 fixture 要求非空文案，改为 builder 单测覆盖。"
+  },
+  {
+    "raw_event_name": "Play_vo_Announcer_Female1_NexusBlitz_Core_OnKillingSpreeSet6YourTeam",
+    "expected_frame_type": "announcer_event",
+    "required_roles": ["event", "team"],
+    "zh_cn_default": "己方超神播报",
+    "zh_cn_main": "己方超神播报",
+    "notes": "批次5a 词表第二批黄金样例：KillingSpreeSet6 按客户端字符串表 onkillingspreeset6=「已经超神啦!」映射为超神（Set1-6 档位各有其词，Godlike=接近神勿混淆）。"
+  },
+  {
+    "raw_event_name": "Play_vo_Announcer_Global_Female1Worlds23_OnDampenerDieEnemyTeam",
+    "expected_frame_type": "announcer_event",
+    "required_roles": ["event", "team"],
+    "zh_cn_default": "敌方召唤水晶被摧毁播报",
+    "zh_cn_main": "敌方召唤水晶被摧毁播报",
+    "notes": "批次5a 词表第二批黄金样例：Dampener 经客户端同键中英互证为 Inhibitor（召唤水晶）引擎旧名。"
+  },
+  {
+    "raw_event_name": "Play_vo_Announcer_Female1_TurretLostFirstBloodYourTeam",
+    "expected_frame_type": "announcer_event",
+    "required_roles": ["event", "team"],
+    "zh_cn_default": "己方第一座防御塔被摧毁播报",
+    "zh_cn_main": "己方第一座防御塔被摧毁播报",
+    "notes": "批次5a 词表第二批黄金样例：官方文案「摧毁了第一座（防御）塔」，「一血塔」判为非官方不用。"
+  },
+  {
+    "raw_event_name": "Play_vo_Announcer_Female1_OnChampionUnrealKillYourTeam",
+    "expected_frame_type": "announcer_event",
+    "required_roles": ["event", "team"],
+    "zh_cn_default": "己方不可思议的击杀播报",
+    "zh_cn_main": "己方不可思议的击杀播报",
+    "notes": "批次5a 词表第二批黄金样例：UnrealKill=不可思议的击杀（五杀以上遗留档位，勿译六杀——HexaKill 另有独立键）。"
   }
 ]
