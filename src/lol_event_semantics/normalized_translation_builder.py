@@ -205,6 +205,10 @@ PARTNER_PROXIMITY_PATTERN = re.compile(r"(?P<alias>[A-Za-z][A-Za-z0-9]*?)(?P<pro
 # ownerless 事件（Play_vo_Kill3DPenta 等）的 owner 段是事件体本身，champion
 # label 会残留维度/壳 token；这类主体进不了用户文案，保守放弃建 frame。
 TECHNICAL_CHAMPION_LABEL_MARKERS = ("3D", "2D", "_", "Play")
+# 批次5b media_base：动作 token 词尾 2D/3D 剥离，沿 skin_action_state 拆解口径
+# （decomposition_profiles.parse_terminal_dimension_action：仅整词尾，避免误伤
+# 词中/词首的 3D）；无词尾维度的小写形态（Base_death）原样通过。
+MEDIA_BASE_ACTION_DIMENSION_PATTERN = re.compile(r"(?P<action>[A-Za-z]+)(?P<dimension>[23]D)", re.IGNORECASE)
 
 
 def build_translation(
@@ -281,6 +285,10 @@ def build_translation_frame(
         "skin_recall_state": build_skin_recall_state,
         "skin_idle_state": build_skin_idle_state,
         "skin_action_state": build_skin_action_state,
+        # 批次5b：media_base 兜底桶里的英雄动作状态（Base_Dance3D_buffactivate 等）
+        # 复用 skin_action_state frame；表外动作词/系统 UI 音由 builder 返回 None
+        # 维持 legacy 展示。
+        "media_base": build_media_base_action_state,
         "gameplay_phase_control": build_gameplay_phase_control,
     }
     builder = builders.get(record.profile.primary_family)
@@ -524,6 +532,126 @@ def build_skin_action_state(
             phase,
         ],
     )
+
+
+def build_media_base_action_state(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+    *,
+    labels: DisplayLabels | None = None,
+) -> dict[str, object] | None:
+    """把 media_base 兜底桶里的英雄动作状态接入 skin_action_state frame（批次5b）。
+
+    双条件门禁：sfx_scope=champion_sfx（排除 hud_base 等系统 UI 音，其
+    owner_context 可能带伪 champion alias）且 owner_context.kind=champion。
+    动作 token 取 cue_path 中 Base 段（大小写两态）之后一段，剥词尾 2D/3D
+    后按 skin_action_state 既有动作词表（display_labels.action，单一来源）
+    解析；表外动作词或无相位（leadin/loop 等尾段不映射 phase）不建 frame
+    维持 legacy——防错优先，严禁英文 fallback 进文案。``Base`` 分组词不进
+    文案，cue_path 无损留在 semantic.slots。
+
+    Args:
+        record: 拆解记录。
+        context: translation 构建上下文。
+        labels: 展示词表；为 None 时使用进程内缓存的默认词表（供测试注入替代词表）。
+
+    Returns:
+        skin_action_state frame；不满足门禁或缺动作/相位时返回 None。
+    """
+
+    slots = record.semantic_slots
+    if slots.get("sfx_scope") != "champion_sfx":
+        return None
+
+    owner_context = slots.get("owner_context")
+    if (
+        not isinstance(owner_context, dict)
+        or owner_context.get("kind") != "champion"
+        or string_or_none(owner_context.get("alias")) is None
+    ):
+        return None
+
+    token = media_base_action_token(slots)
+    if token is None:
+        return None
+
+    action_word, dimension = strip_terminal_dimension(token)
+    action_key = action_word.lower()
+    active_labels = labels if labels is not None else get_display_labels()
+    words = active_labels.action.get(action_key)
+    if words is None:
+        return None
+
+    phase = phase_argument(slots.get("phase"), "skin_action_state", labels=labels)
+    champion = champion_argument(record, context)
+    if phase is None or champion is None or has_technical_champion_label(champion):
+        return None
+
+    zh, en = words
+    action = argument_to_dict(
+        TranslationArgument(
+            role="action",
+            labels={"zh_CN": zh, "en_US": en},
+            confidence="high",
+            provenance={
+                "source": "semantic_slots.cue_path",
+                "frame_type": "skin_action_state",
+                "trigger_family": "media_base",
+                "dimension_token": dimension,
+            },
+            key=action_key,
+            token=token,
+        )
+    )
+    return build_frame(
+        record,
+        "skin_action_state",
+        [
+            champion,
+            skin_argument(record, context),
+            action,
+            phase,
+        ],
+    )
+
+
+def media_base_action_token(slots: Mapping[str, Any]) -> str | None:
+    """取 media_base cue_path 中 Base 分组段之后的动作 token。
+
+    Args:
+        slots: 拆解记录 semantic slots。
+
+    Returns:
+        Base 段后一段字符串；cue_path 缺失、无 Base 段或其后无 token 时返回 None。
+    """
+
+    cue_path = slots.get("cue_path")
+    if not isinstance(cue_path, list):
+        return None
+
+    for index, segment in enumerate(cue_path):
+        if isinstance(segment, str) and segment.lower() == "base":
+            candidate = cue_path[index + 1] if index + 1 < len(cue_path) else None
+            return candidate if isinstance(candidate, str) and candidate else None
+
+    return None
+
+
+def strip_terminal_dimension(token: str) -> tuple[str, str | None]:
+    """剥离动作 token 词尾的 2D/3D 维度标记（仅整词尾）。
+
+    Args:
+        token: 原始动作 token（Dance3D / death 等）。
+
+    Returns:
+        ``(动作词, 维度标记大写或 None)``；无词尾维度时原样返回。
+    """
+
+    match = MEDIA_BASE_ACTION_DIMENSION_PATTERN.fullmatch(token)
+    if match is None:
+        return token, None
+
+    return match.group("action"), match.group("dimension").upper()
 
 
 def build_gameplay_phase_control(
@@ -2401,6 +2529,10 @@ def phase_key(phase: object, frame_type: str) -> str | None:
         "ready",
         "swap",
         "reset",
+        # 批次5b spell rank 语音：等级档位阶段（1-3 级为实测全集，勿造更高档）。
+        "rankone",
+        "ranktwo",
+        "rankthree",
     }:
         return normalized
     if frame_type == "gameplay_phase_control" and normalized == "select":

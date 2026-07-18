@@ -237,6 +237,57 @@ class AnnouncerEventValidationTests(unittest.TestCase):
         self.assertGreater(report.error_count, 0)
 
 
+class MediaBaseActionStateValidationTests(unittest.TestCase):
+    """验证批次5b：skin_action_state 缺 skin 合法化与 media_base 家族注册。"""
+
+    def test_skinless_action_state_record_has_no_issues(self) -> None:
+        """基础皮肤形态（无 skin 角色）的 skin_action_state 记录不产生问题。"""
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            write_normalized_fixture(root, [media_base_action_record()])
+
+            report = validate_normalized_root(root)
+
+        self.assertEqual(report.error_count, 0)
+        self.assertEqual(report.warning_count, 0)
+
+    def test_action_state_missing_action_role_is_still_error(self) -> None:
+        """skin_action_state 缺 action 仍是硬错误（放宽仅限 skin 角色）。"""
+
+        record = media_base_action_record()
+        translation = record["translation"]
+        assert isinstance(translation, dict)
+        arguments = translation["arguments"]
+        assert isinstance(arguments, dict)
+        del arguments["action"]
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            write_normalized_fixture(root, [record])
+
+            report = validate_normalized_root(root)
+
+        codes = {issue.code for issue in report.issues}
+        self.assertIn("translation_frame_required_role_missing", codes)
+        self.assertGreater(report.error_count, 0)
+
+    def test_media_base_without_translation_is_supported_frame_warning(self) -> None:
+        """media_base 已注册为承接家族：缺 translation 报 supported frame warning。"""
+
+        record = media_base_action_record()
+        del record["translation"]
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            write_normalized_fixture(root, [record])
+
+            report = validate_normalized_root(root)
+
+        codes = {issue.code for issue in report.issues}
+        self.assertIn("translation_missing_for_supported_frame", codes)
+
+
 class DisplayLosslessnessTests(unittest.TestCase):
     """验证 display 无损性校验（display_drops_parsed_slot）。"""
 
@@ -665,6 +716,62 @@ def annie_cast_record() -> dict[str, object]:
         "zh_cn_short": "Q技能释放",
         "zh_cn_detail": "Annie Q技能释放",
         "debug_label": "Play_sfx_Annie_AnnieQ_cast",
+    }
+    return record
+
+
+def media_base_action_record() -> dict[str, object]:
+    """构造带 skin_action_state translation 的 media_base 基础皮肤动作记录（批次5b）。"""
+
+    record = minimal_record("Play_sfx_Galio_Base_Death3D_buffactivate", alias="Galio")
+    record["semantic"] = {
+        "profile": "map_or_system",
+        "primary_family": "media_base",
+        "slots": {
+            "trigger_family": "media_base",
+            "sfx_scope": "champion_sfx",
+            "phase": "buff_activate",
+            "cue_path": ["Base", "Death3D", "buffactivate"],
+        },
+        "confidence": "medium",
+        "requires_context": False,
+    }
+    record["translation"] = {
+        "schema_version": 1,
+        "frame_type": "skin_action_state",
+        "frame_version": 1,
+        "frame_confidence": "medium",
+        "arguments": {
+            "champion": {
+                "role": "champion",
+                "alias": "Galio",
+                "labels": {"zh_CN": "加里奥"},
+                "confidence": "high",
+                "provenance": {"kind": "reference", "path": "reference/champions/Galio.yaml"},
+                "omit_when_context_known": ["champion"],
+            },
+            "action": {
+                "role": "action",
+                "key": "death",
+                "token": "Death3D",
+                "labels": {"zh_CN": "死亡", "en_US": "death"},
+                "confidence": "high",
+                "provenance": {"source": "semantic_slots.cue_path"},
+            },
+            "phase": {
+                "role": "phase",
+                "key": "state_activate",
+                "labels": {"zh_CN": "状态启动", "en_US": "state started"},
+                "confidence": "high",
+                "provenance": {"source": "semantic_slots.phase"},
+            },
+        },
+        "provenance": {"builder": "test"},
+    }
+    record["display"] = {
+        "zh_cn_short": "死亡状态启动",
+        "zh_cn_detail": "加里奥 死亡状态启动",
+        "debug_label": "Play_sfx_Galio_Base_Death3D_buffactivate",
     }
     return record
 

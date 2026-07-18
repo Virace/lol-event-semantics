@@ -68,6 +68,9 @@ SUPPORTED_TRANSLATION_PRIMARY_FAMILIES = {
     "audio_scope",
     "announcer_persona",
     "system_voice",
+    # 批次5b media_base 动作状态路由（skin_action_state frame 承接；系统 UI 音、
+    # 表外动作词与无相位记录不建 frame，warning 上涨属已知接受，同 5a 口径）。
+    "media_base",
 }
 # display 无损性校验：detail 必须体现这三个壳动词的中文语义
 #（unmute 的「取消静音」含「静音」，与 mute 共用同一判据）。

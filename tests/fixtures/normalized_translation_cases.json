@@ -390,5 +390,61 @@
     "zh_cn_default": "己方不可思议的击杀播报",
     "zh_cn_main": "己方不可思议的击杀播报",
     "notes": "批次5a 词表第二批黄金样例：UnrealKill=不可思议的击杀（五杀以上遗留档位，勿译六杀——HexaKill 另有独立键）。"
+  },
+  {
+    "raw_event_name": "Play_vo_AatroxSkin33_Spell2DRRankOne",
+    "expected_frame_type": "ability_cast_event",
+    "required_roles": ["champion", "skin", "ability_slot", "phase"],
+    "zh_cn_default": "亚托克斯 海魔至尊 R技能1级",
+    "zh_cn_main": "R技能1级",
+    "notes": "批次5b 黄金样例（实现者补选，待主代理裁决）：rankone→1级走 phase 词表（rules/display_labels.yaml phase 段），frame 沿既有 vo spell 约定 ability_cast_event（renderer TEMPLATES ability_cast_event=champion/skin/ability_slot/phase，normalized_translation_renderer.py:94-107）。既有约定不追加「语音」亚词（同「R技能释放」口径），故文案为「R技能1级」而非「R技能1级语音」；不硬造「升级/学习」时机词。"
+  },
+  {
+    "raw_event_name": "Play_vo_UdyrSkin06_Spell2DQRankOne",
+    "expected_frame_type": "ability_cast_event",
+    "required_roles": ["champion", "skin", "ability_slot", "phase"],
+    "zh_cn_default": "乌迪尔 墨影行者 Q技能1级",
+    "zh_cn_main": "Q技能1级",
+    "notes": "批次5b 黄金样例（实现者补选，待主代理裁决）：非 R 槽位（Udyr 四技能各有 RankOne），措辞机械同上。"
+  },
+  {
+    "raw_event_name": "Play_vo_VayneSkin11_Spell2DRRankThree",
+    "expected_frame_type": "ability_cast_event",
+    "required_roles": ["champion", "skin", "ability_slot", "phase"],
+    "zh_cn_default": "薇恩 源计划：净化 R技能3级",
+    "zh_cn_main": "R技能3级",
+    "notes": "批次5b 黄金样例（实现者补选，待主代理裁决）：rankthree→3级；同皮肤另有 RankTwo（薇恩为全语料唯一 2/3 级样本源）。"
+  },
+  {
+    "raw_event_name": "Play_sfx_AzirSkin05_Base_Dance3D_buffactivate",
+    "expected_frame_type": "skin_action_state",
+    "required_roles": ["champion", "skin", "action", "phase"],
+    "zh_cn_default": "阿兹尔 永恒之森 舞蹈状态启动",
+    "zh_cn_main": "舞蹈状态启动",
+    "notes": "批次5b 黄金样例（实现者补选，待主代理裁决）：media_base 路由取 cue_path Base 段后 Dance3D，剥词尾 3D 后按 skin_action_state 动作词表解析（SPEC 例词「舞蹈状态启动」取「舞蹈」；voice_event 同家族用「跳舞」，见 builder VOICE_EVENT_FAMILIES，分歧待裁决）。Base 分组词不进文案，cue_path 无损留 slots。"
+  },
+  {
+    "raw_event_name": "Play_sfx_AzirSkin05_Base_Death3D_cast",
+    "expected_frame_type": "skin_action_state",
+    "required_roles": ["champion", "skin", "action", "phase"],
+    "zh_cn_default": "阿兹尔 永恒之森 死亡释放",
+    "zh_cn_main": "死亡释放",
+    "notes": "批次5b 黄金样例（实现者补选，待主代理裁决）：cast 相位沿 Sett 批「死亡释放」口径（本 fixture play_sfx_SettSkin01_Death3D_cast 同文案）。"
+  },
+  {
+    "raw_event_name": "Play_sfx_GangplankSkin33_Base_Recall3D_buffactivate",
+    "expected_frame_type": "skin_action_state",
+    "required_roles": ["champion", "skin", "action", "phase"],
+    "zh_cn_default": "普朗克 源计划：铁腕 回城状态启动",
+    "zh_cn_main": "回城状态启动",
+    "notes": "批次5b 黄金样例（实现者补选，待主代理裁决）：recall 动作词复用词表既有「回城」（rules/display_labels.yaml action 段）。"
+  },
+  {
+    "raw_event_name": "Play_sfx_Galio_Base_Death3D_buffactivate",
+    "expected_frame_type": "skin_action_state",
+    "required_roles": ["champion", "action", "phase"],
+    "zh_cn_default": "加里奥 死亡状态启动",
+    "zh_cn_main": "死亡状态启动",
+    "notes": "批次5b 黄金样例（实现者补选，待主代理裁决）：基础皮肤形态无 SkinNN token，合法缺 skin 角色（REQUIRED_FRAME_ROLES 相应放宽，normalized_translation_model.py）。大小写 base 两态中的小写 base 实测仅出现在 hud 系统音（system_sfx 被门禁排除，不建 frame），无法作黄金样例，转 builder 单测覆盖；表外动作词负例同转单测。"
   }
 ]

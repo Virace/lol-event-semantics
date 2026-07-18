@@ -656,6 +656,31 @@ class StripRepeatedChampionFromSkinTests(unittest.TestCase):
         )
 
 
+class SkinlessActionStateRendererTests(unittest.TestCase):
+    """验证批次5b 基础皮肤形态（无 skin 角色）的 skin_action_state 渲染。"""
+
+    def test_skin_action_state_without_skin_renders_both_modes(self) -> None:
+        """缺 skin argument 时 default 仍出「{champion} {action}{phase}」，main 不受影响。"""
+
+        translation = frame_translation(
+            "skin_action_state",
+            {
+                "champion": arg("champion", "加里奥"),
+                "action": arg("action", "死亡"),
+                "phase": arg("phase", "状态启动"),
+            },
+        )
+
+        default_result = render_translation(translation, RenderOptions(locale="zh_CN", mode="default"))
+        main_result = render_translation(
+            translation,
+            RenderOptions(locale="zh_CN", mode="main", known_context=frozenset({"champion", "skin"})),
+        )
+
+        self.assertEqual(default_result.text, "加里奥 死亡状态启动")
+        self.assertEqual(main_result.text, "死亡状态启动")
+
+
 class NormalizedTranslationRendererPlaybackTests(unittest.TestCase):
     """验证 playback（停止/静音）壳语义参与渲染，不被静默丢弃。"""
 

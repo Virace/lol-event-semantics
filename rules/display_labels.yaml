@@ -34,15 +34,25 @@ phase:
   ready: {zh_CN: 就绪, en_US: ready}
   swap: {zh_CN: 切换, en_US: swap}
   reset: {zh_CN: 重置, en_US: reset}
+  # spell rank 语音阶段（批次5b）：SpellXD{QWER}Rank{One,Two,Three} 的等级档位。
+  # 实测语料只有 1-3 级（RankOne 78 / RankTwo 6 / RankThree 3），不预置更高档位。
+  rankone: {zh_CN: 1级, en_US: rank 1}
+  ranktwo: {zh_CN: 2级, en_US: rank 2}
+  rankthree: {zh_CN: 3级, en_US: rank 3}
 
 action:
   # action argument：皮肤动作/招式展示词；key 为小写 action 原值。
+  # 本表同时是 media_base 动作状态路由（批次5b）的动作词门禁：表外动作词
+  # 不建 frame 维持 legacy，防错优先，严禁英文 fallback 进文案。
   recall: {zh_CN: 回城, en_US: recall}
   taunt: {zh_CN: 嘲讽, en_US: taunt}
   death: {zh_CN: 死亡, en_US: death}
   joke: {zh_CN: 玩笑, en_US: joke}
   laugh: {zh_CN: 大笑, en_US: laugh}
   respawn: {zh_CN: 重生, en_US: respawn}
+  # 批次5b：media_base 高频动作词（voice_event 家族词用「跳舞」，状态措辞
+  # 沿 SPEC 例词「舞蹈状态启动」取「舞蹈」，实现者补选，待主代理裁决）。
+  dance: {zh_CN: 舞蹈, en_US: dance}
 
 ability_component:
   # ability_component argument 的组件中文兜底词，供 contextual_alias 缺 raw_label

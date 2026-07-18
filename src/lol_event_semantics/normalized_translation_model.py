@@ -25,7 +25,10 @@ REQUIRED_FRAME_ROLES: dict[str, tuple[str, ...]] = {
     "ability_state_change": ("phase",),
     "skin_recall_state": ("champion", "skin", "action", "phase"),
     "skin_idle_state": ("champion", "skin"),
-    "skin_action_state": ("champion", "skin", "action", "phase"),
+    # 批次5b：media_base 路由接入后，基础皮肤形态（Play_sfx_Galio_Base_… 无
+    # SkinNN token）合法缺 skin 角色，skin 不再是必需角色；带皮肤号的记录仍
+    # 照常产出 skin argument（黄金样例与渲染回归守护）。
+    "skin_action_state": ("champion", "action", "phase"),
     "gameplay_phase_control": ("map", "gameplay_event", "phase"),
     "voice_event": ("action",),
     "ability_cast_event": ("ability_slot", "phase"),

@@ -1022,6 +1022,139 @@ class AnnouncerEventTokenResolutionTests(unittest.TestCase):
         self.assertIsNone(build_translation(record, TranslationBuildContext()))
 
 
+class SpellRankVoiceEventTests(unittest.TestCase):
+    """验证批次5b spell rank 语音：rankone/two/three 相位接入 ability_cast_event。"""
+
+    def test_rank_phases_build_ability_cast_event(self) -> None:
+        """RankOne/Two/Three 记录构建 ability_cast_event，phase 按词表出 N级。"""
+
+        cases = [
+            ("Play_vo_AatroxSkin33_Spell2DRRankOne", "r", "rankone", "1级"),
+            ("Play_vo_UdyrSkin06_Spell2DQRankOne", "q", "rankone", "1级"),
+            ("Play_vo_VayneSkin11_Spell2DRRankTwo", "r", "ranktwo", "2级"),
+            ("Play_vo_VayneSkin11_Spell2DRRankThree", "r", "rankthree", "3级"),
+        ]
+        for raw, slot, phase_key, phase_zh in cases:
+            with self.subTest(raw=raw):
+                translation = build_translation(enriched_record(raw), TranslationBuildContext())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], "ability_cast_event")
+                args = translation["arguments"]
+                self.assertEqual(args["ability_slot"]["value"], slot)
+                self.assertEqual(args["phase"]["key"], phase_key)
+                self.assertEqual(args["phase"]["labels"]["zh_CN"], phase_zh)
+                self.assertIn("skin", args)
+
+    def test_unparsed_rank_variant_builds_no_frame(self) -> None:
+        """RankTwoJhin（拆解层未出 spell_key/phase）不建 frame，维持 legacy。"""
+
+        record = enriched_record("Play_vo_Hwei_Spell2DRRankTwoJhin")
+        self.assertIsNone(record.semantic_slots.get("spell_key"))
+        self.assertIsNone(build_translation(record, TranslationBuildContext()))
+
+
+class MediaBaseActionStateTests(unittest.TestCase):
+    """验证批次5b media_base 动作状态路由到 skin_action_state frame。"""
+
+    def test_vocab_actions_build_skin_action_state(self) -> None:
+        """词表内动作词（含词尾 3D 剥离）构建 skin_action_state。"""
+
+        cases = [
+            ("Play_sfx_AzirSkin05_Base_Dance3D_buffactivate", "dance", "舞蹈", "状态启动", "Dance3D"),
+            ("Play_sfx_AzirSkin05_Base_Death3D_cast", "death", "死亡", "释放", "Death3D"),
+            ("Play_sfx_AzirSkin05_Base_Taunt3D_buffactivate", "taunt", "嘲讽", "状态启动", "Taunt3D"),
+            ("Play_sfx_GangplankSkin33_Base_Recall3D_buffactivate", "recall", "回城", "状态启动", "Recall3D"),
+        ]
+        for raw, action_key, action_zh, phase_zh, token in cases:
+            with self.subTest(raw=raw):
+                translation = build_translation(enriched_record(raw), TranslationBuildContext())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], "skin_action_state")
+                args = translation["arguments"]
+                self.assertEqual(args["action"]["key"], action_key)
+                self.assertEqual(args["action"]["labels"]["zh_CN"], action_zh)
+                # 原始动作 token 与维度标记无损保留在 argument（Base 分组词不进文案）。
+                self.assertEqual(args["action"]["token"], token)
+                self.assertEqual(args["action"]["provenance"]["dimension_token"], "3D")
+                self.assertEqual(args["phase"]["labels"]["zh_CN"], phase_zh)
+                self.assertIn("skin", args)
+
+    def test_lowercase_base_segment_is_matched(self) -> None:
+        """cue_path 小写 base 段同样命中（大小写两态口径）。"""
+
+        translation = build_translation(
+            enriched_record("Play_sfx_AzirSkin05_base_Dance3D_buffactivate"), TranslationBuildContext()
+        )
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        self.assertEqual(translation["frame_type"], "skin_action_state")
+        self.assertEqual(translation["arguments"]["action"]["key"], "dance")
+
+    def test_skinless_base_champion_builds_frame_without_skin(self) -> None:
+        """基础皮肤形态（无 SkinNN token）合法缺 skin 角色。"""
+
+        translation = build_translation(
+            enriched_record("Play_sfx_Galio_Base_Death3D_buffactivate"), TranslationBuildContext()
+        )
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        self.assertEqual(translation["frame_type"], "skin_action_state")
+        args = translation["arguments"]
+        self.assertEqual(args["champion"]["alias"], "Galio")
+        self.assertNotIn("skin", args)
+        self.assertEqual(args["action"]["labels"]["zh_CN"], "死亡")
+
+    def test_out_of_vocab_action_builds_no_frame(self) -> None:
+        """表外动作词不建 frame（防错优先，严禁英文 fallback 进文案）。"""
+
+        record = enriched_record("Play_sfx_AzirSkin05_Base_Dance3D_buffactivate")
+        record.semantic_slots["cue_path"] = ["Base", "Backflip3D", "buffactivate"]
+        self.assertIsNone(build_translation(record, TranslationBuildContext()))
+
+    def test_system_scope_hud_base_builds_no_frame(self) -> None:
+        """hud_base 系统 UI 音（system_sfx，owner 带伪 champion alias）被门禁排除。"""
+
+        record = enriched_record("Play_sfx_hud_base_MissFortune_Skin16_GearUI_Available")
+        self.assertEqual(record.semantic_slots.get("sfx_scope"), "system_sfx")
+        self.assertIsNone(build_translation(record, TranslationBuildContext()))
+
+    def test_phaseless_action_builds_no_frame(self) -> None:
+        """无相位记录（Base_death / leadin / loop 尾段）不建 frame，维持 legacy。"""
+
+        for raw in ["Play_sfx_EvelynnSkin08_Base_death", "Play_sfx_GangplankSkin33_Base_Joke3D_loop"]:
+            with self.subTest(raw=raw):
+                self.assertIsNone(build_translation(enriched_record(raw), TranslationBuildContext()))
+
+
+class Batch5bGoldenDisplayTests(unittest.TestCase):
+    """验证批次5b 黄金样例文本逐字一致（spell rank + media_base 动作状态）。"""
+
+    def test_fixture_golden_cases_render_exact_display(self) -> None:
+        """fixture 批次5b 样例经真实 reference 上下文渲染出逐字 default/main 文本。"""
+
+        cases = json.loads(FIXTURE.read_text(encoding="utf-8"))
+        seen = 0
+        for case in cases:
+            if "批次5b" not in case["notes"]:
+                continue
+
+            seen += 1
+            with self.subTest(raw=case["raw_event_name"]):
+                record = enriched_record(case["raw_event_name"])
+                translation = build_translation(record, reference_translation_context())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], case["expected_frame_type"])
+
+                display = build_compat_display(translation, raw_event_name=case["raw_event_name"])
+                self.assertEqual(display["zh_cn_detail"], case["zh_cn_default"])
+                self.assertEqual(display["zh_cn_short"], case["zh_cn_main"])
+
+        self.assertGreaterEqual(seen, 7)
+
+
 class MapArgumentDisplayLabelsTests(unittest.TestCase):
     """验证 map argument 真名解析与词表外 id 的占位 fallback（T3.3）。"""
 
