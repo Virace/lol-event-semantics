@@ -286,5 +286,37 @@
     "zh_cn_default": "亚托克斯 海魔至尊 打开商店语音",
     "zh_cn_main": "打开商店语音",
     "notes": "批次3 实现者补选：shop qualifier=Open 按措辞表展开为打开商店，待主代理裁决。"
+  },
+  {
+    "raw_event_name": "Play_vo_KayleSkin42_Chat3DMorgana_Move3DKayle01_Chat2",
+    "expected_frame_type": "champion_dialogue_event",
+    "required_roles": ["champion", "skin", "partner", "base_trigger", "turn"],
+    "zh_cn_default": "凯尔 食日天使 与 莫甘娜 对话语音（移动 第2句）",
+    "zh_cn_main": "与 莫甘娜 对话语音（移动 第2句）",
+    "notes": "批次4 黄金样例：dialogue 链 move 底事件 + 第2句轮次。"
+  },
+  {
+    "raw_event_name": "Play_vo_KayleSkin42_Chat3DMorgana_FirstEncounter3DKayle01_Chat2",
+    "expected_frame_type": "champion_dialogue_event",
+    "required_roles": ["champion", "skin", "partner", "base_trigger", "turn"],
+    "zh_cn_default": "凯尔 食日天使 与 莫甘娜 对话语音（初遇 第2句）",
+    "zh_cn_main": "与 莫甘娜 对话语音（初遇 第2句）",
+    "notes": "批次4 黄金样例：dialogue 链 first_encounter 底事件 + 第2句轮次。"
+  },
+  {
+    "raw_event_name": "Play_vo_KayleSkin42_Chat3DMorgana_Move3DMorgana",
+    "expected_frame_type": "champion_dialogue_event",
+    "required_roles": ["champion", "skin", "partner", "base_trigger"],
+    "zh_cn_default": "凯尔 食日天使 与 莫甘娜 对话语音（移动）",
+    "zh_cn_main": "与 莫甘娜 对话语音（移动）",
+    "notes": "批次4 主代理裁决通过：无 chat_turn 时括号只保留 base family 词。"
+  },
+  {
+    "raw_event_name": "Play_vo_XayahSkin04_Chat3DRakanNear_Attack2DGeneral",
+    "expected_frame_type": "champion_dialogue_event",
+    "required_roles": ["champion", "skin", "partner", "base_trigger"],
+    "zh_cn_default": "霞 星之守护者 与 洛 对话语音（攻击）",
+    "zh_cn_main": "与 洛 对话语音（攻击）",
+    "notes": "批次4 主代理裁决（改实现者补选）：Near/Far 是距离触发条件（同 2D/3D 技术 token，本形态占 dialogue 家族 690/812），剥离后按 champion 解析；限定词存 provenance.proximity，原 token 无损保留。真正未命中的 partner 仍走英文 fallback，main 零拉丁字母口径不变。"
   }
 ]

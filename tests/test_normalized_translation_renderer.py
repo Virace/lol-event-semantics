@@ -426,6 +426,103 @@ class CounterpartFrameRendererTests(unittest.TestCase):
         self.assertEqual(main_text, "初遇语音")
 
 
+def partner_arg(label: str, *, fallback: bool = False) -> dict[str, object]:
+    """构造 dialogue partner argument。"""
+
+    argument: dict[str, object] = {
+        "role": "partner",
+        "labels": {"zh_CN": label, "en_US": label},
+        "confidence": "low" if fallback else "high",
+        "provenance": {"kind": "test"},
+        "fallback": fallback,
+    }
+    if fallback:
+        argument["fallback_reason"] = "missing_partner_zh_label"
+    return argument
+
+
+class ChampionDialogueEventRendererTests(unittest.TestCase):
+    """验证批次4 champion_dialogue_event 的中文定制 join。"""
+
+    def render_pair(self, translation: dict[str, object]) -> tuple[str, str]:
+        """返回 (default, main) 中文文案。"""
+
+        default_result = render_translation(translation, RenderOptions(locale="zh_CN", mode="default"))
+        main_result = render_translation(
+            translation,
+            RenderOptions(locale="zh_CN", mode="main", known_context=frozenset({"champion", "skin"})),
+        )
+        return default_result.text, main_result.text
+
+    def test_partner_with_family_and_turn_uses_full_bracket(self) -> None:
+        """核心「与 {partner} 对话语音」+ 全角括号「（{family词} 第{turn}句）」。"""
+
+        translation = frame_translation(
+            "champion_dialogue_event",
+            {
+                "champion": arg("champion", "凯尔"),
+                "skin": arg("skin", "食日天使 凯尔"),
+                "partner": partner_arg("莫甘娜"),
+                "base_trigger": arg("base_trigger", "移动"),
+                "turn": arg("turn", "第2句"),
+            },
+        )
+
+        default_text, main_text = self.render_pair(translation)
+        self.assertEqual(default_text, "凯尔 食日天使 与 莫甘娜 对话语音（移动 第2句）")
+        self.assertEqual(main_text, "与 莫甘娜 对话语音（移动 第2句）")
+
+    def test_partner_without_turn_keeps_family_only_bracket(self) -> None:
+        """无 turn 时括号只保留 base family 词。"""
+
+        translation = frame_translation(
+            "champion_dialogue_event",
+            {
+                "champion": arg("champion", "凯尔"),
+                "skin": arg("skin", "食日天使 凯尔"),
+                "partner": partner_arg("莫甘娜"),
+                "base_trigger": arg("base_trigger", "移动"),
+            },
+        )
+
+        default_text, main_text = self.render_pair(translation)
+        self.assertEqual(default_text, "凯尔 食日天使 与 莫甘娜 对话语音（移动）")
+        self.assertEqual(main_text, "与 莫甘娜 对话语音（移动）")
+
+    def test_partner_without_family_and_turn_has_no_bracket(self) -> None:
+        """family 无词条且无 turn 时无括号；playback 壳语义不得丢。"""
+
+        translation = frame_translation(
+            "champion_dialogue_event",
+            {
+                "champion": arg("champion", "凯尔"),
+                "partner": partner_arg("莫甘娜"),
+                "playback": arg("playback", "停止"),
+            },
+        )
+
+        default_text, main_text = self.render_pair(translation)
+        self.assertEqual(default_text, "凯尔 与 莫甘娜 对话语音停止")
+        self.assertEqual(main_text, "与 莫甘娜 对话语音停止")
+
+    def test_fallback_english_partner_stays_out_of_main_text(self) -> None:
+        """英文 fallback partner 进 default 详细文案，main 退化「对话语音」（棘轮口径）。"""
+
+        translation = frame_translation(
+            "champion_dialogue_event",
+            {
+                "champion": arg("champion", "霞"),
+                "skin": arg("skin", "星之守护者 霞"),
+                "partner": partner_arg("RakanNear", fallback=True),
+                "base_trigger": arg("base_trigger", "攻击"),
+            },
+        )
+
+        default_text, main_text = self.render_pair(translation)
+        self.assertEqual(default_text, "霞 星之守护者 与 RakanNear 对话语音（攻击）")
+        self.assertEqual(main_text, "对话语音（攻击）")
+
+
 class StripRepeatedChampionFromSkinTests(unittest.TestCase):
     """验证皮肤名去重英雄名的整名匹配边界。"""
 

@@ -87,6 +87,7 @@ class NormalizedTranslationBuilderFixtureTests(unittest.TestCase):
             "ability_cast_event",
             "kill_or_destroy_event",
             "champion_interaction_cue",
+            "champion_dialogue_event",
         }
         for case in cases:
             if case["expected_frame_type"] not in supported:
@@ -798,6 +799,107 @@ def reference_translation_context() -> TranslationBuildContext:
     from lol_event_semantics.normalized_output import build_translation_context
 
     return build_translation_context(Path("reference"))
+
+
+class ChampionDialogueEventDispatchTests(unittest.TestCase):
+    """验证批次4 dialogue_chain profile 分派到 champion_dialogue_event。"""
+
+    def test_dialogue_chain_builds_champion_dialogue_event(self) -> None:
+        """dialogue 链记录构建 champion_dialogue_event，槽位无损进 arguments。"""
+
+        record = enriched_record("Play_vo_KayleSkin42_Chat3DMorgana_Move3DKayle01_Chat2")
+        self.assertEqual(record.profile.semantic_profile.value, "dialogue_chain")
+
+        translation = build_translation(record, reference_translation_context())
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        self.assertEqual(translation["frame_type"], "champion_dialogue_event")
+
+        args = translation["arguments"]
+        self.assertEqual(args["champion"]["labels"]["zh_CN"], "凯尔")
+        self.assertEqual(args["skin"]["labels"]["zh_CN"], "食日天使 凯尔")
+        self.assertEqual(args["partner"]["labels"]["zh_CN"], "莫甘娜")
+        self.assertFalse(args["partner"]["fallback"])
+        self.assertEqual(args["base_trigger"]["key"], "move")
+        self.assertEqual(args["base_trigger"]["labels"]["zh_CN"], "移动")
+        # base_trigger.counterpart_raw 与 line_variant 无损存 arguments，不进文案。
+        self.assertEqual(args["base_trigger"]["provenance"]["counterpart_raw"], "Kayle")
+        self.assertEqual(args["base_trigger"]["token"], "Move3DKayle01")
+        self.assertEqual(args["turn"]["labels"]["zh_CN"], "第2句")
+        self.assertEqual(args["line_variant"]["value"], "1")
+
+    def test_dialogue_without_partner_builds_no_frame(self) -> None:
+        """chat_partner=None（前置条件对话链）缺必需 partner，不建 frame。"""
+
+        record = enriched_record("Play_vo_LucianSkin06_WithSennaNear_FirstMove2D01_Chat03")
+        self.assertEqual(record.profile.semantic_profile.value, "dialogue_chain")
+        self.assertIsNone(build_translation(record, reference_translation_context()))
+
+
+class DialoguePartnerResolutionTests(unittest.TestCase):
+    """验证 partner 解析链：champion_labels → skin_labels → 词表 → 英文 fallback。"""
+
+    def test_champion_partner_resolves_reference_label(self) -> None:
+        """raw=Morgana 直接当 champion alias 查得中文俗名。"""
+
+        record = enriched_record("Play_vo_KayleSkin42_Chat3DMorgana_Move3DMorgana")
+        translation = build_translation(record, reference_translation_context())
+        assert translation is not None
+        partner = translation["arguments"]["partner"]
+        self.assertEqual(partner["labels"]["zh_CN"], "莫甘娜")
+        self.assertEqual(partner["confidence"], "high")
+        self.assertFalse(partner["fallback"])
+
+    def test_skin_partner_resolves_skin_label(self) -> None:
+        """raw 带 SkinNN 时走 skin_labels 查皮肤 zh 全名。"""
+
+        record = enriched_record("Play_vo_KayleSkin42_Chat3DMorgana_Move3DMorgana")
+        record.semantic_slots["chat_partner"] = {"raw": "KayleSkin42", "kind": "unresolved_entity"}
+        translation = build_translation(record, reference_translation_context())
+        assert translation is not None
+        partner = translation["arguments"]["partner"]
+        self.assertEqual(partner["labels"]["zh_CN"], "食日天使 凯尔")
+        self.assertFalse(partner["fallback"])
+
+    def test_vocab_partner_resolves_chinese_entry(self) -> None:
+        """raw=Yordle 命中外置词表，解析为官方中文词条。"""
+
+        record = enriched_record("Play_vo_KayleSkin42_Chat3DMorgana_Move3DMorgana")
+        record.semantic_slots["chat_partner"] = {"raw": "Yordle", "kind": "unresolved_entity"}
+        translation = build_translation(record, reference_translation_context())
+        assert translation is not None
+        partner = translation["arguments"]["partner"]
+        self.assertEqual(partner["labels"]["zh_CN"], "约德尔人")
+        self.assertEqual(partner["confidence"], "medium")
+        self.assertFalse(partner["fallback"])
+
+    def test_proximity_partner_strips_near_far_and_resolves_champion(self) -> None:
+        """RakanNear 剥离距离限定词后按 champion 解析，限定词与原 token 无损保留。"""
+
+        record = enriched_record("Play_vo_XayahSkin04_Chat3DRakanNear_Attack2DGeneral")
+        translation = build_translation(record, reference_translation_context())
+        assert translation is not None
+        partner = translation["arguments"]["partner"]
+        self.assertEqual(partner["labels"]["zh_CN"], "洛")
+        self.assertEqual(partner["labels"]["en_US"], "Rakan")
+        self.assertEqual(partner["confidence"], "high")
+        self.assertFalse(partner["fallback"])
+        self.assertEqual(partner["provenance"]["proximity"], "near")
+        self.assertEqual(partner["token"], "RakanNear")
+
+    def test_unresolved_partner_falls_back_to_english(self) -> None:
+        """解析链全未命中（含剥限定词重查）直出英文，不硬造中文。"""
+
+        record = enriched_record("Play_vo_XayahSkin04_Chat3DRakanNear_Attack2DGeneral")
+        record.semantic_slots["chat_partner"] = {"raw": "MysteryVoice", "kind": "unresolved_entity"}
+        translation = build_translation(record, reference_translation_context())
+        assert translation is not None
+        partner = translation["arguments"]["partner"]
+        self.assertEqual(partner["labels"]["zh_CN"], "MysteryVoice")
+        self.assertTrue(partner["fallback"])
+        self.assertEqual(partner["fallback_reason"], "missing_partner_zh_label")
+        self.assertEqual(partner["confidence"], "low")
+        self.assertNotIn("proximity", partner["provenance"])
 
 
 class MapArgumentDisplayLabelsTests(unittest.TestCase):

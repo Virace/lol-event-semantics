@@ -133,6 +133,20 @@ TEMPLATES: dict[str, dict[str, dict[str, tuple[str, ...]]]] = {
             "audit": ("champion", "skin", "trigger", "counterpart"),
         },
     },
+    "champion_dialogue_event": {
+        "zh_CN": {
+            "default": ("champion", "skin", "partner", "base_trigger", "turn"),
+            "main": ("partner", "base_trigger", "turn"),
+            "debug": ("champion", "skin", "partner", "base_trigger", "turn"),
+            "audit": ("champion", "skin", "partner", "base_trigger", "turn"),
+        },
+        "en_US": {
+            "default": ("champion", "skin", "partner", "base_trigger", "turn"),
+            "main": ("partner", "base_trigger", "turn"),
+            "debug": ("champion", "skin", "partner", "base_trigger", "turn"),
+            "audit": ("champion", "skin", "partner", "base_trigger", "turn"),
+        },
+    },
 }
 CONTEXT_ROLES = {"champion", "skin", "map", "mode"}
 TECHNICAL_USER_TOKENS = ("Play_", "OnBuffDeactivate", "buffactivate", "3D", "2D")
@@ -239,6 +253,9 @@ def render_role_texts(
 
     if frame_type == "champion_interaction_cue":
         return join_interaction_cue_zh_cn(role_texts, arguments or {}, mode)
+
+    if frame_type == "champion_dialogue_event":
+        return join_dialogue_event_zh_cn(role_texts, mode)
 
     return join_zh_cn(role_texts)
 
@@ -450,6 +467,43 @@ def join_interaction_cue_zh_cn(
             core = f"{core}（{' '.join(parts)} 在场）"
         else:
             core = insert_before_asset_word(core, counterpart_text)
+
+    core = f"{core}{values.get('playback', '')}"
+    if context_text and core:
+        return f"{context_text} {core}"
+
+    return core or context_text
+
+
+def join_dialogue_event_zh_cn(role_texts: list[tuple[str, str]], mode: str) -> str:
+    """合并英雄对话链 frame 的中文文案（批次4 措辞表）。
+
+    核心「与 {partner} 对话语音」；修饰用全角括号「（{family词} 第{turn}句）」，
+    括号内词缺一半时只保留另一半，全缺则无括号。含拉丁字母的 partner
+    fallback 只进 default/debug/audit（counterpart 同口径），main 短文案
+    核心退化为「对话语音」保持零拉丁字母（residual_english 棘轮口径，
+    argument 数据不受影响）。
+
+    Args:
+        role_texts: `(role, text)` 列表。
+        mode: 渲染模式。
+
+    Returns:
+        中文文案。
+    """
+
+    values = {role: text for role, text in role_texts}
+    context_text = join_zh_cn([(role, text) for role, text in role_texts if role in CONTEXT_ROLES])
+
+    partner_text = values.get("partner", "")
+    if counterpart_visible(partner_text, mode):
+        core = f"与 {partner_text} 对话语音"
+    else:
+        core = "对话语音"
+
+    bracket_parts = [part for part in (values.get("base_trigger", ""), values.get("turn", "")) if part]
+    if bracket_parts:
+        core = f"{core}（{' '.join(bracket_parts)}）"
 
     core = f"{core}{values.get('playback', '')}"
     if context_text and core:

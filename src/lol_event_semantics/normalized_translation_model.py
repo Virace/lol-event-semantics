@@ -18,6 +18,7 @@ SUPPORTED_FRAME_TYPES = (
     "ability_cast_event",
     "kill_or_destroy_event",
     "champion_interaction_cue",
+    "champion_dialogue_event",
 )
 REQUIRED_FRAME_ROLES: dict[str, tuple[str, ...]] = {
     "ability_state_change": ("phase",),
@@ -29,6 +30,7 @@ REQUIRED_FRAME_ROLES: dict[str, tuple[str, ...]] = {
     "ability_cast_event": ("ability_slot", "phase"),
     "kill_or_destroy_event": ("champion", "trigger"),
     "champion_interaction_cue": ("champion", "trigger"),
+    "champion_dialogue_event": ("champion", "partner"),
 }
 
 

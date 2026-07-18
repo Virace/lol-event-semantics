@@ -172,6 +172,30 @@ TIMING_WORDS = {"first": ("首次", "first"), "second": ("再次", "second")}
 RELATION_WORDS = {"ally": ("队友", "ally"), "enemy": ("敌方", "enemy")}
 KILL_METHOD_SPELL_KEYS = frozenset({"Q", "W", "E", "R"})
 COUNTERPART_FALLBACK_REASON = "missing_counterpart_zh_label"
+PARTNER_FALLBACK_REASON = "missing_partner_zh_label"
+# 批次4 dialogue 家族：base_trigger 家族中文核心词。move/attack/taunt/
+# taunt_response 与 VOICE_EVENT_FAMILIES、first_encounter 与
+# INTERACTION_TRIGGER_WORDS、kill 与 kill_trigger_argument 的既有措辞逐字
+# 一致（dialogue 括号只放家族词，不再追加语音亚词，单独立表避免误带后缀）；
+# spell/first_move/heal 为批次4 SPEC 补词。表外家族不硬造词条：无 turn 时
+# 无括号，信息仍无损保留在 semantic.slots.base_trigger。
+DIALOGUE_BASE_TRIGGER_WORDS = {
+    "move": ("移动", "move"),
+    "attack": ("攻击", "attack"),
+    "kill": ("击杀", "kill"),
+    "taunt": ("嘲讽", "taunt"),
+    "first_encounter": ("初遇", "first encounter"),
+    "taunt_response": ("嘲讽回应", "taunt response"),
+    "spell": ("技能", "spell"),
+    "first_move": ("首次移动", "first move"),
+    "heal": ("治疗", "heal"),
+}
+# partner raw 尾缀 SkinNN 时按 (champion, SkinNN) 查皮肤 zh 全名。
+PARTNER_SKIN_ALIAS_PATTERN = re.compile(r"(?P<champion>[A-Za-z][A-Za-z0-9]*?)(?P<skin>Skin[0-9]+)", re.IGNORECASE)
+# partner raw 尾缀 Near/Far 是距离触发条件（同 2D/3D 的技术 token，Xayah/Rakan
+# 对话链 690/812 条带此形态），不是对话对象名的一部分：剥离后按 champion 重查，
+# 限定词存 provenance.proximity，原 token 无损保留在 argument.token。
+PARTNER_PROXIMITY_PATTERN = re.compile(r"(?P<alias>[A-Za-z][A-Za-z0-9]*?)(?P<proximity>Near|Far)")
 # ownerless 事件（Play_vo_Kill3DPenta 等）的 owner 段是事件体本身，champion
 # label 会残留维度/壳 token；这类主体进不了用户文案，保守放弃建 frame。
 TECHNICAL_CHAMPION_LABEL_MARKERS = ("3D", "2D", "_", "Play")
@@ -222,6 +246,14 @@ def build_translation_frame(
 
     if record.profile.semantic_profile is SemanticProfile.KILL_OR_SCORE:
         return build_kill_or_destroy_event(record, context)
+
+    # 批次4：dialogue_chain profile（primary_family=dialogue 同源，双条件防
+    # 未来 profile/family 单边漂移）整链走 champion_dialogue_event。
+    if (
+        record.profile.semantic_profile is SemanticProfile.DIALOGUE_CHAIN
+        or record.profile.primary_family == "dialogue"
+    ):
+        return build_champion_dialogue_event(record, context)
 
     if (
         record.profile.primary_family == "move"
@@ -756,6 +788,258 @@ def build_kill_or_destroy_event(
             qualifier_argument(slots.get("qualifier")),
             counter_argument(slots.get("counter")),
         ],
+    )
+
+
+def build_champion_dialogue_event(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+) -> dict[str, object] | None:
+    """构建英雄对话链 frame（dialogue_chain profile，批次4）。
+
+    partner 为必需角色：chat_partner 缺失（如 WithSennaNear 前置条件对话链
+    未解析出对话对象）时不建 frame，维持 legacy 展示，不硬造对话对象。
+
+    Args:
+        record: 拆解记录。
+        context: translation 构建上下文。
+
+    Returns:
+        champion_dialogue_event frame；缺主体或对话对象时返回 None。
+    """
+
+    champion = champion_argument(record, context)
+    partner = dialogue_partner_argument(record, context)
+    if champion is None or partner is None or has_technical_champion_label(champion):
+        return None
+
+    slots = record.semantic_slots
+    return build_frame(
+        record,
+        "champion_dialogue_event",
+        [
+            champion,
+            skin_argument(record, context),
+            partner,
+            dialogue_base_trigger_argument(slots.get("base_trigger")),
+            dialogue_turn_argument(slots.get("chat_turn")),
+            dialogue_line_variant_argument(slots),
+        ],
+    )
+
+
+def dialogue_partner_argument(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+    *,
+    labels: DisplayLabels | None = None,
+) -> dict[str, object] | None:
+    """构建 dialogue partner argument，复用 counterpart 解析链取中文名。
+
+    chat_partner 由 decomposition 以 kind=unresolved_entity 原样带出（未
+    enrich），因此按 raw 依次查：champion_labels（raw=Morgana 直接当
+    champion alias；RakanNear/XayahFar 剥离 Near/Far 距离限定词后重查）→
+    skin_labels（raw 尾缀 SkinNN）→ 外置词表 → 英文 fallback，不硬造中文。
+
+    Args:
+        record: 拆解记录。
+        context: translation 构建上下文。
+        labels: 展示词表；为 None 时使用进程内缓存的默认词表（供测试注入替代词表）。
+
+    Returns:
+        partner 参数；无 chat_partner 或 kind=general（无特定对象）时返回 None。
+    """
+
+    partner = record.semantic_slots.get("chat_partner")
+    if not isinstance(partner, dict) or not partner:
+        return None
+
+    kind = string_or_none(partner.get("kind"))
+    if kind == "general":
+        return None
+
+    alias = string_or_none(partner.get("alias"))
+    key = string_or_none(partner.get("key"))
+    raw = string_or_none(partner.get("raw"))
+    english = string_or_none(partner.get("label")) or raw or alias or key
+    if english is None:
+        return None
+
+    lookup = raw or english
+    zh = None
+    zh_source = "fallback"
+    confidence = "low"
+    fallback = False
+    fallback_reason = None
+    proximity = None
+
+    entry = context.champion_labels.get(lookup)
+    if isinstance(entry, Mapping):
+        zh = string_or_none(entry.get("zh_CN"))
+    if zh is None:
+        match = PARTNER_PROXIMITY_PATTERN.fullmatch(lookup)
+        if match is not None:
+            stripped_entry = context.champion_labels.get(match.group("alias"))
+            stripped_zh = string_or_none(stripped_entry.get("zh_CN")) if isinstance(stripped_entry, Mapping) else None
+            if stripped_zh is not None:
+                entry = stripped_entry
+                zh = stripped_zh
+                english = match.group("alias")
+                proximity = match.group("proximity").lower()
+    if zh is not None:
+        zh_source, confidence = "champion_labels", "high"
+        if isinstance(entry, ChampionLabelEntry) and entry.label_sources.get("zh_CN") == LABEL_SOURCE_SKIN_VOTE:
+            fallback = True
+            fallback_reason = CHAMPION_ZH_VOTE_FALLBACK_REASON
+    else:
+        zh = partner_skin_zh_label(lookup, context)
+        if zh is not None:
+            zh_source, confidence = "skin_labels", "high"
+        else:
+            zh = counterpart_vocab_zh(lookup, english, labels=labels)
+            if zh is not None:
+                zh_source, confidence = "display_labels.counterpart", "medium"
+
+    if zh is None:
+        fallback = True
+        fallback_reason = PARTNER_FALLBACK_REASON
+
+    provenance: dict[str, object] = {
+        "source": "semantic_slots.chat_partner",
+        "partner_kind": kind,
+        "zh_source": zh_source,
+    }
+    if proximity is not None:
+        provenance["proximity"] = proximity
+
+    return argument_to_dict(
+        TranslationArgument(
+            role="partner",
+            labels={"zh_CN": zh or english, "en_US": english},
+            confidence=confidence,
+            provenance=provenance,
+            alias=alias,
+            key=key,
+            token=raw,
+            fallback=fallback,
+            fallback_reason=fallback_reason,
+        )
+    )
+
+
+def partner_skin_zh_label(raw: str, context: TranslationBuildContext) -> str | None:
+    """按 partner raw 的 `{Champion}SkinNN` 形式查皮肤 zh 全名。
+
+    Args:
+        raw: chat_partner 原始 token。
+        context: translation 构建上下文。
+
+    Returns:
+        皮肤 zh 全名；raw 不含皮肤号或 reference 缺该皮肤时返回 None。
+    """
+
+    match = PARTNER_SKIN_ALIAS_PATTERN.fullmatch(raw)
+    if match is None:
+        return None
+
+    labels = context.skin_labels.get((match.group("champion"), normalize_skin_token(match.group("skin"))))
+    if not isinstance(labels, Mapping):
+        return None
+
+    return string_or_none(labels.get("zh_CN"))
+
+
+def dialogue_base_trigger_argument(base_trigger: object) -> dict[str, object] | None:
+    """构建 dialogue 底事件家族 argument（括号家族词 + 无损数据）。
+
+    counterpart_raw/dimension_token 无损存 provenance，原始 atom 存 token，
+    都不进文案；家族不在措辞表时不建 argument（不硬造词条，信息仍无损
+    保留在 semantic.slots.base_trigger）。
+
+    Args:
+        base_trigger: base_trigger 槽位值。
+
+    Returns:
+        base_trigger 参数；无底事件或家族无词条时返回 None。
+    """
+
+    if not isinstance(base_trigger, dict):
+        return None
+
+    family = string_or_none(base_trigger.get("family"))
+    words = DIALOGUE_BASE_TRIGGER_WORDS.get(family or "")
+    if family is None or words is None:
+        return None
+
+    zh, en = words
+    return argument_to_dict(
+        TranslationArgument(
+            role="base_trigger",
+            labels={"zh_CN": zh, "en_US": en},
+            confidence="high",
+            provenance={
+                "source": "semantic_slots.base_trigger",
+                "counterpart_raw": string_or_none(base_trigger.get("counterpart_raw")),
+                "dimension_token": string_or_none(base_trigger.get("dimension_token")),
+            },
+            key=family,
+            token=string_or_none(base_trigger.get("raw")),
+        )
+    )
+
+
+def dialogue_turn_argument(chat_turn: object) -> dict[str, object] | None:
+    """构建对话轮次 argument（第N句）。
+
+    Args:
+        chat_turn: chat_turn 槽位值。
+
+    Returns:
+        turn 参数；无轮次时返回 None。
+    """
+
+    if isinstance(chat_turn, bool) or not isinstance(chat_turn, int):
+        return None
+
+    return argument_to_dict(
+        TranslationArgument(
+            role="turn",
+            labels={"zh_CN": f"第{chat_turn}句", "en_US": f"line {chat_turn}"},
+            confidence="high",
+            provenance={"source": "semantic_slots.chat_turn"},
+            key=str(chat_turn),
+            value=str(chat_turn),
+        )
+    )
+
+
+def dialogue_line_variant_argument(slots: Mapping[str, Any]) -> dict[str, object] | None:
+    """构建底事件台词变体 argument（数据角色，不进渲染模板）。
+
+    Args:
+        slots: 拆解记录 semantic slots。
+
+    Returns:
+        line_variant 参数；无变体号时返回 None。
+    """
+
+    variant = slots.get("line_variant")
+    base_trigger = slots.get("base_trigger")
+    if variant is None and isinstance(base_trigger, dict):
+        variant = base_trigger.get("line_variant")
+
+    if isinstance(variant, bool) or not isinstance(variant, int):
+        return None
+
+    return argument_to_dict(
+        TranslationArgument(
+            role="line_variant",
+            labels={"zh_CN": str(variant), "en_US": str(variant)},
+            confidence="high",
+            provenance={"source": "semantic_slots.line_variant"},
+            key=str(variant),
+            value=str(variant),
+        )
     )
 
 

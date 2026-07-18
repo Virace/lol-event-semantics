@@ -353,7 +353,7 @@ class DisplayLosslessnessTests(unittest.TestCase):
         self.assertIn("counterpart=Kennen", issues[0].message)
 
     def test_chat_partner_with_pure_fallback_detail_is_warning(self) -> None:
-        """chat_partner 非空且 detail 为纯兜底模板时报警。"""
+        """非 dialogue 家族的 chat_partner 丢弃维持 warning。"""
 
         record = minimal_record("Play_vo_Annie_Chat3DAhri")
         record["semantic"]["primary_family"] = "interaction"
@@ -367,6 +367,25 @@ class DisplayLosslessnessTests(unittest.TestCase):
         issues = self.drop_issues(record)
 
         self.assertEqual(len(issues), 1)
+        self.assertEqual(issues[0].severity, "warning")
+        self.assertIn("chat_partner=Ahri", issues[0].message)
+
+    def test_chat_partner_drop_in_dialogue_family_is_error(self) -> None:
+        """已承接 dialogue 家族的 chat_partner 丢弃升为硬错误（批次4 收紧门禁）。"""
+
+        record = minimal_record("Play_vo_Annie_Chat3DAhri_Move3DAhri_Chat2")
+        record["semantic"]["primary_family"] = "dialogue"
+        record["semantic"]["slots"] = {
+            "trigger_family": "dialogue",
+            "chat_partner": {"raw": "Ahri", "kind": "unresolved_entity"},
+        }
+        record["display"]["zh_cn_short"] = "Annie事件"
+        record["display"]["zh_cn_detail"] = "Annie事件"
+
+        issues = self.drop_issues(record)
+
+        self.assertEqual(len(issues), 1)
+        self.assertEqual(issues[0].severity, "error")
         self.assertIn("chat_partner=Ahri", issues[0].message)
 
     def test_counterpart_with_meaningful_detail_is_not_flagged(self) -> None:

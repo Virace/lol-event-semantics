@@ -60,6 +60,8 @@ SUPPORTED_TRANSLATION_PRIMARY_FAMILIES = {
     "use_item",
     "shop",
     "level_up",
+    # 批次4 dialogue 家族（champion_dialogue_event frame 承接）。
+    "dialogue",
 }
 # display 无损性校验：detail 必须体现这三个壳动词的中文语义
 #（unmute 的「取消静音」含「静音」，与 mute 共用同一判据）。
@@ -502,8 +504,9 @@ def validate_display_losslessness(
     一条记录只发一条问题，message 列出全部被丢弃的槽位；交互对象槽位附带
     对象名（alias/label/raw 首个非空值）方便人工排查。severity：counterpart
     槽位丢弃且 primary_family 属于已承接 translation 家族时升 error（T3.2
-    收紧门禁——覆盖承诺范围内的 counterpart 丢弃是回归）；未承接家族
-    （encounter/recall 等）与 chat_partner/phase/壳动词类维持 warning。
+    收紧门禁——覆盖承诺范围内的 counterpart 丢弃是回归）；chat_partner
+    槽位丢弃且 primary_family=dialogue 时同模式升 error（批次4 收紧门禁）；
+    未承接家族（encounter/recall 等）与 phase/壳动词类维持 warning。
 
     Args:
         row: normalized 记录。
@@ -520,6 +523,7 @@ def validate_display_losslessness(
 
     dropped: list[str] = []
     dropped_counterpart = False
+    dropped_chat_partner = False
 
     if raw is not None:
         verb = parse_shell(raw).verb
@@ -544,11 +548,16 @@ def validate_display_losslessness(
                 dropped.append(f"{key}={partner_display_name(value)}")
                 if key == "counterpart":
                     dropped_counterpart = True
+                elif key == "chat_partner":
+                    dropped_chat_partner = True
 
     if dropped:
         make_issue = (
             error
-            if dropped_counterpart and primary_family in SUPPORTED_TRANSLATION_PRIMARY_FAMILIES
+            if (
+                (dropped_counterpart and primary_family in SUPPORTED_TRANSLATION_PRIMARY_FAMILIES)
+                or (dropped_chat_partner and primary_family == "dialogue")
+            )
             else warning
         )
         issues.append(
