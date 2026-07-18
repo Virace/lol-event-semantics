@@ -318,5 +318,45 @@
     "zh_cn_default": "霞 星之守护者 与 洛 对话语音（攻击）",
     "zh_cn_main": "与 洛 对话语音（攻击）",
     "notes": "批次4 主代理裁决（改实现者补选）：Near/Far 是距离触发条件（同 2D/3D 技术 token，本形态占 dialogue 家族 690/812），剥离后按 champion 解析；限定词存 provenance.proximity，原 token 无损保留。真正未命中的 partner 仍走英文 fallback，main 零拉丁字母口径不变。"
+  },
+  {
+    "raw_event_name": "Play_vo_Announcer_Female1_AceEnemyTeam",
+    "expected_frame_type": "announcer_event",
+    "required_roles": ["event", "team"],
+    "zh_cn_default": "敌方团灭播报",
+    "zh_cn_main": "敌方团灭播报",
+    "notes": "批次5a 黄金样例：Ace+EnemyTeam 尾缀，default/main 一致（无 zh 上下文 args）；Female1 语音包信息无损在 slots，不进 arguments。"
+  },
+  {
+    "raw_event_name": "Play_vo_Announcer_Female1_ChampionPentaKillpurple",
+    "expected_frame_type": "announcer_event",
+    "required_roles": ["event", "team"],
+    "zh_cn_default": "紫方五杀播报",
+    "zh_cn_main": "紫方五杀播报",
+    "notes": "批次5a 黄金样例：队伍尾缀 purple 小写按大小写不敏感剥离，token 保留原始写法。"
+  },
+  {
+    "raw_event_name": "Play_vo_Announcer_Brawl_Victory",
+    "expected_frame_type": "announcer_event",
+    "required_roles": ["event"],
+    "zh_cn_default": "胜利播报",
+    "zh_cn_main": "胜利播报",
+    "notes": "批次5a 黄金样例：无队伍尾缀，team 缺省为空串直连。"
+  },
+  {
+    "raw_event_name": "Play_vo_Announcer_Female1_NexusBlitz_Core_OnChampionPentaKillYourTeam",
+    "expected_frame_type": "announcer_event",
+    "required_roles": ["event", "team"],
+    "zh_cn_default": "己方五杀播报",
+    "zh_cn_main": "己方五杀播报",
+    "notes": "批次5a 黄金样例：多段 cue_path 取末段，剥 On 时机前缀；NexusBlitz/Core 分组前缀无损留在 slots.cue_path。"
+  },
+  {
+    "raw_event_name": "Play_vo_Announcer_Maverick_DoubleKillEnemyTeam",
+    "expected_frame_type": "announcer_event",
+    "required_roles": ["event", "team"],
+    "zh_cn_default": "敌方双杀播报",
+    "zh_cn_main": "敌方双杀播报",
+    "notes": "批次5a 黄金样例：announcer_persona 家族（Maverick）同走双条件分派。表外负例（Play_vo_Announcer_Female1_PentaKillHeroBlue 不建 frame）因 fixture 要求非空文案，改为 builder 单测覆盖。"
   }
 ]

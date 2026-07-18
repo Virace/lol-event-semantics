@@ -36,6 +36,10 @@ class DisplayLabels:
         maps: 地图 id 到人工核对中文名的映射（宁缺毋错，只收录高置信项）。
         counterpart: counterpart 英文 label 到官方中文词条的映射
             （T3.2 第一批，宁缺毋错，表外一律 fallback 直出英文）。
+        announcer_event: 播报员事件英文词干到中文词条的映射
+            （批次5a 第一批，宁缺毋错，表外词干不建 frame）。
+        announcer_team: 播报员队伍尾缀规范写法到中文方位词的映射
+            （匹配大小写不敏感，由 builder 负责）。
     """
 
     phase: Mapping[str, tuple[str, str]] = field(default_factory=dict)
@@ -44,6 +48,8 @@ class DisplayLabels:
     gameplay_event: Mapping[str, tuple[str, str]] = field(default_factory=dict)
     maps: Mapping[int, str] = field(default_factory=dict)
     counterpart: Mapping[str, str] = field(default_factory=dict)
+    announcer_event: Mapping[str, str] = field(default_factory=dict)
+    announcer_team: Mapping[str, str] = field(default_factory=dict)
 
 
 def parse_display_labels(data: Mapping[str, Any]) -> DisplayLabels:
@@ -56,6 +62,9 @@ def parse_display_labels(data: Mapping[str, Any]) -> DisplayLabels:
         结构化后的展示词表；畸形词条被跳过而不是抛错。
     """
 
+    # announcer 段是嵌套分节（event/team 两张子表共用一个域），与其余平铺分节不同。
+    announcer = data.get("announcer")
+    announcer = announcer if isinstance(announcer, Mapping) else {}
     return DisplayLabels(
         phase=_parse_pair_section(data.get("phase")),
         action=_parse_pair_section(data.get("action")),
@@ -63,6 +72,8 @@ def parse_display_labels(data: Mapping[str, Any]) -> DisplayLabels:
         gameplay_event=_parse_pair_section(data.get("gameplay_event")),
         maps=_parse_map_section(data.get("maps")),
         counterpart=_parse_scalar_section(data.get("counterpart")),
+        announcer_event=_parse_scalar_section(announcer.get("event")),
+        announcer_team=_parse_scalar_section(announcer.get("team")),
     )
 
 

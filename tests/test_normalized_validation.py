@@ -201,6 +201,42 @@ class NormalizedValidationTests(unittest.TestCase):
         self.assertIn("translation_display_mismatch", codes)
 
 
+class AnnouncerEventValidationTests(unittest.TestCase):
+    """验证批次5a announcer_event frame 注册与必需角色校验。"""
+
+    def test_valid_announcer_record_has_no_issues(self) -> None:
+        """完整 announcer_event 记录（event+team）不产生问题。"""
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            write_normalized_fixture(root, [announcer_translation_record()])
+
+            report = validate_normalized_root(root)
+
+        self.assertEqual(report.error_count, 0)
+        self.assertEqual(report.warning_count, 0)
+
+    def test_announcer_missing_event_role_is_error(self) -> None:
+        """announcer_event 缺必需 event 角色是硬错误。"""
+
+        record = announcer_translation_record()
+        translation = record["translation"]
+        assert isinstance(translation, dict)
+        arguments = translation["arguments"]
+        assert isinstance(arguments, dict)
+        del arguments["event"]
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            write_normalized_fixture(root, [record])
+
+            report = validate_normalized_root(root)
+
+        codes = {issue.code for issue in report.issues}
+        self.assertIn("translation_frame_required_role_missing", codes)
+        self.assertGreater(report.error_count, 0)
+
+
 class DisplayLosslessnessTests(unittest.TestCase):
     """验证 display 无损性校验（display_drops_parsed_slot）。"""
 
@@ -629,6 +665,55 @@ def annie_cast_record() -> dict[str, object]:
         "zh_cn_short": "Q技能释放",
         "zh_cn_detail": "Annie Q技能释放",
         "debug_label": "Play_sfx_Annie_AnnieQ_cast",
+    }
+    return record
+
+
+def announcer_translation_record() -> dict[str, object]:
+    """构造带 announcer_event translation 的播报员记录。"""
+
+    record = minimal_record("Play_vo_Announcer_Female1_AceEnemyTeam", alias="Announcer")
+    record["semantic"] = {
+        "profile": "map_or_system",
+        "primary_family": "announcer",
+        "slots": {
+            "trigger_family": "system_voice",
+            "system_voice_kind": "announcer",
+            "mode": "Female1",
+            "cue_path": ["AceEnemyTeam"],
+        },
+        "confidence": "high",
+        "requires_context": False,
+    }
+    record["translation"] = {
+        "schema_version": 1,
+        "frame_type": "announcer_event",
+        "frame_version": 1,
+        "frame_confidence": "high",
+        "arguments": {
+            "event": {
+                "role": "event",
+                "key": "Ace",
+                "token": "AceEnemyTeam",
+                "labels": {"zh_CN": "团灭", "en_US": "Ace"},
+                "confidence": "high",
+                "provenance": {"source": "semantic_slots.cue_path"},
+            },
+            "team": {
+                "role": "team",
+                "key": "EnemyTeam",
+                "token": "EnemyTeam",
+                "labels": {"zh_CN": "敌方", "en_US": "EnemyTeam"},
+                "confidence": "high",
+                "provenance": {"source": "semantic_slots.cue_path"},
+            },
+        },
+        "provenance": {"builder": "test"},
+    }
+    record["display"] = {
+        "zh_cn_short": "敌方团灭播报",
+        "zh_cn_detail": "敌方团灭播报",
+        "debug_label": "Play_vo_Announcer_Female1_AceEnemyTeam",
     }
     return record
 

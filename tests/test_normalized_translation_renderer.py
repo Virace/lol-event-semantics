@@ -523,6 +523,83 @@ class ChampionDialogueEventRendererTests(unittest.TestCase):
         self.assertEqual(main_text, "对话语音（攻击）")
 
 
+class AnnouncerEventRendererTests(unittest.TestCase):
+    """验证批次5a announcer_event 的中文定制 join。"""
+
+    def render_pair(self, translation: dict[str, object]) -> tuple[str, str]:
+        """返回 (default, main) 中文文案。"""
+
+        default_result = render_translation(translation, RenderOptions(locale="zh_CN", mode="default"))
+        main_result = render_translation(
+            translation,
+            RenderOptions(locale="zh_CN", mode="main", known_context=frozenset({"champion", "skin"})),
+        )
+        return default_result.text, main_result.text
+
+    def test_team_and_event_join_without_space(self) -> None:
+        """核心「{team}{event}播报」直连无空格，default/main 一致。"""
+
+        translation = frame_translation(
+            "announcer_event",
+            {
+                "team": arg("team", "敌方"),
+                "event": arg("event", "团灭"),
+            },
+        )
+
+        default_text, main_text = self.render_pair(translation)
+        self.assertEqual(default_text, "敌方团灭播报")
+        self.assertEqual(main_text, "敌方团灭播报")
+
+    def test_event_without_team_keeps_bare_core(self) -> None:
+        """team 缺省为空串直连（「胜利播报」）。"""
+
+        translation = frame_translation("announcer_event", {"event": arg("event", "胜利")})
+
+        default_text, main_text = self.render_pair(translation)
+        self.assertEqual(default_text, "胜利播报")
+        self.assertEqual(main_text, "胜利播报")
+
+    def test_playback_appends_to_announcer_frame(self) -> None:
+        """playback 壳语义不得丢，追加在核心之后。"""
+
+        translation = frame_translation(
+            "announcer_event",
+            {
+                "team": arg("team", "紫方"),
+                "event": arg("event", "五杀"),
+                "playback": arg("playback", "停止"),
+            },
+        )
+
+        default_text, _main_text = self.render_pair(translation)
+        self.assertEqual(default_text, "紫方五杀播报停止")
+
+    def test_english_template_joins_event_then_team(self) -> None:
+        """en_US 用既有空格 join（event 前 team 后）。"""
+
+        translation = frame_translation(
+            "announcer_event",
+            {
+                "team": {
+                    "role": "team",
+                    "labels": {"zh_CN": "敌方", "en_US": "EnemyTeam"},
+                    "confidence": "high",
+                    "provenance": {"kind": "test"},
+                },
+                "event": {
+                    "role": "event",
+                    "labels": {"zh_CN": "团灭", "en_US": "Ace"},
+                    "confidence": "high",
+                    "provenance": {"kind": "test"},
+                },
+            },
+        )
+
+        result = render_translation(translation, RenderOptions(locale="en_US", mode="default"))
+        self.assertEqual(result.text, "Ace EnemyTeam")
+
+
 class StripRepeatedChampionFromSkinTests(unittest.TestCase):
     """验证皮肤名去重英雄名的整名匹配边界。"""
 

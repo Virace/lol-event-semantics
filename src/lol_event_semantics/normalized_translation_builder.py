@@ -190,6 +190,12 @@ DIALOGUE_BASE_TRIGGER_WORDS = {
     "first_move": ("首次移动", "first move"),
     "heal": ("治疗", "heal"),
 }
+# 批次5a 播报员超族：4 个 primary_family 与 slots.system_voice_kind=announcer
+# 双条件分派（防未来 family/kind 单边漂移）；tutorial/game_mode/emote_voice
+# 同为 system_voice 家族但 kind 不同，天然被第二门排除。
+ANNOUNCER_EVENT_FAMILIES = frozenset({"announcer", "audio_scope", "announcer_persona", "system_voice"})
+# 播报员事件 token 的 On 时机前缀（OnChampionKill…）：余部非空且首字母大写才剥。
+ANNOUNCER_ON_PREFIX_PATTERN = re.compile(r"On(?=[A-Z])")
 # partner raw 尾缀 SkinNN 时按 (champion, SkinNN) 查皮肤 zh 全名。
 PARTNER_SKIN_ALIAS_PATTERN = re.compile(r"(?P<champion>[A-Za-z][A-Za-z0-9]*?)(?P<skin>Skin[0-9]+)", re.IGNORECASE)
 # partner raw 尾缀 Near/Far 是距离触发条件（同 2D/3D 的技术 token，Xayah/Rakan
@@ -254,6 +260,14 @@ def build_translation_frame(
         or record.profile.primary_family == "dialogue"
     ):
         return build_champion_dialogue_event(record, context)
+
+    # 批次5a：播报员超族（family 与 system_voice_kind 双条件防单边漂移）
+    # 整域走 announcer_event，表外词干由 builder 返回 None 维持 legacy 展示。
+    if (
+        record.profile.primary_family in ANNOUNCER_EVENT_FAMILIES
+        and record.semantic_slots.get("system_voice_kind") == "announcer"
+    ):
+        return build_announcer_event(record, context)
 
     if (
         record.profile.primary_family == "move"
@@ -1041,6 +1055,125 @@ def dialogue_line_variant_argument(slots: Mapping[str, Any]) -> dict[str, object
             value=str(variant),
         )
     )
+
+
+def build_announcer_event(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+    *,
+    labels: DisplayLabels | None = None,
+) -> dict[str, object] | None:
+    """构建播报员事件 frame（批次5a）。
+
+    事件 token 取 cue_path 末段（NexusBlitz/Core 等分组前缀无损留在
+    slots.cue_path）；剥 On 时机前缀后先整词查事件词表，未命中再按队伍
+    尾缀剥一个队伍词重查。表外词干返回 None 维持 legacy「播报员事件」
+    展示——严禁英文 fallback frame（已量化会把 fallback_label 从 533 推到
+    1400+ 冲垮质量棘轮）。announcer/mode 语音包信息无损在 slots，本批
+    不进 arguments（第一批语音包无核验中文名）。
+
+    Args:
+        record: 拆解记录。
+        context: translation 构建上下文。
+        labels: 展示词表；为 None 时使用进程内缓存的默认词表（供测试注入替代词表）。
+
+    Returns:
+        announcer_event frame；缺事件 token 或词表未命中时返回 None。
+    """
+
+    del context  # 播报员域无 champion/skin 主体，不消费构建上下文。
+    token = announcer_cue_token(record.semantic_slots)
+    if token is None:
+        return None
+
+    active_labels = labels if labels is not None else get_display_labels()
+    stem = token[2:] if ANNOUNCER_ON_PREFIX_PATTERN.match(token) else token
+    event_zh = active_labels.announcer_event.get(stem)
+    team = None
+    if event_zh is None:
+        split = split_announcer_team_suffix(stem, active_labels.announcer_team)
+        if split is not None:
+            stripped_stem, team = split
+            event_zh = active_labels.announcer_event.get(stripped_stem)
+            if event_zh is not None:
+                stem = stripped_stem
+            else:
+                team = None
+
+    if event_zh is None:
+        return None
+
+    event_argument = argument_to_dict(
+        TranslationArgument(
+            role="event",
+            labels={"zh_CN": event_zh, "en_US": stem},
+            confidence="high",
+            provenance={"source": "semantic_slots.cue_path"},
+            key=stem,
+            token=token,
+        )
+    )
+    team_argument = None
+    if team is not None:
+        team_key, team_zh, team_raw = team
+        team_argument = argument_to_dict(
+            TranslationArgument(
+                role="team",
+                labels={"zh_CN": team_zh, "en_US": team_key},
+                confidence="high",
+                provenance={"source": "semantic_slots.cue_path"},
+                key=team_key,
+                token=team_raw,
+            )
+        )
+
+    return build_frame(record, "announcer_event", [event_argument, team_argument])
+
+
+def announcer_cue_token(slots: Mapping[str, Any]) -> str | None:
+    """取播报员事件 token（cue_path 末段）。
+
+    Args:
+        slots: 拆解记录 semantic slots。
+
+    Returns:
+        cue_path 末段字符串；cue_path 缺失、为空或末段非字符串时返回 None。
+    """
+
+    cue_path = slots.get("cue_path")
+    if not isinstance(cue_path, list) or not cue_path:
+        return None
+
+    return string_or_none(cue_path[-1])
+
+
+def split_announcer_team_suffix(
+    stem: str,
+    team_vocab: Mapping[str, str],
+) -> tuple[str, tuple[str, str, str]] | None:
+    """按队伍词表剥一个大小写不敏感的尾缀。
+
+    Args:
+        stem: 已剥 On 前缀的事件词干。
+        team_vocab: 队伍尾缀规范写法到中文方位词的映射。
+
+    Returns:
+        ``(剥后词干, (队伍规范键, zh, 原始尾缀写法))``；无可剥尾缀或剥后
+        词干为空时返回 None。
+    """
+
+    if not team_vocab:
+        return None
+
+    # 长键优先，避免未来收录互为尾缀的队伍词时误剥短键。
+    alternation = "|".join(sorted((re.escape(key) for key in team_vocab), key=len, reverse=True))
+    match = re.search(rf"({alternation})$", stem, flags=re.IGNORECASE)
+    if match is None or match.start() == 0:
+        return None
+
+    raw_suffix = match.group(1)
+    canonical = next(key for key in team_vocab if key.lower() == raw_suffix.lower())
+    return stem[: match.start()], (canonical, team_vocab[canonical], raw_suffix)
 
 
 def has_technical_champion_label(champion: dict[str, object]) -> bool:

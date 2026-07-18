@@ -62,6 +62,12 @@ SUPPORTED_TRANSLATION_PRIMARY_FAMILIES = {
     "level_up",
     # 批次4 dialogue 家族（champion_dialogue_event frame 承接）。
     "dialogue",
+    # 批次5a 播报员超族（announcer_event frame 承接；表外事件词干不建 frame，
+    # translation_missing_for_supported_frame warning 因此上涨属已知接受）。
+    "announcer",
+    "audio_scope",
+    "announcer_persona",
+    "system_voice",
 }
 # display 无损性校验：detail 必须体现这三个壳动词的中文语义
 #（unmute 的「取消静音」含「静音」，与 mute 共用同一判据）。

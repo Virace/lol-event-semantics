@@ -88,6 +88,7 @@ class NormalizedTranslationBuilderFixtureTests(unittest.TestCase):
             "kill_or_destroy_event",
             "champion_interaction_cue",
             "champion_dialogue_event",
+            "announcer_event",
         }
         for case in cases:
             if case["expected_frame_type"] not in supported:
@@ -900,6 +901,125 @@ class DialoguePartnerResolutionTests(unittest.TestCase):
         self.assertEqual(partner["fallback_reason"], "missing_partner_zh_label")
         self.assertEqual(partner["confidence"], "low")
         self.assertNotIn("proximity", partner["provenance"])
+
+
+class AnnouncerEventGoldenDisplayTests(unittest.TestCase):
+    """验证批次5a announcer_event 黄金样例文本逐字一致（SPEC 硬门）。"""
+
+    def test_fixture_golden_cases_render_exact_display(self) -> None:
+        """fixture 黄金样例经真实词表渲染出逐字 default/main 文本。"""
+
+        cases = json.loads(FIXTURE.read_text(encoding="utf-8"))
+        seen = 0
+        for case in cases:
+            if case["expected_frame_type"] != "announcer_event":
+                continue
+
+            seen += 1
+            with self.subTest(raw=case["raw_event_name"]):
+                record = enriched_record(case["raw_event_name"])
+                translation = build_translation(record, TranslationBuildContext())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], "announcer_event")
+
+                display = build_compat_display(translation, raw_event_name=case["raw_event_name"])
+                self.assertEqual(display["zh_cn_detail"], case["zh_cn_default"])
+                self.assertEqual(display["zh_cn_short"], case["zh_cn_main"])
+
+        self.assertGreaterEqual(seen, 5)
+
+
+class AnnouncerEventDispatchTests(unittest.TestCase):
+    """验证播报员超族双条件分派：4 家族接入，tutorial 等同族异 kind 不分派。"""
+
+    def test_announcer_families_build_announcer_event(self) -> None:
+        """announcer/system_voice/announcer_persona 家族均分派到 announcer_event。"""
+
+        cases = [
+            ("Play_vo_Announcer_Female1_AceEnemyTeam", "announcer"),
+            ("Play_vo_Announcer_Brawl_Victory", "system_voice"),
+            ("Play_vo_Announcer_Maverick_DoubleKillEnemyTeam", "announcer_persona"),
+        ]
+        for raw, family in cases:
+            with self.subTest(raw=raw):
+                record = enriched_record(raw)
+                self.assertEqual(record.profile.primary_family, family)
+                self.assertEqual(record.semantic_slots.get("system_voice_kind"), "announcer")
+
+                translation = build_translation(record, TranslationBuildContext())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], "announcer_event")
+
+    def test_tutorial_kind_is_not_dispatched(self) -> None:
+        """tutorial 记录（system_voice 家族但 kind=tutorial）被第二门排除，不建 frame。"""
+
+        record = enriched_record("Play_vo_Tutorial_ChampSelect_Ahri")
+        self.assertEqual(record.semantic_slots.get("system_voice_kind"), "tutorial")
+        self.assertIsNone(build_translation(record, TranslationBuildContext()))
+
+
+class AnnouncerEventTokenResolutionTests(unittest.TestCase):
+    """验证事件 token 解析：On 剥离、队伍尾缀大小写、多段取尾、表外不建 frame。"""
+
+    def test_team_suffix_split_keeps_stem_and_team(self) -> None:
+        """AceEnemyTeam 剥出 EnemyTeam 尾缀，event/team 双 argument 无损。"""
+
+        record = enriched_record("Play_vo_Announcer_Female1_AceEnemyTeam")
+        translation = build_translation(record, TranslationBuildContext())
+        assert translation is not None
+        args = translation["arguments"]
+        self.assertEqual(args["event"]["labels"]["zh_CN"], "团灭")
+        self.assertEqual(args["event"]["labels"]["en_US"], "Ace")
+        self.assertEqual(args["event"]["key"], "Ace")
+        self.assertEqual(args["event"]["token"], "AceEnemyTeam")
+        self.assertEqual(args["event"]["provenance"]["source"], "semantic_slots.cue_path")
+        self.assertEqual(args["team"]["labels"]["zh_CN"], "敌方")
+        self.assertEqual(args["team"]["key"], "EnemyTeam")
+
+    def test_on_prefix_strip_and_multi_segment_cue_tail(self) -> None:
+        """多段 cue_path 取末段并剥 On 前缀（OnChampionPentaKillYourTeam）。"""
+
+        record = enriched_record("Play_vo_Announcer_Female1_NexusBlitz_Core_OnChampionPentaKillYourTeam")
+        translation = build_translation(record, TranslationBuildContext())
+        assert translation is not None
+        args = translation["arguments"]
+        self.assertEqual(args["event"]["labels"]["zh_CN"], "五杀")
+        self.assertEqual(args["event"]["key"], "ChampionPentaKill")
+        # token 保留 cue_path 末段原样（含 On 前缀与队伍尾缀）。
+        self.assertEqual(args["event"]["token"], "OnChampionPentaKillYourTeam")
+        self.assertEqual(args["team"]["labels"]["zh_CN"], "己方")
+        self.assertEqual(args["team"]["key"], "YourTeam")
+
+    def test_team_suffix_match_is_case_insensitive(self) -> None:
+        """小写尾缀 purple 命中 Purple 词条，token 保留原始写法。"""
+
+        record = enriched_record("Play_vo_Announcer_Female1_ChampionPentaKillpurple")
+        translation = build_translation(record, TranslationBuildContext())
+        assert translation is not None
+        args = translation["arguments"]
+        self.assertEqual(args["event"]["labels"]["zh_CN"], "五杀")
+        self.assertEqual(args["team"]["labels"]["zh_CN"], "紫方")
+        self.assertEqual(args["team"]["key"], "Purple")
+        self.assertEqual(args["team"]["token"], "purple")
+
+    def test_event_without_team_suffix_has_no_team_argument(self) -> None:
+        """Victory 整词命中时无 team argument。"""
+
+        record = enriched_record("Play_vo_Announcer_Brawl_Victory")
+        translation = build_translation(record, TranslationBuildContext())
+        assert translation is not None
+        args = translation["arguments"]
+        self.assertEqual(args["event"]["labels"]["zh_CN"], "胜利")
+        self.assertNotIn("team", args)
+
+    def test_out_of_vocab_stem_builds_no_frame(self) -> None:
+        """表外词干（PentaKillHero）不建 frame，维持 legacy 展示不放英文 fallback。"""
+
+        record = enriched_record("Play_vo_Announcer_Female1_PentaKillHeroBlue")
+        self.assertEqual(record.semantic_slots.get("system_voice_kind"), "announcer")
+        self.assertIsNone(build_translation(record, TranslationBuildContext()))
 
 
 class MapArgumentDisplayLabelsTests(unittest.TestCase):

@@ -147,6 +147,20 @@ TEMPLATES: dict[str, dict[str, dict[str, tuple[str, ...]]]] = {
             "audit": ("champion", "skin", "partner", "base_trigger", "turn"),
         },
     },
+    "announcer_event": {
+        "zh_CN": {
+            "default": ("team", "event"),
+            "main": ("team", "event"),
+            "debug": ("team", "event"),
+            "audit": ("team", "event"),
+        },
+        "en_US": {
+            "default": ("event", "team"),
+            "main": ("event", "team"),
+            "debug": ("event", "team"),
+            "audit": ("event", "team"),
+        },
+    },
 }
 CONTEXT_ROLES = {"champion", "skin", "map", "mode"}
 TECHNICAL_USER_TOKENS = ("Play_", "OnBuffDeactivate", "buffactivate", "3D", "2D")
@@ -256,6 +270,9 @@ def render_role_texts(
 
     if frame_type == "champion_dialogue_event":
         return join_dialogue_event_zh_cn(role_texts, mode)
+
+    if frame_type == "announcer_event":
+        return join_announcer_event_zh_cn(role_texts)
 
     return join_zh_cn(role_texts)
 
@@ -510,6 +527,25 @@ def join_dialogue_event_zh_cn(role_texts: list[tuple[str, str]], mode: str) -> s
         return f"{context_text} {core}"
 
     return core or context_text
+
+
+def join_announcer_event_zh_cn(role_texts: list[tuple[str, str]]) -> str:
+    """合并播报员事件 frame 的中文文案（批次5a 措辞表）。
+
+    核心「{team}{event}播报」，team 缺省为空串直连无空格（「敌方团灭播报」
+    「胜利播报」）。event/team 均经词表门禁产出纯中文，main 零拉丁字母
+    自然满足，无需 counterpart 式模式分档；playback 壳语义不得丢。
+
+    Args:
+        role_texts: `(role, text)` 列表。
+
+    Returns:
+        中文文案。
+    """
+
+    values = {role: text for role, text in role_texts}
+    core = f"{values.get('team', '')}{values.get('event', '')}播报"
+    return f"{core}{values.get('playback', '')}"
 
 
 def has_cjk_text(text: str) -> bool:

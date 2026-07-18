@@ -71,6 +71,29 @@ class LoadDisplayLabelsFromDictTests(unittest.TestCase):
         self.assertEqual(labels.ability_component, {})
         self.assertEqual(labels.gameplay_event, {})
         self.assertEqual(labels.maps, {})
+        self.assertEqual(labels.announcer_event, {})
+        self.assertEqual(labels.announcer_team, {})
+
+    def test_parses_nested_announcer_section(self) -> None:
+        """announcer 嵌套段（event/team 子表）应解析到独立字段。"""
+
+        labels = load_display_labels(
+            {
+                "announcer": {
+                    "event": {"Ace": "团灭"},
+                    "team": {"EnemyTeam": "敌方"},
+                }
+            }
+        )
+        self.assertEqual(labels.announcer_event["Ace"], "团灭")
+        self.assertEqual(labels.announcer_team["EnemyTeam"], "敌方")
+
+    def test_malformed_announcer_section_yields_empty_maps(self) -> None:
+        """announcer 段非 mapping（或子表畸形）时应解析为空表，不抛错。"""
+
+        labels = load_display_labels({"announcer": "broken"})
+        self.assertEqual(labels.announcer_event, {})
+        self.assertEqual(labels.announcer_team, {})
 
 
 class LoadDisplayLabelsFromPathTests(unittest.TestCase):
@@ -101,6 +124,15 @@ class DefaultDisplayLabelsTests(unittest.TestCase):
         self.assertEqual(len(labels.ability_component), 4)
         self.assertEqual(len(labels.gameplay_event), 1)
         self.assertGreaterEqual(len(labels.maps), 6)
+
+    def test_default_announcer_section_matches_batch5a_vocab(self) -> None:
+        """announcer 段词条数与批次5a 第一批词表一致（表外词第二批再收）。"""
+
+        labels = load_display_labels(REPO_ROOT / DEFAULT_DISPLAY_LABELS_PATH)
+        self.assertEqual(len(labels.announcer_event), 20)
+        self.assertEqual(len(labels.announcer_team), 6)
+        self.assertEqual(labels.announcer_event["ChampionPentaKill"], "五杀")
+        self.assertEqual(labels.announcer_team["YourTeam"], "己方")
 
     def test_get_display_labels_is_cached_singleton(self) -> None:
         """默认词表应进程内缓存，两次调用返回同一对象。"""

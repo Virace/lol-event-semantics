@@ -152,3 +152,40 @@ counterpart:
   Astronauts: 宇航员
   Pulsefire: 未来战士
   Battle Academia: 战斗学院
+
+announcer:
+  # 播报员事件词表（批次5a 第一批，主代理裁决，逐字使用）。
+  # event 的 key 为剥去 On 时机前缀与队伍尾缀后的英文词干（精确匹配），
+  # value 为中文词条；team 的 key 为队伍尾缀规范写法（builder 按大小写
+  # 不敏感剥一个尾缀），value 为中文方位词。防错优先：表外词干一律不建
+  # frame，维持 legacy「播报员事件」展示，不硬造中文也不放英文 fallback。
+  # KillingSpree 系/Dominating/Godlike/Shutdown/Dampener 系/包名等留待
+  # 第二批网搜核验后再收；扩词条改这里、不改代码。
+  event:
+    Ace: 团灭
+    FirstBlood: 一血
+    Victory: 胜利
+    Defeat: 失败
+    DoubleKill: 双杀
+    ChampionDoubleKill: 双杀
+    TripleKill: 三杀
+    ChampionTripleKill: 三杀
+    QuadraKill: 四杀
+    ChampionQuadraKill: 四杀
+    PentaKill: 五杀
+    ChampionPentaKill: 五杀
+    TurretDie: 防御塔被摧毁
+    TurretLost: 失去防御塔
+    InhibitorLost: 失去召唤水晶
+    InhibitorRespawn: 召唤水晶已重生
+    InhibitorRespawnSoon: 召唤水晶即将重生
+    GameStart: 游戏开始
+    Reconnect: 重新连接
+    LowHealth: 生命值过低
+  team:
+    YourTeam: 己方
+    AllyTeam: 己方
+    EnemyTeam: 敌方
+    Blue: 蓝方
+    Red: 红方
+    Purple: 紫方
