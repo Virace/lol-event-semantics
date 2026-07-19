@@ -550,5 +550,37 @@
     "zh_cn_default": "霞 跳舞语音（洛在场）",
     "zh_cn_main": "跳舞语音（洛在场）",
     "notes": "批次6c：voice_event 接 companion（双人舞条件）；Rakan 官方中文名=洛（勿写「拉坎」，reference 核验）；WithXayahDance3D 无 Near 尾缀故措辞不断言距离。"
+  },
+  {
+    "raw_event_name": "Play_vo_Shopkeeper_Map12_SRU_StorekeeperSouth_Purchase2DSpiritVisage",
+    "expected_frame_type": "shop_voice_event",
+    "required_roles": ["map", "shop_action", "shop_subject"],
+    "zh_cn_default": "嚎哭深渊 商店老板购买语音（振奋盔甲）",
+    "zh_cn_main": "商店老板购买语音（振奋盔甲）",
+    "notes": "批次6d 主代理裁决：商店老板语音 frame；装备名经 Data Dragon 16.14.1 en/zh 同 item id(3065) 成对核验（Spirit Visage=振奋盔甲）；店主内部代号（SRU_StorekeeperSouth）无官方中文名不进文案，无损留 semantic.slots.shop_persona。"
+  },
+  {
+    "raw_event_name": "Play_vo_Shopkeeper_Map12_HA_AP_Viking_Purchase2DFrozenMallet",
+    "expected_frame_type": "shop_voice_event",
+    "required_roles": ["map", "shop_action", "shop_subject"],
+    "zh_cn_default": "嚎哭深渊 商店老板购买语音（冰霜之锤）",
+    "zh_cn_main": "商店老板购买语音（冰霜之锤）",
+    "notes": "批次6d：已删除老装备经历史版本 Data Dragon 回溯核验（FrozenMallet=8.24.1 id 3022 冰霜之锤；FrostQueensClaim 同理回溯至 7.24.2）。"
+  },
+  {
+    "raw_event_name": "Play_vo_Shopkeeper_Map12_SRU_StorekeeperSouth_Open2DZiggs",
+    "expected_frame_type": "shop_voice_event",
+    "required_roles": ["map", "shop_action", "shop_subject"],
+    "zh_cn_default": "嚎哭深渊 商店老板开店语音（吉格斯）",
+    "zh_cn_main": "商店老板开店语音（吉格斯）",
+    "notes": "批次6d：对象解析链英雄档（champion_labels）；地区阵营（Zaun/SpiritBlossom）复用 counterpart 词表、皮肤 token（OlafSkin03）走皮肤全名链，另有单测锁定。"
+  },
+  {
+    "raw_event_name": "Play_vo_Shopkeeper_Map12_HA_AP_Hermit_Close3DNoPurchase",
+    "expected_frame_type": "shop_voice_event",
+    "required_roles": ["map", "shop_action", "shop_subject"],
+    "zh_cn_default": "嚎哭深渊 商店老板关店语音（未购买）",
+    "zh_cn_main": "商店老板关店语音（未购买）",
+    "notes": "批次6d：条件触发按 cue 内部名描述性转写（同 phase 词口径）；CountSeven/Count10/CountTen 语义未证实不入表维持 legacy 有单测锁定；General 视为无特定对象合法缺 subject。"
   }
 ]

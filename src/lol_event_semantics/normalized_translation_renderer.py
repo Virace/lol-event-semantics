@@ -147,6 +147,20 @@ TEMPLATES: dict[str, dict[str, dict[str, tuple[str, ...]]]] = {
             "audit": ("champion", "skin", "partner", "base_trigger", "turn"),
         },
     },
+    "shop_voice_event": {
+        "zh_CN": {
+            "default": ("map", "shop_action", "shop_subject"),
+            "main": ("shop_action", "shop_subject"),
+            "debug": ("map", "shop_action", "shop_subject"),
+            "audit": ("map", "shop_action", "shop_subject"),
+        },
+        "en_US": {
+            "default": ("map", "shop_action", "shop_subject"),
+            "main": ("shop_action", "shop_subject"),
+            "debug": ("map", "shop_action", "shop_subject"),
+            "audit": ("map", "shop_action", "shop_subject"),
+        },
+    },
     "announcer_event": {
         "zh_CN": {
             "default": ("team", "event"),
@@ -270,6 +284,9 @@ def render_role_texts(
 
     if frame_type == "champion_dialogue_event":
         return join_dialogue_event_zh_cn(role_texts, mode)
+
+    if frame_type == "shop_voice_event":
+        return join_shop_voice_zh_cn(role_texts)
 
     if frame_type == "announcer_event":
         return join_announcer_event_zh_cn(role_texts)
@@ -538,6 +555,35 @@ def join_dialogue_event_zh_cn(role_texts: list[tuple[str, str]], mode: str) -> s
         return f"{context_text} {core}"
 
     return core or context_text
+
+
+def join_shop_voice_zh_cn(role_texts: list[tuple[str, str]]) -> str:
+    """合并商店老板语音 frame 的中文文案（批次6d 措辞表）。
+
+    核心「商店老板{action}语音」；subject 用全角括号后缀（「商店老板购买
+    语音（振奋盔甲）」）；map 作前缀上下文空格分隔，main 模式模板已不含
+    map。店主内部代号不进文案（无官方中文名）。
+
+    Args:
+        role_texts: ``(role, text)`` 列表。
+
+    Returns:
+        中文文案。
+    """
+
+    values = {role: text for role, text in role_texts}
+    core = f"商店老板{values.get('shop_action', '')}语音"
+
+    subject_text = values.get("shop_subject", "")
+    if subject_text:
+        core = f"{core}（{subject_text}）"
+
+    core = f"{core}{values.get('playback', '')}"
+    map_text = values.get("map", "")
+    if map_text:
+        return f"{map_text} {core}"
+
+    return core
 
 
 def join_announcer_event_zh_cn(role_texts: list[tuple[str, str]]) -> str:

@@ -850,6 +850,7 @@ def enrich_unknown_profile(record: EventDecompositionRecord, reference: Referenc
 
     if entity.kind == "map":
         set_map_profile(record, entity)
+        fill_shopkeeper_voice_slots(record)
     elif entity.kind == "announcer":
         set_announcer_profile(record, entity)
     elif entity.kind == "action":
@@ -1485,6 +1486,49 @@ def owner_champion_entity(
         return None
 
     return reference.champions_by_alias.get(compact(owner_alias)) or reference.find_champion_alias(owner_alias)
+
+
+SHOPKEEPER_ACTION_PATTERN = re.compile(
+    r"^(?P<action>Open|Purchase|Close|Browsing|Ambient)(?P<dimension>2D|3D)?(?P<subject>[A-Z0-9].*)?$"
+)
+
+
+def fill_shopkeeper_voice_slots(record: EventDecompositionRecord) -> None:
+    """解析商店老板语音的动作/店主/对象槽位（批次6d）。
+
+    形态 ``Play_vo_Shopkeeper_Map12_{店主内部代号…}_{Action}[2D|3D][Subject]``：
+    尾 atom 拆动作词 + 维度 + 对象 token（unresolved 原样带出，翻译层按
+    champion/皮肤/counterpart 词表/shop 词表链解析），中段 atom 合并为店主
+    内部代号（Viking/Hermit/TwilightGhost 等无官方中文名，不进文案）。
+    表外尾形态不写槽位，维持既有 map profile 展示。
+
+    Args:
+        record: 已被 set_map_profile 处理的拆解记录。
+    """
+
+    if record.owner.alias != "Shopkeeper" or len(record.lexical_atoms) < 2:
+        return
+
+    action_atom = record.lexical_atoms[-1]
+    match = SHOPKEEPER_ACTION_PATTERN.fullmatch(action_atom.raw)
+    if match is None:
+        return
+
+    from .decomposition_profiles import unresolved_counterpart
+
+    record.semantic_slots["shop_action"] = match.group("action").lower()
+    dimension = match.group("dimension")
+    if dimension is not None:
+        record.semantic_slots["dimension_token"] = dimension
+    subject = match.group("subject")
+    if subject:
+        record.semantic_slots["shop_subject"] = unresolved_counterpart(subject)
+
+    persona_atoms = [atom.raw for atom in record.lexical_atoms[1:-1]]
+    if persona_atoms:
+        record.semantic_slots["shop_persona"] = {"raw": "_".join(persona_atoms), "kind": "shopkeeper_persona"}
+
+    record.profile.reason = f"{record.profile.reason}; parsed shopkeeper voice action"
 
 
 def set_map_profile(record: EventDecompositionRecord, entity: ReferenceEntity) -> None:

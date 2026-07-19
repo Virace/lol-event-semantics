@@ -40,6 +40,11 @@ class DisplayLabels:
             （批次5a 第一批，宁缺毋错，表外词干不建 frame）。
         announcer_team: 播报员队伍尾缀规范写法到中文方位词的映射
             （匹配大小写不敏感，由 builder 负责）。
+        shop_action: 商店老板动作词到 ``(zh_CN, en_US)`` 展示词的映射
+            （批次6d，表外动作词不建 frame）。
+        shop_subject: 商店老板对象 token（装备/条件）到中文词条的映射
+            （批次6d，宁缺毋错，表外对象不建 frame；英雄/皮肤/地区阵营
+            走各自解析链不入此表）。
     """
 
     phase: Mapping[str, tuple[str, str]] = field(default_factory=dict)
@@ -50,6 +55,8 @@ class DisplayLabels:
     counterpart: Mapping[str, str] = field(default_factory=dict)
     announcer_event: Mapping[str, str] = field(default_factory=dict)
     announcer_team: Mapping[str, str] = field(default_factory=dict)
+    shop_action: Mapping[str, tuple[str, str]] = field(default_factory=dict)
+    shop_subject: Mapping[str, str] = field(default_factory=dict)
 
 
 def parse_display_labels(data: Mapping[str, Any]) -> DisplayLabels:
@@ -62,9 +69,11 @@ def parse_display_labels(data: Mapping[str, Any]) -> DisplayLabels:
         结构化后的展示词表；畸形词条被跳过而不是抛错。
     """
 
-    # announcer 段是嵌套分节（event/team 两张子表共用一个域），与其余平铺分节不同。
+    # announcer/shop 段是嵌套分节（各自两张子表共用一个域），与其余平铺分节不同。
     announcer = data.get("announcer")
     announcer = announcer if isinstance(announcer, Mapping) else {}
+    shop = data.get("shop")
+    shop = shop if isinstance(shop, Mapping) else {}
     return DisplayLabels(
         phase=_parse_pair_section(data.get("phase")),
         action=_parse_pair_section(data.get("action")),
@@ -74,6 +83,8 @@ def parse_display_labels(data: Mapping[str, Any]) -> DisplayLabels:
         counterpart=_parse_scalar_section(data.get("counterpart")),
         announcer_event=_parse_scalar_section(announcer.get("event")),
         announcer_team=_parse_scalar_section(announcer.get("team")),
+        shop_action=_parse_pair_section(shop.get("action")),
+        shop_subject=_parse_scalar_section(shop.get("subject")),
     )
 
 

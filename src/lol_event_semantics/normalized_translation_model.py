@@ -20,6 +20,7 @@ SUPPORTED_FRAME_TYPES = (
     "champion_interaction_cue",
     "champion_dialogue_event",
     "announcer_event",
+    "shop_voice_event",
 )
 REQUIRED_FRAME_ROLES: dict[str, tuple[str, ...]] = {
     "ability_state_change": ("phase",),
@@ -36,6 +37,8 @@ REQUIRED_FRAME_ROLES: dict[str, tuple[str, ...]] = {
     "champion_interaction_cue": ("champion", "trigger"),
     "champion_dialogue_event": ("champion", "partner"),
     "announcer_event": ("event",),
+    # 批次6d：subject 合法缺席（Browsing/Ambient/General 无特定对象）。
+    "shop_voice_event": ("shop_action",),
 }
 
 

@@ -142,6 +142,21 @@ class DefaultDisplayLabelsTests(unittest.TestCase):
         self.assertEqual(labels.phase["loop"], ("循环", "loop"))
         self.assertEqual(labels.phase["overall"], ("音效", "sfx"))
 
+    def test_batch6d_shop_section_present(self) -> None:
+        """批次6d 商店词表：动作词 5 条；subject 含条件转写与 Data Dragon 核验装备名。"""
+
+        labels = load_display_labels(REPO_ROOT / DEFAULT_DISPLAY_LABELS_PATH)
+        self.assertEqual(len(labels.shop_action), 5)
+        self.assertEqual(labels.shop_action["open"], ("开店", "shop open"))
+        self.assertEqual(labels.shop_action["purchase"], ("购买", "purchase"))
+        self.assertEqual(labels.shop_subject["SpiritVisage"], "振奋盔甲")
+        self.assertEqual(labels.shop_subject["FrostQueensClaim"], "冰霜女皇的旨令")
+        self.assertEqual(labels.shop_subject["YommusGhostblade"], "幽梦之灵")
+        self.assertEqual(labels.shop_subject["NoPurchase"], "未购买")
+        # 语义未证实的计数词不入表（宁缺毋错）
+        self.assertNotIn("CountTen", labels.shop_subject)
+        self.assertNotIn("CountSeven", labels.shop_subject)
+
     def test_default_announcer_section_matches_batch5a_vocab(self) -> None:
         """announcer 段词条数与批次5a 词表一致（第一批 20 + 第二批 19）。"""
 

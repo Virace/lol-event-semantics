@@ -1219,6 +1219,89 @@ class Batch5bGoldenDisplayTests(unittest.TestCase):
         self.assertGreaterEqual(seen, 7)
 
 
+class Batch6dShopVoiceTests(unittest.TestCase):
+    """验证批次6d 商店老板语音 frame（shop_voice_event）。"""
+
+    def test_subject_resolution_chain(self) -> None:
+        """对象按英雄→皮肤→地区阵营→装备/条件链解析，文案带全角括号。"""
+
+        cases = [
+            ("Play_vo_Shopkeeper_Map12_SRU_StorekeeperSouth_Open2DZiggs", "champion", "商店老板开店语音（吉格斯）"),
+            ("Play_vo_Shopkeeper_Map12_HA_AP_Viking_Open2DOlafSkin03", "skin", "商店老板开店语音（铁哥们儿 奥拉夫）"),
+            ("Play_vo_Shopkeeper_Map12_HA_AP_ShpSouth_Open2DZaun", "faction_or_region", "商店老板开店语音（祖安）"),
+            ("Play_vo_Shopkeeper_Map12_SRU_StorekeeperSouth_Purchase2DSpiritVisage", "shop_vocab", "商店老板购买语音（振奋盔甲）"),
+            ("Play_vo_Shopkeeper_Map12_HA_AP_Viking_Purchase2DFrozenMallet", "shop_vocab", "商店老板购买语音（冰霜之锤）"),
+            ("Play_vo_Shopkeeper_Map12_HA_AP_Hermit_Close3DNoPurchase", "shop_vocab", "商店老板关店语音（未购买）"),
+        ]
+        for raw, subject_kind, short in cases:
+            with self.subTest(raw=raw):
+                translation = build_translation(enriched_record(raw), reference_translation_context())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], "shop_voice_event")
+                args = translation["arguments"]
+                self.assertEqual(args["shop_subject"]["provenance"]["subject_kind"], subject_kind)
+                display = build_compat_display(translation, raw_event_name=raw)
+                self.assertEqual(display["zh_cn_short"], short)
+
+    def test_general_and_bare_forms_build_frame_without_subject(self) -> None:
+        """General 与裸动作形态合法缺 subject（浏览/环境/关店整体语音）。"""
+
+        for raw, short in [
+            ("Play_vo_Shopkeeper_Map12_Bloom_TwilightGhost_Close3DGeneral", "商店老板关店语音"),
+            ("Play_vo_Shopkeeper_Map12_HA_AP_Viking_Ambient3DGeneral", "商店老板环境语音"),
+            ("Play_vo_Shopkeeper_Map12_BW_AP_Bubbs_Purchase", "商店老板购买语音"),
+        ]:
+            with self.subTest(raw=raw):
+                translation = build_translation(enriched_record(raw), reference_translation_context())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertNotIn("shop_subject", translation["arguments"])
+                display = build_compat_display(translation, raw_event_name=raw)
+                self.assertEqual(display["zh_cn_short"], short)
+
+    def test_default_mode_prefixes_map_name(self) -> None:
+        """default 档带地图前缀（嚎哭深渊），main 档不带。"""
+
+        raw = "Play_vo_Shopkeeper_Map12_SRU_StorekeeperSouth_Open2DZiggs"
+        translation = build_translation(enriched_record(raw), reference_translation_context())
+        assert translation is not None
+        display = build_compat_display(translation, raw_event_name=raw)
+        self.assertEqual(display["zh_cn_detail"], "嚎哭深渊 商店老板开店语音（吉格斯）")
+
+    def test_champion_alias_drift_forms_resolve(self) -> None:
+        """英雄 token 三类形态漂移经别名兜底解析（仅 shop 链）。"""
+
+        cases = [
+            ("Play_vo_Shopkeeper_Map12_BW_AP_Finn_OpenReksai", "雷克塞"),
+            ("Play_vo_Shopkeeper_Map12_Bloom_TwilightGhost_Open2DWukong", "孙悟空"),
+            ("Play_vo_Shopkeeper_Map12_HA_AP_ShpNorth_Open2DRenataGlasc", "烈娜塔 · 戈拉斯克"),
+        ]
+        for raw, zh in cases:
+            with self.subTest(raw=raw):
+                translation = build_translation(enriched_record(raw), reference_translation_context())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["arguments"]["shop_subject"]["labels"]["zh_CN"], zh)
+
+    def test_out_of_vocab_subject_builds_no_frame(self) -> None:
+        """表外对象（CountTen 语义未证实）不建 frame，维持 legacy。"""
+
+        for raw in [
+            "Play_vo_Shopkeeper_Map12_Bloom_TwilightGhost_Open2DCountTen",
+            "Play_vo_Shopkeeper_Map12_HA_AP_Viking_Open2DCountSeven",
+        ]:
+            with self.subTest(raw=raw):
+                self.assertIsNone(build_translation(enriched_record(raw), reference_translation_context()))
+
+    def test_non_shopkeeper_map_records_stay_legacy(self) -> None:
+        """map 家族非商店记录维持无 frame（分派接管不抢占旧行为）。"""
+
+        record = enriched_record("Play_sfx_Env_Map11_Emitter_northshopkeeper_exhaust")
+        translation = build_translation(record, reference_translation_context())
+        self.assertIsNone(translation)
+
+
 class Batch6cWithCompanionTests(unittest.TestCase):
     """验证批次6c：With{Champion}[Near] 前置条件的对话链承接与同行英雄条件。"""
 

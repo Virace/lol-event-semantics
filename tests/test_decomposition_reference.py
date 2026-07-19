@@ -1968,3 +1968,64 @@ class ReferenceEnrichmentTests(unittest.TestCase):
         self.assertEqual(index.resolve_token("Nexus").kind, "structure")
         self.assertEqual(index.resolve_token("Sentinels").kind, "faction")
         self.assertEqual(index.resolve_token("Gnetic").label, "G/NETIC")
+
+
+class ShopkeeperVoiceSlotsTests(unittest.TestCase):
+    """验证批次6d 商店老板语音槽位解析（fill_shopkeeper_voice_slots）。"""
+
+    index: ReferenceIndex
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        """加载测试共享的真实 reference index。"""
+
+        cls.index = ReferenceIndex.from_reference_collection("reference")
+
+    def enrich(self, raw_event_name: str):
+        """按生产链路拆解并 enrich 单条事件名。"""
+
+        return enrich_with_reference(
+            normalize_semantics(decompose_event_name(raw_event_name, game_version="16.5")),
+            self.index,
+        )
+
+    def test_action_subject_and_persona_slots(self) -> None:
+        """标准形态拆出动作/维度/对象/店主槽位，map profile 不受影响。"""
+
+        record = self.enrich("Play_vo_Shopkeeper_Map12_SRU_StorekeeperSouth_Open2DZiggs")
+        slots = record.semantic_slots
+        self.assertEqual(record.profile.primary_family, "map")
+        self.assertEqual(slots["map"]["id"], 12)
+        self.assertEqual(slots["shop_action"], "open")
+        self.assertEqual(slots["dimension_token"], "2D")
+        self.assertEqual(slots["shop_subject"]["raw"], "Ziggs")
+        self.assertEqual(slots["shop_persona"]["raw"], "SRU_StorekeeperSouth")
+
+    def test_bare_action_forms_without_dimension(self) -> None:
+        """屠夫之桥店主的裸动作形态（无 2D/3D、可无对象）同样命中。"""
+
+        record = self.enrich("Play_vo_Shopkeeper_Map12_BW_AP_Bubbs_OpenCorki")
+        slots = record.semantic_slots
+        self.assertEqual(slots["shop_action"], "open")
+        self.assertIsNone(slots.get("dimension_token"))
+        self.assertEqual(slots["shop_subject"]["raw"], "Corki")
+        self.assertEqual(slots["shop_persona"]["raw"], "BW_AP_Bubbs")
+
+        record = self.enrich("Play_vo_Shopkeeper_Map12_BW_AP_Bubbs_Purchase")
+        self.assertEqual(record.semantic_slots["shop_action"], "purchase")
+        self.assertNotIn("shop_subject", record.semantic_slots)
+
+    def test_general_subject_uses_general_kind(self) -> None:
+        """General 对象按 unresolved_counterpart 惯例标 kind=general。"""
+
+        record = self.enrich("Play_vo_Shopkeeper_Map12_Bloom_TwilightGhost_Close3DGeneral")
+        slots = record.semantic_slots
+        self.assertEqual(slots["shop_action"], "close")
+        self.assertEqual(slots["shop_subject"]["kind"], "general")
+
+    def test_non_action_tail_leaves_slots_untouched(self) -> None:
+        """表外尾形态不写商店槽位，维持既有 map profile。"""
+
+        record = self.enrich("Play_vo_Shopkeeper_Map12_SRU_StorekeeperSouth_Foo")
+        self.assertNotIn("shop_action", record.semantic_slots)
+        self.assertEqual(record.profile.primary_family, "map")

@@ -170,6 +170,57 @@ counterpart:
   Pulsefire: 未来战士
   Battle Academia: 战斗学院
 
+shop:
+  # 商店老板语音词表（批次6d）。action 为动作词双语对（表外动作词不建
+  # frame）；subject 为对象 token 中文词条——只收「条件触发」与「装备名」
+  # 两类（英雄/皮肤 token 走 champion_labels/skin 解析链、地区阵营走
+  # counterpart 词表，均不入此表）。条件词是 cue 内部触发条件的描述性
+  # 转写（引擎内部名，无官方中文对照，同 phase 词口径）；装备名须
+  # Data Dragon zh_CN 一手核验后才入表，宁缺毋错。
+  action:
+    open: {zh_CN: 开店, en_US: shop open}
+    purchase: {zh_CN: 购买, en_US: purchase}
+    close: {zh_CN: 关店, en_US: shop close}
+    browsing: {zh_CN: 浏览, en_US: browsing}
+    ambient: {zh_CN: 环境, en_US: ambient}
+  subject:
+    # 条件触发（描述性转写；CountSeven/Count10/CountTen 语义未证实不入表）
+    First: 首次
+    NoPurchase: 未购买
+    Gold3000: 金币达3000
+    GameTimer25: 游戏时间25分钟
+    GameTimerTwentyFive: 游戏时间25分钟
+    NearbyEnemyCount2: 附近有两名敌人
+    NearbyEnemyCountTwo: 附近有两名敌人
+    # 按字面转写的价格阈值条件（Data Dragon 证实非装备名；语义推断标注
+    # 见核验报告：总价≥2900 的传说级价位段装备）
+    MinimumPrice2900: 售价不低于2900
+    # 装备名（2026-07-19 核验代理，Data Dragon en/zh 同版本同 item id 成对
+    # 一手证据：16.14.1 为主，FrozenMallet=8.24.1 id 3022、
+    # FrostQueensClaim=7.24.2 id 3092 历史版本回溯；YommusGhostblade 为
+    # cue 内部拼写变体（官方 Youmuu's），按去撇号空格模糊对齐命中）
+    SpiritVisage: 振奋盔甲
+    ScoutsSlingshot: 斥候弹弓
+    LostChapter: 遗失的章节
+    ElixirOfWrath: 愤怒合剂
+    ElixirOfSorcery: 巫术合剂
+    ElixirOfIron: 钢铁合剂
+    BootsOfSwiftness: 轻灵之靴
+    BandleglassMirror: 班德尔玻璃镜
+    SeekersArmguard: 探索者的护臂
+    FrozenMallet: 冰霜之锤
+    FrostQueensClaim: 冰霜女皇的旨令
+    RefillablePotion: 复用型药水
+    HextechRocketbelt: 海克斯科技火箭腰带
+    HextechAlternator: 海克斯科技发电机
+    ExperimentalHexplate: 海克斯注力刚壁
+    ChempunkChainsword: 炼金朋克链锯剑
+    IonianBootsOfLucidity: 明朗之靴
+    NavoriFlickerblade: 纳沃利烁刃
+    SpearOfShojin: 朔极之矛
+    Stormsurge: 风暴狂涌
+    YommusGhostblade: 幽梦之灵
+
 announcer:
   # 播报员事件词表（批次5a 第一批，主代理裁决，逐字使用）。
   # event 的 key 为剥去 On 时机前缀与队伍尾缀后的英文词干（精确匹配），

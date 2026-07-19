@@ -290,6 +290,9 @@ def build_translation_frame(
         # 维持 legacy 展示。
         "media_base": build_media_base_action_state,
         "gameplay_phase_control": build_gameplay_phase_control,
+        # 批次6d：map 家族当前只有商店老板语音可承接（其余 map 记录此前也
+        # 无 frame，返回 None 维持 legacy，与旧行为一致）。
+        "map": build_shop_voice_event,
     }
     builder = builders.get(record.profile.primary_family)
     if builder is not None:
@@ -777,6 +780,177 @@ def strip_terminal_dimension(token: str) -> tuple[str, str | None]:
         return token, None
 
     return match.group("action"), match.group("dimension").upper()
+
+
+def build_shop_voice_event(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+    *,
+    labels: DisplayLabels | None = None,
+) -> dict[str, object] | None:
+    """构建商店老板语音 frame（批次6d）。
+
+    门禁：owner 为 Shopkeeper 且 slots.shop_action 在措辞表内；subject 按
+    champion_labels → SkinNN → counterpart 词表（地区/阵营）→ shop 词表
+    （装备/条件）链解析，kind=general（General）视为无特定对象；链全
+    miss 时不建 frame 维持 legacy——防错优先，严禁英文 fallback 进文案。
+    店主内部代号（Viking/Hermit 等）无官方中文名，无损留 semantic.slots
+    不进 arguments（zh label 技术 token 会被 validation 判 error）。
+
+    Args:
+        record: 拆解记录。
+        context: translation 构建上下文。
+        labels: 展示词表；为 None 时使用进程内缓存的默认词表（供测试注入替代词表）。
+
+    Returns:
+        shop_voice_event frame；不满足门禁或对象不可解析时返回 None。
+    """
+
+    slots = record.semantic_slots
+    if record.owner.alias != "Shopkeeper":
+        return None
+
+    action_key = string_or_none(slots.get("shop_action"))
+    if action_key is None:
+        return None
+
+    active_labels = labels if labels is not None else get_display_labels()
+    words = active_labels.shop_action.get(action_key)
+    if words is None:
+        return None
+
+    subject = None
+    subject_slot = slots.get("shop_subject")
+    if isinstance(subject_slot, dict) and subject_slot.get("kind") != "general":
+        subject = shop_subject_argument(subject_slot, context, active_labels)
+        if subject is None:
+            return None
+
+    zh, en = words
+    action = argument_to_dict(
+        TranslationArgument(
+            role="shop_action",
+            labels={"zh_CN": zh, "en_US": en},
+            confidence="high",
+            provenance={"source": "semantic_slots.shop_action"},
+            key=action_key,
+        )
+    )
+
+    map_slot = slots.get("map")
+    map_id = map_slot.get("id") if isinstance(map_slot, dict) else None
+    return build_frame(
+        record,
+        "shop_voice_event",
+        [
+            map_argument(map_id) if isinstance(map_id, int) else None,
+            action,
+            subject,
+        ],
+    )
+
+
+def shop_subject_argument(
+    subject_slot: Mapping[str, Any],
+    context: TranslationBuildContext,
+    labels: DisplayLabels,
+) -> dict[str, object] | None:
+    """解析商店老板语音的对象 token（批次6d）。
+
+    解析链与 dialogue partner 同构：champion_labels（Ziggs→吉格斯）→
+    SkinNN 皮肤全名（OlafSkin03）→ counterpart 词表（Zaun/Yordle/
+    SpiritBlossom 地区阵营）→ shop 词表（装备名/条件触发）。
+
+    Args:
+        subject_slot: shop_subject 槽位（unresolved 实体 dict）。
+        context: translation 构建上下文。
+        labels: 展示词表。
+
+    Returns:
+        subject 参数；全链未命中返回 None（不硬造中文）。
+    """
+
+    raw = string_or_none(subject_slot.get("raw"))
+    if raw is None:
+        return None
+
+    zh: str | None = None
+    en = raw
+    kind = "unresolved"
+    source = "shop_subject"
+
+    entry = shop_champion_label_entry(raw, context)
+    if isinstance(entry, Mapping):
+        zh = string_or_none(entry.get("zh_CN"))
+        if zh is not None:
+            en = string_or_none(entry.get("en_US")) or raw
+            kind, source = "champion", "champion_labels"
+
+    if zh is None:
+        zh = partner_skin_zh_label(raw, context)
+        if zh is not None:
+            kind, source = "skin", "skin_labels"
+
+    if zh is None:
+        zh = counterpart_vocab_zh(raw, raw, labels=labels)
+        if zh is not None:
+            kind, source = "faction_or_region", "display_labels.counterpart"
+
+    if zh is None:
+        zh = labels.shop_subject.get(raw)
+        if zh is not None:
+            kind, source = "shop_vocab", "display_labels.shop.subject"
+
+    if zh is None:
+        return None
+
+    return argument_to_dict(
+        TranslationArgument(
+            role="shop_subject",
+            labels={"zh_CN": zh, "en_US": en},
+            confidence="high",
+            provenance={"source": source, "subject_kind": kind},
+            token=raw,
+        )
+    )
+
+
+def shop_champion_label_entry(raw: str, context: TranslationBuildContext) -> Mapping[str, object] | None:
+    """按 shop 对象 token 查英雄 label 条目（批次6d，别名兜底仅限本链）。
+
+    商店 cue 的英雄 token 存在三类既有形态漂移：大小写（Reksai↔RekSai）、
+    英文显示名（Wukong↔alias MonkeyKing）、无空格全名（RenataGlasc↔alias
+    Renata）。依次按精确 alias → alias 大小写不敏感 → en_US 显示名紧凑
+    匹配解析；其余 frame 的 champion 解析不受影响。
+
+    Args:
+        raw: shop_subject 原始 token。
+        context: translation 构建上下文。
+
+    Returns:
+        champion label 条目；未命中返回 None。
+    """
+
+    entry = context.champion_labels.get(raw)
+    if isinstance(entry, Mapping):
+        return entry
+
+    lowered = raw.lower()
+    for alias, candidate in context.champion_labels.items():
+        if alias.lower() == lowered and isinstance(candidate, Mapping):
+            return candidate
+
+    target = re.sub(r"[^a-z0-9]", "", lowered)
+    if not target:
+        return None
+    for candidate in context.champion_labels.values():
+        if not isinstance(candidate, Mapping):
+            continue
+        en = string_or_none(candidate.get("en_US"))
+        if en is not None and re.sub(r"[^a-z0-9]", "", en.lower()) == target:
+            return candidate
+
+    return None
 
 
 def build_gameplay_phase_control(
