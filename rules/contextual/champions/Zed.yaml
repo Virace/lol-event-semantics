@@ -17,6 +17,14 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: HasteIn 在 Zed 事件中对应皮肤加速状态进入音效。
+  ShadowDash:
+    kind: champion_spell_component
+    spell: w
+    component: shadow_dash
+    label: 影奥义！分身位移
+    confidence: high
+    source: manual_contextual_alias
+    note: ShadowDash 在 Zed SFX 中对应 W 技能 Living Shadow 的分身位移表现。
   KillerCut:
     kind: champion_spell_component
     spell: p
@@ -73,3 +81,11 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: ZedShuriken 在 ZedStormNinja 事件中对应 Q 技能 Razor Shuriken 释放。
+  ZedShadowDash:
+    kind: champion_spell_component
+    spell: w
+    component: shadow_dash
+    label: 影奥义！分身位移
+    confidence: high
+    source: manual_contextual_alias
+    note: ZedShadowDash 在 ZedStormNinja 或带 owner 前缀的 SFX 中对应 W 技能 Living Shadow 的分身位移表现。

@@ -17,6 +17,22 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: TentacleAttack 在 Illaoi 事件中对应被动 Prophet of an Elder God 生成的触手攻击表现。
+  TentacleSpawn:
+    kind: champion_spell_component
+    spell: p
+    component: tentacle_spawn
+    label: 触手生成
+    confidence: high
+    source: manual_contextual_alias
+    note: TentacleSpawn 在 Illaoi SFX 中对应被动 Prophet of an Elder God 的触手生成状态。
+  TentacleSpawnTrail:
+    kind: champion_spell_component
+    spell: p
+    component: tentacle_spawn_trail
+    label: 触手生成轨迹
+    confidence: high
+    source: manual_contextual_alias
+    note: TentacleSpawnTrail 在 Illaoi SFX 中对应被动触手生成时的轨迹音效。
   TentacleDance:
     kind: champion_spell_component
     spell: p

@@ -17,3 +17,11 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: JannaCritAttack 在 JannaForecast 事件中对应暴击攻击。
+  SowTheWindCastMarker:
+    kind: champion_spell_component
+    spell: w
+    component: sow_the_wind_cast_marker
+    label: 和风守护施法标记
+    confidence: high
+    source: manual_contextual_alias
+    note: SowTheWindCastMarker 在 Janna SFX 中对应 W 技能 Zephyr/SowTheWind 的施法标记。

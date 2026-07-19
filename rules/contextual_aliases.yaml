@@ -16,6 +16,22 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: SealFateMissile 在 TwistedFate 事件中对应 Q 技能 Wild Cards 的飞弹表现。
+    BlueCardPreattack:
+      kind: champion_spell_component
+      spell: w
+      component: blue_card_preattack
+      label: 选牌蓝牌攻击前
+      confidence: high
+      source: manual_contextual_alias
+      note: BlueCardPreattack 在 TwistedFate SFX 中对应 W 技能 Pick a Card 选中蓝牌后的攻击前状态。
+    CardmasterStackParticle:
+      kind: champion_spell_component
+      spell: e
+      component: cardmaster_stack_particle
+      label: 卡牌骗术层数粒子
+      confidence: high
+      source: manual_contextual_alias
+      note: CardmasterStackParticle 在 TwistedFate SFX 中对应 E 技能 Stacked Deck/CardmasterStack 的层数粒子状态。
   Draven:
     DravenAttackP:
       kind: champion_spell_component
@@ -532,6 +548,14 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: MinionHarvest 在 Ivern 事件中对应被动 Friend of the Forest 对野怪营地的收获/释放阶段。
+    MinionHarvestStacks:
+      kind: champion_spell_component
+      spell: p
+      component: minion_harvest_stacks
+      label: 野怪采集层数
+      confidence: high
+      source: manual_contextual_alias
+      note: MinionHarvestStacks 在 Ivern SFX 中对应被动 Friend of the Forest 的野怪营地采集层数状态。
   Jayce:
     AcceleratorBeam:
       kind: champion_spell_component
@@ -774,6 +798,22 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: TentacleDance 在 Illaoi 事件中对应触手单位跳舞动作音效。
+    TentacleSpawn:
+      kind: champion_spell_component
+      spell: p
+      component: tentacle_spawn
+      label: 触手生成
+      confidence: high
+      source: manual_contextual_alias
+      note: TentacleSpawn 在 Illaoi SFX 中对应被动 Prophet of an Elder God 的触手生成状态。
+    TentacleSpawnTrail:
+      kind: champion_spell_component
+      spell: p
+      component: tentacle_spawn_trail
+      label: 触手生成轨迹
+      confidence: high
+      source: manual_contextual_alias
+      note: TentacleSpawnTrail 在 Illaoi SFX 中对应被动触手生成时的轨迹音效。
   Malphite:
     Cleave:
       kind: champion_spell_component
@@ -799,6 +839,14 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: ShieldEffect 在 Malphite 事件中对应被动 Granite Shield 的护盾特效。
+    ObduracyAttack:
+      kind: champion_spell_component
+      spell: w
+      component: obduracy_attack
+      label: 雷霆拍击攻击
+      confidence: high
+      source: manual_contextual_alias
+      note: ObduracyAttack 在 Malphite SFX 中对应 W 技能 Thunderclap/Obduracy 的强化普攻表现。
   Lux:
     LightstrikeToggle:
       kind: champion_spell_component
@@ -1456,6 +1504,22 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: ZedShuriken 在 ZedStormNinja 事件中对应 Q 技能 Razor Shuriken 释放。
+    ShadowDash:
+      kind: champion_spell_component
+      spell: w
+      component: shadow_dash
+      label: 影奥义！分身位移
+      confidence: high
+      source: manual_contextual_alias
+      note: ShadowDash 在 Zed SFX 中对应 W 技能 Living Shadow 的分身位移表现。
+    ZedShadowDash:
+      kind: champion_spell_component
+      spell: w
+      component: shadow_dash
+      label: 影奥义！分身位移
+      confidence: high
+      source: manual_contextual_alias
+      note: ZedShadowDash 在 ZedStormNinja 或带 owner 前缀的 SFX 中对应 W 技能 Living Shadow 的分身位移表现。
   Orianna:
     Ball:
       kind: champion_spell_component
@@ -1826,6 +1890,14 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: FaerieBurn 在 Lulu 事件中对应 W 技能 Whimsy 的变形/控制效果旧命名。
+    FaerieShield:
+      kind: champion_spell_component
+      spell: e
+      component: faerie_shield
+      label: 帮忙，皮克斯！护盾
+      confidence: high
+      source: manual_contextual_alias
+      note: FaerieShield 在 Lulu SFX 中对应 E 技能 Help, Pix! 的护盾/皮克斯转移状态。
   Naafiri:
     PackmatePounce:
       kind: champion_spell_component
@@ -1835,6 +1907,14 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: PackmatePounce 在 Naafiri 事件中对应狼群/伴犬扑击表现。
+    PackmateBasicAttack:
+      kind: champion_spell_component
+      spell: p
+      component: packmate_basic_attack
+      label: 狗群伙伴普通攻击
+      confidence: high
+      source: manual_contextual_alias
+      note: PackmateBasicAttack 在 Naafiri SFX 中对应被动 We Are More 召唤的狗群伙伴普通攻击。
   Ornn:
     VulnerableDebuff:
       kind: champion_spell_component
@@ -1886,6 +1966,54 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: Helm 在 AsheSkin08 事件中对应皮肤头盔状态音效。
+    FrostArrow:
+      kind: champion_spell_component
+      spell: p
+      component: frost_arrow
+      label: 冰霜射击
+      confidence: high
+      source: manual_contextual_alias
+      note: FrostArrow 在 Ashe SFX 中对应被动 Frost Shot 的箭矢命中/释放表现。
+    VolleyAttack:
+      kind: champion_spell_component
+      spell: w
+      component: volley_attack
+      label: 万箭齐发攻击
+      confidence: high
+      source: manual_contextual_alias
+      note: VolleyAttack 在 Ashe SFX 中对应 W 技能 Volley 的攻击/命中表现。
+    VolleyAttackWithSound:
+      kind: champion_spell_component
+      spell: w
+      component: volley_attack
+      label: 万箭齐发攻击带音效
+      confidence: high
+      source: manual_contextual_alias
+      note: VolleyAttackWithSound 在 Ashe SFX 中对应 W 技能 Volley 的带音效命中表现。
+    VolleyCenterAttack:
+      kind: champion_spell_component
+      spell: w
+      component: volley_attack_center
+      label: 万箭齐发中央箭矢
+      confidence: high
+      source: manual_contextual_alias
+      note: VolleyCenterAttack 在 Ashe SFX 中对应 W 技能 Volley 的中央箭矢命中表现。
+    VolleyRightAttack:
+      kind: champion_spell_component
+      spell: w
+      component: volley_attack_right
+      label: 万箭齐发右侧箭矢
+      confidence: high
+      source: manual_contextual_alias
+      note: VolleyRightAttack 在 Ashe SFX 中对应 W 技能 Volley 的右侧箭矢命中表现。
+    VolleyRank:
+      kind: champion_spell_component
+      spell: w
+      component: volley_rank
+      label: 万箭齐发等级
+      confidence: high
+      source: manual_contextual_alias
+      note: VolleyRankN 在 Ashe VO/SFX 中对应 W 技能 Volley 的技能等级语音或音效。
   Gangplank:
     SerpentCeremony:
       kind: champion_spell_component
@@ -2509,6 +2637,14 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: JannaCritAttack 在 JannaForecast 事件中对应暴击攻击。
+    SowTheWindCastMarker:
+      kind: champion_spell_component
+      spell: w
+      component: sow_the_wind_cast_marker
+      label: 和风守护施法标记
+      confidence: high
+      source: manual_contextual_alias
+      note: SowTheWindCastMarker 在 Janna SFX 中对应 W 技能 Zephyr/SowTheWind 的施法标记。
   Lissandra:
     LissandraBasicAttack:
       kind: champion_spell_component
@@ -2763,6 +2899,14 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: In 在 MasterYiSkin89 事件中对应舞蹈动作进入阶段。
+    WujuStyleSuperCharged:
+      kind: champion_spell_component
+      spell: e
+      component: super_charged
+      label: 无极剑道强化状态
+      confidence: high
+      source: manual_contextual_alias
+      note: WujuStyleSuperCharged 在 MasterYi SFX 中对应 E 技能 Wuju Style 的强化状态。
   Mordekaiser:
     Macetransform:
       kind: champion_spell_component
@@ -2969,6 +3113,56 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: Hasterun 在 SionSkin05 事件中对应大招/皮肤加速奔跑状态。
+  LeeSin:
+    BlindMonkEOne:
+      kind: champion_spell_component
+      spell: e
+      component: tempest
+      label: 天雷破
+      confidence: high
+      source: manual_contextual_alias
+      note: BlindMonkEOne 在 LeeSin 皮肤 VO 中对应 E 一段 Tempest。
+    BlindMonkQOne:
+      kind: champion_spell_component
+      spell: q
+      component: sonic_wave
+      label: 天音波
+      confidence: high
+      source: manual_contextual_alias
+      note: BlindMonkQOne 在 LeeSin 皮肤 VO 中对应 Q 一段 Sonic Wave。
+    BlindMonkQTwo:
+      kind: champion_spell_component
+      spell: q
+      component: resonating_strike
+      label: 回音击
+      confidence: high
+      source: manual_contextual_alias
+      note: BlindMonkQTwo 在 LeeSin 皮肤 VO 中对应 Q 二段 Resonating Strike。
+    BlindMonkRKick:
+      kind: champion_spell_component
+      spell: r
+      component: dragon_rage_kick
+      label: 猛龙摆尾
+      confidence: high
+      source: manual_contextual_alias
+      note: BlindMonkRKick 在 LeeSin 皮肤 VO 中对应 R 技能 Dragon's Rage 的踢击。
+    BlindMonkWOne:
+      kind: champion_spell_component
+      spell: w
+      component: safeguard
+      label: 金钟罩
+      confidence: high
+      source: manual_contextual_alias
+      note: BlindMonkWOne 在 LeeSin 皮肤 VO 中对应 W 一段 Safeguard。
+  Tryndamere:
+    BloodlustParticle:
+      kind: champion_spell_component
+      spell: q
+      component: bloodlust_particle
+      label: 嗜血杀戮粒子
+      confidence: high
+      source: manual_contextual_alias
+      note: BloodlustParticle 在 Tryndamere SFX 中对应 Q 技能 Bloodlust 的状态粒子启动/结束。
 modes:
   Ruby:
     Boss:

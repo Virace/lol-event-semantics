@@ -1,0 +1,43 @@
+scope: champion
+owner: LeeSin
+aliases:
+  BlindMonkEOne:
+    kind: champion_spell_component
+    spell: e
+    component: tempest
+    label: 天雷破
+    confidence: high
+    source: manual_contextual_alias
+    note: BlindMonkEOne 在 LeeSin 皮肤 VO 中对应 E 一段 Tempest。
+  BlindMonkQOne:
+    kind: champion_spell_component
+    spell: q
+    component: sonic_wave
+    label: 天音波
+    confidence: high
+    source: manual_contextual_alias
+    note: BlindMonkQOne 在 LeeSin 皮肤 VO 中对应 Q 一段 Sonic Wave。
+  BlindMonkQTwo:
+    kind: champion_spell_component
+    spell: q
+    component: resonating_strike
+    label: 回音击
+    confidence: high
+    source: manual_contextual_alias
+    note: BlindMonkQTwo 在 LeeSin 皮肤 VO 中对应 Q 二段 Resonating Strike。
+  BlindMonkRKick:
+    kind: champion_spell_component
+    spell: r
+    component: dragon_rage_kick
+    label: 猛龙摆尾
+    confidence: high
+    source: manual_contextual_alias
+    note: BlindMonkRKick 在 LeeSin 皮肤 VO 中对应 R 技能 Dragon's Rage 的踢击。
+  BlindMonkWOne:
+    kind: champion_spell_component
+    spell: w
+    component: safeguard
+    label: 金钟罩
+    confidence: high
+    source: manual_contextual_alias
+    note: BlindMonkWOne 在 LeeSin 皮肤 VO 中对应 W 一段 Safeguard。

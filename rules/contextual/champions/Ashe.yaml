@@ -17,3 +17,51 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: Helm 在 AsheSkin08 事件中对应皮肤头盔状态音效。
+  FrostArrow:
+    kind: champion_spell_component
+    spell: p
+    component: frost_arrow
+    label: 冰霜射击
+    confidence: high
+    source: manual_contextual_alias
+    note: FrostArrow 在 Ashe SFX 中对应被动 Frost Shot 的箭矢命中/释放表现。
+  VolleyAttack:
+    kind: champion_spell_component
+    spell: w
+    component: volley_attack
+    label: 万箭齐发攻击
+    confidence: high
+    source: manual_contextual_alias
+    note: VolleyAttack 在 Ashe SFX 中对应 W 技能 Volley 的攻击/命中表现。
+  VolleyAttackWithSound:
+    kind: champion_spell_component
+    spell: w
+    component: volley_attack
+    label: 万箭齐发攻击带音效
+    confidence: high
+    source: manual_contextual_alias
+    note: VolleyAttackWithSound 在 Ashe SFX 中对应 W 技能 Volley 的带音效命中表现。
+  VolleyCenterAttack:
+    kind: champion_spell_component
+    spell: w
+    component: volley_attack_center
+    label: 万箭齐发中央箭矢
+    confidence: high
+    source: manual_contextual_alias
+    note: VolleyCenterAttack 在 Ashe SFX 中对应 W 技能 Volley 的中央箭矢命中表现。
+  VolleyRightAttack:
+    kind: champion_spell_component
+    spell: w
+    component: volley_attack_right
+    label: 万箭齐发右侧箭矢
+    confidence: high
+    source: manual_contextual_alias
+    note: VolleyRightAttack 在 Ashe SFX 中对应 W 技能 Volley 的右侧箭矢命中表现。
+  VolleyRank:
+    kind: champion_spell_component
+    spell: w
+    component: volley_rank
+    label: 万箭齐发等级
+    confidence: high
+    source: manual_contextual_alias
+    note: VolleyRankN 在 Ashe VO/SFX 中对应 W 技能 Volley 的技能等级语音或音效。

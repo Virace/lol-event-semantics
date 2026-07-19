@@ -1,6 +1,14 @@
 scope: champion
 owner: Naafiri
 aliases:
+  PackmateBasicAttack:
+    kind: champion_spell_component
+    spell: p
+    component: packmate_basic_attack
+    label: 狗群伙伴普通攻击
+    confidence: high
+    source: manual_contextual_alias
+    note: PackmateBasicAttack 在 Naafiri SFX 中对应被动 We Are More 召唤的狗群伙伴普通攻击。
   PackmatePounce:
     kind: champion_spell_component
     spell: p

@@ -1,0 +1,11 @@
+scope: champion
+owner: Tryndamere
+aliases:
+  BloodlustParticle:
+    kind: champion_spell_component
+    spell: q
+    component: bloodlust_particle
+    label: 嗜血杀戮粒子
+    confidence: high
+    source: manual_contextual_alias
+    note: BloodlustParticle 在 Tryndamere SFX 中对应 Q 技能 Bloodlust 的状态粒子启动/结束。

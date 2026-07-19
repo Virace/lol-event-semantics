@@ -1,0 +1,137 @@
+# 已审阅低信任整句事件规则；命中后默认不再作为低置信噪声输出。
+# 仍可通过 scripts/decompose_events.py --write-low-trust-rules 导出命中表。
+schema_version: 1
+description: Remaining reviewed exact-event fallback rules after confirmed spell aliases were migrated into contextual rules.
+events:
+- rule_id: low_trust_event_0001
+  raw_event_name: _RESET_ALL_FX
+  category: technical_audio_control
+  category_zh: 技术/音频控制
+  label_zh: 重置所有特效音频
+  confidence: medium
+  trust: low
+  source: manual_low_trust_event_rule
+  evidence: owner/皮肤上下文：RESET
+  note: 属于技术控制或非标准音频壳，解析器只保留结构，不假设玩家可见含义。
+  suggestion: 保留低或 medium，视是否面向用户展示；不要硬翻成玩家增益。
+- rule_id: low_trust_event_0002
+  raw_event_name: Duck_sfx_Cherry_champion_spells
+  category: technical_audio_control
+  category_zh: 技术/音频控制
+  label_zh: 压低音效：Cherry 模式英雄技能音效
+  confidence: medium
+  trust: low
+  source: manual_low_trust_event_rule
+  evidence: owner/皮肤上下文：Duck
+  note: 属于技术控制或非标准音频壳，解析器只保留结构，不假设玩家可见含义。
+  suggestion: 保留低或 medium，视是否面向用户展示；不要硬翻成玩家增益。
+- rule_id: low_trust_event_0004
+  raw_event_name: New_Event
+  category: technical_audio_control
+  category_zh: 技术/音频控制
+  label_zh: 新建事件
+  confidence: medium
+  trust: low
+  source: manual_low_trust_event_rule
+  evidence: owner/皮肤上下文：New
+  note: 属于技术控制或非标准音频壳，解析器只保留结构，不假设玩家可见含义。
+  suggestion: 保留低或 medium，视是否面向用户展示；不要硬翻成玩家增益。
+- rule_id: low_trust_event_0005
+  raw_event_name: Pause_sfx_Cherry_Gameplay_Revive_progress_buffactivate
+  category: technical_audio_control
+  category_zh: 技术/音频控制
+  label_zh: 暂停音效：Cherry 模式复活进度状态启动时
+  confidence: medium
+  trust: low
+  source: manual_low_trust_event_rule
+  evidence: owner/皮肤上下文：Pause；BuffActivate=音频/特效状态启动，可信阶段词
+  note: 属于技术控制或非标准音频壳，解析器只保留结构，不假设玩家可见含义。
+  suggestion: 保留低或 medium，视是否面向用户展示；不要硬翻成玩家增益。
+- rule_id: low_trust_event_0016
+  raw_event_name: Play_NPE_ChampionSwap_Channel_oc
+  category: technical_audio_control
+  category_zh: 技术/音频控制
+  label_zh: 播放事件：新手流程英雄交换 引导 oc
+  confidence: medium
+  trust: low
+  source: manual_low_trust_event_rule
+  evidence: owner/皮肤上下文：ChampionSwap
+  note: 属于技术控制或非标准音频壳，解析器只保留结构，不假设玩家可见含义。
+  suggestion: 保留低或 medium，视是否面向用户展示；不要硬翻成玩家增益。
+- rule_id: low_trust_event_0017
+  raw_event_name: Play_NPE_ChampionSwap_Channel_oml
+  category: technical_audio_control
+  category_zh: 技术/音频控制
+  label_zh: 播放事件：新手流程英雄交换 引导 oml
+  confidence: medium
+  trust: low
+  source: manual_low_trust_event_rule
+  evidence: owner/皮肤上下文：ChampionSwap
+  note: 属于技术控制或非标准音频壳，解析器只保留结构，不假设玩家可见含义。
+  suggestion: 保留低或 medium，视是否面向用户展示；不要硬翻成玩家增益。
+- rule_id: low_trust_event_0018
+  raw_event_name: Play_NPE_ChampionSwap_Missile_oh
+  category: technical_audio_control
+  category_zh: 技术/音频控制
+  label_zh: 播放事件：新手流程英雄交换 飞弹 oh
+  confidence: medium
+  trust: low
+  source: manual_low_trust_event_rule
+  evidence: owner/皮肤上下文：ChampionSwap
+  note: 属于技术控制或非标准音频壳，解析器只保留结构，不假设玩家可见含义。
+  suggestion: 保留低或 medium，视是否面向用户展示；不要硬翻成玩家增益。
+- rule_id: low_trust_event_0019
+  raw_event_name: Play_NPE_ChampionSwap_Missile_oml
+  category: technical_audio_control
+  category_zh: 技术/音频控制
+  label_zh: 播放事件：新手流程英雄交换 飞弹 oml
+  confidence: medium
+  trust: low
+  source: manual_low_trust_event_rule
+  evidence: owner/皮肤上下文：ChampionSwap
+  note: 属于技术控制或非标准音频壳，解析器只保留结构，不假设玩家可见含义。
+  suggestion: 保留低或 medium，视是否面向用户展示；不要硬翻成玩家增益。
+- rule_id: low_trust_event_0308
+  raw_event_name: Play_vo_PhantomVoice1
+  category: phantom_voice_placeholder
+  category_zh: 占位/幽灵语音
+  label_zh: 播放语音：PhantomVoice1 幻影语音
+  confidence: medium
+  trust: low
+  source: manual_low_trust_event_rule
+  evidence: owner/皮肤上下文：PhantomVoice1
+  note: 占位/幽灵语音类资源，缺少可见玩法语义。
+  suggestion: 建议保持低置信，仅调试展示。
+- rule_id: low_trust_event_0312
+  raw_event_name: STG_Opponent_Ultimate_Attack
+  category: technical_audio_control
+  category_zh: 技术/音频控制
+  label_zh: STG 对手终极技能攻击事件
+  confidence: medium
+  trust: low
+  source: manual_low_trust_event_rule
+  evidence: owner/皮肤上下文：STG
+  note: 属于技术控制或非标准音频壳，解析器只保留结构，不假设玩家可见含义。
+  suggestion: 保留低或 medium，视是否面向用户展示；不要硬翻成玩家增益。
+- rule_id: low_trust_event_0353
+  raw_event_name: Unduck_sfx_Cherry_champion_spells
+  category: technical_audio_control
+  category_zh: 技术/音频控制
+  label_zh: 恢复音效：Cherry 模式英雄技能音效
+  confidence: medium
+  trust: low
+  source: manual_low_trust_event_rule
+  evidence: owner/皮肤上下文：Unduck
+  note: 属于技术控制或非标准音频壳，解析器只保留结构，不假设玩家可见含义。
+  suggestion: 保留低或 medium，视是否面向用户展示；不要硬翻成玩家增益。
+- rule_id: low_trust_event_0365
+  raw_event_name: Unpause_sfx_Cherry_Gameplay_Revive_progress_buffactivate
+  category: technical_audio_control
+  category_zh: 技术/音频控制
+  label_zh: 恢复暂停音效：Cherry 模式复活进度状态启动时
+  confidence: medium
+  trust: low
+  source: manual_low_trust_event_rule
+  evidence: owner/皮肤上下文：Unpause；BuffActivate=音频/特效状态启动，可信阶段词
+  note: 属于技术控制或非标准音频壳，解析器只保留结构，不假设玩家可见含义。
+  suggestion: 保留低或 medium，视是否面向用户展示；不要硬翻成玩家增益。

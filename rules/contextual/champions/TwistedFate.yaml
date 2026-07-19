@@ -1,6 +1,22 @@
 scope: champion
 owner: TwistedFate
 aliases:
+  BlueCardPreattack:
+    kind: champion_spell_component
+    spell: w
+    component: blue_card_preattack
+    label: 选牌蓝牌攻击前
+    confidence: high
+    source: manual_contextual_alias
+    note: BlueCardPreattack 在 TwistedFate SFX 中对应 W 技能 Pick a Card 选中蓝牌后的攻击前状态。
+  CardmasterStackParticle:
+    kind: champion_spell_component
+    spell: e
+    component: cardmaster_stack_particle
+    label: 卡牌骗术层数粒子
+    confidence: high
+    source: manual_contextual_alias
+    note: CardmasterStackParticle 在 TwistedFate SFX 中对应 E 技能 Stacked Deck/CardmasterStack 的层数粒子状态。
   Gate:
     kind: champion_spell_component
     spell: r

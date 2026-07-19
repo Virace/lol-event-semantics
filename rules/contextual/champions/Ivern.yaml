@@ -9,3 +9,11 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: MinionHarvest 在 Ivern 事件中对应被动 Friend of the Forest 对野怪营地的收获/释放阶段。
+  MinionHarvestStacks:
+    kind: champion_spell_component
+    spell: p
+    component: minion_harvest_stacks
+    label: 野怪采集层数
+    confidence: high
+    source: manual_contextual_alias
+    note: MinionHarvestStacks 在 Ivern SFX 中对应被动 Friend of the Forest 的野怪营地采集层数状态。

@@ -1,6 +1,14 @@
 scope: champion
 owner: Malphite
 aliases:
+  ObduracyAttack:
+    kind: champion_spell_component
+    spell: w
+    component: obduracy_attack
+    label: 雷霆拍击攻击
+    confidence: high
+    source: manual_contextual_alias
+    note: ObduracyAttack 在 Malphite SFX 中对应 W 技能 Thunderclap/Obduracy 的强化普攻表现。
   Cleave:
     kind: champion_spell_component
     spell: w
