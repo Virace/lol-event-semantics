@@ -80,7 +80,11 @@ maps:
   # key 为 reference/maps 中的 entity.id；英文名不在此维护，取自
   # reference/maps/*.yaml 的 entity.names.en_US[0].value。
   11: 召唤师峡谷
-  12: 嚎哭深渊
+  # 2026-07-19 审计+用户确认:map12 现为三图轮换(嚎哭深渊/屠夫之桥/灵魂
+  # 莲华主题共用,客户端英文名 Random Map),按模式名取「极地大乱斗」,与
+  # shop 域前缀同口径;「嚎哭深渊」作为地图名保留在 counterpart 词表
+  # (Howling Abyss token 语义不变)。
+  12: 极地大乱斗
   21: 极限闪击
   30: 斗魂竞技场
   22: 云顶之弈
