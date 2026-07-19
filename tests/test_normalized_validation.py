@@ -287,6 +287,25 @@ class MediaBaseActionStateValidationTests(unittest.TestCase):
         codes = {issue.code for issue in report.issues}
         self.assertIn("translation_missing_for_supported_frame", codes)
 
+    def test_tier3_record_without_translation_is_not_missing(self) -> None:
+        """Tier 口径收口：Tier3 纯技术记录刻意无 translation，不计 missing。"""
+
+        record = media_base_action_record()
+        del record["translation"]
+        display = record["display"]
+        assert isinstance(display, dict)
+        display["tier"] = 3
+        display["zh_cn_short"] = None
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            write_normalized_fixture(root, [record])
+
+            report = validate_normalized_root(root)
+
+        codes = {issue.code for issue in report.issues}
+        self.assertNotIn("translation_missing_for_supported_frame", codes)
+
 
 class DisplayLosslessnessTests(unittest.TestCase):
     """验证 display 无损性校验（display_drops_parsed_slot）。"""

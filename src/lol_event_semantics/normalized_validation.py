@@ -400,7 +400,7 @@ def validate_record(
         validate_record_translation(translation, row_path, row, issues, raw)
     elif translation is not None:
         issues.append(error("translation_arguments_invalid", row_path, "translation 必须是 object。", raw))
-    elif is_supported_translation_candidate(row):
+    elif is_supported_translation_candidate(row) and not is_tier3_record(row):
         issues.append(warning("translation_missing_for_supported_frame", row_path, "supported frame 缺少 translation。", raw))
 
     if raw is not None:
@@ -784,6 +784,23 @@ def validate_translation_render(
                         raw,
                     )
                 )
+
+
+def is_tier3_record(row: dict[str, Any]) -> bool:
+    """判断记录是否为 Tier3 纯技术展示层级（Tier 口径收口）。
+
+    Tier3 记录按北极星口径只存无损 token、不发短文案、不计翻译 KPI，
+    刻意无 translation，不应计入 translation_missing_for_supported_frame。
+
+    Args:
+        row: normalized 记录。
+
+    Returns:
+        display.tier == 3 时返回 True。
+    """
+
+    display = row.get("display")
+    return isinstance(display, dict) and display.get("tier") == 3
 
 
 def is_supported_translation_candidate(row: dict[str, Any]) -> bool:
