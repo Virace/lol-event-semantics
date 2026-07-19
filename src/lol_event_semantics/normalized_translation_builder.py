@@ -385,12 +385,17 @@ def build_ability_state_change(
     if phase is None or (component is None and slot is None):
         return None
 
+    rank = spell_rank_argument(slots)
+    if rank is not None and component is not None:
+        strip_component_rank_suffix(component)
+
     arguments: dict[str, dict[str, object]] = {}
     for item in [
         champion_argument(record, context),
         skin_argument(record, context),
         slot,
         component,
+        rank,
         phase,
     ]:
         if item is not None:
@@ -408,6 +413,71 @@ def build_ability_state_change(
             "primary_family": record.profile.primary_family,
         },
     }
+
+
+SPELL_RANK_ALIAS_PATTERN = re.compile(r"Rank(\d+)$")
+
+
+def spell_rank_argument(slots: dict[str, object]) -> dict[str, object] | None:
+    """构建技能等级 argument（rank 门禁修法）。
+
+    门禁：仅当 contextual_alias.raw 以 Rank\\d+ 结尾且尾号与 slots.spell_rank
+    一致时消费——spell_rank 同时承载非等级变体号（Tibbers 普攻2 等），全量
+    接入会把变体号误标技能等级（见 20_DECISIONS 2026-07-18 批次5b 条）。
+
+    Args:
+        slots: 拆解记录 semantic slots。
+
+    Returns:
+        rank 参数；门禁不满足时返回 None。
+    """
+
+    contextual_alias = slots.get("contextual_alias")
+    if not isinstance(contextual_alias, dict):
+        return None
+
+    raw = string_or_none(contextual_alias.get("raw"))
+    if raw is None:
+        return None
+
+    match = SPELL_RANK_ALIAS_PATTERN.search(raw)
+    if match is None:
+        return None
+
+    rank = int(match.group(1))
+    if slots.get("spell_rank") != rank:
+        return None
+
+    return argument_to_dict(
+        TranslationArgument(
+            role="rank",
+            labels={"zh_CN": f"{rank}级", "en_US": f"rank {rank}"},
+            confidence="high",
+            provenance={"source": "semantic_slots.spell_rank", "alias_raw": raw},
+            key=str(rank),
+            value=str(rank),
+        )
+    )
+
+
+def strip_component_rank_suffix(component: dict[str, object]) -> None:
+    """rank argument 在场时去掉组件 label 的等级词尾避免叠字（万箭齐发等级2级）。
+
+    Args:
+        component: 已构建的 ability_component argument（原地修改 labels）。
+    """
+
+    labels = component.get("labels")
+    if not isinstance(labels, dict):
+        return
+
+    zh = labels.get("zh_CN")
+    if isinstance(zh, str) and zh.endswith("等级") and len(zh) > len("等级"):
+        labels["zh_CN"] = zh[: -len("等级")]
+
+    en = labels.get("en_US")
+    if isinstance(en, str) and en.endswith(" Rank") and len(en) > len(" Rank"):
+        labels["en_US"] = en[: -len(" Rank")]
 
 
 def is_ability_state_change_candidate(record: EventDecompositionRecord) -> bool:

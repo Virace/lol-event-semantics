@@ -502,5 +502,21 @@
     "zh_cn_default": "加里奥 回城收尾停止",
     "zh_cn_main": "回城收尾停止",
     "notes": "批次6a：Stop 壳动词经 display 无损性判据（DISPLAY_DROP_SHELL_VERBS）在文案尾附「停止」；skinless + 尾段相位词 winddown（收尾）组合形态锁定。"
+  },
+  {
+    "raw_event_name": "Play_sfx_AsheSkin08_VolleyRank2_OnCast",
+    "expected_frame_type": "ability_state_change",
+    "required_roles": ["champion", "skin", "ability_slot", "ability_component", "rank", "phase"],
+    "zh_cn_default": "艾希 源计划：联合 W技能万箭齐发2级释放",
+    "zh_cn_main": "W技能万箭齐发2级释放",
+    "notes": "批次6b rank 门禁修法：contextual_alias.raw 以 Rank\\d+ 结尾且尾号与 spell_rank 一致时消费为等级（2级 沿批次5b RankOne=1级 约定）；组件词尾「等级」去重防叠字；皮肤名对照 reference/skins/Ashe/Skin08（源计划：联合 艾希）核验。"
+  },
+  {
+    "raw_event_name": "Play_sfx_Ashe_VolleyRank5_OnCast",
+    "expected_frame_type": "ability_state_change",
+    "required_roles": ["champion", "ability_slot", "ability_component", "rank", "phase"],
+    "zh_cn_default": "艾希 W技能万箭齐发5级释放",
+    "zh_cn_main": "W技能万箭齐发5级释放",
+    "notes": "批次6b：无皮肤 token 形态 + 等级上界实测值 5（W 技能满级）；变体号（Tibbers 普攻2 等非 Rank 结尾 alias）有单测锁定不误标等级。"
   }
 ]

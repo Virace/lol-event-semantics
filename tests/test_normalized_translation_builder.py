@@ -1212,6 +1212,52 @@ class Batch5bGoldenDisplayTests(unittest.TestCase):
         self.assertGreaterEqual(seen, 7)
 
 
+class SpellRankArgumentTests(unittest.TestCase):
+    """验证 rank argument 门禁修法：仅 contextual_alias.raw 以 Rank\\d+ 结尾时消费 spell_rank。"""
+
+    def test_volley_rank_alias_builds_rank_argument(self) -> None:
+        """VolleyRankN 记录消费 spell_rank 为等级，组件词尾「等级」去重后文案带等级数。"""
+
+        cases = [
+            ("Play_sfx_AsheSkin08_VolleyRank2_OnCast", "2", "2级"),
+            ("Play_sfx_Ashe_VolleyRank5_OnCast", "5", "5级"),
+        ]
+        for raw, key, zh in cases:
+            with self.subTest(raw=raw):
+                translation = build_translation(enriched_record(raw), TranslationBuildContext())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], "ability_state_change")
+                args = translation["arguments"]
+                self.assertEqual(args["rank"]["key"], key)
+                self.assertEqual(args["rank"]["labels"]["zh_CN"], zh)
+                self.assertEqual(args["rank"]["provenance"]["source"], "semantic_slots.spell_rank")
+                self.assertEqual(args["ability_component"]["labels"]["zh_CN"], "万箭齐发")
+                display = build_compat_display(translation, raw_event_name=raw)
+                self.assertEqual(display["zh_cn_short"], f"W技能万箭齐发{zh}释放")
+
+    def test_rank_number_mismatch_builds_no_rank_argument(self) -> None:
+        """alias 尾号与 spell_rank 不一致时不出 rank argument，组件 label 不去重。"""
+
+        record = enriched_record("Play_sfx_AsheSkin08_VolleyRank2_OnCast")
+        record.semantic_slots["spell_rank"] = 3
+        translation = build_translation(record, TranslationBuildContext())
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        self.assertNotIn("rank", translation["arguments"])
+        self.assertEqual(translation["arguments"]["ability_component"]["labels"]["zh_CN"], "万箭齐发等级")
+
+    def test_variant_number_alias_builds_no_rank_argument(self) -> None:
+        """spell_rank 承载变体号（Tibbers 普攻2 等）且 alias 非 Rank 结尾时不得误标技能等级。"""
+
+        record = enriched_record("Play_sfx_AnnieSkin08Tibbers_AnnieTibbersBasicAttack2_OnCast")
+        self.assertEqual(record.semantic_slots.get("spell_rank"), 2)
+        translation = build_translation(record, TranslationBuildContext())
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        self.assertNotIn("rank", translation["arguments"])
+
+
 class Batch6aGoldenDisplayTests(unittest.TestCase):
     """验证批次6a 黄金样例文本逐字一致（media_base 无相位承接：尾段相位与整段音效）。"""
 

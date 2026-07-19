@@ -9,16 +9,16 @@ from .normalized_translation_model import RenderOptions, RenderResult
 TEMPLATES: dict[str, dict[str, dict[str, tuple[str, ...]]]] = {
     "ability_state_change": {
         "zh_CN": {
-            "default": ("champion", "skin", "ability_slot", "ability_component", "phase"),
-            "main": ("ability_slot", "ability_component", "phase"),
-            "debug": ("champion", "skin", "ability_slot", "ability_component", "phase"),
-            "audit": ("champion", "skin", "ability_slot", "ability_component", "phase"),
+            "default": ("champion", "skin", "ability_slot", "ability_component", "rank", "phase"),
+            "main": ("ability_slot", "ability_component", "rank", "phase"),
+            "debug": ("champion", "skin", "ability_slot", "ability_component", "rank", "phase"),
+            "audit": ("champion", "skin", "ability_slot", "ability_component", "rank", "phase"),
         },
         "en_US": {
-            "default": ("champion", "skin", "ability_slot", "ability_component", "phase"),
-            "main": ("ability_slot", "ability_component", "phase"),
-            "debug": ("champion", "skin", "ability_slot", "ability_component", "phase"),
-            "audit": ("champion", "skin", "ability_slot", "ability_component", "phase"),
+            "default": ("champion", "skin", "ability_slot", "ability_component", "rank", "phase"),
+            "main": ("ability_slot", "ability_component", "rank", "phase"),
+            "debug": ("champion", "skin", "ability_slot", "ability_component", "rank", "phase"),
+            "audit": ("champion", "skin", "ability_slot", "ability_component", "rank", "phase"),
         },
     },
     "skin_recall_state": {
