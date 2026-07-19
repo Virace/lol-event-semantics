@@ -826,6 +826,7 @@ def build_voice_event(
         champion_argument(record, context),
         skin_argument(record, context),
         action,
+        companion_argument(record, context),
     ]
     if record.profile.primary_family in SELF_ACTION_VOICE_FAMILIES:
         # 批次3：未被核心词消化的 qualifier 无损进 arguments（qualifier role
@@ -834,6 +835,56 @@ def build_voice_event(
         arguments.append(voice_qualifier_argument(record))
 
     return build_frame(record, "voice_event", arguments)
+
+
+def companion_argument(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+) -> dict[str, object] | None:
+    """构建同行英雄 argument（批次6c，With{Champion}[Near] 前置条件）。
+
+    precondition.kind=nearby_champion 且 counterpart 经 champion_labels 解析
+    出中文名才建（宁缺毋错，表外不放英文进 zh 文案）。措辞「{名}在场」沿
+    interaction move 家族既有先例，不把 proximity 推断值写进文案（
+    WithXayahDance3D 无 Near 尾缀也被记为 near，度不可背书；无损留
+    provenance）。
+
+    Args:
+        record: 拆解记录。
+        context: translation 构建上下文。
+
+    Returns:
+        companion 参数；无前置条件或中文名不可解析时返回 None。
+    """
+
+    precondition = record.semantic_slots.get("precondition")
+    if not isinstance(precondition, dict) or precondition.get("kind") != "nearby_champion":
+        return None
+
+    counterpart = precondition.get("counterpart")
+    raw = string_or_none(counterpart.get("raw")) if isinstance(counterpart, dict) else None
+    if raw is None:
+        return None
+
+    entry = context.champion_labels.get(raw)
+    zh = string_or_none(entry.get("zh_CN")) if isinstance(entry, Mapping) else None
+    if zh is None:
+        return None
+
+    en = string_or_none(entry.get("en_US")) or raw
+    return argument_to_dict(
+        TranslationArgument(
+            role="companion",
+            labels={"zh_CN": f"{zh}在场", "en_US": f"{en} nearby"},
+            confidence="high",
+            provenance={
+                "source": "semantic_slots.precondition",
+                "proximity": string_or_none(precondition.get("proximity")),
+            },
+            alias=raw,
+            token=string_or_none(precondition.get("raw")),
+        )
+    )
 
 
 def build_self_action_voice_event(
@@ -1013,6 +1064,7 @@ def build_champion_interaction_cue(
             counterpart_argument(record, context),
             timing_argument(slots.get("timing")),
             relation_argument(slots.get("relation")),
+            companion_argument(record, context),
         ],
     )
 
@@ -1054,6 +1106,7 @@ def build_kill_or_destroy_event(
             objective_steal_argument(slots.get("objective_steal")),
             qualifier_argument(slots.get("qualifier")),
             counter_argument(slots.get("counter")),
+            companion_argument(record, context),
         ],
     )
 
@@ -1062,10 +1115,11 @@ def build_champion_dialogue_event(
     record: EventDecompositionRecord,
     context: TranslationBuildContext,
 ) -> dict[str, object] | None:
-    """构建英雄对话链 frame（dialogue_chain profile，批次4）。
+    """构建英雄对话链 frame（dialogue_chain profile，批次4/6c）。
 
-    partner 为必需角色：chat_partner 缺失（如 WithSennaNear 前置条件对话链
-    未解析出对话对象）时不建 frame，维持 legacy 展示，不硬造对话对象。
+    partner 为必需角色：chat_partner 缺失时回落 precondition 同行英雄
+    （WithSennaNear 前置条件对话链，双人组语境下同行者即对话对象，批次6c）；
+    两者都缺则不建 frame，维持 legacy 展示，不硬造对话对象。
 
     Args:
         record: 拆解记录。
@@ -1081,6 +1135,8 @@ def build_champion_dialogue_event(
         return None
 
     slots = record.semantic_slots
+    base_trigger = dialogue_base_trigger_argument(slots.get("base_trigger"))
+    append_dialogue_trigger_counterpart(base_trigger, partner, record, context)
     return build_frame(
         record,
         "champion_dialogue_event",
@@ -1088,11 +1144,71 @@ def build_champion_dialogue_event(
             champion,
             skin_argument(record, context),
             partner,
-            dialogue_base_trigger_argument(slots.get("base_trigger")),
+            base_trigger,
             dialogue_turn_argument(slots.get("chat_turn")),
             dialogue_line_variant_argument(slots),
         ],
     )
+
+
+def append_dialogue_trigger_counterpart(
+    base_trigger: dict[str, object] | None,
+    partner: dict[str, object],
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+) -> None:
+    """三方对话链把 base_trigger 的第三方英雄并入家族词 label（批次6c）。
+
+    WithLucianNear_FirstEncounter3D01Thresh_Chat02 类：底事件 counterpart
+    解析为英雄且既非 owner 也非 partner 时并入（「初遇」→「初遇锤石」）；
+    自指（Kayle 链的 FirstEncounter3DKayle01）、partner 同名（Morgana 链）
+    与非英雄 token（Yordle/Standard/BasicHit*）保持原词不动。
+
+    Args:
+        base_trigger: 已构建的 base_trigger argument（原地修改 labels）。
+        partner: 已构建的 partner argument。
+        record: 拆解记录。
+        context: translation 构建上下文。
+    """
+
+    if base_trigger is None:
+        return
+
+    provenance = base_trigger.get("provenance")
+    counterpart_raw = string_or_none(provenance.get("counterpart_raw")) if isinstance(provenance, dict) else None
+    if counterpart_raw is None:
+        return
+
+    entry = context.champion_labels.get(counterpart_raw)
+    zh = string_or_none(entry.get("zh_CN")) if isinstance(entry, Mapping) else None
+    if zh is None:
+        return
+
+    owner_alias = record.owner.alias if record.owner is not None else None
+    partner_names = {
+        value.lower()
+        for value in (
+            string_or_none(partner.get("alias")),
+            string_or_none(partner.get("token")),
+            string_or_none((partner.get("labels") or {}).get("en_US") if isinstance(partner.get("labels"), dict) else None),
+        )
+        if value is not None
+    }
+    lowered = counterpart_raw.lower()
+    if (owner_alias is not None and lowered == owner_alias.lower()) or lowered in partner_names:
+        return
+
+    labels = base_trigger.get("labels")
+    if not isinstance(labels, dict):
+        return
+
+    zh_label = string_or_none(labels.get("zh_CN"))
+    en_label = string_or_none(labels.get("en_US"))
+    en = string_or_none(entry.get("en_US")) or counterpart_raw
+    if zh_label is not None:
+        labels["zh_CN"] = f"{zh_label}{zh}"
+    if en_label is not None:
+        labels["en_US"] = f"{en_label} {en}"
 
 
 def dialogue_partner_argument(
@@ -1118,6 +1234,18 @@ def dialogue_partner_argument(
     """
 
     partner = record.semantic_slots.get("chat_partner")
+    partner_source = "semantic_slots.chat_partner"
+    precondition_proximity = None
+    if not isinstance(partner, dict) or not partner:
+        # 批次6c：WithSennaNear 前置条件对话链无 chat_partner，双人组语境下
+        # 同行英雄即对话对象；proximity 无损进 provenance。
+        precondition = record.semantic_slots.get("precondition")
+        if isinstance(precondition, dict) and precondition.get("kind") == "nearby_champion":
+            counterpart = precondition.get("counterpart")
+            if isinstance(counterpart, dict) and counterpart:
+                partner = counterpart
+                partner_source = "semantic_slots.precondition"
+                precondition_proximity = string_or_none(precondition.get("proximity"))
     if not isinstance(partner, dict) or not partner:
         return None
 
@@ -1172,10 +1300,12 @@ def dialogue_partner_argument(
         fallback_reason = PARTNER_FALLBACK_REASON
 
     provenance: dict[str, object] = {
-        "source": "semantic_slots.chat_partner",
+        "source": partner_source,
         "partner_kind": kind,
         "zh_source": zh_source,
     }
+    if proximity is None:
+        proximity = precondition_proximity
     if proximity is not None:
         provenance["proximity"] = proximity
 

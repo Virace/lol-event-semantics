@@ -79,16 +79,16 @@ TEMPLATES: dict[str, dict[str, dict[str, tuple[str, ...]]]] = {
     },
     "voice_event": {
         "zh_CN": {
-            "default": ("champion", "skin", "action"),
-            "main": ("action",),
-            "debug": ("champion", "skin", "action"),
-            "audit": ("champion", "skin", "action"),
+            "default": ("champion", "skin", "action", "companion"),
+            "main": ("action", "companion"),
+            "debug": ("champion", "skin", "action", "companion"),
+            "audit": ("champion", "skin", "action", "companion"),
         },
         "en_US": {
-            "default": ("champion", "skin", "action"),
-            "main": ("action",),
-            "debug": ("champion", "skin", "action"),
-            "audit": ("champion", "skin", "action"),
+            "default": ("champion", "skin", "action", "companion"),
+            "main": ("action", "companion"),
+            "debug": ("champion", "skin", "action", "companion"),
+            "audit": ("champion", "skin", "action", "companion"),
         },
     },
     "ability_cast_event": {
@@ -107,30 +107,30 @@ TEMPLATES: dict[str, dict[str, dict[str, tuple[str, ...]]]] = {
     },
     "kill_or_destroy_event": {
         "zh_CN": {
-            "default": ("champion", "skin", "kill_method", "trigger", "counterpart", "counter"),
-            "main": ("kill_method", "trigger", "counterpart", "counter"),
-            "debug": ("champion", "skin", "kill_method", "trigger", "counterpart", "counter"),
-            "audit": ("champion", "skin", "kill_method", "trigger", "counterpart", "counter"),
+            "default": ("champion", "skin", "kill_method", "trigger", "counterpart", "counter", "companion"),
+            "main": ("kill_method", "trigger", "counterpart", "counter", "companion"),
+            "debug": ("champion", "skin", "kill_method", "trigger", "counterpart", "counter", "companion"),
+            "audit": ("champion", "skin", "kill_method", "trigger", "counterpart", "counter", "companion"),
         },
         "en_US": {
-            "default": ("champion", "skin", "kill_method", "trigger", "counterpart"),
-            "main": ("kill_method", "trigger", "counterpart"),
-            "debug": ("champion", "skin", "kill_method", "trigger", "counterpart"),
-            "audit": ("champion", "skin", "kill_method", "trigger", "counterpart"),
+            "default": ("champion", "skin", "kill_method", "trigger", "counterpart", "companion"),
+            "main": ("kill_method", "trigger", "counterpart", "companion"),
+            "debug": ("champion", "skin", "kill_method", "trigger", "counterpart", "companion"),
+            "audit": ("champion", "skin", "kill_method", "trigger", "counterpart", "companion"),
         },
     },
     "champion_interaction_cue": {
         "zh_CN": {
-            "default": ("champion", "skin", "trigger", "relation", "counterpart"),
-            "main": ("trigger", "relation", "counterpart"),
-            "debug": ("champion", "skin", "trigger", "relation", "counterpart"),
-            "audit": ("champion", "skin", "trigger", "relation", "counterpart"),
+            "default": ("champion", "skin", "trigger", "relation", "counterpart", "companion"),
+            "main": ("trigger", "relation", "counterpart", "companion"),
+            "debug": ("champion", "skin", "trigger", "relation", "counterpart", "companion"),
+            "audit": ("champion", "skin", "trigger", "relation", "counterpart", "companion"),
         },
         "en_US": {
-            "default": ("champion", "skin", "trigger", "counterpart"),
-            "main": ("trigger", "counterpart"),
-            "debug": ("champion", "skin", "trigger", "counterpart"),
-            "audit": ("champion", "skin", "trigger", "counterpart"),
+            "default": ("champion", "skin", "trigger", "counterpart", "companion"),
+            "main": ("trigger", "counterpart", "companion"),
+            "debug": ("champion", "skin", "trigger", "counterpart", "companion"),
+            "audit": ("champion", "skin", "trigger", "counterpart", "companion"),
         },
     },
     "champion_dialogue_event": {
@@ -356,6 +356,9 @@ def join_zh_cn(role_texts: list[tuple[str, str]]) -> str:
     previous_text = ""
     for role, text in role_texts:
         current_text = strip_repeated_champion_from_skin(text, previous_text) if role == "skin" else text
+        if role == "companion":
+            # 批次6c：同行英雄条件统一全角括号后缀（「跳舞语音（霞在场）」）。
+            current_text = f"（{current_text}）"
         if not output:
             output = current_text
         elif previous_role in CONTEXT_ROLES or role in CONTEXT_ROLES:
@@ -444,6 +447,10 @@ def join_kill_or_destroy_zh_cn(
     elif mode in {"debug", "audit"} and values.get("counter"):
         core = f"{core}（{values['counter']}）"
 
+    companion_text = values.get("companion", "")
+    if companion_text:
+        core = f"{core}（{companion_text}）"
+
     core = f"{core}{values.get('playback', '')}"
     if context_text and core:
         return f"{context_text} {core}"
@@ -484,6 +491,10 @@ def join_interaction_cue_zh_cn(
             core = f"{core}（{' '.join(parts)} 在场）"
         else:
             core = insert_before_asset_word(core, counterpart_text)
+
+    companion_text = values.get("companion", "")
+    if companion_text:
+        core = f"{core}（{companion_text}）"
 
     core = f"{core}{values.get('playback', '')}"
     if context_text and core:

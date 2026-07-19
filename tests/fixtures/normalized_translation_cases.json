@@ -518,5 +518,37 @@
     "zh_cn_default": "艾希 W技能万箭齐发5级释放",
     "zh_cn_main": "W技能万箭齐发5级释放",
     "notes": "批次6b：无皮肤 token 形态 + 等级上界实测值 5（W 技能满级）；变体号（Tibbers 普攻2 等非 Rank 结尾 alias）有单测锁定不误标等级。"
+  },
+  {
+    "raw_event_name": "Play_vo_Lucian_WithSennaNear_FirstMove2D01_Chat03",
+    "expected_frame_type": "champion_dialogue_event",
+    "required_roles": ["champion", "partner", "turn"],
+    "zh_cn_default": "卢锡安 与 赛娜 对话语音（首次移动 第3句）",
+    "zh_cn_main": "与 赛娜 对话语音（首次移动 第3句）",
+    "notes": "批次6c 主代理裁决：WithXNear 前置条件对话链回落 precondition 同行英雄为 partner（双人组语境下同行者即对话对象，批次4 留口子正式承接）；proximity 无损进 provenance 不进文案。"
+  },
+  {
+    "raw_event_name": "Play_vo_SennaSkin16_WithLucianNear_FirstEncounter3D01Thresh_Chat02",
+    "expected_frame_type": "champion_dialogue_event",
+    "required_roles": ["champion", "skin", "partner", "turn"],
+    "zh_cn_default": "赛娜 源计划：魅灵 与 卢锡安 对话语音（初遇锤石 第2句）",
+    "zh_cn_main": "与 卢锡安 对话语音（初遇锤石 第2句）",
+    "notes": "批次6c 三方链：base_trigger counterpart 解析为第三方英雄（非 owner 非 partner）时并入家族词（初遇→初遇锤石）；凯尔/莫甘娜链自指与 partner 同名场景有回归锁零变化；皮肤名对照 reference/skins/Senna/Skin16（源计划：魅灵 赛娜）核验。"
+  },
+  {
+    "raw_event_name": "Play_vo_Lucian_KillChampion3DWithSennaNear",
+    "expected_frame_type": "kill_or_destroy_event",
+    "required_roles": ["champion", "trigger"],
+    "zh_cn_default": "卢锡安 击杀语音（赛娜在场）",
+    "zh_cn_main": "击杀语音（赛娜在场）",
+    "notes": "批次6c 同行英雄条件：companion 措辞「{名}在场」沿 interaction move 家族既有先例，不把 proximity 推断值写进文案；中文名经 champion_labels 门禁（表外不建 companion）。"
+  },
+  {
+    "raw_event_name": "Play_vo_Xayah_WithRakanDance3D",
+    "expected_frame_type": "voice_event",
+    "required_roles": ["champion", "action"],
+    "zh_cn_default": "霞 跳舞语音（洛在场）",
+    "zh_cn_main": "跳舞语音（洛在场）",
+    "notes": "批次6c：voice_event 接 companion（双人舞条件）；Rakan 官方中文名=洛（勿写「拉坎」，reference 核验）；WithXayahDance3D 无 Near 尾缀故措辞不断言距离。"
   }
 ]

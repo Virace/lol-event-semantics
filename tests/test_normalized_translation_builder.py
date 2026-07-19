@@ -830,10 +830,17 @@ class ChampionDialogueEventDispatchTests(unittest.TestCase):
         self.assertEqual(args["line_variant"]["value"], "1")
 
     def test_dialogue_without_partner_builds_no_frame(self) -> None:
-        """chat_partner=None（前置条件对话链）缺必需 partner，不建 frame。"""
+        """chat_partner 与 precondition 双缺时缺必需 partner，不建 frame。
+
+        批次6c 后 WithSennaNear 前置条件链已回落 precondition 建 frame（见
+        Batch6cWithCompanionTests），本锁改用剥除两个槽位的记录守「不硬造
+        对话对象」底线。
+        """
 
         record = enriched_record("Play_vo_LucianSkin06_WithSennaNear_FirstMove2D01_Chat03")
         self.assertEqual(record.profile.semantic_profile.value, "dialogue_chain")
+        record.semantic_slots["chat_partner"] = None
+        record.semantic_slots["precondition"] = None
         self.assertIsNone(build_translation(record, reference_translation_context()))
 
 
@@ -1210,6 +1217,91 @@ class Batch5bGoldenDisplayTests(unittest.TestCase):
                 self.assertEqual(display["zh_cn_short"], case["zh_cn_main"])
 
         self.assertGreaterEqual(seen, 7)
+
+
+class Batch6cWithCompanionTests(unittest.TestCase):
+    """验证批次6c：With{Champion}[Near] 前置条件的对话链承接与同行英雄条件。"""
+
+    def test_precondition_dialogue_chain_builds_frame_with_partner(self) -> None:
+        """WithXNear 对话链回落 precondition 同行英雄为 partner。"""
+
+        cases = [
+            ("Play_vo_Lucian_WithSennaNear_FirstMove2D01_Chat03", "赛娜", "首次移动", "与 赛娜 对话语音（首次移动 第3句）"),
+            ("Play_vo_SennaSkin16_WithLucianNear_KillChampion3D05_Chat02", "卢锡安", "击杀", "与 卢锡安 对话语音（击杀 第2句）"),
+        ]
+        for raw, partner_zh, trigger_zh, short in cases:
+            with self.subTest(raw=raw):
+                translation = build_translation(enriched_record(raw), reference_translation_context())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], "champion_dialogue_event")
+                args = translation["arguments"]
+                self.assertEqual(args["partner"]["labels"]["zh_CN"], partner_zh)
+                self.assertEqual(args["partner"]["provenance"]["source"], "semantic_slots.precondition")
+                self.assertEqual(args["partner"]["provenance"]["proximity"], "near")
+                self.assertEqual(args["base_trigger"]["labels"]["zh_CN"], trigger_zh)
+                display = build_compat_display(translation, raw_event_name=raw)
+                self.assertEqual(display["zh_cn_short"], short)
+
+    def test_three_way_chain_appends_trigger_counterpart(self) -> None:
+        """三方链（WithLucianNear+初遇Thresh）把第三方英雄并入家族词。"""
+
+        raw = "Play_vo_SennaSkin16_WithLucianNear_FirstEncounter3D01Thresh_Chat02"
+        translation = build_translation(enriched_record(raw), reference_translation_context())
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        args = translation["arguments"]
+        self.assertEqual(args["base_trigger"]["labels"]["zh_CN"], "初遇锤石")
+        display = build_compat_display(translation, raw_event_name=raw)
+        self.assertEqual(display["zh_cn_short"], "与 卢锡安 对话语音（初遇锤石 第2句）")
+
+    def test_self_referencing_trigger_counterpart_is_unchanged(self) -> None:
+        """存量链回归锁：自指/partner 同名 counterpart 不并入（凯尔链文案零变化）。"""
+
+        raw = "Play_vo_KayleSkin42_Chat3DMorgana_FirstEncounter3DKayle01_Chat2"
+        translation = build_translation(enriched_record(raw), reference_translation_context())
+        assert translation is not None
+        self.assertEqual(translation["arguments"]["base_trigger"]["labels"]["zh_CN"], "初遇")
+        display = build_compat_display(translation, raw_event_name=raw)
+        self.assertEqual(display["zh_cn_short"], "与 莫甘娜 对话语音（初遇 第2句）")
+
+    def test_companion_condition_on_framed_families(self) -> None:
+        """kill/interaction/voice frame 追加同行英雄括号条件（在场措辞）。"""
+
+        cases = [
+            ("Play_vo_Lucian_KillChampion3DWithSennaNear", "kill_or_destroy_event", "击杀语音（赛娜在场）"),
+            ("Play_vo_Lucian_FirstEncounter3DThreshWithSennaNear", "champion_interaction_cue", "初遇 锤石 语音（赛娜在场）"),
+            ("Play_vo_SennaSkin16_Move2DWithLucianNear", "voice_event", "移动语音（卢锡安在场）"),
+            ("Play_vo_Xayah_WithRakanDance3D", "voice_event", "跳舞语音（洛在场）"),
+        ]
+        for raw, frame_type, short in cases:
+            with self.subTest(raw=raw):
+                translation = build_translation(enriched_record(raw), reference_translation_context())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], frame_type)
+                args = translation["arguments"]
+                self.assertIn("在场", args["companion"]["labels"]["zh_CN"])
+                self.assertEqual(args["companion"]["provenance"]["source"], "semantic_slots.precondition")
+                display = build_compat_display(translation, raw_event_name=raw)
+                self.assertEqual(display["zh_cn_short"], short)
+
+    def test_uncovered_families_with_condition_stay_legacy(self) -> None:
+        """heal/first_move 基础家族未承接，With 变体同样不建 frame（范围锁）。"""
+
+        for raw in ["Play_vo_Lucian_HealWithSennaNear", "Play_vo_Lucian_FirstMove2DWithSennaNear"]:
+            with self.subTest(raw=raw):
+                self.assertIsNone(build_translation(enriched_record(raw), reference_translation_context()))
+
+    def test_unresolvable_companion_builds_no_companion_argument(self) -> None:
+        """precondition 同行者中文名不可解析时不建 companion argument（宁缺毋错）。"""
+
+        record = enriched_record("Play_vo_Lucian_KillChampion3DWithSennaNear")
+        record.semantic_slots["precondition"]["counterpart"]["raw"] = "Bogus"
+        translation = build_translation(record, reference_translation_context())
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        self.assertNotIn("companion", translation["arguments"])
 
 
 class SpellRankArgumentTests(unittest.TestCase):
