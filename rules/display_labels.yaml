@@ -234,10 +234,23 @@ announcer:
   # Legendary=超神、Rampage=接近暴走（非「暴走」）。Dampener 经同键
   # 中英互证为 Inhibitor（召唤水晶）引擎旧名；TurretLostFirstBlood
   # 官方文案「摧毁了第一座（防御）塔」，「一血塔」判为非官方不用。
-  # You/Hero 中缀变体（RampageYouYourTeam 等）语义未证实，不入表；
+  # You/Hero 中缀变体语义已核验（2026-07-19 核验代理，16.14 国服字符串表
+  # game_announcement_* 键系统中英同键对照：You=你/本机玩家、Hero=非本机
+  # 英雄、队伍尾缀=主体所属队伍、Blue/Red=观战视角；语料无 YouEnemyTeam
+  # 组合自洽佐证），主体词见 subject 子表。**Shutdown 三态主体方向（终结
+  # 者还是被终结者）字符串表无法区分，排除待音频原声核对；KillChampion
+  # 复合形态（击杀者/被杀者/队伍三槽）推断置信高但未逐条核对，留后批**。
   # 包名（Worlds23=2023全球总决赛/Brawl=神木之门/NexusBlitz=极限闪击/
   # Maverick=进步之桥播报员内部代号无官方中文名）已核验但本域不进
   # arguments，留 mode role 设计时接入。扩词条改这里、不改代码。
+  subject:
+    # 播报主体三态（批次6e）：措辞取字符串表实际用词（你已被击杀/友方被杀/
+    # 敌方英雄/蓝方红方队伍词），组合词由已核验成分构成。
+    You: 你
+    HeroYourTeam: 友方英雄
+    HeroEnemyTeam: 敌方英雄
+    HeroBlue: 蓝方英雄
+    HeroRed: 红方英雄
   event:
     Ace: 团灭
     FirstBlood: 一血
@@ -260,6 +273,7 @@ announcer:
     Reconnect: 重新连接
     LowHealth: 生命值过低
     KillingSpree: 大杀特杀
+    # （批次6e 起 You/Hero 三态由 subject 子表承接，事件词干沿用本表）
     KillingSpreeSet1: 大杀特杀
     KillingSpreeSet2: 接近暴走
     KillingSpreeSet3: 无人能挡

@@ -170,6 +170,11 @@ class DefaultDisplayLabelsTests(unittest.TestCase):
         self.assertEqual(labels.announcer_event["Legendary"], "超神")
         self.assertEqual(labels.announcer_event["KillingSpreeSet6"], "超神")
         self.assertEqual(labels.announcer_event["DampenerDie"], "召唤水晶被摧毁")
+        # 批次6e：播报主体三态词（字符串表核验：你/友方英雄/敌方英雄+观战双色）。
+        self.assertEqual(len(labels.announcer_subject), 5)
+        self.assertEqual(labels.announcer_subject["You"], "你")
+        self.assertEqual(labels.announcer_subject["HeroYourTeam"], "友方英雄")
+        self.assertEqual(labels.announcer_subject["HeroEnemyTeam"], "敌方英雄")
 
     def test_get_display_labels_is_cached_singleton(self) -> None:
         """默认词表应进程内缓存，两次调用返回同一对象。"""

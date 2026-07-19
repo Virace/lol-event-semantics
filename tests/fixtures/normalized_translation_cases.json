@@ -582,5 +582,21 @@
     "zh_cn_default": "嚎哭深渊 商店老板关店语音（未购买）",
     "zh_cn_main": "商店老板关店语音（未购买）",
     "notes": "批次6d：条件触发按 cue 内部名描述性转写（同 phase 词口径）；CountSeven/Count10/CountTen 语义未证实不入表维持 legacy 有单测锁定；General 视为无特定对象合法缺 subject。"
+  },
+  {
+    "raw_event_name": "Play_vo_Announcer_Female1_RampageYouYourTeam",
+    "expected_frame_type": "announcer_event",
+    "required_roles": ["event"],
+    "zh_cn_default": "你接近暴走播报",
+    "zh_cn_main": "你接近暴走播报",
+    "notes": "批次6e You/Hero 三态承接：语义经 2026-07-19 核验代理 16.14 国服字符串表 game_announcement_* 键系统中英同键对照证实（You=你/本机玩家；Rampage=接近暴走 反惯称沿批次5a）；You 仅与 YourTeam 组合（语料无 YouEnemyTeam）。"
+  },
+  {
+    "raw_event_name": "Play_vo_Announcer_Female1_LegendaryHeroEnemyTeam",
+    "expected_frame_type": "announcer_event",
+    "required_roles": ["event"],
+    "zh_cn_default": "敌方英雄超神播报",
+    "zh_cn_main": "敌方英雄超神播报",
+    "notes": "批次6e：Hero=非本机英雄+队伍尾缀=主体所属队伍（敌方英雄 为字符串表 _enemy_you 文案实际连用词）；Shutdown 三态主体方向未证实、KillChampion 复合形态未逐条核对，均维持 legacy 有测试锁。"
   }
 ]

@@ -163,16 +163,16 @@ TEMPLATES: dict[str, dict[str, dict[str, tuple[str, ...]]]] = {
     },
     "announcer_event": {
         "zh_CN": {
-            "default": ("team", "event"),
-            "main": ("team", "event"),
-            "debug": ("team", "event"),
-            "audit": ("team", "event"),
+            "default": ("subject", "team", "event"),
+            "main": ("subject", "team", "event"),
+            "debug": ("subject", "team", "event"),
+            "audit": ("subject", "team", "event"),
         },
         "en_US": {
-            "default": ("event", "team"),
-            "main": ("event", "team"),
-            "debug": ("event", "team"),
-            "audit": ("event", "team"),
+            "default": ("subject", "event", "team"),
+            "main": ("subject", "event", "team"),
+            "debug": ("subject", "event", "team"),
+            "audit": ("subject", "event", "team"),
         },
     },
 }
@@ -587,11 +587,12 @@ def join_shop_voice_zh_cn(role_texts: list[tuple[str, str]]) -> str:
 
 
 def join_announcer_event_zh_cn(role_texts: list[tuple[str, str]]) -> str:
-    """合并播报员事件 frame 的中文文案（批次5a 措辞表）。
+    """合并播报员事件 frame 的中文文案（批次5a/6e 措辞表）。
 
-    核心「{team}{event}播报」，team 缺省为空串直连无空格（「敌方团灭播报」
-    「胜利播报」）。event/team 均经词表门禁产出纯中文，main 零拉丁字母
-    自然满足，无需 counterpart 式模式分档；playback 壳语义不得丢。
+    核心「{subject}{team}{event}播报」，subject/team 缺省为空串直连无空格
+    （「敌方团灭播报」「你接近暴走播报」「友方英雄超神播报」）；subject 在
+    场时 builder 不出 team（队伍已并入主体词），两者不会同现。各角色均经
+    词表门禁产出纯中文，main 零拉丁字母自然满足；playback 壳语义不得丢。
 
     Args:
         role_texts: `(role, text)` 列表。
@@ -601,7 +602,7 @@ def join_announcer_event_zh_cn(role_texts: list[tuple[str, str]]) -> str:
     """
 
     values = {role: text for role, text in role_texts}
-    core = f"{values.get('team', '')}{values.get('event', '')}播报"
+    core = f"{values.get('subject', '')}{values.get('team', '')}{values.get('event', '')}播报"
     return f"{core}{values.get('playback', '')}"
 
 

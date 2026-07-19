@@ -1022,11 +1022,64 @@ class AnnouncerEventTokenResolutionTests(unittest.TestCase):
         self.assertNotIn("team", args)
 
     def test_out_of_vocab_stem_builds_no_frame(self) -> None:
-        """表外词干（PentaKillHero）不建 frame，维持 legacy 展示不放英文 fallback。"""
+        """表外词干不建 frame，维持 legacy 展示不放英文 fallback。
 
-        record = enriched_record("Play_vo_Announcer_Female1_PentaKillHeroBlue")
+        原样例 PentaKillHeroBlue 已被批次6e 主体三态承接，改用真表外词干守
+        同一底线。
+        """
+
+        record = enriched_record("Play_vo_Announcer_Female1_MysteryEventYourTeam")
         self.assertEqual(record.semantic_slots.get("system_voice_kind"), "announcer")
         self.assertIsNone(build_translation(record, TranslationBuildContext()))
+
+
+class Batch6eAnnouncerSubjectTests(unittest.TestCase):
+    """验证批次6e 播报主体三态（You/Hero 中缀，语义经字符串表核验）。"""
+
+    def test_subject_variants_build_frame(self) -> None:
+        """{事件}{You|Hero}{队伍} 组合建 frame，主体词并入文案。"""
+
+        cases = [
+            ("Play_vo_Announcer_Female1_RampageYouYourTeam", "You", "你接近暴走播报"),
+            ("Play_vo_Announcer_Female1_LegendaryHeroEnemyTeam", "HeroEnemyTeam", "敌方英雄超神播报"),
+            ("Play_vo_Announcer_Male1_KillingSpreeHeroYourTeam", "HeroYourTeam", "友方英雄大杀特杀播报"),
+            ("Play_vo_Announcer_Female1_PentaKillHeroBlue", "HeroBlue", "蓝方英雄五杀播报"),
+        ]
+        for raw, subject_key, short in cases:
+            with self.subTest(raw=raw):
+                translation = build_translation(enriched_record(raw), TranslationBuildContext())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], "announcer_event")
+                args = translation["arguments"]
+                self.assertEqual(args["subject"]["key"], subject_key)
+                self.assertNotIn("team", args)
+                display = build_compat_display(translation, raw_event_name=raw)
+                self.assertEqual(display["zh_cn_short"], short)
+
+    def test_unverified_forms_stay_legacy(self) -> None:
+        """Shutdown 三态（主体方向未证实）与 KillChampion 复合形态不建 frame。"""
+
+        for raw in [
+            "Play_vo_Announcer_Female1_ShutdownYouYourTeam",
+            "Play_vo_Announcer_Female1_ShutdownHeroEnemyTeam",
+            "Play_vo_Announcer_Female1_KillChampionYouHeroYourTeam",
+            "Play_vo_Announcer_Female1_KillChampionTurretYouEnemyTeam",
+        ]:
+            with self.subTest(raw=raw):
+                self.assertIsNone(build_translation(enriched_record(raw), TranslationBuildContext()))
+
+    def test_plain_team_suffix_path_is_unchanged(self) -> None:
+        """既有纯队伍尾缀路径回归锁（无主体词时 team argument 照旧）。"""
+
+        translation = build_translation(
+            enriched_record("Play_vo_Announcer_Female1_ChampionPentaKillPurple"), TranslationBuildContext()
+        )
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        args = translation["arguments"]
+        self.assertEqual(args["team"]["key"], "Purple")
+        self.assertNotIn("subject", args)
 
 
 class SpellRankVoiceEventTests(unittest.TestCase):

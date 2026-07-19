@@ -1647,6 +1647,7 @@ def build_announcer_event(
     stem = token[2:] if ANNOUNCER_ON_PREFIX_PATTERN.match(token) else token
     event_zh = active_labels.announcer_event.get(stem)
     team = None
+    subject = None
     if event_zh is None:
         split = split_announcer_team_suffix(stem, active_labels.announcer_team)
         if split is not None:
@@ -1655,7 +1656,13 @@ def build_announcer_event(
             if event_zh is not None:
                 stem = stripped_stem
             else:
+                # 批次6e：{事件}{You|Hero}{队伍} 三态（语义经字符串表核验），
+                # 先剥队伍再剥主体；主体在场时队伍并入主体词（友方英雄），
+                # 不再单独出 team argument。
+                subject_split = announcer_subject_stem(stripped_stem, team[0], active_labels)
                 team = None
+                if subject_split is not None:
+                    stem, event_zh, subject = subject_split
 
     if event_zh is None:
         return None
@@ -1684,7 +1691,79 @@ def build_announcer_event(
             )
         )
 
-    return build_frame(record, "announcer_event", [event_argument, team_argument])
+    subject_argument = None
+    if subject is not None:
+        subject_key, subject_zh, subject_token = subject
+        subject_argument = argument_to_dict(
+            TranslationArgument(
+                role="subject",
+                labels={"zh_CN": subject_zh, "en_US": ANNOUNCER_SUBJECT_EN.get(subject_key, subject_key)},
+                confidence="high",
+                provenance={"source": "semantic_slots.cue_path"},
+                key=subject_key,
+                token=subject_token,
+            )
+        )
+
+    return build_frame(record, "announcer_event", [event_argument, team_argument, subject_argument])
+
+
+ANNOUNCER_SUBJECT_SUFFIX_PATTERN = re.compile(r"^(?P<stem>.+?)(?P<subject>You|Hero)$")
+ANNOUNCER_SUBJECT_EN = {
+    "You": "you",
+    "HeroYourTeam": "ally champion",
+    "HeroEnemyTeam": "enemy champion",
+    "HeroBlue": "blue side champion",
+    "HeroRed": "red side champion",
+}
+
+
+def announcer_subject_stem(
+    stripped_stem: str,
+    team_key: str,
+    labels: DisplayLabels,
+) -> tuple[str, str, tuple[str, str, str]] | None:
+    """剥 ``{事件}{You|Hero}`` 主体尾缀（批次6e，语义经字符串表核验）。
+
+    门禁：You 仅与 YourTeam 组合（语料无 YouEnemyTeam，出现即防错拒绝）；
+    Shutdown 主体方向（终结者还是被终结者）字符串表无法区分，排除待音频
+    原声核对；主体词从 announcer.subject 词表取，表外组合不建。
+
+    Args:
+        stripped_stem: 已剥队伍尾缀的事件词干（RampageYou 等）。
+        team_key: 已剥出的队伍键（YourTeam/EnemyTeam/Blue/Red…）。
+        labels: 展示词表。
+
+    Returns:
+        ``(事件词干, 事件中文, (主体键, 主体中文, 主体 token))``；门禁不满足
+        时返回 None。
+    """
+
+    match = ANNOUNCER_SUBJECT_SUFFIX_PATTERN.fullmatch(stripped_stem)
+    if match is None:
+        return None
+
+    stem = match.group("stem")
+    subject_token = match.group("subject")
+    if stem == "Shutdown":
+        return None
+
+    event_zh = labels.announcer_event.get(stem)
+    if event_zh is None:
+        return None
+
+    if subject_token == "You":
+        if team_key != "YourTeam":
+            return None
+        subject_key = "You"
+    else:
+        subject_key = f"Hero{team_key}"
+
+    subject_zh = labels.announcer_subject.get(subject_key)
+    if subject_zh is None:
+        return None
+
+    return stem, event_zh, (subject_key, subject_zh, subject_token)
 
 
 def announcer_cue_token(slots: Mapping[str, Any]) -> str | None:
