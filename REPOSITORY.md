@@ -22,7 +22,7 @@
 
 ```text
 raw/events/
-  -> rules/ + overrides/ + dist/reference/<version>/game-data/
+  -> rules/ + overrides/ + reference/
   -> dist/work/<run-id>/event-decomposition/
   -> dist/reports/runs/<run-id>/
   -> dist/normalized/
@@ -33,7 +33,8 @@ raw/events/
 - `raw/events/`：按实体累积的 raw event name 源语料。不按版本替换，不因为新版本重做而删除旧事件。
 - `rules/`：长期维护的规则、词典、上下文别名和 residual modifier。
 - `overrides/`：人工 review 后的精确覆盖和兼容决策。
-- `dist/reference/<version>/game-data/`：版本敏感的参考输入，不对下游承诺稳定。
+- `reference/`：仓库维护的累计精简参考合集，包含 `champions/`、`maps/`、`skinlines/`，解释阶段只读取这里。
+- `.temp/reference-sources/`：被忽略的版本敏感参考输入缓存，不对下游承诺稳定。
 - `dist/work/<run-id>/`：单次执行中间产物，例如 event-decomposition 和 review-site。
 - `dist/reports/runs/<run-id>/`：规则命中、未知项、候选项和维护审计报告。
 - `dist/normalized/`：唯一对外主数据源，只按实体拆分，不包含完整大包索引。
@@ -50,9 +51,12 @@ raw/events/
 rules/contextual/champions/*.yaml
 rules/contextual/modes/*.yaml
 rules/contextual/sfx/*.yaml
+rules/low_trust_events.yaml
 ```
 
 拆分只改变维护形态，不改变匹配语义。运行时仍应把所有分片聚合为一个 `RuleBook`，不能按当前英雄只加载局部规则，否则会丢失跨 owner 命中。
+
+`rules/low_trust_events.yaml` 是已审阅的整句 exact fallback。它用于把默认低置信噪声移出主报告，但仍会在 `semantic_slots.low_trust_rule` 标记 `trust: low`，并可通过 CLI 参数单独导出。
 
 ## 审计与报告
 
@@ -66,11 +70,19 @@ rules/contextual/sfx/*.yaml
 - 哪些事件依赖推断逻辑
 - 小批量输入的审计范围是什么
 
-因此报告必须记录输入范围、raw 数量、参考版本、game-data 路径和命令摘要。小批量审计不能被误读为全库覆盖率。
+因此报告必须记录输入范围、raw 数量、参考版本、reference 路径和命令摘要。小批量审计不能被误读为全库覆盖率。
 
 ## 对外数据
 
 下游程序应读取 `dist/normalized/`，不要依赖中间 JSONL、报告、review site 或本地 game-data。
+
+当前数据 contract 分层如下：
+
+- `raw/events/` 是源语料层，`raw_event_name` 在所有派生产物中保持原样。
+- `reference/` 是实体、英雄、皮肤、地图和 skinline 的 label/reference 层。
+- `rules/` 与 `overrides/` 是语义解释层，负责把事件名归一为技能、状态、动作、阶段和上下文别名。
+- `dist/normalized/` 是生成的消费者层，按实体拆分并保留兼容 `display` 预览。
+- `translation` 是 normalized 记录内的本地化渲染层；需要页面上下文省略、不同语言语序或调试审计时，应优先使用它，而不是只依赖固定 `display.zh_cn_short/detail`。
 
 普通用户展示文案应回答“这个音频什么时候触发”，例如：
 
@@ -84,7 +96,7 @@ rules/contextual/sfx/*.yaml
 
 ## 自动更新边界
 
-自动 raw 更新已有单独 SPEC。当前布局重整只预留路径，不实现 GAME WAD 下载、BIN 解包或 GitHub Actions workflow。
+自动 raw 更新入口和手动 GitHub Actions workflow 已纳入仓库。GAME manifest/WAD/BIN 抽取是可选更新来源，不是对外数据契约。
 
 自动更新的关键边界：
 

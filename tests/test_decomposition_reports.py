@@ -221,18 +221,116 @@ class DecompositionCliTests(unittest.TestCase):
             self.assertNotIn("tft", output_text.lower())
             self.assertIn("Play_sfx_Env_Map12_Ambience", output_text)
 
-    def test_cli_uses_game_data_root_for_candidates(self) -> None:
+    def test_cli_can_write_low_trust_rule_hits(self) -> None:
+        """加参数时输出低信任规则命中表，默认拆解结果不再保持 low。"""
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            raw_root = root / "raw" / "events"
+            champions = raw_root / "champions"
+            champions.mkdir(parents=True)
+            champions.joinpath("99.txt").write_text(
+                "_RESET_ALL_FX\n",
+                encoding="utf-8",
+            )
+            output_root = root / "out"
+            report_root = root / "reports"
+
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "scripts/decompose_events.py",
+                    "--raw-root",
+                    str(raw_root),
+                    "--output-root",
+                    str(output_root),
+                    "--report-root",
+                    str(report_root),
+                    "--write-low-trust-rules",
+                ],
+                cwd=Path.cwd(),
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            record = json.loads((output_root / "champions.jsonl").read_text(encoding="utf-8").splitlines()[0])
+            self.assertEqual(record["confidence"], "medium")
+            self.assertEqual(record["semantic_slots"]["low_trust_rule"]["trust"], "low")
+            rows = (report_root / "low-trust-rules.csv").read_text(encoding="utf-8-sig").splitlines()
+            self.assertIn("raw_event_name,rule_id,category,trust,confidence,label_zh,note", rows[0])
+            self.assertIn("_RESET_ALL_FX", rows[1])
+            self.assertIn("technical_audio_control", rows[1])
+
+    def test_cli_defaults_version_to_cumulative(self) -> None:
+        """拆解累计 raw 时不强制要求具体版本标签。"""
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            raw_root = root / "raw" / "events"
+            champions = raw_root / "champions"
+            champions.mkdir(parents=True)
+            (champions / "Annie.txt").write_text("Play_vo_Annie_Move2DStandard\n", encoding="utf-8")
+            output_root = root / "out"
+            report_root = root / "reports"
+
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "scripts/decompose_events.py",
+                    "--raw-root",
+                    str(raw_root),
+                    "--output-root",
+                    str(output_root),
+                    "--report-root",
+                    str(report_root),
+                ],
+                cwd=Path.cwd(),
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            manifest = json.loads((report_root / "rule-audit" / "manifest.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(manifest["reference_version"], "cumulative")
+
+    def test_cli_uses_reference_root_for_candidates(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             raw_root = root / "raw" / "16.5" / "events"
             maps = raw_root / "maps"
             maps.mkdir(parents=True)
             (maps / "12.txt").write_text("Play_sfx_Env_Map12_Ambience\n", encoding="utf-8")
-            game_data_root = root / "game-data"
-            v1 = game_data_root / "global" / "default" / "v1"
-            v1.mkdir(parents=True)
-            (v1 / "maps.json").write_text('[{"id": 12, "name": "Howling Abyss"}]', encoding="utf-8")
-            (v1 / "champion-summary.json").write_text("[]", encoding="utf-8")
+            reference_root = root / "reference"
+            reference_root.joinpath("maps").mkdir(parents=True)
+            reference_root.joinpath("manifest.yaml").write_text(
+                "schema_version: 1\n"
+                "updated_at: '2026-06-15T00:00:00Z'\n"
+                "languages:\n"
+                "  - en_US\n"
+                "  - zh_CN\n"
+                "source_versions: {}\n"
+                "entities:\n"
+                "  champions: 0\n"
+                "  maps: 1\n",
+                encoding="utf-8",
+            )
+            reference_root.joinpath("maps", "HowlingAbyss.yaml").write_text(
+                "schema_version: 1\n"
+                "entity:\n"
+                "  type: map\n"
+                "  id: 12\n"
+                "  alias: HowlingAbyss\n"
+                "  names:\n"
+                "    en_US:\n"
+                "      - value: Howling Abyss\n"
+                "        sources:\n"
+                "          - source: game_data\n"
+                "            version: '16.5'\n",
+                encoding="utf-8",
+            )
             output_root = root / "out"
             report_root = root / "reports"
 
@@ -248,8 +346,8 @@ class DecompositionCliTests(unittest.TestCase):
                     str(output_root),
                     "--report-root",
                     str(report_root),
-                    "--game-data-root",
-                    str(game_data_root),
+                    "--reference-root",
+                    str(reference_root),
                 ],
                 cwd=Path.cwd(),
                 text=True,
@@ -262,51 +360,54 @@ class DecompositionCliTests(unittest.TestCase):
             self.assertEqual(record["semantic_slots"]["map"]["id"], 12)
             self.assertTrue(record["candidates"])
             manifest = json.loads((report_root / "rule-audit" / "manifest.json").read_text(encoding="utf-8"))
-            self.assertEqual(manifest["game_data_root"], game_data_root.as_posix())
+            self.assertEqual(manifest["reference_root"], reference_root.as_posix())
             self.assertEqual(manifest["reference_version"], "16.5")
 
-    def test_cli_uses_dragontail_spell_ids(self) -> None:
+    def test_cli_uses_reference_spell_ids(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             raw_root = root / "raw" / "16.5" / "events"
             champions = raw_root / "champions"
             champions.mkdir(parents=True)
             champions.joinpath("38.txt").write_text("Play_sfx_KassadinSkin05_NullLance_OnCast\n", encoding="utf-8")
-            game_data_root = root / "game-data"
-            v1 = game_data_root / "global" / "default" / "v1"
-            champion_root = v1 / "champions"
-            champion_root.mkdir(parents=True)
-            (v1 / "champion-summary.json").write_text(
-                json.dumps([{"id": 38, "alias": "Kassadin", "name": "Kassadin"}]),
+            reference_root = root / "reference"
+            reference_root.joinpath("champions").mkdir(parents=True)
+            reference_root.joinpath("manifest.yaml").write_text(
+                "schema_version: 1\n"
+                "updated_at: '2026-06-15T00:00:00Z'\n"
+                "languages:\n"
+                "  - en_US\n"
+                "source_versions: {}\n"
+                "entities:\n"
+                "  champions: 1\n"
+                "  maps: 0\n",
                 encoding="utf-8",
             )
-            (champion_root / "38.json").write_text(
-                json.dumps(
-                    {
-                        "id": 38,
-                        "alias": "Kassadin",
-                        "name": "Kassadin",
-                        "spells": [{"spellKey": "q", "name": "Null Sphere"}],
-                    }
-                ),
-                encoding="utf-8",
-            )
-            dragontail_root = root / "dragontail" / "16.12.1" / "data" / "en_US"
-            dragontail_champion_root = dragontail_root / "champion"
-            dragontail_champion_root.mkdir(parents=True)
-            (dragontail_champion_root / "Kassadin.json").write_text(
-                json.dumps(
-                    {
-                        "data": {
-                            "Kassadin": {
-                                "id": "Kassadin",
-                                "key": "38",
-                                "name": "Kassadin",
-                                "spells": [{"id": "NullLance", "name": "Null Sphere"}],
-                            }
-                        }
-                    }
-                ),
+            reference_root.joinpath("champions", "Kassadin.yaml").write_text(
+                "schema_version: 1\n"
+                "entity:\n"
+                "  type: champion\n"
+                "  id: 38\n"
+                "  alias: Kassadin\n"
+                "  names:\n"
+                "    en_US:\n"
+                "      - value: Kassadin\n"
+                "        sources:\n"
+                "          - source: game_data\n"
+                "            version: '16.5'\n"
+                "spells:\n"
+                "  - slot: Q\n"
+                "    ids:\n"
+                "      - value: NullLance\n"
+                "        sources:\n"
+                "          - source: data_dragon\n"
+                "            version: 16.5.1\n"
+                "    names:\n"
+                "      en_US:\n"
+                "        - value: Null Sphere\n"
+                "          sources:\n"
+                "            - source: game_data\n"
+                "              version: '16.5'\n",
                 encoding="utf-8",
             )
             output_root = root / "out"
@@ -324,10 +425,8 @@ class DecompositionCliTests(unittest.TestCase):
                     str(output_root),
                     "--report-root",
                     str(report_root),
-                    "--game-data-root",
-                    str(game_data_root),
-                    "--dragontail-root",
-                    str(dragontail_root),
+                    "--reference-root",
+                    str(reference_root),
                 ],
                 cwd=Path.cwd(),
                 text=True,
@@ -338,4 +437,4 @@ class DecompositionCliTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             record = json.loads((output_root / "champions.jsonl").read_text(encoding="utf-8").splitlines()[0])
             self.assertEqual(record["semantic_slots"]["spell_key"], "q")
-            self.assertEqual(record["semantic_slots"]["spell_match"]["match_source"], "dragontail_spell_id")
+            self.assertEqual(record["semantic_slots"]["spell_match"]["match_source"], "reference_spell_id")

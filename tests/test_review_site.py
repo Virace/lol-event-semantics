@@ -266,7 +266,7 @@ class ReviewSiteTests(unittest.TestCase):
             "confidence": confidence,
             "unknowns": unknowns or [],
             "candidates": candidates or [],
-            "source_paths": ["raw/16.5/events/champions/99.txt"],
+            "source_paths": ["raw/events/champions/99.txt"],
         }
 
 

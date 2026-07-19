@@ -41,7 +41,11 @@ def parse_args(argv: list[str] | None = None) -> BuildNormalizedArgs:
         help="Directory containing champions.jsonl and maps.jsonl from decompose_events.py.",
     )
     parser.add_argument("--output-root", type=Path, required=True, help="Output root, for example dist/normalized.")
-    parser.add_argument("--reference-version", required=True, help="Reference version label, for example 16.5.")
+    parser.add_argument(
+        "--reference-version",
+        default="cumulative",
+        help="Optional metadata label for the reference collection used by this run. Defaults to cumulative.",
+    )
     parser.add_argument(
         "--report-root",
         type=Path,

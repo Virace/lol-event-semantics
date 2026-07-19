@@ -10,8 +10,8 @@ from pathlib import Path
 
 from lol_event_semantics.decomposition_lexer import decompose_event_name
 from lol_event_semantics.decomposition_profiles import normalize_semantics
-from lol_event_semantics.decomposition_reference import ReferenceIndex, enrich_with_reference, normalize_dragontail_root
-from lol_event_semantics.decomposition_reports import write_jsonl, write_reports
+from lol_event_semantics.decomposition_reference import ReferenceIndex, enrich_with_reference
+from lol_event_semantics.decomposition_reports import write_jsonl, write_low_trust_rule_reports, write_reports
 from lol_event_semantics.match_audit import (
     MatchAuditRecorder,
     audit_context,
@@ -31,11 +31,11 @@ class DecomposeArgs:
 
     raw_root: Path
     version: str
+    reference_root: Path | None
     output_root: Path
     report_root: Path
     limit: int | None
-    game_data_root: Path | None
-    dragontail_root: Path | None
+    write_low_trust_rules: bool = False
     reference: ReferenceIndex | None = None
 
 
@@ -51,6 +51,8 @@ def main(argv: list[str] | None = None) -> int:
     write_jsonl(champion_records, args.output_root / "champions.jsonl")
     write_jsonl(map_records, args.output_root / "maps.jsonl")
     write_reports(records, args.report_root)
+    if args.write_low_trust_rules:
+        write_low_trust_rule_reports(records, args.report_root)
     write_rule_audit_reports(args, audit, len(records), argv)
 
     print(
@@ -65,22 +67,30 @@ def parse_args(argv: list[str] | None = None) -> DecomposeArgs:
 
     parser = argparse.ArgumentParser(description="Build event-name decomposition artifacts.")
     parser.add_argument("--raw-root", type=Path, required=True, help="Raw events root, for example raw/events.")
-    parser.add_argument("--version", required=True, help="Game version label, for example 16.5.")
+    parser.add_argument(
+        "--version",
+        default="cumulative",
+        help="Optional metadata label for this decomposition run. Defaults to cumulative.",
+    )
+    parser.add_argument("--reference-root", type=Path, help="Internal reference collection root, for example reference.")
     parser.add_argument("--output-root", type=Path, required=True, help="Output directory for JSONL artifacts.")
     parser.add_argument("--report-root", type=Path, required=True, help="Output directory for reports.")
     parser.add_argument("--limit", type=int, help="Optional maximum number of unique event names.")
-    parser.add_argument("--game-data-root", type=Path, help="Optional extracted rcp-be-lol-game-data root.")
-    parser.add_argument("--dragontail-root", type=Path, help="Optional dragontail data root for official champion spell ids.")
+    parser.add_argument(
+        "--write-low-trust-rules",
+        action="store_true",
+        help="Write reviewed low-trust rule hits as low-trust-rules.{md,csv,jsonl}.",
+    )
     namespace = parser.parse_args(argv)
 
     return DecomposeArgs(
         raw_root=namespace.raw_root,
         version=namespace.version,
+        reference_root=namespace.reference_root,
         output_root=namespace.output_root,
         report_root=namespace.report_root,
         limit=namespace.limit,
-        game_data_root=namespace.game_data_root,
-        dragontail_root=namespace.dragontail_root,
+        write_low_trust_rules=namespace.write_low_trust_rules,
     )
 
 
@@ -89,13 +99,10 @@ def build_records(args: DecomposeArgs, audit: MatchAuditRecorder | None = None):
 
     grouped: dict[str, list[str]] = {}
     reference = (
-        ReferenceIndex.from_game_data_root(args.game_data_root, dragontail_root=args.dragontail_root)
-        if args.game_data_root is not None
+        ReferenceIndex.from_reference_collection(args.reference_root)
+        if args.reference_root is not None
         else ReferenceIndex.builtins()
     )
-
-    if args.game_data_root is None and args.dragontail_root is not None:
-        reference.load_dragontail(normalize_dragontail_root(args.dragontail_root))
 
     args.reference = reference
 
@@ -149,8 +156,7 @@ def write_rule_audit_reports(
         input_scope=input_scope(args),
         raw_count=raw_count,
         reference_version=args.version,
-        game_data_root=args.game_data_root,
-        dragontail_root=args.dragontail_root,
+        reference_root=args.reference_root,
         command=command_summary(argv),
     )
 

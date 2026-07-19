@@ -55,6 +55,16 @@ def write_reports(records: list[EventDecompositionRecord], report_root: Path) ->
     write_candidate_jsonl(candidate_rows, report_root / "candidate-review.jsonl")
 
 
+def write_low_trust_rule_reports(records: list[EventDecompositionRecord], report_root: Path) -> None:
+    """输出低信任规则命中表。"""
+
+    report_root.mkdir(parents=True, exist_ok=True)
+    rows = collect_low_trust_rule_rows(records)
+    write_low_trust_rule_markdown(rows, report_root / "low-trust-rules.md")
+    write_low_trust_rule_csv(rows, report_root / "low-trust-rules.csv")
+    write_low_trust_rule_jsonl(rows, report_root / "low-trust-rules.jsonl")
+
+
 def write_profile_summary(records: list[EventDecompositionRecord], output_path: Path) -> None:
     """输出 profile 计数报告。"""
 
@@ -187,6 +197,43 @@ def write_candidate_jsonl(rows: list[dict[str, str]], output_path: Path) -> None
             file.write("\n")
 
 
+def write_low_trust_rule_markdown(rows: list[dict[str, str]], output_path: Path) -> None:
+    """输出低信任规则命中 Markdown。"""
+
+    fields = ["raw_event_name", "rule_id", "category", "trust", "confidence", "label_zh", "note"]
+    lines = [
+        "# Low Trust Rule Hits",
+        "",
+        "| raw_event_name | rule_id | category | trust | confidence | label_zh | note |",
+        "| --- | --- | --- | --- | --- | --- | --- |",
+    ]
+
+    for row in rows:
+        lines.append("| " + " | ".join(markdown_cell(row[field]) for field in fields) + " |")
+
+    output_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def write_low_trust_rule_csv(rows: list[dict[str, str]], output_path: Path) -> None:
+    """输出低信任规则命中 CSV。"""
+
+    fields = ["raw_event_name", "rule_id", "category", "trust", "confidence", "label_zh", "note", "source_path"]
+
+    with output_path.open("w", encoding="utf-8-sig", newline="") as file:
+        writer = csv.DictWriter(file, fieldnames=fields)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def write_low_trust_rule_jsonl(rows: list[dict[str, str]], output_path: Path) -> None:
+    """输出低信任规则命中 JSONL。"""
+
+    with output_path.open("w", encoding="utf-8", newline="\n") as file:
+        for row in rows:
+            file.write(json.dumps(row, ensure_ascii=False, sort_keys=True))
+            file.write("\n")
+
+
 def collect_candidate_rows(records: list[EventDecompositionRecord]) -> list[dict[str, str]]:
     """展开所有整句级候选解释。"""
 
@@ -206,6 +253,33 @@ def collect_candidate_rows(records: list[EventDecompositionRecord]) -> list[dict
                     "candidate_json": json.dumps(candidate, ensure_ascii=False, sort_keys=True),
                 }
             )
+
+    return rows
+
+
+def collect_low_trust_rule_rows(records: list[EventDecompositionRecord]) -> list[dict[str, str]]:
+    """展开低信任规则命中记录。"""
+
+    rows: list[dict[str, str]] = []
+
+    for record in records:
+        rule = record.semantic_slots.get("low_trust_rule")
+
+        if not isinstance(rule, dict):
+            continue
+
+        rows.append(
+            {
+                "raw_event_name": record.raw_event_name,
+                "rule_id": str(rule.get("rule_id") or ""),
+                "category": str(rule.get("category") or ""),
+                "trust": str(rule.get("trust") or ""),
+                "confidence": str(rule.get("confidence") or ""),
+                "label_zh": str(rule.get("label_zh") or ""),
+                "note": str(rule.get("note") or ""),
+                "source_path": str(rule.get("source_path") or ""),
+            }
+        )
 
     return rows
 
