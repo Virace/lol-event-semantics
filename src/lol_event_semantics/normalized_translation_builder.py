@@ -796,6 +796,10 @@ def build_shop_voice_event(
     miss 时不建 frame 维持 legacy——防错优先，严禁英文 fallback 进文案。
     店主内部代号（Viking/Hermit 等）无官方中文名，无损留 semantic.slots
     不进 arguments（zh label 技术 token 会被 validation 判 error）。
+    前缀（2026-07-19 审计修正）：map12 现为三图轮换的 "Random Map"（嚎哭
+    深渊/屠夫之桥/灵魂莲华主题共用），「嚎哭深渊」对后两者构成误导，改用
+    模式级前缀「极地大乱斗」（queue 450 官方名，对三套主题店主均成立）；
+    map id 无损留 semantic.slots.map。
 
     Args:
         record: 拆解记录。
@@ -839,11 +843,23 @@ def build_shop_voice_event(
 
     map_slot = slots.get("map")
     map_id = map_slot.get("id") if isinstance(map_slot, dict) else None
+    mode = None
+    if map_id == 12:
+        mode = argument_to_dict(
+            TranslationArgument(
+                role="mode",
+                labels={"zh_CN": "极地大乱斗", "en_US": "ARAM"},
+                confidence="high",
+                provenance={"source": "semantic_slots.map", "map_id": map_id, "queue": 450},
+                key="aram",
+                omit_when_context_known=("mode",),
+            )
+        )
     return build_frame(
         record,
         "shop_voice_event",
         [
-            map_argument(map_id) if isinstance(map_id, int) else None,
+            mode,
             action,
             subject,
         ],
@@ -1018,10 +1034,10 @@ def companion_argument(
     """构建同行英雄 argument（批次6c，With{Champion}[Near] 前置条件）。
 
     precondition.kind=nearby_champion 且 counterpart 经 champion_labels 解析
-    出中文名才建（宁缺毋错，表外不放英文进 zh 文案）。措辞「{名}在场」沿
-    interaction move 家族既有先例，不把 proximity 推断值写进文案（
-    WithXayahDance3D 无 Near 尾缀也被记为 near，度不可背书；无损留
-    provenance）。
+    出中文名才建（宁缺毋错，表外不放英文进 zh 文案）。措辞「{名}在附近」
+    （2026-07-19 审计修正：机制为距离触发，官方 wiki 按 nearby/far away
+    分类；「在场」易误读为"参与本局"。WithXayah 无 Near 尾缀的合舞机制
+    同样要求靠近，统一用「在附近」；proximity 原值无损留 provenance）。
 
     Args:
         record: 拆解记录。
@@ -1049,7 +1065,7 @@ def companion_argument(
     return argument_to_dict(
         TranslationArgument(
             role="companion",
-            labels={"zh_CN": f"{zh}在场", "en_US": f"{en} nearby"},
+            labels={"zh_CN": f"{zh}在附近", "en_US": f"{en} nearby"},
             confidence="high",
             provenance={
                 "source": "semantic_slots.precondition",

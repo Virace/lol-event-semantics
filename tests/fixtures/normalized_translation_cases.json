@@ -459,9 +459,9 @@
     "raw_event_name": "Play_sfx_EvelynnSkin08_Base_dance",
     "expected_frame_type": "skin_action_state",
     "required_roles": ["champion", "skin", "action", "phase"],
-    "zh_cn_default": "伊芙琳 糖果大战 舞蹈音效",
-    "zh_cn_main": "舞蹈音效",
-    "notes": "批次6a 主代理裁决：无尾段纯动作合成 key=overall 整段音效相位（词表 overall=音效），不硬造 state_activate 时机；皮肤名对照 reference/skins/Evelynn/Skin08（糖果大战 伊芙琳）核验。"
+    "zh_cn_default": "伊芙琳 糖果大战 舞蹈整段音效",
+    "zh_cn_main": "舞蹈整段音效",
+    "notes": "批次6a 主代理裁决：无尾段纯动作合成 key=overall 整段音效相位（词表 overall=整段音效，2026-07-19 审计后保留与分段相位的层级区分），不硬造 state_activate 时机；皮肤名对照 reference/skins/Evelynn/Skin08（糖果大战 伊芙琳）核验。"
   },
   {
     "raw_event_name": "Play_sfx_Azir_Base_Dance3D_leadin",
@@ -539,48 +539,48 @@
     "raw_event_name": "Play_vo_Lucian_KillChampion3DWithSennaNear",
     "expected_frame_type": "kill_or_destroy_event",
     "required_roles": ["champion", "trigger"],
-    "zh_cn_default": "卢锡安 击杀语音（赛娜在场）",
-    "zh_cn_main": "击杀语音（赛娜在场）",
-    "notes": "批次6c 同行英雄条件：companion 措辞「{名}在场」沿 interaction move 家族既有先例，不把 proximity 推断值写进文案；中文名经 champion_labels 门禁（表外不建 companion）。"
+    "zh_cn_default": "卢锡安 击杀语音（赛娜在附近）",
+    "zh_cn_main": "击杀语音（赛娜在附近）",
+    "notes": "批次6c 同行英雄条件：companion 措辞「{名}在附近」（2026-07-19 审计修正：机制为距离触发，官方 wiki 按 nearby/far away 分类，「在场」易误读为参与本局）；中文名经 champion_labels 门禁（表外不建 companion）。"
   },
   {
     "raw_event_name": "Play_vo_Xayah_WithRakanDance3D",
     "expected_frame_type": "voice_event",
     "required_roles": ["champion", "action"],
-    "zh_cn_default": "霞 跳舞语音（洛在场）",
-    "zh_cn_main": "跳舞语音（洛在场）",
-    "notes": "批次6c：voice_event 接 companion（双人舞条件）；Rakan 官方中文名=洛（勿写「拉坎」，reference 核验）；WithXayahDance3D 无 Near 尾缀故措辞不断言距离。"
+    "zh_cn_default": "霞 跳舞语音（洛在附近）",
+    "zh_cn_main": "跳舞语音（洛在附近）",
+    "notes": "批次6c：voice_event 接 companion（双人舞条件，合舞机制同样要求靠近故同用「在附近」）；Rakan 官方中文名=洛（勿写「拉坎」，reference 核验）；WithXayahDance3D 无 Near 尾缀故措辞不断言距离。"
   },
   {
     "raw_event_name": "Play_vo_Shopkeeper_Map12_SRU_StorekeeperSouth_Purchase2DSpiritVisage",
     "expected_frame_type": "shop_voice_event",
-    "required_roles": ["map", "shop_action", "shop_subject"],
-    "zh_cn_default": "嚎哭深渊 商店老板购买语音（振奋盔甲）",
+    "required_roles": ["mode", "shop_action", "shop_subject"],
+    "zh_cn_default": "极地大乱斗 商店老板购买语音（振奋盔甲）",
     "zh_cn_main": "商店老板购买语音（振奋盔甲）",
     "notes": "批次6d 主代理裁决：商店老板语音 frame；装备名经 Data Dragon 16.14.1 en/zh 同 item id(3065) 成对核验（Spirit Visage=振奋盔甲）；店主内部代号（SRU_StorekeeperSouth）无官方中文名不进文案，无损留 semantic.slots.shop_persona。"
   },
   {
     "raw_event_name": "Play_vo_Shopkeeper_Map12_HA_AP_Viking_Purchase2DFrozenMallet",
     "expected_frame_type": "shop_voice_event",
-    "required_roles": ["map", "shop_action", "shop_subject"],
-    "zh_cn_default": "嚎哭深渊 商店老板购买语音（冰霜之锤）",
+    "required_roles": ["mode", "shop_action", "shop_subject"],
+    "zh_cn_default": "极地大乱斗 商店老板购买语音（冰霜之锤）",
     "zh_cn_main": "商店老板购买语音（冰霜之锤）",
     "notes": "批次6d：已删除老装备经历史版本 Data Dragon 回溯核验（FrozenMallet=8.24.1 id 3022 冰霜之锤；FrostQueensClaim 同理回溯至 7.24.2）。"
   },
   {
     "raw_event_name": "Play_vo_Shopkeeper_Map12_SRU_StorekeeperSouth_Open2DZiggs",
     "expected_frame_type": "shop_voice_event",
-    "required_roles": ["map", "shop_action", "shop_subject"],
-    "zh_cn_default": "嚎哭深渊 商店老板开店语音（吉格斯）",
-    "zh_cn_main": "商店老板开店语音（吉格斯）",
+    "required_roles": ["mode", "shop_action", "shop_subject"],
+    "zh_cn_default": "极地大乱斗 商店老板进店语音（吉格斯）",
+    "zh_cn_main": "商店老板进店语音（吉格斯）",
     "notes": "批次6d：对象解析链英雄档（champion_labels）；地区阵营（Zaun/SpiritBlossom）复用 counterpart 词表、皮肤 token（OlafSkin03）走皮肤全名链，另有单测锁定。"
   },
   {
     "raw_event_name": "Play_vo_Shopkeeper_Map12_HA_AP_Hermit_Close3DNoPurchase",
     "expected_frame_type": "shop_voice_event",
-    "required_roles": ["map", "shop_action", "shop_subject"],
-    "zh_cn_default": "嚎哭深渊 商店老板关店语音（未购买）",
-    "zh_cn_main": "商店老板关店语音（未购买）",
+    "required_roles": ["mode", "shop_action", "shop_subject"],
+    "zh_cn_default": "极地大乱斗 商店老板离店语音（未购买）",
+    "zh_cn_main": "商店老板离店语音（未购买）",
     "notes": "批次6d：条件触发按 cue 内部名描述性转写（同 phase 词口径）；CountSeven/Count10/CountTen 语义未证实不入表维持 legacy 有单测锁定；General 视为无特定对象合法缺 subject。"
   },
   {
@@ -603,8 +603,8 @@
     "raw_event_name": "Play_vo_Announcer_Global_Pyke_OnAce",
     "expected_frame_type": "announcer_event",
     "required_roles": ["event"],
-    "zh_cn_default": "派克语音包 团灭播报",
+    "zh_cn_default": "派克播报员 团灭播报",
     "zh_cn_main": "团灭播报",
-    "notes": "批次6e mode role：语音包/赛事包名前缀经 announcer.mode 词表进 default 档（main 保持短文案）；Pyke=派克 为 reference 官方名+「语音包」描述性后缀；Worlds23/NexusBlitz/Brawl 沿批次5a 核验词；RhaastKayn/Maverick 等未核验包名不出 mode argument 有测试锁。"
+    "notes": "批次6e mode role：语音包/赛事包名前缀经 announcer.mode 词表进 default 档（main 保持短文案）；Pyke=派克 为 reference 官方名+「播报员」称谓（2026-07-19 审计：内容性质是播报员，「语音包」易与英雄语音包混淆）；Worlds23/NexusBlitz/Brawl 沿批次5a 核验词；RhaastKayn/Maverick 等未核验包名不出 mode argument 有测试锁。"
   }
 ]

@@ -43,9 +43,10 @@ phase:
   # 这些 key（门禁清单见 normalized_translation_builder.MEDIA_BASE_TAIL_PHASES）。
   windup: {zh_CN: 起手, en_US: wind up}
   loop: {zh_CN: 循环, en_US: loop}
-  # 无尾段整段音效（批次6a）：key=overall 断言「整段、无特定相位段」，展示词
-  # 取「音效」使中文自然（舞蹈音效）；不硬造 state_activate 等时机语义。
-  overall: {zh_CN: 音效, en_US: sfx}
+  # 无尾段整段音效（批次6a）：key=overall 断言「整段、无特定相位段」；
+  # 不硬造 state_activate 等时机语义。2026-07-19 审计后由「音效」改
+  # 「整段音效」——保留 overall 与分段相位（引入/循环/收尾）的层级区分。
+  overall: {zh_CN: 整段音效, en_US: full sfx}
 
 action:
   # action argument：皮肤动作/招式展示词；key 为小写 action 原值。
@@ -177,12 +178,17 @@ shop:
   # counterpart 词表，均不入此表）。条件词是 cue 内部触发条件的描述性
   # 转写（引擎内部名，无官方中文对照，同 phase 词口径）；装备名须
   # Data Dragon zh_CN 一手核验后才入表，宁缺毋错。
+  # 2026-07-19 审计修正（官方 wiki 语音小节标题逐字对照）：Open=玩家进店
+  # 时店主招呼（Upon Entering the Shop）故「进店」非「开店」；Close=离店
+  # 道别（Upon Leaving the Shop）故「离店」非「关店」；Ambient=玩家在店旁
+  # 闲置时店主独白（While Idling Near the Shop）故「闲聊」。FrozenMallet
+  # 为已从常规商店移除的老装备（现以 id 4014 存在于限定模式）。
   action:
-    open: {zh_CN: 开店, en_US: shop open}
+    open: {zh_CN: 进店, en_US: shop enter}
     purchase: {zh_CN: 购买, en_US: purchase}
-    close: {zh_CN: 关店, en_US: shop close}
+    close: {zh_CN: 离店, en_US: shop leave}
     browsing: {zh_CN: 浏览, en_US: browsing}
-    ambient: {zh_CN: 环境, en_US: ambient}
+    ambient: {zh_CN: 闲聊, en_US: idle chatter}
   subject:
     # 条件触发（描述性转写；CountSeven/Count10/CountTen 语义未证实不入表）
     First: 首次
@@ -261,7 +267,7 @@ announcer:
     Worlds23: 2023全球总决赛
     NexusBlitz: 极限闪击
     Brawl: 神木之门
-    Pyke: 派克语音包
+    Pyke: 派克播报员
   event:
     Ace: 团灭
     FirstBlood: 一血

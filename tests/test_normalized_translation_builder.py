@@ -1074,7 +1074,7 @@ class Batch6eAnnouncerSubjectTests(unittest.TestCase):
 
         cases = [
             ("Play_vo_Announcer_Global_Female1Worlds23_OnAce", "Worlds23", "2023全球总决赛 团灭播报"),
-            ("Play_vo_Announcer_Global_Pyke_OnAce", "Pyke", "派克语音包 团灭播报"),
+            ("Play_vo_Announcer_Global_Pyke_OnAce", "Pyke", "派克播报员 团灭播报"),
         ]
         for raw, mode_key, detail in cases:
             with self.subTest(raw=raw):
@@ -1251,7 +1251,7 @@ class MediaBaseActionStateTests(unittest.TestCase):
                 self.assertEqual(args["action"]["key"], action_key)
                 self.assertEqual(args["action"]["labels"]["zh_CN"], action_zh)
                 self.assertEqual(args["phase"]["key"], "overall")
-                self.assertEqual(args["phase"]["labels"]["zh_CN"], "音效")
+                self.assertEqual(args["phase"]["labels"]["zh_CN"], "整段音效")
                 self.assertIsNone(args["phase"].get("token"))
 
     def test_non_phase_tails_build_no_frame(self) -> None:
@@ -1310,12 +1310,12 @@ class Batch6dShopVoiceTests(unittest.TestCase):
         """对象按英雄→皮肤→地区阵营→装备/条件链解析，文案带全角括号。"""
 
         cases = [
-            ("Play_vo_Shopkeeper_Map12_SRU_StorekeeperSouth_Open2DZiggs", "champion", "商店老板开店语音（吉格斯）"),
-            ("Play_vo_Shopkeeper_Map12_HA_AP_Viking_Open2DOlafSkin03", "skin", "商店老板开店语音（铁哥们儿 奥拉夫）"),
-            ("Play_vo_Shopkeeper_Map12_HA_AP_ShpSouth_Open2DZaun", "faction_or_region", "商店老板开店语音（祖安）"),
+            ("Play_vo_Shopkeeper_Map12_SRU_StorekeeperSouth_Open2DZiggs", "champion", "商店老板进店语音（吉格斯）"),
+            ("Play_vo_Shopkeeper_Map12_HA_AP_Viking_Open2DOlafSkin03", "skin", "商店老板进店语音（铁哥们儿 奥拉夫）"),
+            ("Play_vo_Shopkeeper_Map12_HA_AP_ShpSouth_Open2DZaun", "faction_or_region", "商店老板进店语音（祖安）"),
             ("Play_vo_Shopkeeper_Map12_SRU_StorekeeperSouth_Purchase2DSpiritVisage", "shop_vocab", "商店老板购买语音（振奋盔甲）"),
             ("Play_vo_Shopkeeper_Map12_HA_AP_Viking_Purchase2DFrozenMallet", "shop_vocab", "商店老板购买语音（冰霜之锤）"),
-            ("Play_vo_Shopkeeper_Map12_HA_AP_Hermit_Close3DNoPurchase", "shop_vocab", "商店老板关店语音（未购买）"),
+            ("Play_vo_Shopkeeper_Map12_HA_AP_Hermit_Close3DNoPurchase", "shop_vocab", "商店老板离店语音（未购买）"),
         ]
         for raw, subject_kind, short in cases:
             with self.subTest(raw=raw):
@@ -1332,8 +1332,8 @@ class Batch6dShopVoiceTests(unittest.TestCase):
         """General 与裸动作形态合法缺 subject（浏览/环境/关店整体语音）。"""
 
         for raw, short in [
-            ("Play_vo_Shopkeeper_Map12_Bloom_TwilightGhost_Close3DGeneral", "商店老板关店语音"),
-            ("Play_vo_Shopkeeper_Map12_HA_AP_Viking_Ambient3DGeneral", "商店老板环境语音"),
+            ("Play_vo_Shopkeeper_Map12_Bloom_TwilightGhost_Close3DGeneral", "商店老板离店语音"),
+            ("Play_vo_Shopkeeper_Map12_HA_AP_Viking_Ambient3DGeneral", "商店老板闲聊语音"),
             ("Play_vo_Shopkeeper_Map12_BW_AP_Bubbs_Purchase", "商店老板购买语音"),
         ]:
             with self.subTest(raw=raw):
@@ -1345,13 +1345,13 @@ class Batch6dShopVoiceTests(unittest.TestCase):
                 self.assertEqual(display["zh_cn_short"], short)
 
     def test_default_mode_prefixes_map_name(self) -> None:
-        """default 档带地图前缀（嚎哭深渊），main 档不带。"""
+        """default 档带模式前缀（极地大乱斗），main 档不带。"""
 
         raw = "Play_vo_Shopkeeper_Map12_SRU_StorekeeperSouth_Open2DZiggs"
         translation = build_translation(enriched_record(raw), reference_translation_context())
         assert translation is not None
         display = build_compat_display(translation, raw_event_name=raw)
-        self.assertEqual(display["zh_cn_detail"], "嚎哭深渊 商店老板开店语音（吉格斯）")
+        self.assertEqual(display["zh_cn_detail"], "极地大乱斗 商店老板进店语音（吉格斯）")
 
     def test_champion_alias_drift_forms_resolve(self) -> None:
         """英雄 token 三类形态漂移经别名兜底解析（仅 shop 链）。"""
@@ -1436,10 +1436,10 @@ class Batch6cWithCompanionTests(unittest.TestCase):
         """kill/interaction/voice frame 追加同行英雄括号条件（在场措辞）。"""
 
         cases = [
-            ("Play_vo_Lucian_KillChampion3DWithSennaNear", "kill_or_destroy_event", "击杀语音（赛娜在场）"),
-            ("Play_vo_Lucian_FirstEncounter3DThreshWithSennaNear", "champion_interaction_cue", "初遇 锤石 语音（赛娜在场）"),
-            ("Play_vo_SennaSkin16_Move2DWithLucianNear", "voice_event", "移动语音（卢锡安在场）"),
-            ("Play_vo_Xayah_WithRakanDance3D", "voice_event", "跳舞语音（洛在场）"),
+            ("Play_vo_Lucian_KillChampion3DWithSennaNear", "kill_or_destroy_event", "击杀语音（赛娜在附近）"),
+            ("Play_vo_Lucian_FirstEncounter3DThreshWithSennaNear", "champion_interaction_cue", "初遇 锤石 语音（赛娜在附近）"),
+            ("Play_vo_SennaSkin16_Move2DWithLucianNear", "voice_event", "移动语音（卢锡安在附近）"),
+            ("Play_vo_Xayah_WithRakanDance3D", "voice_event", "跳舞语音（洛在附近）"),
         ]
         for raw, frame_type, short in cases:
             with self.subTest(raw=raw):
@@ -1448,7 +1448,7 @@ class Batch6cWithCompanionTests(unittest.TestCase):
                 assert translation is not None
                 self.assertEqual(translation["frame_type"], frame_type)
                 args = translation["arguments"]
-                self.assertIn("在场", args["companion"]["labels"]["zh_CN"])
+                self.assertIn("在附近", args["companion"]["labels"]["zh_CN"])
                 self.assertEqual(args["companion"]["provenance"]["source"], "semantic_slots.precondition")
                 display = build_compat_display(translation, raw_event_name=raw)
                 self.assertEqual(display["zh_cn_short"], short)

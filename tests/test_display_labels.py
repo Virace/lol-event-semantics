@@ -140,14 +140,14 @@ class DefaultDisplayLabelsTests(unittest.TestCase):
         labels = load_display_labels(REPO_ROOT / DEFAULT_DISPLAY_LABELS_PATH)
         self.assertEqual(labels.phase["windup"], ("起手", "wind up"))
         self.assertEqual(labels.phase["loop"], ("循环", "loop"))
-        self.assertEqual(labels.phase["overall"], ("音效", "sfx"))
+        self.assertEqual(labels.phase["overall"], ("整段音效", "full sfx"))
 
     def test_batch6d_shop_section_present(self) -> None:
         """批次6d 商店词表：动作词 5 条；subject 含条件转写与 Data Dragon 核验装备名。"""
 
         labels = load_display_labels(REPO_ROOT / DEFAULT_DISPLAY_LABELS_PATH)
         self.assertEqual(len(labels.shop_action), 5)
-        self.assertEqual(labels.shop_action["open"], ("开店", "shop open"))
+        self.assertEqual(labels.shop_action["open"], ("进店", "shop enter"))
         self.assertEqual(labels.shop_action["purchase"], ("购买", "purchase"))
         self.assertEqual(labels.shop_subject["SpiritVisage"], "振奋盔甲")
         self.assertEqual(labels.shop_subject["FrostQueensClaim"], "冰霜女皇的旨令")

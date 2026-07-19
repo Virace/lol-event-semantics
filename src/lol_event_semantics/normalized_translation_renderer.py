@@ -149,16 +149,16 @@ TEMPLATES: dict[str, dict[str, dict[str, tuple[str, ...]]]] = {
     },
     "shop_voice_event": {
         "zh_CN": {
-            "default": ("map", "shop_action", "shop_subject"),
+            "default": ("mode", "shop_action", "shop_subject"),
             "main": ("shop_action", "shop_subject"),
-            "debug": ("map", "shop_action", "shop_subject"),
-            "audit": ("map", "shop_action", "shop_subject"),
+            "debug": ("mode", "shop_action", "shop_subject"),
+            "audit": ("mode", "shop_action", "shop_subject"),
         },
         "en_US": {
-            "default": ("map", "shop_action", "shop_subject"),
+            "default": ("mode", "shop_action", "shop_subject"),
             "main": ("shop_action", "shop_subject"),
-            "debug": ("map", "shop_action", "shop_subject"),
-            "audit": ("map", "shop_action", "shop_subject"),
+            "debug": ("mode", "shop_action", "shop_subject"),
+            "audit": ("mode", "shop_action", "shop_subject"),
         },
     },
     "announcer_event": {
@@ -561,8 +561,8 @@ def join_shop_voice_zh_cn(role_texts: list[tuple[str, str]]) -> str:
     """合并商店老板语音 frame 的中文文案（批次6d 措辞表）。
 
     核心「商店老板{action}语音」；subject 用全角括号后缀（「商店老板购买
-    语音（振奋盔甲）」）；map 作前缀上下文空格分隔，main 模式模板已不含
-    map。店主内部代号不进文案（无官方中文名）。
+    语音（振奋盔甲）」）；mode（极地大乱斗）作前缀上下文空格分隔，main
+    模式模板已不含 mode。店主内部代号不进文案（无官方中文名）。
 
     Args:
         role_texts: ``(role, text)`` 列表。
@@ -579,9 +579,9 @@ def join_shop_voice_zh_cn(role_texts: list[tuple[str, str]]) -> str:
         core = f"{core}（{subject_text}）"
 
     core = f"{core}{values.get('playback', '')}"
-    map_text = values.get("map", "")
-    if map_text:
-        return f"{map_text} {core}"
+    mode_text = values.get("mode", "")
+    if mode_text:
+        return f"{mode_text} {core}"
 
     return core
 
