@@ -79,16 +79,19 @@ maps:
   # id 不得瞎猜，由 loader 回落到 reference 英文真名，再无则保留 Map{id}。
   # key 为 reference/maps 中的 entity.id；英文名不在此维护，取自
   # reference/maps/*.yaml 的 entity.names.en_US[0].value。
-  11: 召唤师峡谷
-  # 2026-07-19 审计+用户确认:map12 现为三图轮换(嚎哭深渊/屠夫之桥/灵魂
-  # 莲华主题共用,客户端英文名 Random Map),按模式名取「极地大乱斗」,与
-  # shop 域前缀同口径;「嚎哭深渊」作为地图名保留在 counterpart 词表
+  # 词条与国服客户端 maps.json(CommunityDragon zh_cn 镜像)逐 id 对照
+  # (2026-07-19 终审)。map12 为三图轮换容器(嚎哭深渊/屠夫之桥/灵魂莲华
+  # 主题共用),官方中文名即「随机地图」——地图域用地图名,模式名「极地
+  # 大乱斗」只用于 shop 域 mode role;「嚎哭深渊」保留在 counterpart 词表
   # (Howling Abyss token 语义不变)。
-  12: 极地大乱斗
+  11: 召唤师峡谷
+  12: 随机地图
   21: 极限闪击
   30: 斗魂竞技场
   22: 云顶之弈
-  0: 通用
+  33: 无尽狂潮
+  35: 班德尔之森
+  0: 常规
 
 counterpart:
   # counterpart argument 的官方译名词条（T3.2 第一批，主代理裁决，逐字使用）。
