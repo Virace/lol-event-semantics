@@ -175,6 +175,10 @@ class DefaultDisplayLabelsTests(unittest.TestCase):
         self.assertEqual(labels.announcer_subject["You"], "你")
         self.assertEqual(labels.announcer_subject["HeroYourTeam"], "友方英雄")
         self.assertEqual(labels.announcer_subject["HeroEnemyTeam"], "敌方英雄")
+        # 批次6e mode role：语音包/赛事包名前缀词（RhaastKayn 等未核验不入表）。
+        self.assertEqual(labels.announcer_mode["Worlds23"], "2023全球总决赛")
+        self.assertEqual(labels.announcer_mode["NexusBlitz"], "极限闪击")
+        self.assertNotIn("RhaastKayn", labels.announcer_mode)
 
     def test_get_display_labels_is_cached_singleton(self) -> None:
         """默认词表应进程内缓存，两次调用返回同一对象。"""

@@ -355,9 +355,9 @@
     "raw_event_name": "Play_vo_Announcer_Female1_NexusBlitz_Core_OnChampionPentaKillYourTeam",
     "expected_frame_type": "announcer_event",
     "required_roles": ["event", "team"],
-    "zh_cn_default": "己方五杀播报",
+    "zh_cn_default": "极限闪击 己方五杀播报",
     "zh_cn_main": "己方五杀播报",
-    "notes": "批次5a 黄金样例：多段 cue_path 取末段，剥 On 时机前缀；NexusBlitz/Core 分组前缀无损留在 slots.cue_path。"
+    "notes": "批次5a 黄金样例：多段 cue_path 取末段，剥 On 时机前缀；NexusBlitz/Core 分组前缀无损留在 slots.cue_path。（批次6e mode role 裁决：default 档追加已核验包名前缀，main 不变）"
   },
   {
     "raw_event_name": "Play_vo_Announcer_Maverick_DoubleKillEnemyTeam",
@@ -371,17 +371,17 @@
     "raw_event_name": "Play_vo_Announcer_Female1_NexusBlitz_Core_OnKillingSpreeSet6YourTeam",
     "expected_frame_type": "announcer_event",
     "required_roles": ["event", "team"],
-    "zh_cn_default": "己方超神播报",
+    "zh_cn_default": "极限闪击 己方超神播报",
     "zh_cn_main": "己方超神播报",
-    "notes": "批次5a 词表第二批黄金样例：KillingSpreeSet6 按客户端字符串表 onkillingspreeset6=「已经超神啦!」映射为超神（Set1-6 档位各有其词，Godlike=接近神勿混淆）。"
+    "notes": "批次5a 词表第二批黄金样例：KillingSpreeSet6 按客户端字符串表 onkillingspreeset6=「已经超神啦!」映射为超神（Set1-6 档位各有其词，Godlike=接近神勿混淆）。（批次6e mode role 裁决：default 档追加已核验包名前缀，main 不变）"
   },
   {
     "raw_event_name": "Play_vo_Announcer_Global_Female1Worlds23_OnDampenerDieEnemyTeam",
     "expected_frame_type": "announcer_event",
     "required_roles": ["event", "team"],
-    "zh_cn_default": "敌方召唤水晶被摧毁播报",
+    "zh_cn_default": "2023全球总决赛 敌方召唤水晶被摧毁播报",
     "zh_cn_main": "敌方召唤水晶被摧毁播报",
-    "notes": "批次5a 词表第二批黄金样例：Dampener 经客户端同键中英互证为 Inhibitor（召唤水晶）引擎旧名。"
+    "notes": "批次5a 词表第二批黄金样例：Dampener 经客户端同键中英互证为 Inhibitor（召唤水晶）引擎旧名。（批次6e mode role 裁决：default 档追加已核验包名前缀，main 不变）"
   },
   {
     "raw_event_name": "Play_vo_Announcer_Female1_TurretLostFirstBloodYourTeam",
@@ -598,5 +598,13 @@
     "zh_cn_default": "敌方英雄超神播报",
     "zh_cn_main": "敌方英雄超神播报",
     "notes": "批次6e：Hero=非本机英雄+队伍尾缀=主体所属队伍（敌方英雄 为字符串表 _enemy_you 文案实际连用词）；Shutdown 三态主体方向未证实、KillChampion 复合形态未逐条核对，均维持 legacy 有测试锁。"
+  },
+  {
+    "raw_event_name": "Play_vo_Announcer_Global_Pyke_OnAce",
+    "expected_frame_type": "announcer_event",
+    "required_roles": ["event"],
+    "zh_cn_default": "派克语音包 团灭播报",
+    "zh_cn_main": "团灭播报",
+    "notes": "批次6e mode role：语音包/赛事包名前缀经 announcer.mode 词表进 default 档（main 保持短文案）；Pyke=派克 为 reference 官方名+「语音包」描述性后缀；Worlds23/NexusBlitz/Brawl 沿批次5a 核验词；RhaastKayn/Maverick 等未核验包名不出 mode argument 有测试锁。"
   }
 ]

@@ -1705,7 +1705,55 @@ def build_announcer_event(
             )
         )
 
-    return build_frame(record, "announcer_event", [event_argument, team_argument, subject_argument])
+    return build_frame(
+        record,
+        "announcer_event",
+        [announcer_mode_argument(record.semantic_slots, active_labels), event_argument, team_argument, subject_argument],
+    )
+
+
+ANNOUNCER_PERSONA_PREFIX_PATTERN = re.compile(r"^(?:Female|Male)\d+")
+
+
+def announcer_mode_argument(slots: Mapping[str, Any], labels: DisplayLabels) -> dict[str, object] | None:
+    """构建播报语音包/模式前缀 argument（批次6e mode role）。
+
+    在 cue_path 事件 token 之前的包名段中查 announcer.mode 词表（先剥
+    Female1/Male1 人声前缀，如 Female1Worlds23）；表外包名（RhaastKayn/
+    Maverick 等内部代号或未核验名）不出 argument，事件本体照常建 frame，
+    包名无损留 cue_path。
+
+    Args:
+        slots: 拆解记录 semantic slots。
+        labels: 展示词表。
+
+    Returns:
+        mode 参数；无包名段或表外时返回 None。
+    """
+
+    cue_path = slots.get("cue_path")
+    if not isinstance(cue_path, list) or len(cue_path) < 2:
+        return None
+
+    for segment in cue_path[:-1]:
+        if not isinstance(segment, str) or not segment:
+            continue
+        candidate = ANNOUNCER_PERSONA_PREFIX_PATTERN.sub("", segment) or segment
+        zh = labels.announcer_mode.get(candidate)
+        if zh is not None:
+            return argument_to_dict(
+                TranslationArgument(
+                    role="mode",
+                    labels={"zh_CN": zh, "en_US": candidate},
+                    confidence="high",
+                    provenance={"source": "semantic_slots.cue_path"},
+                    key=candidate,
+                    token=segment,
+                    omit_when_context_known=("mode",),
+                )
+            )
+
+    return None
 
 
 ANNOUNCER_SUBJECT_SUFFIX_PATTERN = re.compile(r"^(?P<stem>.+?)(?P<subject>You|Hero)$")

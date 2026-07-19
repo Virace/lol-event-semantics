@@ -42,6 +42,8 @@ class DisplayLabels:
             （匹配大小写不敏感，由 builder 负责）。
         announcer_subject: 播报主体键（You/Hero{队伍}）到中文主体词的映射
             （批次6e，You/Hero 三态语义经字符串表核验）。
+        announcer_mode: 播报语音包/模式包名段到中文前缀词的映射
+            （批次6e mode role，表外包名不出 mode argument）。
         shop_action: 商店老板动作词到 ``(zh_CN, en_US)`` 展示词的映射
             （批次6d，表外动作词不建 frame）。
         shop_subject: 商店老板对象 token（装备/条件）到中文词条的映射
@@ -58,6 +60,7 @@ class DisplayLabels:
     announcer_event: Mapping[str, str] = field(default_factory=dict)
     announcer_team: Mapping[str, str] = field(default_factory=dict)
     announcer_subject: Mapping[str, str] = field(default_factory=dict)
+    announcer_mode: Mapping[str, str] = field(default_factory=dict)
     shop_action: Mapping[str, tuple[str, str]] = field(default_factory=dict)
     shop_subject: Mapping[str, str] = field(default_factory=dict)
 
@@ -87,6 +90,7 @@ def parse_display_labels(data: Mapping[str, Any]) -> DisplayLabels:
         announcer_event=_parse_scalar_section(announcer.get("event")),
         announcer_team=_parse_scalar_section(announcer.get("team")),
         announcer_subject=_parse_scalar_section(announcer.get("subject")),
+        announcer_mode=_parse_scalar_section(announcer.get("mode")),
         shop_action=_parse_pair_section(shop.get("action")),
         shop_subject=_parse_scalar_section(shop.get("subject")),
     )

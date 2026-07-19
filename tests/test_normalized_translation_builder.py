@@ -1069,6 +1069,37 @@ class Batch6eAnnouncerSubjectTests(unittest.TestCase):
             with self.subTest(raw=raw):
                 self.assertIsNone(build_translation(enriched_record(raw), TranslationBuildContext()))
 
+    def test_mode_package_prefix_builds_mode_argument(self) -> None:
+        """包名段经词表出 mode argument（人声前缀剥离），default 档带前缀。"""
+
+        cases = [
+            ("Play_vo_Announcer_Global_Female1Worlds23_OnAce", "Worlds23", "2023全球总决赛 团灭播报"),
+            ("Play_vo_Announcer_Global_Pyke_OnAce", "Pyke", "派克语音包 团灭播报"),
+        ]
+        for raw, mode_key, detail in cases:
+            with self.subTest(raw=raw):
+                translation = build_translation(enriched_record(raw), TranslationBuildContext())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                args = translation["arguments"]
+                self.assertEqual(args["mode"]["key"], mode_key)
+                display = build_compat_display(translation, raw_event_name=raw)
+                self.assertEqual(display["zh_cn_detail"], detail)
+                # main 短文案不带包名前缀
+                self.assertEqual(display["zh_cn_short"], "团灭播报")
+
+    def test_unverified_package_builds_no_mode_argument(self) -> None:
+        """表外包名（RhaastKayn 等内部代号）不出 mode argument，事件本体照常。"""
+
+        translation = build_translation(
+            enriched_record("Play_vo_Announcer_Global_RhaastKayn_OnAce"), TranslationBuildContext()
+        )
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        self.assertNotIn("mode", translation["arguments"])
+        display = build_compat_display(translation, raw_event_name="Play_vo_Announcer_Global_RhaastKayn_OnAce")
+        self.assertEqual(display["zh_cn_short"], "团灭播报")
+
     def test_plain_team_suffix_path_is_unchanged(self) -> None:
         """既有纯队伍尾缀路径回归锁（无主体词时 team argument 照旧）。"""
 

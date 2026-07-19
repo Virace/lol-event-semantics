@@ -163,16 +163,16 @@ TEMPLATES: dict[str, dict[str, dict[str, tuple[str, ...]]]] = {
     },
     "announcer_event": {
         "zh_CN": {
-            "default": ("subject", "team", "event"),
+            "default": ("mode", "subject", "team", "event"),
             "main": ("subject", "team", "event"),
-            "debug": ("subject", "team", "event"),
-            "audit": ("subject", "team", "event"),
+            "debug": ("mode", "subject", "team", "event"),
+            "audit": ("mode", "subject", "team", "event"),
         },
         "en_US": {
-            "default": ("subject", "event", "team"),
+            "default": ("mode", "subject", "event", "team"),
             "main": ("subject", "event", "team"),
-            "debug": ("subject", "event", "team"),
-            "audit": ("subject", "event", "team"),
+            "debug": ("mode", "subject", "event", "team"),
+            "audit": ("mode", "subject", "event", "team"),
         },
     },
 }
@@ -603,7 +603,12 @@ def join_announcer_event_zh_cn(role_texts: list[tuple[str, str]]) -> str:
 
     values = {role: text for role, text in role_texts}
     core = f"{values.get('subject', '')}{values.get('team', '')}{values.get('event', '')}播报"
-    return f"{core}{values.get('playback', '')}"
+    core = f"{core}{values.get('playback', '')}"
+    mode_text = values.get("mode", "")
+    if mode_text:
+        return f"{mode_text} {core}"
+
+    return core
 
 
 def has_cjk_text(text: str) -> bool:

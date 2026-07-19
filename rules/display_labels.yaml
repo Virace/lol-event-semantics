@@ -251,6 +251,17 @@ announcer:
     HeroEnemyTeam: 敌方英雄
     HeroBlue: 蓝方英雄
     HeroRed: 红方英雄
+  mode:
+    # 播报语音包/模式前缀（批次6e mode role）：key 为 cue_path 包名段
+    # （builder 先剥 Female1/Male1 人声前缀再查）。词条沿批次5a 核验
+    # （Worlds23=2023全球总决赛/NexusBlitz=极限闪击/Brawl=神木之门）；
+    # Pyke=派克（reference 官方名）+「语音包」描述性后缀。表外包名
+    # （RhaastKayn/Maverick/Pundit/Ringcaller 内部代号或未核验）不出
+    # mode argument，事件本体照常建 frame。
+    Worlds23: 2023全球总决赛
+    NexusBlitz: 极限闪击
+    Brawl: 神木之门
+    Pyke: 派克语音包
   event:
     Ace: 团灭
     FirstBlood: 一血
