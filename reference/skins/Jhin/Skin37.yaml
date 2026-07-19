@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Jhin
+  champion_id: 202
+  skin_number: 37
+  skin_token: Skin37
+  id: 202037
+  alias: JhinSkin37
+  names:
+    en_US:
+      - value: Dark Cosmic Erasure Jhin
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 暗星绝杀 烬
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 44
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - JhinSkin37

@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ashe
+  champion_id: 22
+  skin_number: 65
+  skin_token: Skin65
+  id: 22065
+  alias: AsheSkin65
+  names:
+    en_US:
+      - value: Crystalis Motus Ashe
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 水晶圣骑 艾希
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 195
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AsheSkin65

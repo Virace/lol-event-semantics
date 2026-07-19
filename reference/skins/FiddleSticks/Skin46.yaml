@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Fiddlesticks
+  champion_id: 9
+  skin_number: 46
+  skin_token: Skin46
+  id: 9046
+  alias: FiddlesticksSkin46
+  names:
+    en_US:
+      - value: Flora Fatalis Fiddlesticks
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 绝命花妖 费德提克
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 221
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - FiddleSticksSkin46
+  - FiddlesticksSkin46

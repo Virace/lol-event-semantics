@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Janna
+  champion_id: 40
+  skin_number: 4
+  skin_token: Skin04
+  id: 40004
+  alias: JannaSkin04
+  names:
+    en_US:
+      - value: Victorious Janna
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 胜利女神 迦娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 7
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - JannaSkin04
+  - JannaSkin4

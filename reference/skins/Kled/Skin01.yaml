@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Kled
+  champion_id: 240
+  skin_number: 1
+  skin_token: Skin01
+  id: 240001
+  alias: KledSkin01
+  names:
+    en_US:
+      - value: Sir Kled
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 爵士 克烈
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 114
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KledSkin01
+  - KledSkin1

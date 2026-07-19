@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Tryndamere
+  champion_id: 23
+  skin_number: 27
+  skin_token: Skin27
+  id: 23027
+  alias: TryndamereSkin27
+  names:
+    en_US:
+      - value: Victorious Tryndamere
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 胜利之王 泰达米尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 7
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - TryndamereSkin27

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Skarner
+  champion_id: 72
+  skin_number: 5
+  skin_token: Skin05
+  id: 72005
+  alias: SkarnerSkin05
+  names:
+    en_US:
+      - value: Cosmic Sting Skarner
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 天蝎星神 斯卡纳
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 43
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SkarnerSkin05
+  - SkarnerSkin5

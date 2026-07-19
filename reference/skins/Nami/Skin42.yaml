@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Nami
+  champion_id: 267
+  skin_number: 42
+  skin_token: Skin42
+  id: 267042
+  alias: NamiSkin42
+  names:
+    en_US:
+      - value: Prestige Space Groove Nami
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至臻 太空律动 “魔音海妖” 娜美
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 144
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NamiSkin42

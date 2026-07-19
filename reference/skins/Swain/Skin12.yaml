@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Swain
+  champion_id: 50
+  skin_number: 12
+  skin_token: Skin12
+  id: 50012
+  alias: SwainSkin12
+  names:
+    en_US:
+      - value: Crystal Rose Swain
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 水晶玫瑰 斯维因
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 140
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SwainSkin12

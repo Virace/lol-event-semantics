@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Leona
+  champion_id: 89
+  skin_number: 50
+  skin_token: Skin50
+  id: 89050
+  alias: LeonaSkin50
+  names:
+    en_US:
+      - value: Crystalis Motus Leona
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 水晶圣骑 蕾欧娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 195
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LeonaSkin50

@@ -1,0 +1,32 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Fiddlesticks
+  champion_id: 9
+  skin_number: 6
+  skin_token: Skin06
+  id: 9006
+  alias: FiddlesticksSkin06
+  names:
+    en_US:
+      - value: Surprise Party Fiddlesticks
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 惊悚派对 费德提克
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 169
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - FiddleSticksSkin06
+  - FiddleSticksSkin6
+  - FiddlesticksSkin06
+  - FiddlesticksSkin6

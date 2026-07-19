@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Veigar
+  champion_id: 45
+  skin_number: 9
+  skin_token: Skin09
+  id: 45009
+  alias: VeigarSkin09
+  names:
+    en_US:
+      - value: Omega Squad Veigar
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 欧米伽小队 天雷爆破手
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 14
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - VeigarSkin09
+  - VeigarSkin9

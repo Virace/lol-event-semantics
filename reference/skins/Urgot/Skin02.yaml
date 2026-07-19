@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Urgot
+  champion_id: 6
+  skin_number: 2
+  skin_token: Skin02
+  id: 6002
+  alias: UrgotSkin02
+  names:
+    en_US:
+      - value: Butcher Urgot
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 电锯狂人 厄加特
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 88
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - UrgotSkin02
+  - UrgotSkin2

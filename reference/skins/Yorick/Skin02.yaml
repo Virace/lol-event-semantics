@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Yorick
+  champion_id: 83
+  skin_number: 2
+  skin_token: Skin02
+  id: 83002
+  alias: YorickSkin02
+  names:
+    en_US:
+      - value: Pentakill Yorick
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 五杀摇滚贝斯手 约里克
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 16
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - YorickSkin02
+  - YorickSkin2

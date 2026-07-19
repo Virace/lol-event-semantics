@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Graves
+  champion_id: 104
+  skin_number: 25
+  skin_token: Skin25
+  id: 104025
+  alias: GravesSkin25
+  names:
+    en_US:
+      - value: Battle Professor Graves
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 战斗教授 格雷福斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 113
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - GravesSkin25

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Zyra
+  champion_id: 143
+  skin_number: 1
+  skin_token: Skin01
+  id: 143001
+  alias: ZyraSkin01
+  names:
+    en_US:
+      - value: Wildfire Zyra
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 野火之藤 婕拉
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 86
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ZyraSkin01
+  - ZyraSkin1

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ryze
+  champion_id: 13
+  skin_number: 4
+  skin_token: Skin04
+  id: 13004
+  alias: RyzeSkin04
+  names:
+    en_US:
+      - value: Triumphant Ryze
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 守护者雕像 瑞兹
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 184
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - RyzeSkin04
+  - RyzeSkin4

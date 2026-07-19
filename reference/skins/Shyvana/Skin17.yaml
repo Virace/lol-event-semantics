@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Shyvana
+  champion_id: 102
+  skin_number: 17
+  skin_token: Skin17
+  id: 102017
+  alias: ShyvanaSkin17
+  names:
+    en_US:
+      - value: Immortal Journey Shyvana
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 玉剑传说 舞龙卫
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 81
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ShyvanaSkin17

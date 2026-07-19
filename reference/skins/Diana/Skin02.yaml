@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Diana
+  champion_id: 131
+  skin_number: 2
+  skin_token: Skin02
+  id: 131002
+  alias: DianaSkin02
+  names:
+    en_US:
+      - value: Lunar Goddess Diana
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 广寒仙子 嫦娥
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 55
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - DianaSkin02
+  - DianaSkin2

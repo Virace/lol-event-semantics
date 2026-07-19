@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Alistar
+  champion_id: 12
+  skin_number: 19
+  skin_token: Skin19
+  id: 12019
+  alias: AlistarSkin19
+  names:
+    en_US:
+      - value: Hextech Alistar
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 海克斯科技 阿利斯塔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 40
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AlistarSkin19

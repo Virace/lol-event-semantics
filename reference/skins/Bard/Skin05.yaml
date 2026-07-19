@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Bard
+  champion_id: 432
+  skin_number: 5
+  skin_token: Skin05
+  id: 432005
+  alias: BardSkin05
+  names:
+    en_US:
+      - value: Snow Day Bard
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 冰雪游神 巴德
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 46
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - BardSkin05
+  - BardSkin5

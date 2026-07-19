@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Aurora
+  champion_id: 893
+  skin_number: 11
+  skin_token: Skin11
+  id: 893011
+  alias: AuroraSkin11
+  names:
+    en_US:
+      - value: Arcana Aurora
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 慧理之贤 阿萝拉
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 146
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AuroraSkin11

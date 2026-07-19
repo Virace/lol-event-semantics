@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Twitch
+  champion_id: 29
+  skin_number: 27
+  skin_token: Skin27
+  id: 29027
+  alias: TwitchSkin27
+  names:
+    en_US:
+      - value: Twitch Shadowfoot
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 图奇 · 影足
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 38
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - TwitchSkin27

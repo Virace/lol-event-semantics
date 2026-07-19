@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Chogath
+  champion_id: 31
+  skin_number: 14
+  skin_token: Skin14
+  id: 31014
+  alias: ChogathSkin14
+  names:
+    en_US:
+      - value: Shan Hai Scrolls Cho'Gath
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 山海绘卷 科加斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 139
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ChogathSkin14

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Malzahar
+  champion_id: 90
+  skin_number: 1
+  skin_token: Skin01
+  id: 90001
+  alias: MalzaharSkin01
+  names:
+    en_US:
+      - value: Vizier Malzahar
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 元老议会 玛尔扎哈
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 99
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MalzaharSkin01
+  - MalzaharSkin1

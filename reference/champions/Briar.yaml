@@ -1,0 +1,310 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 233
+  alias: Briar
+  names:
+    en_US:
+      - value: Briar
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 贝蕾亚
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 狂厄蔷薇
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 狂
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: 蔷薇
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: beileiya
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: BriarE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Chilling Scream
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 惊吼
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:a5c404c90624cccd1c78e0c4bb5473fc04e406c9a0c3db8960b0d2c3e7410421
+            value: Briar refocuses her mind, removing Blood Frenzy and 
+              channeling energy into a powerful scream that damages and slows 
+              enemies. While charging, she takes reduced damage and heals for a 
+              portion of her max Health. A fully charged scream knocks foes 
+              back, dealing additional damage and stunning those who collide 
+              with a wall.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:88cb165f4f610f396c4cafe74d36ed69c761ae2028b10bcdb2d343e261f056dd
+            value: 
+              贝蕾亚重新集中她的意志，移除【血莽】并将能量引导为一次强力吼叫，对敌人造成伤害和减速。在蓄力时，她获得伤害减免并回复一部分最大生命值。一次完全蓄力的吼叫会将敌人们击退，对那些与墙体碰撞的敌人造成额外伤害和晕眩。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: BriarPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Crimson Curse
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 猩红诅咒
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:ce7d39aa68602f5cb37d170367b8abb419e513881d3e53fa9f7db4fd7c10e63e
+            value: Briar's attacks and abilities apply a stacking bleed that 
+              heals her for a portion of the damage it deals. Perpetually 
+              hungry, she gains increased healing based on her missing Health, 
+              but lacks innate Health Regeneration.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:6a8ea5d2d69474eb0578162b49be55d4b669598fc9dbf7b44e2aa0a9a2baa426
+            value: 
+              贝蕾亚的攻击与技能会造成可叠加的流血效果，同时基于这个效果的伤害治疗自身。她永远处于饥饿状态，会根据自己的已损失生命值获得更高的治疗，但缺乏自带的生命回复。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: BriarQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Head Rush
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 冲头
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:16a915f2e8635d1c35350a5f5d301b5dbc9260872cb694d82ddb9446a41ba350
+            value: Briar leaps to a unit and hits enemies with The Heel Wheel 
+              (of Pain), stunning them and breaking their Armor.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:96df72c2e7dbb7cb79a5d2d473c469f33d8d5251762273163190e0d115a10861
+            value: 贝蕾亚跃向一个单位并用她的（痛苦之）脚镣命中敌人们，将他们晕眩并削减他们的护甲。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: BriarR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Certain Death
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 毙除
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:edf60bf7bc285ba837253f616094e1e95531debc845eb36adeb92cf9a0f69217
+            value: Briar kicks her pillory's hemolith gemstone, marking the 
+              first champion it hits as her prey. She then beelines straight to 
+              them, fearing other surrounding enemies upon arriving at her 
+              target, and enters a state of complete hemomania. She will pursue 
+              her prey until death, gaining the benefits of Blood Frenzy as well
+              as additional Armor, Magic Resistance, Life Steal, and Move Speed.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:f7c4a80dd2b5bac2203d3c38cfa175d6e061487c880b5a69ddb9a85c2f76dd69
+            value: 
+              贝蕾亚踢出她的囚枷中的血石，让被它命中的第一个英雄成为她的猎物。她随后会径直走向该目标，在抵达目标处时恐惧周围的其它敌人们，并进入一个彻底血狂的状态。她将追击她的猎物直至阵亡才罢休，获得【血莽】的助益以及额外的护甲、魔抗、生命偷取和移动速度。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: BriarW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Blood Frenzy / Snack Attack
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 血莽 / 噬击
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:d337377eb37e847da6fab2a0c561b2c3c5d5a6d1266ce34748ddde581a297f7d
+            value: Briar leaps forward and shatters her pillory, entering a 
+              Blood Frenzy that causes her to relentlessly pursue the nearest 
+              enemy (prioritizing champions). While frenzied, she gains 
+              increased Attack Speed and Move Speed, and her attacks deal damage
+              in an area around her target.<br><br>Briar can reactivate this 
+              ability while frenzied to take a CHOMP out of her target on her 
+              next attack, dealing additional damage based on their missing 
+              Health, and healing Briar based on the damage she deals.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:fd66ae77a71cedc3704c095f6eb859b9b06dfc007139e985f85c857cf2b53f75
+            value: 
+              贝蕾亚向前跳跃并击碎她的囚枷，进入一种【血莽】状态来使她无休止地追击相距最近的那个敌人（优先以英雄为目标）。在【血莽】状态下，她的攻击速度和移动速度获得提升，并且她的攻击会在她目标四周的一个区域内造成伤害。<br><br>贝蕾亚可以在【血莽】状态下再次激活这个技能，来让她的下一次攻击噬咬她的目标，造成基于目标已损失生命值的额外伤害，并且基于她造成的伤害来为她提供治疗效果。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

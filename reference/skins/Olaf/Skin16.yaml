@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Olaf
+  champion_id: 2
+  skin_number: 16
+  skin_token: Skin16
+  id: 2016
+  alias: OlafSkin16
+  names:
+    en_US:
+      - value: Dragonslayer Olaf
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 屠龙勇士 奥拉夫
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 13
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - OlafSkin16

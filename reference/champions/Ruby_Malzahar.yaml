@@ -1,0 +1,148 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 66618
+  alias: Ruby_Malzahar
+  names:
+    en_US:
+      - value: Doom Bot Malzahar
+        sources:
+          - source: game_data
+            version: '16.5'
+spells:
+  - slot: E
+    ids:
+      - value: Ruby_MalzaharE
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Malefic Visions
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:718226b60d05bbd559a04d103915968d35031f239a9cd72f00773f08fd55f901
+            value: Malzahar infects his target's mind with cruel visions of 
+              their demise, dealing damage over time. Using Malzahar's other 
+              spells on the target will refresh the visions.<br><br>If the 
+              target dies while afflicted by the visions, they pass on to a 
+              nearby enemy unit and Malzahar gains Mana. Malzahar's Voidlings 
+              are attracted to affected units.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: P
+    ids:
+      - value: Ruby_MalzaharPassive
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Void Shift
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:ae698593e84a0dd8c9281b3088409302313a8f1c57477c9c919fec022d5273cd
+            value: When he hasn't recently taken damage or been crowd 
+              controlled, Malzahar gains massive damage reduction and crowd 
+              control immunity, lingering for a short period after taking 
+              damage.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: Q
+    ids:
+      - value: Ruby_MalzaharQ
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Call of the Void
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:02a89cd03677b8dafef97622ad1f3d0a0bd85046a5a4a19332f7f0bbf0a6c478
+            value: Malzahar opens up two portals to the Void. After a short 
+              delay, they fire projectiles that deal Magic Damage and silence 
+              enemy champions.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: R
+    ids:
+      - value: Ruby_MalzaharR
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Nether Grasp
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:468defb5e0079e4953e71cfb538ba3a2025f0772b2c035ff66a18023f54c773b
+            value: Malzahar channels the essence of the Void to suppress an 
+              enemy champion over a zone of damaging negative energy.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: W
+    ids:
+      - value: Ruby_MalzaharW
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Void Swarm
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:8e8a7f2b00b0feccb50a3be71d22c4e887e730fde2f003a6ef7432148127049a
+            value: Malzahar summons Voidlings to attack nearby enemies.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'

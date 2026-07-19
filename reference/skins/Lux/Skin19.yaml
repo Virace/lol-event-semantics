@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Lux
+  champion_id: 99
+  skin_number: 19
+  skin_token: Skin19
+  id: 99019
+  alias: LuxSkin19
+  names:
+    en_US:
+      - value: Space Groove Lux
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 太空律动 “闪耀灯球” 拉克丝
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 144
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LuxSkin19

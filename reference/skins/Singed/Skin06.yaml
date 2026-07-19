@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Singed
+  champion_id: 27
+  skin_number: 6
+  skin_token: Skin06
+  id: 27006
+  alias: SingedSkin06
+  names:
+    en_US:
+      - value: Snow Day Singed
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 冰雪节 辛吉德
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 46
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SingedSkin06
+  - SingedSkin6

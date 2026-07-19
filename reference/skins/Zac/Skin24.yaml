@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Zac
+  champion_id: 154
+  skin_number: 24
+  skin_token: Skin24
+  id: 154024
+  alias: ZacSkin24
+  names:
+    en_US:
+      - value: Zesty Dip Zac
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 香浓芝士 扎克
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 203
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ZacSkin24

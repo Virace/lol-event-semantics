@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Vayne
+  champion_id: 67
+  skin_number: 32
+  skin_token: Skin32
+  id: 67032
+  alias: VayneSkin32
+  names:
+    en_US:
+      - value: Battle Bat Vayne
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 幻灵战斗蝠 薇恩
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 156
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - VayneSkin32

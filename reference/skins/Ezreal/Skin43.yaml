@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ezreal
+  champion_id: 81
+  skin_number: 43
+  skin_token: Skin43
+  id: 81043
+  alias: EzrealSkin43
+  names:
+    en_US:
+      - value: HEARTSTEEL Ezreal
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 心之钢 伊泽瑞尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 199
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - EzrealSkin43

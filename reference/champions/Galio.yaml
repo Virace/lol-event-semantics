@@ -1,0 +1,294 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 3
+  alias: Galio
+  names:
+    en_US:
+      - value: Galio
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 加里奥
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 正义巨像
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: jialiao
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: jla
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: zhengyijuxiang
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: zyjx
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: GalioE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Justice Punch
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 正义冲拳
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:2d96bbc7574e5a88a990530025b283e1a1b540cf6a8b883255afb8891a7c860a
+            value: Galio will briefly step back and charge, knocking up the 
+              first enemy champion he encounters.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:296f6d1f7f7e23d0099440cffb988a740383212b65d1241336bf0257742e2cdb
+            value: 加里奥将暂时后跳然后冲锋，击飞他遇到的第一个敌方英雄。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: GalioPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Colossal Smash
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 巨像重击
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:b639c69af1afd51fca0481d3f2b443c4edda004141f2bf563920839da8256de4
+            value: Every few seconds, Galio's next basic attack deals bonus 
+              magic damage in an area.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:6bf04ee764a38d373e3b2099ae7400f682787e494da2d0b7ae7ad28f7f028b87
+            value: 每过若干秒，加里奥的下次普攻就能在小范围内造成额外魔法伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: GalioQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Winds of War
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 战争罡风
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:46897ba53ed442954a32c6d90e10b0902bdcb0c75017c483aae2cdb28a7cdd27
+            value: Galio fires two windblasts that converge into a large tornado
+              that deals damage over time.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:0d5d3fb6554047e09c553000a24405bcb0bc0d2efe1dad3c367c47256181db5b
+            value: 加里奥发射两道罡风，罡风在汇聚后会形成一团大型龙卷风，造成持续伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: GalioR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Hero's Entrance
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 英雄登场
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:55f3ea732d8a96a0e9141f34c9805316eea5ca3181ecf630d709473068d4608b
+            value: Galio designates an ally's position as his landing spot, 
+              granting all allies in the area a magic shield. After a delay 
+              Galio smashes down location, knocking up nearby enemies.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:ae776b17e171695a80beaf6a30c2bf58b92f0959d3c280d4525dd0a37124574e
+            value: 
+              加里奥将一名友军的当前位置作为他的着陆点，并为区域内的所有友军提供一个魔法护盾。在短暂的延迟后，加里奥会落到该位置上，然后击退附近的敌人。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: GalioW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Shield of Durand
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 杜朗护盾
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:f65d13c5256ba49788faf967906200cca237823b7757ee554d5792244032eef4
+            value: Galio charges a defensive stance, moving slowly. Upon 
+              releasing the charge, Galio will taunt and damage nearby enemies.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:f14b497ed969ccc0796741079c70457d7546c1273834eb5515b8f75e3e0880f9
+            value: 加里奥在防御姿态下蓄力，同时移动速度减慢。在蓄力得以释放时，加里奥将嘲讽并伤害附近的敌人。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

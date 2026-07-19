@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Graves
+  champion_id: 104
+  skin_number: 35
+  skin_token: Skin35
+  id: 104035
+  alias: GravesSkin35
+  names:
+    en_US:
+      - value: Sentinel Graves
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 光明哨兵 格雷福斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 147
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - GravesSkin35

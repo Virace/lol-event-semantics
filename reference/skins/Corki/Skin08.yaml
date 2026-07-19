@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Corki
+  champion_id: 42
+  skin_number: 8
+  skin_token: Skin08
+  id: 42008
+  alias: CorkiSkin08
+  names:
+    en_US:
+      - value: Arcade Corki
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 电玩上校 库奇
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 10
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - CorkiSkin08
+  - CorkiSkin8

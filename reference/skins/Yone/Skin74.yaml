@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Yone
+  champion_id: 777
+  skin_number: 74
+  skin_token: Skin74
+  id: 777074
+  alias: YoneSkin74
+  names:
+    en_US:
+      - value: T1 Yone
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: T1 永恩
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 220
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - YoneSkin74

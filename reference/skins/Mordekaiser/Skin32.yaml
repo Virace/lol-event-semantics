@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Mordekaiser
+  champion_id: 82
+  skin_number: 32
+  skin_token: Skin32
+  id: 82032
+  alias: MordekaiserSkin32
+  names:
+    en_US:
+      - value: High Noon Mordekaiser
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 西部魔影 地狱列车长 莫德凯撒
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 39
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MordekaiserSkin32

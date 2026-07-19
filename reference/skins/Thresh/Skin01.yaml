@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Thresh
+  champion_id: 412
+  skin_number: 1
+  skin_token: Skin01
+  id: 412001
+  alias: ThreshSkin01
+  names:
+    en_US:
+      - value: Deep Terror Thresh
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 深渊恐惧 锤石
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 108
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ThreshSkin01
+  - ThreshSkin1

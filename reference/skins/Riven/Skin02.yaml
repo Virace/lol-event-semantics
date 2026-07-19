@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Riven
+  champion_id: 92
+  skin_number: 2
+  skin_token: Skin02
+  id: 92002
+  alias: RivenSkin02
+  names:
+    en_US:
+      - value: Crimson Elite Riven
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 血色精锐 锐雯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 122
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - RivenSkin02
+  - RivenSkin2

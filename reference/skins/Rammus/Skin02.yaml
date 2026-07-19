@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Rammus
+  champion_id: 33
+  skin_number: 2
+  skin_token: Skin02
+  id: 33002
+  alias: RammusSkin02
+  names:
+    en_US:
+      - value: Chrome Rammus
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 铬金铠甲 拉莫斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - RammusSkin02
+  - RammusSkin2

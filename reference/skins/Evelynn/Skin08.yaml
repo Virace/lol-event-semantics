@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Evelynn
+  champion_id: 28
+  skin_number: 8
+  skin_token: Skin08
+  id: 28008
+  alias: EvelynnSkin08
+  names:
+    en_US:
+      - value: Sugar Rush Evelynn
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 糖果大战 伊芙琳
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 57
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - EvelynnSkin08
+  - EvelynnSkin8

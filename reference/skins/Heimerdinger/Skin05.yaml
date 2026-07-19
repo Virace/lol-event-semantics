@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Heimerdinger
+  champion_id: 74
+  skin_number: 5
+  skin_token: Skin05
+  id: 74005
+  alias: HeimerdingerSkin05
+  names:
+    en_US:
+      - value: Hazmat Heimerdinger
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 生化博士 黑默丁格
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 100
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - HeimerdingerSkin05
+  - HeimerdingerSkin5

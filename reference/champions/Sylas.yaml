@@ -1,0 +1,305 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 517
+  alias: Sylas
+  names:
+    en_US:
+      - value: Sylas
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 塞拉斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 解脱者
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: jietuozhe
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: jtz
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: sailasi
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: sls
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: sn
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: suannan
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: SylasE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Abscond / Abduct
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 潜掠/强掳
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:1feb97e7a1d43c606802d2d9c1377b6aa32fc3103f6fb4602dea85fc86ca2363
+            value: Sylas dashes to a location. Sylas can recast the ability to 
+              throw his chains out, pulling himself to an enemy he hits.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:1e00b31cba160c3543e3ab4a80094458f37eec28948b68b0e91753b9f7162a14
+            value: 塞拉斯突进至一个位置。塞拉斯可以再次施放来将他的锁链向一个方向挥出，将他自身拉向命中的第一个敌人。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: SylasPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Petricite Burst
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 破敌禁法
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:9247e277b2709241551fec5ec720a93ff2d3b727727ac90a095ee6ea83a60a1d
+            value: "After casting a spell, Sylas stores a charge of Petricite Burst.
+              Sylas's basic attacks will expend a charge and whirl his energized chains
+              around him dealing bonus magic damage to enemies hit. While Sylas has
+              a charge of Petricite Burst, he gains attack speed. "
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:94d2c761f85e6fd82cd9cf040150f54747aad5591bb9e863ea7d568500344ec8
+            value: '在施放一次技能后，塞拉斯会储存一层【破敌禁法】效果。塞拉斯的普攻将消耗一层效果并环绕自身挥舞他的盈能锁链来对命中的敌人造成额外魔法伤害。当塞拉斯拥有一层【破敌禁法】效果时，他会获得攻击速度。 '
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: SylasQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Chain Lash
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 锁链鞭击
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:aee28e2d2283ff880ca9339fd736342bad943bddad01283565870dda287efef8
+            value: Sylas lashes his chains out, intersecting at his targeted 
+              location dealing damage to and slowing enemies. <br><br>After a 
+              delay, magical energy explodes from the intersection point dealing
+              damage.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:8c7fbff94ed69f2c7371be331a6c8f912c2dc3dffd1d3d54d61b29cf2c0e6317
+            value: 
+              塞拉斯甩出他的锁链，锁链会在目标区域交叉，并对敌人造成伤害和减速效果。<br><br>在一段延迟后，魔法能量将从交叉点迸发，造成伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: SylasR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Hijack
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 其人之道
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:6f20f1185595bfcd37c93ec3d42ef3683f2ab565924f357a06d86f6b7e9fd3d7
+            value: Sylas steals the enemy's ultimate ability and can cast it 
+              freely.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:e96b61867b6bfb12c364c84d8b8a4d4c8960bd9fd53fdfafcb581d86ef8802bc
+            value: 塞拉斯窃取一名敌人的终极技能，然后可以免费施放该技能。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: SylasW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Kingslayer
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 弑君突刺
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:0dba2e63fe1b66519433640a31ed17ff31b86c2ed416b06c21b4d67be8c52881
+            value: Sylas lunges at an enemy with magical force dealing damage 
+              and healing himself against enemy champions.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:b3102aef2e02966c07c269808bb846531151346ee558da486f8e03a1a37b9dd9
+            value: 塞拉斯带着魔法之力跃向一名敌人，造成伤害，并且在对抗敌方英雄时治疗自身。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

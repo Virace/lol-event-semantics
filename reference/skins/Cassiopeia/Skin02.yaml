@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Cassiopeia
+  champion_id: 69
+  skin_number: 2
+  skin_token: Skin02
+  id: 69002
+  alias: CassiopeiaSkin02
+  names:
+    en_US:
+      - value: Siren Cassiopeia
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 深海妖姬 卡西奥佩娅
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 72
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - CassiopeiaSkin02
+  - CassiopeiaSkin2

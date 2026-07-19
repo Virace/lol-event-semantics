@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ashe
+  champion_id: 22
+  skin_number: 17
+  skin_token: Skin17
+  id: 22017
+  alias: AsheSkin17
+  names:
+    en_US:
+      - value: High Noon Ashe
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 西部天使 艾希
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 39
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AsheSkin17

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: MonkeyKing
+  champion_id: 62
+  skin_number: 6
+  skin_token: Skin06
+  id: 62006
+  alias: MonkeyKingSkin06
+  names:
+    en_US:
+      - value: Lancer Stratus Wukong
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 破空枪骑 孙悟空
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 69
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MonkeyKingSkin06
+  - MonkeyKingSkin6

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Aatrox
+  champion_id: 266
+  skin_number: 3
+  skin_token: Skin03
+  id: 266003
+  alias: AatroxSkin03
+  names:
+    en_US:
+      - value: Sea Hunter Aatrox
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 狂鲨 亚托克斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 49
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AatroxSkin03
+  - AatroxSkin3

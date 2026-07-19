@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: MasterYi
+  champion_id: 11
+  skin_number: 96
+  skin_token: Skin96
+  id: 11096
+  alias: MasterYiSkin96
+  names:
+    en_US:
+      - value: Heavenscale Master Yi
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 天龙之子 易
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 201
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MasterYiSkin96

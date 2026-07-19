@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Graves
+  champion_id: 104
+  skin_number: 6
+  skin_token: Skin06
+  id: 104006
+  alias: GravesSkin06
+  names:
+    en_US:
+      - value: Cutthroat Graves
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 无情重炮 格雷福斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 49
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - GravesSkin06
+  - GravesSkin6

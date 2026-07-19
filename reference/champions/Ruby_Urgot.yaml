@@ -1,0 +1,145 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 66600
+  alias: Ruby_Urgot
+  names:
+    en_US:
+      - value: Doom Bot Urgot
+        sources:
+          - source: game_data
+            version: '16.5'
+spells:
+  - slot: E
+    ids:
+      - value: Ruby_UrgotE
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Disdain
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:899eecb7f1516d8148307a8cb844c79998a3450ff1c535fb505366982bc6d69d
+            value: Urgot charges in a direction, shielding himself and trampling
+              non-champion enemies. If he catches an enemy champion, he will 
+              stop and hurl them out of his way.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: P
+    ids:
+      - value: Ruby_UrgotPassive
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Echoing Flames
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:ae92b4dd9fb9c093d7a0858a64f2791c3f3340c0588728858af7fa591b411bae
+            value: Urgot's basic attacks and Purge periodically trigger blasts 
+              of flame from his legs, dealing physical damage.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: Q
+    ids:
+      - value: Ruby_UrgotQ
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Corrosive Charge
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:3c6ef119e0350578481101a6c2155287b5e679ef649627f9ae2c9a1d918a4103
+            value: Fires an explosive charge at the target location, dealing 
+              physical damage and slowing enemies caught in the explosion.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: R
+    ids:
+      - value: Ruby_UrgotR
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Fear Beyond Death
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:0a56ad83cb349d4aef87e2477d4206d9cbf69d2d4b0d05a325960fd3c1caf992
+            value: Urgot fires a chem-drill that impales the first enemy 
+              champion hit. If that champion falls below a health threshold, 
+              Urgot judges them weak and can execute them.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: W
+    ids:
+      - value: Ruby_UrgotW
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Purge
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:21f17d64d4f84a22d000575ba7a8d4cda6cadee3db4bf929703dd83249e48d73
+            value: Urgot slows himself while he unloads his weapon on nearby 
+              enemies. Prioritizes enemy champions Urgot has recently struck 
+              with other abilities and triggers Echoing Flames.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'

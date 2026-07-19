@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Janna
+  champion_id: 40
+  skin_number: 20
+  skin_token: Skin20
+  id: 40020
+  alias: JannaSkin20
+  names:
+    en_US:
+      - value: Guardian of the Sands Janna
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 沙之守护 迦娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 66
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - JannaSkin20

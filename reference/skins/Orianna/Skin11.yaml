@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Orianna
+  champion_id: 61
+  skin_number: 11
+  skin_token: Skin11
+  id: 61011
+  alias: OriannaSkin11
+  names:
+    en_US:
+      - value: Pool Party Orianna
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 泳池派对 奥莉安娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 15
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - OriannaSkin11

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Graves
+  champion_id: 104
+  skin_number: 1
+  skin_token: Skin01
+  id: 104001
+  alias: GravesSkin01
+  names:
+    en_US:
+      - value: Hired Gun Graves
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 怒之火炮 格雷福斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 27
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - GravesSkin01
+  - GravesSkin1

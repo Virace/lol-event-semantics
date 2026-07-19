@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Amumu
+  champion_id: 32
+  skin_number: 34
+  skin_token: Skin34
+  id: 32034
+  alias: AmumuSkin34
+  names:
+    en_US:
+      - value: Porcelain Amumu
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 青花瓷 阿木木
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 154
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AmumuSkin34

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Blitzcrank
+  champion_id: 53
+  skin_number: 1
+  skin_token: Skin01
+  id: 53001
+  alias: BlitzcrankSkin01
+  names:
+    en_US:
+      - value: Rusty Blitzcrank
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 铁锈斑斑 布里茨
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - BlitzcrankSkin01
+  - BlitzcrankSkin1

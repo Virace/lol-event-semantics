@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Naafiri
+  champion_id: 950
+  skin_number: 11
+  skin_token: Skin11
+  id: 950011
+  alias: NaafiriSkin11
+  names:
+    en_US:
+      - value: 'PROJECT: Naafiri'
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 源计划：狂猎 纳亚菲利
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 18
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NaafiriSkin11

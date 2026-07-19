@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ekko
+  champion_id: 245
+  skin_number: 36
+  skin_token: Skin36
+  id: 245036
+  alias: EkkoSkin36
+  names:
+    en_US:
+      - value: Arcane Firelight Ekko
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 野火首领 艾克
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 152
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - EkkoSkin36

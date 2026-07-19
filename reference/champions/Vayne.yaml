@@ -1,0 +1,312 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 67
+  alias: Vayne
+  names:
+    en_US:
+      - value: Vayne
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 薇恩
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 暗夜猎手
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: anyelieshou
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: ayls
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: ve
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: vn
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: weien
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: VayneCondemn
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+      - value: VayneE
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Condemn
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 恶魔审判
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:030a58c7652fbec24486556a64ad460cab03cd6431f7d770413f1d23a42c4fbe
+            value: Vayne draws a heavy crossbow from her back, and fires a huge 
+              bolt at her target, knocking them back and dealing damage. If they
+              collide with terrain, they are impaled, dealing bonus damage and 
+              stunning them.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:5e39165af7472e54b18d4b65f95a22e316bd80bd68ee77f79f27ba2cb79b5393
+            value: 
+              薇恩从背部展开一张重弩，并且朝她的目标发射一根巨型弩箭，将目标击退并造成伤害。如果目标与地形产生碰撞，那么目标会被贯穿，对其造成额外伤害和晕眩效果。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: VaynePassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Night Hunter
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 暗夜猎手
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:aec91321f64ca736df2f50e971c8e2028f2c976917bd6e34dfa603e132584cce
+            value: Vayne ruthlessly hunts evil-doers, gaining Move Speed when 
+              moving toward nearby enemy champions.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:f764bc977e38e7295f43b6072042860d7222fbbab7872b3b604e64e8f5f9e6bf
+            value: 薇恩毫不留情的猎杀世间邪恶，向附近敌方英雄移动时会获得移动速度。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: VayneQ
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: VayneTumble
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Tumble
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 闪避突袭
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:0621e28c6e728a037b02a888f56b698d204c18e5d97ffc59c93945fbbfa68a22
+            value: Vayne tumbles, maneuvering to carefully place her next shot. 
+              Her next attack deals bonus damage.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:6b3eae67dd0f8d1f7516d3398c3a3d3193b0ed96eed05c6db77c8e4ab95e9a57
+            value: 薇恩进行翻滚，并小心地填充她的下一发射击。她的下次攻击造成额外伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: VayneInquisition
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+      - value: VayneR
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Final Hour
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 终极时刻
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:a8df83b25821dceb1173ee078b198f29e1a1de23af69d18c7118d63bf510d36b
+            value: Readying herself for an epic confrontation, Vayne gains 
+              increased Attack Damage, Invisibility during Tumble, reduced 
+              Tumble cooldown, and more bonus Move Speed from Night Hunter
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:9fc490ff3f0ecb8fcdd27241eade62d92b8f75a2b83ca60c33cb7f1b186987c0
+            value: 
+              薇恩准备进行史诗般的对决，她的攻击力得到提高，能在闪避突袭期间进入隐形状态，闪避突袭的冷却时间缩短，并且暗夜猎手（被动）提供更多移动速度。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: VayneSilveredBolts
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+      - value: VayneW
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Silver Bolts
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 圣银弩箭
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:e5228b7c641522dfe14dc7820153b38408ed44a44f9475679c0e1df4e2bc97e3
+            value: Vayne tips her bolts with a rare metal, toxic to evil things.
+              The third consecutive attack or ability against the same target 
+              deals a percentage of the target's max health as bonus true 
+              damage.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:c2700cc59458df7a81e3f20af8919534b58f203f36f1d2df9d3ebfb66089ef7b
+            value: 
+              薇恩用稀有金属制作弩箭，让邪恶敌人中毒。对同一目标的第3次攻击或技能施放会对其造成额外真实伤害，数值相当于目标最大生命值的一定百分比。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

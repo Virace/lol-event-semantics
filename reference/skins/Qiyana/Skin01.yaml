@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Qiyana
+  champion_id: 246
+  skin_number: 1
+  skin_token: Skin01
+  id: 246001
+  alias: QiyanaSkin01
+  names:
+    en_US:
+      - value: Battle Boss Qiyana
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 战场BOSS 奇亚娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 11
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - QiyanaSkin01
+  - QiyanaSkin1

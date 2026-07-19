@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Annie
+  champion_id: 1
+  skin_number: 31
+  skin_token: Skin31
+  id: 1031
+  alias: AnnieSkin31
+  names:
+    en_US:
+      - value: Fright Night Annie
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 魔域梦魇 安妮
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 170
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AnnieSkin31

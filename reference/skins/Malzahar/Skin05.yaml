@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Malzahar
+  champion_id: 90
+  skin_number: 5
+  skin_token: Skin05
+  id: 90005
+  alias: MalzaharSkin05
+  names:
+    en_US:
+      - value: Snow Day Malzahar
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 冰雪节 玛尔扎哈
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 46
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MalzaharSkin05
+  - MalzaharSkin5

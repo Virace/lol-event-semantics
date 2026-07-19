@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sivir
+  champion_id: 15
+  skin_number: 10
+  skin_token: Skin10
+  id: 15010
+  alias: SivirSkin10
+  names:
+    en_US:
+      - value: Pizza Delivery Sivir
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 送披萨的小姐姐 希维尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 26
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SivirSkin10

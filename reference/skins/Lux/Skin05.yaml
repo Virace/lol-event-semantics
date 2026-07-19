@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Lux
+  champion_id: 99
+  skin_number: 5
+  skin_token: Skin05
+  id: 99005
+  alias: LuxSkin05
+  names:
+    en_US:
+      - value: Steel Legion Lux
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 钢铁军团 拉克丝
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 85
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LuxSkin05
+  - LuxSkin5

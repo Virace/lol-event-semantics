@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Zilean
+  champion_id: 26
+  skin_number: 4
+  skin_token: Skin04
+  id: 26004
+  alias: ZileanSkin04
+  names:
+    en_US:
+      - value: Time Machine Zilean
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 时间机器 基兰
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 106
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ZileanSkin04
+  - ZileanSkin4

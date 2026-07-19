@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: MasterYi
+  champion_id: 11
+  skin_number: 33
+  skin_token: Skin33
+  id: 11033
+  alias: MasterYiSkin33
+  names:
+    en_US:
+      - value: PsyOps Master Yi
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 灵能特工 易
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 133
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MasterYiSkin33

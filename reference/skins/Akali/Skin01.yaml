@@ -1,0 +1,26 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Akali
+  champion_id: 84
+  skin_number: 1
+  skin_token: Skin01
+  id: 84001
+  alias: AkaliSkin01
+  names:
+    en_US:
+      - value: Stinger Akali
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 蜂刺 阿卡丽
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines: []
+aliases:
+  - AkaliSkin01
+  - AkaliSkin1

@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Azir
+  champion_id: 268
+  skin_number: 19
+  skin_token: Skin19
+  id: 268019
+  alias: AzirSkin19
+  names:
+    en_US:
+      - value: Attorney Azir
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 精英律师 阿兹尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 100
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AzirSkin19

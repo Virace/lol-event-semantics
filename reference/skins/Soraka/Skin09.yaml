@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Soraka
+  champion_id: 16
+  skin_number: 9
+  skin_token: Skin09
+  id: 16009
+  alias: SorakaSkin09
+  names:
+    en_US:
+      - value: Winter Wonder Soraka
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 冬境仙灵 索拉卡
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 47
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SorakaSkin09
+  - SorakaSkin9

@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Varus
+  champion_id: 110
+  skin_number: 69
+  skin_token: Skin69
+  id: 110069
+  alias: VarusSkin69
+  names:
+    en_US:
+      - value: T1 Varus
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: T1 韦鲁斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 220
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - VarusSkin69

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Volibear
+  champion_id: 106
+  skin_number: 1
+  skin_token: Skin01
+  id: 106001
+  alias: VolibearSkin01
+  names:
+    en_US:
+      - value: Thunder Lord Volibear
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 雷霆领主 沃利贝尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 52
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - VolibearSkin01
+  - VolibearSkin1

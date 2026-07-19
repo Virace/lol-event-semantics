@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Renekton
+  champion_id: 58
+  skin_number: 3
+  skin_token: Skin03
+  id: 58003
+  alias: RenektonSkin03
+  names:
+    en_US:
+      - value: Bloodfury Renekton
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 血石战神 雷克顿
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 126
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - RenektonSkin03
+  - RenektonSkin3

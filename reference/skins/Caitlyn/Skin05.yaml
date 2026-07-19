@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Caitlyn
+  champion_id: 51
+  skin_number: 5
+  skin_token: Skin05
+  id: 51005
+  alias: CaitlynSkin05
+  names:
+    en_US:
+      - value: Officer Caitlyn
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 女警狙击 凯特琳
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 121
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - CaitlynSkin05
+  - CaitlynSkin5

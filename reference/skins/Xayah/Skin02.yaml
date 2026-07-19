@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Xayah
+  champion_id: 498
+  skin_number: 2
+  skin_token: Skin02
+  id: 498002
+  alias: XayahSkin02
+  names:
+    en_US:
+      - value: Sweetheart Xayah
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 甜心之羽 霞
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 64
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - XayahSkin02
+  - XayahSkin2

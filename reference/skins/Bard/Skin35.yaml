@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Bard
+  champion_id: 432
+  skin_number: 35
+  skin_token: Skin35
+  id: 432035
+  alias: BardSkin35
+  names:
+    en_US:
+      - value: T1 Bard
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: T1 巴德
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 207
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - BardSkin35

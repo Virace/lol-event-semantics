@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Aphelios
+  champion_id: 523
+  skin_number: 9
+  skin_token: Skin09
+  id: 523009
+  alias: ApheliosSkin09
+  names:
+    en_US:
+      - value: Lunar Beast Aphelios
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 福牛守护者 厄斐琉斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 142
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ApheliosSkin09
+  - ApheliosSkin9

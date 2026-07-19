@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Rakan
+  champion_id: 497
+  skin_number: 2
+  skin_token: Skin02
+  id: 497002
+  alias: RakanSkin02
+  names:
+    en_US:
+      - value: Sweetheart Rakan
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 甜心之翎 洛
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 64
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - RakanSkin02
+  - RakanSkin2

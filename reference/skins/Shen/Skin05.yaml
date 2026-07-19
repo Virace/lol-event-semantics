@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Shen
+  champion_id: 98
+  skin_number: 5
+  skin_token: Skin05
+  id: 98005
+  alias: ShenSkin05
+  names:
+    en_US:
+      - value: Warlord Shen
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 战国大名 慎
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ShenSkin05
+  - ShenSkin5

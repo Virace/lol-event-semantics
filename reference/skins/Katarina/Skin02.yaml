@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Katarina
+  champion_id: 55
+  skin_number: 2
+  skin_token: Skin02
+  id: 55002
+  alias: KatarinaSkin02
+  names:
+    en_US:
+      - value: Red Card Katarina
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 红牌！退场！ 卡特琳娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 31
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KatarinaSkin02
+  - KatarinaSkin2

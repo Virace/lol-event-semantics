@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Kindred
+  champion_id: 203
+  skin_number: 34
+  skin_token: Skin34
+  id: 203034
+  alias: KindredSkin34
+  names:
+    en_US:
+      - value: Chosen of the Wolf Kindred
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 狼神英灵 千珏
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 209
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KindredSkin34

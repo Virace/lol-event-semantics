@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Rakan
+  champion_id: 497
+  skin_number: 37
+  skin_token: Skin37
+  id: 497037
+  alias: RakanSkin37
+  names:
+    en_US:
+      - value: Dragonmancer Rakan
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 神龙尊者 比翼之龙 洛
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 135
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - RakanSkin37

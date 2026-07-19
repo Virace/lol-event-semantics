@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Katarina
+  champion_id: 55
+  skin_number: 1
+  skin_token: Skin01
+  id: 55001
+  alias: KatarinaSkin01
+  names:
+    en_US:
+      - value: Mercenary Katarina
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 赏金猎人 卡特琳娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KatarinaSkin01
+  - KatarinaSkin1

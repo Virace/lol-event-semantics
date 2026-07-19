@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Gangplank
+  champion_id: 41
+  skin_number: 6
+  skin_token: Skin06
+  id: 41006
+  alias: GangplankSkin06
+  names:
+    en_US:
+      - value: Sultan Gangplank
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 奥斯曼大帝 普朗克
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 99
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - GangplankSkin06
+  - GangplankSkin6

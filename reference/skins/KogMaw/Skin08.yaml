@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: KogMaw
+  champion_id: 96
+  skin_number: 8
+  skin_token: Skin08
+  id: 96008
+  alias: KogMawSkin08
+  names:
+    en_US:
+      - value: Battlecast Kog'Maw
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 战地机甲 克格莫
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 25
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KogMawSkin08
+  - KogMawSkin8

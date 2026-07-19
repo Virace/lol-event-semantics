@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sion
+  champion_id: 14
+  skin_number: 30
+  skin_token: Skin30
+  id: 14030
+  alias: SionSkin30
+  names:
+    en_US:
+      - value: High Noon Sion
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 西部魔影 合成天使 赛恩
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 39
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SionSkin30

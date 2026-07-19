@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Lillia
+  champion_id: 876
+  skin_number: 37
+  skin_token: Skin37
+  id: 876037
+  alias: LilliaSkin37
+  names:
+    en_US:
+      - value: Bowling League Lillia
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 打保龄球的莉莉娅
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 100
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LilliaSkin37

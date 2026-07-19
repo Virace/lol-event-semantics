@@ -1,0 +1,304 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 143
+  alias: Zyra
+  names:
+    en_US:
+      - value: Zyra
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 婕拉
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 荆棘之兴
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: jiela
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: jingjizhixing
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: jjzx
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: jl
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: ZyraE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Grasping Roots
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 缠绕之根
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:f6bf7759a7ed6150ae6e91964a60cd41f60f0e4fd9fee7bd4bd6910179130614
+            value: Zyra sends forth vines through the ground to ensnare her 
+              target, dealing damage and rooting enemies they come across. If 
+              cast near a seed, Grasping Roots grows a Vine Lasher, whose short 
+              range attacks reduce enemy Move Speed.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:c57355e067a60b602e3e90f715b210a49617636eaba5442804d0868bf0b160ba
+            value: 
+              婕拉朝前方放出贯穿地面的藤蔓来诱捕她的目标，藤蔓经过的敌人会受到伤害和束缚效果。如果在一颗种子附近施放，那么【E缠绕之根】就会让种子长成一株藤蔓鞭击者，可进行短程攻击并降低敌人的移动速度。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: ZyraPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Garden of Thorns
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 荆棘花园
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:2ef79942ad9300e157f9eb69b0deed9e50a3461c818a523a82d038c1367cd746
+            value: Seeds spawn around Zyra periodically, becoming faster with 
+              level. Zyra can cast Deadly Spines or Grasping Roots near seeds to
+              grow plants, who fight for Zyra.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:ef014bbb78d4de594694eb625dd0a9bb09fb4fc7eb3c39b12dfd85f2cf4aae70
+            value: 种子会周期性地在婕拉身边生成，生成速度随等级提升。婕拉可通过在种子附近施放致命棘刺或缠绕之根来让种子长成为婕拉而战的植物。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: ZyraQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Deadly Spines
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 致命棘刺
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:b6ca2b3822791ab8e20ba9e28b7534551f032ebfd763bcdde650efc8a2adb555
+            value: Thick vines spread through the ground and explode into 
+              spines, dealing magic damage to enemies within the area. If cast 
+              near a seed, Deadly Spines grows a Thorn Spitter plant, which 
+              fires at enemies from afar.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:6c4968a0a5a40e1b7ddc3da00c940e3ac92169bda3af0dbaa49c8939516a1e25
+            value: 
+              浓密的藤蔓在地面蔓延，并爆炸成棘刺，对范围内的敌人造成魔法伤害。如果在一颗种子附近施放，那么【Q致命棘刺】就会让种子长成一株荆棘喷射者，可对远处的敌人进行攻击。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: ZyraR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Stranglethorns
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 绞杀之藤
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:0fb5fdce518f60285cfb86535fffd2ac2ea47109d830b3f91e1d160d09ff29bd
+            value: Zyra summons a twisted thicket at her target location, 
+              dealing damage to enemies as it expands and knocking them airborne
+              as it contracts. Plants within the thicket are enraged.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:9d68c1ab9da984cf727cf86c9670108a44826909606225a83bc91150a9a6f198
+            value: 
+              婕拉在目标区域召唤一个扭曲的密林，在蔓延时对区域内的所有敌人造成伤害，并在收缩时击飞区域内的所有敌人。密林内的植物会被进入激怒状态。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: ZyraW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Rampant Growth
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 狂野生长
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:f98a5bbb97dd00e1cbadc65caca0d0db25879552573cd30cf3e519c4a91dc9cb
+            value: Zyra plants a seed, lasting up to 60 seconds. Deadly Spines 
+              and Grasping Roots cast near seeds will turn them into plants who 
+              fight for Zyra. Zyra can store multiple seeds at once, and killing
+              enemies reduces Rampant Growth's recharge time.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:b3a0abce014fa16fdb5daac5f7d306cb912de3dce5ef91392487ca972dfa544a
+            value: 
+              婕拉播下一颗种子，最多持续60秒。在种子附近施放【Q致命棘刺】或【E缠绕之根】会让种子长成植物，与婕拉并肩作战。婕拉可以同时存有多个种子，并且击杀敌人会减少【W狂野生长】的充能时间。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

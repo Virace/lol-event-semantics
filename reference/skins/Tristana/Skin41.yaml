@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Tristana
+  champion_id: 18
+  skin_number: 41
+  skin_token: Skin41
+  id: 18041
+  alias: TristanaSkin41
+  names:
+    en_US:
+      - value: Firecracker Tristana
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 虎头虎脑 崔丝塔娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 54
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - TristanaSkin41

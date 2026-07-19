@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sona
+  champion_id: 37
+  skin_number: 4
+  skin_token: Skin04
+  id: 37004
+  alias: SonaSkin04
+  names:
+    en_US:
+      - value: Guqin Sona
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 古琴余韵 娑娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 55
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SonaSkin04
+  - SonaSkin4

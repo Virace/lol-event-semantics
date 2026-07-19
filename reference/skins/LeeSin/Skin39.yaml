@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: LeeSin
+  champion_id: 64
+  skin_number: 39
+  skin_token: Skin39
+  id: 64039
+  alias: LeeSinSkin39
+  names:
+    en_US:
+      - value: Prestige Nightbringer Lee Sin (2022)
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至臻 黑夜使者 李青 (2022)
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 193
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LeeSinSkin39

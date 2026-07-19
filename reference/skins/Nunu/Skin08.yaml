@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Nunu
+  champion_id: 20
+  skin_number: 8
+  skin_token: Skin08
+  id: 20008
+  alias: NunuSkin08
+  names:
+    en_US:
+      - value: Papercraft Nunu & Willump
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 千纸双子 努努和威朗普
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 96
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NunuSkin08
+  - NunuSkin8

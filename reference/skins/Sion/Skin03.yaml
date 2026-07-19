@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sion
+  champion_id: 14
+  skin_number: 3
+  skin_token: Skin03
+  id: 14003
+  alias: SionSkin03
+  names:
+    en_US:
+      - value: Lumberjack Sion
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 原野伐木工 赛恩
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 100
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SionSkin03
+  - SionSkin3

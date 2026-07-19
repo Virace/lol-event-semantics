@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Neeko
+  champion_id: 518
+  skin_number: 40
+  skin_token: Skin40
+  id: 518040
+  alias: NeekoSkin40
+  names:
+    en_US:
+      - value: Cosplayer Neeko
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 超级COSPLAY粉丝 妮蔻
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 210
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NeekoSkin40

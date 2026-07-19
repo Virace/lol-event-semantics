@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Poppy
+  champion_id: 78
+  skin_number: 4
+  skin_token: Skin04
+  id: 78004
+  alias: PoppySkin04
+  names:
+    en_US:
+      - value: Ragdoll Poppy
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 圣诞玩偶 波比
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 61
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - PoppySkin04
+  - PoppySkin4

@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Yuumi
+  champion_id: 350
+  skin_number: 11
+  skin_token: Skin11
+  id: 350011
+  alias: YuumiSkin11
+  names:
+    en_US:
+      - value: Heartseeker Yuumi
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 觅心猫猫 悠米
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 64
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - YuumiSkin11

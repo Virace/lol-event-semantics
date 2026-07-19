@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Rell
+  champion_id: 526
+  skin_number: 20
+  skin_token: Skin20
+  id: 526020
+  alias: RellSkin20
+  names:
+    en_US:
+      - value: High Noon Rell
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 西部魔影 芮尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 39
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - RellSkin20

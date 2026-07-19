@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Poppy
+  champion_id: 78
+  skin_number: 5
+  skin_token: Skin05
+  id: 78005
+  alias: PoppySkin05
+  names:
+    en_US:
+      - value: Battle Regalia Poppy
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 军神战甲 波比
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - PoppySkin05
+  - PoppySkin5

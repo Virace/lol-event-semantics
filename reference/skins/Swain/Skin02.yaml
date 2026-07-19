@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Swain
+  champion_id: 50
+  skin_number: 2
+  skin_token: Skin02
+  id: 50002
+  alias: SwainSkin02
+  names:
+    en_US:
+      - value: Bilgewater Swain
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 海贼参谋 斯维因
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 49
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SwainSkin02
+  - SwainSkin2

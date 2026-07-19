@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ashe
+  champion_id: 22
+  skin_number: 2
+  skin_token: Skin02
+  id: 22002
+  alias: AsheSkin02
+  names:
+    en_US:
+      - value: Sherwood Forest Ashe
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 丛林侠盗 艾希
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 97
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AsheSkin02
+  - AsheSkin2

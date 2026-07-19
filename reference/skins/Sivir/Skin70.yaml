@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sivir
+  champion_id: 15
+  skin_number: 70
+  skin_token: Skin70
+  id: 15070
+  alias: SivirSkin70
+  names:
+    en_US:
+      - value: Ann-Sivir-sary
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 十五周年纪念 希维尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 208
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SivirSkin70

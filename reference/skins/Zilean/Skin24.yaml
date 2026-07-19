@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Zilean
+  champion_id: 26
+  skin_number: 24
+  skin_token: Skin24
+  id: 26024
+  alias: ZileanSkin24
+  names:
+    en_US:
+      - value: Arcana Zilean
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 节制之塔 基兰
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 146
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ZileanSkin24

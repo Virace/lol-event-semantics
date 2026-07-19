@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Renata
+  champion_id: 888
+  skin_number: 31
+  skin_token: Skin31
+  id: 888031
+  alias: RenataSkin31
+  names:
+    en_US:
+      - value: Masque of the Black Rose Renata Glasc
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 黑色玫瑰假面舞会 烈娜塔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 211
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - RenataSkin31

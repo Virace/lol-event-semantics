@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Nunu
+  champion_id: 20
+  skin_number: 35
+  skin_token: Skin35
+  id: 20035
+  alias: NunuSkin35
+  names:
+    en_US:
+      - value: Cosmic Paladins Nunu & Willump
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 星界圣骑双子 努努和威朗普
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 43
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NunuSkin35

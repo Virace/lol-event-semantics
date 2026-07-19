@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Soraka
+  champion_id: 16
+  skin_number: 37
+  skin_token: Skin37
+  id: 16037
+  alias: SorakaSkin37
+  names:
+    en_US:
+      - value: Immortal Journey Soraka
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 玉剑传说 星仙子
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 81
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SorakaSkin37

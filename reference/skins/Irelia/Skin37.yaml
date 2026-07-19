@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Irelia
+  champion_id: 39
+  skin_number: 37
+  skin_token: Skin37
+  id: 39037
+  alias: IreliaSkin37
+  names:
+    en_US:
+      - value: Mythmaker Irelia
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 剪纸仙灵 艾瑞莉娅
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 188
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - IreliaSkin37

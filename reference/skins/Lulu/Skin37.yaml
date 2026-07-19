@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Lulu
+  champion_id: 117
+  skin_number: 37
+  skin_token: Skin37
+  id: 117037
+  alias: LuluSkin37
+  names:
+    en_US:
+      - value: Monster Tamer Lulu
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 小怪兽训练师 璐璐
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 162
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LuluSkin37

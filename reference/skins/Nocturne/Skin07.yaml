@@ -1,0 +1,34 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Nocturne
+  champion_id: 56
+  skin_number: 7
+  skin_token: Skin07
+  id: 56007
+  alias: NocturneSkin07
+  names:
+    en_US:
+      - value: Old God Nocturne
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 古神 魔腾
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 58
+    sources:
+      - source: game_data
+        version: '16.5'
+  - id: 92
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NocturneSkin07
+  - NocturneSkin7

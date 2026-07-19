@@ -1,0 +1,145 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 66611
+  alias: Ruby_Maokai
+  names:
+    en_US:
+      - value: Doom Bot Maokai
+        sources:
+          - source: game_data
+            version: '16.5'
+spells:
+  - slot: E
+    ids:
+      - value: Ruby_MaokaiE
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Sapling Toss
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:349f2d1c90da072ba990cd5931c6d33a78281c45ca3e709ec3c852838656e983
+            value: Maokai flings a sapling to the target area to stand guard. 
+              More effective in brush.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: P
+    ids:
+      - value: Ruby_MaokaiPassive
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Sap Magic
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:80e714836962db260a23c1b709f1713e3501f9a10eddca3c8a2a7f40ad9c8955
+            value: Maokai's basic attack also heals him and deals additional 
+              damage on a moderate cooldown. Each time Maokai casts a spell or 
+              is struck by an enemy's spell, this cooldown is reduced.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: Q
+    ids:
+      - value: Ruby_MaokaiQ
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Bramble Smash
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:99e180451573f7d069db732036e4b1603a1e216d3646cf9af0cca955647e3deb
+            value: Maokai knocks back nearby enemies with a shockwave, dealing 
+              magic damage and slowing them.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: R
+    ids:
+      - value: Ruby_MaokaiR
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Nature's Grasp
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:bd95c954b860934c7b603752f65cea953693f5da1c5a3480c1b62c3988b04bfc
+            value: Maokai summons a colossal wall of brambles and thorns that 
+              slowly advances forwards, damaging and rooting any enemies in the 
+              path.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: W
+    ids:
+      - value: Ruby_MaokaiW
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Twisted Advance
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:7c7168c29523b469530cdc9a54d64b97522c85a405fbf4af072da79a874bf8a3
+            value: Maokai contorts into a mass of moving roots, becoming 
+              untargetable and dashing to the target. Upon arrival, he roots the
+              target.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'

@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Vex
+  champion_id: 711
+  skin_number: 10
+  skin_token: Skin10
+  id: 711010
+  alias: VexSkin10
+  names:
+    en_US:
+      - value: Empyrean Vex
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至高天 薇古丝
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 186
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - VexSkin10

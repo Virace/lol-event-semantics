@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sona
+  champion_id: 37
+  skin_number: 56
+  skin_token: Skin56
+  id: 37056
+  alias: SonaSkin56
+  names:
+    en_US:
+      - value: Victorious Sona
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 胜利女神 娑娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 7
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SonaSkin56

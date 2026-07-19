@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Thresh
+  champion_id: 412
+  skin_number: 13
+  skin_token: Skin13
+  id: 412013
+  alias: ThreshSkin13
+  names:
+    en_US:
+      - value: Pulsefire Thresh
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 未来战士 锤石
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 36
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ThreshSkin13

@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Shen
+  champion_id: 98
+  skin_number: 49
+  skin_token: Skin49
+  id: 98049
+  alias: ShenSkin49
+  names:
+    en_US:
+      - value: Ashen Guardian Shen
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 灰烬守护者 慎
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 157
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ShenSkin49

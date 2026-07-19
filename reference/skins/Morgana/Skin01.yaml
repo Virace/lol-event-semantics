@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Morgana
+  champion_id: 25
+  skin_number: 1
+  skin_token: Skin01
+  id: 25001
+  alias: MorganaSkin01
+  names:
+    en_US:
+      - value: Exiled Morgana
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 杀戮天使昔拉 莫甘娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 68
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MorganaSkin01
+  - MorganaSkin1

@@ -1,0 +1,314 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 105
+  alias: Fizz
+  names:
+    en_US:
+      - value: Fizz
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 菲兹
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 潮汐海灵
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 小鱼人
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: chaoxihailing
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: cxhl
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: feizi
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: fz
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: xiaoyuren
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: xyr
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: FizzE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Playful / Trickster
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 古灵/精怪
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:4236f72b0d4fab02fcabb5a274df275a3c72710449e7441fb9187673fa49688d
+            value: Fizz hops into the air, landing gracefully upon his spear and
+              becoming untargetable. From this position, Fizz can either slam 
+              the ground or choose to jump again before smashing back down.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:729ec5ef26d1160d8781c22f1e598c3d5bf099d191dceabcf7979689814c5ec1
+            value: 
+              菲兹跳到空中，同时优雅地落在他的长矛上，变得不可被选取。在这个姿态下，菲兹可以选择立原地着陆，也可以选择在着陆之前再跳一段距离。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: FizzPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Nimble Fighter
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 伶俐斗士
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:901a7123efba4660d5076ab7e6a19906ddd1d1826a7b62d7d9092b6536317913
+            value: Fizz can move through units and takes a flat amount of 
+              reduced damage from all sources
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:23a764a016836b7dae4d2ae788e4a121bfdb80f73ba19d2d21067f16580bd93a
+            value: 菲兹在移动时可以穿过单位并且从所有来源处受到的伤害都会减少一个固定的数额。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: FizzQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Urchin Strike
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 淘气打击
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:86a0e35abc406869abe86293a21a18b6eadb7bc30efca8951c56b030ffb13b43
+            value: Fizz dashes through his target, dealing magic damage and 
+              applying on hit effects.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:5cb0b0beec91399d0fb6874499fcbecd77df83b8bb165f5f7c0bf1846fc9b2af
+            value: 菲兹穿过他的目标，造成魔法伤害，并施加攻击特效。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: FizzR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Chum the Waters
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 巨鲨强袭
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:30a733ddc07f43a93a8a390b50e897f2934bef5ee1d41e1cb88a0db2c3757619
+            value: Fizz tosses a fish in a direction that attaches to any 
+              champion that touches it, slowing the target. After a short delay,
+              a shark erupts from the ground, knocking up the target and 
+              knocking any nearby enemies aside. All enemies hit are dealt magic
+              damage and slowed.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:ecb008378643023b2ef68eeff261e29f18cc42328a0dfa5638fafe518dc1983a
+            value: 
+              菲兹朝一个方向放出一条小鱼，小鱼会附身在第一个与它接触的敌方英雄身上，同时减速目标。在短暂的延迟之后，一条巨鲨就会破土而出，击飞目标并将目标附近的敌人震开。被命中的所有敌人都会受到魔法伤害和减速效果。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: FizzW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Seastone Trident
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 海石三叉戟
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:8fd0c0a4f233e8a9c6d87240497291bcb7a5d83f4aadc36c668f447719329f73
+            value: Fizz's attacks bleed his enemies, dealing magic damage over 
+              several seconds. Fizz can empower his next attack to deal bonus 
+              damage and empower his further attacks for a short time.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:a3a9cd3a9797ab2e1ba09f0c0f98371cc1c14d07004a01c5b8c735ec033f473b
+            value: 
+              菲兹的攻击会让他的敌人们流血，同时造成持续数秒的魔法伤害。菲兹可以强化他的下次普攻来造成额外伤害，并在短时间内强化他的后续普攻。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

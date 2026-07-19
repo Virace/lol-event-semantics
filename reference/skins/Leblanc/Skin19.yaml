@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Leblanc
+  champion_id: 7
+  skin_number: 19
+  skin_token: Skin19
+  id: 7019
+  alias: LeblancSkin19
+  names:
+    en_US:
+      - value: iG LeBlanc
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: iG 乐芙兰
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 107
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LeblancSkin19

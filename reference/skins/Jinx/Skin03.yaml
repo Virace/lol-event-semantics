@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Jinx
+  champion_id: 222
+  skin_number: 3
+  skin_token: Skin03
+  id: 222003
+  alias: JinxSkin03
+  names:
+    en_US:
+      - value: Zombie Slayer Jinx
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 丧尸杀手 金克丝
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 89
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - JinxSkin03
+  - JinxSkin3

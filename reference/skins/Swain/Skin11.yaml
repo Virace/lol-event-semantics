@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Swain
+  champion_id: 50
+  skin_number: 11
+  skin_token: Skin11
+  id: 50011
+  alias: SwainSkin11
+  names:
+    en_US:
+      - value: Hextech Swain
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 海克斯科技 斯维因
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 40
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SwainSkin11

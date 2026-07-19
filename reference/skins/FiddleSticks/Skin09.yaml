@@ -1,0 +1,32 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Fiddlesticks
+  champion_id: 9
+  skin_number: 9
+  skin_token: Skin09
+  id: 9009
+  alias: FiddlesticksSkin09
+  names:
+    en_US:
+      - value: Praetorian Fiddlesticks
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 禁卫机甲 费德提克
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 90
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - FiddleSticksSkin09
+  - FiddleSticksSkin9
+  - FiddlesticksSkin09
+  - FiddlesticksSkin9

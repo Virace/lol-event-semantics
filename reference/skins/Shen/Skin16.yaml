@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Shen
+  champion_id: 98
+  skin_number: 16
+  skin_token: Skin16
+  id: 98016
+  alias: ShenSkin16
+  names:
+    en_US:
+      - value: Infernal Shen
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 奈落之炎 慎
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 86
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ShenSkin16

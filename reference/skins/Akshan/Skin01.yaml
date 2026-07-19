@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Akshan
+  champion_id: 166
+  skin_number: 1
+  skin_token: Skin01
+  id: 166001
+  alias: AkshanSkin01
+  names:
+    en_US:
+      - value: Cyber Pop Akshan
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 赛博潮流 阿克尚
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 148
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AkshanSkin01
+  - AkshanSkin1

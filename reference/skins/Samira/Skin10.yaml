@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Samira
+  champion_id: 360
+  skin_number: 10
+  skin_token: Skin10
+  id: 360010
+  alias: SamiraSkin10
+  names:
+    en_US:
+      - value: Space Groove Samira
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 太空律动 “音浪狂舞” 莎弥拉
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 144
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SamiraSkin10

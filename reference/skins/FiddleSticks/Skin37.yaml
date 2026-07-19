@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Fiddlesticks
+  champion_id: 9
+  skin_number: 37
+  skin_token: Skin37
+  id: 9037
+  alias: FiddlesticksSkin37
+  names:
+    en_US:
+      - value: Blood Moon Fiddlesticks
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 腥红之月 费德提克
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 12
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - FiddleSticksSkin37
+  - FiddlesticksSkin37

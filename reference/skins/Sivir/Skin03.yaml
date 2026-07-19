@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sivir
+  champion_id: 15
+  skin_number: 3
+  skin_token: Skin03
+  id: 15003
+  alias: SivirSkin03
+  names:
+    en_US:
+      - value: Huntress Sivir
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 女猎手 希维尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 32
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SivirSkin03
+  - SivirSkin3

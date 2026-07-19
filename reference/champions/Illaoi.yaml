@@ -1,0 +1,317 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 420
+  alias: Illaoi
+  names:
+    en_US:
+      - value: Illaoi
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 俄洛伊
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 海兽祭司
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 触手妈
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: chushouma
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: csm
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: eluoyi
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: ely
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: haishoujisi
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: hsjs
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: IllaoiE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Test of Spirit
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 灵魂试炼
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:8bfec21d065a0dce4fb19a2852f942fe5ad2009b5f18b3d60d4259afb5ded210
+            value: Illaoi rips the spirit from a foe's body, forcing it to stand
+              before her. Spirits echo a percentage of the damage they take to 
+              the original target. If killed, or if the target gets too far from
+              the spirit, the target will become a <font 
+              color='#669900'>Vessel</font> and begin spawning Tentacles.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:2af5b43867df5367734cba526f771046998262a7acb502e17c36192cef78b5f1
+            value: 俄洛伊把灵魂从一名敌人的肉身中扯出，强迫它站在她面前。 
+              灵魂会将其所受的一部分伤害传递到本体上。如果灵魂被击杀，或者本体离灵魂过远，那么本体就会成为一个<font 
+              color='#669900'>躯壳</font>并且开始生成触手。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: IllaoiPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Prophet of an Elder God
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 古神先知
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:bd0fecc3418739b2d08691aee35b04011fb2eb6ceb900e1f5394fe6034825dd6
+            value: Illaoi and the <font color='#669900'>Vessels</font> she 
+              creates spawn Tentacles on nearby impassible terrain. Tentacles 
+              swing at spirits, <font color='#669900'>Vessels</font>, and 
+              victims of Illaoi's Harsh lesson. Tentacles deal physical damage 
+              to enemies hit, and will heal Illaoi if they damage a champion.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:c7bba19ef7a6858a40955a80092ff112abf9ff8fbc5e5db354a584fc9be9fc9b
+            value: 俄洛伊和她创造的<font 
+              color='#669900'>躯壳</font>会在附近的不可穿越的地形上生成触手。触手会挥向灵魂，<font 
+              color='#669900'>躯壳</font>，以及俄洛伊的【严酷训诫】的受害者们。触手会在命中敌人时造成物理伤害，如果命中目标是英雄还会治疗俄洛伊。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: IllaoiQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Tentacle Smash
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 触手猛击
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:e6e1be808cd0c0714d658cb1e8f8a08e11450819d5f7c4dfff1e9a864ab99096
+            value: Increases the damage dealt by Tentacles. When activated, 
+              Illaoi smashes down a Tentacle that deals physical damage.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:eb408f5cfaf14c4b37df81072bca2a357ced3e97e6d38e1282d2b97d286e3610
+            value: 提升触手造成的伤害。在激活时，俄洛伊会挥出一条触手来造成物理伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: IllaoiR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Leap of Faith
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 过界信仰
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:7c4bbc12b2346923df5c8f8d11872d595429f73c7a6a138690cfb42d2e19d7e4
+            value: Illaoi smashes her idol into the ground, dealing physical 
+              damage to nearby enemies. A Tentacle spawns for each enemy 
+              champion hit.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:dab342b4b8849dc45e28c23023ef335cf7fd4e26ede11280f08b068e5258c5cf
+            value: 俄洛伊将她的神像砸在地上，对附近的敌人造成物理伤害。每命中一个敌人就会生成一条触手。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: IllaoiW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Harsh Lesson
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 严酷训诫
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:0dc81fd9f52add5583438a667d4e59f939eaf867106bd68926c781f1db3921e7
+            value: Illaoi leaps to her target, dealing physical damage and 
+              causing nearby Tentacles to also swing at the target.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:2357c37c4db87165e52eaa2232ba3909e5c4bac85153b049cee3e84dfe958935
+            value: 俄洛伊跃向她的目标，造成物理伤害并使附近的触手也挥向目标。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

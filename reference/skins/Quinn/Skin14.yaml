@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Quinn
+  champion_id: 133
+  skin_number: 14
+  skin_token: Skin14
+  id: 133014
+  alias: QuinnSkin14
+  names:
+    en_US:
+      - value: Star Guardian Quinn
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 星之守护者 奎因
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 161
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - QuinnSkin14

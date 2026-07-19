@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Leona
+  champion_id: 89
+  skin_number: 9
+  skin_token: Skin09
+  id: 89009
+  alias: LeonaSkin09
+  names:
+    en_US:
+      - value: Barbecue Leona
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 烧烤女神 蕾欧娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 26
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LeonaSkin09
+  - LeonaSkin9

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Lissandra
+  champion_id: 127
+  skin_number: 2
+  skin_token: Skin02
+  id: 127002
+  alias: LissandraSkin02
+  names:
+    en_US:
+      - value: Blade Queen Lissandra
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 刀锋女王 丽桑卓
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 80
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LissandraSkin02
+  - LissandraSkin2

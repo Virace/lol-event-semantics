@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Talon
+  champion_id: 91
+  skin_number: 49
+  skin_token: Skin49
+  id: 91049
+  alias: TalonSkin49
+  names:
+    en_US:
+      - value: Primal Ambush Talon
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 伏虎之力 泰隆
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 200
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - TalonSkin49

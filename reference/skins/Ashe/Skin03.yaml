@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ashe
+  champion_id: 22
+  skin_number: 3
+  skin_token: Skin03
+  id: 22003
+  alias: AsheSkin03
+  names:
+    en_US:
+      - value: Woad Ashe
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 勇敢的心 艾希
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 68
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AsheSkin03
+  - AsheSkin3

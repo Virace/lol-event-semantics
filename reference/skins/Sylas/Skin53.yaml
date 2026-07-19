@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sylas
+  champion_id: 517
+  skin_number: 53
+  skin_token: Skin53
+  id: 517053
+  alias: SylasSkin53
+  names:
+    en_US:
+      - value: Prestige T1 Sylas
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至臻 T1 塞拉斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 220
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SylasSkin53

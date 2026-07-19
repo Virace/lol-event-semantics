@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sylas
+  champion_id: 517
+  skin_number: 8
+  skin_token: Skin08
+  id: 517008
+  alias: SylasSkin08
+  names:
+    en_US:
+      - value: Freljord Sylas
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 弗雷尔卓德 塞拉斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 128
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SylasSkin08
+  - SylasSkin8

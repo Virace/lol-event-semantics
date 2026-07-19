@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Kaisa
+  champion_id: 145
+  skin_number: 29
+  skin_token: Skin29
+  id: 145029
+  alias: KaisaSkin29
+  names:
+    en_US:
+      - value: Lagoon Dragon Kai'Sa
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 神龙尊者 玉境灵龙 卡莎
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 135
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KaisaSkin29

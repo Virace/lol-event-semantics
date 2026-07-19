@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Zed
+  champion_id: 238
+  skin_number: 1
+  skin_token: Skin01
+  id: 238001
+  alias: ZedSkin01
+  names:
+    en_US:
+      - value: Shockblade Zed
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 冲击之刃 劫
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 155
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ZedSkin01
+  - ZedSkin1

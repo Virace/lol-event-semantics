@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Jayce
+  champion_id: 126
+  skin_number: 34
+  skin_token: Skin34
+  id: 126034
+  alias: JayceSkin34
+  names:
+    en_US:
+      - value: T1 Jayce
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: T1 杰斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 207
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - JayceSkin34

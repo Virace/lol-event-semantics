@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Fizz
+  champion_id: 105
+  skin_number: 35
+  skin_token: Skin35
+  id: 105035
+  alias: FizzSkin35
+  names:
+    en_US:
+      - value: Rain Shepherd Fizz
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 青蛙雨衣 菲兹
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 205
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - FizzSkin35

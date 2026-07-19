@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Kayle
+  champion_id: 10
+  skin_number: 67
+  skin_token: Skin67
+  id: 10067
+  alias: KayleSkin67
+  names:
+    en_US:
+      - value: Prestige Empyrean Kayle
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至臻 至高天 凯尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 186
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KayleSkin67

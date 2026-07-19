@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Nocturne
+  champion_id: 56
+  skin_number: 3
+  skin_token: Skin03
+  id: 56003
+  alias: NocturneSkin03
+  names:
+    en_US:
+      - value: Ravager Nocturne
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 劫掠梦魇 魔腾
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 111
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NocturneSkin03
+  - NocturneSkin3

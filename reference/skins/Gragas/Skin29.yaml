@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Gragas
+  champion_id: 79
+  skin_number: 29
+  skin_token: Skin29
+  id: 79029
+  alias: GragasSkin29
+  names:
+    en_US:
+      - value: High Noon Gragas
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 西部魔影 古拉加斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 39
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - GragasSkin29

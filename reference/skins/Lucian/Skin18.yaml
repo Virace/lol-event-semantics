@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Lucian
+  champion_id: 236
+  skin_number: 18
+  skin_token: Skin18
+  id: 236018
+  alias: LucianSkin18
+  names:
+    en_US:
+      - value: Pulsefire Lucian
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 未来战士 卢锡安
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 36
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LucianSkin18

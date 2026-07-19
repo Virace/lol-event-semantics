@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Velkoz
+  champion_id: 161
+  skin_number: 2
+  skin_token: Skin02
+  id: 161002
+  alias: VelkozSkin02
+  names:
+    en_US:
+      - value: Arclight Vel'Koz
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 苍穹之光 维克兹
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 24
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - VelkozSkin02
+  - VelkozSkin2

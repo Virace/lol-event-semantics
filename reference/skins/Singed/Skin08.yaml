@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Singed
+  champion_id: 27
+  skin_number: 8
+  skin_token: Skin08
+  id: 27008
+  alias: SingedSkin08
+  names:
+    en_US:
+      - value: Black Scourge Singed
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 黑色天灾 辛吉德
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 80
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SingedSkin08
+  - SingedSkin8

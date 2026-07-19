@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Janna
+  champion_id: 40
+  skin_number: 46
+  skin_token: Skin46
+  id: 40046
+  alias: JannaSkin46
+  names:
+    en_US:
+      - value: Prestige Cyber Halo Janna
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至臻 海珀利安小队 X09-星环灵风 迦娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 65
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - JannaSkin46

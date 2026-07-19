@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Nami
+  champion_id: 267
+  skin_number: 24
+  skin_token: Skin24
+  id: 267024
+  alias: NamiSkin24
+  names:
+    en_US:
+      - value: Cosmic Destiny Nami
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 双鱼星神 娜美
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 43
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NamiSkin24

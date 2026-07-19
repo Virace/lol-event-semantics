@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Gragas
+  champion_id: 79
+  skin_number: 10
+  skin_token: Skin10
+  id: 79010
+  alias: GragasSkin10
+  names:
+    en_US:
+      - value: Arctic Ops Gragas
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 冰原核弹 古拉加斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 63
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - GragasSkin10

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Vi
+  champion_id: 254
+  skin_number: 4
+  skin_token: Skin04
+  id: 254004
+  alias: ViSkin04
+  names:
+    en_US:
+      - value: Demon Vi
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 炼狱魔女 蔚
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 116
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ViSkin04
+  - ViSkin4

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sivir
+  champion_id: 15
+  skin_number: 6
+  skin_token: Skin06
+  id: 15006
+  alias: SivirSkin06
+  names:
+    en_US:
+      - value: Snowstorm Sivir
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 冰雪风暴 希维尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 47
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SivirSkin06
+  - SivirSkin6

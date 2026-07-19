@@ -1,0 +1,309 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 163
+  alias: Taliyah
+  names:
+    en_US:
+      - value: Taliyah
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 塔莉垭
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 岩雀
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 小鸟
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: taliya
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: tly
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: xiaoniao
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: xn
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: yanque
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: yq
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: TaliyahE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Unraveled Earth
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 撒石阵
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:e249b4d59fc24f474c8e68687b18325179291f5d14bc6c799476cc69344328ae
+            value: Taliyah creates a slowing minefield. If enemies dash through 
+              it or are knocked through it, the mines explode and stun them.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:6b426b657b9b2efde7a385100dc146306b3525283b9fb526b4c34581cd4ccbd5
+            value: 塔莉垭创造一个可减速的雷区。如果敌人在使用冲刺技能途径雷区或是被强制位移效果途经雷区，石雷就会爆炸并晕眩该敌人。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: TaliyahPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Rock Surfing
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 浮石冲
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:628de5916a8b4362c1447369d97f2b1d68d36f79890b0ab013a140f1962ad20a
+            value: Taliyah gains Move Speed near walls.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:8206e8383f1aff2f6788fd61c80537b72548b36d564523a9c62a2bc8c2837523
+            value: 塔莉垭在墙体附近时会获得移动速度。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: TaliyahQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Threaded Volley
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 石穿
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:b0b51645c4d391cc04c0286c3d945edf31c916842c4f1e03aff260fc88bd9880
+            value: Taliyah throws a volley of rocks in a target direction, 
+              moving freely as she casts. This creates Worked Ground below her. 
+              If Taliyah casts Threaded Volley on Worked Ground, she consumes 
+              the ground to throw a stronger boulder that slows enemies.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:350ddc2a209a649c505326c9e58d8964402d9e9aab447413ae23dc8e53bf224b
+            value: 
+              塔莉垭朝目标方向扔出一串岩石，同时自身可自由移动。这个技能会在她脚下生成【掘石场】。如果塔莉垭在【掘石场】上使用【Q石穿】，她将消耗掉【掘石场】来投掷一颗更强大的岩石来减速敌人。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: TaliyahR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Weaver's Wall
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 墙幔
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:62421e006243ad56c81e1693fc2306a84f8c09c4bfd7ffd209a9e31b0b6948f5
+            value: Taliyah creates a very long wall and then surfs it.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:8e44d72e10ec818a08cc5256aa2a48f8431c5a6f1f91ace48ba1c2802fc5c3fa
+            value: 塔莉垭创造出一个非常长的石墙，然后在石墙上冲浪。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: TaliyahW
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: TaliyahWVC
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Seismic Shove
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 岩突
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:75f1ae570657ff0f786bc88e2e3855ed4acc07788f51937f643e112feff0c31c
+            value: Taliyah causes an area of ground to erupt and throws enemies 
+              within it in a direction of her choosing.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:32c6637d2fff4b674d73f33c117add3f5cbf93ecbf4e532055d20bda93a0cafa
+            value: 塔莉垭在目标区域引发岩突，并将区域内的敌人们扔向她所选的方向。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

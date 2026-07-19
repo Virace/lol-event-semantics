@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Seraphine
+  champion_id: 147
+  skin_number: 59
+  skin_token: Skin59
+  id: 147059
+  alias: SeraphineSkin59
+  names:
+    en_US:
+      - value: Firecracker Seraphine
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 龙马烈焰 萨勒芬妮
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 54
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SeraphineSkin59

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Hwei
+  champion_id: 910
+  skin_number: 1
+  skin_token: Skin01
+  id: 910001
+  alias: HweiSkin01
+  names:
+    en_US:
+      - value: Winterblessed Hwei
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 北极星使者 彗
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 187
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - HweiSkin01
+  - HweiSkin1

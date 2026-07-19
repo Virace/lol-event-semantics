@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Darius
+  champion_id: 122
+  skin_number: 1
+  skin_token: Skin01
+  id: 122001
+  alias: DariusSkin01
+  names:
+    en_US:
+      - value: Lord Darius
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 铁血帝皇 德莱厄斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 38
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - DariusSkin01
+  - DariusSkin1

@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Yasuo
+  champion_id: 157
+  skin_number: 45
+  skin_token: Skin45
+  id: 157045
+  alias: YasuoSkin45
+  names:
+    en_US:
+      - value: Sea Dog Yasuo
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 断浪之刃 亚索
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 138
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - YasuoSkin45

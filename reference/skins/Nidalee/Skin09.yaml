@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Nidalee
+  champion_id: 76
+  skin_number: 9
+  skin_token: Skin09
+  id: 76009
+  alias: NidaleeSkin09
+  names:
+    en_US:
+      - value: Super Galaxy Nidalee
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 银河魔装机神 奈德丽
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 21
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NidaleeSkin09
+  - NidaleeSkin9

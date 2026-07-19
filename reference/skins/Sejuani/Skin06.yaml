@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sejuani
+  champion_id: 113
+  skin_number: 6
+  skin_token: Skin06
+  id: 113006
+  alias: SejuaniSkin06
+  names:
+    en_US:
+      - value: Beast Hunter Sejuani
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 野兽猎人 瑟庄妮
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 32
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SejuaniSkin06
+  - SejuaniSkin6

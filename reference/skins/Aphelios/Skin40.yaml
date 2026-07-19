@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Aphelios
+  champion_id: 523
+  skin_number: 40
+  skin_token: Skin40
+  id: 523040
+  alias: ApheliosSkin40
+  names:
+    en_US:
+      - value: Prestige Spirit Blossom Springs Aphelios
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至臻 莲华温泉 厄斐琉斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 218
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ApheliosSkin40

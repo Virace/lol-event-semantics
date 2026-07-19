@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ahri
+  champion_id: 103
+  skin_number: 85
+  skin_token: Skin85
+  id: 103085
+  alias: AhriSkin85
+  names:
+    en_US:
+      - value: Risen Legend Ahri
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 殿堂传奇 阿狸
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 204
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AhriSkin85

@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Darius
+  champion_id: 122
+  skin_number: 65
+  skin_token: Skin65
+  id: 122065
+  alias: DariusSkin65
+  names:
+    en_US:
+      - value: Prestige Triumphant General Darius
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至臻 凯旋将军 德莱厄斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 215
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - DariusSkin65

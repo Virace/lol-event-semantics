@@ -1,0 +1,308 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 74
+  alias: Heimerdinger
+  names:
+    en_US:
+      - value: Heimerdinger
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 黑默丁格
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 大发明家
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 大头
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: dafamingjia
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: datou
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: dfmj
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: dt
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: heimodingge
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: hmdg
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: HeimerdingerE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: CH-2 Electron Storm Grenade
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: CH-2电子风暴手雷
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:f8483cec8004a6df42467cddc24aff9628dec4d0949e1d6500cbae32d17b9503
+            value: Heimerdinger lobs a grenade at a location, dealing damage to 
+              enemy units, as well as stunning anyone directly hit and slowing 
+              surrounding units.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:0d1d0168b5ae6682be0118d45e998c559de05681831f8d9344f41d10398f4894
+            value: 黑默丁格朝一个位置掷出一颗手雷，来对敌方单位造成伤害，并对被它直接命中的敌人造成晕眩效果，且对附近单位造成减速效果。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: HeimerdingerPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Hextech Affinity
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 海克斯科技亲和
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:9ae8dd7cdd0a470130c3064922cf47f46dde13b989d894ab05ffdf748833ef0f
+            value: Gain Move Speed while near allied towers and turrets deployed
+              by Heimerdinger.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:b3cd7b6aea22fb55b1962711e602939f6dbfadd483f2776555bf89e15f912b0a
+            value: 在友方防御塔和由黑默丁格部署的炮台附近时，获得移动速度加成。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: HeimerdingerQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: H-28 G Evolution Turret
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: H-28 G 进化炮台
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:1ffa4aa370339dcb803ea2f473714f9c2d635c52bf282802b01afa87cedd2dca
+            value: Heimerdinger lays down a rapid-fire cannon turret equipped 
+              with a secondary pass-through beam attack (turrets deal half 
+              damage to towers).
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:945c376658a219b03c1fbec27e7dd9ab05876383cc4a34ac30589c1fe185cf62
+            value: 黑默丁格放置一座快速开火的加农炮台，它还配有一个次级穿透光束发射器（炮台对防御塔造成一半伤害）。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: HeimerdingerR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: UPGRADE!!!
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 升级！！！
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:19119fe44d2dc1b3f73e0e1ce824d64efb58ed6bbe3cc5d82f6747c975c9c1ba
+            value: 'Heimerdinger invents an upgrade, causing his next spell to have
+              increased effects. '
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:b0d5d0b0530b2cd02117e51713f97dbfc0597e95257679b0dfd8d9c30b81d7f0
+            value: 黑默丁格通过发明进行一次技术升级，使他的下一个技能拥有强化效果。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: HeimerdingerW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Hextech Micro-Rockets
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 海克斯科技微型导弹
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:402f5b37798bd92218b2a7adb4c3d1e34c44f5650e6558749af24d44baba9d60
+            value: Heimerdinger fires long-range rockets that converge on his 
+              cursor.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:967bef20d472bdd93706cb868160d705262e9ba35a38a9b3dac90248abaa86b1
+            value: 黑默丁格以鼠标悬停处为焦点，发射数枚长程导弹。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

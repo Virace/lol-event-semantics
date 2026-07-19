@@ -1,0 +1,296 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 910
+  alias: Hwei
+  names:
+    en_US:
+      - value: Hwei
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 彗
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 异画师
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: hui
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: yihuashi
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: HweiE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: 'Subject: Torment'
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 主题：悚
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:35613bf7d5913a32495cd37e8ae30186d1f7ee1d89e160bc34003902ccd5092f
+            value: "Hwei envisions a series of torments, allowing him to paint controlling
+              visages.<br><br>This ability replaces Hwei's abilities with crowd control
+              abilities: Grim Visage, Gaze of the Abyss, and Crushing Maw."
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:2bf1520e1d22e412df909ed42509ffc8ebf4ea150db74711dc9e821f478711dc
+            value: 
+              彗将眼中所见到的恐怖景象付诸笔端，带来震慑人心的画面。<br><br>这个技能会用这些控制型技能替换掉彗的技能：阴沉变意、滞涩幽瞳、双钩血喉。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: HweiPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Signature of the Visionary
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 落款
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:659d246c2c0996b6d3e1f196d0537419b3256f39fb7519a47f61b5e9326f077e
+            value: Hwei primes enemy champions he damages with his abilities for
+              his signature finishing touch.<br><br>Hitting an enemy with a 
+              second damaging spell completes his signature, leaving it beneath 
+              them. The signature detonates after a short delay, dealing magic 
+              damage to all enemies in range.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:9f8a764644117c03e7ca34286f69dfb55e50216366ade53236e288ac1479d7a4
+            value: 
+              彗准备在那些受到他的技能伤害的敌人们身上留下落款。<br><br>用另一个伤害型技能命中时，即可完成他的落款，将其留在敌人脚下。落款会在短暂延迟后引爆，对范围内的所有敌人造成魔法伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: HweiQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: 'Subject: Disaster'
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 主题：灾
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:6bac1f320cc676aa926247cc293b7f4db89554b0bf9f01a55ff7d871b9373571
+            value: "Hwei envisions a series of disasters, allowing him to paint a
+              devastating blow.<br><br>This ability replaces Hwei's abilities with
+              damaging abilities: Devastating Fire, Severing Bolt, and Molten Fissure."
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:3e8d09bb5ea677214af056c66f9bb23e65a89646476385af8e712ea082424e06
+            value: 
+              彗将眼中所见的灾难逐一描绘，造成可怕的破坏力。<br><br>这个技能会用这些伤害型技能替换掉彗的技能：没骨火、攒聚雷、连皴山。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: HweiR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Spiraling Despair
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 焚心绚华绘
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:9b48a9bed9b8e1833b79ba22791af36ee3b37e764a0c19403e6378a1f4aa6b93
+            value: Hwei paints a vision of pure despair. The first enemy 
+              champion struck becomes the center of an expanding painting that 
+              slows and damages nearby enemies. The vision explodes after 
+              reaching its maximum size or when the champion dies.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:95fb0618b6754c2542047190f90fe90f116b99ef01ab23a9f6c4dda5940afc4a
+            value: 
+              彗画出深重的绝望。命中的第一个敌人会成为画卷的中心。画卷向四周展开，减速并伤害附近的敌人们。展开至最大时，或是中心的敌人死亡时，画卷会发生爆炸。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: HweiW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: 'Subject: Serenity'
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 主题：靖
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:de827172a7dbdb4d1dee28d8bbb1820992057e98b1af9731e21bc4c62bcfba04
+            value: "Hwei envisions a series of serenities, allowing him to paint invigorating
+              settings.<br><br>This ability replaces Hwei's abilities with utility
+              abilities: Fleeting Current, Pool of Reflection, and Stirring Lights."
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:f146f570ff530ba01a4a77c89421247d41d39449c55f451fc37d1c61427466b0
+            value: 彗画下眼中所见到的宁静，抚慰并激励众人。<br><br>这个技能会用这些功能型技能替换掉彗的技能：飞染、渲浓、宿墨
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

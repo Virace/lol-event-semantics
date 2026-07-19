@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Gnar
+  champion_id: 150
+  skin_number: 3
+  skin_token: Skin03
+  id: 150003
+  alias: GnarSkin03
+  names:
+    en_US:
+      - value: Snow Day Gnar
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 冰雪兽 纳尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 46
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - GnarSkin03
+  - GnarSkin3

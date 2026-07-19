@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Nunu
+  champion_id: 20
+  skin_number: 1
+  skin_token: Skin01
+  id: 20001
+  alias: NunuSkin01
+  names:
+    en_US:
+      - value: Sasquatch Nunu & Willump
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 荒野巨兽 努努和威朗普
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 72
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NunuSkin01
+  - NunuSkin1

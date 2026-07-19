@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Brand
+  champion_id: 63
+  skin_number: 21
+  skin_token: Skin21
+  id: 63021
+  alias: BrandSkin21
+  names:
+    en_US:
+      - value: Debonair Brand
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 焰执事 布兰德
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 23
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - BrandSkin21

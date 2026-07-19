@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Neeko
+  champion_id: 518
+  skin_number: 22
+  skin_token: Skin22
+  id: 518022
+  alias: NeekoSkin22
+  names:
+    en_US:
+      - value: Bewitching Neeko
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 魅惑女巫 妮蔻
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 172
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NeekoSkin22

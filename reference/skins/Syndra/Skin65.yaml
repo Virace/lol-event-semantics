@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Syndra
+  champion_id: 134
+  skin_number: 65
+  skin_token: Skin65
+  id: 134065
+  alias: SyndraSkin65
+  names:
+    en_US:
+      - value: Dumpling Darlings Syndra
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 点心宝贝 辛德拉
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 213
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SyndraSkin65

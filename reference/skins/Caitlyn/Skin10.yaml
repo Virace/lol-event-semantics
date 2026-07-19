@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Caitlyn
+  champion_id: 51
+  skin_number: 10
+  skin_token: Skin10
+  id: 51010
+  alias: CaitlynSkin10
+  names:
+    en_US:
+      - value: Lunar Wraith Caitlyn
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 玉净夜叉 凯特琳
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 55
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - CaitlynSkin10

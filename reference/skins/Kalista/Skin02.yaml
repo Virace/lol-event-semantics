@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Kalista
+  champion_id: 429
+  skin_number: 2
+  skin_token: Skin02
+  id: 429002
+  alias: KalistaSkin02
+  names:
+    en_US:
+      - value: Worlds 2015 Kalista
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 冠军之矛 卡莉丝塔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 8
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KalistaSkin02
+  - KalistaSkin2

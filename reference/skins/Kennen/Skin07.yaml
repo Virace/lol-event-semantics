@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Kennen
+  champion_id: 85
+  skin_number: 7
+  skin_token: Skin07
+  id: 85007
+  alias: KennenSkin07
+  names:
+    en_US:
+      - value: Super Kennen
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 超级英雄 凯南
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 111
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KennenSkin07
+  - KennenSkin7

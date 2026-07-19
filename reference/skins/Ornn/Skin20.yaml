@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ornn
+  champion_id: 516
+  skin_number: 20
+  skin_token: Skin20
+  id: 516020
+  alias: OrnnSkin20
+  names:
+    en_US:
+      - value: Choo-Choo Ornn
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 嘟！嘟 ！奥恩
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 61
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - OrnnSkin20

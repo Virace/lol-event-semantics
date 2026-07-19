@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Kaisa
+  champion_id: 145
+  skin_number: 1
+  skin_token: Skin01
+  id: 145001
+  alias: KaisaSkin01
+  names:
+    en_US:
+      - value: Bullet Angel Kai'Sa
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 弹幕天使 卡莎
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 65
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KaisaSkin01
+  - KaisaSkin1

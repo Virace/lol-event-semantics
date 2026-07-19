@@ -1,0 +1,309 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 83
+  alias: Yorick
+  names:
+    en_US:
+      - value: Yorick
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 约里克
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 牧魂人
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 掘墓人
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: jmr
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: juemuren
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: mhr
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: muhunren
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: ylk
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: yuelike
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: YorickE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Mourning Mist
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 哀伤之雾
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:eb640106807cf7501230cfcf1a236b826f6ff91c3416cb4529a11dc3b4ae507b
+            value: 'Yorick throws a globule of Black Mist that reduces armor, damages,
+              slows and marks enemies. Summoned units gain move speed when moving
+              towards marked targets. '
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:db7313cc317640be2c7d361cec36b7cb84cccf878be69a2450fbb50a5c37ef03
+            value: '约里克扔出一小团黑雾，对敌人造成护甲削减、伤害、减速效果并标记敌人。召唤物在朝着被标记的目标移动时会获得移动速度。 '
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: YorickPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Shepherd of Souls
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 牧魂人
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:c1a738dcff305d01584df37c2e920f36a0a85d129c2c7b729771fb7fc17bcd96
+            value: <font color='#FF9900'>The Cursed Horde:</font> Yorick can 
+              summon Mist Walkers to swarm and attack nearby enemies.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:20575b5b2485737603c2f358849d337ebef096f1e71b3c597716d2cab6f51fa1
+            value: <font color='#FF9900'>受诅咒的部落：</font>约里克可以召唤雾行者来蜂拥并攻击附近的敌人。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: YorickQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Last Rites
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 临终仪式
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:22d71662052e363f4f759df7c729497fa316f9b8da7ffcc6ea884d94ee2d8981
+            value: Yorick deals bonus damage on his next attack and heals 
+              himself. If the target is a champion or large monster or if the 
+              target dies, a grave will be dug.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:a67bea8e18e7dbbfdf7b28e62b61bf71aeb45100401ce68e7597bd709a065bd7
+            value: 约里克的下次攻击造成额外伤害并治疗自身。如果目标是一个英雄或大型野怪或如果目标死亡，则会留下一个坟墓。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: YorickR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Eulogy of the Isles
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 海屿悼词
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:e29163e26abf31e9f1c8e5ae5ff1de70ab80068e54e7b464af24d21d34f49428
+            value: Yorick summons the Maiden of the Mist that causes Yorick's 
+              attacks against the Maiden's target to deal bonus damage. The 
+              Maiden will also automatically raise Walkers from dead enemies.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:6b7f6a89d6b75ec42b4b09f50ccd2ef936c87bb397bbe8c0f6f21792f8771ac5
+            value: 约里克召唤迷雾室女，来让约里克的攻击对室女锁定的目标造成额外伤害。室女也会自动从死亡的敌人身上唤起雾行者。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: YorickW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Dark Procession
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 暗灵缠身
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:272fcce569af917f882128e0c551435f079b5cb1a9ea57d98e475cb9527405f6
+            value: Yorick summons a destructible wall at target location that 
+              will block enemy movement.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:271b353ce66ed13f2e624098e55a17bb4ac7adca098c52e71fa70de71ccdcdee
+            value: 约里克在目标区域召唤一圈可破坏的暗灵之墙来阻挡敌方移动。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

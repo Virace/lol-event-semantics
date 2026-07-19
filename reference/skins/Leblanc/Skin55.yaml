@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Leblanc
+  champion_id: 7
+  skin_number: 55
+  skin_token: Skin55
+  id: 7055
+  alias: LeblancSkin55
+  names:
+    en_US:
+      - value: Risen Legend LeBlanc
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 殿堂传奇 乐芙兰
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 204
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LeblancSkin55

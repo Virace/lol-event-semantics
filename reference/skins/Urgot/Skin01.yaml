@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Urgot
+  champion_id: 6
+  skin_number: 1
+  skin_token: Skin01
+  id: 6001
+  alias: UrgotSkin01
+  names:
+    en_US:
+      - value: Giant Enemy Crabgot
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 深渊巨蟹 厄加特
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 79
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - UrgotSkin01
+  - UrgotSkin1

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Rammus
+  champion_id: 33
+  skin_number: 6
+  skin_token: Skin06
+  id: 33006
+  alias: RammusSkin06
+  names:
+    en_US:
+      - value: Full Metal Rammus
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 全金属狂潮 拉莫斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 118
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - RammusSkin06
+  - RammusSkin6

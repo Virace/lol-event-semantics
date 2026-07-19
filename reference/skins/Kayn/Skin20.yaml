@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Kayn
+  champion_id: 141
+  skin_number: 20
+  skin_token: Skin20
+  id: 141020
+  alias: KaynSkin20
+  names:
+    en_US:
+      - value: HEARTSTEEL Kayn
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 心之钢 凯隐
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 199
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KaynSkin20

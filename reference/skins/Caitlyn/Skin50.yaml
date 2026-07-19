@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Caitlyn
+  champion_id: 51
+  skin_number: 50
+  skin_token: Skin50
+  id: 51050
+  alias: CaitlynSkin50
+  names:
+    en_US:
+      - value: Arcane Commander Caitlyn
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 双城之战2 指挥官 凯特琳
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 152
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - CaitlynSkin50

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Singed
+  champion_id: 27
+  skin_number: 4
+  skin_token: Skin04
+  id: 27004
+  alias: SingedSkin04
+  names:
+    en_US:
+      - value: Mad Scientist Singed
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 科学狂人 辛吉德
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 106
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SingedSkin04
+  - SingedSkin4

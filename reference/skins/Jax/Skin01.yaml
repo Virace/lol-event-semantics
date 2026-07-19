@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Jax
+  champion_id: 24
+  skin_number: 1
+  skin_token: Skin01
+  id: 24001
+  alias: JaxSkin01
+  names:
+    en_US:
+      - value: The Mighty Jax
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 冰球队员 贾克斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 28
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - JaxSkin01
+  - JaxSkin1

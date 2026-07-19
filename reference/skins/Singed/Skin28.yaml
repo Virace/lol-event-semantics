@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Singed
+  champion_id: 27
+  skin_number: 28
+  skin_token: Skin28
+  id: 27028
+  alias: SingedSkin28
+  names:
+    en_US:
+      - value: Arcane Shimmer Lab Singed
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 双城之战2 微光实验室 辛吉德
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 152
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SingedSkin28

@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Akshan
+  champion_id: 166
+  skin_number: 10
+  skin_token: Skin10
+  id: 166010
+  alias: AkshanSkin10
+  names:
+    en_US:
+      - value: Crystal Rose Akshan
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 水晶玫瑰 阿克尚
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 140
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AkshanSkin10

@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Vex
+  champion_id: 711
+  skin_number: 20
+  skin_token: Skin20
+  id: 711020
+  alias: VexSkin20
+  names:
+    en_US:
+      - value: Stargazer Vex
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 观星者 薇古丝
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 217
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - VexSkin20

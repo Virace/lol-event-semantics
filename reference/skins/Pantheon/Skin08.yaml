@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Pantheon
+  champion_id: 80
+  skin_number: 8
+  skin_token: Skin08
+  id: 80008
+  alias: PantheonSkin08
+  names:
+    en_US:
+      - value: Baker Pantheon
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 面包之王 潘森
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 26
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - PantheonSkin08
+  - PantheonSkin8

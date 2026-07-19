@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Twitch
+  champion_id: 29
+  skin_number: 2
+  skin_token: Skin02
+  id: 29002
+  alias: TwitchSkin02
+  names:
+    en_US:
+      - value: Whistler Village Twitch
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 北风冻原 图奇
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 28
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - TwitchSkin02
+  - TwitchSkin2

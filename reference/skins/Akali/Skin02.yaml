@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Akali
+  champion_id: 84
+  skin_number: 2
+  skin_token: Skin02
+  id: 84002
+  alias: AkaliSkin02
+  names:
+    en_US:
+      - value: Infernal Akali
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 奈落之炎 阿卡丽
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 86
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AkaliSkin02
+  - AkaliSkin2

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Jayce
+  champion_id: 126
+  skin_number: 5
+  skin_token: Skin05
+  id: 126005
+  alias: JayceSkin05
+  names:
+    en_US:
+      - value: Battle Academia Jayce
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 战斗学院 杰斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 113
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - JayceSkin05
+  - JayceSkin5

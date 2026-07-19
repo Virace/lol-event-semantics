@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Nami
+  champion_id: 267
+  skin_number: 3
+  skin_token: Skin03
+  id: 267003
+  alias: NamiSkin03
+  names:
+    en_US:
+      - value: Urf the Nami-tee
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 鲛妮座人 娜美
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 168
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NamiSkin03
+  - NamiSkin3

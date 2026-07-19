@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: MonkeyKing
+  champion_id: 62
+  skin_number: 1
+  skin_token: Skin01
+  id: 62001
+  alias: MonkeyKingSkin01
+  names:
+    en_US:
+      - value: Volcanic Wukong
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 三昧真火 孙悟空
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 86
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MonkeyKingSkin01
+  - MonkeyKingSkin1

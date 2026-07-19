@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Riven
+  champion_id: 92
+  skin_number: 3
+  skin_token: Skin03
+  id: 92003
+  alias: RivenSkin03
+  names:
+    en_US:
+      - value: Battle Bunny Riven
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 兔女郎 锐雯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 100
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - RivenSkin03
+  - RivenSkin3

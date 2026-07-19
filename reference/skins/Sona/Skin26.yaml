@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sona
+  champion_id: 37
+  skin_number: 26
+  skin_token: Skin26
+  id: 37026
+  alias: SonaSkin26
+  names:
+    en_US:
+      - value: 'Pentakill III: Lost Chapter Sona'
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 五杀摇滚 III：遗失的章节 娑娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 151
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SonaSkin26

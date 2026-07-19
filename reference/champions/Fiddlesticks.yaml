@@ -1,0 +1,309 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 9
+  alias: Fiddlesticks
+  names:
+    en_US:
+      - value: Fiddlesticks
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 费德提克
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 远古恐惧
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 稻草人
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: daocaoren
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: dcr
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: fdtk
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: feidetike
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: ygkj
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: yuangukongju
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: FiddleSticksE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Reap
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 夜割
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:d9c02952ef441cf13a49ff07bfbda10fbb0fe7f73eb602b05bf8cd8ce958c186
+            value: Fiddlesticks slashes an area with its scythe, slowing all 
+              enemies hit and silencing enemies hit in the center of the slash.
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:8b5e97782aacf6421c56c8af1a9673ba94ac034fe78017d5cee1abb23b45b4cf
+            value: 费德提克用它的镰刀斩击一个区域，使命中的所有敌人减速，并使斩击区域中心的敌人沉默。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: FiddleSticksPassive
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: FiddlesticksPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: A Harmless Scarecrow
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 巫骇草人
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:a98dadf3206a3317d1aa8062436db1d77ed830d12bfed11c08c3847dcec7d9a1
+            value: Fiddlesticks' trinket is replaced by scarecrow effigies.
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:edaf489c0dfaaf299393d9ac40e9dd1747eb26c1491b0298682888a0fc6ddc2e
+            value: 费德提克的饰品会被替换为【草间人】。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: FiddleSticksQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Terrify
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 恐惧
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:a0f51e36611d43bda0b348e5b3ab822d0ec10b730093cb0d6f341d9db2fcbf90
+            value: Fiddlesticks damaging enemies with spells while unseen or 
+              targeting an enemy with Terrify's activation strikes a target unit
+              with fear, causing it to flee in terror for a duration.
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:e1b501ab84c907b2e9c9b6d8183c141d5e52925912061559eaaf497f81aee024
+            value: 
+              费德提克在非战斗状态且未被敌人看见时，如果用技能对敌人造成了伤害，或者对一名敌人使用了【Q恐惧】的主动效果，都会使目标因害怕而逃跑一段时间。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: FiddleSticksR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Crowstorm
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 群鸦风暴
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:ebefe93b4cbff2b8096b2c9840aa6807a839124a3b16a0c3428646877af30c81
+            value: A murder of crows flock wildly around Fiddlesticks, dealing 
+              damage per second to all enemy units in the area.
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:40868260d284c67c1293d60ca726996f134ab3fcfec0e41843b7fd9741ac5a8c
+            value: 一群杀人鸦盘旋于费德提克身边，每秒对范围内的所有敌方单位造成伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: FiddleSticksW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Bountiful Harvest
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 五骨丰登
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:f024a75010498e8432fca19333b161bdc6e67626595cd46b0626c6eaf3fe8966
+            value: Fiddlesticks drains health from nearby enemies, dealing bonus
+              execute damage at the end of the duration.
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:ef86572b55f64bb36cda0bff5adc5f86aff507a865e3255b40323f49209fef9b
+            value: 费德提克从附近敌人们身上吸取生命值，在持续结束时造成额外的处决伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

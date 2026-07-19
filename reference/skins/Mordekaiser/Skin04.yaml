@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Mordekaiser
+  champion_id: 82
+  skin_number: 4
+  skin_token: Skin04
+  id: 82004
+  alias: MordekaiserSkin04
+  names:
+    en_US:
+      - value: Lord Mordekaiser
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 死亡领主 莫德凯撒
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 38
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MordekaiserSkin04
+  - MordekaiserSkin4

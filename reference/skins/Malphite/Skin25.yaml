@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Malphite
+  champion_id: 54
+  skin_number: 25
+  skin_token: Skin25
+  id: 54025
+  alias: MalphiteSkin25
+  names:
+    en_US:
+      - value: FPX Malphite
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: FPX 墨菲特
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 130
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MalphiteSkin25

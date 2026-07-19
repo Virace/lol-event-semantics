@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Shyvana
+  champion_id: 102
+  skin_number: 4
+  skin_token: Skin04
+  id: 102004
+  alias: ShyvanaSkin04
+  names:
+    en_US:
+      - value: Ice Drake Shyvana
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 冰霜亚龙 希瓦娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 129
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ShyvanaSkin04
+  - ShyvanaSkin4

@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Akali
+  champion_id: 84
+  skin_number: 68
+  skin_token: Skin68
+  id: 84068
+  alias: AkaliSkin68
+  names:
+    en_US:
+      - value: DRX Akali
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: DRX 阿卡丽
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 194
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AkaliSkin68

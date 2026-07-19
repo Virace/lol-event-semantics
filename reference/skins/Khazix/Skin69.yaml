@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Khazix
+  champion_id: 121
+  skin_number: 69
+  skin_token: Skin69
+  id: 121069
+  alias: KhazixSkin69
+  names:
+    en_US:
+      - value: Lunar Guardian Kha'Zix
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 春晖海神 卡兹克
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 55
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KhazixSkin69

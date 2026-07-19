@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Jhin
+  champion_id: 202
+  skin_number: 25
+  skin_token: Skin25
+  id: 202025
+  alias: JhinSkin25
+  names:
+    en_US:
+      - value: Empyrean Jhin
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至高天 烬
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 186
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - JhinSkin25

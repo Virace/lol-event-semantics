@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Malphite
+  champion_id: 54
+  skin_number: 4
+  skin_token: Skin04
+  id: 54004
+  alias: MalphiteSkin04
+  names:
+    en_US:
+      - value: Obsidian Malphite
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 黑曜石守护者 墨菲特
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 86
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MalphiteSkin04
+  - MalphiteSkin4

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Heimerdinger
+  champion_id: 74
+  skin_number: 4
+  skin_token: Skin04
+  id: 74004
+  alias: HeimerdingerSkin04
+  names:
+    en_US:
+      - value: Snowmerdinger
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 雪默丁格
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 48
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - HeimerdingerSkin04
+  - HeimerdingerSkin4

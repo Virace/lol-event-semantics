@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Shaco
+  champion_id: 35
+  skin_number: 54
+  skin_token: Skin54
+  id: 35054
+  alias: ShacoSkin54
+  names:
+    en_US:
+      - value: Fright Night Shaco
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 魔域梦魇 萨科
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 170
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ShacoSkin54

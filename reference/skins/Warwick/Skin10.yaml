@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Warwick
+  champion_id: 19
+  skin_number: 10
+  skin_token: Skin10
+  id: 19010
+  alias: WarwickSkin10
+  names:
+    en_US:
+      - value: Lunar Guardian Warwick
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 南天之怒 沃里克
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 55
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - WarwickSkin10

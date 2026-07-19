@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Zoe
+  champion_id: 142
+  skin_number: 33
+  skin_token: Skin33
+  id: 142033
+  alias: ZoeSkin33
+  names:
+    en_US:
+      - value: Dark Star Zoe
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 暗星 佐伊
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 44
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ZoeSkin33

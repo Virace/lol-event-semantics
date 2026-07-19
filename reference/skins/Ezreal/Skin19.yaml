@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ezreal
+  champion_id: 81
+  skin_number: 19
+  skin_token: Skin19
+  id: 81019
+  alias: EzrealSkin19
+  names:
+    en_US:
+      - value: SSG Ezreal
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: SSG 伊泽瑞尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 75
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - EzrealSkin19

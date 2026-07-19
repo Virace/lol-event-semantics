@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Taric
+  champion_id: 44
+  skin_number: 27
+  skin_token: Skin27
+  id: 44027
+  alias: TaricSkin27
+  names:
+    en_US:
+      - value: Fatebreaker Taric
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 逆命 塔里克
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 216
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - TaricSkin27

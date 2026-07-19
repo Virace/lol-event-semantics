@@ -1,0 +1,312 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 119
+  alias: Draven
+  names:
+    en_US:
+      - value: Draven
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 德莱文
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 荣耀行刑官
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: delaiwen
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: dlw
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: rongyaoxingxingguan
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: ryxxg
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: DravenDoubleShot
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+      - value: DravenE
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Stand Aside
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 开道利斧
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:e84b6f4db1a44b168c56f5f46d791ea63c50e126b5517785ae00645a1688d979
+            value: Draven throws his axes, dealing physical damage to targets 
+              hit and knocking them aside. Targets hit are slowed.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:3b0974f85e984c70e71d6a18bce4076f3bd79f4483b5fcd8da03751e99229725
+            value: 德莱文扔出他的斧头，对命中的目标造成物理伤害，并将他们击退至一边。被命中的目标会受到减速效果。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: DravenPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: League of Draven
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 德莱文联盟
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:3b2dfdb33da42c4063713160798a6848f80ded092ebc6deac823a917d54282d0
+            value: Draven gains his fans' Adoration when he catches a Spinning 
+              Axe or kills a minion, monster, or tower. Killing enemy champions 
+              grants Draven bonus gold based on how much Adoration he has.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:3abc1c20b7450f86e8c0e8b67915e3f2dd80823c26769c484ec249b41a9fb99a
+            value: 
+              在接住一把旋转飞斧或者击杀了一个小兵、野怪或防御塔后，德莱文会从他的粉丝那里获得崇拜效果。击杀一名敌方英雄会为德莱文提供额外赏金，赏金的多少取决于他拥有多少层崇拜效果。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: DravenQ
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: DravenSpinning
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Spinning Axe
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 旋转飞斧
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:31e176a88ce1693c8a56e6e919e0610b3c2e85936d2bf5c40351f89a4cc1d626
+            value: Draven's next attack will deal bonus physical damage. This 
+              axe will ricochet off the target high up into the air. If Draven 
+              catches it, he automatically readies another Spinning Axe. Draven 
+              can have two Spinning Axes at once.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:477ad16726354518b8e662e3ebb523444b642a76db8a938dcdcf2e8522d7213b
+            value: 
+              德莱文的下次攻击会造成额外物理伤害。这个斧头将会从目标身上弹到高空。如果德莱文接住了它，那么会立刻准备好下一发旋转飞斧。德莱文可以同时拥有2发旋转飞斧。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: DravenR
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: DravenRCast
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Whirling Death
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 冷血追命
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:6110348e585353c68e138dfadd7b6dc7b8fa7bf2fd431eb12a5bcb5b3e8f819d
+            value: Draven hurls two massive axes to deal physical damage to each
+              unit struck. Whirling Death slowly reverses direction and returns 
+              to Draven after striking an enemy champion. Draven may also 
+              activate this ability while the axes are in flight to cause it to 
+              return early. Deals less damage for each unit hit and resets when 
+              the axes reverse direction. Executes enemies who have less health 
+              than Draven's number of Adoration stacks.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:04d4a297fae4ab26f79198975b818c38dd46f4ad8a06bc9a184103fbdb447acb
+            value: 
+              德莱文掷出两柄大斧，对命中的每个单位造成物理伤害。在命中一名敌方英雄后，大斧会缓慢地调转方向，并回到德莱文身边。在斧头正在向外飞的时候，德莱文可以激活该技能来让斧头早点飞回来。每命中一个单位，伤害值就会减少。在斧头调转方向时，伤害值会重置。会处决那些生命值低于德莱文崇拜层数的敌人们。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: DravenFury
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+      - value: DravenW
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Blood Rush
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 血性冲刺
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:90ad45fac854217fcce9cdc25cbfd036385ae7aa1dd5160d46d958627e600758
+            value: Draven gains increased Move Speed and Attack Speed. The Move 
+              Speed bonus decreases rapidly over its duration. Catching a 
+              Spinning Axe will refresh the cooldown of Blood Rush.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:cca1e140d4295c46852b1458fe8618ce1c2f0f017c17c9ce0d363eb4b72062bd
+            value: 德莱文获得移动速度和攻击速度加成。移动速度加成在持续时间过后会急剧下降。在接到一把旋转飞斧后，血性冲刺会立刻冷却完毕。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

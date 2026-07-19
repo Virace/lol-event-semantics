@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Jax
+  champion_id: 24
+  skin_number: 12
+  skin_token: Skin12
+  id: 24012
+  alias: JaxSkin12
+  names:
+    en_US:
+      - value: Warden Jax
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 光明骑士 贾克斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 50
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - JaxSkin12

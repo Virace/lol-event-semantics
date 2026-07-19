@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Elise
+  champion_id: 60
+  skin_number: 1
+  skin_token: Skin01
+  id: 60001
+  alias: EliseSkin01
+  names:
+    en_US:
+      - value: Death Blossom Elise
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 死亡绽放 伊莉丝
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 62
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - EliseSkin01
+  - EliseSkin1

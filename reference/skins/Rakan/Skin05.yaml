@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Rakan
+  champion_id: 497
+  skin_number: 5
+  skin_token: Skin05
+  id: 497005
+  alias: RakanSkin05
+  names:
+    en_US:
+      - value: Star Guardian Rakan
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 星之守护者 洛
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 119
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - RakanSkin05
+  - RakanSkin5

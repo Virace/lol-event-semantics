@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Kayle
+  champion_id: 10
+  skin_number: 2
+  skin_token: Skin02
+  id: 10002
+  alias: KayleSkin02
+  names:
+    en_US:
+      - value: Viridian Kayle
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 末世天使 凯尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 97
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KayleSkin02
+  - KayleSkin2

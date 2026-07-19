@@ -1,0 +1,292 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 893
+  alias: Aurora
+  names:
+    en_US:
+      - value: Aurora
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 阿萝拉
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 双界灵兔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: aluola
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: shuangjielingtu
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: AuroraE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: The Weirding
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 怪奇喷涌
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:433ccfaf40172bb1ab05d42a236c3ccc3ae35dc162531a50de3a7ffe9ffe21f3
+            value: Aurora converges the realms, sending out a blast of spirit 
+              magic that damages and slows enemies before Aurora hops backward 
+              to safety.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:461a2e8b0804235957f7db923ff8b15ee0ad68b6a71e8356d3935d1945c40549
+            value: 
+              阿萝拉打开界域之窗，施放出一道灵魂魔法洪流，让双界汇聚，放出一道灵物魔法震波，对敌人造成伤害和减速，然后阿萝拉也会向后跳到安全处。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: AuroraPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Spirit Abjuration
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 驱灵奇术
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:4af8fae09483221ddfd0db84c42c23f5462d3b445901014fe8617b402d2fbe1a
+            value: Aurora's spells and attacks exorcise spirits from the enemies
+              she damages. Exorcised spirits follow Aurora around and heal her.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:8a5a93a8cb925ef397d6b6ba934a3e2289a30daff6dc52381a0a56d3ef0a1d98
+            value: 阿萝拉的技能或攻击伤害能从敌人身上抽离出灵物。被抽离灵物跟随阿萝拉并治疗她。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: AuroraQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Twofold Hex
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 飞去来咒
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:7c6d69ba391afaa2a3f6adc32dcc09d92e4f08105dc2d8b9c39c18d4a3928ed6
+            value: Aurora sends out a missile that curses any enemies it hits. 
+              She can then recast the ability to draw active curses back toward 
+              herself, damaging foes who are hit along the way.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:7a87ba7d156248fe1967a66b23337b26872b6e33f61385eff0b0ab11c0756d73
+            value: 
+              阿萝拉放出一道飞弹，诅咒所有命中的敌人。阿萝拉可以再次施放该技能，来将所有激活的诅咒抽回自己身上。诅咒在返回途中会对命中的敌人造成伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: AuroraR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Between Worlds
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 双界合一
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:0ff0bcedf44b500021ee26ce77cb9015828dfa6f56c75a2737620b0fa902623d
+            value: Aurora leaps in a direction of her choosing, releasing a 
+              shockwave that damages and slows any enemies it hits. Afterward, 
+              she creates an area that slows enemies within it and allows Aurora
+              to teleport from one side of the area to the other.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:336fe238c40fc05faa2736958e8602fe6fc58269a12f44d68a5a6c5112f95216
+            value: 
+              阿萝拉跳向选定方向，释放出一片灵冲击波，对命中的敌人造成伤害和减速。然后，她会创造一个区域来减速其中的敌人们，并且允许阿萝拉从该区域的一侧传送到另一侧。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: AuroraW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Across the Veil
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 灵纱洞开
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:b455538bfdb9617a6999e72bd5c11134528f581d683361b46c88a58a78bc66d3
+            value: Aurora leaps in a direction of her choosing, entering the 
+              spirit realm upon landing, becoming invisible, and gaining Move 
+              Speed for a short duration of time.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:e85ade3b9c648e7258d380cf4dc141498bfef790614680142308e64623589109
+            value: 阿萝拉跳向选定方向，并在落地时进入精神领域，在短时间内进入隐形状态并获得移动速度。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

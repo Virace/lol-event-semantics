@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Draven
+  champion_id: 119
+  skin_number: 68
+  skin_token: Skin68
+  id: 119068
+  alias: DravenSkin68
+  names:
+    en_US:
+      - value: Victorious Draven
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 胜利行刑官 德莱文
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 7
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - DravenSkin68

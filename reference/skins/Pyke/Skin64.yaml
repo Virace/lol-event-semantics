@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Pyke
+  champion_id: 555
+  skin_number: 64
+  skin_token: Skin64
+  id: 555064
+  alias: PykeSkin64
+  names:
+    en_US:
+      - value: Fright Night Pyke
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 魔域梦魇 派克
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 170
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - PykeSkin64

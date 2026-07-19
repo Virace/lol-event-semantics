@@ -1,0 +1,324 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 112
+  alias: Viktor
+  names:
+    en_US:
+      - value: Viktor
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 维克托
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 奥术先驱
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 三只手
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: 机械先驱
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: jixiexianqu
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: jxxq
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: sanzhishou
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: szs
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: weiketuo
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: wkt
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: ViktorE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Hextech Ray
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 海克斯射线
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:1483c4e3db14d8f57f4edf6d197c5e2478cfe755fd1b2319a5d93b0670f60da1
+            value: "Viktor uses his biomechanical arm to fire a Hextech Ray that cuts
+              across the field in a line, dealing damage to all enemies in its path.<br><br>Augment:
+              An explosion follows in the Hextech Ray's wake, dealing magic damage.<br>"
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:02672ab2abf5df0d53735faab05a6407872bc9e1d165c77be3f2fa9f0a7dba4a
+            value: 
+              维克托用自己的生物机械臂发射一束海克斯射线，沿一条直线在战场上切割，对沿途敌人造成伤害。<br><br>增强：一道爆炸会跟随海克斯射线的轨迹，造成魔法伤害。<br>
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: ViktorPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Glorious Evolution
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 光荣进化
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:c20cd982c8b1c8ad9df2e9fe747a6940a9c144eb532eda9c3bc5bc44f7ca149a
+            value: Viktor gains Hex Fragments whenever he kills an enemy. With 
+              every 100 Hex Fragments he obtains, Viktor permanently augments an
+              active ability. After upgrading all of his basic abilities, he can
+              gather 100 Hex Fragments to augment his ultimate ability.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:18241fa0b973eeb418a14368d86c168dd128511397ca65b5dccc632220ed7176
+            value: 
+              维克托会在击杀一名敌人后获得海克斯碎片。每获得100个海克斯碎片，维克托将永久强化一个主动技能。升级完所有基础技能后，他可以再收集100个海克斯碎片，用来强化自己的终极技能。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: ViktorQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Siphon Power
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 虹吸能量
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:be99d8ca72c92be9ea79a455f8ca7d94df122a8a915539c5297279462cf1e692
+            value: "Viktor blasts an enemy unit with magic damage, which grants him
+              a shield and empowers his next basic attack.<br><br>Augment: Siphon
+              Power's shield is increased by 60% and Viktor gains bonus move speed
+              after casting the Ability.<br>"
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:c41d78e51fa9a9edb3ce6df65c0364fd23fcea019c526099c01f43af333aee23
+            value: 
+              维克托引爆一个敌方单位，造成魔法伤害，同时获得一道护盾，并强化自己的下次普通攻击。<br><br>增强：虹吸能量的护盾提升60%，并且维克托在施放这个技能后获得额外移动速度加成。<br>
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: ViktorR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Arcane Storm
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 奥术风暴
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:c9c7d0c1e5cd7f5e75ffd57b6d2c90652f4f8b2b54c717e06119383ce9ea7560
+            value: 'Viktor conjures an Arcane Storm on the field, dealing magic damage
+              and interrupting enemy channels. The storm periodically does magic damage
+              to all nearby enemies and can be redirected by Viktor.<br><br>Augment:
+              The Arcane Storm moves 25% faster, and whenever champions die after
+              taking damage from it, the storm grows and increases in its duration.<br><br>'
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:14a5cc8cf1bc2634d6544e4fa10157d8523c8cd423e8468b3aee68aa711c1573
+            value: 
+              维克托在场上召唤一道奥术风暴，对敌人造成魔法伤害并打断敌人的引导。之后风暴会周期性对附近所有敌人造成魔法伤害，且可以被维克托重新导向。<br><br>增强：奥术风暴的移动速度提升25%，每有英雄在受到风暴伤害后阵亡，风暴就会扩大，持续时间也会延长。<br><br>
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: ViktorW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Gravity Field
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 重力场
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:c8a6ebc3d12352ea0a74f314e496457d76eacd0226a89e3fc4673f65f4fea78b
+            value: "Viktor conjures a heavy gravitational field that slows enemies
+              caught within its radius. Enemies who stay in the field for too long
+              become stunned.<br><br>Augment: Viktor's spells apply a slow to enemies.<br>"
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:b76b6ffb2b44682cfba02a0d764e4c8c6456e8ef84ae5b2728347714bde4ab70
+            value: 
+              维克托放出一个重型引力场装置，使半径范围内的敌人减速。在力场中驻留时间过长的敌人会遭到晕眩。<br><br>增强：维克托的技能会对命中的敌人施加一个减速效果。<br>
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

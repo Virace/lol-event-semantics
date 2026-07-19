@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sona
+  champion_id: 37
+  skin_number: 17
+  skin_token: Skin17
+  id: 37017
+  alias: SonaSkin17
+  names:
+    en_US:
+      - value: PsyOps Sona
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 灵能特工 娑娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 133
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SonaSkin17

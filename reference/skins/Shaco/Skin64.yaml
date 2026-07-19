@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Shaco
+  champion_id: 35
+  skin_number: 64
+  skin_token: Skin64
+  id: 35064
+  alias: ShacoSkin64
+  names:
+    en_US:
+      - value: Cat-in-the-Box Shaco
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 盒子猫 萨科
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 98
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ShacoSkin64

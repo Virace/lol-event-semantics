@@ -1,0 +1,314 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 50
+  alias: Swain
+  names:
+    en_US:
+      - value: Swain
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 斯维因
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 诺克萨斯统领
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 乌鸦
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: nksstl
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: nuokesasitongling
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: siweiyin
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: swy
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: wuya
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: wy
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: SwainE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Nevermove
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 永不复行
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:171fdec12d27213b54bc5396a4bab4f28c60436f273e1ee589735d6a059f4ffa
+            value: Swain launches a wave of demonic power forward. It then 
+              returns to Swain and roots enemies it hits. Swain can then choose 
+              to pull all rooted champions closer. This ability has a shorter 
+              cooldown during Demonic Ascension.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:d03ae4fcd8fff92ca37908eb5f280a1f768791c7fc4a9d75d6643e48534b601e
+            value: 
+              斯维因释放一道恶魔之手向前击出。手臂随后会返回至斯维因处，并禁锢它命中的敌人。斯维因之后可以选择将所有被禁锢的英雄们拉拽得更靠近他。这个技能在【恶魔升华】期间会有一个更短的冷却时间。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: SwainPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Ravenous Flock
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 狂食鸦群
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:acc84fa487e3d5d75fb106a906850074459017be23ac75e76b72365c25985064
+            value: Swain's ravens collect <i>Soul Fragments</i> that heal him 
+              and permanently increase his maximum health.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:855c4434a109cc6523e6f432c7d07a73392cd430eb2644d291f7e917b8979afc
+            value: 斯维因的鸦群会收集<i>魂屑</i>来治疗斯维因并永久提升他的最大生命值。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: SwainQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Death's Hand
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 解脱之触
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:8e8ae9921c101bed33b44d83e8b52efff90949da61bee16fe7e4f2346a3e50e3
+            value: Swain unleashes several bolts of eldritch power that pierce 
+              through enemies. Enemies hit take more damage for each bolt they 
+              are struck by.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:fc642ee187cd80c654481b4a32432bb2ee535692e147ca00c5514ab54c212b13
+            value: 斯维因释放多道恶魔之力，这种力量可以穿透命中的目标。被一道以上的恶魔之力所命中的敌人，会受到基于恶魔之力数量的更多伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: SwainR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Demonic Ascension
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 恶魔升华
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:d58f18a7f953546f56e927373d409f9f8538e70d7410a197c557d799da735273
+            value: Swain transforms into a demon and drains health from nearby 
+              enemy champions, minions, and neutral monsters. Swain can cast 
+              Demonflare to decimate and slow nearby enemies with a nova of 
+              soulfire. This form is indefinite as long as Swain drains enemy 
+              champions.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:e6eac65023d3ed85d551d2776fc8280d43ff1fa470919baf75335f01beac6b0c
+            value: 
+              斯维因变身为恶魔并从附近的敌方英雄、小兵和中立野怪身上汲取生命值。斯维因能施放【恶魔耀光】来用一道魂焰新星残害并减速附近的敌人们。这个形态可以在斯维因汲取敌方英雄时无限持续。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: SwainW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Vision of Empire
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 帝国视界
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:20c9ce4512628060300776c9ab491a10d917b81c2980a03f2cb8ff015906019a
+            value: Swain opens a demon eye that deals damage and slows enemies. 
+              Champions hit are revealed and also grant Swain a Soul Fragment.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:91aee804dd712543b5e7e3b26beebc3acd226d933b0c12c1cbe84fc65ccb7e9b
+            value: 斯维因睁开恶魔之眼来对敌人造成伤害和减速效果。在命中敌方英雄时会使该英雄显形，并为斯维因提供一片魂屑。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

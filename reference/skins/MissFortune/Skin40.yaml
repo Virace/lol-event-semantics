@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: MissFortune
+  champion_id: 21
+  skin_number: 40
+  skin_token: Skin40
+  id: 21040
+  alias: MissFortuneSkin40
+  names:
+    en_US:
+      - value: Broken Covenant Miss Fortune
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 绝息圣堂 厄运小姐
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 190
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MissFortuneSkin40

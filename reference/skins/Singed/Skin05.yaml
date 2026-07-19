@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Singed
+  champion_id: 27
+  skin_number: 5
+  skin_token: Skin05
+  id: 27005
+  alias: SingedSkin05
+  names:
+    en_US:
+      - value: Augmented Singed
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 炼金狂士 辛吉德
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 111
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SingedSkin05
+  - SingedSkin5

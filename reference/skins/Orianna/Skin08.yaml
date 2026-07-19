@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Orianna
+  champion_id: 61
+  skin_number: 8
+  skin_token: Skin08
+  id: 61008
+  alias: OriannaSkin08
+  names:
+    en_US:
+      - value: Victorious Orianna
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 胜利女神 奥莉安娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 7
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - OriannaSkin08
+  - OriannaSkin8

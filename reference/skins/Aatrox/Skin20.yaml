@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Aatrox
+  champion_id: 266
+  skin_number: 20
+  skin_token: Skin20
+  id: 266020
+  alias: AatroxSkin20
+  names:
+    en_US:
+      - value: Prestige Blood Moon Aatrox (2022)
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至臻 腥红之月 亚托克斯 (2022)
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 12
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AatroxSkin20

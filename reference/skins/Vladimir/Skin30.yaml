@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Vladimir
+  champion_id: 8
+  skin_number: 30
+  skin_token: Skin30
+  id: 8030
+  alias: VladimirSkin30
+  names:
+    en_US:
+      - value: Cafe Cuties Vladimir
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 咖啡甜心 弗拉基米尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 153
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - VladimirSkin30

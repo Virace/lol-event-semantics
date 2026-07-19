@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Pyke
+  champion_id: 555
+  skin_number: 1
+  skin_token: Skin01
+  id: 555001
+  alias: PykeSkin01
+  names:
+    en_US:
+      - value: Sand Wraith Pyke
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 怨之砂 派克
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 66
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - PykeSkin01
+  - PykeSkin1

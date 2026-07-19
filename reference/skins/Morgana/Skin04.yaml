@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Morgana
+  champion_id: 25
+  skin_number: 4
+  skin_token: Skin04
+  id: 25004
+  alias: MorganaSkin04
+  names:
+    en_US:
+      - value: Blackthorn Morgana
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 黑色荆棘 莫甘娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 97
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MorganaSkin04
+  - MorganaSkin4

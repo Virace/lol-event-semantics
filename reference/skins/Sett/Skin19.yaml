@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sett
+  champion_id: 875
+  skin_number: 19
+  skin_token: Skin19
+  id: 875019
+  alias: SettSkin19
+  names:
+    en_US:
+      - value: Firecracker Sett
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 龙腾虎跃 瑟提
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 54
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SettSkin19

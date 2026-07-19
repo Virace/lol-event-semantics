@@ -1,0 +1,146 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 66606
+  alias: Ruby_Tristana
+  names:
+    en_US:
+      - value: Doom Bot Tristana
+        sources:
+          - source: game_data
+            version: '16.5'
+spells:
+  - slot: E
+    ids:
+      - value: Ruby_TristanaE
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Explosive Charge
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:958f8c00bef8c42fc29e785323058b599f5fe0ac43e0f55efcf997a7cabdb3c8
+            value: When Tristana kills a unit, her cannonballs burst into 
+              shrapnel, dealing damage to surrounding enemies. Can be activated 
+              to place a bomb on a target enemy that explodes after a short 
+              duration dealing damage to surrounding units.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: P
+    ids:
+      - value: Ruby_TristanaPassive
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Draw a Bead
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:b07f1d8ff76fa384b2dd462cfcc9f929180a5e4916afa9f633e7e3adca21e44e
+            value: Increases Tristana's Attack Range as she levels.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: Q
+    ids:
+      - value: Ruby_TristanaQ
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Rapid Fire
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:b3383249d1118ef901214d958eda8f39cd61675307e7de0d7cd343758f277900
+            value: Tristana fires her weapon rapidly, increasing her Attack 
+              Speed for a short time.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: R
+    ids:
+      - value: Ruby_TristanaR
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Buster Shot
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:44804b60631e2f4cd3615eb45fab5f8112e9ad08ce84a7d63f0790a236548528
+            value: Tristana loads a massive cannonball into her weapon and fires
+              it at an enemy unit. This deals Magic Damage and knocks the target
+              back. If the target is carrying the Explosive Charge bomb, the 
+              bomb detonation radius is doubled.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: W
+    ids:
+      - value: Ruby_TristanaW
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Rocket Jump
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:a07f5bdc76be289074faa6ca05a8d8ad9f8766b89949137f894296e36b4c1a45
+            value: Tristana fires at the ground to propel her to a distant 
+              location, dealing damage and slowing surrounding units for a brief
+              period where she lands.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'

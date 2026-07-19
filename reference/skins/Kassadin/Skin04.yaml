@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Kassadin
+  champion_id: 38
+  skin_number: 4
+  skin_token: Skin04
+  id: 38004
+  alias: KassadinSkin04
+  names:
+    en_US:
+      - value: Harbinger Kassadin
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 先驱行者 卡萨丁
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KassadinSkin04
+  - KassadinSkin4

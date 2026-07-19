@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Olaf
+  champion_id: 2
+  skin_number: 35
+  skin_token: Skin35
+  id: 2035
+  alias: OlafSkin35
+  names:
+    en_US:
+      - value: 'Pentakill III: Lost Chapter Olaf'
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 五杀摇滚 III：遗失的章节 奥拉夫
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 151
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - OlafSkin35

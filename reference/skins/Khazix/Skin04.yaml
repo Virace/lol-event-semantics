@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Khazix
+  champion_id: 121
+  skin_number: 4
+  skin_token: Skin04
+  id: 121004
+  alias: KhazixSkin04
+  names:
+    en_US:
+      - value: Dark Star Kha'Zix
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 暗星 卡兹克
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 44
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KhazixSkin04
+  - KhazixSkin4

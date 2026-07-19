@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Malphite
+  champion_id: 54
+  skin_number: 24
+  skin_token: Skin24
+  id: 54024
+  alias: MalphiteSkin24
+  names:
+    en_US:
+      - value: Prestige Dark Star Malphite
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至臻 暗星 墨菲特
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 44
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MalphiteSkin24

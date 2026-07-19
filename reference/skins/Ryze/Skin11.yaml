@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ryze
+  champion_id: 13
+  skin_number: 11
+  skin_token: Skin11
+  id: 13011
+  alias: RyzeSkin11
+  names:
+    en_US:
+      - value: Worlds 2019 Ryze
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 冠军之志 瑞兹
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 8
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - RyzeSkin11

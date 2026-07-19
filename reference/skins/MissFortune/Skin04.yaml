@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: MissFortune
+  champion_id: 21
+  skin_number: 4
+  skin_token: Skin04
+  id: 21004
+  alias: MissFortuneSkin04
+  names:
+    en_US:
+      - value: Candy Cane Miss Fortune
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 圣诞糖果棒 厄运小姐
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 48
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MissFortuneSkin04
+  - MissFortuneSkin4

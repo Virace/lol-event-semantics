@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ziggs
+  champion_id: 115
+  skin_number: 1
+  skin_token: Skin01
+  id: 115001
+  alias: ZiggsSkin01
+  names:
+    en_US:
+      - value: Mad Scientist Ziggs
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 科学狂人 吉格斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 106
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ZiggsSkin01
+  - ZiggsSkin1

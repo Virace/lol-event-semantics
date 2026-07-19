@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Vladimir
+  champion_id: 8
+  skin_number: 4
+  skin_token: Skin04
+  id: 8004
+  alias: VladimirSkin04
+  names:
+    en_US:
+      - value: Vandal Vladimir
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 霹雳游侠 弗拉基米尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 27
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - VladimirSkin04
+  - VladimirSkin4

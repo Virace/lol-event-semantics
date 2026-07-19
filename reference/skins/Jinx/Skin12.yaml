@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Jinx
+  champion_id: 222
+  skin_number: 12
+  skin_token: Skin12
+  id: 222012
+  alias: JinxSkin12
+  names:
+    en_US:
+      - value: Ambitious Elf Jinx
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 圣诞捣蛋鬼 金克丝
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 48
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - JinxSkin12

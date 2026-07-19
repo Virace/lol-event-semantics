@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Renekton
+  champion_id: 58
+  skin_number: 9
+  skin_token: Skin09
+  id: 58009
+  alias: RenektonSkin09
+  names:
+    en_US:
+      - value: Renektoy
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 鳄霸 雷克顿
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 61
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - RenektonSkin09
+  - RenektonSkin9

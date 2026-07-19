@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Nasus
+  champion_id: 75
+  skin_number: 1
+  skin_token: Skin01
+  id: 75001
+  alias: NasusSkin01
+  names:
+    en_US:
+      - value: Galactic Nasus
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 星空之门 内瑟斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 136
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NasusSkin01
+  - NasusSkin1

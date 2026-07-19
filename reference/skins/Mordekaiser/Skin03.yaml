@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Mordekaiser
+  champion_id: 82
+  skin_number: 3
+  skin_token: Skin03
+  id: 82003
+  alias: MordekaiserSkin03
+  names:
+    en_US:
+      - value: Pentakill Mordekaiser
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 五杀摇滚吉他手  莫德凯撒
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 16
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MordekaiserSkin03
+  - MordekaiserSkin3

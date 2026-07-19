@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sivir
+  champion_id: 15
+  skin_number: 1
+  skin_token: Skin01
+  id: 15001
+  alias: SivirSkin01
+  names:
+    en_US:
+      - value: Warrior Princess Sivir
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 战场公主 希维尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SivirSkin01
+  - SivirSkin1

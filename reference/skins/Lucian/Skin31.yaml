@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Lucian
+  champion_id: 236
+  skin_number: 31
+  skin_token: Skin31
+  id: 236031
+  alias: LucianSkin31
+  names:
+    en_US:
+      - value: Arcana Lucian
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 正义之枪 卢锡安
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 146
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LucianSkin31

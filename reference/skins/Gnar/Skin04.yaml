@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Gnar
+  champion_id: 150
+  skin_number: 4
+  skin_token: Skin04
+  id: 150004
+  alias: GnarSkin04
+  names:
+    en_US:
+      - value: El León Gnar
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 狂狮 纳尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 34
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - GnarSkin04
+  - GnarSkin4

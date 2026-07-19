@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Cassiopeia
+  champion_id: 69
+  skin_number: 8
+  skin_token: Skin08
+  id: 69008
+  alias: CassiopeiaSkin08
+  names:
+    en_US:
+      - value: Eternum Cassiopeia
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 上古魔蛇 卡西奥佩娅
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 59
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - CassiopeiaSkin08
+  - CassiopeiaSkin8

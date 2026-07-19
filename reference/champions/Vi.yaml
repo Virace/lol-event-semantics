@@ -1,0 +1,308 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 254
+  alias: Vi
+  names:
+    en_US:
+      - value: Vi
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 蔚
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 皮城执法官
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 拳女
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: pczfg
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: pichengzhifaguan
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: quannv
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: qv
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: v
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: wei
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: ViE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Relentless Force
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 透体之劲
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:1a317ab25c282035278dcabda821e4e644a922c3a397f0ba552ede1fe90d4db3
+            value: Vi's next attack blasts through her target, dealing damage to
+              enemies behind it.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:9afdb11bb230c9796898017e63b2def82e5439578bb778b69c199c845c7a8cd1
+            value: 蔚的下次攻击会爆裂，并透过她的目标，对目标身后的敌人造成伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: ViPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Blast Shield
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 爆裂护盾
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:158914b7d1d7ff821102e0f8ca90eceee10a9f3ca575ef66faf17bbc6efa5596
+            value: Vi charges a shield over time. The shield can be activated by
+              hitting an enemy with an ability.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:5b84d4eac0f42baa777c6378da80bf3ad5084b11fd5834500cc16131757f1a85
+            value: 蔚持续为护盾充能。护盾会在蔚的技能命中一名敌人后激活。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: ViQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Vault Breaker
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 强能冲拳
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:9780a8ed0c488ff581a2bf0932c4bf3b8d059dcf0a6c2e04268a9cb00c9adf8b
+            value: Vi charges her gauntlets and unleashes a vault shattering 
+              punch, carrying her forward. Enemies she hits are knocked back and
+              receive a stack of Denting Blows.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:3bcf0b1c94c32ec1d85dbad2b43f86f76e1d1f0b5f4231951b6d96ef93749aa9
+            value: 蔚对她的拳套进行充能，并且释放一记粉碎性的勾拳，同时带着她前冲。被她命中的敌人会被击退，同时会被施加一层爆弹重拳的效果。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: ViR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Cease and Desist
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 天霸横空烈轰
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:9d06b3d9dd97514d5dff0ba2a30bf9fe01ede1acc00ee4f56f6e8f2dd81c2b70
+            value: Vi runs down an enemy, knocking aside anyone in the way. When
+              she reaches her target she knocks it into the air, jumps after it,
+              and slams it back into the ground.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:f32f6ba7594b77d4d76cc12a2d69491605157567f4b8490b4fb6ba595098abcf
+            value: 蔚撞向一名敌人，将途中的人击退到两边。当她接触到目标时，她会将目标击飞到空中，然后跳上去，将目标轰到地面上。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: ViW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Denting Blows
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 爆弹重拳
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:028428c0063383b368b082bea6a17e00b1f3281d9bbcb3e4a05af521dd71bc51
+            value: Vi's punches break her opponent's Armor, dealing bonus damage
+              and granting her Attack Speed.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:95b1f22df872c4ba817fa470eb03a99fec9130c6294db544afc48923ad243954
+            value: 蔚的出拳会打破她对手的护甲，造成额外伤害并为她提供额外攻击速度。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

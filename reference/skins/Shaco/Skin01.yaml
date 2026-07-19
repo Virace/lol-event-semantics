@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Shaco
+  champion_id: 35
+  skin_number: 1
+  skin_token: Skin01
+  id: 35001
+  alias: ShacoSkin01
+  names:
+    en_US:
+      - value: Mad Hatter Shaco
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 恐怖之源 萨科
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 71
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ShacoSkin01
+  - ShacoSkin1

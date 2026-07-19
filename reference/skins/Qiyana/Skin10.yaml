@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Qiyana
+  champion_id: 246
+  skin_number: 10
+  skin_token: Skin10
+  id: 246010
+  alias: QiyanaSkin10
+  names:
+    en_US:
+      - value: Prestige True Damage Qiyana
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至臻 真实伤害 奇亚娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 120
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - QiyanaSkin10

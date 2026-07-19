@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Jax
+  champion_id: 24
+  skin_number: 7
+  skin_token: Skin07
+  id: 24007
+  alias: JaxSkin07
+  names:
+    en_US:
+      - value: Nemesis Jax
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 复仇武神 贾克斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - JaxSkin07
+  - JaxSkin7

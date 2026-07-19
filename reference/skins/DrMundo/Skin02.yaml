@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: DrMundo
+  champion_id: 36
+  skin_number: 2
+  skin_token: Skin02
+  id: 36002
+  alias: DrMundoSkin02
+  names:
+    en_US:
+      - value: Mr. Mundoverse
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 健美教练 蒙多
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - DrMundoSkin02
+  - DrMundoSkin2

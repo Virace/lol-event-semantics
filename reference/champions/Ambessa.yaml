@@ -1,0 +1,298 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 799
+  alias: Ambessa
+  names:
+    en_US:
+      - value: Ambessa
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 安蓓萨
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 铁血狼母
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: anbeisa
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: tiexuelangmu
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: AmbessaE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Lacerate
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 血戮
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:167e212723ad0c3718db1cf52414a5d4c1e305c52d8efcc4f9c76782f7e1fe40
+            value: Ambessa whips her twin drakehounds around herself, damaging 
+              and slowing nearby enemies. Initiating Drakehound's Step from this
+              ability causes her to strike a second time at the end of its dash.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:ef9b01749dd7f675eeddd86e9d63abdb1370ef258a0988ab045a7915e64adbda
+            value: 安蓓萨环绕自身挥舞链刃，对附近的敌人们造成伤害和减速。若在施放该技能后使用【龙犬诡步】，则会在冲刺结束时进行第二次打击。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: AmbessaPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Drakehound's Step
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 龙犬诡步
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:a85aafdb41616195c0a929fa7d8f5fc492fe5a072cc91a1f4a83fbe5bffbc105
+            value: Entering an attack or movement command while casting an 
+              ability will cause Ambessa to dash a short distance once the 
+              ability is cast, granting her next attack bonus range, damage, and
+              attack speed, and refunding energy.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:8bb603ad88ac241b9f30830c68c9321526e121dca6e32c6ae3ba051e44595113
+            value: 
+              在施放技能的同时输入攻击或移动指令，会使安蓓萨在施放技能后冲刺一小段距离，为她的下一次攻击提供额外的攻击距离、伤害和攻击速度，并返还能量。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: AmbessaQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Cunning Sweep / Sundering Slam
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 暗袭 / 裂斩
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:d49a4656b3bb207f1654a7be77438a57976e75b1218c6d4f80628872bd9a7884
+            value: Ambessa sweeps her twin drakehounds in a semicircle in front 
+              of her, dealing bonus damage to enemies hit by the blades. 
+              Striking an enemy will transform the next cast of this ability for
+              a short period of time, causing her to slam her twin drakehounds 
+              down in a line in front of her, dealing bonus damage to the first 
+              enemy hit.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:49d344bc4e199b7bc2f980a98d64ff323feb989bae6b13a84798da8161a2d815
+            value: 
+              安蓓萨甩出链刃横扫她前方的半圆区域，对被链刃命中的敌人造成额外伤害。击中一个敌人后，该技能在短时间内的下一次施放会发生变化，使她向前方的一条直线猛砸链刃，对命中的首个敌人造成额外伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: AmbessaR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Public Execution
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 公开处刑
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:cd1994bebbd3e1501234829a8925f5e8fc9787529df6ad621384294bd72bca7d
+            value: Ambessa blinks to the farthest enemy champion in a line of 
+              her choosing and suppresses them upon her arrival. She then slams 
+              the enemy into the ground where they take damage and are stunned.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:f697f1a083105f256f0174568ec508ec282ae9399fab931b743fa87b7ec682d0
+            value: 
+              安蓓萨选择一条直线，然后瞬移到直线上相距最远的那个敌方英雄身旁，并在到达后压制该英雄。随后将目标砸向地面，对其造成伤害和晕眩。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: AmbessaW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Repudiation
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 铁令
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:11f76e164d0e42f87f910f371f802771601b50f6da00571142c0e6faa6b5bba4
+            value: Ambessa gains a shield, briefly braces herself, and then 
+              slams the ground to damage nearby enemies. If she blocked any 
+              non-minion damage while bracing herself, this ability will deal 
+              increased damage.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:1d44d19c07f086078be51e0756cceeb44a3693afdc1bcce79d26bef8af181cd1
+            value: 
+              安蓓萨获得一道护盾，在短时间内摆出防守姿势，随后猛砸地面，对附近敌人造成伤害。如果她在防守姿势期间格挡了任何来自非小兵单位的伤害，该技能将造成额外伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

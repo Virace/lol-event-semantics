@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Nami
+  champion_id: 267
+  skin_number: 58
+  skin_token: Skin58
+  id: 267058
+  alias: NamiSkin58
+  names:
+    en_US:
+      - value: Mythmaker Nami
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 剪纸仙灵 娜美
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 188
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NamiSkin58

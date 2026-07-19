@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Annie
+  champion_id: 1
+  skin_number: 3
+  skin_token: Skin03
+  id: 1003
+  alias: AnnieSkin03
+  names:
+    en_US:
+      - value: Annie in Wonderland
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 安妮梦游仙境
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 71
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AnnieSkin03
+  - AnnieSkin3

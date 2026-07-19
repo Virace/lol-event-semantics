@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Nasus
+  champion_id: 75
+  skin_number: 10
+  skin_token: Skin10
+  id: 75010
+  alias: NasusSkin10
+  names:
+    en_US:
+      - value: Worldbreaker Nasus
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 创世之神 内瑟斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 29
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NasusSkin10

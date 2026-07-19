@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Aatrox
+  champion_id: 266
+  skin_number: 21
+  skin_token: Skin21
+  id: 266021
+  alias: AatroxSkin21
+  names:
+    en_US:
+      - value: Lunar Eclipse Aatrox
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 月蚀骑士 亚托克斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 93
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AatroxSkin21

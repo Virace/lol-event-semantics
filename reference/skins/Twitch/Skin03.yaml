@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Twitch
+  champion_id: 29
+  skin_number: 3
+  skin_token: Skin03
+  id: 29003
+  alias: TwitchSkin03
+  names:
+    en_US:
+      - value: Medieval Twitch
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 都铎王朝 图奇
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 114
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - TwitchSkin03
+  - TwitchSkin3

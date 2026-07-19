@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Yasuo
+  champion_id: 157
+  skin_number: 2
+  skin_token: Skin02
+  id: 157002
+  alias: YasuoSkin02
+  names:
+    en_US:
+      - value: 'PROJECT: Yasuo'
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 源计划：风 亚索
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 18
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - YasuoSkin02
+  - YasuoSkin2

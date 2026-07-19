@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Kindred
+  champion_id: 203
+  skin_number: 23
+  skin_token: Skin23
+  id: 203023
+  alias: KindredSkin23
+  names:
+    en_US:
+      - value: DRX Kindred
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: DRX 千珏
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 194
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KindredSkin23

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Rumble
+  champion_id: 68
+  skin_number: 2
+  skin_token: Skin02
+  id: 68002
+  alias: RumbleSkin02
+  names:
+    en_US:
+      - value: Bilgerat Rumble
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 独眼海盗 兰博
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 49
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - RumbleSkin02
+  - RumbleSkin2

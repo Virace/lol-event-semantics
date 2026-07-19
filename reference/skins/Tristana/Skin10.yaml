@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Tristana
+  champion_id: 18
+  skin_number: 10
+  skin_token: Skin10
+  id: 18010
+  alias: TristanaSkin10
+  names:
+    en_US:
+      - value: Dragon Trainer Tristana
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 驯龙炮手 崔丝塔娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 13
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - TristanaSkin10

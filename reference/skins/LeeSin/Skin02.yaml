@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: LeeSin
+  champion_id: 64
+  skin_number: 2
+  skin_token: Skin02
+  id: 64002
+  alias: LeeSinSkin02
+  names:
+    en_US:
+      - value: Acolyte Lee Sin
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 防弹武僧 李青
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 180
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LeeSinSkin02
+  - LeeSinSkin2

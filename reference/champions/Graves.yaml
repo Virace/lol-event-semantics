@@ -1,0 +1,326 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 104
+  alias: Graves
+  names:
+    en_US:
+      - value: Graves
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 格雷福斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 法外狂徒
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 男枪
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: fawaikuangtu
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: fwkt
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: geleifusi
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: glfs
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: nanqiang
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: nq
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: GravesE
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: GravesMove
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Quickdraw
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 快速拔枪
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:7df4fe6d817541b1125bb27626419a232c5d2de55b1d6ef59d1d9e5e8d6bfa4c
+            value: Graves dashes forward gaining an Armor and Magic Resist boost
+              for several seconds. If Graves dashes towards an enemy champion, 
+              gain two stacks of True Grit instead. Hitting enemies with basic 
+              attacks lowers the cooldown of this skill and refreshes the 
+              resistance boost.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:217413bf2d8a500ae5269a2b8668f5b3c8569502b8752288a184bcce93c6f4e9
+            value: 
+              格雷福斯向前冲刺，获得一层持续数秒的护甲和魔法抗性加成。如果格雷福斯朝着一名敌方英雄冲刺，则会获得两层纯爷们效果。格雷福斯的每次未被闪避的普通攻击，都会减少这个技能的冷却时间并刷新该防御属性加成。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: GravesPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: New Destiny
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 新命运
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:2a76d2137dac3c3e822afac3e70db5d3bdffb915f771bb4a4cec22beba97432a
+            value: Graves' shotgun has some unique properties. He must reload 
+              when he runs out of ammo. Attacks fire 4 bullets, which cannot 
+              pass through units. Non-champions struck by multiple bullets are 
+              knocked back.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:fd54528bd9538744bf095452a51627f52084b2e2b52e7818dab51e33dab57c24
+            value: 
+              格雷福斯的散弹枪拥有一些独特性能。他的弹药打光后就必须重新装弹。每次攻击会发射4颗弹丸，弹丸无法穿透单位。会击退被多颗弹丸命中的非英雄单位。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: GravesQ
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: GravesQLineSpell
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: End of the Line
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 穷途末路
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:de424ea91681d14217a801aa6435483bf265a856e574840747a5aa3d265f4796
+            value: Graves fires an explosive shell that detonates after 1 
+              second, or after colliding with terrain.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:82e03949f6b777e1ee78d381ca93f6c11c49c34c07e1d7702bfd7fc46a73e123
+            value: 格雷福斯发射一颗爆破性的榴弹，会在1秒后引爆，或是在碰到地形后立刻爆炸。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: GravesChargeShot
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+      - value: GravesR
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Collateral Damage
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 终极爆弹
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:cd9f909005ecd8c59435226e3999861df5408dd87d2896f6e583b059791afb79
+            value: Graves fires an explosive shell dealing heavy damage to the 
+              first champion it hits. After hitting a champion or reaching the 
+              end of its range, the shell explodes dealing damage in a cone.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:669481b98e5f9021aa5a292106ba68fe75c21c84eb9c60903af0ec6ca57ff394
+            value: 
+              格雷福斯射出一枚爆破弹，对它所命中的第一个敌人造成大量伤害。在命中一名英雄或者达到它的最大射程之后，爆弹会爆炸，并对锥形范围内的敌人造成伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: GravesSmokeGrenade
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+      - value: GravesW
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Smoke Screen
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 烟幕弹
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:88a11c89c79631531079a9374dbedaca37d80aaa764737f7787ad217bac3fa64
+            value: Graves fires a smoke canister at the target area creating a 
+              cloud of smoke that reduces sight range. Enemies caught in the 
+              initial impact are dealt magic damage and have their Move Speed 
+              reduced briefly.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:183a14e83879b85ea4f41ca140bef73253e3878abb3126876ab6e24ad38652ee
+            value: 
+              格雷福斯朝目标区域掷出一颗烟幕弹。如果敌人处在烟幕之中，则其视野会被降低。被烟幕弹的初始冲击所命中的敌人会受到魔法伤害并且移动速度会被短暂降低。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Naafiri
+  champion_id: 950
+  skin_number: 1
+  skin_token: Skin01
+  id: 950001
+  alias: NaafiriSkin01
+  names:
+    en_US:
+      - value: Soul Fighter Naafiri
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 斗魂觉醒 纳亚菲利
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 196
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NaafiriSkin01
+  - NaafiriSkin1

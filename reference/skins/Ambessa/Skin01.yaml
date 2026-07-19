@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ambessa
+  champion_id: 799
+  skin_number: 1
+  skin_token: Skin01
+  id: 799001
+  alias: AmbessaSkin01
+  names:
+    en_US:
+      - value: Chosen of the Wolf Ambessa
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 狼神英灵 安蓓萨
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 209
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AmbessaSkin01
+  - AmbessaSkin1

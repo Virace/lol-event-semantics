@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Gnar
+  champion_id: 150
+  skin_number: 31
+  skin_token: Skin31
+  id: 150031
+  alias: GnarSkin31
+  names:
+    en_US:
+      - value: La Ilusión Gnar
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 灵之菊 纳尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 198
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - GnarSkin31

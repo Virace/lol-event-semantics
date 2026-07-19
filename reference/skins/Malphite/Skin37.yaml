@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Malphite
+  champion_id: 54
+  skin_number: 37
+  skin_token: Skin37
+  id: 54037
+  alias: MalphiteSkin37
+  names:
+    en_US:
+      - value: Lunar Guardian Malphite
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 春晖山神 墨菲特
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 55
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MalphiteSkin37

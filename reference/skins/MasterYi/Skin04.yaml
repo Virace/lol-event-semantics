@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: MasterYi
+  champion_id: 11
+  skin_number: 4
+  skin_token: Skin04
+  id: 11004
+  alias: MasterYiSkin04
+  names:
+    en_US:
+      - value: Samurai Yi
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 侍魂 易
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MasterYiSkin04
+  - MasterYiSkin4

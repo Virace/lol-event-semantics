@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Vladimir
+  champion_id: 8
+  skin_number: 48
+  skin_token: Skin48
+  id: 8048
+  alias: VladimirSkin48
+  names:
+    en_US:
+      - value: Masque of the Black Rose Vladimir
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 黑色玫瑰假面舞会 弗拉基米尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 211
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - VladimirSkin48

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Evelynn
+  champion_id: 28
+  skin_number: 7
+  skin_token: Skin07
+  id: 28007
+  alias: EvelynnSkin07
+  names:
+    en_US:
+      - value: Prestige K/DA Evelynn
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至臻 K/DA 伊芙琳
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 91
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - EvelynnSkin07
+  - EvelynnSkin7

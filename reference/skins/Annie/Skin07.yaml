@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Annie
+  champion_id: 1
+  skin_number: 7
+  skin_token: Skin07
+  id: 1007
+  alias: AnnieSkin07
+  names:
+    en_US:
+      - value: FrankenTibbers Annie
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 科学怪熊的新娘 安妮
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 88
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AnnieSkin07
+  - AnnieSkin7

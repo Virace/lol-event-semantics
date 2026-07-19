@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ahri
+  champion_id: 103
+  skin_number: 65
+  skin_token: Skin65
+  id: 103065
+  alias: AhriSkin65
+  names:
+    en_US:
+      - value: Prestige K/DA Ahri (2022)
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至臻 K/DA 阿狸 (2022)
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 91
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AhriSkin65

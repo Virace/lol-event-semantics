@@ -1,0 +1,321 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 61
+  alias: Orianna
+  names:
+    en_US:
+      - value: Orianna
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 奥莉安娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 发条魔灵
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 发条
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: alan
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: aolianna
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: fatiao
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: fatiaomoling
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: ft
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: ftml
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: OrianaRedactCommand
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+      - value: OriannaE
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: 'Command: Protect'
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 指令：防卫
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:732f8081a6f0e63e72ca590fcc28bce69c0b28d98cda9c3cbac212b25c9e8097
+            value: Orianna commands her Ball to attach to an allied champion, 
+              Shielding them and dealing magic damage to any enemies it passes 
+              through on the way. Additionally, the Ball grants additional Armor
+              and Magic Resist to the champion it is attached to.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:55a489087aa8493ae74d81be70fecc8dc3bae3976f3a1222fd352423ad81453f
+            value: 
+              奥莉安娜指挥她的魔偶，依附于友军英雄身上，保护他们并对经过的敌人造成魔法伤害。此外，魔偶还会对依附的友军增加额外护甲和魔法抗性。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: OriannaPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Clockwork Windup
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 发条协奏
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:04524022b2ec594dbda058e2dcb5697261de8e00d21a98dd7bdf2a27d438965e
+            value: Orianna's Attacks deal additional magic damage. This damage 
+              increases the more Orianna Attacks the same target.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:966c32635090f12856349b53c37468535db56b7fa98c8d358ff2f4747df02069
+            value: 奥莉安娜的攻击会造成额外魔法伤害。这个伤害可在奥莉安娜对相同目标进行更多次攻击后提升。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: OrianaIzunaCommand
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+      - value: OriannaQ
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: 'Command: Attack'
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 指令：攻击
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:b21d9f7c42032d0b03f07033d36def029031b10c743659f6d092718eef01950a
+            value: Orianna commands her Ball to fire toward a target location, 
+              dealing magic damage to targets along the way (deals less damage 
+              to subsequent targets). Her Ball remains at the target location 
+              after.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:62b4544ca157097907b552461156c67ac0f50fd7dea7f28f712040c09ea15100
+            value: 奥莉安娜指挥她的魔偶，朝目标区域发射，对沿途目标造成魔法伤害（对后续目标伤害递减）。指令结束后魔偶会停在目标区域。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: OrianaDetonateCommand
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+      - value: OriannaR
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: 'Command: Shockwave'
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 指令：冲击波
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:59df50e89bd3edc429f67c5d762030d48de3db1d09e89326c9ee65ea1880dcbc
+            value: Orianna commands her Ball to unleash a shockwave, dealing 
+              magic damage and launching nearby enemies towards the Ball after a
+              short delay.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:9a2fab96b3b32c9c60fccc462e184657ac00f5261764106dc5516ca66feb8e40
+            value: 奥莉安娜指挥她的魔偶，释放一股冲击波，对周围敌军造成魔法伤害并在短暂延迟后将他们拉向魔偶。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: OrianaDissonanceCommand
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+      - value: OriannaW
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: 'Command: Dissonance'
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 指令：杂音
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:b4c5b2efb06e46d1b6606237b1e41b0998da4e023877d05ea8b635543182f4dd
+            value: Orianna commands her Ball to release a pulse of energy, 
+              dealing magic damage around it. This leaves a field behind that 
+              speeds up allies and slows enemies.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:7c82bcf35569d5d628e1fdc91e4025787e77d6090ff616428363276226c9864e
+            value: 奥莉安娜指挥她的魔偶，释放能量脉冲，造成魔法伤害，并产生一个加速友军、减速敌军的能量场。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

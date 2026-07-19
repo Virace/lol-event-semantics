@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Katarina
+  champion_id: 55
+  skin_number: 59
+  skin_token: Skin59
+  id: 55059
+  alias: KatarinaSkin59
+  names:
+    en_US:
+      - value: Chosen of the Wolf Katarina
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 狼神英灵 卡特琳娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 209
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KatarinaSkin59

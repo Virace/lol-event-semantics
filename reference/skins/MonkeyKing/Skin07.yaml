@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: MonkeyKing
+  champion_id: 62
+  skin_number: 7
+  skin_token: Skin07
+  id: 62007
+  alias: MonkeyKingSkin07
+  names:
+    en_US:
+      - value: Battle Academia Wukong
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 战斗学院 孙悟空
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 113
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MonkeyKingSkin07
+  - MonkeyKingSkin7

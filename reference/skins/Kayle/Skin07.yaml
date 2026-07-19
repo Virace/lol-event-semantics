@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Kayle
+  champion_id: 10
+  skin_number: 7
+  skin_token: Skin07
+  id: 10007
+  alias: KayleSkin07
+  names:
+    en_US:
+      - value: Riot Kayle
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 防暴天使 凯尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 37
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KayleSkin07
+  - KayleSkin7

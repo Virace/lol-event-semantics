@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Nidalee
+  champion_id: 76
+  skin_number: 4
+  skin_token: Skin04
+  id: 76004
+  alias: NidaleeSkin04
+  names:
+    en_US:
+      - value: Pharaoh Nidalee
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 艳后 奈德丽
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 67
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NidaleeSkin04
+  - NidaleeSkin4

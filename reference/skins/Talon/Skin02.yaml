@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Talon
+  champion_id: 91
+  skin_number: 2
+  skin_token: Skin02
+  id: 91002
+  alias: TalonSkin02
+  names:
+    en_US:
+      - value: Crimson Elite Talon
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 血色精锐 泰隆
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 122
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - TalonSkin02
+  - TalonSkin2

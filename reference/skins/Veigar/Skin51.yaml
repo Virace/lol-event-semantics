@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Veigar
+  champion_id: 45
+  skin_number: 51
+  skin_token: Skin51
+  id: 45051
+  alias: VeigarSkin51
+  names:
+    en_US:
+      - value: King Beegar
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 蜂大王 维迦
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 143
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - VeigarSkin51

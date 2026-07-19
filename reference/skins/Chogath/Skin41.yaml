@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Chogath
+  champion_id: 31
+  skin_number: 41
+  skin_token: Skin41
+  id: 31041
+  alias: ChogathSkin41
+  names:
+    en_US:
+      - value: Petricite Cho'Gath
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 禁魔石巨像 科加斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 224
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ChogathSkin41

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Leona
+  champion_id: 89
+  skin_number: 8
+  skin_token: Skin08
+  id: 89008
+  alias: LeonaSkin08
+  names:
+    en_US:
+      - value: 'PROJECT: Leona'
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 源计划：山 蕾欧娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 18
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LeonaSkin08
+  - LeonaSkin8

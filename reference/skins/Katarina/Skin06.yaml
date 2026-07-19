@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Katarina
+  champion_id: 55
+  skin_number: 6
+  skin_token: Skin06
+  id: 55006
+  alias: KatarinaSkin06
+  names:
+    en_US:
+      - value: Sandstorm Katarina
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 沙漠风暴 卡特琳娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 66
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KatarinaSkin06
+  - KatarinaSkin6

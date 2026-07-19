@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Talon
+  champion_id: 91
+  skin_number: 1
+  skin_token: Skin01
+  id: 91001
+  alias: TalonSkin01
+  names:
+    en_US:
+      - value: Renegade Talon
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 刺客信条 泰隆
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - TalonSkin01
+  - TalonSkin1

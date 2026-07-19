@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Annie
+  champion_id: 1
+  skin_number: 6
+  skin_token: Skin06
+  id: 1006
+  alias: AnnieSkin06
+  names:
+    en_US:
+      - value: Reverse Annie
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 安伯斯与提妮
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AnnieSkin06
+  - AnnieSkin6

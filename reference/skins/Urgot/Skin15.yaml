@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Urgot
+  champion_id: 6
+  skin_number: 15
+  skin_token: Skin15
+  id: 6015
+  alias: UrgotSkin15
+  names:
+    en_US:
+      - value: Pajama Guardian Cosplay Urgot
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 星之守护者COS 厄加特
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 101
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - UrgotSkin15

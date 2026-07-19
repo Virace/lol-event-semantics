@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Fiora
+  champion_id: 114
+  skin_number: 22
+  skin_token: Skin22
+  id: 114022
+  alias: FioraSkin22
+  names:
+    en_US:
+      - value: Soaring Sword Fiora
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 玉剑传说 无双
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 81
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - FioraSkin22

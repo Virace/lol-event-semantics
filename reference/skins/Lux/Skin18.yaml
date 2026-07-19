@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Lux
+  champion_id: 99
+  skin_number: 18
+  skin_token: Skin18
+  id: 99018
+  alias: LuxSkin18
+  names:
+    en_US:
+      - value: Cosmic Lux
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 耀星女神 拉克丝
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 43
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LuxSkin18

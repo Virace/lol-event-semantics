@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ziggs
+  champion_id: 115
+  skin_number: 7
+  skin_token: Skin07
+  id: 115007
+  alias: ZiggsSkin07
+  names:
+    en_US:
+      - value: Odyssey Ziggs
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 奥德赛 吉格斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 73
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ZiggsSkin07
+  - ZiggsSkin7

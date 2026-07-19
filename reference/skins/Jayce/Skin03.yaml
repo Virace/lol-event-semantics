@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Jayce
+  champion_id: 126
+  skin_number: 3
+  skin_token: Skin03
+  id: 126003
+  alias: JayceSkin03
+  names:
+    en_US:
+      - value: Forsaken Jayce
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 天启骑士 杰斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - JayceSkin03
+  - JayceSkin3

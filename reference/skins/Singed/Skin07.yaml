@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Singed
+  champion_id: 27
+  skin_number: 7
+  skin_token: Skin07
+  id: 27007
+  alias: SingedSkin07
+  names:
+    en_US:
+      - value: SSW Singed
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: SSW 辛吉德
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 4
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SingedSkin07
+  - SingedSkin7

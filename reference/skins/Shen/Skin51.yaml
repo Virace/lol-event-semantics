@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Shen
+  champion_id: 98
+  skin_number: 51
+  skin_token: Skin51
+  id: 98051
+  alias: ShenSkin51
+  names:
+    en_US:
+      - value: Three Honors Shen
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 荣誉使者 慎
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 176
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ShenSkin51

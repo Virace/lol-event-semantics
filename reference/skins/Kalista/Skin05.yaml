@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Kalista
+  champion_id: 429
+  skin_number: 5
+  skin_token: Skin05
+  id: 429005
+  alias: KalistaSkin05
+  names:
+    en_US:
+      - value: Marauder Kalista
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 黑暗骑士 卡莉丝塔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 45
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KalistaSkin05
+  - KalistaSkin5

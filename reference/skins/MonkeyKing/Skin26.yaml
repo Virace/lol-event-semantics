@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: MonkeyKing
+  champion_id: 62
+  skin_number: 26
+  skin_token: Skin26
+  id: 62026
+  alias: MonkeyKingSkin26
+  names:
+    en_US:
+      - value: Mecha Kingdoms Wukong
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 机神 孙悟空
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 127
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MonkeyKingSkin26

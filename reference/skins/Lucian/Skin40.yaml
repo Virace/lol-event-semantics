@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Lucian
+  champion_id: 236
+  skin_number: 40
+  skin_token: Skin40
+  id: 236040
+  alias: LucianSkin40
+  names:
+    en_US:
+      - value: Strike Paladin Lucian
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 海珀利安小队 Z01-猎户座 卢锡安
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 65
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LucianSkin40

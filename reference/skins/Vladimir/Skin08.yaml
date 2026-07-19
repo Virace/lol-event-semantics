@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Vladimir
+  champion_id: 8
+  skin_number: 8
+  skin_token: Skin08
+  id: 8008
+  alias: VladimirSkin08
+  names:
+    en_US:
+      - value: Dark Waters Vladimir
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 黑潮 弗拉基米尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 74
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - VladimirSkin08
+  - VladimirSkin8

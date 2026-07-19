@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Maokai
+  champion_id: 57
+  skin_number: 33
+  skin_token: Skin33
+  id: 57033
+  alias: MaokaiSkin33
+  names:
+    en_US:
+      - value: DRX Maokai
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: DRX 茂凯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 194
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MaokaiSkin33

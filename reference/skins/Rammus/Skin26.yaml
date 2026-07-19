@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Rammus
+  champion_id: 33
+  skin_number: 26
+  skin_token: Skin26
+  id: 33026
+  alias: RammusSkin26
+  names:
+    en_US:
+      - value: Durian Defender Rammus
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 榴莲龙龟 拉莫斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 203
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - RammusSkin26

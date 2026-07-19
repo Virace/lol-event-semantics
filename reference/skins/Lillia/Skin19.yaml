@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Lillia
+  champion_id: 876
+  skin_number: 19
+  skin_token: Skin19
+  id: 876019
+  alias: LilliaSkin19
+  names:
+    en_US:
+      - value: Shan Hai Scrolls Lillia
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 山海绘卷 莉莉娅
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 139
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LilliaSkin19

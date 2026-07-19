@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: KogMaw
+  champion_id: 96
+  skin_number: 7
+  skin_token: Skin07
+  id: 96007
+  alias: KogMawSkin07
+  names:
+    en_US:
+      - value: Jurassic Kog'Maw
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 侏罗纪化石 克格莫
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 100
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KogMawSkin07
+  - KogMawSkin7

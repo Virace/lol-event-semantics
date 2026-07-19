@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Viego
+  champion_id: 234
+  skin_number: 30
+  skin_token: Skin30
+  id: 234030
+  alias: ViegoSkin30
+  names:
+    en_US:
+      - value: Soul Fighter Viego
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 斗魂觉醒 佛耶戈
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 196
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ViegoSkin30

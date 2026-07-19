@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Diana
+  champion_id: 131
+  skin_number: 25
+  skin_token: Skin25
+  id: 131025
+  alias: DianaSkin25
+  names:
+    en_US:
+      - value: Battle Queen Diana
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 女帝 黛安娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 137
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - DianaSkin25

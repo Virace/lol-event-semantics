@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Soraka
+  champion_id: 16
+  skin_number: 4
+  skin_token: Skin04
+  id: 16004
+  alias: SorakaSkin04
+  names:
+    en_US:
+      - value: Reaper Soraka
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 灵魂收割者 索拉卡
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 87
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SorakaSkin04
+  - SorakaSkin4

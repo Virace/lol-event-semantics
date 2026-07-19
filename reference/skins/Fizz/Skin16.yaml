@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Fizz
+  champion_id: 105
+  skin_number: 16
+  skin_token: Skin16
+  id: 105016
+  alias: FizzSkin16
+  names:
+    en_US:
+      - value: Little Devil Fizz
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 小恶魔 菲兹
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 116
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - FizzSkin16

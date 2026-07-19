@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Evelynn
+  champion_id: 28
+  skin_number: 2
+  skin_token: Skin02
+  id: 28002
+  alias: EvelynnSkin02
+  names:
+    en_US:
+      - value: Masquerade Evelynn
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 假面女皇 伊芙琳
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - EvelynnSkin02
+  - EvelynnSkin2

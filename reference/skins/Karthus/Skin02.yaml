@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Karthus
+  champion_id: 30
+  skin_number: 2
+  skin_token: Skin02
+  id: 30002
+  alias: KarthusSkin02
+  names:
+    en_US:
+      - value: Statue of Karthus
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 自由女神 卡尔萨斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 99
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KarthusSkin02
+  - KarthusSkin2

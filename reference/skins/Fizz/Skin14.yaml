@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Fizz
+  champion_id: 105
+  skin_number: 14
+  skin_token: Skin14
+  id: 105014
+  alias: FizzSkin14
+  names:
+    en_US:
+      - value: Fuzz Fizz
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 绒毛菲兹
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 98
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - FizzSkin14

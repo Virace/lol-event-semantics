@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Katarina
+  champion_id: 55
+  skin_number: 4
+  skin_token: Skin04
+  id: 55004
+  alias: KatarinaSkin04
+  names:
+    en_US:
+      - value: Kitty Cat Katarina
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 暗夜猫女 卡特琳娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 88
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KatarinaSkin04
+  - KatarinaSkin4

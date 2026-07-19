@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: MissFortune
+  champion_id: 21
+  skin_number: 5
+  skin_token: Skin05
+  id: 21005
+  alias: MissFortuneSkin05
+  names:
+    en_US:
+      - value: Road Warrior Miss Fortune
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 荒野女警 厄运小姐
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 70
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MissFortuneSkin05
+  - MissFortuneSkin5

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ezreal
+  champion_id: 81
+  skin_number: 1
+  skin_token: Skin01
+  id: 81001
+  alias: EzrealSkin01
+  names:
+    en_US:
+      - value: Nottingham Ezreal
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 冒险精神 伊泽瑞尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 97
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - EzrealSkin01
+  - EzrealSkin1

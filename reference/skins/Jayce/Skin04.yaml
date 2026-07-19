@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Jayce
+  champion_id: 126
+  skin_number: 4
+  skin_token: Skin04
+  id: 126004
+  alias: JayceSkin04
+  names:
+    en_US:
+      - value: Jayce Brighthammer
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 杰斯·光明之锤
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 38
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - JayceSkin04
+  - JayceSkin4

@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Zed
+  champion_id: 238
+  skin_number: 11
+  skin_token: Skin11
+  id: 238011
+  alias: ZedSkin11
+  names:
+    en_US:
+      - value: Death Sworn Zed
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 死亡誓约 劫
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 87
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ZedSkin11

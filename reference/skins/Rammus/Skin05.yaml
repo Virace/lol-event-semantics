@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Rammus
+  champion_id: 33
+  skin_number: 5
+  skin_token: Skin05
+  id: 33005
+  alias: RammusSkin05
+  names:
+    en_US:
+      - value: Ninja Rammus
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 忍龟 拉莫斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - RammusSkin05
+  - RammusSkin5

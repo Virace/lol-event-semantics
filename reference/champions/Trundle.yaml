@@ -1,0 +1,317 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 48
+  alias: Trundle
+  names:
+    en_US:
+      - value: Trundle
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 特朗德尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 巨魔之王
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 巨魔
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: jm
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: jmzw
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: jumo
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: jumozhiwang
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: telangdeer
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: tlde
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: TrundleCircle
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+      - value: TrundleE
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Pillar of Ice
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 寒冰之柱
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:c8bc1057611ef561a04d9dc9823beb5cf2932ccc8fc41565b1639678c5939e78
+            value: Trundle creates an ice pillar at target location, becoming 
+              impassable terrain and slowing all nearby enemy units.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:6d9831a00d72029c0eca1f86b93ee99aa3959a8282d73301f1cdff5b3ffa865c
+            value: 特朗德尔在目标地点召唤寒冰之柱，令敌人无法通过，并减缓附近敌方单位的移动速度。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: TrundlePassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: King's Tribute
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 国王的贡品
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:5586cee7df692ae9a91a5d0f1dc389edc3fe33c3847f6be73a6ab87f117d9174
+            value: When an enemy unit dies near Trundle, he heals for a percent 
+              of its maximum Health.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:8542a396580fb39f80a8f3b2086ba3eb01818cb33c5ab1bd3a420b84ca5cd71b
+            value: 每当附近有一个敌方单位死亡，特朗德尔都会获得相当于其一部分最大生命值的治疗效果。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: TrundleQ
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: TrundleTrollSmash
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Chomp
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 利齿撕咬
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:3bae77c7a2cad0e93fed559c6d697012906ce3ff163e4621dd6a4b8e8a936ec7
+            value: Trundle bites his opponent, dealing damage, briefly slowing 
+              and sapping some of their Attack Damage.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:2a78417b39db55a0712de5bb3c8f3db3b226280232c549716bfcd060737ba53e
+            value: 特朗德尔撕咬敌方，造成伤害，并暂时减少敌人的移动速度，削弱敌人的攻击力。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: TrundlePain
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+      - value: TrundleR
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Subjugate
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 强权至上
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:ee003235327f47bfeabd85e92c6f84809634cd72c00e92e880a0bfd71dd2870f
+            value: Trundle immediately steals a percent of his target's Health, 
+              Armor and Magic Resistance. Over the next 4 seconds the amount of 
+              Health, Armor, and Magic Resistance stolen is doubled.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:62fa2f2364f3cf5bb194a76d89e968f84fb50d03cc03e686b2c1398ac73c4c9d
+            value: 
+              特朗德尔直接偷取目标的一部分生命值、大量的护甲和魔抗。在接下来的4秒里，特朗德尔将继续偷取双倍的等量的生命值、护甲值和魔抗。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: TrundleW
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: trundledesecrate
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Frozen Domain
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 冰封领域
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:7646bb825d381677977fed674b6ab8312417d2d04b36b7ea5ca142df844b2789
+            value: Trundle turns target location into his domain, gaining Attack
+              Speed, Move Speed, and increased healing from all sources while on
+              it.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:866e12ccf23f1c97bf1df95260949b1d1ef15247eb989cc1b86b12181d06f4f5
+            value: 特朗德尔将目标区域变成他的领土，增加自己在该区域的攻击速度、移动速度，并且会从所有治疗手段中获得额外治疗效果。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

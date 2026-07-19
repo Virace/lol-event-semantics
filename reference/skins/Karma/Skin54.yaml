@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Karma
+  champion_id: 43
+  skin_number: 54
+  skin_token: Skin54
+  id: 43054
+  alias: KarmaSkin54
+  names:
+    en_US:
+      - value: Faerie Queen Karma
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 花仙女王 卡尔玛
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 191
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KarmaSkin54

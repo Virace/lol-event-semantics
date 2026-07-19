@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sejuani
+  champion_id: 113
+  skin_number: 16
+  skin_token: Skin16
+  id: 113016
+  alias: SejuaniSkin16
+  names:
+    en_US:
+      - value: 'PROJECT: Sejuani'
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 源计划：统帅 瑟庄妮
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 18
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SejuaniSkin16

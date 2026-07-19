@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Swain
+  champion_id: 50
+  skin_number: 3
+  skin_token: Skin03
+  id: 50003
+  alias: SwainSkin03
+  names:
+    en_US:
+      - value: Tyrant Swain
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 绝代智将 斯维因
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 180
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SwainSkin03
+  - SwainSkin3

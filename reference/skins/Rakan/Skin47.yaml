@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Rakan
+  champion_id: 497
+  skin_number: 47
+  skin_token: Skin47
+  id: 497047
+  alias: RakanSkin47
+  names:
+    en_US:
+      - value: Battle Academia Rakan
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 战斗学院 洛
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 113
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - RakanSkin47

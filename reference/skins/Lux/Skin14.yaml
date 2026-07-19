@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Lux
+  champion_id: 99
+  skin_number: 14
+  skin_token: Skin14
+  id: 99014
+  alias: LuxSkin14
+  names:
+    en_US:
+      - value: Pajama Guardian Lux
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 睡衣守护者 拉克丝
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 19
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LuxSkin14

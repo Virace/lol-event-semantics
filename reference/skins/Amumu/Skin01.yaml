@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Amumu
+  champion_id: 32
+  skin_number: 1
+  skin_token: Skin01
+  id: 32001
+  alias: AmumuSkin01
+  names:
+    en_US:
+      - value: Pharaoh Amumu
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 法老 阿木木
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 67
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AmumuSkin01
+  - AmumuSkin1

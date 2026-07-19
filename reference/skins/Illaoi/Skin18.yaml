@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Illaoi
+  champion_id: 420
+  skin_number: 18
+  skin_token: Skin18
+  id: 420018
+  alias: IllaoiSkin18
+  names:
+    en_US:
+      - value: Snow Moon Illaoi
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 净雪之月 俄洛伊
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 160
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - IllaoiSkin18

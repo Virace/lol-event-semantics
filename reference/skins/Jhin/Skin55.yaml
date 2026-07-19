@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Jhin
+  champion_id: 202
+  skin_number: 55
+  skin_token: Skin55
+  id: 202055
+  alias: JhinSkin55
+  names:
+    en_US:
+      - value: Arcana Jhin
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 不谐之面 烬
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 146
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - JhinSkin55

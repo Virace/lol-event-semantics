@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Gragas
+  champion_id: 79
+  skin_number: 1
+  skin_token: Skin01
+  id: 79001
+  alias: GragasSkin01
+  names:
+    en_US:
+      - value: Scuba Gragas
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 深潜蛙人 古拉加斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 100
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - GragasSkin01
+  - GragasSkin1

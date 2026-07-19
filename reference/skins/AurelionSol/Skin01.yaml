@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: AurelionSol
+  champion_id: 136
+  skin_number: 1
+  skin_token: Skin01
+  id: 136001
+  alias: AurelionSolSkin01
+  names:
+    en_US:
+      - value: Ashen Lord Aurelion Sol
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 灰烬领主 奥瑞利安·索尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 86
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AurelionSolSkin01
+  - AurelionSolSkin1

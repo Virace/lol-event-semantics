@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: AurelionSol
+  champion_id: 136
+  skin_number: 21
+  skin_token: Skin21
+  id: 136021
+  alias: AurelionSolSkin21
+  names:
+    en_US:
+      - value: Inkshadow Aurelion Sol
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 墨影之灵 奥瑞利安 · 索尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 192
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AurelionSolSkin21

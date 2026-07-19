@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Janna
+  champion_id: 40
+  skin_number: 6
+  skin_token: Skin06
+  id: 40006
+  alias: JannaSkin06
+  names:
+    en_US:
+      - value: Fnatic Janna
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: Fnatic 迦娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 1
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - JannaSkin06
+  - JannaSkin6

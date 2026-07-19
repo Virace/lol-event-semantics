@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Udyr
+  champion_id: 77
+  skin_number: 5
+  skin_token: Skin05
+  id: 77005
+  alias: UdyrSkin05
+  names:
+    en_US:
+      - value: Dragon Oracle Udyr
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 龙神之力 乌迪尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 13
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - UdyrSkin05
+  - UdyrSkin5

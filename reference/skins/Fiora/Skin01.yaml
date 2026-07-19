@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Fiora
+  champion_id: 114
+  skin_number: 1
+  skin_token: Skin01
+  id: 114001
+  alias: FioraSkin01
+  names:
+    en_US:
+      - value: Royal Guard Fiora
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 皇家守卫 菲奥娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 72
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - FioraSkin01
+  - FioraSkin1

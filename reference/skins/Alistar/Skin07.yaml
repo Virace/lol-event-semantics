@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Alistar
+  champion_id: 12
+  skin_number: 7
+  skin_token: Skin07
+  id: 12007
+  alias: AlistarSkin07
+  names:
+    en_US:
+      - value: Sweeper Alistar
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 后场堡垒 阿利斯塔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 31
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AlistarSkin07
+  - AlistarSkin7

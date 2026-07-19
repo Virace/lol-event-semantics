@@ -1,0 +1,313 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 72
+  alias: Skarner
+  names:
+    en_US:
+      - value: Skarner
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 斯卡纳
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 上古领主
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 水晶先锋
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: 蝎子
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: shuijingxianfeng
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: sikana
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: sjxf
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: skn
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: xiezi
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: xz
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: SkarnerE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Ixtal's Impact
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 以绪塔尔冲击
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:3c88fc1f115d4eec444c0d1e3ca309768d8fecabb6b2c8ac9283662bf93bcf41
+            value: Skarner charges forward and passes through terrain. If he 
+              collides with a champion or large monster, he'll slam them into 
+              the next wall he hits to damage and stun them.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:9b889f84f50d818c1a5af7947546aab911d92c6ec4e01a49236ef5402b80ce1b
+            value: 斯卡纳向前冲锋并穿过地形。如果他撞击到一个英雄或大型野怪，则可将其猛推到他命中的下一个墙体上，造成伤害和晕眩效果。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: SkarnerPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Threads of Vibration
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 战栗
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:5dd69cedfc3916ca8c0438eaeac3d4a05e3f152153ca38a65023c6974407fd3e
+            value: Skarner's Attacks, Shattered Earth, Upheaval, and Impale, 
+              apply Quaking. At max stacks of Quaking, enemies take max Health 
+              magic damage over its duration.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:aaa39c44e7a0c81fefc37bac43b70372bbf1f58a324b2907139a48ac3518aee9
+            value: 斯卡纳的普通攻击、撼地、擎天和毒刺贯体都会施加战栗效果。在满层战栗时，敌人们会在其持续期间内受到最大生命值魔法伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: SkarnerQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Shattered Earth / Upheaval
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 撼地 / 擎天
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:36ea4f19669e3db7373a3c37ca7388a152e36eae848557bd9df1539d7dd4cb47
+            value: Skarner rips a boulder from the earth that empowers his 
+              attacks and can be thrown as a powerful projectile.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:098ad635d6bdd165a9f7fe91b5e53c96a21a9b58a835bbfa881060726a2539f6
+            value: 斯卡纳从地面掘出一块巨石来强化他的普攻，这块巨石可作为飞弹投掷。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: SkarnerR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Impale
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 毒刺贯体
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:9fbca70d9bd222808199466536f4e92ddeabbf64b7d80249c1bee8459a813b3a
+            value: Skarner's tails lash forward to suppress enemy champions. 
+              Once suppressed, the victims will be dragged along by Skarner as 
+              he moves around.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:bc5540cf790ac60b8f0684b4b3441fcfd3572c85214da90116be490b2e43e094
+            value: 斯卡纳向前甩出他的尾巴，以压制敌方英雄们。一旦被压制，猎物们就会在斯卡纳移动时被拖行。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: SkarnerW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Seismic Bastion
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 震地壁垒
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:5d14d412882a0608d80bbf96d45a9116a40e75621f66617e85909165890cc99c
+            value: Skarner gains a shield and creates an earthquake whose 
+              shockwave damages and slows foes.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:a970026b61771d78e05679d2c87286c44b39f4f1c630edd563ce90d6bddb3d6f
+            value: 斯卡纳获得一个护盾并生成一阵地震，地震的冲击波会伤害并减速敌人们。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

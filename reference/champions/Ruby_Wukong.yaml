@@ -1,0 +1,145 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 66614
+  alias: Ruby_Wukong
+  names:
+    en_US:
+      - value: Doom Bot Wukong
+        sources:
+          - source: game_data
+            version: '16.5'
+spells:
+  - slot: E
+    ids:
+      - value: Ruby_WukongE
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Nimbus Strike
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:20ca4f7d4339067a86f9329d5cba2b6f8f2c73f1327be9bb0958335cf3936a54
+            value: Wukong dashes to a targeted enemy and sends out images to 
+              attack enemies near his target, dealing damage to each enemy 
+              struck.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: P
+    ids:
+      - value: Ruby_WukongPassive
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Stone Skin
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:d69bf04b6ad4af6f1871e465dd08b9ba9df63a7bdf037a9b94feb371c3c6a668
+            value: Wukong gains stacking armor and max health regeneration while
+              fighting champions and monsters.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: Q
+    ids:
+      - value: Ruby_WukongQ
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Crushing Blow
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:347aba8cf1bf66642e6e2c5e2a849826f3ecbbb2f3f1190718cbebcbe99388d2
+            value: Wukong's next attack gains attack range, deals bonus damage, 
+              and reduces the target's armor for a few seconds.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: R
+    ids:
+      - value: Ruby_WukongR
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Cyclone
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:f9f9a970a038e23996bcb97fc69072b0d27ed3bf4217a727c0862845c1c8bd99
+            value: Wukong's extends his staff and spins it around repeatedly, 
+              gaining Move Speed.<br><br>Enemies struck take damage and are 
+              knocked up.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: W
+    ids:
+      - value: Ruby_WukongW
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Warrior Trickster
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:01e7f1be5e137a2e255dad61e46580bcaf257550e18530449c6d6f0fb72d1229
+            value: Wukong becomes <font color='#91d7ee'>Invisible</font> and 
+              dashes in a direction, leaving behind a clone that will attack 
+              nearby enemies.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'

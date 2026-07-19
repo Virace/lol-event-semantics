@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Chogath
+  champion_id: 31
+  skin_number: 4
+  skin_token: Skin04
+  id: 31004
+  alias: ChogathSkin04
+  names:
+    en_US:
+      - value: Jurassic Cho'Gath
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 侏罗纪化石 科加斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 100
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ChogathSkin04
+  - ChogathSkin4

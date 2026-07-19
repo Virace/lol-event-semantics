@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Lucian
+  champion_id: 236
+  skin_number: 72
+  skin_token: Skin72
+  id: 236072
+  alias: LucianSkin72
+  names:
+    en_US:
+      - value: Sunken Shadows Lucian
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 沉溺暗影 卢锡安
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 223
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LucianSkin72

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sona
+  champion_id: 37
+  skin_number: 7
+  skin_token: Skin07
+  id: 37007
+  alias: SonaSkin07
+  names:
+    en_US:
+      - value: Sweetheart Sona
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 甜心宝贝 娑娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 64
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SonaSkin07
+  - SonaSkin7

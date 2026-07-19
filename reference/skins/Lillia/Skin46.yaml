@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Lillia
+  champion_id: 876
+  skin_number: 46
+  skin_token: Skin46
+  id: 876046
+  alias: LilliaSkin46
+  names:
+    en_US:
+      - value: Petals of Spring Lillia
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 踏雪寻梅 莉莉娅
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 225
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LilliaSkin46

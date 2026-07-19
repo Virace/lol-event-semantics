@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Garen
+  champion_id: 86
+  skin_number: 4
+  skin_token: Skin04
+  id: 86004
+  alias: GarenSkin04
+  names:
+    en_US:
+      - value: Dreadknight Garen
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 死亡骑士 盖伦
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 123
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - GarenSkin04
+  - GarenSkin4

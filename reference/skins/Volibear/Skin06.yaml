@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Volibear
+  champion_id: 106
+  skin_number: 6
+  skin_token: Skin06
+  id: 106006
+  alias: VolibearSkin06
+  names:
+    en_US:
+      - value: The Thousand-Pierced Bear
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 坚韧不屈 沃利贝尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 92
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - VolibearSkin06
+  - VolibearSkin6

@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Zoe
+  champion_id: 142
+  skin_number: 20
+  skin_token: Skin20
+  id: 142020
+  alias: ZoeSkin20
+  names:
+    en_US:
+      - value: EDG Zoe
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: EDG 佐伊
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 158
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ZoeSkin20

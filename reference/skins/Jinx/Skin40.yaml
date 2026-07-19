@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Jinx
+  champion_id: 222
+  skin_number: 40
+  skin_token: Skin40
+  id: 222040
+  alias: JinxSkin40
+  names:
+    en_US:
+      - value: Prestige Battle Cat Jinx
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至臻 幻灵战斗猫 金克丝
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 156
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - JinxSkin40

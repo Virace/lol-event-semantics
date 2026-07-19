@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Kindred
+  champion_id: 203
+  skin_number: 12
+  skin_token: Skin12
+  id: 203012
+  alias: KindredSkin12
+  names:
+    en_US:
+      - value: Porcelain Kindred
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 青花瓷 千珏
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 154
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KindredSkin12

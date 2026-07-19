@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Lux
+  champion_id: 99
+  skin_number: 4
+  skin_token: Skin04
+  id: 99004
+  alias: LuxSkin04
+  names:
+    en_US:
+      - value: Imperial Lux
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 星际迷航 拉克丝
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LuxSkin04
+  - LuxSkin4

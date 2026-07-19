@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: MissFortune
+  champion_id: 21
+  skin_number: 9
+  skin_token: Skin09
+  id: 21009
+  alias: MissFortuneSkin09
+  names:
+    en_US:
+      - value: Pool Party Miss Fortune
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 泳池派对 厄运小姐
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 15
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MissFortuneSkin09
+  - MissFortuneSkin9

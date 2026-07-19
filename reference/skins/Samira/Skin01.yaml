@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Samira
+  champion_id: 360
+  skin_number: 1
+  skin_token: Skin01
+  id: 360001
+  alias: SamiraSkin01
+  names:
+    en_US:
+      - value: PsyOps Samira
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 灵能特工 莎弥拉
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 134
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SamiraSkin01
+  - SamiraSkin1

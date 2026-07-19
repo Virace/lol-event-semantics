@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Vladimir
+  champion_id: 8
+  skin_number: 1
+  skin_token: Skin01
+  id: 8001
+  alias: VladimirSkin01
+  names:
+    en_US:
+      - value: Count Vladimir
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 弗拉基米尔伯爵
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 71
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - VladimirSkin01
+  - VladimirSkin1

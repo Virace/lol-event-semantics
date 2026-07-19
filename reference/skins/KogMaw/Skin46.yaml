@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: KogMaw
+  champion_id: 96
+  skin_number: 46
+  skin_token: Skin46
+  id: 96046
+  alias: KogMawSkin46
+  names:
+    en_US:
+      - value: Shan Hai Scrolls Kog'Maw
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 山海绘卷 克格莫
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 139
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KogMawSkin46

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Warwick
+  champion_id: 19
+  skin_number: 8
+  skin_token: Skin08
+  id: 19008
+  alias: WarwickSkin08
+  names:
+    en_US:
+      - value: Marauder Warwick
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 黑暗骑士 沃里克
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 45
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - WarwickSkin08
+  - WarwickSkin8

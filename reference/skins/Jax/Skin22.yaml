@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Jax
+  champion_id: 24
+  skin_number: 22
+  skin_token: Skin22
+  id: 24022
+  alias: JaxSkin22
+  names:
+    en_US:
+      - value: Empyrean Jax
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至高天 贾克斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 186
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - JaxSkin22

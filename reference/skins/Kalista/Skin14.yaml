@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Kalista
+  champion_id: 429
+  skin_number: 14
+  skin_token: Skin14
+  id: 429014
+  alias: KalistaSkin14
+  names:
+    en_US:
+      - value: Faerie Court Kalista
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 花仙骑士 卡莉丝塔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 191
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KalistaSkin14

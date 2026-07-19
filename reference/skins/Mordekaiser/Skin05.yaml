@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Mordekaiser
+  champion_id: 82
+  skin_number: 5
+  skin_token: Skin05
+  id: 82005
+  alias: MordekaiserSkin05
+  names:
+    en_US:
+      - value: King of Clubs Mordekaiser
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 梅花国王 莫德凯撒
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 41
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MordekaiserSkin05
+  - MordekaiserSkin5

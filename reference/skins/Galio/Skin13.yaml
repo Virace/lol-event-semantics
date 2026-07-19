@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Galio
+  champion_id: 3
+  skin_number: 13
+  skin_token: Skin13
+  id: 3013
+  alias: GalioSkin13
+  names:
+    en_US:
+      - value: Infernal Galio
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 地狱火 加里奥
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 86
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - GalioSkin13

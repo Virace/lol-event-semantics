@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ahri
+  champion_id: 103
+  skin_number: 76
+  skin_token: Skin76
+  id: 103076
+  alias: AhriSkin76
+  names:
+    en_US:
+      - value: Snow Moon Ahri
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 净雪之月 阿狸
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 160
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AhriSkin76

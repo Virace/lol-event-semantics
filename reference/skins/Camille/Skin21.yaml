@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Camille
+  champion_id: 164
+  skin_number: 21
+  skin_token: Skin21
+  id: 164021
+  alias: CamilleSkin21
+  names:
+    en_US:
+      - value: Strike Commander Camille
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 海珀利安小队 Y03-权天使 卡蜜尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 65
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - CamilleSkin21

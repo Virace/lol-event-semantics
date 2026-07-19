@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Amumu
+  champion_id: 32
+  skin_number: 2
+  skin_token: Skin02
+  id: 32002
+  alias: AmumuSkin02
+  names:
+    en_US:
+      - value: Vancouver Amumu
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 狂欢 阿木木
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 28
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AmumuSkin02
+  - AmumuSkin2

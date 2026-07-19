@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Zed
+  champion_id: 238
+  skin_number: 69
+  skin_token: Skin69
+  id: 238069
+  alias: ZedSkin69
+  names:
+    en_US:
+      - value: Prestige Spirit Blossom Zed
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至臻 灵魂莲华 劫
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 171
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ZedSkin69

@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Yone
+  champion_id: 777
+  skin_number: 19
+  skin_token: Skin19
+  id: 777019
+  alias: YoneSkin19
+  names:
+    en_US:
+      - value: Dawnbringer Yone
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 黎明使者 永恩
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 193
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - YoneSkin19

@@ -1,0 +1,143 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 66615
+  alias: Ruby_Soraka
+  names:
+    en_US:
+      - value: Doom Bot Soraka
+        sources:
+          - source: game_data
+            version: '16.5'
+spells:
+  - slot: E
+    ids:
+      - value: Ruby_SorakaE
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Equinox
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:3613190fb8f5ce2e71c3c820cabc79e0dff088321df4303f3a07336bfb7fe530
+            value: Creates a zone at a location that silences all enemies 
+              inside. When the zone expires, all enemies still inside are 
+              rooted.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: P
+    ids:
+      - value: Ruby_SorakaPassive
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Salvation
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:538f40f2122cdcf8d36b3c489abef76c198d25ca6b6ad1775c238e175c42a660
+            value: Soraka runs faster towards nearby low health allies.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: Q
+    ids:
+      - value: Ruby_SorakaQ
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Starcall
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:32a4b58f7812ec99b59d5341006c7f516f11e057d4dc6d7b07cf9e150da59c05
+            value: A star falls from the sky at the target location dealing 
+              magic damage and slowing enemies. If an enemy champion is hit by 
+              Starcall, Soraka recovers Health.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: R
+    ids:
+      - value: Ruby_SorakaR
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Wish
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:93835922e94e7f5f35edef646f7ef20be86498e124a6014b029523c95e5bfae7
+            value: Soraka fills her allies with hope, instantly restoring health
+              to herself and all allied champions.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: W
+    ids:
+      - value: Ruby_SorakaW
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Astral Infusion
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:b641b9265194b0edceaf3db73bf784cd0c88230a4d22dc59c16c3a13d5a5ec76
+            value: Soraka sacrifices a portion of her own health to heal another
+              friendly champion.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'

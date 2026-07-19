@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Gangplank
+  champion_id: 41
+  skin_number: 4
+  skin_token: Skin04
+  id: 41004
+  alias: GangplankSkin04
+  names:
+    en_US:
+      - value: Toy Soldier Gangplank
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 英勇玩具兵 普朗克
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 61
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - GangplankSkin04
+  - GangplankSkin4

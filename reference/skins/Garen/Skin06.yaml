@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Garen
+  champion_id: 86
+  skin_number: 6
+  skin_token: Skin06
+  id: 86006
+  alias: GarenSkin06
+  names:
+    en_US:
+      - value: Steel Legion Garen
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 钢铁军团 盖伦
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 85
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - GarenSkin06
+  - GarenSkin6

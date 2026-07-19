@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Renekton
+  champion_id: 58
+  skin_number: 5
+  skin_token: Skin05
+  id: 58005
+  alias: RenektonSkin05
+  names:
+    en_US:
+      - value: Scorched Earth Renekton
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 枯萎之壤 雷克顿
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 86
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - RenektonSkin05
+  - RenektonSkin5

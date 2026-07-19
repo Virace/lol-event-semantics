@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sejuani
+  champion_id: 113
+  skin_number: 7
+  skin_token: Skin07
+  id: 113007
+  alias: SejuaniSkin07
+  names:
+    en_US:
+      - value: Sejuani Dawnchaser
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 瑟庄妮·逐晓者
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 38
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SejuaniSkin07
+  - SejuaniSkin7

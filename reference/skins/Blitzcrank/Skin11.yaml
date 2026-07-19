@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Blitzcrank
+  champion_id: 53
+  skin_number: 11
+  skin_token: Skin11
+  id: 53011
+  alias: BlitzcrankSkin11
+  names:
+    en_US:
+      - value: Battle Boss Blitzcrank
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 战场BOSS 布里茨
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 11
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - BlitzcrankSkin11

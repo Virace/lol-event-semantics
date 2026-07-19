@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: XinZhao
+  champion_id: 5
+  skin_number: 2
+  skin_token: Skin02
+  id: 5002
+  alias: XinZhaoSkin02
+  names:
+    en_US:
+      - value: Imperial Xin Zhao
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 皇家守卫 赵信
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - XinZhaoSkin02
+  - XinZhaoSkin2

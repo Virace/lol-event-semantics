@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Neeko
+  champion_id: 518
+  skin_number: 1
+  skin_token: Skin01
+  id: 518001
+  alias: NeekoSkin01
+  names:
+    en_US:
+      - value: Winter Wonder Neeko
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 冬境仙灵 妮蔻
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 47
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NeekoSkin01
+  - NeekoSkin1

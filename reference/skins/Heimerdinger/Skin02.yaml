@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Heimerdinger
+  champion_id: 74
+  skin_number: 2
+  skin_token: Skin02
+  id: 74002
+  alias: HeimerdingerSkin02
+  names:
+    en_US:
+      - value: Blast Zone Heimerdinger
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 拆弹专家 黑默丁格
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 70
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - HeimerdingerSkin02
+  - HeimerdingerSkin2

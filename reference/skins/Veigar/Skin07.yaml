@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Veigar
+  champion_id: 45
+  skin_number: 7
+  skin_token: Skin07
+  id: 45007
+  alias: VeigarSkin07
+  names:
+    en_US:
+      - value: Bad Santa Veigar
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 邪恶圣诞老人 维迦
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 48
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - VeigarSkin07
+  - VeigarSkin7

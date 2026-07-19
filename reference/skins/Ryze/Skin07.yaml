@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ryze
+  champion_id: 13
+  skin_number: 7
+  skin_token: Skin07
+  id: 13007
+  alias: RyzeSkin07
+  names:
+    en_US:
+      - value: Dark Crystal Ryze
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 恶魔男爵 瑞兹
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 126
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - RyzeSkin07
+  - RyzeSkin7

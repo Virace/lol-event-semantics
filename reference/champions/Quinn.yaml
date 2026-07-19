@@ -1,0 +1,316 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 133
+  alias: Quinn
+  names:
+    en_US:
+      - value: Quinn
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 奎因
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 德玛西亚之翼
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 鸟人
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: demaxiyazhiyi
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: dmxyzz
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: kuiyin
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: ky
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: niaoren
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: nr
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: QuinnE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Vault
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 旋翔掠杀
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:89f69f59cb2ed95a23cbbd64028a56253b1f4d8fb27c0ce6f3b4070ab8030fc9
+            value: Quinn dashes to an enemy, dealing physical damage and slowing
+              the target's Move Speed. Upon reaching the target, she leaps off 
+              the target, briefly interrupting it, and lands near her maximum 
+              Attack Range away from the target.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:6abfdcea28729004a87e4504c181a31f0be5331539d4107eb2e6dad4d4ef2c27
+            value: 
+              奎因冲向一名敌人，造成物理伤害，并减少目标的移动速度。在接触到目标的同时，她会向后空翻，暂时打断目标的行动，并在接近她最大攻击距离的地方着陆。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: QuinnPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Harrier
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 侵扰
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:1865540d0ee171c428c23cbcd70f7ec35bca7c04234f73e17f448156e230e2dd
+            value: Valor, Quinn's Demacian eagle, periodically marks enemies as 
+              <font color='#FFF673'>Vulnerable</font>. Quinn's first basic 
+              attack against <font color='#FFF673'>Vulnerable</font> targets 
+              will deal bonus physical damage.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:40ce1fd551d1917dd72ffdd56aded59d6ce45ccda3a1b5114af15f54762fb3fd
+            value: 华洛，奎因的德玛西亚鹰，会周期性地将敌人标记为<font 
+              color='#FFF673'>易损</font>状态。奎因对<font 
+              color='#FFF673'>易损</font>目标的第一次普通攻击将造成额外物理伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: QuinnQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Blinding Assault
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 炫目攻势
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:f14e623ac7a5ca1b8c97ff4ab8246a1de3421f1e968a592d921cc8bf967124f5
+            value: Quinn calls Valor to mark an enemy and hinder its vision 
+              before damaging all enemies in the immediate area.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:40e4f9f98835f2217defbee07af1405ba294e92cb3eeab2daf9282cae896d3dc
+            value: 奎因唤出华洛，来标记一名敌人并遮蔽其视野，然后对目标附近区域内的所有敌人造成伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: QuinnR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Behind Enemy Lines
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 深入敌后
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:4a1eb07b8b2bc0547fb0933dda1d451d053ae88192f4e184636b7b638bcfca38
+            value: Quinn and Valor team up to fly around at great speed.  Ending
+              the ability casts Skystrike, which deals damage to nearby enemies 
+              and marks champions as Vulnerable.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:d87735d053661262135a49f9cc82fa180b16ec3faf21410efd5131d2c847b2d2
+            value: 奎因和华洛联成一体并以极高的速度进行移动。在结束此技能时会施放【鹰翼天翔】，对附近的敌人造成伤害并对英雄施加易损效果。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: QuinnW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Heightened Senses
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 敏锐感知
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:235c42feca96f6c3604c87fa0e24a991d39a66cf85a95be681443ebd3236b433
+            value: Passively grants Quinn Attack Speed and Move Speed after she 
+              attacks a <font color='#FFF673'>Vulnerable</font> target. Activate
+              to have Valor reveal a large area nearby.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:8a8ace784527a9bdb5250328723e78c9ef85cc10dd9f27c23c0710bab2ea4cd7
+            value: 在奎因攻击了一名<font 
+              color='#FFF673'>易损</font>目标后，被动地为奎因提供攻击速度和移动速度加成。主动激活可以让华洛驱散周围一大片区域的战争迷雾。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

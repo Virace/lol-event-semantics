@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Quinn
+  champion_id: 133
+  skin_number: 5
+  skin_token: Skin05
+  id: 133005
+  alias: QuinnSkin05
+  names:
+    en_US:
+      - value: Warden Quinn
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 光明骑士 奎因
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 50
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - QuinnSkin05
+  - QuinnSkin5

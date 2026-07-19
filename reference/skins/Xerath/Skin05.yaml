@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Xerath
+  champion_id: 101
+  skin_number: 5
+  skin_token: Skin05
+  id: 101005
+  alias: XerathSkin05
+  names:
+    en_US:
+      - value: Dark Star Xerath
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 暗星 泽拉斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 44
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - XerathSkin05
+  - XerathSkin5

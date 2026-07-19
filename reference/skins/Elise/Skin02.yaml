@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Elise
+  champion_id: 60
+  skin_number: 2
+  skin_token: Skin02
+  id: 60002
+  alias: EliseSkin02
+  names:
+    en_US:
+      - value: Victorious Elise
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 胜利女神 伊莉丝
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 7
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - EliseSkin02
+  - EliseSkin2

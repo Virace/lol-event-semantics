@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Evelynn
+  champion_id: 28
+  skin_number: 24
+  skin_token: Skin24
+  id: 28024
+  alias: EvelynnSkin24
+  names:
+    en_US:
+      - value: Coven Evelynn
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 魔女 伊芙琳
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 92
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - EvelynnSkin24

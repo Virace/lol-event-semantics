@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Karma
+  champion_id: 43
+  skin_number: 27
+  skin_token: Skin27
+  id: 43027
+  alias: KarmaSkin27
+  names:
+    en_US:
+      - value: Ruined Karma
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 破败军团 卡尔玛
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 138
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KarmaSkin27

@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Qiyana
+  champion_id: 246
+  skin_number: 40
+  skin_token: Skin40
+  id: 246040
+  alias: QiyanaSkin40
+  names:
+    en_US:
+      - value: La Ilusión Qiyana
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 灵之菊 奇亚娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 198
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - QiyanaSkin40

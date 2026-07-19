@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Orianna
+  champion_id: 61
+  skin_number: 1
+  skin_token: Skin01
+  id: 61001
+  alias: OriannaSkin01
+  names:
+    en_US:
+      - value: Gothic Orianna
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 哥特女仆 奥莉安娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 110
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - OriannaSkin01
+  - OriannaSkin1

@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Darius
+  champion_id: 122
+  skin_number: 33
+  skin_token: Skin33
+  id: 122033
+  alias: DariusSkin33
+  names:
+    en_US:
+      - value: Crime City Nightmare Darius
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 地下都市 梦魇 德莱厄斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 149
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - DariusSkin33

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Vi
+  champion_id: 254
+  skin_number: 5
+  skin_token: Skin05
+  id: 254005
+  alias: ViSkin05
+  names:
+    en_US:
+      - value: Warring Kingdoms Vi
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 虎痴之拳 蔚
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 53
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ViSkin05
+  - ViSkin5

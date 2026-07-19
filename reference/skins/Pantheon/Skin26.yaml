@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Pantheon
+  champion_id: 80
+  skin_number: 26
+  skin_token: Skin26
+  id: 80026
+  alias: PantheonSkin26
+  names:
+    en_US:
+      - value: Prestige Ascended Pantheon
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至臻 飞升战神 潘森
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 138
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - PantheonSkin26

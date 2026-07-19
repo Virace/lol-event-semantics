@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Mordekaiser
+  champion_id: 82
+  skin_number: 6
+  skin_token: Skin06
+  id: 82006
+  alias: MordekaiserSkin06
+  names:
+    en_US:
+      - value: Dark Star Mordekaiser
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 暗星 莫德凯撒
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 44
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MordekaiserSkin06
+  - MordekaiserSkin6

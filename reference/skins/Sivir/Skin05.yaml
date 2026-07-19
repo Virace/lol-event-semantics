@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sivir
+  champion_id: 15
+  skin_number: 5
+  skin_token: Skin05
+  id: 15005
+  alias: SivirSkin05
+  names:
+    en_US:
+      - value: PAX Sivir
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 创战纪 希维尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 84
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SivirSkin05
+  - SivirSkin5

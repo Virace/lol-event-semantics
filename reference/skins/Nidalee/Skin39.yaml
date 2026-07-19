@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Nidalee
+  champion_id: 76
+  skin_number: 39
+  skin_token: Skin39
+  id: 76039
+  alias: NidaleeSkin39
+  names:
+    en_US:
+      - value: Kittalee
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 喵大力
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 98
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NidaleeSkin39

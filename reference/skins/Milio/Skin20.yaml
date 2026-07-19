@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Milio
+  champion_id: 902
+  skin_number: 20
+  skin_token: Skin20
+  id: 902020
+  alias: MilioSkin20
+  names:
+    en_US:
+      - value: Winter Wonder Milio
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 冬境仙灵 米利欧
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 47
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MilioSkin20

@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ryze
+  champion_id: 13
+  skin_number: 29
+  skin_token: Skin29
+  id: 13029
+  alias: RyzeSkin29
+  names:
+    en_US:
+      - value: Blood Moon Ryze
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 腥红之月 瑞兹
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 12
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - RyzeSkin29

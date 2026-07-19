@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Nautilus
+  champion_id: 111
+  skin_number: 27
+  skin_token: Skin27
+  id: 111027
+  alias: NautilusSkin27
+  names:
+    en_US:
+      - value: Cosmic Paladin Nautilus
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 星界圣骑 诺提勒斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 43
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NautilusSkin27

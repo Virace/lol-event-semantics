@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Akali
+  champion_id: 84
+  skin_number: 5
+  skin_token: Skin05
+  id: 84005
+  alias: AkaliSkin05
+  names:
+    en_US:
+      - value: Blood Moon Akali
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 腥红之月 鬼武姬 阿卡丽
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 12
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AkaliSkin05
+  - AkaliSkin5

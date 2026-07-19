@@ -1,0 +1,300 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 777
+  alias: Yone
+  names:
+    en_US:
+      - value: Yone
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 永恩
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 封魔剑魂
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: fengmojianhun
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: fmjh
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: ye
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: yongen
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: YoneE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Soul Unbound
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 破障之锋
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:1e74e3f206334791bb2110cd451d73b6c583d4ebe18c171e7f6518af922569db
+            value: Yone's spirit leaves his body behind, gaining Move Speed. 
+              When this ability ends, Yone's spirit is forced back to his body 
+              and he repeats a portion of the damage he dealt as a spirit.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:78515b3a3388f8614446df7bb3662055076b8c44d732186462920f270a78550c
+            value: 
+              永恩的灵体离开他的身体，并获得移动速度。当这个技能结束时，永恩的灵体会被强制返回他的身体，并且他会再次造成伤害，伤害值相当于一部分他在灵体形态中造成的伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: YonePassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Way of the Hunter
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 狩人之道
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:440fd5cf2d08a7e0664cfb14e327cc87d53faf99ba79460d616156278a02d8ad
+            value: Yone deals magic damage with every second Attack. In 
+              addition, his critical strike chance is increased.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:06d9e6fa846eece163c87b5857a05ac785ec3b9569337336cf4a780760bde43f
+            value: 永恩每第二次攻击造成魔法伤害。此外，他的暴击几率提升。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: YoneQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Mortal Steel
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 错玉切
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:3481626c1ffbabe4d08becb26b9ccf4bcc2b58d8470e02b2c1810732002921da
+            value: Thrusts forward, damaging all enemies in a line.<br><br>On 
+              hit, grants a stack of Gathering Storm for a few seconds. At 2 
+              stacks, Mortal Steel dashes Yone forward with a gust of wind 
+              knocking enemies <status>Airborne</status>.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:d4106d4822150b60a61c9b17715849022497ec193a1653d6e91f7019ba187ce2
+            value: 
+              向前出剑，呈直线造成伤害。<br><br>在命中时，错玉切会获得一层旋风烈斩效果，持续数秒。在2层时，错玉切会使永恩向前冲刺并带着一阵能够<status>击飞</status>敌人的旋风。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: YoneR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Fate Sealed
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 封尘绝念斩
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:14fe18f041668c9a290156eb721ac3b86498c27939f9e12d57bc0fd6b4f1cb49
+            value: Yone blinks behind the last champion in a line with a slash 
+              so powerful it pulls all enemies hit towards him.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:0dbafcf50f9298db4f447b6ba7515daea2778d141cc42ba95d9c668a89d394d9
+            value: 永恩沿直线进行斩击，闪烁至最后一名敌方英雄身后，并将命中的所有敌人拉向他。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: YoneW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Spirit Cleave
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 凛神斩
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:0b594a9f453e58294198331b8e8d5995e9ba2285668dc9a407a8842dae492296
+            value: Cleaves forward, damaging all enemies in a cone. Grants a 
+              shield to Yone, the value is increased by the number of champions 
+              hit by the swipe.<br><br>Spirit Cleave's cooldown and cast time 
+              scale with attack speed.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:b99772cce38733c4196a5de581cb1a629ed50ccb32181d95485df2e84fcf01a7
+            value: 
+              向前顺劈，对锥形范围内的所有敌人造成伤害。为永恩提供一个护盾，护盾生命值会基于被顺劈到的敌方英雄的数量而得到提升。<br><br>凛神斩的冷却时间和施放时间可通过攻击速度来缩短。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

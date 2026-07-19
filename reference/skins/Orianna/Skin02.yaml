@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Orianna
+  champion_id: 61
+  skin_number: 2
+  skin_token: Skin02
+  id: 61002
+  alias: OriannaSkin02
+  names:
+    en_US:
+      - value: Sewn Chaos Orianna
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 恶灵布偶 奥莉安娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 61
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - OriannaSkin02
+  - OriannaSkin2

@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Senna
+  champion_id: 235
+  skin_number: 56
+  skin_token: Skin56
+  id: 235056
+  alias: SennaSkin56
+  names:
+    en_US:
+      - value: Winterblessed Senna
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 北极星神 赛娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 187
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SennaSkin56

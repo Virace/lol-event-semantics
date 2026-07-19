@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Lissandra
+  champion_id: 127
+  skin_number: 43
+  skin_token: Skin43
+  id: 127043
+  alias: LissandraSkin43
+  names:
+    en_US:
+      - value: Flora Fatalis Lissandra
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 绝命花妖 丽桑卓
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 221
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LissandraSkin43

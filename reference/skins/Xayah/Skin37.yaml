@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Xayah
+  champion_id: 498
+  skin_number: 37
+  skin_token: Skin37
+  id: 498037
+  alias: XayahSkin37
+  names:
+    en_US:
+      - value: Broken Covenant Xayah
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 绝息圣堂 霞
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 190
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - XayahSkin37

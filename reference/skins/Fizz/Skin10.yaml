@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Fizz
+  champion_id: 105
+  skin_number: 10
+  skin_token: Skin10
+  id: 105010
+  alias: FizzSkin10
+  names:
+    en_US:
+      - value: Omega Squad Fizz
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 欧米伽小队 鬼影蛙人
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 14
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - FizzSkin10

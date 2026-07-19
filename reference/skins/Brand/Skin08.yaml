@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Brand
+  champion_id: 63
+  skin_number: 8
+  skin_token: Skin08
+  id: 63008
+  alias: BrandSkin08
+  names:
+    en_US:
+      - value: Eternal Dragon Brand
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 神龙尊者 魔龙布兰德
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 135
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - BrandSkin08
+  - BrandSkin8

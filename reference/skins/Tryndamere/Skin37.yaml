@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Tryndamere
+  champion_id: 23
+  skin_number: 37
+  skin_token: Skin37
+  id: 23037
+  alias: TryndamereSkin37
+  names:
+    en_US:
+      - value: Visions of the Fallen Tryndamere
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 暗裔英雄 泰达米尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 219
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - TryndamereSkin37

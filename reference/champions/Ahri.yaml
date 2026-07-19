@@ -1,0 +1,322 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 103
+  alias: Ahri
+  names:
+    en_US:
+      - value: Ahri
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 阿狸
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 九尾妖狐
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 九尾
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: 狐狸
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: al
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: ali
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: hl
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: huli
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: jiuwei
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: jiuweiyaohu
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: jw
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: jwyh
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: AhriE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Charm
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 魅惑妖术
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:c64bf854c14d58ddf3b17debdd391b8d640f3ab80021821cf4fd6a81406e7233
+            value: Ahri blows a kiss that damages and charms an enemy it 
+              encounters, instantly stopping movement abilities and causing them
+              to walk harmlessly towards her.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:302c4245a6ddba81cec19416d2e1606b2e8721f369c114de24f5dd88859029e0
+            value: 阿狸献出红唇热吻，对命中的第一个敌人造成伤害并将目标魅惑，并且立刻终止目标的移动技能并使目标无恶意地走向她。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: AhriPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Essence Theft
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 摄魂夺魄
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:1e1cdfda79bd68d28953a54301786ba87b5bc8c49551dbfeb1c0248f3d58dcd6
+            value: After killing 9 minions or monsters, Ahri heals.<br>After 
+              taking down an enemy champion, Ahri heals for a greater amount.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:646c61260fbe6a102172a55e98e1a4a4fdb14b25d898e1dd6f3401b1756246a9
+            value: 在击杀9个小兵或野怪后，阿狸会治疗自身。<br>在参与击杀一名敌方英雄后，阿狸会以一个更高的治疗效果来治疗自身。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: AhriQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Orb of Deception
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 欺诈宝珠
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:06fe3f23200b5e57e8870299dec5a1d3ca74d5444d1b1ebb7cbc8be662ba85ff
+            value: 'Ahri sends out and pulls back her orb, dealing magic damage on
+              the way out and true damage on the way back. '
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:30e3b9d186d5ad3a5d6d53b7d20f50ba8f33f0c74ed1c9aef6615214e7589b1c
+            value: '阿狸放出并收回她的宝珠，在放出时会沿途对敌人造成魔法伤害，在收回时则会沿途对敌人造成真实伤害。 '
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: AhriR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Spirit Rush
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 灵魄突袭
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:79da9464ba4336e9701a2014da710fe17c2530525774b43c774d215676b0cd90
+            value: Ahri dashes forward and fires essence bolts, damaging nearby 
+              enemies. Spirit Rush can be cast up to three times before going on
+              cooldown, and gains additional recasts when taking down enemy 
+              champions.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:e77281a8d27d372c4392fd27a6726951b1036ed5cd552ce0f69e12b836a509d6
+            value: 
+              阿狸向前猛冲，并放出元气弹，对周围的数个敌人造成伤害。灵魄突袭在进入冷却阶段以前最多可被施放三次，并在参与击杀敌方英雄后获得额外的再次施放次数。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: AhriW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Fox-Fire
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 妖异狐火
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:75de24cf81def5402af02f0b2abd082a868659de82f15cd22936bf3ca3d5ea0e
+            value: Ahri gains a brief burst of Move Speed and releases three 
+              fox-fires, that lock onto and attack nearby enemies.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:8b3bc31b95bb78ab8af82bff86d6a60f51034be720156b5334132e496f421ef9
+            value: 阿狸获得短暂的爆发性移动速度加成，并放出三团狐火，锁定附近的敌人进行攻击。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Riven
+  champion_id: 92
+  skin_number: 1
+  skin_token: Skin01
+  id: 92001
+  alias: RivenSkin01
+  names:
+    en_US:
+      - value: Redeemed Riven
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 刺客信条 锐雯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 180
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - RivenSkin01
+  - RivenSkin1

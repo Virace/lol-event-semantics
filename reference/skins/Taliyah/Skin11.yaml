@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Taliyah
+  champion_id: 163
+  skin_number: 11
+  skin_token: Skin11
+  id: 163011
+  alias: TaliyahSkin11
+  names:
+    en_US:
+      - value: Star Guardian Taliyah
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 星之守护者 塔莉垭
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 161
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - TaliyahSkin11

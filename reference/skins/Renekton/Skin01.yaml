@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Renekton
+  champion_id: 58
+  skin_number: 1
+  skin_token: Skin01
+  id: 58001
+  alias: RenektonSkin01
+  names:
+    en_US:
+      - value: Galactic Renekton
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 星河战队 雷克顿
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 136
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - RenektonSkin01
+  - RenektonSkin1

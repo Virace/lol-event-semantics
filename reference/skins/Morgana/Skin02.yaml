@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Morgana
+  champion_id: 25
+  skin_number: 2
+  skin_token: Skin02
+  id: 25002
+  alias: MorganaSkin02
+  names:
+    en_US:
+      - value: Sinful Succulence Morgana
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 地狱厨房 莫甘娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 26
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MorganaSkin02
+  - MorganaSkin2

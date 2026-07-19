@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Viego
+  champion_id: 234
+  skin_number: 37
+  skin_token: Skin37
+  id: 234037
+  alias: ViegoSkin37
+  names:
+    en_US:
+      - value: Worlds 2024 Viego
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 2024 全球总决赛 佛耶戈
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 8
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ViegoSkin37

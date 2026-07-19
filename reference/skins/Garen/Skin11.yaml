@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Garen
+  champion_id: 86
+  skin_number: 11
+  skin_token: Skin11
+  id: 86011
+  alias: GarenSkin11
+  names:
+    en_US:
+      - value: Warring Kingdoms Garen
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 张辽 文远
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 53
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - GarenSkin11

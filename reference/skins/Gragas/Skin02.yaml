@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Gragas
+  champion_id: 79
+  skin_number: 2
+  skin_token: Skin02
+  id: 79002
+  alias: GragasSkin02
+  names:
+    en_US:
+      - value: Hillbilly Gragas
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 乡村农夫 古拉加斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - GragasSkin02
+  - GragasSkin2

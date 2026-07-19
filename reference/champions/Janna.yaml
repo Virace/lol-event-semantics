@@ -1,0 +1,323 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 40
+  alias: Janna
+  names:
+    en_US:
+      - value: Janna
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 迦娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 风暴之怒
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 风女
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: fbzn
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: fengbaozhinu
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: fengnv
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: fn
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: jiana
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: jn
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: EyeOfTheStorm
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+      - value: JannaE
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Eye Of The Storm
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 风暴之眼
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:9227e6703dc695f7c76130a3940ffd8a1c8b7e176942fe938e4deb106a32051e
+            value: Janna conjures a defensive gale that shields an ally champion
+              or turret from incoming damage and increases their Attack Damage.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:2ed14a8d57b6c5b14ba1949303c239f31c6356021cadf1bcc66d6176ea98b88d
+            value: 迦娜制造出一阵防御性的气旋，来为目标友军或防御塔吸收即将到来的伤害，并提高目标的攻击力。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: JannaPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Tailwind
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 顺风而行
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:f0b2093bfe10674415aebe64bdd479f4e66f8a12f689e1869ebb60e326cca5a7
+            value: Janna's allies gain Move Speed moving towards 
+              her.<br><br>Janna deals a portion of bonus Move Speed as bonus 
+              magic damage on hit and with Zephyr.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:c0e07dd188e5dc45cea4cee1d760839e48f99d58391e8157eb6d9b00b94cd8f2
+            value: 迦娜的友军在朝她移动时获得移动速度。<br><br>迦娜的普攻和【和风守护】会附带一部分额外移动速度的额外魔法伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: HowlingGale
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+      - value: JannaQ
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Howling Gale
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 飓风呼啸
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:7074ce01635627b67fe47d2fa7180b977c944d033c8106f7b720ae8c7047417a
+            value: By creating a localized change in pressure and temperature, 
+              Janna is able to create a small storm that grows in size with 
+              time. She can activate the spell again to release the storm. On 
+              release this storm will fly towards the direction it was cast in, 
+              dealing damage and knocking away any enemies in its path.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:f706129440f8a286404d7d79601562e804261009a8078cf42aa24f9781521c1d
+            value: 
+              迦娜改变气压和温度，在目标区域召唤小型风暴，风暴体积随时间增大。她可以再次施放该技能来释放风暴。风暴会朝向施放方向飞行，对沿途的所有单位造成伤害和击飞效果。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: JannaR
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: ReapTheWhirlwind
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Monsoon
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 复苏季风
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:919f14d3c860644fea00be59e612e50f1e5d5d2fbcba688c6d51a24393ec9096
+            value: Janna surrounds herself in a magical storm, throwing enemies 
+              back. After the storm has settled, soothing winds heal nearby 
+              allies while the ability is active.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:7b899205e45de5de8d8c028dbe01a85d6dfd678ada7c6fecb949e3f370f78cd5
+            value: 迦娜召唤魔法风暴围绕自己，将敌人击退。在风暴平息后，当技能仍处在激活状态时，和风将治疗附近的友军。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: JannaW
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: SowTheWind
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Zephyr
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 和风守护
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:1ac6642779ede0668c64e0f921dcf8e060e83e3fe9e3dc5f9d490454b21f23b4
+            value: Janna summons an air elemental that passively increases her 
+              Move Speed and enables her to pass through units. She may also 
+              activate this ability to deal damage and slow an enemy's Move 
+              Speed.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:b8c681f100f58b64f4de89b73215611d38b96fe978b4d924a2a7627acf677ae3
+            value: 
+              迦娜召唤出一个空气元素灵体，来被动地提升她的移动速度，并使她能够穿越单位。她也可以主动激活这个技能，来对一个敌人造成伤害和减速效果。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

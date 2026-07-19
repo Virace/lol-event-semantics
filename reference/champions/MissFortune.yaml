@@ -1,0 +1,322 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 21
+  alias: MissFortune
+  names:
+    en_US:
+      - value: Miss Fortune
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 厄运小姐
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 赏金猎人
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 赏金
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: MF
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: eyunxiaojie
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: eyxj
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: shangjin
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: shangjinlieren
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: sj
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: sjlr
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: MissFortuneE
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: MissFortuneScattershot
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Make It Rain
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 枪林弹雨
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:62e799f9a1296ca646cd61d84a2bc3d790562650833d12bc8b836b0cf4389a95
+            value: Miss Fortune reveals an area with a flurry of bullets, 
+              dealing waves of damage to opponents and slowing them.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:b1ec53838cdd093a7486462a15f429b0baa8553be33decae2052161f77a4684f
+            value: 厄运小姐发射一阵弹雨来获得目标区域的视野，对敌人造成几波伤害，并减缓他们的移动速度。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: MissFortunePassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Love Tap
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 厄运的眷顾
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:dc175846fa217f452bd0b334d14146300eeea37d1a705fa628adbf81132cef3a
+            value: Miss Fortune deals bonus physical damage whenever she basic 
+              attacks a new target.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:69a1c7592868c8a89b9a6d3e6a3e2f79511279d07d7fa1a46e2463ad0bdb23c4
+            value: 在对一个新目标进行普攻时，厄运小姐会造成额外物理伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: MissFortuneQ
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: MissFortuneRicochetShot
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Double Up
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 一箭双雕
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:58813c47832c3710042158293b9c53724cf99f1358e7a8021c5741b9251f1339
+            value: Miss Fortune fires a bullet at an enemy, damaging them and a 
+              target behind them. Both strikes can also apply Love Tap.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:841fa089d97970a3ff78ccb286c193471ef1ed10db908f01c452242718b885f8
+            value: 厄运小姐向敌人发射子弹，伤害他们以及他们后面的目标。两次攻击都可以施加【厄运的眷顾】。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: MissFortuneBulletTime
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+      - value: MissFortuneR
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Bullet Time
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 弹幕时间
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:555ec9e1b5c328ab8fe0e33500426ab4811b47a58869b2923c9805ae49137e39
+            value: Miss Fortune channels a barrage of bullets into a cone in 
+              front of her, dealing large amounts of damage to enemies. Each 
+              wave of Bullet Time can critically strike
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:9e29ee81772a41d0f191ee7295db364d78a82fa0f4184c9f24833c1cd9027dcd
+            value: 厄运小姐向她面前的锥形范围内引导一阵子弹风暴，对敌人造成大量伤害。这个技能的每波子弹都可以暴击。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: MissFortuneViciousStrikes
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+      - value: MissFortuneW
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Strut
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 大步流星
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:359606787f03515464ccde797cc565924da895e767f081ea999f146c760adddc
+            value: Miss Fortune passively gains Move Speed when not attacked. 
+              This ability can be activated to grant bonus Attack Speed for a 
+              short duration. While it's on cooldown, Love Taps reduce the 
+              remaining cooldown of Strut.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:02de4e786776884a1367a3bc44e038e8e201f06ca7e2fe1c9654ad387429cf9e
+            value: 
+              厄运小姐在不被攻击时会被动获得移动速度加成。可以主动施放这个技能来获得短时间的攻击速度加成。在【大步流星】尚未冷却完毕时，【厄运的眷顾】可减少【大步流星】的剩余持续时间。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

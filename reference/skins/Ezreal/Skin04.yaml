@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ezreal
+  champion_id: 81
+  skin_number: 4
+  skin_token: Skin04
+  id: 81004
+  alias: EzrealSkin04
+  names:
+    en_US:
+      - value: Explorer Ezreal
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 失落的世界 伊泽瑞尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - EzrealSkin04
+  - EzrealSkin4

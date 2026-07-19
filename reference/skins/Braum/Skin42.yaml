@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Braum
+  champion_id: 201
+  skin_number: 42
+  skin_token: Skin42
+  id: 201042
+  alias: BraumSkin42
+  names:
+    en_US:
+      - value: Grill Master Braum
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 烤肉大师 布隆
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 100
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - BraumSkin42

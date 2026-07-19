@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Caitlyn
+  champion_id: 51
+  skin_number: 2
+  skin_token: Skin02
+  id: 51002
+  alias: CaitlynSkin02
+  names:
+    en_US:
+      - value: Sheriff Caitlyn
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 荒野治安官 凯特琳
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 39
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - CaitlynSkin02
+  - CaitlynSkin2

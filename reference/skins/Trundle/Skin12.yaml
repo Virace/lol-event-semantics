@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Trundle
+  champion_id: 48
+  skin_number: 12
+  skin_token: Skin12
+  id: 48012
+  alias: TrundleSkin12
+  names:
+    en_US:
+      - value: Fright Night Trundle
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 魔域梦魇 特朗德尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 170
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - TrundleSkin12

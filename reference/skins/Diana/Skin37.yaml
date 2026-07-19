@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Diana
+  champion_id: 131
+  skin_number: 37
+  skin_token: Skin37
+  id: 131037
+  alias: DianaSkin37
+  names:
+    en_US:
+      - value: Firecracker Diana
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 烈焰仙子 黛安娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 54
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - DianaSkin37

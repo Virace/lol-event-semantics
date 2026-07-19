@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Senna
+  champion_id: 235
+  skin_number: 46
+  skin_token: Skin46
+  id: 235046
+  alias: SennaSkin46
+  names:
+    en_US:
+      - value: Star Guardian Senna
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 星之守护者 赛娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 161
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SennaSkin46

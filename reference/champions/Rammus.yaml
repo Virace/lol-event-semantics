@@ -1,0 +1,317 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 33
+  alias: Rammus
+  names:
+    en_US:
+      - value: Rammus
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 拉莫斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 披甲龙龟
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 龙龟
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: lamosi
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: lg
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: lms
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: longgui
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: pijialonggui
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: pjlg
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: PuncturingTaunt
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+      - value: RammusE
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Frenzying Taunt
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 狂乱嘲讽
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:69c84f0fc78d4426e1024d49074271f1d4f50fbda2dacd17892661b48eb9e43b
+            value: Rammus taunts an enemy champion or monster into a reckless 
+              assault against him.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:d9a038ecb9a6566f9a8dd637ca8715339eae1a75d536cb4807e6b0b93007dbfb
+            value: 拉莫斯嘲讽一个敌方英雄或野怪，强制目标鲁莽地攻击自己。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: RammusPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Spiked Shell
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 锥刺甲壳
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:0b9b9b4b17ca9df2ef6e7718855c891d2dfba623b4017fda4f157ccbe236e5e3
+            value: Rammus gains bonus Attack Damage scaling with his Armor and 
+              Magic Resistance.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:462b9a6a69190870d3239b37d233e0b67a262e46f21085e88c719660fb76f6c8
+            value: 拉莫斯获得额外攻击力，受益于他的护甲和魔法抗性。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: PowerBall
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+      - value: RammusQ
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Powerball
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 动力冲刺
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:02144f9f5750780c90c665200006609ca1f82fcd48ef729696bdaf4ce3924e78
+            value: Rammus accelerates in a ball towards his enemies, dealing 
+              damage and slowing targets affected by the impact.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:16f61474fe07eb0df507db5203538d4599accb361df187ae622cf6a9a932061c
+            value: 拉莫斯缩成球状冲击目标，造成魔法伤害并减速目标。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: RammusR
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: Tremors2
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Soaring Slam
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 冲天猛撞
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:bb300939278a2546458a01375db8437d5e8b54f4a33c67ad6e0481f5254d4f19
+            value: Rammus hops into the air and slams down at a target area, 
+              dealing magic damage and slowing enemies. If cast while Rammus is 
+              in Powerball, Rammus knocks up enemies near the center as well.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:2a139f18102166eb47ada1bae24f3b86273a68a75c338decd32a10421a5c4832
+            value: 
+              拉莫斯跃到空中然后朝着目标位置猛撞，对敌人造成魔法伤害和减速效果。如果拉莫斯在【动力冲刺】状态下施放，那么拉莫斯还会击飞区域中心的敌人们。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: DefensiveBallCurl
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+      - value: RammusW
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Defensive Ball Curl
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 尖刺防御
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:be5f44db0918321094e2b612eb5bd5da4f3be6a7307a2d20ce1a53ba0f4ff751
+            value: Rammus goes into a defensive formation, vastly increasing his
+              Armor and Magic Resistance, and returning damage to enemies that 
+              attack him.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:9235b9d0ede1699c9fa4af8b789f8af22dfadbdc407b3c53a122f9756c719d9d
+            value: 拉莫斯进入防御状态，极大提高护甲值和魔法抗性，并回敬伤害给那些攻击他的敌人。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

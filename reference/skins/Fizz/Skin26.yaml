@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Fizz
+  champion_id: 105
+  skin_number: 26
+  skin_token: Skin26
+  id: 105026
+  alias: FizzSkin26
+  names:
+    en_US:
+      - value: Astronaut Fizz
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 宇航员 菲兹
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 94
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - FizzSkin26

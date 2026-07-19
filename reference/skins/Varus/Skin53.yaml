@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Varus
+  champion_id: 110
+  skin_number: 53
+  skin_token: Skin53
+  id: 110053
+  alias: VarusSkin53
+  names:
+    en_US:
+      - value: Empyrean Varus
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至高天 韦鲁斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 186
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - VarusSkin53

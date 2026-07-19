@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Karma
+  champion_id: 43
+  skin_number: 1
+  skin_token: Skin01
+  id: 43001
+  alias: KarmaSkin01
+  names:
+    en_US:
+      - value: Sun Goddess Karma
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 日冕女神 卡尔玛
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 29
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KarmaSkin01
+  - KarmaSkin1

@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Kayle
+  champion_id: 10
+  skin_number: 78
+  skin_token: Skin78
+  id: 10078
+  alias: KayleSkin78
+  names:
+    en_US:
+      - value: Spirit Blossom Kayle
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 灵魂莲华 凯尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 171
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KayleSkin78

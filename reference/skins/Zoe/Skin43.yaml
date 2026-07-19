@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Zoe
+  champion_id: 142
+  skin_number: 43
+  skin_token: Skin43
+  id: 142043
+  alias: ZoeSkin43
+  names:
+    en_US:
+      - value: Prestige Eternal Aspect Zoe
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至臻 永恒星灵 佐伊
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 222
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ZoeSkin43

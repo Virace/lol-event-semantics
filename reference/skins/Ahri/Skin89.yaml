@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ahri
+  champion_id: 103
+  skin_number: 89
+  skin_token: Skin89
+  id: 103089
+  alias: AhriSkin89
+  names:
+    en_US:
+      - value: After Hours Spirit Blossom Springs Ahri
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 金鱼枫姬 莲华温泉 阿狸
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 218
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AhriSkin89

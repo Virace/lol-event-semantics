@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Twitch
+  champion_id: 29
+  skin_number: 6
+  skin_token: Skin06
+  id: 29006
+  alias: TwitchSkin06
+  names:
+    en_US:
+      - value: Pickpocket Twitch
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 绝影神偷 图奇
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 121
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - TwitchSkin06
+  - TwitchSkin6

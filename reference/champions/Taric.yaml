@@ -1,0 +1,310 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 44
+  alias: Taric
+  names:
+    en_US:
+      - value: Taric
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 塔里克
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 瓦洛兰之盾
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 宝石
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: baoshi
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: bs
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: talike
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: tlk
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: waluolanzhidun
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: wllzd
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: TaricE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Dazzle
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 炫光
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:a4138d653b27c3b99a1b8df07f4b512784deeeb9a2191d25ecc61201e1bd1911
+            value: Taric readies a beam of starlight that, after a brief delay, 
+              deals magic damage and stuns enemies.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:d2a32e09ac6728ae6ac42a60b34b1f1c45d6f9246420083a0107b730ee51c820
+            value: 塔里克准备施放一束星光，在短暂的延迟后，会对敌人造成魔法伤害和晕眩效果。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: TaricPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Bravado
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 正气凌人
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:94abffc61256af5d03e62ec20ea5ddd3b3b1da9f5d9b7296d4cb1c5a77df121a
+            value: Spellcasts empower Taric's next 2 basic attacks to deal bonus
+              magic damage, reduce his spell cooldowns, and attack in quick 
+              succession.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:6c30faa726ba6f612180e3568ae1fefd9b6622aa681ff75e7d02392238ae540c
+            value: 每次施放技能会强化塔里克的下2次普攻，以造成额外魔法伤害，使他的基础技能的冷却时间减少，并且可以快速地连续攻击。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: TaricQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Starlight's Touch
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 星光之触
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:86668dfa56462c7e080e4d0eeee28347805554b7f194bd7ab0365a9bbdab020b
+            value: Heals nearby allied champions based on charges stored. 
+              Bravado-empowered attacks grant a charge of Starlight's Touch.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:d3134811eff061b3d433824f9c24ce002e2d0e1179c422d4e1809ed705ca8ab3
+            value: 基于已储存的充能来治疗附近的友方英雄。【正气凌人】的强化普攻会为这个技能提供一层充能。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: TaricR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Cosmic Radiance
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 宇宙之辉
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:28c787bfc646219b96f3e2121e4e8481539a4c2e7a94745474732d2174725c6a
+            value: Pulses cosmic energy onto nearby allied champions after a 
+              delay, making them invulnerable for a short duration.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:af1a80d714619e518c44fbab128dd978d9550d6e314705540b57e73dc828c40e
+            value: 在短暂的延迟后，放射一道宇宙能量到附近的友方英雄身上，让他们免疫伤害一段时间。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: TaricW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Bastion
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 坚毅壁垒
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:c48792d4d8e6185b2116514bd5b38cbd9665671e27c88bfc1800be3b94968767
+            value: Passively increase the Armor of Taric and any allied champion
+              with Bastion.<br><br>Actively shields an ally and grants them 
+              Bastion for as long as they remain near Taric. Taric's spells also
+              cast off the ally with Bastion.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:21f1f5fcc5e022ba3a723ced610987d2bfa4c0dd28bae78f24b5897a78fb5bd1
+            value: 
+              被动提升塔里克和带有【坚毅壁垒】效果的友方英雄的护甲。<br><br>主动施放会为一名友方英雄提供护盾和【坚毅壁垒】效果，只要该英雄呆在塔里克身边，【坚毅壁垒】效果会一直持续。塔里克的技能也会从带有【坚毅壁垒】效果的友方英雄身上施放。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

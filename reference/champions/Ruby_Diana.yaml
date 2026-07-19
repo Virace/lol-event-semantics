@@ -1,0 +1,152 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 66616
+  alias: Ruby_Diana
+  names:
+    en_US:
+      - value: Doom Bot Diana
+        sources:
+          - source: game_data
+            version: '16.5'
+spells:
+  - slot: E
+    ids:
+      - value: Ruby_DianaE
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Lunar Rush
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:938c8b59e81ccf22af90c2272e02edb5343db3a68feea4a6aeebb6803cf3bb67
+            value: Becomes the living embodiment of the vengeful moon, dashing 
+              to an enemy and dealing magic damage.<br><br>Lunar Rush has no 
+              cooldown when used to dash to an enemy afflicted with Moonlight. 
+              All other enemies will have the Moonlight debuff removed 
+              regardless of whether they were the target of Lunar Rush.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: P
+    ids:
+      - value: Ruby_DianaPassive
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Moonsilver Blade
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:2a361c6c76b45d051d5b9757b0d2874d695bbca8515b73e1ace4e30cc7eeaf30
+            value: Every third strike cleaves nearby enemies for an additional 
+              magic damage. After casting a spell, Diana gains Attack Speed for 
+              5 seconds.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: Q
+    ids:
+      - value: Ruby_DianaQ
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Crescent Strike
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:74960b2be9efbf60eb775b09863ec64b3d9bd6c77e4d9c50865fe950863686c3
+            value: Unleashes a bolt of lunar energy in an arc dealing magic 
+              damage.<br><br>Afflicts enemies struck with Moonlight, revealing 
+              them if they are not stealthed for 3 seconds.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: R
+    ids:
+      - value: Ruby_DianaR
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Moonfall
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:268ad522a1991808db0517ea28bffaa8215244cd754a8352f0e32cbf17a24afa
+            value: Diana reveals and draws in all nearby enemies and slows 
+              them.<br><br>If Diana pulls in one or more enemy champions, the 
+              moonlight crashes down onto her after a short delay, dealing magic
+              damage in an area around her, increased for each target beyond the
+              first pulled.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: W
+    ids:
+      - value: Ruby_DianaW
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Pale Cascade
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:49c12ba2887308bb48e0f06fa38f2fb3db9b7605e2e9f187d77250f5291536dc
+            value: Diana creates three orbiting spheres that detonate on contact
+              with enemies to deal damage in an area. She also gains a temporary
+              shield that absorbs damage. If her third sphere detonates, the 
+              shield gains additional strength.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'

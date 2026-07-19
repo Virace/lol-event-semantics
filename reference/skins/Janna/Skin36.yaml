@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Janna
+  champion_id: 40
+  skin_number: 36
+  skin_token: Skin36
+  id: 40036
+  alias: JannaSkin36
+  names:
+    en_US:
+      - value: Crystal Rose Janna
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 水晶玫瑰 迦娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 140
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - JannaSkin36

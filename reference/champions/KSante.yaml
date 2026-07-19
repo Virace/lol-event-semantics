@@ -1,0 +1,297 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 897
+  alias: KSante
+  names:
+    en_US:
+      - value: K'Sante
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 奎桑提
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 纳祖芒荣耀
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: kuisangti
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: nazumangrongyao
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: KSanteE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Footwork
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 大步驰援
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:a5c082a98ae625428517807fa2e31b5aad2dd31ea9af070bb0045ec2664635cd
+            value: K'Sante dashes and gains a shield. If targeting an ally, 
+              K'Sante dashes to the ally with increased range and both gain a 
+              shield.<br><br>When All Out, cooldown is reduced and speed is 
+              increased.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:49c5146a7c984a81e59083b5adc6bb3fc9c9fd8bda538bbadd978782a2bbc269
+            value: 
+              奎桑提进行冲刺并获得一个护盾。如果以一个友军为目标，则奎桑提的冲刺距离会提升并冲刺至该友军处，两人都会获得一个护盾。<br><br>在全盛姿态下，冷却时间会缩短，并且速度会提升。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: KSantePassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Dauntless Instinct
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 血性本能
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:b8703ef4b0af57cf4a7876689ebefef364bbb32cb1410b3d31da27f92e90ce37
+            value: K'Sante's Abilities mark targets to take more damage on his 
+              next Attack.<br><br>When All Out, K'Sante deals more damage with 
+              all Attacks and Abilities.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:2ded735f86d16c350c8308fac091ee477f98288ccf22429523418ab69e1ac40a
+            value: 
+              奎桑提的技能会标记目标来使他的下一次攻击对其造成更多伤害。<br><br>在全盛姿态下，奎桑提的所有攻击和技能造成更多伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: KSanteQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Ntofo Strikes
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 无双陀斧
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:c27e5fa38e2c68b450864346d32b146252a4c60f07dd49cad8cbf5aece70e54c
+            value: K'Sante strikes, damaging and slowing enemies in a short 
+              line.<br><br>On hit, grants a stack of Ntofo Strikes. At 2 stacks,
+              K'Sante fires a shockwave that pulls enemies in.<br><br>When All 
+              Out, cooldown is reduced.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:1fc9b9ccb69076cc32fc82b1ea56eb39c532fb4777e8d027269600be46779dfb
+            value: 
+              奎桑提进行打击，对一条较短直线内的所有敌人造成伤害和减速效果。<br><br>命中敌人时会提供一层【无双陀斧】。在2层时，奎桑提会发射一道可将敌人拉近的冲击波。<br><br>在全盛姿态下，冷却时间会缩短。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: KSanteR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: All Out
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 傲岸雄姿
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:2640b10981d8ddc6a5e9af0a149aebe888f1b1865ed5832e905a72bab13e7ac2
+            value: K'Sante knocks an enemy back, launching them through any wall
+              in their path. Then, K'Sante goes All Out and dashes after them, 
+              gaining increased damage, healing, and transformed abilities at 
+              the cost of reduced defenses.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:01b4d4425ef269bc650699d915c600bc5d6d2ecb4db31101390977974a857e54
+            value: 
+              奎桑提将一个敌人击退，并带其翻越沿途的任何墙体。然后，奎桑提进入【全盛姿态】并冲刺至其身后，获得提升过的伤害、治疗效果、以及转化过的各个技能，但代价是各防御属性降低。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: KSanteW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Path Maker
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 辟路先锋
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:2e4eff98c14815634f24a2cb2a3e32228519078415dcbe33d33e711a0dc6937d
+            value: K'Sante charges up, taking reduced damage, then dashes, 
+              knocking back and stunning enemies.<br><br>When All Out, deals 
+              increased damage and no longer knocks back or stuns.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:dd2edbe6563db2f6ee8bf9def3490d544e22ff3d5b4791731908797049d1c443
+            value: 
+              奎桑提进行蓄力，期间获得伤害减免，然后进行冲刺，对敌人造成击退和晕眩。<br><br>在全盛姿态下，造成提升过的伤害并且不再造成击退或晕眩。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

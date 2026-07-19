@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Morgana
+  champion_id: 25
+  skin_number: 26
+  skin_token: Skin26
+  id: 25026
+  alias: MorganaSkin26
+  names:
+    en_US:
+      - value: Coven Morgana
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至尊魔女 莫甘娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 92
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MorganaSkin26

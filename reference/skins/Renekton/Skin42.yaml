@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Renekton
+  champion_id: 58
+  skin_number: 42
+  skin_token: Skin42
+  id: 58042
+  alias: RenektonSkin42
+  names:
+    en_US:
+      - value: Worlds 2023 Renekton
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 2023 全球总决赛 雷克顿
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 8
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - RenektonSkin42

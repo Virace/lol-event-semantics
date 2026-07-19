@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Azir
+  champion_id: 268
+  skin_number: 14
+  skin_token: Skin14
+  id: 268014
+  alias: AzirSkin14
+  names:
+    en_US:
+      - value: Worlds 2022 Azir
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 2022 全球总决赛 阿兹尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 8
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AzirSkin14

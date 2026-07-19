@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Nunu
+  champion_id: 20
+  skin_number: 2
+  skin_token: Skin02
+  id: 20002
+  alias: NunuSkin02
+  names:
+    en_US:
+      - value: Workshop Nunu & Willump
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 圣诞狂欢 努努和威朗普
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 48
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NunuSkin02
+  - NunuSkin2

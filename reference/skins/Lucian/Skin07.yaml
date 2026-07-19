@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Lucian
+  champion_id: 236
+  skin_number: 7
+  skin_token: Skin07
+  id: 236007
+  alias: LucianSkin07
+  names:
+    en_US:
+      - value: Heartseeker Lucian
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 觅心游侠 卢锡安
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 64
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LucianSkin07
+  - LucianSkin7

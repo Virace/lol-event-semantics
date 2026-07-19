@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Talon
+  champion_id: 91
+  skin_number: 12
+  skin_token: Skin12
+  id: 91012
+  alias: TalonSkin12
+  names:
+    en_US:
+      - value: Enduring Sword Talon
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 玉剑传说 无影
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 81
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - TalonSkin12

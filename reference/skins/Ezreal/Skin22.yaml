@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ezreal
+  champion_id: 81
+  skin_number: 22
+  skin_token: Skin22
+  id: 81022
+  alias: EzrealSkin22
+  names:
+    en_US:
+      - value: PsyOps Ezreal
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 灵能特工 伊泽瑞尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 133
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - EzrealSkin22

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Shyvana
+  champion_id: 102
+  skin_number: 5
+  skin_token: Skin05
+  id: 102005
+  alias: ShyvanaSkin05
+  names:
+    en_US:
+      - value: Worlds 2014 Shyvana
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 冠军之血 希瓦娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 8
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ShyvanaSkin05
+  - ShyvanaSkin5

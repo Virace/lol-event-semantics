@@ -1,0 +1,145 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 66619
+  alias: Ruby_Blitzcrank
+  names:
+    en_US:
+      - value: Doom Bot Blitzcrank
+        sources:
+          - source: game_data
+            version: '16.5'
+spells:
+  - slot: E
+    ids:
+      - value: Ruby_BlitzcrankE
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Power Fist
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:1491da95923e54b6b93f088f3132a8d3a52a0beba4943dbec19eebd62137b5b4
+            value: Blitzcrank charges up their fist to make the next attack deal
+              double damage and pop their target up in the air.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: P
+    ids:
+      - value: Ruby_BlitzcrankPassive
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Mana Barrier
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:c32e77338800868cc1a4ecb62b815990935e384a77a0d321caca23ea5ae3787e
+            value: Blitzcrank gains a shield based on their mana when dropping 
+              to low health.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: Q
+    ids:
+      - value: Ruby_BlitzcrankQ
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Rocket Grab
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:902590cce6a0a941d0ec02412839f864e8f012435f2b698bbfdbc973b46de65b
+            value: Blitzcrank fires their right hand to grab an opponent on its 
+              path, dealing damage and dragging it back to them.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: R
+    ids:
+      - value: Ruby_BlitzcrankR
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Static Field
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:6ee3a83a9a857213e19b27f995d8aed6166d0be4dcf2e6fb102db9c9d868da32
+            value: Enemies attacked by Blitzcrank are marked and take lightning 
+              damage after 1 second. Additionally, Blitzcrank can activate this 
+              ability to remove nearby enemies' shields, damage them, and 
+              silence them briefly.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: W
+    ids:
+      - value: Ruby_BlitzcrankW
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Overdrive
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:ba2061132149b0751942e15dfa3c4e92fef21e08148cc1a36a789556ac2c4088
+            value: Blitzcrank super charges themself to get dramatically 
+              increased Move and Attack Speed. They are temporarily slowed after
+              the effect ends.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'

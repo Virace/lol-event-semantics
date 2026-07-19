@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sivir
+  champion_id: 15
+  skin_number: 50
+  skin_token: Skin50
+  id: 15050
+  alias: SivirSkin50
+  names:
+    en_US:
+      - value: Mythmaker Sivir
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 剪纸仙灵 希维尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 188
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SivirSkin50

@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sett
+  champion_id: 875
+  skin_number: 67
+  skin_token: Skin67
+  id: 875067
+  alias: SettSkin67
+  names:
+    en_US:
+      - value: Spirit Blossom Springs Sett
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 莲华温泉 瑟提
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 218
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SettSkin67

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Lucian
+  champion_id: 236
+  skin_number: 9
+  skin_token: Skin09
+  id: 236009
+  alias: LucianSkin09
+  names:
+    en_US:
+      - value: Demacia Vice Lucian
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 德玛西亚警官 卢锡安
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 117
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LucianSkin09
+  - LucianSkin9

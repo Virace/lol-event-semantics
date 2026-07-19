@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Brand
+  champion_id: 63
+  skin_number: 4
+  skin_token: Skin04
+  id: 63004
+  alias: BrandSkin04
+  names:
+    en_US:
+      - value: Zombie Brand
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 丧尸 布兰德
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 89
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - BrandSkin04
+  - BrandSkin4

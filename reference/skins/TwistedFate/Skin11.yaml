@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: TwistedFate
+  champion_id: 4
+  skin_number: 11
+  skin_token: Skin11
+  id: 4011
+  alias: TwistedFateSkin11
+  names:
+    en_US:
+      - value: Pulsefire Twisted Fate
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 未来战士 崔斯特
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 36
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - TwistedFateSkin11

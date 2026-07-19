@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: JarvanIV
+  champion_id: 59
+  skin_number: 54
+  skin_token: Skin54
+  id: 59054
+  alias: JarvanIVSkin54
+  names:
+    en_US:
+      - value: Prestige Visions of the Fallen Jarvan IV
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至臻 暗裔英雄 嘉文四世
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 219
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - JarvanIVSkin54

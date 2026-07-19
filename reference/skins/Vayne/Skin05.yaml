@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Vayne
+  champion_id: 67
+  skin_number: 5
+  skin_token: Skin05
+  id: 67005
+  alias: VayneSkin05
+  names:
+    en_US:
+      - value: SKT T1 Vayne
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: SKT T1 薇恩
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 3
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - VayneSkin05
+  - VayneSkin5

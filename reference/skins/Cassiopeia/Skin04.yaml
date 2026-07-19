@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Cassiopeia
+  champion_id: 69
+  skin_number: 4
+  skin_token: Skin04
+  id: 69004
+  alias: CassiopeiaSkin04
+  names:
+    en_US:
+      - value: Jade Fang Cassiopeia
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 碧玉之牙 卡西奥佩娅
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 55
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - CassiopeiaSkin04
+  - CassiopeiaSkin4

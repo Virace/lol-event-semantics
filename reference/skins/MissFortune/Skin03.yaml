@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: MissFortune
+  champion_id: 21
+  skin_number: 3
+  skin_token: Skin03
+  id: 21003
+  alias: MissFortuneSkin03
+  names:
+    en_US:
+      - value: Secret Agent Miss Fortune
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 特工狂花 厄运小姐
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 121
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - MissFortuneSkin03
+  - MissFortuneSkin3

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Nunu
+  champion_id: 20
+  skin_number: 7
+  skin_token: Skin07
+  id: 20007
+  alias: NunuSkin07
+  names:
+    en_US:
+      - value: Zombie Nunu & Willump
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 丧尸 努努和威朗普
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 89
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NunuSkin07
+  - NunuSkin7

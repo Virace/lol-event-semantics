@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Zeri
+  champion_id: 221
+  skin_number: 1
+  skin_token: Skin01
+  id: 221001
+  alias: ZeriSkin01
+  names:
+    en_US:
+      - value: Withered Rose Zeri
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 幽梦玫瑰 泽丽
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 141
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ZeriSkin01
+  - ZeriSkin1

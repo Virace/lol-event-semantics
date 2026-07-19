@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Taliyah
+  champion_id: 163
+  skin_number: 3
+  skin_token: Skin03
+  id: 163003
+  alias: TaliyahSkin03
+  names:
+    en_US:
+      - value: Pool Party Taliyah
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 泳池派对 塔莉垭
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 15
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - TaliyahSkin03
+  - TaliyahSkin3

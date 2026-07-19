@@ -1,0 +1,308 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 41
+  alias: Gangplank
+  names:
+    en_US:
+      - value: Gangplank
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 普朗克
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 海洋之灾
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 船长
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: chuanzhang
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: cz
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: haiyangzhizai
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: hyzz
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: plk
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: pulangke
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: GangplankE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Powder Keg
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 火药桶
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:bd296dfc4aeb38f8cbb2ae1761d4f97dd835d3b9fd31a8e01e2de4e763a75d07
+            value: Gangplank uncovers a powder keg at target location. If he 
+              attacks it, it explodes, spreading the attack's damage to enemies 
+              in the area, slowing them.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:3cb57cf533496eeedd5b9b360892ae5bc795304251800a1f3e9812b557fbba70
+            value: 
+              普朗克在目标区域为一个火药桶开盖。如果他攻击火药桶，那么火药桶会爆炸，将这次攻击的伤害传播到范围内的敌人身上，并将他们减速。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: GangplankPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Trial by Fire
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 烈火审讯
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:384555e46ef58dfeda5a8664793ed2241e3e87e47eaf22940ae0619245ed5476
+            value: Every few seconds, Gangplank's melee strike will set his 
+              opponent on fire.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:f9d30bf34bdcb708cb37f7a23e9653657c839acbba07fe1b4d11baeb2f07734d
+            value: 每过几秒，普朗克的近战攻击就会让他的对手着火。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: GangplankQ
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: GangplankQWrapper
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Parrrley
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 枪火谈判
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:c27166e926f48d5f18585e4b53aa8a46e3399658f05544e75857a2d5f152ee36
+            value: Shoots target, plundering Gold for each enemy unit killed.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:99114b0d846d8bcb400d17d0d855278079f3d38266430e53d04ab881ac9884f8
+            value: 攻击目标，每击杀一个敌方单位时都会掠夺金币。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: GangplankR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Cannon Barrage
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 加农炮幕
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:00fdecc83d86d68c881f9cdbbca824782bffe9fcf032d101b801f62642ccc42a
+            value: Gangplank signals his ship to bombard an area, slowing and 
+              damaging enemies.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:c18cbf7d726d3e33af7d8b812307d39e505249f2513dcd466fe72b2954046b07
+            value: 普朗克给他的船发信号，来轰炸一个区域，伤害并减速敌人。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: GangplankW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Remove Scurvy
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 坏血病疗法
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:0488b47ff479f427e16b91b628f2d7aa497d5e51c73c35b85128d726474946d7
+            value: Eats citrus to cure crowd control effects and restore Health.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:cbae4210c65d87e0e9d1859d9bf65db4b55a51710bd096784319baef08f20858
+            value: 吃掉柑橘类水果，来移除控制效果并回复生命值。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

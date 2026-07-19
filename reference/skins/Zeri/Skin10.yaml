@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Zeri
+  champion_id: 221
+  skin_number: 10
+  skin_token: Skin10
+  id: 221010
+  alias: ZeriSkin10
+  names:
+    en_US:
+      - value: Ocean Song Zeri
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 海之歌 泽丽
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 159
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ZeriSkin10

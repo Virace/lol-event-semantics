@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: TwistedFate
+  champion_id: 4
+  skin_number: 7
+  skin_token: Skin07
+  id: 4007
+  alias: TwistedFateSkin07
+  names:
+    en_US:
+      - value: Underworld Twisted Fate
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 地底世界 崔斯特
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 88
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - TwistedFateSkin07
+  - TwistedFateSkin7

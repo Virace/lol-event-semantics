@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sejuani
+  champion_id: 113
+  skin_number: 36
+  skin_token: Skin36
+  id: 113036
+  alias: SejuaniSkin36
+  names:
+    en_US:
+      - value: Victorious Sejuani
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 胜利女神 瑟庄妮
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 7
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SejuaniSkin36

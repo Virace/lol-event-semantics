@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Teemo
+  champion_id: 17
+  skin_number: 14
+  skin_token: Skin14
+  id: 17014
+  alias: TeemoSkin14
+  names:
+    en_US:
+      - value: Little Devil Teemo
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 大魔王 提莫
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 116
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - TeemoSkin14

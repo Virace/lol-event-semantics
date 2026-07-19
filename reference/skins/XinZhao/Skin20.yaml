@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: XinZhao
+  champion_id: 5
+  skin_number: 20
+  skin_token: Skin20
+  id: 5020
+  alias: XinZhaoSkin20
+  names:
+    en_US:
+      - value: Cosmic Defender Xin Zhao
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 穿星魔锋 赵信
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 43
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - XinZhaoSkin20

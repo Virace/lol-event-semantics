@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Syndra
+  champion_id: 134
+  skin_number: 54
+  skin_token: Skin54
+  id: 134054
+  alias: SyndraSkin54
+  names:
+    en_US:
+      - value: Coven Syndra
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 魔女 辛德拉
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 92
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SyndraSkin54

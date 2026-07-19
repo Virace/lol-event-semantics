@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Annie
+  champion_id: 1
+  skin_number: 1
+  skin_token: Skin01
+  id: 1001
+  alias: AnnieSkin01
+  names:
+    en_US:
+      - value: Goth Annie
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 哥特萝莉 安妮
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 110
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AnnieSkin01
+  - AnnieSkin1

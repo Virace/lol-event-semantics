@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Nasus
+  champion_id: 75
+  skin_number: 35
+  skin_token: Skin35
+  id: 75035
+  alias: NasusSkin35
+  names:
+    en_US:
+      - value: Armored Titan Nasus
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 海珀利安小队 S02-阿努比斯 内瑟斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 65
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NasusSkin35

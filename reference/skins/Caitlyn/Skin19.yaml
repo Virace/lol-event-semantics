@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Caitlyn
+  champion_id: 51
+  skin_number: 19
+  skin_token: Skin19
+  id: 51019
+  alias: CaitlynSkin19
+  names:
+    en_US:
+      - value: Arcade Caitlyn
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 电玩女神 凯特琳
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 10
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - CaitlynSkin19

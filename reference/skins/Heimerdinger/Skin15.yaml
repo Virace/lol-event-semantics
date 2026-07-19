@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Heimerdinger
+  champion_id: 74
+  skin_number: 15
+  skin_token: Skin15
+  id: 74015
+  alias: HeimerdingerSkin15
+  names:
+    en_US:
+      - value: Pool Party Heimerdinger
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 泳池派对 黑默丁格
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 15
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - HeimerdingerSkin15

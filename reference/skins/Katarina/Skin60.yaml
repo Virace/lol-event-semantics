@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Katarina
+  champion_id: 55
+  skin_number: 60
+  skin_token: Skin60
+  id: 55060
+  alias: KatarinaSkin60
+  names:
+    en_US:
+      - value: Prestige Masque of the Black Rose Katarina
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至臻 黑色玫瑰假面舞会 卡特琳娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 211
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KatarinaSkin60

@@ -1,0 +1,149 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 66617
+  alias: Ruby_Jinx
+  names:
+    en_US:
+      - value: Doom Bot Jinx
+        sources:
+          - source: game_data
+            version: '16.5'
+spells:
+  - slot: E
+    ids:
+      - value: Ruby_JinxE
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Flame Chompers!
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:723a272e52edc1424e6536feb83f12a1bbdac3fff4b0eb45dc2caa75a7630741
+            value: Jinx throws out a line of snare grenades that explode after 5
+              seconds, lighting enemies on fire. Flame Chompers will bite enemy 
+              champions who walk over them, rooting them in place.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: P
+    ids:
+      - value: Ruby_JinxPassive
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Get Excited!
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:de9590041710c0c4324d3c14c5e9d49f29ef21a20fda8ec22b000854a2c40661
+            value: Jinx receives massively increased Move Speed and Attack Speed
+              whenever she helps kill or destroy an enemy champions epic jungle 
+              monster, or structure.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: Q
+    ids:
+      - value: Ruby_JinxQ
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Switcheroo!
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:39c679f6168fa29abf3c2ac84db786cd690d2502f390a5dc7b24adde017ea3d3
+            value: Jinx modifies her basic attacks by swapping between Pow-Pow, 
+              her minigun and Fishbones, her rocket launcher. Attacks with 
+              Pow-Pow grant Attack Speed, while attacks with Fishbones deal area
+              of effect damage, gain increased range, but drain Mana and attack 
+              slower.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: R
+    ids:
+      - value: Ruby_JinxR
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Super Mega Death Rocket!
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:c0d0c944d4f0d4dd0e47091a4673ef8490be8be5a8c8557e3f5386d3c2ac1998
+            value: Jinx fires a super rocket across the map that gains damage as
+              it travels. The rocket will explode upon colliding with an enemy 
+              champion, dealing damage to it and surrounding enemies based on 
+              their missing Health.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'
+  - slot: W
+    ids:
+      - value: Ruby_JinxW
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Zap!
+          sources:
+            - source: game_data
+              version: '16.5'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:f4c177eaa17460644a612c11e0921289c5d4032fd6802f766e72064744448652
+            value: Jinx uses Zapper, her shock pistol, to fire a blast that 
+              deals damage to the first enemy hit, slowing and revealing it.
+            first_seen: '16.5'
+            last_seen: '16.5'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                version: '16.5'

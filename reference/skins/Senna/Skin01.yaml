@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Senna
+  champion_id: 235
+  skin_number: 1
+  skin_token: Skin01
+  id: 235001
+  alias: SennaSkin01
+  names:
+    en_US:
+      - value: True Damage Senna
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 真实伤害 赛娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 120
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SennaSkin01
+  - SennaSkin1

@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Volibear
+  champion_id: 106
+  skin_number: 19
+  skin_token: Skin19
+  id: 106019
+  alias: VolibearSkin19
+  names:
+    en_US:
+      - value: Inkshadow Volibear
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 墨影之灵 沃利贝尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 192
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - VolibearSkin19

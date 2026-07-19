@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Viego
+  champion_id: 234
+  skin_number: 21
+  skin_token: Skin21
+  id: 234021
+  alias: ViegoSkin21
+  names:
+    en_US:
+      - value: King Viego
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 国王 佛耶戈
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 164
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ViegoSkin21

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Jinx
+  champion_id: 222
+  skin_number: 4
+  skin_token: Skin04
+  id: 222004
+  alias: JinxSkin04
+  names:
+    en_US:
+      - value: Star Guardian Jinx
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 星之守护者 金克丝
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 19
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - JinxSkin04
+  - JinxSkin4

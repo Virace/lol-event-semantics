@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Nocturne
+  champion_id: 56
+  skin_number: 17
+  skin_token: Skin17
+  id: 56017
+  alias: NocturneSkin17
+  names:
+    en_US:
+      - value: Broken Covenant Nocturne
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 绝息圣堂 魔腾
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 190
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NocturneSkin17

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Warwick
+  champion_id: 19
+  skin_number: 3
+  skin_token: Skin03
+  id: 19003
+  alias: WarwickSkin03
+  names:
+    en_US:
+      - value: Big Bad Warwick
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 狼外婆 沃里克
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 71
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - WarwickSkin03
+  - WarwickSkin3

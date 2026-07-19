@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Teemo
+  champion_id: 17
+  skin_number: 1
+  skin_token: Skin01
+  id: 17001
+  alias: TeemoSkin01
+  names:
+    en_US:
+      - value: Happy Elf Teemo
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 圣诞开心鬼 提莫
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 48
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - TeemoSkin01
+  - TeemoSkin1

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Warwick
+  champion_id: 19
+  skin_number: 5
+  skin_token: Skin05
+  id: 19005
+  alias: WarwickSkin05
+  names:
+    en_US:
+      - value: Feral Warwick
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 嗜血狂暴 沃里克
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 111
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - WarwickSkin05
+  - WarwickSkin5

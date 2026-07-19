@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Gnar
+  champion_id: 150
+  skin_number: 1
+  skin_token: Skin01
+  id: 150001
+  alias: GnarSkin01
+  names:
+    en_US:
+      - value: Dino Gnar
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 最后一只恐龙 纳尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 61
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - GnarSkin01
+  - GnarSkin1

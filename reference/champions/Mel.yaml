@@ -1,0 +1,294 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 800
+  alias: Mel
+  names:
+    en_US:
+      - value: Mel
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 梅尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 流光镜影
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: liuguangjingying
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: meier
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: MelE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Solar Snare
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 阳炎涡旋
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:9c9eab5403e8d33136ade41980761e645495c2349a17582f394513f6a616a273
+            value: Mel fires a radiant orb forward, rooting those at its center 
+              while the area around it slows enemies and deals damage over time.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:10d2fb50c5d8a1b488572f9b94e2d5463b2fe2958626aa0eba591cc2ff61feb1
+            value: 梅尔发射一颗阳炎法球，禁锢中心区域的敌人并减速周围区域的敌人并造成持续伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: MelPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Searing Brilliance
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 灼灼之光
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:ab715a432ae3588a6afc99016ed80c54574796a18986b63edb019b4b724f56fa
+            value: Whenever Mel uses an ability, she gains three bonus 
+              projectiles (up to nine maximum) on her next attack.<br><br>When 
+              Mel deals damage through an ability or attack, she applies 
+              Overwhelm, which can stack infinitely. If the enemy is hit by Mel 
+              with enough Overwhelm damage, the stacks are consumed to execute 
+              the target.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:6855df8372d560907c422ed39d3d190c480ae45385ab1c021a7275e211cbd7bb
+            value: 
+              每当梅尔使用技能，她的下一次攻击将额外附带3枚弹体（最多9枚）。<br><br>当梅尔通过一次技能或攻击造成伤害时，她会施加【夺命残影】——一种可以无限叠加的效果。如果目标身上叠加了足够的夺命残影伤害量，则会在下一次被梅尔命中时被直接处决，同时消耗效果层数。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: MelQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Radiant Volley
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 耀光齐射
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:e59a43a2c35b9cbad414d8f5bfd974c54fbe6639aa1c57e0e9ee944b55870f90
+            value: Mel fires a barrage of projectiles that explode around a 
+              target location, dealing damage repeatedly to enemies within the 
+              area.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:a915579520dce37023e60e85ce82ef160cbbe81b56e69174ecaee212101b5c1e
+            value: 梅尔发射一连串耀光飞弹，飞弹会在目标位置周围爆炸，对范围内的敌人造成多段伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: MelR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Golden Eclipse
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 鎏金蚀日
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:b57788eaf60d830db808987704afd348271438f7c2671610a284edc26bd03045
+            value: Mel strikes all enemies marked with Overwhelm regardless of 
+              their distance from her, dealing additional damage for each stack 
+              of Overwhelm.<br><br>Ranks of Golden Eclipse increase Overwhelm's 
+              damage.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:be8417d2644810782ceb164ef1345fd0b38a7d743bdc2a62fde71f1ac4cd55cf
+            value: 
+              梅尔无视距离，对所有带有【夺命残影】层数的敌人进行打击，造成基于【夺命残影】层数的额外伤害。<br><br>【鎏金蚀日】的技能等级会提升【夺命残影】的伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: MelW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Rebuttal
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 灵魂折镜
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:b1b2f8934e4ead4689764e01189489c7f2e0a945757e792ec099632ab8960603
+            value: Mel forms a barrier around herself that reflects enemy 
+              projectiles back at the attacker, prevents her from taking damage,
+              and grants her movement speed.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:2e887a646cde29f0553fd4857feef63128570a8d92765283fb5bb1f0e8abe8cf
+            value: 梅尔生成一道屏障围绕自身，这道屏障会将敌方弹体反弹给攻击者，使她免受伤害，并为她提供移动速度。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

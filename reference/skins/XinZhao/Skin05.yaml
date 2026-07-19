@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: XinZhao
+  champion_id: 5
+  skin_number: 5
+  skin_token: Skin05
+  id: 5005
+  alias: XinZhaoSkin05
+  names:
+    en_US:
+      - value: Warring Kingdoms Xin Zhao
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 赵云 子龙
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 53
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - XinZhaoSkin05
+  - XinZhaoSkin5

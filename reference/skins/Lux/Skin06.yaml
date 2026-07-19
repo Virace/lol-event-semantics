@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Lux
+  champion_id: 99
+  skin_number: 6
+  skin_token: Skin06
+  id: 99006
+  alias: LuxSkin06
+  names:
+    en_US:
+      - value: Star Guardian Lux
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 星之守护者 拉克丝
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 19
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LuxSkin06
+  - LuxSkin6

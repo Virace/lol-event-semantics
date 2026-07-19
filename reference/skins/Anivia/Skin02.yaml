@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Anivia
+  champion_id: 34
+  skin_number: 2
+  skin_token: Skin02
+  id: 34002
+  alias: AniviaSkin02
+  names:
+    en_US:
+      - value: Bird of Prey Anivia
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 联盟之喙 艾尼维亚
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 99
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AniviaSkin02
+  - AniviaSkin2

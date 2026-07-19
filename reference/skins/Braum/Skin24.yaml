@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Braum
+  champion_id: 201
+  skin_number: 24
+  skin_token: Skin24
+  id: 201024
+  alias: BraumSkin24
+  names:
+    en_US:
+      - value: Sugar Rush Braum
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 糖果大战 布隆
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 57
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - BraumSkin24

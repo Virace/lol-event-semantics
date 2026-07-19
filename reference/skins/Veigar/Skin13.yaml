@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Veigar
+  champion_id: 45
+  skin_number: 13
+  skin_token: Skin13
+  id: 45013
+  alias: VeigarSkin13
+  names:
+    en_US:
+      - value: Elderwood Veigar
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 永恒之森 维迦
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 58
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - VeigarSkin13

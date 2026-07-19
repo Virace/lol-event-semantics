@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Draven
+  champion_id: 119
+  skin_number: 1
+  skin_token: Skin01
+  id: 119001
+  alias: DravenSkin01
+  names:
+    en_US:
+      - value: Soul Reaver Draven
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 灵魂收割者 德莱文
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 87
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - DravenSkin01
+  - DravenSkin1

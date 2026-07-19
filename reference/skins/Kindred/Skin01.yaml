@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Kindred
+  champion_id: 203
+  skin_number: 1
+  skin_token: Skin01
+  id: 203001
+  alias: KindredSkin01
+  names:
+    en_US:
+      - value: Shadowfire Kindred
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 黯焰双魂 千珏
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 86
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KindredSkin01
+  - KindredSkin1

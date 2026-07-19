@@ -1,0 +1,346 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 32
+  alias: Amumu
+  names:
+    en_US:
+      - value: Amumu
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 阿木木
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 殇之木乃伊
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 伤之木乃伊
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: 分头
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: 木乃伊
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: 木木
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: amm
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: fentou
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: ft
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: mm
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: mny
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: mumu
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: munaiyi
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: shangzhimunaiyi
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: szmny
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: AmumuE
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: Tantrum
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Tantrum
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 阿木木的愤怒
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:c0b043aa2ef198d6bb04824b7bc73a4f918e110d0e11c86e40a81dcff80383ab
+            value: Permanently reduces the physical damage Amumu would take. 
+              Amumu can unleash his rage, dealing damage to surrounding enemies.
+              Each time Amumu is hit, the cooldown on Tantrum is reduced.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:94e44377c7c85ce9e7d6fd78d169cf82bcf0ba42d183f8a8136d7173c11e54d4
+            value: 
+              永久减少阿木木所受的物理伤害。主动施放时，阿木木可以发泄他的怒火，对周围的敌人造成伤害。阿木木每被攻击一次，该技能的冷却时间就会缩短。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: AmumuPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Cursed Touch
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 诅咒之触
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:8495822ddbd1a497c442c53daf48274b542f0b04675747f5625365fb48e1a81b
+            value: Amumu's basic attacks <font color='#9b0f5f'>Curse</font> his 
+              enemies, causing them to take bonus true damage from incoming 
+              magic damage.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:4ff53a82cbc148cd7fd3fda2e40f1c72e537d38b75c29a46c33291f1278ba7cb
+            value: 阿木木的普通攻击会<font 
+              color='#9b0f5f'>诅咒</font>他的敌人，使敌人会从即将到来的魔法伤害中承受额外真实伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: AmumuQ
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: BandageToss
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Bandage Toss
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 绷带牵引
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:0212e343f2f61c40e6cc53848e062080cefb9f911e72e84f49a1bdd341aa2e93
+            value: Amumu tosses a sticky bandage at a target, stunning and 
+              damaging the target while he pulls himself to them.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:62b5eb0e341a536c2161272fa7f91d0e1ae9a3e806e6f17e62a32ee58d662e9d
+            value: 阿木木向目标投掷粘稠的绷带，将自己拉向目标，并对目标造成伤害和眩晕效果。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: AmumuR
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: CurseoftheSadMummy
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Curse of the Sad Mummy
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 木乃伊之咒
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:80c24f7396d8c113c626bdfeae7e58b3569caf92e90e896abe58a1a804eed2c7
+            value: Amumu entangles surrounding enemy units in bandages, applying
+              his <keywordMajor>Curse</keywordMajor>, damaging and stunning 
+              them.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:db6dfe84d5239f2a5a4d4c65f9fdd257c701a5d4537ebd5e5a429613136a5a32
+            value: 
+              阿木木用绷带将附近敌方单位通通缠住，对他们施加<keywordMajor>诅咒</keywordMajor>效果，并造成伤害和晕眩效果。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: AmumuW
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: AuraofDespair
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Despair
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 绝望光环
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:89fc3943b9ce1b0ffe764799907fa765bc7eb73235ba1628b809eebf42b5f47d
+            value: Overcome by anguish, nearby enemies lose a percentage of 
+              their maximum Health each second and have their <font 
+              color='#9b0f5f'>Curses</font> refreshed.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:d5551ef025df54a241dc4a593da0fa1f37ad6b8addf543b2fc54a7bbe2bc1edb
+            value: 附近的敌人陷入绝望，每秒损失一定百分比的最大生命值并刷新身上的<font 
+              color='#9b0f5f'>诅咒</font>效果。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Darius
+  champion_id: 122
+  skin_number: 4
+  skin_token: Skin04
+  id: 122004
+  alias: DariusSkin04
+  names:
+    en_US:
+      - value: Dunkmaster Darius
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 灌篮高手 德莱厄斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 103
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - DariusSkin04
+  - DariusSkin4

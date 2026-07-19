@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Xayah
+  champion_id: 498
+  skin_number: 26
+  skin_token: Skin26
+  id: 498026
+  alias: XayahSkin26
+  names:
+    en_US:
+      - value: Prestige Brave Phoenix Xayah
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至臻 神凰行者 烈羽焰凰 霞
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 150
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - XayahSkin26

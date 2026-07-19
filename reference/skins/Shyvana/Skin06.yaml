@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Shyvana
+  champion_id: 102
+  skin_number: 6
+  skin_token: Skin06
+  id: 102006
+  alias: ShyvanaSkin06
+  names:
+    en_US:
+      - value: Super Galaxy Shyvana
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 银河魔装机神 希瓦娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 21
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ShyvanaSkin06
+  - ShyvanaSkin6

@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Teemo
+  champion_id: 17
+  skin_number: 18
+  skin_token: Skin18
+  id: 17018
+  alias: TeemoSkin18
+  names:
+    en_US:
+      - value: Beemo
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 小蜜蜂 提莫
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 143
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - TeemoSkin18

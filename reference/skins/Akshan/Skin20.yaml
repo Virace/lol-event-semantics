@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Akshan
+  champion_id: 166
+  skin_number: 20
+  skin_token: Skin20
+  id: 166020
+  alias: AkshanSkin20
+  names:
+    en_US:
+      - value: Three Honors Akshan
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 荣誉使者 阿克尚
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 176
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AkshanSkin20

@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Darius
+  champion_id: 122
+  skin_number: 14
+  skin_token: Skin14
+  id: 122014
+  alias: DariusSkin14
+  names:
+    en_US:
+      - value: Dreadnova Darius
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 恐惧新星 德莱厄斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 76
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - DariusSkin14

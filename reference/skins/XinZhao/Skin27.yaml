@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: XinZhao
+  champion_id: 5
+  skin_number: 27
+  skin_token: Skin27
+  id: 5027
+  alias: XinZhaoSkin27
+  names:
+    en_US:
+      - value: Marauder Xin Zhao
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 黑暗骑士 赵信
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 45
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - XinZhaoSkin27

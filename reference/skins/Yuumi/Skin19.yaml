@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Yuumi
+  champion_id: 350
+  skin_number: 19
+  skin_token: Skin19
+  id: 350019
+  alias: YuumiSkin19
+  names:
+    en_US:
+      - value: Yuubee
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 小蜜蜂 悠米
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 143
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - YuumiSkin19

@@ -1,0 +1,323 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 58
+  alias: Renekton
+  names:
+    en_US:
+      - value: Renekton
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 雷克顿
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 荒漠屠夫
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 鳄鱼
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: ey
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: eyu
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: huangmotufu
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: leikedun
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: lkd
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: mmtf
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: RenektonE
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: RenektonSliceAndDice
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Slice and Dice
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 横冲直撞
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:f9154f847e8ee7e43c74146fa541e3d1d5c6f32de9f4918f4a478785cb8e4d3f
+            value: Renekton dashes, dealing damage to units along the way. 
+              Empowered, Renekton deals bonus damage and reduces the Armor of 
+              units hit.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:30eff99f24f71a46fe2bf229854e301d894eea0e23d6ea68339ff46ec087ff80
+            value: 雷克顿冲向前方，对沿途的敌人造成伤害。如果雷克顿有50点以上怒气，就会造成额外伤害，并减少沿途敌人的护甲值。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: RenektonPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Reign of Anger
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 怒之领域
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:d58fe85991153691a7f128bd75ea8c306654c6682791038d5ea1f9a18d3b5d75
+            value: Renekton's attacks generate Fury, increased when he is low on
+              life. This Fury can empower his abilities with bonus effects.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:d8ff5db3eb5374a9ba12e2d1fd565ec09d0e00fb705d9598e9875e18716c0f4d
+            value: 雷克顿的攻击会产生【怒气】，在它的生命值较低时产生更多【怒气】。【怒气】可以强化他的基础技能，使它们具有额外效果。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: RenektonCleave
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+      - value: RenektonQ
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Cull the Meek
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 巨鳄狂袭
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:1f3d3bf2d36e6241003a6ee56a84b9f1418a44ab7a16829087d4fd8c03e48e80
+            value: Renekton swings his blade, dealing moderate physical damage 
+              to all targets around him, and heals for a small portion of the 
+              damage dealt. If he has more than 50 Fury, his damage and heal are
+              increased.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:e59b72039c8146ac58b00be7a9644559f036d434f67253be89336b2a64ed31ee
+            value: 
+              雷克顿挥动他的武器，对周围所有目标造成中等水平物理伤害，并根据造成的伤害来治疗自己。如果他有50点以上怒气，那么此技能的伤害和治疗效果会得到提升。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: RenektonR
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: RenektonReignOfTheTyrant
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Dominus
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 终极统治
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:9e6dfe5f7f705c87e3bcba87691f939baf356096b8ef7f744bb83b364c2b7e6a
+            value: Renekton transforms into the Tyrant form, gaining bonus 
+              Health and dealing damage to enemies around him. While in this 
+              form, Renekton gains Fury periodically.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:7c2efb9dfc729fb218f547787023cb6790124086228060e1cd49cd5b09220cea
+            value: 雷克顿转换为暴君形态，获得额外生命值，并对周围敌人造成伤害。此形态的雷克顿定时获得怒气。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: RenektonPreExecute
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+      - value: RenektonW
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Ruthless Predator
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 冷酷捕猎
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:34ead37eeed7bc18468e61cebf10287e04ea8838d4df79d8421b72ce1d84f5b6
+            value: Renekton slashes his target twice, dealing moderate physical 
+              damage and stuns them for 0.75 seconds. If Renekton has more than 
+              50 Fury, he slashes his target three times, destroying damage 
+              shields on the target, dealing high physical damage, and stunning 
+              them for 1.5 seconds.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:babf68fd1e394ba79614a0a676434dcaa2388f68125b2d5219888c87a96b97c0
+            value: 
+              雷克顿两次挥击目标，对其造成中等水平物理伤害并晕眩其0.75秒。如果雷克顿有50点以上怒气，他会三次挥击目标，摧毁目标身上的伤害护盾，对其造成高额物理伤害，并晕眩其1.5秒。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

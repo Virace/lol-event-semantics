@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Smolder
+  champion_id: 901
+  skin_number: 1
+  skin_token: Skin01
+  id: 901001
+  alias: SmolderSkin01
+  names:
+    en_US:
+      - value: Heavenscale Smolder
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 天龙之子 斯莫德
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 201
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SmolderSkin01
+  - SmolderSkin1

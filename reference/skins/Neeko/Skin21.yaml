@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Neeko
+  champion_id: 518
+  skin_number: 21
+  skin_token: Skin21
+  id: 518021
+  alias: NeekoSkin21
+  names:
+    en_US:
+      - value: Prestige Star Guardian Neeko (2022)
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至臻 星之守护者 妮蔻 (2022)
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 119
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NeekoSkin21

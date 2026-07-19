@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Aatrox
+  champion_id: 266
+  skin_number: 30
+  skin_token: Skin30
+  id: 266030
+  alias: AatroxSkin30
+  names:
+    en_US:
+      - value: DRX Aatrox
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: DRX 亚托克斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 194
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AatroxSkin30

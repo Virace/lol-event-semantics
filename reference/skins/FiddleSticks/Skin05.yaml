@@ -1,0 +1,32 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Fiddlesticks
+  champion_id: 9
+  skin_number: 5
+  skin_token: Skin05
+  id: 9005
+  alias: FiddlesticksSkin05
+  names:
+    en_US:
+      - value: Fiddle Me Timbers
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 铁钩船长 费德提克
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 49
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - FiddleSticksSkin05
+  - FiddleSticksSkin5
+  - FiddlesticksSkin05
+  - FiddlesticksSkin5

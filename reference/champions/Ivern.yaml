@@ -1,0 +1,311 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 427
+  alias: Ivern
+  names:
+    en_US:
+      - value: Ivern
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 艾翁
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 翠神
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 小菊
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: aiweng
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: aw
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: cs
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: cuishen
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: xiaoju
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: xj
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: IvernE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Triggerseed
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 种豆得瓜
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:323c4a72c854b8df771cd60438c80d9be69980ec4d591d1c7d9f94710f775a28
+            value: Ivern places a shield on an ally which explodes after a short
+              duration slowing and damaging enemies. The shield refreshes if it 
+              hits no enemies.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:eae9427a240c57339cd075dacde9fb9e097b12d29c788e6f28fc563de42a40f9
+            value: 艾翁在一个友军身上放置一个护盾，护盾会在短暂延迟后爆炸，减速并伤害敌人。护盾值会在没有命中敌人时刷新。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: IvernPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Friend of the Forest
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 森林之友
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:d42d17ba05497831c77f87d86ea3d3bfd2cdb49fd6aa7900b90beab7f811fd1a
+            value: Ivern cannot attack or be attacked by non-epic monsters. 
+              Ivern can create magical groves on jungle camps which grow over 
+              time. When the grove is fully grown, Ivern may free the monsters 
+              to receive gold and experience.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:8c3d9785adc1c00678e89de7518fdb87b4ea4485cd224392736734ebf01ad908
+            value: 
+              艾翁无法攻击非史诗野怪，也无法被非史诗野怪攻击。艾翁可以在野怪营地创造神奇的小植被，小植被可以持续成长。当小植被完全成长后，艾翁就可以送走野怪来获得金币和经验。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: IvernQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Rootcaller
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 根深敌固
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:025703e0bec33f0c5f2bd153cd49d6ea9831035cc654283c49cc670401b50fb3
+            value: Ivern conjures a vine, dealing damage and rooting enemy 
+              targets hit. Ivern's allies can dash to the rooted target.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:ed34f0de1a449aff633e6a6525fac9078d07bc9ee4274d0e136b2549f55dc421
+            value: 艾翁召唤出一束荆棘，对命中的敌方单位造成伤害和禁锢效果。艾翁的友军可以突进到禁锢目标附近。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: IvernR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Daisy!
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 小菊！
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:0230b108d6510beb1cc92f1d121d88401f01811469ced19d25459a64c2b05a69
+            value: Ivern summons his Sentinel friend Daisy to fight with him. 
+              Re-cast command Daisy to attack or move.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:4ffcb7889e630b28850b9b839702ccb30db289c5cd7dd9dc477de95991b70751
+            value: 艾翁召唤他的护卫好友小菊来与他并肩战斗。再次施放即可指挥小菊进行攻击或移动。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: IvernW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Brushmaker
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 揠苗助攻
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:6c01a4bd4b32ffcd830c7f71166842f048c758d5c70f7510b20d278227733af5
+            value: In brush, Ivern and his nearby allies attacks deal bonus 
+              magic damage. Ivern can activate this ability to create a patch of
+              brush.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:fdd699946093d5bad4f03c7a37e49030b0ac0dc95dd178eddf9c39ccb1619802
+            value: 在草丛中，艾翁和他附近友军们的攻击将造成额外魔法伤害。艾翁可以激活这个技能来创造一块草丛。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

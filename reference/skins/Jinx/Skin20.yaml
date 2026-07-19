@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Jinx
+  champion_id: 222
+  skin_number: 20
+  skin_token: Skin20
+  id: 222020
+  alias: JinxSkin20
+  names:
+    en_US:
+      - value: 'PROJECT: Jinx'
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 源计划：疯狂 金克丝
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 18
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - JinxSkin20

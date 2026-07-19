@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Camille
+  champion_id: 164
+  skin_number: 1
+  skin_token: Skin01
+  id: 164001
+  alias: CamilleSkin01
+  names:
+    en_US:
+      - value: Program Camille
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 源代码 卡蜜尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 17
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - CamilleSkin01
+  - CamilleSkin1

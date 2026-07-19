@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Neeko
+  champion_id: 518
+  skin_number: 10
+  skin_token: Skin10
+  id: 518010
+  alias: NeekoSkin10
+  names:
+    en_US:
+      - value: Star Guardian Neeko
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 星之守护者 妮蔻
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 119
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NeekoSkin10

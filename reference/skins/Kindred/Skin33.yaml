@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Kindred
+  champion_id: 203
+  skin_number: 33
+  skin_token: Skin33
+  id: 203033
+  alias: KindredSkin33
+  names:
+    en_US:
+      - value: Prestige Porcelain Kindred
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至臻 青花瓷 千珏
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 154
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - KindredSkin33

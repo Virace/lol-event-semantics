@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sona
+  champion_id: 37
+  skin_number: 75
+  skin_token: Skin75
+  id: 37075
+  alias: SonaSkin75
+  names:
+    en_US:
+      - value: Prestige Requiem Sona
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 至臻 安魂曲 娑娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 178
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SonaSkin75

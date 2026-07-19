@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Warwick
+  champion_id: 19
+  skin_number: 6
+  skin_token: Skin06
+  id: 19006
+  alias: WarwickSkin06
+  names:
+    en_US:
+      - value: Firefang Warwick
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 火牙狼人 沃里克
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 86
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - WarwickSkin06
+  - WarwickSkin6

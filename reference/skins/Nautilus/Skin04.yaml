@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Nautilus
+  champion_id: 111
+  skin_number: 4
+  skin_token: Skin04
+  id: 111004
+  alias: NautilusSkin04
+  names:
+    en_US:
+      - value: Warden Nautilus
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 光明骑士 诺提勒斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 50
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - NautilusSkin04
+  - NautilusSkin4

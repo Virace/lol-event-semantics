@@ -1,0 +1,346 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 89
+  alias: Leona
+  names:
+    en_US:
+      - value: Leona
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 蕾欧娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 曙光女神
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 女坦
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: 日女
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: 曙光
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: leiouna
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: lon
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: nt
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: nvtan
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: rinv
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: rn
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: sg
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: sgns
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: shuguang
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: shuguangnvshen
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: LeonaE
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: LeonaZenithBlade
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Zenith Blade
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 天顶之刃
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:80025bddcb2950fab701532dc176eb3c8a22a7e832604340aff2c0c5a40e8817
+            value: Leona projects a solar image of her sword, dealing magic 
+              damage to all enemies in a line. When the image fades, the last 
+              enemy champion struck will be briefly immobilized and Leona will 
+              dash to them.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:766c3dc25c0bfc769b2e3735f8c91db47bea4a8ae5d81acba466bd3a430cdb7e
+            value: 蕾欧娜投掷一束日光，对直线上的所有敌人造成魔法伤害。当效果消失时，蕾欧娜会冲向最后一个被击中的敌人并使其无法移动。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: LeonaPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Sunlight
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 日光
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:bc4c2f00a9a94e6ff1564bbd7cdb47fdc2d4779a7b239462db687c3a09572a62
+            value: Damaging spells afflict enemies with Sunlight for 1.5 
+              seconds. When allied Champions deal damage to those targets, they 
+              consume the Sunlight to deal additional magic damage.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:c5095b3c7fb9c0285a23237cf5ba4e9525806194411d83bf0eefe75f184a3007
+            value: 
+              技能会在敌人身上施加【日光】效果，持续1.5秒。在此期间，蕾欧娜友军对这些目标造成伤害时，会触发【日光】，使目标受到额外的魔法伤害。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: LeonaQ
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: LeonaShieldOfDaybreak
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Shield of Daybreak
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 破晓之盾
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:31370d7f0aa1c8f9e0e3dc9f2bdc863e35043c6873b744cbf033a98db2271a34
+            value: Leona uses her shield to perform her next basic attack, 
+              dealing bonus magic damage and stunning the target.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:7130f85d52c801825140e1e7ffa6f47e913bab6290da621ed321ec123edccca4
+            value: 蕾欧娜用盾进行下次普通攻击，造成额外魔法伤害并晕眩目标。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: LeonaR
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: LeonaSolarFlare
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Solar Flare
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 日炎耀斑
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:17987b3246128fb129afe432b5baa1c18713a11ba7f77aafca54ac25bc00c6fe
+            value: Leona calls down a beam of solar energy, dealing damage to 
+              enemies in an area. Enemies in the center of the area are stunned,
+              while enemies on the outside are slowed.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:7ea6cb9ae19802fce31d672f1a749629b3e7ced41554c717021a78a158277be0
+            value: 蕾欧娜召唤一道太阳光束，对区域内的敌人造成伤害。区域中心的敌人会被晕眩，并且外围的敌人会被减速。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: LeonaSolarBarrier
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+      - value: LeonaW
+        sources:
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Eclipse
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 日蚀
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:87b3e2b7cf98b38c43971fb084c3096796639481912336beaa1baf9fa91f0bf7
+            value: Leona raises her shield to gain Damage Reduction, Armor, and 
+              Magic Resist. When the duration first ends, if there are nearby 
+              enemies, she will deal magic damage to them and prolong the 
+              duration of the effect.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:89565c51e3738570b04bb348710282b8b1308db22e406158d59373e8f6aa4bc4
+            value: 
+              蕾欧娜举起盾牌，提供伤害减免、护甲和魔法抗性。当持续时间首次结束时，如果附近有敌人，那么她会对其造成魔法伤害并延长效果的持续时间。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

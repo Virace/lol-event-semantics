@@ -1,0 +1,330 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 12
+  alias: Alistar
+  names:
+    en_US:
+      - value: Alistar
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 阿利斯塔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 牛头酋长
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 牛头
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: 酋长
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: alisita
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: alst
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: niutou
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: niutouqiuzhang
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: nt
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: ntqz
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: qiuzhang
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: qz
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: AlistarE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Trample
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 践踏
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:2c3072089be9c5074cb1263d323364ed96f76da8143ac5553a7e28935767cb20
+            value: Alistar tramples nearby enemy units, ignoring unit collision 
+              and gaining stacks if he damages an enemy champion. At full stacks
+              Alistar's next basic attack against an enemy champion deals 
+              additional magic damage and stuns them.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:6fe0bc57c53c6d79a815bc6544ff76e337e472dd313d783c2a0f3adb9556d85c
+            value: 
+              阿利斯塔践踏附近的敌方单位，无视单位的碰撞体积并在他伤害到一名敌方英雄时获得一层充能。在满层充能时，阿利斯塔的下次对敌方英雄发起的普攻将造成额外魔法伤害和晕眩效果。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: AlistarPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Triumphant Roar
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 凯旋怒吼
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:d8c42af5acc8f9ad7f827bac32931969d5242baa82957391186d38fd8a6f7f94
+            value: Alistar charges his roar by stunning or displacing enemy 
+              champions or when nearby enemies die. When fully charged he heals 
+              himself all nearby allied champions.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:dea39b5e3393941f0d2829c0e052b89d36b6f70470d310ea7ef054e071bb9317
+            value: 
+              阿利斯塔在对敌方英雄造成晕眩或强制位移时，或附近有敌人阵亡时，会积攒他的怒吼层数。在层数攒满后，他会治疗他自己和所有附近的友方英雄。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: AlistarQ
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: Pulverize
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Pulverize
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 大地粉碎
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:a3228ca31bd8b75132e387b34d0698713992136c0a3ebf6bd53ba8d561700db0
+            value: Alistar smashes the ground, dealing damage to nearby enemies 
+              and tossing them into the air.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:35a715f58ffb52bfd20ab88dc32eb72fd4a4e4740059797a0fe74991d1e459ad
+            value: 阿利斯塔锤击地面，对附近的敌人造成魔法伤害并使他们浮空。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: AlistarR
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: FerociousHowl
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Unbreakable Will
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 坚定意志
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:29f7c30c8a9e8a8a74074eb88cbb25e7a50375b0953c3fb070fa1b653f85d983
+            value: Alistar lets out a wild roar, removing all crowd control 
+              effects on himself, and reducing incoming physical and magical 
+              damage for the duration.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:17640883f219f7c63f9e61f17e3ce778b2b1c16e420ad57dcf0d133a937d2e0c
+            value: 阿利斯塔发出野性的咆哮，移除身上所有控制效果，并且持续时间内所受的物理和魔法伤害将减少。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: AlistarW
+        sources:
+          - source: game_data
+            version: '16.5'
+      - value: Headbutt
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+    names:
+      en_US:
+        - value: Headbutt
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 野蛮冲撞
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:50d0b274d522c47be2f71d2f52279f3ea72ed502b75129b17ba15eee192a67a9
+            value: Alistar rams a target with his head, dealing damage and 
+              knocking the target back.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:8592480910c98b4ab3ac144fc9f75f47136604dc2e7d3b20a555f7a6bd80cf95
+            value: 阿利斯塔冲撞目标，对其造成伤害并击退目标。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

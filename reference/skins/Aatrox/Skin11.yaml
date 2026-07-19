@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Aatrox
+  champion_id: 266
+  skin_number: 11
+  skin_token: Skin11
+  id: 266011
+  alias: AatroxSkin11
+  names:
+    en_US:
+      - value: Odyssey Aatrox
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 奥德赛 亚托克斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 73
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AatroxSkin11

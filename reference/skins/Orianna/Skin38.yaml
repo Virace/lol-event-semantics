@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Orianna
+  champion_id: 61
+  skin_number: 38
+  skin_token: Skin38
+  id: 61038
+  alias: OriannaSkin38
+  names:
+    en_US:
+      - value: T1 Orianna
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: T1 奥莉安娜
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 207
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - OriannaSkin38

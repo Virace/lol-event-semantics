@@ -1,0 +1,317 @@
+schema_version: 1
+entity:
+  type: champion
+  id: 90
+  alias: Malzahar
+  names:
+    en_US:
+      - value: Malzahar
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 玛尔扎哈
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  title:
+    zh_CN:
+      - value: 虚空先知
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: tencent_101
+            version: '16.13'
+  nicknames:
+    zh_CN:
+      - value: 蚂蚱
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: 马尔扎哈
+        sources:
+          - source: tencent_101
+            version: '16.13'
+  search_alias:
+    zh_CN:
+      - value: maerzhaha
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: mazha
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: mezh
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: mz
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: xkxz
+        sources:
+          - source: tencent_101
+            version: '16.13'
+      - value: xukongxianzhi
+        sources:
+          - source: tencent_101
+            version: '16.13'
+spells:
+  - slot: E
+    ids:
+      - value: MalzaharE
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Malefic Visions
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 煞星幻象
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:718226b60d05bbd559a04d103915968d35031f239a9cd72f00773f08fd55f901
+            value: Malzahar infects his target's mind with cruel visions of 
+              their demise, dealing damage over time. Using Malzahar's other 
+              spells on the target will refresh the visions.<br><br>If the 
+              target dies while afflicted by the visions, they pass on to a 
+              nearby enemy unit and Malzahar gains Mana. Malzahar's Voidlings 
+              are attracted to affected units.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:d56f04927ee692390274e2cc7afee528ff030182c5a874c335601a5936638d44
+            value: 
+              玛尔扎哈将目标的惨死幻象侵入目标的意识中，造成持续伤害。玛尔扎哈对目标使用其它技能时会刷新幻象的持续时间。<br><br>如果目标在感染幻象期间死亡，那么幻象会传到附近的一个敌人身上，并且玛尔扎哈会回复法力值。玛尔扎哈的虚灵会优先攻击感染了幻象的单位。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: P
+    ids:
+      - value: MalzaharPassive
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Void Shift
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 虚空穿越
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:ae698593e84a0dd8c9281b3088409302313a8f1c57477c9c919fec022d5273cd
+            value: When he hasn't recently taken damage or been crowd 
+              controlled, Malzahar gains massive damage reduction and crowd 
+              control immunity, lingering for a short period after taking 
+              damage.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:fa28aaaadb96f8658ebe5874e7605c0c4b6f313ef147bc91607468a215ff1ed5
+            value: 玛尔扎哈如果近期没有受到伤害或控制效果，就会获得巨幅伤害减免和免疫控制的效果，并且这个效果在受到伤害后还会残留一小段时间。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: Q
+    ids:
+      - value: MalzaharQ
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Call of the Void
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 虚空召唤
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:02a89cd03677b8dafef97622ad1f3d0a0bd85046a5a4a19332f7f0bbf0a6c478
+            value: Malzahar opens up two portals to the Void. After a short 
+              delay, they fire projectiles that deal Magic Damage and silence 
+              enemy champions.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:bf2c2284760995f0e9f55092af07d2d74bd3be4288afa023f4bf4ed1d4e01216
+            value: 玛尔扎哈开启两扇通向虚空的传送门。在短暂的延迟后，两扇门之间会有虚空能量对流而过，造成魔法伤害并沉默敌方英雄。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: R
+    ids:
+      - value: MalzaharR
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Nether Grasp
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 冥府之握
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:468defb5e0079e4953e71cfb538ba3a2025f0772b2c035ff66a18023f54c773b
+            value: Malzahar channels the essence of the Void to suppress an 
+              enemy champion over a zone of damaging negative energy.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:0fdfd3cc499c78c2ea826e09c04136fd6d201461a8c116ba18ae67aafa1b9005
+            value: 玛尔扎哈引导虚空的精萃来把一名敌方英雄压制在一个充满伤害的负能量地带上。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+  - slot: W
+    ids:
+      - value: MalzaharW
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    names:
+      en_US:
+        - value: Void Swarm
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+            - source: game_data
+              version: '16.5'
+      zh_CN:
+        - value: 虚空虫群
+          sources:
+            - source: data_dragon
+              version: 16.5.1
+    descriptions:
+      en_US:
+        snapshots:
+          - hash: 
+              sha256:8e8a7f2b00b0feccb50a3be71d22c4e887e730fde2f003a6ef7432148127049a
+            value: Malzahar summons Voidlings to attack nearby enemies.
+            first_seen: '16.5'
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1
+              - source: game_data
+                version: '16.5'
+      zh_CN:
+        snapshots:
+          - hash: 
+              sha256:5c52b3e0812ab0658b1787dd0e9365c6309d572ecb830a121265d2183fcf11eb
+            value: 玛尔扎哈召唤虚灵去攻击附近的敌人。
+            first_seen: 16.5.1
+            last_seen: 16.5.1
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: data_dragon
+                version: 16.5.1

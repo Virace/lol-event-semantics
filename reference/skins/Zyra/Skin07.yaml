@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Zyra
+  champion_id: 143
+  skin_number: 7
+  skin_token: Skin07
+  id: 143007
+  alias: ZyraSkin07
+  names:
+    en_US:
+      - value: Crystal Rose Zyra
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 水晶玫瑰 婕拉
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 140
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ZyraSkin07
+  - ZyraSkin7

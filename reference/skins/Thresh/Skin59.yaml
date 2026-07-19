@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Thresh
+  champion_id: 412
+  skin_number: 59
+  skin_token: Skin59
+  id: 412059
+  alias: ThreshSkin59
+  names:
+    en_US:
+      - value: Janitor Thresh
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 洗地专家 锤石
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 100
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ThreshSkin59

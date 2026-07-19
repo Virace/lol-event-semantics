@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Poppy
+  champion_id: 78
+  skin_number: 14
+  skin_token: Skin14
+  id: 78014
+  alias: PoppySkin14
+  names:
+    en_US:
+      - value: Snow Fawn Poppy
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 冰雪驯鹿 波比
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 47
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - PoppySkin14

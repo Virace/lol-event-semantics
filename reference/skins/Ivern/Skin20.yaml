@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ivern
+  champion_id: 427
+  skin_number: 20
+  skin_token: Skin20
+  id: 427020
+  alias: IvernSkin20
+  names:
+    en_US:
+      - value: Astronaut Ivern
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 宇航员 艾翁
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 94
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - IvernSkin20

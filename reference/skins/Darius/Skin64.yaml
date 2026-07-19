@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Darius
+  champion_id: 122
+  skin_number: 64
+  skin_token: Skin64
+  id: 122064
+  alias: DariusSkin64
+  names:
+    en_US:
+      - value: Divine God-King Darius
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 圣洁神王 德莱厄斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 78
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - DariusSkin64

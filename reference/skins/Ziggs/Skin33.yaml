@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ziggs
+  champion_id: 115
+  skin_number: 33
+  skin_token: Skin33
+  id: 115033
+  alias: ZiggsSkin33
+  names:
+    en_US:
+      - value: La Ilusión Ziggs
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 魂蔷薇 吉格斯
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 198
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ZiggsSkin33

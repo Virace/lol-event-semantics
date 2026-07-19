@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Jinx
+  champion_id: 222
+  skin_number: 62
+  skin_token: Skin62
+  id: 222062
+  alias: JinxSkin62
+  names:
+    en_US:
+      - value: T1 Jinx
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: T1 金克丝
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 207
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - JinxSkin62

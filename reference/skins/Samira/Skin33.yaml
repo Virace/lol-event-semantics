@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Samira
+  champion_id: 360
+  skin_number: 33
+  skin_token: Skin33
+  id: 360033
+  alias: SamiraSkin33
+  names:
+    en_US:
+      - value: Masque of the Black Rose Samira
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 黑色玫瑰假面舞会 莎弥拉
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 211
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SamiraSkin33

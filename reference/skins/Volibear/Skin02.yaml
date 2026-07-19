@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Volibear
+  champion_id: 106
+  skin_number: 2
+  skin_token: Skin02
+  id: 106002
+  alias: VolibearSkin02
+  names:
+    en_US:
+      - value: Northern Storm Volibear
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 北地风暴 沃利贝尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 63
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - VolibearSkin02
+  - VolibearSkin2

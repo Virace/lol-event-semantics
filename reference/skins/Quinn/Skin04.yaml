@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Quinn
+  champion_id: 133
+  skin_number: 4
+  skin_token: Skin04
+  id: 133004
+  alias: QuinnSkin04
+  names:
+    en_US:
+      - value: Heartseeker Quinn
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 觅心之翼 奎因
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 64
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - QuinnSkin04
+  - QuinnSkin4

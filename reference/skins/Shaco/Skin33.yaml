@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Shaco
+  champion_id: 35
+  skin_number: 33
+  skin_token: Skin33
+  id: 35033
+  alias: ShacoSkin33
+  names:
+    en_US:
+      - value: Winterblessed Shaco
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 北极星使者 萨科
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 187
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - ShacoSkin33

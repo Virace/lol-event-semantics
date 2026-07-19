@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Rell
+  champion_id: 526
+  skin_number: 1
+  skin_token: Skin01
+  id: 526001
+  alias: RellSkin01
+  names:
+    en_US:
+      - value: Battle Queen Rell
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 女帝 芮尔
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 137
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - RellSkin01
+  - RellSkin1

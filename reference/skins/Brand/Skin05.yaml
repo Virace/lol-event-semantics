@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Brand
+  champion_id: 63
+  skin_number: 5
+  skin_token: Skin05
+  id: 63005
+  alias: BrandSkin05
+  names:
+    en_US:
+      - value: Spirit Fire Brand
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 灵魂烈焰 布兰德
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 29
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - BrandSkin05
+  - BrandSkin5

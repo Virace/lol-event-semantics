@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: TwistedFate
+  champion_id: 4
+  skin_number: 9
+  skin_token: Skin09
+  id: 4009
+  alias: TwistedFateSkin09
+  names:
+    en_US:
+      - value: Cutpurse Twisted Fate
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 逍遥赌侠 崔斯特
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 49
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - TwistedFateSkin09
+  - TwistedFateSkin9

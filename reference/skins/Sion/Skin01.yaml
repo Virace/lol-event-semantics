@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sion
+  champion_id: 14
+  skin_number: 1
+  skin_token: Skin01
+  id: 14001
+  alias: SionSkin01
+  names:
+    en_US:
+      - value: Hextech Sion
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 钢铁终结者 赛恩
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 40
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - SionSkin01
+  - SionSkin1

@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Akali
+  champion_id: 84
+  skin_number: 92
+  skin_token: Skin92
+  id: 84092
+  alias: AkaliSkin92
+  names:
+    en_US:
+      - value: Spirit Blossom Akali
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 灵魂莲华 阿卡丽
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 171
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - AkaliSkin92

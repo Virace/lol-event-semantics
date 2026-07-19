@@ -1,0 +1,11 @@
+# 人工补充的英雄玩家俗称（hero_list keywords 缺失的常用叫法）。
+#
+# 来源：人工 review。与官方 hero_list 俗称按值去重合并，来源标记 `override`。
+# 按英雄 alias 归类（大小写不敏感匹配；reference 中不存在的 alias 会被跳过）。
+# 仅收录确有把握的常用俗称，宁缺毋滥；可随时增补，属纯数据变更。
+version: curated
+nicknames:
+  # 艾瑞莉娅：hero_list 仅有「女刀 / 女刀锋」，补旧称「刀妹」。
+  Irelia:
+    zh_CN:
+      - 刀妹

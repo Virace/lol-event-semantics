@@ -1,0 +1,30 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Irelia
+  champion_id: 39
+  skin_number: 5
+  skin_token: Skin05
+  id: 39005
+  alias: IreliaSkin05
+  names:
+    en_US:
+      - value: Order of the Lotus Irelia
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 莲花之令 艾瑞莉娅
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 60
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - IreliaSkin05
+  - IreliaSkin5

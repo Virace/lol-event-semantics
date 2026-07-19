@@ -1,0 +1,29 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Lillia
+  champion_id: 876
+  skin_number: 10
+  skin_token: Skin10
+  id: 876010
+  alias: LilliaSkin10
+  names:
+    en_US:
+      - value: Nightbringer Lillia
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+          - source: game_data
+            version: '16.5'
+    zh_CN:
+      - value: 黑夜使者 莉莉娅
+        sources:
+          - source: data_dragon
+            version: 16.5.1
+skinlines:
+  - id: 193
+    sources:
+      - source: game_data
+        version: '16.5'
+aliases:
+  - LilliaSkin10
