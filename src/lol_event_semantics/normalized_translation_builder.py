@@ -540,15 +540,16 @@ def build_media_base_action_state(
     *,
     labels: DisplayLabels | None = None,
 ) -> dict[str, object] | None:
-    """把 media_base 兜底桶里的英雄动作状态接入 skin_action_state frame（批次5b）。
+    """把 media_base 兜底桶里的英雄动作状态接入 skin_action_state frame（批次5b/6a）。
 
     双条件门禁：sfx_scope=champion_sfx（排除 hud_base 等系统 UI 音，其
     owner_context 可能带伪 champion alias）且 owner_context.kind=champion。
     动作 token 取 cue_path 中 Base 段（大小写两态）之后一段，剥词尾 2D/3D
     后按 skin_action_state 既有动作词表（display_labels.action，单一来源）
-    解析；表外动作词或无相位（leadin/loop 等尾段不映射 phase）不建 frame
-    维持 legacy——防错优先，严禁英文 fallback 进文案。``Base`` 分组词不进
-    文案，cue_path 无损留在 semantic.slots。
+    解析；相位依次取 slots.phase、cue 尾段相位门禁（MEDIA_BASE_TAIL_PHASES）、
+    无尾段整段音效（overall），非相位尾段（音层/姿势/变体号/多段链）与表外
+    动作词不建 frame 维持 legacy——防错优先，严禁英文 fallback 进文案。
+    ``Base`` 分组词不进文案，cue_path 无损留在 semantic.slots。
 
     Args:
         record: 拆解记录。
@@ -571,9 +572,10 @@ def build_media_base_action_state(
     ):
         return None
 
-    token = media_base_action_token(slots)
-    if token is None:
+    cue = media_base_action_cue(slots)
+    if cue is None:
         return None
+    token, tail = cue
 
     action_word, dimension = strip_terminal_dimension(token)
     action_key = action_word.lower()
@@ -583,6 +585,8 @@ def build_media_base_action_state(
         return None
 
     phase = phase_argument(slots.get("phase"), "skin_action_state", labels=labels)
+    if phase is None:
+        phase = media_base_tail_phase(tail, labels=active_labels)
     champion = champion_argument(record, context)
     if phase is None or champion is None or has_technical_champion_label(champion):
         return None
@@ -615,14 +619,18 @@ def build_media_base_action_state(
     )
 
 
-def media_base_action_token(slots: Mapping[str, Any]) -> str | None:
-    """取 media_base cue_path 中 Base 分组段之后的动作 token。
+MEDIA_BASE_TAIL_PHASES = frozenset({"leadin", "leadout", "windup", "winddown", "loop"})
+
+
+def media_base_action_cue(slots: Mapping[str, Any]) -> tuple[str, tuple[object, ...]] | None:
+    """取 media_base cue_path 中 Base 分组段之后的动作 token 与其后尾段。
 
     Args:
         slots: 拆解记录 semantic slots。
 
     Returns:
-        Base 段后一段字符串；cue_path 缺失、无 Base 段或其后无 token 时返回 None。
+        ``(动作 token, 尾段元组)``；cue_path 缺失、无 Base 段或其后无 token 时
+        返回 None。尾段原样保留（不过滤非字符串），由调用方门禁判定。
     """
 
     cue_path = slots.get("cue_path")
@@ -632,9 +640,56 @@ def media_base_action_token(slots: Mapping[str, Any]) -> str | None:
     for index, segment in enumerate(cue_path):
         if isinstance(segment, str) and segment.lower() == "base":
             candidate = cue_path[index + 1] if index + 1 < len(cue_path) else None
-            return candidate if isinstance(candidate, str) and candidate else None
+            if not isinstance(candidate, str) or not candidate:
+                return None
+            return candidate, tuple(cue_path[index + 2 :])
 
     return None
+
+
+def media_base_tail_phase(
+    tail: tuple[object, ...],
+    *,
+    labels: DisplayLabels,
+) -> dict[str, object] | None:
+    """把动作 token 后的 cue 尾段解析为 phase argument（批次6a）。
+
+    单段相位词按 MEDIA_BASE_TAIL_PHASES 门禁；无尾段合成 key=overall 的
+    整段音效相位；其余尾段（音层/姿势/变体号/多段链）返回 None 维持 legacy。
+
+    Args:
+        tail: 动作 token 之后的 cue_path 尾段。
+        labels: 展示词表。
+
+    Returns:
+        phase argument；尾段不在门禁内时返回 None。
+    """
+
+    token: str | None
+    if not tail:
+        key = "overall"
+        token = None
+    elif len(tail) == 1 and isinstance(tail[0], str) and tail[0].lower() in MEDIA_BASE_TAIL_PHASES:
+        token = tail[0]
+        key = token.lower()
+    else:
+        return None
+
+    zh_label, en_label = labels.phase.get(key, (key, key))
+    return argument_to_dict(
+        TranslationArgument(
+            role="phase",
+            labels={"zh_CN": zh_label, "en_US": en_label},
+            confidence="high",
+            provenance={
+                "source": "semantic_slots.cue_path",
+                "frame_type": "skin_action_state",
+                "trigger_family": "media_base",
+            },
+            key=key,
+            token=token,
+        )
+    )
 
 
 def strip_terminal_dimension(token: str) -> tuple[str, str | None]:

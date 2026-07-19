@@ -39,6 +39,13 @@ phase:
   rankone: {zh_CN: 1级, en_US: rank 1}
   ranktwo: {zh_CN: 2级, en_US: rank 2}
   rankthree: {zh_CN: 3级, en_US: rank 3}
+  # media_base cue 尾段相位（批次6a）：builder 级尾段门禁产出，拆解层不产出
+  # 这些 key（门禁清单见 normalized_translation_builder.MEDIA_BASE_TAIL_PHASES）。
+  windup: {zh_CN: 起手, en_US: wind up}
+  loop: {zh_CN: 循环, en_US: loop}
+  # 无尾段整段音效（批次6a）：key=overall 断言「整段、无特定相位段」，展示词
+  # 取「音效」使中文自然（舞蹈音效）；不硬造 state_activate 等时机语义。
+  overall: {zh_CN: 音效, en_US: sfx}
 
 action:
   # action argument：皮肤动作/招式展示词；key 为小写 action 原值。

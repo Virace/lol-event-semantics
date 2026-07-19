@@ -116,10 +116,10 @@ class DefaultDisplayLabelsTests(unittest.TestCase):
     """验证默认 rules/display_labels.yaml 词条数与原内联 dict 逐项一致。"""
 
     def test_default_display_labels_counts_match_original_inline_dicts(self) -> None:
-        """迁移前后词条数不能变化（maps 为 T3.3 新增；批次5b 增 rank 相位与 dance）。"""
+        """迁移前后词条数不能变化（maps 为 T3.3 新增；批次5b 增 rank 相位与 dance；批次6a 增尾段相位）。"""
 
         labels = load_display_labels(REPO_ROOT / DEFAULT_DISPLAY_LABELS_PATH)
-        self.assertEqual(len(labels.phase), 29)
+        self.assertEqual(len(labels.phase), 32)
         self.assertEqual(len(labels.action), 7)
         self.assertEqual(len(labels.ability_component), 4)
         self.assertEqual(len(labels.gameplay_event), 1)
@@ -133,6 +133,14 @@ class DefaultDisplayLabelsTests(unittest.TestCase):
         self.assertEqual(labels.phase["ranktwo"], ("2级", "rank 2"))
         self.assertEqual(labels.phase["rankthree"], ("3级", "rank 3"))
         self.assertEqual(labels.action["dance"], ("舞蹈", "dance"))
+
+    def test_batch6a_entries_present(self) -> None:
+        """批次6a 词条：media_base 尾段相位（起手/循环）与无尾段整段音效（overall=音效）。"""
+
+        labels = load_display_labels(REPO_ROOT / DEFAULT_DISPLAY_LABELS_PATH)
+        self.assertEqual(labels.phase["windup"], ("起手", "wind up"))
+        self.assertEqual(labels.phase["loop"], ("循环", "loop"))
+        self.assertEqual(labels.phase["overall"], ("音效", "sfx"))
 
     def test_default_announcer_section_matches_batch5a_vocab(self) -> None:
         """announcer 段词条数与批次5a 词表一致（第一批 20 + 第二批 19）。"""

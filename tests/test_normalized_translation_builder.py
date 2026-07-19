@@ -1120,10 +1120,67 @@ class MediaBaseActionStateTests(unittest.TestCase):
         self.assertEqual(record.semantic_slots.get("sfx_scope"), "system_sfx")
         self.assertIsNone(build_translation(record, TranslationBuildContext()))
 
-    def test_phaseless_action_builds_no_frame(self) -> None:
-        """无相位记录（Base_death / leadin / loop 尾段）不建 frame，维持 legacy。"""
+    def test_tail_phase_words_build_frame(self) -> None:
+        """批次6a：cue 尾段相位词（leadin/loop/windup/winddown/leadout）经门禁进 phase。"""
 
-        for raw in ["Play_sfx_EvelynnSkin08_Base_death", "Play_sfx_GangplankSkin33_Base_Joke3D_loop"]:
+        cases = [
+            ("Play_sfx_Azir_Base_Dance3D_leadin", "dance", "leadin", "引入"),
+            ("Play_sfx_GangplankSkin33_Base_Joke3D_loop", "joke", "loop", "循环"),
+            ("Play_sfx_TristanaSkin33_Base_Dance3D_windup", "dance", "windup", "起手"),
+            ("Play_sfx_Tristana_Base_Recall_winddown", "recall", "winddown", "收尾"),
+            ("Play_sfx_KarthusSkin26_Base_Recall_leadout", "recall", "leadout", "引出"),
+        ]
+        for raw, action_key, phase_key, phase_zh in cases:
+            with self.subTest(raw=raw):
+                translation = build_translation(enriched_record(raw), TranslationBuildContext())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], "skin_action_state")
+                args = translation["arguments"]
+                self.assertEqual(args["action"]["key"], action_key)
+                self.assertEqual(args["phase"]["key"], phase_key)
+                self.assertEqual(args["phase"]["labels"]["zh_CN"], phase_zh)
+                self.assertEqual(args["phase"]["provenance"]["source"], "semantic_slots.cue_path")
+
+    def test_no_tail_action_builds_overall_sfx_phase(self) -> None:
+        """批次6a：无尾段纯动作记录合成 key=overall 整段音效相位（舞蹈音效）。"""
+
+        cases = [
+            ("Play_sfx_EvelynnSkin08_Base_dance", "dance", "舞蹈"),
+            ("Play_sfx_EvelynnSkin08_Base_death", "death", "死亡"),
+            ("Play_sfx_ShenSkin22_Base_taunt", "taunt", "嘲讽"),
+        ]
+        for raw, action_key, action_zh in cases:
+            with self.subTest(raw=raw):
+                translation = build_translation(enriched_record(raw), TranslationBuildContext())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], "skin_action_state")
+                args = translation["arguments"]
+                self.assertEqual(args["action"]["key"], action_key)
+                self.assertEqual(args["action"]["labels"]["zh_CN"], action_zh)
+                self.assertEqual(args["phase"]["key"], "overall")
+                self.assertEqual(args["phase"]["labels"]["zh_CN"], "音效")
+                self.assertIsNone(args["phase"].get("token"))
+
+    def test_non_phase_tails_build_no_frame(self) -> None:
+        """批次6a legacy 锁：非相位尾段（音层/姿势/变体号/多段链）不建 frame。"""
+
+        for raw in [
+            "Play_sfx_TristanaSkin33_Base_Death3D_body",
+            "Play_sfx_TristanaSkin33_Base_Death3D_gun",
+            "Play_sfx_TaricSkin18_Base_Joke3D_pose1",
+            "Play_sfx_TaricSkin18_Base_Joke3D_open",
+            "Play_sfx_TristanaSkin51_Base_Recall_A",
+            "Play_sfx_TaricSkin18_Base_Dance3D_crystal_loop_buffactivate2",
+        ]:
+            with self.subTest(raw=raw):
+                self.assertIsNone(build_translation(enriched_record(raw), TranslationBuildContext()))
+
+    def test_out_of_vocab_action_with_no_tail_builds_no_frame(self) -> None:
+        """批次6a legacy 锁：表外动作词（idle/meow 等）即便无尾段也不建 frame。"""
+
+        for raw in ["Play_sfx_YorickSkin12_Base_idle", "Play_sfx_YuumiSkin39_Base_meow_01"]:
             with self.subTest(raw=raw):
                 self.assertIsNone(build_translation(enriched_record(raw), TranslationBuildContext()))
 
@@ -1153,6 +1210,33 @@ class Batch5bGoldenDisplayTests(unittest.TestCase):
                 self.assertEqual(display["zh_cn_short"], case["zh_cn_main"])
 
         self.assertGreaterEqual(seen, 7)
+
+
+class Batch6aGoldenDisplayTests(unittest.TestCase):
+    """验证批次6a 黄金样例文本逐字一致（media_base 无相位承接：尾段相位与整段音效）。"""
+
+    def test_fixture_golden_cases_render_exact_display(self) -> None:
+        """fixture 批次6a 样例经真实 reference 上下文渲染出逐字 default/main 文本。"""
+
+        cases = json.loads(FIXTURE.read_text(encoding="utf-8"))
+        seen = 0
+        for case in cases:
+            if "批次6a" not in case["notes"]:
+                continue
+
+            seen += 1
+            with self.subTest(raw=case["raw_event_name"]):
+                record = enriched_record(case["raw_event_name"])
+                translation = build_translation(record, reference_translation_context())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], case["expected_frame_type"])
+
+                display = build_compat_display(translation, raw_event_name=case["raw_event_name"])
+                self.assertEqual(display["zh_cn_detail"], case["zh_cn_default"])
+                self.assertEqual(display["zh_cn_short"], case["zh_cn_main"])
+
+        self.assertGreaterEqual(seen, 6)
 
 
 class MapArgumentDisplayLabelsTests(unittest.TestCase):

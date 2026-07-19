@@ -454,5 +454,53 @@
     "zh_cn_default": "加里奥 死亡状态启动",
     "zh_cn_main": "死亡状态启动",
     "notes": "批次5b 黄金样例（实现者补选，待主代理裁决）：基础皮肤形态无 SkinNN token，合法缺 skin 角色（REQUIRED_FRAME_ROLES 相应放宽，normalized_translation_model.py）。大小写 base 两态中的小写 base 实测仅出现在 hud 系统音（system_sfx 被门禁排除，不建 frame），无法作黄金样例，转 builder 单测覆盖；表外动作词负例同转单测。"
+  },
+  {
+    "raw_event_name": "Play_sfx_EvelynnSkin08_Base_dance",
+    "expected_frame_type": "skin_action_state",
+    "required_roles": ["champion", "skin", "action", "phase"],
+    "zh_cn_default": "伊芙琳 糖果大战 舞蹈音效",
+    "zh_cn_main": "舞蹈音效",
+    "notes": "批次6a 主代理裁决：无尾段纯动作合成 key=overall 整段音效相位（词表 overall=音效），不硬造 state_activate 时机；皮肤名对照 reference/skins/Evelynn/Skin08（糖果大战 伊芙琳）核验。"
+  },
+  {
+    "raw_event_name": "Play_sfx_Azir_Base_Dance3D_leadin",
+    "expected_frame_type": "skin_action_state",
+    "required_roles": ["champion", "action", "phase"],
+    "zh_cn_default": "阿兹尔 舞蹈引入",
+    "zh_cn_main": "舞蹈引入",
+    "notes": "批次6a：cue 尾段相位词 leadin 经 MEDIA_BASE_TAIL_PHASES 门禁进 phase（引入，沿既有词表词条）；skinless 基础形态合法缺 skin 角色（沿批次5b 契约）。"
+  },
+  {
+    "raw_event_name": "Play_sfx_TristanaSkin33_Base_Dance3D_windup",
+    "expected_frame_type": "skin_action_state",
+    "required_roles": ["champion", "skin", "action", "phase"],
+    "zh_cn_default": "崔丝塔娜 我，羽饰骑士 舞蹈起手",
+    "zh_cn_main": "舞蹈起手",
+    "notes": "批次6a 新词条：windup=起手（与 winddown=收尾 对仗，动画预备段技术词，无官方中文对照）；皮肤名对照 reference/skins/Tristana/Skin33（我，羽饰骑士 崔丝塔娜=Pengu Cosplay）核验。"
+  },
+  {
+    "raw_event_name": "Play_sfx_GangplankSkin33_Base_Joke3D_loop",
+    "expected_frame_type": "skin_action_state",
+    "required_roles": ["champion", "skin", "action", "phase"],
+    "zh_cn_default": "普朗克 源计划：铁腕 玩笑循环",
+    "zh_cn_main": "玩笑循环",
+    "notes": "批次6a 新词条：loop=循环（音频循环段技术词）；皮肤名对照 reference/skins/Gangplank/Skin33（源计划：铁腕 普朗克）核验。"
+  },
+  {
+    "raw_event_name": "Play_sfx_KarthusSkin26_Base_Recall_leadout",
+    "expected_frame_type": "skin_action_state",
+    "required_roles": ["champion", "skin", "action", "phase"],
+    "zh_cn_default": "卡尔萨斯 永恒之森 回城引出",
+    "zh_cn_main": "回城引出",
+    "notes": "批次6a：尾段相位词 leadout（引出，沿既有词表词条）；动作 token 无 3D 维度尾（Recall 裸词）同样命中；皮肤名对照 reference/skins/Karthus/Skin26（永恒之森 卡尔萨斯）核验。"
+  },
+  {
+    "raw_event_name": "Stop_sfx_Galio_Base_Recall3D_winddown",
+    "expected_frame_type": "skin_action_state",
+    "required_roles": ["champion", "action", "phase"],
+    "zh_cn_default": "加里奥 回城收尾停止",
+    "zh_cn_main": "回城收尾停止",
+    "notes": "批次6a：Stop 壳动词经 display 无损性判据（DISPLAY_DROP_SHELL_VERBS）在文案尾附「停止」；skinless + 尾段相位词 winddown（收尾）组合形态锁定。"
   }
 ]
