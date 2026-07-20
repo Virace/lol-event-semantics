@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from .decomposition_model import EventDecompositionRecord, SemanticProfile
+from .display_labels import get_reference_item_names
 from .display_tier import classify_display_tier
 from .normalized_translation_builder import (
     LABEL_SOURCE_REFERENCE,
@@ -125,7 +126,67 @@ def entity_key(record: EventDecompositionRecord) -> dict[str, str]:
         kind = record.owner.kind if record.owner.kind != "unknown" else record.scope
         alias = record.owner.alias or record.owner.raw_owner_token or record.scope or "unknown"
 
+    if kind == "map_or_system":
+        item = item_entity_from_alias(alias)
+        if item is not None:
+            return item
+
     return {"kind": sanitize_entity_kind(kind), "alias": sanitize_entity_alias(alias)}
+
+
+ITEM_ALIAS_PATTERN = re.compile(r"^(\d+)(?:\D.*)?$")
+
+
+def item_entity_from_alias(alias: str, known_item_ids: Iterable[int] | None = None) -> dict[str, str] | None:
+    """把 map/系统域的数字（或数字+状态尾缀）别名解析为装备实体。
+
+    装备以数字 id 为规范身份；尾缀（Shield/Buff/Active 等）是装备效果的
+    状态语义，不进实体身份，原始别名保留在 raw_alias（信息无损）。仅当
+    数字部分能在 reference 装备表中查到时才归入装备域（宁缺毋错），表外
+    数字维持原实体分类。
+
+    Args:
+        alias: map/系统域实体别名。
+        known_item_ids: 可注入的已知装备 id 集合；缺省读取进程内缓存的
+            reference 装备名索引。
+
+    Returns:
+        装备实体键；不是装备别名时返回 None。
+    """
+
+    match = ITEM_ALIAS_PATTERN.match(alias)
+    if match is None:
+        return None
+
+    item_id = int(match.group(1))
+    ids = known_item_ids if known_item_ids is not None else get_reference_item_names()
+    if item_id not in ids:
+        return None
+
+    entity = {"kind": "item", "alias": str(item_id)}
+    if alias != str(item_id):
+        entity["raw_alias"] = alias
+
+    return entity
+
+
+def item_entity_label(alias: str) -> str | None:
+    """把装备别名渲染成 reference 装备名（zh 优先，en 兜底）。
+
+    Args:
+        alias: map/系统域实体别名。
+
+    Returns:
+        装备名；别名不是可认领装备时返回 None。
+    """
+
+    names = get_reference_item_names()
+    entity = item_entity_from_alias(alias, names)
+    if entity is None:
+        return None
+
+    labels = names[int(entity["alias"])]
+    return labels.get("zh_CN") or labels.get("en_US")
 
 
 def resolved_entity_subject(record: EventDecompositionRecord) -> tuple[str, str] | None:
@@ -360,9 +421,10 @@ def build_debug_label(record: EventDecompositionRecord) -> str:
 def display_owner(record: EventDecompositionRecord) -> str:
     """返回适合展示的 owner 名称。
 
-    map/系统域记录没有具体 subject 时，优先用 T3.4 头部词条表把 owner
-    英文 alias（Announcer/Env/Cherry 等）渲染成人工核对的中文名；表外
-    别名保留英文，不新造翻译。
+    map/系统域记录没有具体 subject 时：可认领的装备别名（数字 id，含
+    状态尾缀形态）渲染成 reference 装备名；其余优先用 T3.4 头部词条表把
+    owner 英文 alias（Announcer/Env/Cherry 等）渲染成人工核对的中文名；
+    表外别名保留英文，不新造翻译。
 
     Args:
         record: 拆解记录。
@@ -378,6 +440,10 @@ def display_owner(record: EventDecompositionRecord) -> str:
     alias = record.owner.alias or record.owner.raw_owner_token or "未知实体"
 
     if record.owner.kind == "map_or_system":
+        item_label = item_entity_label(alias)
+        if item_label is not None:
+            return item_label
+
         label = map_system_entity_label(alias)
         if label is not None:
             return label

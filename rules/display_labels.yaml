@@ -360,3 +360,109 @@ announcer:
     Blue: 蓝方
     Red: 红方
     Purple: 紫方
+
+augments:
+  # Arena/ARAM 增益与斗魂竞技场道具 Code 的官方双语名。key 为事件 cue 中
+  # ARAM/Augment/Item 标记之后的 Code 段（大小写按事件名原样）；value 为
+  # 客户端字符串表命名 key 中英同键对照（zh/en 同 hash 成对取值，来源
+  # dist/sources/stringtable + rst-hashes 字典）。命名 key 优先序：
+  # cherry_{code}_name → cherry_augment_{code}_name → kiwi_aram_{code}_name →
+  # aram_augment_{code}_name → cherry_aram_{code}_name → kiwi_{code}_name
+  # （code 全小写；kiwi_{code}_name 为实测补充——ARAM 新增益（kiwi 内部
+  # 代号）的命名 key 不带 aram 段，Goldrend/Fetch/FinalForm 等仅此键有名）。
+  # 宁缺毋错：字符串表查不到官方名的 Code 不入表，对应事件不建 frame、
+  # 维持 legacy 展示；扩词条改这里、不改代码。
+  AndMyAxe: {zh_CN: 还有我的斧头！, en_US: "And My Axe!"}
+  BabyKitty: {zh_CN: 小猫咪找妈妈, en_US: I'm a Baby Kitty Where is Mama}
+  BannerOfCommand: {zh_CN: 号令之旗, en_US: Banner of Command}
+  BigBrain: {zh_CN: 超强大脑, en_US: Big Brain}
+  BiggestSnowballEver: {zh_CN: 史上最大雪球, en_US: Biggest Snowball Ever}
+  BladeWaltz: {zh_CN: 利刃华尔兹, en_US: Blade Waltz}
+  BloodBrother: {zh_CN: 血亲兄弟, en_US: Blood Brother}
+  BravestOfTheBrave: {zh_CN: 勇中最勇, en_US: Bravest of the Brave}
+  BulletHeaven: {zh_CN: 弹幕天堂, en_US: Bullet Heaven}
+  CantTouchThis: {zh_CN: 你摸不到, en_US: Can't Touch This}
+  Castle: {zh_CN: 王车易位, en_US: Castle}
+  CenterOfTheUniverse: {zh_CN: 星原之准, en_US: Center of the Universe}
+  Cerberus: {zh_CN: 地狱三头犬, en_US: Cerberus}
+  ChainLightning: {zh_CN: 连锁闪电, en_US: Chain Lightning}
+  Clothesline: {zh_CN: 晾衣绳, en_US: Clothesline}
+  ClownCollege: {zh_CN: 小丑学院, en_US: Clown College}
+  ComboMaster: {zh_CN: 连招大师, en_US: Combo Master}
+  CourageOfTheColossus: {zh_CN: 巨像的勇气, en_US: Courage of the Colossus}
+  Cruelty: {zh_CN: 残忍, en_US: Cruelty}
+  DawnbringersResolve: {zh_CN: 黎明使者的坚决, en_US: Dawnbringer's Resolve}
+  DefensiveManeuvers: {zh_CN: 防御计略, en_US: Defensive Maneuvers}
+  DieAnotherDay: {zh_CN: 择日赴死, en_US: Die Another Day}
+  DiveBomber: {zh_CN: 俯冲轰炸, en_US: Dive Bomber}
+  DivineIntervention: {zh_CN: 神圣干预, en_US: Divine Intervention}
+  DontChase: {zh_CN: 请勿追击, en_US: Don't Chase}
+  DrawYourSword: {zh_CN: 亮出你的剑, en_US: Draw Your Sword}
+  Earthwake: {zh_CN: 大地苏醒, en_US: Earthwake}
+  EmpyreanPromise: {zh_CN: 至高天诺言, en_US: Empyrean Promise}
+  EscapePlan: {zh_CN: 逃跑计划, en_US: Escape Plan}
+  Evocation: {zh_CN: 活力焕发, en_US: Evocation}
+  ExtendoArm: {zh_CN: 弹簧飞爪, en_US: Extendo-Arm}
+  FallenAegis: {zh_CN: 堕落圣盾, en_US: Fallen Aegis}
+  FanTheHammer: {zh_CN: 连拨击锤, en_US: Fan the Hammer}
+  Fetch: {zh_CN: 血上加伤, en_US: Fetch}
+  FeyMagic: {zh_CN: 精怪魔法, en_US: Fey Magic}
+  FinalForm: {zh_CN: 最终形态, en_US: Final Form}
+  FireFox: {zh_CN: 火狐, en_US: Firefox}
+  Flashbang: {zh_CN: 闪光弹, en_US: Flashbang}
+  FromBeginningToEnd: {zh_CN: 有始有终, en_US: From Beginning to End}
+  FrostWraith: {zh_CN: 冰霜 幽灵, en_US: Frost Wraith}
+  FrozenFoundations: {zh_CN: 冰封地基, en_US: Frozen Foundations}
+  FruitsOfYourLabor: {zh_CN: 你的劳动果实, en_US: Fruits of Your Labor}
+  GetExcited: {zh_CN: 罪恶快感, en_US: "Get Excited!"}
+  Goldrend: {zh_CN: 夺金, en_US: Goldrend}
+  HatTrick: {zh_CN: 帽子戏法, en_US: Hat Trick}
+  HoldVeryStill: {zh_CN: 纹丝不动, en_US: Hold Very Still}
+  Impassable: {zh_CN: 不动如山, en_US: Impassable}
+  KingMe: {zh_CN: 尊我为王, en_US: King Me}
+  LaserEyes: {zh_CN: 镭射眼, en_US: Laser Eyes}
+  LaserHeal: {zh_CN: 激光治疗, en_US: Laser Heal}
+  LightEmUp: {zh_CN: 点亮他们！, en_US: "Light 'em Up!"}
+  LightWarden: {zh_CN: 光明守望者, en_US: Light Warden}
+  LightningRod: {zh_CN: 闪电杖, en_US: Lightning Rod}
+  MadScientist: {zh_CN: 科学狂人, en_US: Mad Scientist}
+  MagicMissile: {zh_CN: 魔法飞弹, en_US: Magic Missile}
+  MidnightExpress: {zh_CN: 午夜快递, en_US: Midnight Express}
+  MirrorImage: {zh_CN: 镜花水月, en_US: Mirror Image}
+  NestingDoll: {zh_CN: 套娃, en_US: Nesting Doll}
+  Nightstalking: {zh_CN: 夜狩, en_US: Nightstalking}
+  Oathsworn: {zh_CN: 誓约者, en_US: Oathsworn}
+  OkBoomerang: {zh_CN: 回力OK镖, en_US: OK Boomerang}
+  OminousPact: {zh_CN: 不祥契约, en_US: Ominous Pact}
+  OmniSoul: {zh_CN: 全能龙魂, en_US: Omni Soul}
+  OrbitalLaser: {zh_CN: 轨道镭射, en_US: Orbital Laser}
+  PandorasBox: {zh_CN: 潘朵拉的盒子, en_US: Pandora's Box}
+  QuantumComputing: {zh_CN: 量子计算, en_US: Quantum Computing}
+  RaidBoss: {zh_CN: 副本BOSS, en_US: Raid Boss}
+  Repulsor: {zh_CN: 退敌力场, en_US: Repulsor}
+  Restart: {zh_CN: 重启, en_US: Restart}
+  SelfDestruct: {zh_CN: 自我毁灭, en_US: Self Destruct}
+  ServeBeyondDeath: {zh_CN: 超越死亡的效劳, en_US: Serve Beyond Death}
+  ShrinkRay: {zh_CN: 缩小射线, en_US: Shrink Ray}
+  SkilledSniper: {zh_CN: 老练狙神, en_US: Skilled Sniper}
+  SlimeTime: {zh_CN: 史莱姆时间, en_US: Slime Time}
+  SnowballRoulette: {zh_CN: 雪球扭蛋机, en_US: Snowball Roulette}
+  SnowballUpgrade: {zh_CN: 升级：雪球, en_US: Snowball Upgrade}
+  SonicBoom: {zh_CN: 天音爆, en_US: Sonic Boom}
+  Spellwake: {zh_CN: 法术苏醒, en_US: Spellwake}
+  SpiritInfusion: {zh_CN: 灵之灌注, en_US: Spirit Infusion}
+  SummonersRoulette: {zh_CN: 召唤师峡谷的轮盘, en_US: Summoner's Roulette}
+  SwiftAndSafe: {zh_CN: 快中求稳, en_US: Swift and Safe}
+  SymphonyOfWar: {zh_CN: 战争交响乐, en_US: Symphony of War}
+  Trailblazer: {zh_CN: 引路者, en_US: Trailblazer}
+  TricksterDemon: {zh_CN: 诡术恶魔, en_US: Trickster Demon}
+  TrueshotProdigy: {zh_CN: 精准奇才, en_US: Trueshot Prodigy}
+  Typhoon: {zh_CN: 台风, en_US: Typhoon}
+  UltimateAwakening: {zh_CN: 终极唤醒, en_US: Ultimate Awakening}
+  UltimateRevolution: {zh_CN: 终极刷新, en_US: Ultimate Revolution}
+  UltimateUnstoppable: {zh_CN: 终极不可阻挡, en_US: Ultimate Unstoppable}
+  Vanish: {zh_CN: 遁入暗影, en_US: Vanish}
+  Vengeance: {zh_CN: 复仇, en_US: Vengeance}
+  WarmupRoutine: {zh_CN: 热身动作, en_US: Warmup Routine}
+  WellBeRightBack: {zh_CN: 我们马上就回来, en_US: We'll Be Right Back}
+  WillingSacrifice: {zh_CN: 自愿牺牲, en_US: Willing Sacrifice}

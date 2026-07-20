@@ -378,6 +378,48 @@ class NormalizedTranslationBuilderOwnerSkinTokenTests(unittest.TestCase):
         self.assertEqual(args["skin"]["token"], "Skin04")
 
 
+class SpellSfxNoPhaseTests(unittest.TestCase):
+    """验证无相位 spell sfx 的相位合成（复用 media_base 尾段词表与 overall 先例）。"""
+
+    def test_no_phase_sfx_builds_overall_phase(self) -> None:
+        """有技能键无相位的 sfx 记录合成 key=overall 整段相位进入 ability_cast_event。"""
+
+        record = enriched_record("Play_sfx_PykeSkin01_PykeR_hitlocation")
+        translation = build_translation(record, TranslationBuildContext())
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        self.assertEqual(translation["frame_type"], "ability_cast_event")
+        args = translation["arguments"]
+        self.assertEqual(args["ability_slot"]["value"], "r")
+        self.assertEqual(args["phase"]["key"], "overall")
+        self.assertIsNone(args["phase"].get("token"))
+
+    def test_tail_phase_word_reuses_media_base_vocabulary(self) -> None:
+        """cue 尾段命中 media_base 尾段相位词表（loop 等）时用该相位而非 overall。"""
+
+        record = enriched_record("Play_sfx_LuxSkin01_LuxE_loop")
+        translation = build_translation(record, TranslationBuildContext())
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        self.assertEqual(translation["frame_type"], "ability_cast_event")
+        args = translation["arguments"]
+        self.assertEqual(args["phase"]["key"], "loop")
+        self.assertEqual(args["phase"]["token"], "loop")
+
+    def test_vo_spell_without_phase_stays_legacy(self) -> None:
+        """vo 无相位形态（voProcessing 开关等）不做合成，维持 legacy 不建 frame。"""
+
+        record = enriched_record("Play_vo_AkaliSkin14_AkaliW_voProcessing_OFF")
+        self.assertIsNone(build_translation(record, TranslationBuildContext()))
+
+    def test_out_of_vocab_phase_stays_legacy(self) -> None:
+        """词表外相位（missile_cast 等）有明确时机但措辞未核验，不合成整段相位。"""
+
+        record = enriched_record("Play_sfx_AurelionSolSkin01_AurelionSolQ_missilecast")
+        self.assertEqual(record.semantic_slots.get("phase"), "missile_cast")
+        self.assertIsNone(build_translation(record, TranslationBuildContext()))
+
+
 class NormalizedTranslationBuilderAbilityCastTests(unittest.TestCase):
     """验证 ability_cast_event frame。"""
 

@@ -209,6 +209,13 @@ TECHNICAL_CHAMPION_LABEL_MARKERS = ("3D", "2D", "_", "Play")
 # （decomposition_profiles.parse_terminal_dimension_action：仅整词尾，避免误伤
 # 词中/词首的 3D）；无词尾维度的小写形态（Base_death）原样通过。
 MEDIA_BASE_ACTION_DIMENSION_PATTERN = re.compile(r"(?P<action>[A-Za-z]+)(?P<dimension>[23]D)", re.IGNORECASE)
+# Arena/ARAM 增益系事件：reference_entity.kind 三家族与 cue 家族标记段双条件
+# 分派（防未来单边漂移）。cue_path 首段标记之后一段是增益/道具 Code；标记
+# 同时归一出 provenance 的对象类别（Item→道具，ARAM/Augment→增益）。
+MODE_AUGMENT_REFERENCE_KINDS = frozenset({"augment_system", "game_mode", "item_system"})
+MODE_AUGMENT_CUE_MARKERS = {"aram": "augment", "augment": "augment", "item": "item"}
+# 系统/道具域标记不是模式名，模式前缀候选跳过不查 T3.4 词条表。
+MODE_AUGMENT_NON_MODE_MARKERS = frozenset({"augment", "item"})
 
 
 def build_translation(
@@ -313,6 +320,12 @@ def build_translation_frame(
     ability_cast = build_ability_cast_event(record, context)
     if ability_cast is not None:
         return ability_cast
+
+    # 增益系分派必须在 ability builder 之后：借用英雄技能的增益记录
+    # （Oathsworn_KalistaRMis 等）由 ability frame 承接，不被增益 frame 抢占。
+    mode_augment = build_mode_augment_event(record, context)
+    if mode_augment is not None:
+        return mode_augment
 
     return build_self_action_voice_event(record, context)
 
@@ -2449,6 +2462,11 @@ def build_ability_cast_event(
     slot = ability_slot_argument(slots.get("spell_key") or slots.get("spell_key_hint"))
     phase = phase_argument(slots.get("phase") or phase_from_cue_path(slots), "ability_cast_event")
 
+    # 仅真无相位（slots.phase 为空）时合成；词表外相位（missile_cast/stun 等）
+    # 有明确时机但措辞未核验，标「整段音效」语义失准，维持 legacy 待考证。
+    if phase is None and slots.get("phase") is None:
+        phase = sfx_spell_phase_argument(record)
+
     if slot is None or phase is None:
         return None
 
@@ -2462,6 +2480,161 @@ def build_ability_cast_event(
             phase,
         ],
     )
+
+
+def build_mode_augment_event(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+    *,
+    labels: DisplayLabels | None = None,
+) -> dict[str, object] | None:
+    """构建 Arena/ARAM 增益系事件 frame。
+
+    门禁：slots.reference_entity.kind 属增益系三家族
+    （augment_system/game_mode/item_system），且 cue_path 为
+    ``[家族标记, Code, …]`` 形态（ARAM/Augment/Item 标记之后一段是
+    增益/道具 Code）。augment 角色取外置词表（display_labels.augments）
+    的客户端官方双语名，词表外 Code 不建 frame 维持 legacy——宁缺毋错，
+    严禁英文 fallback 进文案。mode 角色把 owner/cue 的模式标记经 T3.4
+    头部词条表解析为中文（Cherry→斗魂竞技场），表外标记合法缺席。相位
+    依次取既有 phase 映射、无相位 sfx 合成（cue 尾段相位词或整段音效）；
+    词表外相位（missile_cast/buff_cast 等）有明确时机但措辞未核验，维持
+    legacy 待考证。借用英雄技能的同域记录已由 ability builder 先接走，
+    本 builder 不回收。
+
+    Args:
+        record: 拆解记录。
+        context: translation 构建上下文。
+        labels: 展示词表；为 None 时使用进程内缓存的默认词表（供测试注入替代词表）。
+
+    Returns:
+        mode_augment_event frame；不满足门禁、词表外 Code 或相位不可承接时
+        返回 None。
+    """
+
+    del context  # 增益系事件无 champion/skin 主体，不消费构建上下文。
+    slots = record.semantic_slots
+    reference_entity = slots.get("reference_entity")
+    kind = reference_entity.get("kind") if isinstance(reference_entity, dict) else None
+    if kind not in MODE_AUGMENT_REFERENCE_KINDS:
+        return None
+
+    cue = mode_augment_cue(slots)
+    if cue is None:
+        return None
+    marker, code = cue
+
+    active_labels = labels if labels is not None else get_display_labels()
+    words = active_labels.augments.get(code)
+    if words is None:
+        return None
+
+    phase = phase_argument(slots.get("phase"), "mode_augment_event", labels=labels)
+    if phase is None:
+        if slots.get("phase") is not None:
+            return None
+        phase = sfx_spell_phase_argument(record, frame_type="mode_augment_event", labels=labels)
+        if phase is None:
+            return None
+
+    zh, en = words
+    augment = argument_to_dict(
+        TranslationArgument(
+            role="augment",
+            labels={"zh_CN": zh, "en_US": en},
+            confidence="high",
+            provenance={
+                "source": "display_labels.augments",
+                "reference_kind": MODE_AUGMENT_CUE_MARKERS[marker.lower()],
+                "code": code,
+            },
+            key=code,
+            token=code,
+        )
+    )
+    return build_frame(
+        record,
+        "mode_augment_event",
+        [
+            mode_augment_mode_argument(record),
+            augment,
+            phase,
+        ],
+    )
+
+
+def mode_augment_cue(slots: Mapping[str, Any]) -> tuple[str, str] | None:
+    """取增益系 cue_path 的家族标记段与其后的增益/道具 Code 段。
+
+    Args:
+        slots: 拆解记录 semantic slots。
+
+    Returns:
+        ``(家族标记, Code)``；cue_path 缺失、首段不是 ARAM/Augment/Item
+        标记或其后无 Code 段时返回 None。Code 之后的尾段（相位/子组件）
+        无损留在 slots，由相位解析与 legacy 展示各自消费。
+    """
+
+    cue_path = slots.get("cue_path")
+    if not isinstance(cue_path, list) or len(cue_path) < 2:
+        return None
+
+    marker = cue_path[0]
+    if not isinstance(marker, str) or marker.lower() not in MODE_AUGMENT_CUE_MARKERS:
+        return None
+
+    code = cue_path[1]
+    if not isinstance(code, str) or not code:
+        return None
+
+    return marker, code
+
+
+def mode_augment_mode_argument(record: EventDecompositionRecord) -> dict[str, object] | None:
+    """构建增益系事件的模式前缀 argument（T3.4 头部词条表）。
+
+    候选依次为 owner alias 与 cue 首段家族标记；Augment/Item 是系统/道具
+    域标记而非模式名，跳过不查。表外标记（ARAM 暂无 T3.4 词条）不出
+    argument，模式合法缺席，模式信息无损留在 owner/cue_path——宁可缺席，
+    不硬造中文模式名。
+
+    Args:
+        record: 拆解记录。
+
+    Returns:
+        mode 参数；候选均不在词条表内时返回 None。
+    """
+
+    # map_system_entity_label 定义在 normalized_output（该模块反向依赖本
+    # builder），函数内导入避免模块级循环依赖。
+    from .normalized_output import map_system_entity_label
+
+    cue_path = record.semantic_slots.get("cue_path")
+    cue_head = cue_path[0] if isinstance(cue_path, list) and cue_path else None
+    for candidate in (record.owner.alias, cue_head):
+        if not isinstance(candidate, str) or not candidate:
+            continue
+        if candidate.lower() in MODE_AUGMENT_NON_MODE_MARKERS:
+            continue
+
+        zh = map_system_entity_label(candidate)
+        if zh is None:
+            continue
+
+        source = "owner.alias" if candidate == record.owner.alias else "semantic_slots.cue_path"
+        return argument_to_dict(
+            TranslationArgument(
+                role="mode",
+                labels={"zh_CN": zh, "en_US": candidate},
+                confidence="high",
+                provenance={"source": source},
+                key=candidate,
+                token=candidate,
+                omit_when_context_known=("mode",),
+            )
+        )
+
+    return None
 
 
 def build_frame(
@@ -3158,6 +3331,59 @@ def phase_from_cue_path(slots: dict[str, object]) -> str | None:
             return normalized
 
     return None
+
+
+def sfx_spell_phase_argument(
+    record: EventDecompositionRecord,
+    *,
+    frame_type: str = "ability_cast_event",
+    labels: DisplayLabels | None = None,
+) -> dict[str, object] | None:
+    """为无相位的 sfx 记录合成相位 argument。
+
+    与 media_base 无相位承接同一先例：cue 尾段命中 MEDIA_BASE_TAIL_PHASES
+    （引入/引出/起手/收尾/循环）时用该相位词；无可用尾段时合成 key=overall
+    的整段音效相位（不硬造具体时机）。仅对 asset_kind=sfx 生效——vo 无相位
+    形态（voProcessing 开关等）语义未证实，维持 legacy 不建 frame。
+
+    Args:
+        record: 拆解记录。
+        frame_type: 调用方 frame 类型，仅记入 provenance。
+        labels: 展示词表；为 None 时使用进程内缓存的默认词表（供测试注入替代词表）。
+
+    Returns:
+        相位 argument；非 sfx 记录返回 None。
+    """
+
+    if record.shell.asset_kind != "sfx":
+        return None
+
+    cue_path = record.semantic_slots.get("cue_path")
+    tail = cue_path[-1] if isinstance(cue_path, list) and cue_path else None
+
+    if isinstance(tail, str) and tail.lower() in MEDIA_BASE_TAIL_PHASES:
+        key = tail.lower()
+        token: str | None = tail
+    else:
+        key = "overall"
+        token = None
+
+    active_labels = labels if labels is not None else get_display_labels()
+    zh_label, en_label = active_labels.phase.get(key, (key, key))
+    return argument_to_dict(
+        TranslationArgument(
+            role="phase",
+            labels={"zh_CN": zh_label, "en_US": en_label},
+            confidence="high",
+            provenance={
+                "source": "semantic_slots.cue_path",
+                "frame_type": frame_type,
+                "synthesized": "sfx_no_phase",
+            },
+            key=key,
+            token=token,
+        )
+    )
 
 
 def locale_labels(values: Any, fallback: str) -> dict[str, str]:

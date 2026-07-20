@@ -30,11 +30,46 @@ from lol_event_semantics.normalized_output import (
     build_normalized_record,
     build_short_display,
     champion_by_alias_affix,
+    item_entity_from_alias,
     load_champion_entity_resolver,
     load_entity_attribution_overrides,
     playback_verb_suffix,
     resolve_champion_entity,
 )
+
+
+class ItemEntityResolutionTests(unittest.TestCase):
+    """验证 map/系统域数字别名到装备实体的解析（注入 id 集合的纯逻辑）。"""
+
+    KNOWN_ITEM_IDS = frozenset({1035, 2065, 3040})
+
+    def test_pure_numeric_alias_resolves_to_item(self) -> None:
+        """纯数字别名命中装备表时归入 item 实体，无需 raw_alias。"""
+
+        entity = item_entity_from_alias("1035", self.KNOWN_ITEM_IDS)
+        self.assertEqual(entity, {"kind": "item", "alias": "1035"})
+
+    def test_state_suffix_folds_into_same_item_with_raw_alias(self) -> None:
+        """数字+状态尾缀折叠进同一装备实体，原始别名无损保留在 raw_alias。"""
+
+        for alias, item_alias in [
+            ("3040Shield", "3040"),
+            ("2065Active", "2065"),
+            ("2065MoveSpeed", "2065"),
+        ]:
+            with self.subTest(alias=alias):
+                entity = item_entity_from_alias(alias, self.KNOWN_ITEM_IDS)
+                self.assertEqual(
+                    entity,
+                    {"kind": "item", "alias": item_alias, "raw_alias": alias},
+                )
+
+    def test_unclaimed_or_non_numeric_aliases_stay_out(self) -> None:
+        """表外数字与非数字别名不归装备域（宁缺毋错，维持既有实体分类）。"""
+
+        for alias in ("9999", "578", "Announcer", "Env", "missile1"):
+            with self.subTest(alias=alias):
+                self.assertIsNone(item_entity_from_alias(alias, self.KNOWN_ITEM_IDS))
 
 
 class NormalizedOutputTests(unittest.TestCase):
@@ -1110,7 +1145,8 @@ class DisplayTierTests(unittest.TestCase):
 
         cases = [
             "Mute_sfx_AkshanSkin01_AkshanWRevive_buffcast",  # spell sfx
-            "Play_sfx_Cherry_Augment_BannerOfCommand_buffactivate",  # augment_system sfx
+            # augment_system sfx（Ceremony 组段不是增益 Code，词表外不建 frame）
+            "Play_sfx_Cherry_Augment_Ceremony_MadScientist_buffactivate",
         ]
 
         for raw in cases:

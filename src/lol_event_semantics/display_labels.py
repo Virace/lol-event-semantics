@@ -49,6 +49,9 @@ class DisplayLabels:
         shop_subject: 商店老板对象 token（装备/条件）到中文词条的映射
             （批次6d，宁缺毋错，表外对象不建 frame；英雄/皮肤/地区阵营
             走各自解析链不入此表）。
+        augments: Arena/ARAM 增益与斗魂竞技场道具 Code 到 ``(zh_CN, en_US)``
+            官方名的映射（客户端字符串表命名 key 中英同键对照；宁缺毋错，
+            表外 Code 不建 frame）。
     """
 
     phase: Mapping[str, tuple[str, str]] = field(default_factory=dict)
@@ -63,6 +66,7 @@ class DisplayLabels:
     announcer_mode: Mapping[str, str] = field(default_factory=dict)
     shop_action: Mapping[str, tuple[str, str]] = field(default_factory=dict)
     shop_subject: Mapping[str, str] = field(default_factory=dict)
+    augments: Mapping[str, tuple[str, str]] = field(default_factory=dict)
 
 
 def parse_display_labels(data: Mapping[str, Any]) -> DisplayLabels:
@@ -93,6 +97,7 @@ def parse_display_labels(data: Mapping[str, Any]) -> DisplayLabels:
         announcer_mode=_parse_scalar_section(announcer.get("mode")),
         shop_action=_parse_pair_section(shop.get("action")),
         shop_subject=_parse_scalar_section(shop.get("subject")),
+        augments=_parse_pair_section(data.get("augments")),
     )
 
 
@@ -225,7 +230,12 @@ def load_reference_map_names(reference_root: Path | str = DEFAULT_REFERENCE_ROOT
         地图不出现在返回结果中。
     """
 
-    collection = load_reference_collection(reference_root)
+    return map_names_from_collection(load_reference_collection(reference_root))
+
+
+def map_names_from_collection(collection: Any) -> dict[int, str]:
+    """从 reference 合集提取地图 id → 英文真名索引。"""
+
     names: dict[int, str] = {}
     for row in collection.maps.values():
         entity = row.get("entity")
@@ -236,28 +246,84 @@ def load_reference_map_names(reference_root: Path | str = DEFAULT_REFERENCE_ROOT
         if not isinstance(map_id, int):
             continue
 
-        value = _first_en_name(entity)
+        value = _first_name(entity, "en_US")
         if value is not None:
             names[map_id] = value
 
     return names
 
 
-def _first_en_name(entity: Mapping[str, Any]) -> str | None:
-    """读取 reference entity 的 ``names.en_US`` 首个 value。
+def load_reference_item_names(reference_root: Path | str = DEFAULT_REFERENCE_ROOT) -> dict[int, dict[str, str]]:
+    """读取 ``reference/items`` 的装备名，按 ``entity.id`` 建双语索引。
 
     Args:
-        entity: reference 地图实体字典。
+        reference_root: 仓库内部 reference 合集根目录。
 
     Returns:
-        首个英文真名；无该语言词条时返回 ``None``。
+        装备 id 到 ``{language: 首个名称 value}`` 的映射；无任何语言词条的
+        装备不出现在返回结果中。
+    """
+
+    return item_names_from_collection(load_reference_collection(reference_root))
+
+
+def item_names_from_collection(collection: Any) -> dict[int, dict[str, str]]:
+    """从 reference 合集提取装备 id → 双语名称索引。"""
+
+    names: dict[int, dict[str, str]] = {}
+    for row in collection.items.values():
+        entity = row.get("entity")
+        if not isinstance(entity, dict):
+            continue
+
+        item_id = entity.get("id")
+        if not isinstance(item_id, int):
+            continue
+
+        labels = {
+            language: value
+            for language in ("zh_CN", "en_US")
+            if (value := _first_name(entity, language)) is not None
+        }
+        if labels:
+            names[item_id] = labels
+
+    return names
+
+
+@lru_cache(maxsize=1)
+def get_reference_item_names() -> dict[int, dict[str, str]]:
+    """返回进程内缓存的默认装备双语名索引。
+
+    与地图真名索引共享同一次默认合集加载，避免重复解析全量 reference。
+    """
+
+    return item_names_from_collection(_default_reference_collection())
+
+
+@lru_cache(maxsize=1)
+def _default_reference_collection() -> Any:
+    """进程内缓存的默认 reference 合集（供展示索引共用，只读约定）。"""
+
+    return load_reference_collection(DEFAULT_REFERENCE_ROOT)
+
+
+def _first_name(entity: Mapping[str, Any], language: str) -> str | None:
+    """读取 reference entity 指定语言 names 的首个 value。
+
+    Args:
+        entity: reference 实体字典。
+        language: 语言键。
+
+    Returns:
+        首个名称 value；无该语言词条时返回 ``None``。
     """
 
     names = entity.get("names")
     if not isinstance(names, Mapping):
         return None
 
-    rows = names.get("en_US")
+    rows = names.get(language)
     if not isinstance(rows, list):
         return None
 
@@ -272,8 +338,7 @@ def _first_en_name(entity: Mapping[str, Any]) -> str | None:
 def get_reference_map_names() -> dict[int, str]:
     """返回进程内缓存的 reference 地图英文真名索引。
 
-    Returns:
-        地图 id 到英文真名的映射；同一进程内只读一次 reference 目录。
+    与装备名索引共享同一次默认合集加载；同一进程内只读一次 reference 目录。
     """
 
-    return load_reference_map_names(DEFAULT_REFERENCE_ROOT)
+    return map_names_from_collection(_default_reference_collection())

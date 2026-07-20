@@ -15,6 +15,7 @@ from pathlib import Path
 from lol_event_semantics.display_labels import (
     DEFAULT_DISPLAY_LABELS_PATH,
     get_display_labels,
+    get_reference_item_names,
     get_reference_map_names,
     load_display_labels,
 )
@@ -171,6 +172,29 @@ class ReferenceMapNamesTests(unittest.TestCase):
 
         first = get_reference_map_names()
         second = get_reference_map_names()
+        self.assertIs(first, second)
+
+
+class ReferenceItemNamesTests(unittest.TestCase):
+    """验证 reference/items 装备双语名索引（按 entity.id 建索引）。"""
+
+    def test_reference_item_names_build_id_index(self) -> None:
+        """真实 reference/items 应产出非空的 int id → 双语非空名索引（不锁定具体装备名）。"""
+
+        names = get_reference_item_names()
+        self.assertTrue(names)
+        for item_id, labels in names.items():
+            self.assertIsInstance(item_id, int)
+            self.assertTrue(labels)
+            self.assertLessEqual(set(labels), {"zh_CN", "en_US"})
+            for value in labels.values():
+                self.assertTrue(value)
+
+    def test_get_reference_item_names_is_cached_singleton(self) -> None:
+        """装备名索引应进程内缓存，并与地图索引共享同一次合集加载。"""
+
+        first = get_reference_item_names()
+        second = get_reference_item_names()
         self.assertIs(first, second)
 
 
