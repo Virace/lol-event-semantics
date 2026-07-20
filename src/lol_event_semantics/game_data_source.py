@@ -32,7 +32,7 @@ def download_game_data_snapshot_subset(
     base_url: str = GAME_DATA_SNAPSHOT_BASE_URL,
     fetcher: Fetcher | None = None,
 ) -> None:
-    """按需下载 GAME data 的 champion summary、地图、皮肤系列和英雄详情。"""
+    """按需下载 GAME data 的 champion summary、地图、皮肤系列、装备和英雄详情。"""
 
     fetch = fetcher or fetch_bytes
     base = base_url.rstrip("/")
@@ -50,9 +50,11 @@ def download_game_data_snapshot_subset(
         summary = read_json_bytes(fetch(f"{remote_base}/champion-summary.json"))
         maps = read_json_bytes(fetch(f"{remote_base}/maps.json"))
         skinlines = read_json_bytes(fetch(f"{remote_base}/skinlines.json"))
+        items = read_json_bytes(fetch(f"{remote_base}/items.json"))
         write_json_bytes(local_base / "champion-summary.json", summary)
         write_json_bytes(local_base / "maps.json", maps)
         write_json_bytes(local_base / "skinlines.json", skinlines)
+        write_json_bytes(local_base / "items.json", items)
 
         for champion_id in champion_ids(summary):
             detail = read_json_bytes(fetch(f"{remote_base}/champions/{champion_id}.json"))

@@ -11,6 +11,7 @@ from typing import Any
 from .reference_collection import (
     ReferenceCollection,
     ReferenceEntityInput,
+    ReferenceItemInput,
     ReferenceMapInput,
     ReferenceSkinInput,
     ReferenceSpellInput,
@@ -101,6 +102,7 @@ def import_game_data(
 
     import_game_maps(collection, localized_maps, game_version, game_languages)
     import_game_skinlines(collection, root, game_version, game_languages)
+    import_game_items(collection, root, game_version, game_languages)
 
     for row in summary:
         if not isinstance(row, dict):
@@ -149,6 +151,41 @@ def import_game_maps(
             ReferenceMapInput(
                 id=map_id,
                 alias=alias,
+                names=names,
+                source="game_data",
+                version=game_version,
+            )
+        )
+
+
+def import_game_items(
+    collection: ReferenceCollection,
+    root: Path,
+    game_version: str,
+    languages: tuple[str, ...],
+) -> None:
+    """导入 GAME data 装备列表；旧缓存缺 items.json 时整体跳过。"""
+
+    localized_items: dict[str, dict[int, dict[str, Any]]] = {}
+    for language in languages:
+        path = game_data_base(root, language) / "items.json"
+        if path.is_file():
+            localized_items[language] = rows_by_id(read_json(path))
+
+    default_rows = localized_items.get("en_US") or {}
+    for item_id, row in sorted(default_rows.items()):
+        names: dict[str, str] = {}
+        for language in languages:
+            name = localized_items.get(language, {}).get(item_id, {}).get("name")
+            if isinstance(name, str) and name:
+                names[language] = name
+
+        if not names:
+            continue
+
+        collection.merge_item(
+            ReferenceItemInput(
+                id=item_id,
                 names=names,
                 source="game_data",
                 version=game_version,

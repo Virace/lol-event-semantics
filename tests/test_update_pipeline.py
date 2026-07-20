@@ -204,6 +204,9 @@ class UpdatePipelineTests(unittest.TestCase):
             if url.endswith("/skinlines.json"):
                 return json.dumps([{"id": 19, "name": "Star Guardian Season 1"}]).encode("utf-8")
 
+            if url.endswith("/items.json"):
+                return json.dumps([{"id": 1035, "name": "Emberknife"}]).encode("utf-8")
+
             if "/global/" in url and url.endswith("/champions/1.json"):
                 return json.dumps(
                     {

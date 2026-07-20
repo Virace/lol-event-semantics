@@ -33,7 +33,7 @@ raw/events/
 - `raw/events/`：按实体累积的 raw event name 源语料。不按版本替换，不因为新版本重做而删除旧事件。
 - `rules/`：长期维护的规则、词典、上下文别名和 residual modifier。
 - `overrides/`：人工 review 后的精确覆盖和兼容决策。
-- `reference/`：仓库维护的累计精简参考合集，包含 `champions/`、`maps/`、`skinlines/`，解释阶段只读取这里。
+- `reference/`：仓库维护的累计精简参考合集，包含 `champions/`、`maps/`、`skinlines/`、`skins/`、`items/`，解释阶段只读取这里。
 - `.temp/reference-sources/`：被忽略的版本敏感参考输入缓存，不对下游承诺稳定。
 - `dist/sources/`：`scripts/download_sources.py` 的数据源落点（字符串表 / 大厅 JSON / 皮肤 bin / RST key 字典 + 版本游标 `manifest.json`）；layout 与手工放置规范见根 README「目录契约」。
 - `dist/work/<run-id>/`：单次执行中间产物，例如 event-decomposition 和 review-site。

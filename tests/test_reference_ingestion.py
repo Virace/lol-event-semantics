@@ -50,6 +50,7 @@ class ReferenceIngestionTests(unittest.TestCase):
             map_data = (reference_root / "maps" / "SummonersRift.yaml").read_text(encoding="utf-8")
             skinline = (reference_root / "skinlines" / "Skinline19.yaml").read_text(encoding="utf-8")
             skin = (reference_root / "skins" / "Galio" / "Skin13.yaml").read_text(encoding="utf-8")
+            item = (reference_root / "items" / "1035.yaml").read_text(encoding="utf-8")
             manifest = (reference_root / "manifest.yaml").read_text(encoding="utf-8")
 
         self.assertIn("alias: Annie", champion)
@@ -64,6 +65,9 @@ class ReferenceIngestionTests(unittest.TestCase):
         self.assertIn("value: Infernal Galio", skin)
         self.assertIn("value: 地狱火 加里奥", skin)
         self.assertIn("source: data_dragon", skin)
+        self.assertIn("type: item", item)
+        self.assertIn("id: 1035", item)
+        self.assertIn("value: 灰烬小刀", item)
         self.assertIn("game_data:", manifest)
         self.assertIn("data_dragon:", manifest)
         self.assertIn("skinlines: 1", manifest)
@@ -350,6 +354,13 @@ def write_game_data_fixture(root: Path) -> None:
         )
         (base / "maps.json").write_text(
             json.dumps([{"id": 11, "name": map_name, "mapStringId": "SummonersRift"}], ensure_ascii=False),
+            encoding="utf-8",
+        )
+        (base / "items.json").write_text(
+            json.dumps(
+                [{"id": 1035, "name": "Emberknife" if locale == "default" else "灰烬小刀"}],
+                ensure_ascii=False,
+            ),
             encoding="utf-8",
         )
         (base / "skinlines.json").write_text(

@@ -37,6 +37,9 @@ class OnlineSourcesTests(unittest.TestCase):
             if url.endswith("/skinlines.json"):
                 return json.dumps([{"id": 19, "name": "Star Guardian Season 1"}]).encode("utf-8")
 
+            if url.endswith("/items.json"):
+                return json.dumps([{"id": 1035, "name": "Emberknife"}]).encode("utf-8")
+
             if "/global/" in url and url.endswith("/champions/1.json"):
                 return json.dumps({"id": 1, "alias": "Annie", "name": "Annie", "spells": []}).encode("utf-8")
 
@@ -91,7 +94,7 @@ class OnlineSourcesTests(unittest.TestCase):
             self.assertTrue((sources.data_dragon_root / "16.12.1" / "data" / "zh_CN" / "champion.json").is_file())
             self.assertTrue((sources.hero_list_root / "hero_list.json").is_file())
 
-        self.assertEqual(len(calls), 14)
+        self.assertEqual(len(calls), 16)
 
 
 if __name__ == "__main__":

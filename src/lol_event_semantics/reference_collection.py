@@ -58,6 +58,19 @@ class ReferenceMapInput:
 
 
 @dataclass(frozen=True, slots=True)
+class ReferenceItemInput:
+    """待合并的装备基础信息。
+
+    装备以数字 id 为规范身份（跨语言、跨版本稳定），不设字符串 alias。
+    """
+
+    id: int
+    names: dict[str, str]
+    source: str
+    version: str
+
+
+@dataclass(frozen=True, slots=True)
 class ReferenceSkinInput:
     """待合并的具体皮肤基础信息。"""
 
@@ -93,6 +106,7 @@ class ReferenceCollection:
     maps: dict[str, dict[str, Any]] = field(default_factory=dict)
     skinlines: dict[str, dict[str, Any]] = field(default_factory=dict)
     skins: dict[str, dict[str, Any]] = field(default_factory=dict)
+    items: dict[str, dict[str, Any]] = field(default_factory=dict)
     source_versions: dict[str, dict[str, Any]] = field(default_factory=dict)
     updated_at: str | None = None
     _dirty: bool = False
@@ -206,6 +220,32 @@ class ReferenceCollection:
         for language, value in sorted(item.names.items()):
             self._dirty = add_sourced_value(
                 map_entity["entity"].setdefault("names", {}).setdefault(language, []),
+                value,
+                item.source,
+                item.version,
+            ) or self._dirty
+
+    def merge_item(self, item: ReferenceItemInput) -> None:
+        """合并一个装备实体（以数字 id 字符串为分组键）。"""
+
+        key = str(item.id)
+        item_entity = self.items.setdefault(
+            key,
+            {
+                "schema_version": SCHEMA_VERSION,
+                "entity": {
+                    "type": "item",
+                    "id": item.id,
+                    "alias": key,
+                    "names": {},
+                },
+            },
+        )
+        self._dirty = set_if_changed(item_entity["entity"], "id", item.id) or self._dirty
+
+        for language, value in sorted(item.names.items()):
+            self._dirty = add_sourced_value(
+                item_entity["entity"].setdefault("names", {}).setdefault(language, []),
                 value,
                 item.source,
                 item.version,
@@ -356,6 +396,7 @@ class ReferenceCollection:
                 "maps": len(self.maps),
                 "skinlines": len(self.skinlines),
                 "skins": len(self.skins),
+                "items": len(self.items),
             },
         }
 
@@ -368,6 +409,7 @@ class ReferenceCollection:
         write_entity_group(self.root / "maps", self.maps)
         write_entity_group(self.root / "skinlines", self.skinlines)
         write_entity_group(self.root / "skins", self.skins)
+        write_entity_group(self.root / "items", self.items)
         self._dirty = False
 
 
@@ -386,6 +428,7 @@ def load_reference_collection(root: Path | str) -> ReferenceCollection:
     collection.maps = read_entity_group(base / "maps")
     collection.skinlines = read_entity_group(base / "skinlines")
     collection.skins = read_entity_group(base / "skins", key_from_path=True)
+    collection.items = read_entity_group(base / "items")
     return collection
 
 

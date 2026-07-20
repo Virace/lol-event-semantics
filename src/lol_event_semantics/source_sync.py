@@ -25,7 +25,7 @@ RST_HASHES_URL = (
 # reference 导入可用 file:// 指向克隆实现零网络。
 SNAPSHOT_GIT_URL = "https://github.com/Virace/lol-game-data-snapshot.git"
 SNAPSHOT_CLONE_DIRNAME = "lol-game-data-snapshot"
-LOBBY_JSON_NAMES = ("maps", "queues", "skinlines", "skins")
+LOBBY_JSON_NAMES = ("items", "maps", "queues", "skinlines", "skins")
 
 
 def champion_aliases(reference_root: Path) -> list[str]:

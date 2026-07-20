@@ -49,6 +49,12 @@ class GameDataSourceTests(unittest.TestCase):
             if url.endswith("/skinlines.json"):
                 return json.dumps([{"id": 19, "name": "Star Guardian Season 1"}]).encode("utf-8")
 
+            if url.endswith("/global/default/v1/items.json"):
+                return json.dumps([{"id": 1035, "name": "Emberknife"}]).encode("utf-8")
+
+            if url.endswith("/global/zh_CN/v1/items.json"):
+                return json.dumps([{"id": 1035, "name": "灰烬小刀"}], ensure_ascii=False).encode("utf-8")
+
             if url.endswith("/champions/1.json"):
                 return json.dumps({"id": 1, "alias": "Annie", "name": "Annie", "spells": []}).encode("utf-8")
 
@@ -66,9 +72,11 @@ class GameDataSourceTests(unittest.TestCase):
 
             self.assertTrue((root / "global" / "default" / "v1" / "champion-summary.json").is_file())
             self.assertTrue((root / "global" / "default" / "v1" / "skinlines.json").is_file())
+            self.assertTrue((root / "global" / "default" / "v1" / "items.json").is_file())
+            self.assertTrue((root / "global" / "zh_cn" / "v1" / "items.json").is_file())
             self.assertTrue((root / "global" / "zh_cn" / "v1" / "champions" / "1.json").is_file())
 
-        self.assertEqual(len(calls), 8)
+        self.assertEqual(len(calls), 10)
 
 
 if __name__ == "__main__":

@@ -9,6 +9,7 @@ from pathlib import Path
 from lol_event_semantics.reference_collection import (
     ReferenceCollection,
     ReferenceEntityInput,
+    ReferenceItemInput,
     ReferenceMapInput,
     ReferenceSkinInput,
     ReferenceSpellInput,
@@ -357,6 +358,31 @@ class ReferenceCollectionTests(unittest.TestCase):
         self.assertIn("- en_US", manifest)
         self.assertIn("main_version: '16.12'", manifest)
         self.assertFalse((root / "16.12").exists())
+
+    def test_merge_item_writes_items_group_keyed_by_id(self) -> None:
+        """装备实体以数字 id 为键写入独立 items 分组，双语名带来源区间。"""
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "reference"
+            collection = ReferenceCollection(root)
+            collection.merge_item(
+                ReferenceItemInput(
+                    id=1035,
+                    names={"en_US": "Emberknife", "zh_CN": "灰烬小刀"},
+                    source="game_data",
+                    version="16.14",
+                )
+            )
+            collection.write()
+            loaded = load_reference_collection(root)
+            item_file_exists = (root / "items" / "1035.yaml").is_file()
+
+        self.assertIn("1035", loaded.items)
+        entity = loaded.items["1035"]["entity"]
+        self.assertEqual(entity["type"], "item")
+        self.assertEqual(entity["id"], 1035)
+        self.assertEqual([row["value"] for row in entity["names"]["zh_CN"]], ["灰烬小刀"])
+        self.assertTrue(item_file_exists)
 
     def test_merge_map_writes_maps_group(self) -> None:
         """地图实体写入独立 maps 分组。"""
