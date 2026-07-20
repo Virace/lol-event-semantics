@@ -8,63 +8,95 @@ entity:
       - value: Fiora
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     zh_CN:
       - value: 菲奥娜
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
   title:
     zh_CN:
       - value: 无双剑姬
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
   nicknames:
     zh_CN:
       - value: 剑姬
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
   search_alias:
     zh_CN:
       - value: fan
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: feiaona
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: jianji
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: jj
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: wsjj
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: wushuangjianji
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
 spells:
   - slot: E
     ids:
       - value: FioraE
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -72,14 +104,22 @@ spells:
         - value: Bladework
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 夺命连刺
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -89,12 +129,16 @@ spells:
               The first attack slows the target, and the second attack will 
               critically strike.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -103,18 +147,26 @@ spells:
               sha256:6cd40d90898bf0538731f2c21c7648e77cd4929e448f035ceabca484a46156a1
             value: 菲奥娜的下两次攻击将获得攻击速度加成。第一次攻击会使目标减速，而第二次攻击必定会产生暴击。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: P
     ids:
       - value: FioraPassive
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -122,14 +174,22 @@ spells:
         - value: Duelist's Dance
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 决斗之舞
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -140,12 +200,16 @@ spells:
               she <healing>restores Health</healing> and gains <speed>Move 
               Speed</speed>.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -155,18 +219,26 @@ spells:
             value: 
               菲奥娜已在这名英雄身上发现了一处<keywordMajor>破绽</keywordMajor>。如果她命中了这处<keywordMajor>破绽</keywordMajor>，她就会<healing>回复生命值</healing>并获得<speed>移动速度</speed>。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: Q
     ids:
       - value: FioraQ
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -174,14 +246,22 @@ spells:
         - value: Lunge
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 破空斩
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -190,12 +270,16 @@ spells:
             value: Fiora lunges in a direction and stabs a nearby enemy, dealing
               physical damage and applying on-hit effects.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -204,18 +288,26 @@ spells:
               sha256:01833c40ccafde4faa5456b7d46317f92f8c3465bde1f77920c49a93622d7ac1
             value: 菲奥娜向一个方向冲刺，并刺击一个附近的敌人，造成物理伤害并施加攻击特效。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: R
     ids:
       - value: FioraR
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -223,14 +315,22 @@ spells:
         - value: Grand Challenge
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 无双挑战
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -241,12 +341,16 @@ spells:
               the target dies after she has hit at least one, Fiora and her 
               allies in the area are healed over the next few seconds.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -256,18 +360,26 @@ spells:
             value: 
               菲奥娜显示出一个敌方英雄身上的所有四处破绽，并在目标附近时获得移动速度加成。如果菲奥娜命中了所有四处破绽，或者目标在死前至少被命中了一处破绽，那么菲奥娜和范围内的友军就会在接下来的几秒里持续获得治疗效果。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: W
     ids:
       - value: FioraW
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -275,14 +387,22 @@ spells:
         - value: Riposte
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 劳伦特心眼刀
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -293,12 +413,16 @@ spells:
               champion hit, or stuns them if Fiora blocked an immobilizing 
               effect with this ability.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -308,9 +432,13 @@ spells:
             value: 
               菲奥娜在短时间内对所有即将到来的伤害和限制效果进行招架，然后朝着一个方向进行刺击。这个刺击会减速命中的第一个敌方英雄，如果菲奥娜用这个技能格挡掉一个禁锢类效果，那么刺击会造成晕眩效果而非减速效果。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'

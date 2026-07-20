@@ -8,51 +8,77 @@ entity:
       - value: Jayce
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     zh_CN:
       - value: 杰斯
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
   title:
     zh_CN:
       - value: 未来守护者
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
   search_alias:
     zh_CN:
       - value: jiesi
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: js
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: weilaishouhuzhe
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: wlshz
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
 spells:
   - slot: E
     ids:
       - value: JayceE
         sources:
           - source: game_data
+            version: '16.14'
+          - source: game_data
             version: '16.5'
       - value: JayceThunderingBlow
         sources:
+          - source: data_dragon
+            version: 16.14.1
           - source: data_dragon
             version: 16.5.1
     names:
@@ -60,14 +86,22 @@ spells:
         - value: Thundering Blow / Acceleration Gate
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 雷霆一击 / 加速之门
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -79,12 +113,16 @@ spells:
               it. If Shock Blast is fired through the gate the missile speed, range,
               and damage will increase.'
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -94,18 +132,26 @@ spells:
             value: 
               锤形态：对一个敌人造成魔法伤害，并将目标击退一小段距离。<br><br>炮形态：展开一个加速之门，所有穿过它的友军英雄都会得到移动速度加成。如果电能震荡穿过这个门发射，那么它的弹道速度和射程都会得到提高，并且伤害会提升。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: P
     ids:
       - value: JaycePassive
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -113,14 +159,22 @@ spells:
         - value: Hextech Capacitor
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 海克斯科技电容
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -129,12 +183,16 @@ spells:
             value: When Jayce swaps weapons he gains Move Speed for a short 
               duration.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -143,20 +201,28 @@ spells:
               sha256:10b7e0d48af0a23c61d1b5ce6cc98a994f1c5f334a3e23c073ca89cc7c53bd00
             value: 每当杰斯切换武器时，他会获得短暂持续的移动速度加成。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: Q
     ids:
       - value: JayceQ
         sources:
           - source: game_data
+            version: '16.14'
+          - source: game_data
             version: '16.5'
       - value: JayceToTheSkies
         sources:
+          - source: data_dragon
+            version: 16.14.1
           - source: data_dragon
             version: 16.5.1
     names:
@@ -164,14 +230,22 @@ spells:
         - value: To the Skies! / Shock Blast
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 苍穹之跃 / 电能震荡
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -182,12 +256,16 @@ spells:
               upon hitting an enemy (or reaching the end of its path) dealing physical
               damage to all enemies hit.'
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -197,20 +275,28 @@ spells:
             value: 锤形态：跳向一个敌人，对敌人造成物理伤害和减速效果。 
               <br><br>炮形态：发射一团电球，在命中一名敌人或者到达最大射程后爆炸，对命中的敌人造成物理伤害。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: R
     ids:
       - value: JayceR
         sources:
           - source: game_data
+            version: '16.14'
+          - source: game_data
             version: '16.5'
       - value: JayceStanceHtG
         sources:
+          - source: data_dragon
+            version: 16.14.1
           - source: data_dragon
             version: 16.5.1
     names:
@@ -218,14 +304,22 @@ spells:
         - value: Mercury Cannon / Mercury Hammer
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 墨丘利之炮 / 墨丘利之锤
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -238,12 +332,16 @@ spells:
               new abilities and increasing Armor and Magic Resist. The first attack
               in this form deals additional magic damage."
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -253,20 +351,28 @@ spells:
             value: 
               锤形态：将墨丘利之锤变成墨丘利之炮，获得新的技能和远程攻击能力。切换至这个形态后的第一下攻击将会减少目标的护甲和魔法抗性。<br><br>炮形态：将墨丘利之炮变成墨丘利之锤，获得新的技能和护甲与魔法抗性加成，切换至这个形态后的第一下攻击将会造成额外的魔法伤害。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: W
     ids:
       - value: JayceStaticField
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
       - value: JayceW
         sources:
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -274,14 +380,22 @@ spells:
         - value: Lightning Field / Hyper Charge
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 闪电领域 / 超能电荷
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -292,12 +406,16 @@ spells:
               Stance: Gains a burst of energy, increasing Attack Speed to maximum
               for several attacks.'
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -307,9 +425,13 @@ spells:
             value: 
               锤形态：被动：每次攻击回复法力。主动：创造一个闪电领域，在数秒内对附近的敌人造成伤害。<br><br>炮形态：杰斯的活力暴涨，将攻击速度提升至最大值，此效果在若干次攻击后消失。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'

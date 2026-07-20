@@ -1,6 +1,14 @@
 scope: champion
 owner: Lillia
 aliases:
+  Drowsey:
+    kind: champion_spell_component
+    spell: r
+    component: drowsy_state
+    label: 困倦状态
+    confidence: medium
+    source: manual_contextual_alias
+    note: Drowsey 是 Drowsy 的拼写变体；R 技能 Lilting Lullaby（夜阑谣）描述「陷入困倦状态，然后陷入昏睡状态」，对应昏睡前的困倦阶段。
   Homegaurd:
     kind: champion_spell_component
     spell: p
@@ -25,3 +33,27 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: LilliaCritAttack 在 Lillia 事件中对应暴击基础攻击音效。
+  LilliaERollingMissile:
+    kind: champion_spell_component
+    spell: e
+    component: swirlseed_rolling_missile
+    label: 流涡种滚动飞弹
+    confidence: medium
+    source: manual_contextual_alias
+    note: LilliaERollingMissile 对应 E 技能 Swirlseed（流涡种）描述「种子未能命中任何东西时将继续滚动」的滚动种子飞行物。
+  LilliaRSleep:
+    kind: champion_spell_component
+    spell: r
+    component: lullaby_sleep
+    label: 夜阑谣昏睡
+    confidence: medium
+    source: manual_contextual_alias
+    note: LilliaRSleep 对应 R 技能 Lilting Lullaby（夜阑谣）令敌人「陷入昏睡状态」的持续昏睡层。
+  LilliaRSleepDealDamage:
+    kind: champion_spell_component
+    spell: r
+    component: lullaby_sleep_wake_damage
+    label: 夜阑谣唤醒伤害
+    confidence: medium
+    source: manual_contextual_alias
+    note: LilliaRSleepDealDamage 对应 R 技能夜阑谣描述「这些敌人在被强制唤醒时会受到额外伤害」的昏睡破除伤害段。

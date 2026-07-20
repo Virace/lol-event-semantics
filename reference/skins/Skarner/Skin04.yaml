@@ -12,17 +12,27 @@ entity:
       - value: Guardian of the Sands Skarner
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     zh_CN:
       - value: 沙之守护 斯卡纳
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
 skinlines:
   - id: 66
     sources:
+      - source: game_data
+        version: '16.14'
       - source: game_data
         version: '16.5'
 aliases:

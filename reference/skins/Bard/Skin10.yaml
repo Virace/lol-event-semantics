@@ -1,0 +1,23 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Bard
+  champion_id: 432
+  skin_number: 10
+  skin_token: Skin10
+  id: 432010
+  alias: BardSkin10
+  names:
+    en_US:
+      - value: Astronaut Bard (Ruby)
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+    zh_CN:
+      - value: 宇航员 巴德 平坦宇宙
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+skinlines: []
+aliases:
+  - BardSkin10

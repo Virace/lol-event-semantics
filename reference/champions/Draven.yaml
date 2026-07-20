@@ -8,51 +8,77 @@ entity:
       - value: Draven
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     zh_CN:
       - value: 德莱文
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
   title:
     zh_CN:
       - value: 荣耀行刑官
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
   search_alias:
     zh_CN:
       - value: delaiwen
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: dlw
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: rongyaoxingxingguan
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: ryxxg
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
 spells:
   - slot: E
     ids:
       - value: DravenDoubleShot
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
       - value: DravenE
         sources:
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -60,14 +86,22 @@ spells:
         - value: Stand Aside
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 开道利斧
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -76,12 +110,16 @@ spells:
             value: Draven throws his axes, dealing physical damage to targets 
               hit and knocking them aside. Targets hit are slowed.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -90,18 +128,26 @@ spells:
               sha256:3b0974f85e984c70e71d6a18bce4076f3bd79f4483b5fcd8da03751e99229725
             value: 德莱文扔出他的斧头，对命中的目标造成物理伤害，并将他们击退至一边。被命中的目标会受到减速效果。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: P
     ids:
       - value: DravenPassive
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -109,14 +155,22 @@ spells:
         - value: League of Draven
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 德莱文联盟
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -126,12 +180,16 @@ spells:
               Axe or kills a minion, monster, or tower. Killing enemy champions 
               grants Draven bonus gold based on how much Adoration he has.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -141,20 +199,28 @@ spells:
             value: 
               在接住一把旋转飞斧或者击杀了一个小兵、野怪或防御塔后，德莱文会从他的粉丝那里获得崇拜效果。击杀一名敌方英雄会为德莱文提供额外赏金，赏金的多少取决于他拥有多少层崇拜效果。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: Q
     ids:
       - value: DravenQ
         sources:
           - source: game_data
+            version: '16.14'
+          - source: game_data
             version: '16.5'
       - value: DravenSpinning
         sources:
+          - source: data_dragon
+            version: 16.14.1
           - source: data_dragon
             version: 16.5.1
     names:
@@ -162,14 +228,22 @@ spells:
         - value: Spinning Axe
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 旋转飞斧
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -180,12 +254,16 @@ spells:
               catches it, he automatically readies another Spinning Axe. Draven 
               can have two Spinning Axes at once.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -195,20 +273,28 @@ spells:
             value: 
               德莱文的下次攻击会造成额外物理伤害。这个斧头将会从目标身上弹到高空。如果德莱文接住了它，那么会立刻准备好下一发旋转飞斧。德莱文可以同时拥有2发旋转飞斧。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: R
     ids:
       - value: DravenR
         sources:
           - source: game_data
+            version: '16.14'
+          - source: game_data
             version: '16.5'
       - value: DravenRCast
         sources:
+          - source: data_dragon
+            version: 16.14.1
           - source: data_dragon
             version: 16.5.1
     names:
@@ -216,14 +302,22 @@ spells:
         - value: Whirling Death
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 冷血追命
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -237,12 +331,16 @@ spells:
               the axes reverse direction. Executes enemies who have less health 
               than Draven's number of Adoration stacks.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -252,20 +350,28 @@ spells:
             value: 
               德莱文掷出两柄大斧，对命中的每个单位造成物理伤害。在命中一名敌方英雄后，大斧会缓慢地调转方向，并回到德莱文身边。在斧头正在向外飞的时候，德莱文可以激活该技能来让斧头早点飞回来。每命中一个单位，伤害值就会减少。在斧头调转方向时，伤害值会重置。会处决那些生命值低于德莱文崇拜层数的敌人们。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: W
     ids:
       - value: DravenFury
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
       - value: DravenW
         sources:
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -273,14 +379,22 @@ spells:
         - value: Blood Rush
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 血性冲刺
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -290,12 +404,16 @@ spells:
               Speed bonus decreases rapidly over its duration. Catching a 
               Spinning Axe will refresh the cooldown of Blood Rush.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -304,9 +422,13 @@ spells:
               sha256:cca1e140d4295c46852b1458fe8618ce1c2f0f017c17c9ce0d363eb4b72062bd
             value: 德莱文获得移动速度和攻击速度加成。移动速度加成在持续时间过后会急剧下降。在接到一把旋转飞斧后，血性冲刺会立刻冷却完毕。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'

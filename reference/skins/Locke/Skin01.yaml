@@ -1,0 +1,32 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Locke
+  champion_id: 805
+  skin_number: 1
+  skin_token: Skin01
+  id: 805001
+  alias: LockeSkin01
+  names:
+    en_US:
+      - value: High Noon Locke
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+    zh_CN:
+      - value: 西部魔影 洛克
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+skinlines:
+  - id: 39
+    sources:
+      - source: game_data
+        version: '16.14'
+aliases:
+  - LockeSkin01
+  - LockeSkin1

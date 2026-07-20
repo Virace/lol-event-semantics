@@ -12,17 +12,27 @@ entity:
       - value: Ruined Shyvana
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     zh_CN:
       - value: 破败军团 希瓦娜
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
 skinlines:
   - id: 138
     sources:
+      - source: game_data
+        version: '16.14'
       - source: game_data
         version: '16.5'
 aliases:

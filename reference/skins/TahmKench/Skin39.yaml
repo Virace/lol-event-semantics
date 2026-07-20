@@ -1,0 +1,31 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: TahmKench
+  champion_id: 223
+  skin_number: 39
+  skin_token: Skin39
+  id: 223039
+  alias: TahmKenchSkin39
+  names:
+    en_US:
+      - value: Choncc Kench
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+    zh_CN:
+      - value: 胖胖龙 塔姆
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+skinlines:
+  - id: 210
+    sources:
+      - source: game_data
+        version: '16.14'
+aliases:
+  - TahmKenchSkin39

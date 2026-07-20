@@ -8,63 +8,95 @@ entity:
       - value: Annie
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     zh_CN:
       - value: 安妮
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
   title:
     zh_CN:
       - value: 黑暗之女
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
   nicknames:
     zh_CN:
       - value: 火女
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
   search_alias:
     zh_CN:
       - value: an
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: anni
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: hazn
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: heianzhinv
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: hn
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: huonv
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
 spells:
   - slot: E
     ids:
       - value: AnnieE
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -72,14 +104,22 @@ spells:
         - value: Molten Shield
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 熔岩护盾
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -88,12 +128,16 @@ spells:
             value: Grants Annie or an ally a shield, a burst of Move Speed, and 
               damages enemies who strike her with attacks or spells.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -102,18 +146,26 @@ spells:
               sha256:060dc651490b10e597c592af372993664c72d55386dec16953c13ce292b01aa9
             value: 为安妮或一名友军提供一层护盾、一个爆发性的移动速度加成并且对任何用攻击或技能袭击她的敌人造成伤害。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: P
     ids:
       - value: AnniePassive
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -121,14 +173,22 @@ spells:
         - value: Pyromania
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 嗜火
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -138,12 +198,16 @@ spells:
               stun the target.<br><br>Annie begins the game and respawns with 
               Pyromania available.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -153,18 +217,26 @@ spells:
             value: 
               在施放4个技能后，安妮的下一次伤害类技能就会对目标造成短暂的晕眩效果。<br><br>安妮在游戏开始时和重生时，会带着满层的【嗜火】。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: Q
     ids:
       - value: AnnieQ
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -172,14 +244,22 @@ spells:
         - value: Disintegrate
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 碎裂之火
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -188,12 +268,16 @@ spells:
             value: Annie hurls a Mana infused fireball, dealing damage and 
               refunding the Mana cost if it destroys the target.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -203,18 +287,26 @@ spells:
             value: 
               安妮向目标投出注入了法力值的火球，对目标造成魔法伤害。如果目标死于碎裂之火，则碎裂之火消耗的法力值会返还给安妮，且碎裂之火的冷却时间减半。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: R
     ids:
       - value: AnnieR
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -222,14 +314,22 @@ spells:
         - value: 'Summon: Tibbers'
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 提伯斯之怒
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -239,12 +339,16 @@ spells:
               in the area. Tibbers can attack and also burns enemies that stand 
               near him.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -253,18 +357,26 @@ spells:
               sha256:c37f5bc48fcd1c92dc539865fb0389719d3addf18c1b005a23e3d23de68bcd8b
             value: 安妮召唤地狱火泰迪：提伯斯为其作战，对目标区域造成伤害，提伯斯也会攻击和烧伤站在它周围的敌人。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: W
     ids:
       - value: AnnieW
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -272,14 +384,22 @@ spells:
         - value: Incinerate
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 焚烧
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -288,12 +408,16 @@ spells:
             value: Annie casts a blazing cone of fire, dealing damage to all 
               enemies in the area.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -302,9 +426,13 @@ spells:
               sha256:d0c20fac00acbfaac3b73cf77e883eb966076410152b1428aafc1c0a8be2f284
             value: 安妮向锥形区域施放一道烈焰，对区域内的所有敌人造成伤害。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'

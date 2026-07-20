@@ -12,17 +12,27 @@ entity:
       - value: Dark Candy Fiddlesticks
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     zh_CN:
       - value: 糖果使徒 费德提克
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
 skinlines:
   - id: 57
     sources:
+      - source: game_data
+        version: '16.14'
       - source: game_data
         version: '16.5'
 aliases:

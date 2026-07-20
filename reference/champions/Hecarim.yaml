@@ -8,65 +8,97 @@ entity:
       - value: Hecarim
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     zh_CN:
       - value: 赫卡里姆
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
   title:
     zh_CN:
       - value: 战争之影
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
   nicknames:
     zh_CN:
       - value: 人马
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
   search_alias:
     zh_CN:
       - value: hekalimu
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: hlkm
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: renma
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: rm
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: zhanzhengzhiying
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: zzzy
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
 spells:
   - slot: E
     ids:
       - value: HecarimE
         sources:
           - source: game_data
+            version: '16.14'
+          - source: game_data
             version: '16.5'
       - value: HecarimRamp
         sources:
+          - source: data_dragon
+            version: 16.14.1
           - source: data_dragon
             version: 16.5.1
     names:
@@ -74,14 +106,22 @@ spells:
         - value: Devastating Charge
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 毁灭冲锋
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -92,12 +132,16 @@ spells:
               and deals additional physical damage based on the distance he has 
               traveled since activating the ability.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -107,18 +151,26 @@ spells:
             value: 
               赫卡里姆获得不断提升的移动速度加成并且移动时可以无视单位的碰撞体积。他的下一次攻击将会击退目标，并且造成额外物理伤害，伤害值基于他在激活该技能后所移动的距离。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: P
     ids:
       - value: HecarimPassive
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -126,14 +178,22 @@ spells:
         - value: Warpath
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 征战之路
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -142,12 +202,16 @@ spells:
             value: Hecarim gains Attack Damage equal to a percentage of his 
               bonus Move Speed.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -156,20 +220,28 @@ spells:
               sha256:016affcbd9bb412031188b9675535a0b6ce31dab6761a7a4cfe43f40039e0638
             value: 赫卡里姆获得相当于他一部分额外移动速度的攻击力加成。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: Q
     ids:
       - value: HecarimQ
         sources:
           - source: game_data
+            version: '16.14'
+          - source: game_data
             version: '16.5'
       - value: HecarimRapidSlash
         sources:
+          - source: data_dragon
+            version: 16.14.1
           - source: data_dragon
             version: 16.5.1
     names:
@@ -177,14 +249,22 @@ spells:
         - value: Rampage
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 暴走
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -194,12 +274,16 @@ spells:
               Hecarim damages at least one enemy, he increases the damage and 
               lowers the cooldown of subsequent Rampages.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -209,20 +293,28 @@ spells:
             value: 
               赫卡里姆猛劈周围的敌人，同时造成物理伤害。如果这个技能对至少一名敌人造成伤害，那么赫卡里姆会提升【暴走】的伤害并为随后施放的【暴走】缩短冷却时间。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: R
     ids:
       - value: HecarimR
         sources:
           - source: game_data
+            version: '16.14'
+          - source: game_data
             version: '16.5'
       - value: HecarimUlt
         sources:
+          - source: data_dragon
+            version: 16.14.1
           - source: data_dragon
             version: 16.5.1
     names:
@@ -230,14 +322,22 @@ spells:
         - value: Onslaught of Shadows
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 暗影冲击
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -247,12 +347,16 @@ spells:
               magic damage in a line. Hecarim creates a shockwave when he 
               finishes his charge, causing nearby enemies to flee in terror.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -262,18 +366,26 @@ spells:
             value: 
               赫卡里姆召唤幽魂骑兵向前冲锋，对一条直线上的敌人造成魔法伤害。赫卡里姆会在完成他的冲锋时发出一道冲击波，来使周围的敌人惊慌失措地逃命。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: W
     ids:
       - value: HecarimW
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -281,14 +393,22 @@ spells:
         - value: Spirit of Dread
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 恐惧之灵
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -298,12 +418,16 @@ spells:
               damage to nearby enemies, and gains Health equal to a percentage 
               of any damage those enemies suffer.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -312,9 +436,13 @@ spells:
               sha256:d49900fe0ce7ad97d1feb32f5b461feb16b2bcf5a29ea93992f07fcd082d56e4
             value: 赫卡里姆获得护甲和魔抗。赫卡里姆对附近敌人造成魔法伤害，并基于敌人所受的伤害来恢复生命值。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'

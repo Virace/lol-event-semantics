@@ -1,0 +1,31 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Braum
+  champion_id: 201
+  skin_number: 51
+  skin_token: Skin51
+  id: 201051
+  alias: BraumSkin51
+  names:
+    en_US:
+      - value: Victorious Braum
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+    zh_CN:
+      - value: 胜利之心 布隆
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+skinlines:
+  - id: 7
+    sources:
+      - source: game_data
+        version: '16.14'
+aliases:
+  - BraumSkin51

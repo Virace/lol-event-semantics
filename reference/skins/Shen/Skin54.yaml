@@ -1,0 +1,31 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Shen
+  champion_id: 98
+  skin_number: 54
+  skin_token: Skin54
+  id: 98054
+  alias: ShenSkin54
+  names:
+    en_US:
+      - value: Broken Covenant Shen
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+    zh_CN:
+      - value: 绝息圣堂 慎
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+skinlines:
+  - id: 190
+    sources:
+      - source: game_data
+        version: '16.14'
+aliases:
+  - ShenSkin54

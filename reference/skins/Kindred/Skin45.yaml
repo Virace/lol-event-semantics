@@ -1,0 +1,31 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Kindred
+  champion_id: 203
+  skin_number: 45
+  skin_token: Skin45
+  id: 203045
+  alias: KindredSkin45
+  names:
+    en_US:
+      - value: Pandemonium Kindred
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+    zh_CN:
+      - value: 万魔殿 千珏
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+skinlines:
+  - id: 229
+    sources:
+      - source: game_data
+        version: '16.14'
+aliases:
+  - KindredSkin45

@@ -12,17 +12,27 @@ entity:
       - value: Arcane Professor Heimerdinger
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     zh_CN:
       - value: 双城之战2 教授 黑默丁格
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
 skinlines:
   - id: 152
     sources:
+      - source: game_data
+        version: '16.14'
       - source: game_data
         version: '16.5'
 aliases:

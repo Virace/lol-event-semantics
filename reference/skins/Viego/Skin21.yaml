@@ -12,17 +12,27 @@ entity:
       - value: King Viego
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     zh_CN:
       - value: 国王 佛耶戈
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
 skinlines:
   - id: 164
     sources:
+      - source: game_data
+        version: '16.14'
       - source: game_data
         version: '16.5'
 aliases:

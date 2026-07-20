@@ -8,77 +8,115 @@ entity:
       - value: Cho'Gath
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     zh_CN:
       - value: 科加斯
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
   title:
     zh_CN:
       - value: 虚空恐惧
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
   nicknames:
     zh_CN:
       - value: 大虫子
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: 虫子
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
   search_alias:
     zh_CN:
       - value: chongzi
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: cz
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: dachongzi
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: dcz
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: kejiasi
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: kjs
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: xkkj
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: xukongkongju
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
 spells:
   - slot: E
     ids:
       - value: ChogathE
         sources:
           - source: game_data
+            version: '16.14'
+          - source: game_data
             version: '16.5'
       - value: VorpalSpikes
         sources:
+          - source: data_dragon
+            version: 16.14.1
           - source: data_dragon
             version: 16.5.1
     names:
@@ -86,14 +124,22 @@ spells:
         - value: Vorpal Spikes
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 恐惧之刺
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -102,12 +148,16 @@ spells:
             value: Cho'Gath's attacks release deadly spikes, dealing damage and 
               slowing all enemy units in front of him.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -116,18 +166,26 @@ spells:
               sha256:aeaf3611eb72aa4079fd2cb6710df9089c53c97dfd89670a6486acb45197dc56
             value: 科加斯的攻击会释放致命的尖刺，伤害并减速面前所有的敌人。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: P
     ids:
       - value: ChogathPassive
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -135,14 +193,22 @@ spells:
         - value: Carnivore
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 肉食者
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -151,12 +217,16 @@ spells:
             value: Whenever Cho'Gath kills a unit, he recovers Health and Mana. 
               The values restored increase with Cho'Gath's level.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -165,20 +235,28 @@ spells:
               sha256:aaa9a7add7983cadbb2e197805734b9ecaea008bd9f62ee38ba267ca67457d51
             value: 当科加斯杀死一个单位时，他会回复生命值和法力值。回复的数值会随着科加斯的等级而提升。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: Q
     ids:
       - value: ChogathQ
         sources:
           - source: game_data
+            version: '16.14'
+          - source: game_data
             version: '16.5'
       - value: Rupture
         sources:
+          - source: data_dragon
+            version: 16.14.1
           - source: data_dragon
             version: 16.5.1
     names:
@@ -186,14 +264,22 @@ spells:
         - value: Rupture
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 破裂
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -202,12 +288,16 @@ spells:
             value: Ruptures the ground at target location, popping enemy units 
               into the air, dealing damage and slowing them.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -216,20 +306,28 @@ spells:
               sha256:291e2b3f33493353914177232f1ac2dc17be1b6a03787f1c5e35eda81e020a56
             value: 使目标地面破裂，将敌人抛向空中，造成伤害并减速。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: R
     ids:
       - value: ChogathR
         sources:
           - source: game_data
+            version: '16.14'
+          - source: game_data
             version: '16.5'
       - value: Feast
         sources:
+          - source: data_dragon
+            version: 16.14.1
           - source: data_dragon
             version: 16.5.1
     names:
@@ -237,14 +335,22 @@ spells:
         - value: Feast
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 盛宴
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -253,12 +359,16 @@ spells:
             value: Devours an enemy unit, dealing a high amount of true damage. 
               If the target is killed, Cho'Gath grows, gaining maximum Health.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -267,20 +377,28 @@ spells:
               sha256:ce0dc61d677de4315f4bba1e130754e6746ca33c89ff5e0dd2ba790e08d600b5
             value: 吞噬一个敌方单位，造成高额真实伤害。若目标被吞噬致死，科加斯就会长大，提高最大生命值。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: W
     ids:
       - value: ChogathW
         sources:
           - source: game_data
+            version: '16.14'
+          - source: game_data
             version: '16.5'
       - value: FeralScream
         sources:
+          - source: data_dragon
+            version: 16.14.1
           - source: data_dragon
             version: 16.5.1
     names:
@@ -288,14 +406,22 @@ spells:
         - value: Feral Scream
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 野性尖叫
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -304,12 +430,16 @@ spells:
             value: Cho'Gath unleashes a terrible scream at enemies in a cone, 
               dealing magic damage and Silencing enemies for a few seconds.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -318,9 +448,13 @@ spells:
               sha256:7ee208881c044e2ec5d6b73677f3b87b7d812ff2794e4d1916917bc9254621e2
             value: 科加斯向面前锥形区域施放恐怖声波，造成魔法伤害并沉默数秒。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'

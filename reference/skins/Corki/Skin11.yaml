@@ -1,0 +1,23 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Corki
+  champion_id: 42
+  skin_number: 11
+  skin_token: Skin11
+  id: 42011
+  alias: CorkiSkin11
+  names:
+    en_US:
+      - value: Arcade Corki (Turquoise)
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+    zh_CN:
+      - value: 电玩上校 库奇 星辰勇士
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+skinlines: []
+aliases:
+  - CorkiSkin11

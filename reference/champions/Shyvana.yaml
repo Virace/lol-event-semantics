@@ -8,61 +8,93 @@ entity:
       - value: Shyvana
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     zh_CN:
       - value: 希瓦娜
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
   title:
     zh_CN:
       - value: 龙血武姬
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
   nicknames:
     zh_CN:
       - value: 龙女
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
   search_alias:
     zh_CN:
       - value: ln
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: longnv
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: longxuewuji
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: lxwj
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: xiwana
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: xwn
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
 spells:
   - slot: E
     ids:
       - value: ShyvanaE
         sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
       - value: ShyvanaFireball
@@ -77,11 +109,23 @@ spells:
               version: 16.5.1
             - source: game_data
               version: '16.5'
+        - value: Molten Burst
+          sources:
+            - source: data_dragon
+              version: 16.14.1
+            - source: game_data
+              version: '16.14'
       zh_CN:
         - value: 烈焰吐息
           sources:
             - source: data_dragon
               version: 16.5.1
+        - value: 爆炎吐息
+          sources:
+            - source: data_dragon
+              version: 16.14.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -102,6 +146,21 @@ spells:
                 version: 16.5.1
               - source: game_data
                 version: '16.5'
+          - hash: 
+              sha256:2c304d912a57dddaf88d9748ae90d9ef6fa6404c284beeda72ff600ce93deef5
+            value: Shyvana launches a fireball that explodes upon striking a 
+              large target and slows them. In Dragon Form, it passes through and
+              explodes upon striking large enemies, leaving behind a trail of 
+              fire.
+            first_seen: '16.14'
+            last_seen: 16.14.1
+            similarity_to_previous: 0.384106
+            review_status: needs_review
+            sources:
+              - source: data_dragon
+                version: 16.14.1
+              - source: game_data
+                version: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -116,12 +175,29 @@ spells:
             sources:
               - source: data_dragon
                 version: 16.5.1
+          - hash: 
+              sha256:a4adb776241b5319412eefabd4c97af81d0ede07b7f50c93308de785997ecaa6
+            value: 
+              希瓦娜发射一团火球，火球在击中一个大型目标时爆炸并将其减速。在【魔龙形态】下，它会穿过敌人并在击中大型目标时爆炸，还会留下一条烈焰轨迹。
+            first_seen: '16.14'
+            last_seen: 16.14.1
+            similarity_to_previous: 0.210526
+            review_status: needs_review
+            sources:
+              - source: data_dragon
+                version: 16.14.1
+              - source: game_data
+                version: '16.14'
   - slot: P
     ids:
       - value: ShyvanaPassive
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -132,11 +208,23 @@ spells:
               version: 16.5.1
             - source: game_data
               version: '16.5'
+        - value: Scalemail
+          sources:
+            - source: data_dragon
+              version: 16.14.1
+            - source: game_data
+              version: '16.14'
       zh_CN:
         - value: 龙族之怒
           sources:
             - source: data_dragon
               version: 16.5.1
+        - value: 龙鳞铁衣
+          sources:
+            - source: data_dragon
+              version: 16.14.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -154,6 +242,19 @@ spells:
                 version: 16.5.1
               - source: game_data
                 version: '16.5'
+          - hash: 
+              sha256:70962b19a80b62ea100283770f018009e5531cda37eacf658ce792a0624b6609
+            value: Takedowns on enemy champions, large minions, and large 
+              monsters grant Shyvana Scalemail stacks, improving her defenses.
+            first_seen: '16.14'
+            last_seen: 16.14.1
+            similarity_to_previous: 0.333333
+            review_status: needs_review
+            sources:
+              - source: data_dragon
+                version: 16.14.1
+              - source: game_data
+                version: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -167,6 +268,18 @@ spells:
             sources:
               - source: data_dragon
                 version: 16.5.1
+          - hash: 
+              sha256:55569cb9f5afa823477bc00b881e3d733b91f7edfc6b4f20ecf787d567f48b69
+            value: 参与击杀敌方英雄、大型小兵和大型野怪后，希瓦娜会获得【龙鳞铁衣】层数，从而改进她的防御属性。
+            first_seen: '16.14'
+            last_seen: 16.14.1
+            similarity_to_previous: 0.165138
+            review_status: needs_review
+            sources:
+              - source: data_dragon
+                version: 16.14.1
+              - source: game_data
+                version: '16.14'
   - slot: Q
     ids:
       - value: ShyvanaDoubleAttack
@@ -175,10 +288,20 @@ spells:
             version: 16.5.1
       - value: ShyvanaQ
         sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
       en_US:
+        - value: Emberstrike
+          sources:
+            - source: data_dragon
+              version: 16.14.1
+            - source: game_data
+              version: '16.14'
         - value: Twin Bite
           sources:
             - source: data_dragon
@@ -186,6 +309,12 @@ spells:
             - source: game_data
               version: '16.5'
       zh_CN:
+        - value: 焚焰打击
+          sources:
+            - source: data_dragon
+              version: 16.14.1
+            - source: game_data
+              version: '16.14'
         - value: 龙牙突刺
           sources:
             - source: data_dragon
@@ -208,6 +337,21 @@ spells:
                 version: 16.5.1
               - source: game_data
                 version: '16.5'
+          - hash: 
+              sha256:11c486fe0573f7abb23968cf824182927c4a151d3aa97688c79d40b7964e4f90
+            value: Shyvana's next attack strikes both the target and the 
+              surrounding area. This Ability can be recast. While in Dragon 
+              Form, it gains an additional recast, dealing massive damage to a 
+              single target.
+            first_seen: '16.14'
+            last_seen: 16.14.1
+            similarity_to_previous: 0.288889
+            review_status: needs_review
+            sources:
+              - source: data_dragon
+                version: 16.14.1
+              - source: game_data
+                version: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -222,10 +366,27 @@ spells:
             sources:
               - source: data_dragon
                 version: 16.5.1
+          - hash: 
+              sha256:3cc4cc610291732da5fd8780df15fff0a0d6281e10839585a7466c835b5b19d0
+            value: 
+              希瓦娜的下次攻击会打击目标和周围区域。这个技能可以再次施放。在【魔龙形态】下，它提供一次额外的再次施放，对单体目标造成巨额伤害。
+            first_seen: '16.14'
+            last_seen: 16.14.1
+            similarity_to_previous: 0.227027
+            review_status: needs_review
+            sources:
+              - source: data_dragon
+                version: 16.14.1
+              - source: game_data
+                version: '16.14'
   - slot: R
     ids:
       - value: ShyvanaR
         sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
       - value: ShyvanaTransformCast
@@ -237,14 +398,22 @@ spells:
         - value: Dragon's Descent
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 魔龙降世
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -263,6 +432,20 @@ spells:
                 version: 16.5.1
               - source: game_data
                 version: '16.5'
+          - hash: 
+              sha256:b91de80b91351b0b08cb2228686c61ac16ef6c82e5e5bb6b073f1f9a5cd7bf86
+            value: Shyvana transforms into a Dragon and leaps forward causing 
+              enemies along her path to flee. While in Dragon form she becomes 
+              larger and her basic abilities are empowered.
+            first_seen: '16.14'
+            last_seen: 16.14.1
+            similarity_to_previous: 0.48
+            review_status: needs_review
+            sources:
+              - source: data_dragon
+                version: 16.14.1
+              - source: game_data
+                version: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -276,6 +459,19 @@ spells:
             sources:
               - source: data_dragon
                 version: 16.5.1
+          - hash: 
+              sha256:2db71b9909579d864f3dbbbf6670e1b69969fd62f51fdc43f4a61bde080e7097
+            value: 
+              希瓦娜变形成一头魔龙并向前跳跃来使途经的敌人们因恐惧而逃跑。在【魔龙形态】下，她的体型变得更大并且她的基础技能都会获得强化。
+            first_seen: '16.14'
+            last_seen: 16.14.1
+            similarity_to_previous: 0.317241
+            review_status: needs_review
+            sources:
+              - source: data_dragon
+                version: 16.14.1
+              - source: game_data
+                version: '16.14'
   - slot: W
     ids:
       - value: ShyvanaImmolationAura
@@ -284,6 +480,10 @@ spells:
             version: 16.5.1
       - value: ShyvanaW
         sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -294,7 +494,19 @@ spells:
               version: 16.5.1
             - source: game_data
               version: '16.5'
+        - value: Inferno Aegis
+          sources:
+            - source: data_dragon
+              version: 16.14.1
+            - source: game_data
+              version: '16.14'
       zh_CN:
+        - value: 烈火圣盾
+          sources:
+            - source: data_dragon
+              version: 16.14.1
+            - source: game_data
+              version: '16.14'
         - value: 烈火燎原
           sources:
             - source: data_dragon
@@ -319,6 +531,20 @@ spells:
                 version: 16.5.1
               - source: game_data
                 version: '16.5'
+          - hash: 
+              sha256:4cd4ef440474d4c86fda2d525570155935c58efcf89c516e4914293bea47738f
+            value: Shyvana gains a shield, movement speed, and after a short 
+              delay, the area around her detonates.  While in Dragon Form, the 
+              explosion will heal her if it strikes an enemy champion.
+            first_seen: '16.14'
+            last_seen: 16.14.1
+            similarity_to_previous: 0.20922
+            review_status: needs_review
+            sources:
+              - source: data_dragon
+                version: 16.14.1
+              - source: game_data
+                version: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -333,3 +559,16 @@ spells:
             sources:
               - source: data_dragon
                 version: 16.5.1
+          - hash: 
+              sha256:856725ad868a990614fd6deff5864cc090ea918ac0a331fbd7654cb02b468b08
+            value: 
+              希瓦娜获得一个护盾和移动速度，并在短暂延迟后，她周围的区域会被引爆。在【魔龙形态】下，这次爆炸如果击中一个敌方英雄，则会治疗希瓦娜。
+            first_seen: '16.14'
+            last_seen: 16.14.1
+            similarity_to_previous: 0.148472
+            review_status: needs_review
+            sources:
+              - source: data_dragon
+                version: 16.14.1
+              - source: game_data
+                version: '16.14'

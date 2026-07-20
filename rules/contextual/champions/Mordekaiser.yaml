@@ -9,3 +9,11 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: Macetransform 在 MordekaiserSkin54 事件中对应武器变形表现。
+  MordekaiserSoulMissile:
+    kind: champion_spell_component
+    spell: e
+    component: deaths_grasp_soul_missile
+    label: 断魂一扼灵魂飞弹
+    confidence: medium
+    source: manual_contextual_alias
+    note: MordekaiserSoulMissile 仅出现在 OnMissileLaunch 相位，对应 E 技能 Death's Grasp（断魂一扼）「拉拽一个区域内的所有敌人」的拉拽弹道；Soul 与中文名「断魂」相扣，全套技能中仅 E 具备弹道表现。

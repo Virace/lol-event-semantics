@@ -1,0 +1,31 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Leblanc
+  champion_id: 7
+  skin_number: 59
+  skin_token: Skin59
+  id: 7059
+  alias: LeblancSkin59
+  names:
+    en_US:
+      - value: Prestige Sinful Shores LeBlanc
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+    zh_CN:
+      - value: 至臻 恶魔假日 乐芙兰
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+skinlines:
+  - id: 230
+    sources:
+      - source: game_data
+        version: '16.14'
+aliases:
+  - LeblancSkin59

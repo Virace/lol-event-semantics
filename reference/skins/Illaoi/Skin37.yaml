@@ -1,0 +1,31 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Illaoi
+  champion_id: 420
+  skin_number: 37
+  skin_token: Skin37
+  id: 420037
+  alias: IllaoiSkin37
+  names:
+    en_US:
+      - value: Pasta Maker Illaoi
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+    zh_CN:
+      - value: 慢炖海鲜意面掌锅人 俄洛伊
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+skinlines:
+  - id: 100
+    sources:
+      - source: game_data
+        version: '16.14'
+aliases:
+  - IllaoiSkin37

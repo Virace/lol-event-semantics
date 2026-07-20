@@ -73,6 +73,22 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: OrianaGhostSelf 使用旧拼写 Oriana，语义同 Orianna GhostSelf。
+  OrianaIzuna:
+    kind: champion_spell_component
+    spell: q
+    component: command_attack_ball_hit
+    label: 指令：攻击魔偶命中
+    confidence: medium
+    source: manual_contextual_alias
+    note: "OrianaIzuna 使用旧拼写 Oriana，语义同 Orianna Izuna；reference Q 技能内部 id 为 OrianaIzunaCommand，对应 Q 技能 Command: Attack 的魔偶移动/命中表现。"
+  OrianaRedact:
+    kind: champion_spell_component
+    spell: e
+    component: protect_command
+    label: 指令：防卫
+    confidence: medium
+    source: manual_contextual_alias
+    note: "OrianaRedact 使用旧拼写 Oriana，对应 E 技能 Command: Protect 的内部名（reference E 技能 id 为 OrianaRedactCommand），OnMissileLaunch 相位为魔偶飞向友军途中的表现。"
   OrianaRedactShield:
     kind: champion_spell_component
     spell: e

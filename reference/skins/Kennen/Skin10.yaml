@@ -1,0 +1,23 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Kennen
+  champion_id: 85
+  skin_number: 10
+  skin_token: Skin10
+  id: 85010
+  alias: KennenSkin10
+  names:
+    en_US:
+      - value: Kennen M.D. (Ruby)
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+    zh_CN:
+      - value: 医学博士 凯南 初心不改
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+skinlines: []
+aliases:
+  - KennenSkin10

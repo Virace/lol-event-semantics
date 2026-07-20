@@ -72,7 +72,8 @@ ability_component:
 
 gameplay_event:
   # gameplay_event argument：玩法事件展示词；key 为小写事件名。
-  first_blood: {zh_CN: 一血, en_US: first blood}
+  # 官方 onfirstblood 原文「第一滴血」；「一血」为社区惯称（2026-07-20 检查轮核验后用户终审改）。
+  first_blood: {zh_CN: 第一滴血, en_US: first blood}
 
 maps:
   # map argument 的人工核对高置信地图中文名（T3.3 新增）。宁缺毋错：未列出的
@@ -145,7 +146,8 @@ counterpart:
   Champion: 英雄
   Minion: 小兵
   Monster: 野怪
-  Epic Monster: 史诗野怪
+  # 客户端字符串统一「史诗级野怪」（159:0，2026-07-20 检查轮核验后用户终审改）。
+  Epic Monster: 史诗级野怪
   Inhibitor: 召唤水晶
   # 世界观（第二批）
   Sentinel: 光明哨兵
@@ -163,6 +165,9 @@ counterpart:
   Coven: 魔女
   Program: 源代码
   Dreadnova: 恐惧新星
+  # High Noon 存在层级/历史多名（2026-07-20 用户拍板：主词取皮肤名前缀主流称谓，
+  # 曾用名保留备查不拍死）：skinline 层（id 39）现名「西部风云」；皮肤名前缀
+  # 「西部魔影」（25 款现代皮肤）/「西部牛仔」（4 款早期：崔斯特/厄运小姐/亚索/烬）。
   High Noon: 西部魔影
   Cosmic: 星界
   Spirit Blossom: 灵魂莲华
@@ -177,6 +182,35 @@ counterpart:
   Astronauts: 宇航员
   Pulsefire: 未来战士
   Battle Academia: 战斗学院
+  # skinline/阵营（第三批，2026-07-20 收敛轮：16.14 新语料 counterpart fallback
+  # 词，客户端 skinlines.json zh/en 同 id 对照一手核验；空格/连写双形态并收，
+  # 同 Murkwolf/Murk Wolf 先例）
+  Primordian: 海魔人
+  Mecha Kingdoms: 机神
+  MechaKingdoms: 机神
+  Eternal Aspects: 永恒星灵
+  EternalAspects: 永恒星灵
+  KDA: K/DA
+  K/DA: K/DA
+  True Damage: 真实伤害
+  TrueDamage: 真实伤害
+  Dragonmancer: 神龙尊者
+  Dragonmancers: 神龙尊者
+  Debonair: 执事
+  Mecha: 霸天
+  # Black Rose（skinline 134，官方全称 Black Rose Group/黑色玫瑰集团）：
+  # 取皮肤名前缀常用称谓，与 High Noon 同一处理手法（有意截断，非漏核）。
+  Black Rose: 黑色玫瑰
+  BlackRose: 黑色玫瑰
+  # 战队与灵魂莲华角色（字符串表同 hash zh/en 对核验：
+  # 「Akana Hushtail 1 Star」=「夜幽 静尾 1星」、「Kanmei Grab Bag」=「明昼 福袋」；
+  # SKT 客户端中文皮肤名保留拉丁原样，如「SKT T1 艾克」）
+  SKT: SKT
+  Akana: 夜幽
+  Kanmei: 明昼
+  # 世界观阵营（客户端无独立词条，取官方宇宙世界观词：Solari=烈阳教/Lunari=皎月教；
+  # 客户端字符串表以「皎月」作修饰词（皎月武器）旁证）
+  Lunari: 皎月教
 
 shop:
   # 商店老板语音词表（批次6d）。action 为动作词双语对（表外动作词不建
@@ -189,7 +223,8 @@ shop:
   # 时店主招呼（Upon Entering the Shop）故「进店」非「开店」；Close=离店
   # 道别（Upon Leaving the Shop）故「离店」非「关店」；Ambient=玩家在店旁
   # 闲置时店主独白（While Idling Near the Shop）故「闲聊」。FrozenMallet
-  # 为已从常规商店移除的老装备（现以 id 4014 存在于限定模式）。
+  # 为已从常规商店移除的老装备（16.14.1 数据中保留 id 4014，purchasable=false
+  # 且无上架地图，当前不可购）。
   action:
     open: {zh_CN: 进店, en_US: shop enter}
     purchase: {zh_CN: 购买, en_US: purchase}
@@ -268,16 +303,18 @@ announcer:
     # 播报语音包/模式前缀（批次6e mode role）：key 为 cue_path 包名段
     # （builder 先剥 Female1/Male1 人声前缀再查）。词条沿批次5a 核验
     # （Worlds23=2023全球总决赛/NexusBlitz=极限闪击/Brawl=神木之门）；
-    # Pyke=派克（reference 官方名）+「语音包」描述性后缀。表外包名
+    # Pyke=派克（reference 官方名）+「通告员」——国服客户端对 announcer 的
+    # 统一译名（字符串表「派克 通告员已启用！」，2026-07-20 用户终审）。表外包名
     # （RhaastKayn/Maverick/Pundit/Ringcaller 内部代号或未核验）不出
     # mode argument，事件本体照常建 frame。
     Worlds23: 2023全球总决赛
     NexusBlitz: 极限闪击
     Brawl: 神木之门
-    Pyke: 派克播报员
+    Pyke: 派克通告员
   event:
     Ace: 团灭
-    FirstBlood: 一血
+    # 官方 onfirstblood 原文「第一滴血」（2026-07-20 检查轮核验后用户终审改）。
+    FirstBlood: 第一滴血
     Victory: 胜利
     Defeat: 失败
     DoubleKill: 双杀

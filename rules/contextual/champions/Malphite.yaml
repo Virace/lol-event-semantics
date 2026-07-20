@@ -33,3 +33,11 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: ShieldEffect 在 Malphite 事件中对应被动 Granite Shield 的护盾特效。
+  ObduracyBuff:
+    kind: champion_spell_component
+    spell: w
+    component: obduracy_buff
+    label: 雷霆拍击增益
+    confidence: medium
+    source: manual_contextual_alias
+    note: reference W 技能 id 含 Obduracy（Thunderclap 雷霆拍击），ObduracyBuff 对应 W 开启期间的强化增益状态，与 ObduracyAttack 同源。

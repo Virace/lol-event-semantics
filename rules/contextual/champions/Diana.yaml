@@ -1,6 +1,22 @@
 scope: champion
 owner: Diana
 aliases:
+  ArcThrow:
+    kind: champion_spell_component
+    spell: q
+    component: crescent_strike_arc
+    label: 新月打击弧形投掷
+    confidence: medium
+    source: manual_contextual_alias
+    note: ArcThrow 对应 Q 技能 Crescent Strike（新月打击）「释放一道月能光束，对弧形范围内的敌人造成伤害」的弧形投射；hit/miss 相位表明是可落空的飞行物，Q 是 Diana 唯一此类技能。
+  DianaVortex:
+    kind: champion_spell_component
+    spell: r
+    component: moonfall_vortex
+    label: 月之降临旋涡
+    confidence: medium
+    source: manual_contextual_alias
+    note: DianaVortex 与既有 VortexUlt 同源，对应 R 技能 Moonfall（月之降临）聚拢敌人的旋涡表现。
   Orbs:
     kind: champion_spell_component
     spell: w

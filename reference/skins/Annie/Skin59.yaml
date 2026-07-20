@@ -1,0 +1,31 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Annie
+  champion_id: 1
+  skin_number: 59
+  skin_token: Skin59
+  id: 1059
+  alias: AnnieSkin59
+  names:
+    en_US:
+      - value: Pandemonium Annie
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+    zh_CN:
+      - value: 万魔殿 安妮
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+skinlines:
+  - id: 229
+    sources:
+      - source: game_data
+        version: '16.14'
+aliases:
+  - AnnieSkin59

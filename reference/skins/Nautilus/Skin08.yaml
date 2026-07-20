@@ -1,0 +1,24 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Nautilus
+  champion_id: 111
+  skin_number: 8
+  skin_token: Skin08
+  id: 111008
+  alias: NautilusSkin08
+  names:
+    en_US:
+      - value: Astronautilus (Chrono)
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+    zh_CN:
+      - value: 宇航员 诺提勒斯 无尽永前
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+skinlines: []
+aliases:
+  - NautilusSkin08
+  - NautilusSkin8

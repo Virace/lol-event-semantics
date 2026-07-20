@@ -17,6 +17,14 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: MaokaiDrain 在 GraveDiggerMaokai 事件中对应皮肤主题吸取/循环音效。
+  MaokaiTrunkLineMissile:
+    kind: champion_spell_component
+    spell: q
+    component: bramble_smash_shockwave
+    label: 荆棘重击冲击波
+    confidence: medium
+    source: manual_contextual_alias
+    note: MaokaiTrunkLineMissile（树干直线飞行物）出现在 GraveDiggerMaokai 历史事件中，Q 技能 Bramble Smash（荆棘重击）「用一记冲击波击退附近的敌人」是茂凯唯一的直线冲击波，OnMissileLaunch 相位与之吻合。
   SaplingRun:
     kind: champion_spell_component
     spell: e

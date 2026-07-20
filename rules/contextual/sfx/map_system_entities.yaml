@@ -14,7 +14,7 @@ aliases:
   Announcer:
     kind: map_system_entity
     component: announcer
-    label: 播报员
+    label: 通告员
     confidence: high
     source: manual_sfx_alias
     note: 全场播报语音（Ace/FirstBlood 等），主代理裁决词条（T3.4 头部词条表）。
@@ -91,10 +91,10 @@ aliases:
   Atakhan:
     kind: map_system_entity
     component: atakhan
-    label: 阿塔坎
+    label: 厄塔汗
     confidence: high
     source: manual_sfx_alias
-    note: S15 史诗野怪，主代理裁决词条（T3.4 头部词条表）。
+    note: S15 史诗级野怪。国服客户端字符串表 129:0 用「厄塔汗」（荆棘/渴血/灭尽厄塔汗），与 counterpart 词表一致（2026-07-20 检查轮勘误，原「阿塔坎」为表外译名）。
   GameMode:
     kind: map_system_entity
     component: game_mode

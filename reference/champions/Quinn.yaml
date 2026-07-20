@@ -8,63 +8,95 @@ entity:
       - value: Quinn
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     zh_CN:
       - value: 奎因
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
   title:
     zh_CN:
       - value: 德玛西亚之翼
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
   nicknames:
     zh_CN:
       - value: 鸟人
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
   search_alias:
     zh_CN:
       - value: demaxiyazhiyi
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: dmxyzz
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: kuiyin
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: ky
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: niaoren
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
       - value: nr
         sources:
           - source: tencent_101
             version: '16.13'
+          - source: tencent_101
+            version: '16.14'
 spells:
   - slot: E
     ids:
       - value: QuinnE
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -72,14 +104,22 @@ spells:
         - value: Vault
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 旋翔掠杀
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -90,12 +130,16 @@ spells:
               the target, briefly interrupting it, and lands near her maximum 
               Attack Range away from the target.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -105,18 +149,26 @@ spells:
             value: 
               奎因冲向一名敌人，造成物理伤害，并减少目标的移动速度。在接触到目标的同时，她会向后空翻，暂时打断目标的行动，并在接近她最大攻击距离的地方着陆。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: P
     ids:
       - value: QuinnPassive
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -124,14 +176,22 @@ spells:
         - value: Harrier
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 侵扰
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -150,6 +210,21 @@ spells:
                 version: 16.5.1
               - source: game_data
                 version: '16.5'
+          - hash: 
+              sha256:6b1d4ca554eeb7024c504ff325b8b00903b41a08a489804eaf49cc7cf370a534
+            value: Valor, Quinn's Demacian eagle, periodically marks enemies 
+              with <keywordMajor>Harrier</keywordMajor>. Quinn's first basic 
+              attack against <keywordMajor>Harrier</keywordMajor> targets will 
+              deal bonus physical damage.
+            first_seen: '16.14'
+            last_seen: 16.14.1
+            similarity_to_previous: 0.665116
+            review_status: needs_review
+            sources:
+              - source: data_dragon
+                version: 16.14.1
+              - source: game_data
+                version: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -164,12 +239,29 @@ spells:
             sources:
               - source: data_dragon
                 version: 16.5.1
+          - hash: 
+              sha256:e1ca0426a4773d4a0dc2a11a4c9d0a55a812467d66f14d922e3d8b2d6f442c2e
+            value: 
+              华洛，奎因的德玛西亚鹰，会周期性地用<keywordMajor>侵扰</keywordMajor>标记敌人。奎因对<keywordMajor>侵扰</keywordMajor>目标的第一次普攻将造成额外物理伤害。
+            first_seen: '16.14'
+            last_seen: 16.14.1
+            similarity_to_previous: 0.451613
+            review_status: needs_review
+            sources:
+              - source: data_dragon
+                version: 16.14.1
+              - source: game_data
+                version: '16.14'
   - slot: Q
     ids:
       - value: QuinnQ
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -177,14 +269,22 @@ spells:
         - value: Blinding Assault
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 炫目攻势
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -193,12 +293,16 @@ spells:
             value: Quinn calls Valor to mark an enemy and hinder its vision 
               before damaging all enemies in the immediate area.
             first_seen: '16.5'
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
               - source: game_data
                 version: '16.5'
       zh_CN:
@@ -207,18 +311,26 @@ spells:
               sha256:40e4f9f98835f2217defbee07af1405ba294e92cb3eeab2daf9282cae896d3dc
             value: 奎因唤出华洛，来标记一名敌人并遮蔽其视野，然后对目标附近区域内的所有敌人造成伤害。
             first_seen: 16.5.1
-            last_seen: 16.5.1
+            last_seen: 16.14.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
+                version: 16.14.1
+              - source: data_dragon
                 version: 16.5.1
+              - source: game_data
+                version: '16.14'
   - slot: R
     ids:
       - value: QuinnR
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -226,14 +338,22 @@ spells:
         - value: Behind Enemy Lines
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 深入敌后
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -251,6 +371,20 @@ spells:
                 version: 16.5.1
               - source: game_data
                 version: '16.5'
+          - hash: 
+              sha256:c4150a5b0388a721393636158f21c9aa0b5d8d5312e714cf12cd4ecd05421753
+            value: Quinn and Valor team up to fly around at great speed.  Ending
+              the ability casts Skystrike, which deals damage to nearby enemies 
+              and marks champions with Harrier.
+            first_seen: '16.14'
+            last_seen: 16.14.1
+            similarity_to_previous: 0.941176
+            review_status: needs_review
+            sources:
+              - source: data_dragon
+                version: 16.14.1
+              - source: game_data
+                version: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -263,12 +397,28 @@ spells:
             sources:
               - source: data_dragon
                 version: 16.5.1
+          - hash: 
+              sha256:3924a0935088927e4cc4ec3c56cdb5e789336f04840551d1349b1d7123118e48
+            value: 奎因和华洛联成一体并以极高的速度进行移动。在结束此技能时会施放【鹰翼天翔】，对附近的敌人造成伤害并用侵扰标记英雄们。
+            first_seen: '16.14'
+            last_seen: 16.14.1
+            similarity_to_previous: 0.888889
+            review_status: needs_review
+            sources:
+              - source: data_dragon
+                version: 16.14.1
+              - source: game_data
+                version: '16.14'
   - slot: W
     ids:
       - value: QuinnW
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
           - source: game_data
             version: '16.5'
     names:
@@ -276,14 +426,22 @@ spells:
         - value: Heightened Senses
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
             - source: game_data
               version: '16.5'
       zh_CN:
         - value: 敏锐感知
           sources:
             - source: data_dragon
+              version: 16.14.1
+            - source: data_dragon
               version: 16.5.1
+            - source: game_data
+              version: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -301,6 +459,20 @@ spells:
                 version: 16.5.1
               - source: game_data
                 version: '16.5'
+          - hash: 
+              sha256:11644aeda465e5eb740ebf15e106693cb343250248189a14d7466f90ca6b50ef
+            value: Passively grants Quinn Attack Speed and Move Speed after she 
+              attacks a <keywordMajor>Harrier</keywordMajor> target. Activate to
+              have Valor reveal a large area nearby.
+            first_seen: '16.14'
+            last_seen: 16.14.1
+            similarity_to_previous: 0.835821
+            review_status: needs_review
+            sources:
+              - source: data_dragon
+                version: 16.14.1
+              - source: game_data
+                version: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -314,3 +486,16 @@ spells:
             sources:
               - source: data_dragon
                 version: 16.5.1
+          - hash: 
+              sha256:f2b26b7635234a26456fa941a5a75d64793218dfa783fa88864e4da69806b905
+            value: 
+              在奎因攻击了一名<keywordMajor>侵扰</keywordMajor>目标后，被动地为奎因提供攻击速度和移动速度。主动激活可以让华洛显形附近的一大片区域。
+            first_seen: '16.14'
+            last_seen: 16.14.1
+            similarity_to_previous: 0.630952
+            review_status: needs_review
+            sources:
+              - source: data_dragon
+                version: 16.14.1
+              - source: game_data
+                version: '16.14'

@@ -15,12 +15,26 @@ entity:
             version: 16.5.1
           - source: game_data
             version: '16.5'
+      - value: Shyvana Ironscale
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
     zh_CN:
       - value: 钢之逆鳞 希瓦娜
         sources:
           - source: data_dragon
+            version: 16.14.1
+          - source: data_dragon
             version: 16.5.1
+          - source: game_data
+            version: '16.14'
 skinlines:
+  - id: 38
+    sources:
+      - source: game_data
+        version: '16.14'
   - id: 167
     sources:
       - source: game_data

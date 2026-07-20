@@ -1,0 +1,23 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Alistar
+  champion_id: 12
+  skin_number: 42
+  skin_token: Skin42
+  id: 12042
+  alias: AlistarSkin42
+  names:
+    en_US:
+      - value: Elderwood Alistar (Catseye)
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+    zh_CN:
+      - value: 永恒之森 阿利斯塔 辉瓣
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+skinlines: []
+aliases:
+  - AlistarSkin42

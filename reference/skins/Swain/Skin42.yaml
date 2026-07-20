@@ -1,0 +1,31 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Swain
+  champion_id: 50
+  skin_number: 42
+  skin_token: Skin42
+  id: 50042
+  alias: SwainSkin42
+  names:
+    en_US:
+      - value: Fried Chicken King Swain
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+    zh_CN:
+      - value: 炸鸡之王 斯维因
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+skinlines:
+  - id: 100
+    sources:
+      - source: game_data
+        version: '16.14'
+aliases:
+  - SwainSkin42

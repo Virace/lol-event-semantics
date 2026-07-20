@@ -1,0 +1,11 @@
+scope: champion
+owner: Locke
+aliases:
+  LockeConsumeAttack:
+    kind: champion_spell_component
+    spell: q
+    component: mark_detonation_attack
+    label: 印记引爆攻击
+    confidence: medium
+    source: manual_contextual_alias
+    note: LockeConsumeAttack 对应 Q 技能 Ritual Nails（伏魔三钉）描述「洛克的攻击可以引爆印记，造成额外伤害」，即引爆（消耗）Q 印记的强化攻击。

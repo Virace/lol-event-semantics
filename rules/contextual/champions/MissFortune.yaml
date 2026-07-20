@@ -17,6 +17,14 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: MissFortuneBasicAttack 在 Miss Fortune 事件中对应基础攻击音效。
+  MissFortuneBulletEMPTY:
+    kind: champion_spell_component
+    spell: p
+    component: bullet_empty
+    label: 子弹（空弹）
+    confidence: medium
+    source: manual_contextual_alias
+    note: MissFortuneBulletEMPTY 在 Miss Fortune 事件中是子弹打空/空弹音效层（OnMissileLaunch 相位）；reference 各技能描述仅泛称子弹、无空弹归属证据，按普攻子弹音效层挂被动 P 处理，不归属具体主动技能。
   MissFortuneCritAttack:
     kind: champion_spell_component
     spell: p

@@ -1,0 +1,23 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Riven
+  champion_id: 92
+  skin_number: 42
+  skin_token: Skin42
+  id: 92042
+  alias: RivenSkin42
+  names:
+    en_US:
+      - value: Sentinel Riven (Pearl)
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+    zh_CN:
+      - value: 光明哨兵 锐雯 极地抗击者
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+skinlines: []
+aliases:
+  - RivenSkin42

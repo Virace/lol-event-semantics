@@ -89,3 +89,11 @@ aliases:
     confidence: high
     source: manual_contextual_alias
     note: ZedShadowDash 在 ZedStormNinja 或带 owner 前缀的 SFX 中对应 W 技能 Living Shadow 的分身位移表现。
+  ZedShadowDashMissile:
+    kind: champion_spell_component
+    spell: w
+    component: shadow_dash_missile
+    label: 影子冲刺飞行物
+    confidence: medium
+    source: manual_contextual_alias
+    note: ZedShadowDashMissile 在带 owner 前缀的 Zed SFX 中对应 W 技能 Living Shadow（影奥义！分身）的影分身突进飞行物，reference 描述「劫的影分身向前突进」。

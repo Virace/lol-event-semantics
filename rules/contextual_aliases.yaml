@@ -141,12 +141,12 @@ champions:
       note: ObeliskSound 在 Azir 事件中对应被动 Shurima's Legacy 的太阳圆盘/防御塔音效状态。
     SoldierMissile:
       kind: champion_spell_component
-      spell: q
+      spell: w
       component: soldier_missile
       label: 沙兵飞弹
       confidence: medium
       source: manual_contextual_alias
-      note: SoldierMissile 在 Azir 事件中对应沙兵攻击飞弹表现。
+      note: SoldierMissile 在 Azir 事件中对应沙兵攻击飞弹，归属与 AzirSoldierMissile 一致——W 技能 Arise! 召唤的沙兵替代普攻发出的攻击飞行物（Q 为指挥沙兵冲刺，不产生攻击飞弹）。
     IsChannelingPassive:
       kind: champion_spell_component
       spell: p
@@ -155,6 +155,14 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: IsChannelingPassive 在 Azir 事件中对应被动引导/沙兵相关的状态变化。
+    AzirSoldierMissile:
+      kind: champion_spell_component
+      spell: w
+      component: soldier_attack_missile
+      label: 沙兵攻击飞行物
+      confidence: medium
+      source: manual_contextual_alias
+      note: AzirSoldierMissile 在 Azir/AzirSoldier 事件中对应 W 技能 Arise! 召唤的沙兵替代普攻的攻击飞行物，reference 描述「士兵的攻击会对一条直线上的敌人造成魔法伤害」。
   Aurora:
     Passive3D:
       kind: champion_spell_component
@@ -270,6 +278,22 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: Shield 在 Diana 事件中对应 W 技能 Pale Cascade 的护盾状态。
+    ArcThrow:
+      kind: champion_spell_component
+      spell: q
+      component: crescent_strike_arc
+      label: 新月打击弧形投掷
+      confidence: medium
+      source: manual_contextual_alias
+      note: ArcThrow 对应 Q 技能 Crescent Strike（新月打击）「释放一道月能光束，对弧形范围内的敌人造成伤害」的弧形投射；hit/miss 相位表明是可落空的飞行物，Q 是 Diana 唯一此类技能。
+    DianaVortex:
+      kind: champion_spell_component
+      spell: r
+      component: moonfall_vortex
+      label: 月之降临旋涡
+      confidence: medium
+      source: manual_contextual_alias
+      note: DianaVortex 与既有 VortexUlt 同源，对应 R 技能 Moonfall（月之降临）聚拢敌人的旋涡表现。
   Elise:
     SpiderQCast:
       kind: champion_spell_component
@@ -440,6 +464,22 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: MarinerDoomBomb 在 Fizz 事件中对应 R 技能 Chum the Waters 命中后的爆发表现。
+    MarinerDoom:
+      kind: champion_spell_component
+      spell: r
+      component: chum_the_waters_cast
+      label: 巨鲨强袭施放
+      confidence: medium
+      source: manual_contextual_alias
+      note: FizzMarinerDoom 是 Fizz R 技能 Chum the Waters（巨鲨强袭）的内部名主干，OnCast/pre 相位对应扔出鱼饵的施放段。
+    SeastonePassive:
+      kind: champion_spell_component
+      spell: w
+      component: seastone_trident_passive
+      label: 海石三叉戟被动
+      confidence: medium
+      source: manual_contextual_alias
+      note: FizzSeastonePassive 对应 W 技能 Seastone Trident（海石三叉戟）的被动流血层——「菲兹的攻击会让他的敌人们流血」。
   Graves:
     SmokeGrenade:
       kind: champion_spell_component
@@ -847,6 +887,14 @@ champions:
       confidence: high
       source: manual_contextual_alias
       note: ObduracyAttack 在 Malphite SFX 中对应 W 技能 Thunderclap/Obduracy 的强化普攻表现。
+    ObduracyBuff:
+      kind: champion_spell_component
+      spell: w
+      component: obduracy_buff
+      label: 雷霆拍击增益
+      confidence: medium
+      source: manual_contextual_alias
+      note: reference W 技能 id 含 Obduracy（Thunderclap 雷霆拍击），ObduracyBuff 对应 W 开启期间的强化增益状态，与 ObduracyAttack 同源。
   Lux:
     LightstrikeToggle:
       kind: champion_spell_component
@@ -913,6 +961,14 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: MissFortuneCritAttack 在 Miss Fortune 事件中对应暴击基础攻击音效。
+    MissFortuneBulletEMPTY:
+      kind: champion_spell_component
+      spell: p
+      component: bullet_empty
+      label: 子弹（空弹）
+      confidence: medium
+      source: manual_contextual_alias
+      note: MissFortuneBulletEMPTY 在 Miss Fortune 事件中是子弹打空/空弹音效层（OnMissileLaunch 相位）；reference 各技能描述仅泛称子弹、无空弹归属证据，按普攻子弹音效层挂被动 P 处理，不归属具体主动技能。
   Sona:
     AmbientQSound:
       kind: champion_spell_component
@@ -1299,6 +1355,86 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: ShyvanaCritAttack 在 ShyvanaDragon 事件中对应龙形态暴击攻击。
+    ShyvanaDragonDeath3D:
+      kind: champion_spell_component
+      spell: r
+      component: dragon_form_death
+      label: 龙形态死亡
+      confidence: medium
+      source: manual_contextual_alias
+      note: ShyvanaDragonDeath3D 在 ShyvanaSkin04 事件中对应龙形态死亡动作音效，龙形态为 R 技能 Dragon's Descent 状态，3D 仅为音频维度信息。
+    ShyvanaDragonJoke3D:
+      kind: champion_spell_component
+      spell: r
+      component: dragon_form_joke
+      label: 龙形态玩笑
+      confidence: medium
+      source: manual_contextual_alias
+      note: ShyvanaDragonJoke3D 在 ShyvanaSkin04 事件中对应龙形态玩笑动作音效，龙形态为 R 技能 Dragon's Descent 状态，3D 仅为音频维度信息。
+    ShyvanaDragonLaugh3D:
+      kind: champion_spell_component
+      spell: r
+      component: dragon_form_laugh
+      label: 龙形态大笑
+      confidence: medium
+      source: manual_contextual_alias
+      note: ShyvanaDragonLaugh3D 在 ShyvanaSkin04 事件中对应龙形态大笑动作音效，龙形态为 R 技能 Dragon's Descent 状态，3D 仅为音频维度信息。
+    ShyvanaDragonQ1:
+      kind: champion_spell_component
+      spell: q
+      component: dragon_q_stage_1
+      label: 龙形态Q一段
+      confidence: medium
+      source: manual_contextual_alias
+      note: ShyvanaDragonQ1 在 ShyvanaSkin04 事件中对应龙形态 Q 技能 Emberstrike 的一段打击；16.14 描述该技能可再次施放且魔龙形态额外提供一次再施放，共三段。
+    ShyvanaDragonQ2:
+      kind: champion_spell_component
+      spell: q
+      component: dragon_q_stage_2
+      label: 龙形态Q二段
+      confidence: medium
+      source: manual_contextual_alias
+      note: ShyvanaDragonQ2 在 ShyvanaSkin04 事件中对应龙形态 Q 技能 Emberstrike 的二段再施放。
+    ShyvanaDragonQ3:
+      kind: champion_spell_component
+      spell: q
+      component: dragon_q_stage_3
+      label: 龙形态Q三段
+      confidence: medium
+      source: manual_contextual_alias
+      note: ShyvanaDragonQ3 在 ShyvanaSkin04 事件中对应龙形态 Q 技能 Emberstrike 的三段再施放，即魔龙形态额外提供的对单体巨额伤害一击。
+    ShyvanaDragonRTransform:
+      kind: champion_spell_component
+      spell: r
+      component: dragon_transform
+      label: 龙形态变身
+      confidence: medium
+      source: manual_contextual_alias
+      note: ShyvanaDragonRTransform 在 ShyvanaSkin04 事件中对应 R 技能 Dragon's Descent 的变身状态，与 Transform 同义。
+    ShyvanaDragonRecall3D:
+      kind: champion_spell_component
+      spell: r
+      component: dragon_form_recall
+      label: 龙形态回城
+      confidence: medium
+      source: manual_contextual_alias
+      note: ShyvanaDragonRecall3D 在 ShyvanaSkin04 事件中对应龙形态回城动作音效，龙形态为 R 技能 Dragon's Descent 状态，3D 仅为音频维度信息。
+    ShyvanaDragonRespawn3D:
+      kind: champion_spell_component
+      spell: r
+      component: dragon_form_respawn
+      label: 龙形态重生
+      confidence: medium
+      source: manual_contextual_alias
+      note: ShyvanaDragonRespawn3D 在 ShyvanaSkin04 事件中对应龙形态重生动作音效，龙形态为 R 技能 Dragon's Descent 状态，3D 仅为音频维度信息。
+    ShyvanaDragonTaunt3D:
+      kind: champion_spell_component
+      spell: r
+      component: dragon_form_taunt
+      label: 龙形态嘲讽
+      confidence: medium
+      source: manual_contextual_alias
+      note: ShyvanaDragonTaunt3D 在 ShyvanaSkin04 事件中对应龙形态嘲讽动作音效，龙形态为 R 技能 Dragon's Descent 状态，3D 仅为音频维度信息。
     ShyvanaIDDamage:
       kind: champion_spell_component
       spell: p
@@ -1520,6 +1656,14 @@ champions:
       confidence: high
       source: manual_contextual_alias
       note: ZedShadowDash 在 ZedStormNinja 或带 owner 前缀的 SFX 中对应 W 技能 Living Shadow 的分身位移表现。
+    ZedShadowDashMissile:
+      kind: champion_spell_component
+      spell: w
+      component: shadow_dash_missile
+      label: 影子冲刺飞行物
+      confidence: medium
+      source: manual_contextual_alias
+      note: ZedShadowDashMissile 在带 owner 前缀的 Zed SFX 中对应 W 技能 Living Shadow（影奥义！分身）的影分身突进飞行物，reference 描述「劫的影分身向前突进」。
   Orianna:
     Ball:
       kind: champion_spell_component
@@ -1625,6 +1769,22 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: OrianaGhostSelf 使用旧拼写 Oriana，语义同 Orianna GhostSelf。
+    OrianaIzuna:
+      kind: champion_spell_component
+      spell: q
+      component: command_attack_ball_hit
+      label: 指令：攻击魔偶命中
+      confidence: medium
+      source: manual_contextual_alias
+      note: "OrianaIzuna 使用旧拼写 Oriana，语义同 Orianna Izuna；reference Q 技能内部 id 为 OrianaIzunaCommand，对应 Q 技能 Command: Attack 的魔偶移动/命中表现。"
+    OrianaRedact:
+      kind: champion_spell_component
+      spell: e
+      component: protect_command
+      label: 指令：防卫
+      confidence: medium
+      source: manual_contextual_alias
+      note: "OrianaRedact 使用旧拼写 Oriana，对应 E 技能 Command: Protect 的内部名（reference E 技能 id 为 OrianaRedactCommand），OnMissileLaunch 相位为魔偶飞向友军途中的表现。"
   XinZhao:
     QIdle:
       kind: champion_spell_component
@@ -1756,6 +1916,14 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: MageSpear 在 Xerath 事件中对应 E 技能 Shocking Orb 的飞行控制表现。
+    LocusPulse:
+      kind: champion_spell_component
+      spell: r
+      component: locus_pulse
+      label: 炮台形态脉冲
+      confidence: medium
+      source: manual_contextual_alias
+      note: LocusPulse 沿用 R 技能内部 id XerathLocusOfPower2 的 Locus 词干（Rite of the Arcane 奥术仪式），OnMissileLaunch 相位对应炮台形态发射的远程脉冲；与同上下文 LocusOfPower→R 一致。
 
   Bard:
     meep:
@@ -2554,6 +2722,14 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: MaokaiDrain 在 GraveDiggerMaokai 事件中对应皮肤主题吸取/循环音效。
+    MaokaiTrunkLineMissile:
+      kind: champion_spell_component
+      spell: q
+      component: bramble_smash_shockwave
+      label: 荆棘重击冲击波
+      confidence: medium
+      source: manual_contextual_alias
+      note: MaokaiTrunkLineMissile（树干直线飞行物）出现在 GraveDiggerMaokai 历史事件中，Q 技能 Bramble Smash（荆棘重击）「用一记冲击波击退附近的敌人」是茂凯唯一的直线冲击波，OnMissileLaunch 相位与之吻合。
   Varus:
     VarusBasicAttack:
       kind: champion_spell_component
@@ -2662,6 +2838,15 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: LissandraCritAttack 在 Lissandra 皮肤别名事件中对应暴击攻击。
+  Locke:
+    LockeConsumeAttack:
+      kind: champion_spell_component
+      spell: q
+      component: mark_detonation_attack
+      label: 印记引爆攻击
+      confidence: medium
+      source: manual_contextual_alias
+      note: LockeConsumeAttack 对应 Q 技能 Ritual Nails（伏魔三钉）描述「洛克的攻击可以引爆印记，造成额外伤害」，即引爆（消耗）Q 印记的强化攻击。
   Lucian:
     LucianBasicAttack:
       kind: champion_spell_component
@@ -2763,6 +2948,38 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: LilliaCritAttack 在 Lillia 事件中对应暴击基础攻击音效。
+    Drowsey:
+      kind: champion_spell_component
+      spell: r
+      component: drowsy_state
+      label: 困倦状态
+      confidence: medium
+      source: manual_contextual_alias
+      note: Drowsey 是 Drowsy 的拼写变体；R 技能 Lilting Lullaby（夜阑谣）描述「陷入困倦状态，然后陷入昏睡状态」，对应昏睡前的困倦阶段。
+    LilliaERollingMissile:
+      kind: champion_spell_component
+      spell: e
+      component: swirlseed_rolling_missile
+      label: 流涡种滚动飞弹
+      confidence: medium
+      source: manual_contextual_alias
+      note: LilliaERollingMissile 对应 E 技能 Swirlseed（流涡种）描述「种子未能命中任何东西时将继续滚动」的滚动种子飞行物。
+    LilliaRSleep:
+      kind: champion_spell_component
+      spell: r
+      component: lullaby_sleep
+      label: 夜阑谣昏睡
+      confidence: medium
+      source: manual_contextual_alias
+      note: LilliaRSleep 对应 R 技能 Lilting Lullaby（夜阑谣）令敌人「陷入昏睡状态」的持续昏睡层。
+    LilliaRSleepDealDamage:
+      kind: champion_spell_component
+      spell: r
+      component: lullaby_sleep_wake_damage
+      label: 夜阑谣唤醒伤害
+      confidence: medium
+      source: manual_contextual_alias
+      note: LilliaRSleepDealDamage 对应 R 技能夜阑谣描述「这些敌人在被强制唤醒时会受到额外伤害」的昏睡破除伤害段。
   Annie:
     AnnieTibbersBasicAttack:
       kind: champion_spell_component
@@ -2916,6 +3133,14 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: Macetransform 在 MordekaiserSkin54 事件中对应武器变形表现。
+    MordekaiserSoulMissile:
+      kind: champion_spell_component
+      spell: e
+      component: deaths_grasp_soul_missile
+      label: 断魂一扼灵魂飞弹
+      confidence: medium
+      source: manual_contextual_alias
+      note: MordekaiserSoulMissile 仅出现在 OnMissileLaunch 相位，对应 E 技能 Death's Grasp（断魂一扼）「拉拽一个区域内的所有敌人」的拉拽弹道；Soul 与中文名「断魂」相扣，全套技能中仅 E 具备弹道表现。
   Neeko:
     Stun:
       kind: champion_spell_component
@@ -3401,7 +3626,7 @@ sfx:
     Announcer:
       kind: map_system_entity
       component: announcer
-      label: 播报员
+      label: 通告员
       confidence: high
       source: manual_sfx_alias
       note: 全场播报语音（Ace/FirstBlood 等），主代理裁决词条（T3.4 头部词条表）。
@@ -3478,10 +3703,10 @@ sfx:
     Atakhan:
       kind: map_system_entity
       component: atakhan
-      label: 阿塔坎
+      label: 厄塔汗
       confidence: high
       source: manual_sfx_alias
-      note: S15 史诗野怪，主代理裁决词条（T3.4 头部词条表）。
+      note: S15 史诗级野怪。国服客户端字符串表 129:0 用「厄塔汗」（荆棘/渴血/灭尽厄塔汗），与 counterpart 词表一致（2026-07-20 检查轮勘误，原「阿塔坎」为表外译名）。
     GameMode:
       kind: map_system_entity
       component: game_mode

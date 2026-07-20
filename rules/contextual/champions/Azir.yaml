@@ -1,6 +1,14 @@
 scope: champion
 owner: Azir
 aliases:
+  AzirSoldierMissile:
+    kind: champion_spell_component
+    spell: w
+    component: soldier_attack_missile
+    label: 沙兵攻击飞行物
+    confidence: medium
+    source: manual_contextual_alias
+    note: AzirSoldierMissile 在 Azir/AzirSoldier 事件中对应 W 技能 Arise! 召唤的沙兵替代普攻的攻击飞行物，reference 描述「士兵的攻击会对一条直线上的敌人造成魔法伤害」。
   IsChannelingPassive:
     kind: champion_spell_component
     spell: p
@@ -35,9 +43,9 @@ aliases:
     note: ObeliskVOEnemy 在 Azir 事件中对应被动 Shurima's Legacy 的圆盘/防御塔语音。
   SoldierMissile:
     kind: champion_spell_component
-    spell: q
+    spell: w
     component: soldier_missile
     label: 沙兵飞弹
     confidence: medium
     source: manual_contextual_alias
-    note: SoldierMissile 在 Azir 事件中对应沙兵攻击飞弹表现。
+    note: SoldierMissile 在 Azir 事件中对应沙兵攻击飞弹，归属与 AzirSoldierMissile 一致——W 技能 Arise! 召唤的沙兵替代普攻发出的攻击飞行物（Q 为指挥沙兵冲刺，不产生攻击飞弹）。

@@ -1,0 +1,31 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Diana
+  champion_id: 131
+  skin_number: 77
+  skin_token: Skin77
+  id: 131077
+  alias: DianaSkin77
+  names:
+    en_US:
+      - value: Eclipse Eternal Aspect Diana
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+    zh_CN:
+      - value: 无光月神 永恒星灵 黛安娜
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+skinlines:
+  - id: 222
+    sources:
+      - source: game_data
+        version: '16.14'
+aliases:
+  - DianaSkin77

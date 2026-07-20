@@ -1,0 +1,24 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Swain
+  champion_id: 50
+  skin_number: 5
+  skin_token: Skin05
+  id: 50005
+  alias: SwainSkin05
+  names:
+    en_US:
+      - value: Dragon Master Swain (Pearl)
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+    zh_CN:
+      - value: 驯龙大师 斯维因 至高言灵
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+skinlines: []
+aliases:
+  - SwainSkin05
+  - SwainSkin5

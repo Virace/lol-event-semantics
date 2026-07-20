@@ -1,0 +1,23 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Bard
+  champion_id: 432
+  skin_number: 42
+  skin_token: Skin42
+  id: 432042
+  alias: BardSkin42
+  names:
+    en_US:
+      - value: Spirit Blossom Bard (Obsidian)
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+    zh_CN:
+      - value: 灵魂莲华 巴德 月升
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+skinlines: []
+aliases:
+  - BardSkin42

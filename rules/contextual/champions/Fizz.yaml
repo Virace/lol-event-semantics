@@ -25,6 +25,14 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: JumpTwo 在 Fizz 事件中对应 E 技能 Playful / Trickster 的二段落地/位移表现。
+  MarinerDoom:
+    kind: champion_spell_component
+    spell: r
+    component: chum_the_waters_cast
+    label: 巨鲨强袭施放
+    confidence: medium
+    source: manual_contextual_alias
+    note: FizzMarinerDoom 是 Fizz R 技能 Chum the Waters（巨鲨强袭）的内部名主干，OnCast/pre 相位对应扔出鱼饵的施放段。
   MarinerDoomBomb:
     kind: champion_spell_component
     spell: r
@@ -41,6 +49,14 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: MarinerDoomMissile 在 Fizz 事件中对应 R 技能 Chum the Waters 的鱼饵/飞行物。
+  SeastonePassive:
+    kind: champion_spell_component
+    spell: w
+    component: seastone_trident_passive
+    label: 海石三叉戟被动
+    confidence: medium
+    source: manual_contextual_alias
+    note: FizzSeastonePassive 对应 W 技能 Seastone Trident（海石三叉戟）的被动流血层——「菲兹的攻击会让他的敌人们流血」。
   TrickSlam:
     kind: champion_spell_component
     spell: e

@@ -1,0 +1,24 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Swain
+  champion_id: 50
+  skin_number: 9
+  skin_token: Skin09
+  id: 50009
+  alias: SwainSkin09
+  names:
+    en_US:
+      - value: Dragon Master Swain (Sapphire)
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+    zh_CN:
+      - value: 驯龙大师 斯维因 苍蓝之手
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+skinlines: []
+aliases:
+  - SwainSkin09
+  - SwainSkin9

@@ -1,0 +1,23 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Braum
+  champion_id: 201
+  skin_number: 21
+  skin_token: Skin21
+  id: 201021
+  alias: BraumSkin21
+  names:
+    en_US:
+      - value: Dragonslayer Braum (LEC)
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+    zh_CN:
+      - value: 屠龙勇士 布隆 金瞳龙首之盾
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+skinlines: []
+aliases:
+  - BraumSkin21

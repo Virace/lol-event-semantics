@@ -1,0 +1,31 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Sejuani
+  champion_id: 113
+  skin_number: 48
+  skin_token: Skin48
+  id: 113048
+  alias: SejuaniSkin48
+  names:
+    en_US:
+      - value: Pug Trainer Sejuani
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+    zh_CN:
+      - value: 哈巴狗训练师 瑟庄妮
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+skinlines:
+  - id: 98
+    sources:
+      - source: game_data
+        version: '16.14'
+aliases:
+  - SejuaniSkin48

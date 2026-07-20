@@ -1,0 +1,31 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Ivern
+  champion_id: 427
+  skin_number: 31
+  skin_token: Skin31
+  id: 427031
+  alias: IvernSkin31
+  names:
+    en_US:
+      - value: Rain Shepherd Ivern
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+    zh_CN:
+      - value: 青蛙雨衣 艾翁
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+skinlines:
+  - id: 205
+    sources:
+      - source: game_data
+        version: '16.14'
+aliases:
+  - IvernSkin31

@@ -27,6 +27,14 @@ aliases:
     source: manual_contextual_alias
     note: LocusOfPower 在 Xerath 事件中对应 R 技能 Rite of the Arcane 的远程炮击形态；数字尾缀作为 
       spell_rank 保留。
+  LocusPulse:
+    kind: champion_spell_component
+    spell: r
+    component: locus_pulse
+    label: 炮台形态脉冲
+    confidence: medium
+    source: manual_contextual_alias
+    note: LocusPulse 沿用 R 技能内部 id XerathLocusOfPower2 的 Locus 词干（Rite of the Arcane 奥术仪式），OnMissileLaunch 相位对应炮台形态发射的远程脉冲；与同上下文 LocusOfPower→R 一致。
   MageSpear:
     kind: champion_spell_component
     spell: e

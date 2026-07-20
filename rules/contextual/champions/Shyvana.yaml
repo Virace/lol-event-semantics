@@ -105,6 +105,86 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: ShyvanaCritAttack 在 ShyvanaDragon 事件中对应龙形态暴击攻击。
+  ShyvanaDragonDeath3D:
+    kind: champion_spell_component
+    spell: r
+    component: dragon_form_death
+    label: 龙形态死亡
+    confidence: medium
+    source: manual_contextual_alias
+    note: ShyvanaDragonDeath3D 在 ShyvanaSkin04 事件中对应龙形态死亡动作音效，龙形态为 R 技能 Dragon's Descent 状态，3D 仅为音频维度信息。
+  ShyvanaDragonJoke3D:
+    kind: champion_spell_component
+    spell: r
+    component: dragon_form_joke
+    label: 龙形态玩笑
+    confidence: medium
+    source: manual_contextual_alias
+    note: ShyvanaDragonJoke3D 在 ShyvanaSkin04 事件中对应龙形态玩笑动作音效，龙形态为 R 技能 Dragon's Descent 状态，3D 仅为音频维度信息。
+  ShyvanaDragonLaugh3D:
+    kind: champion_spell_component
+    spell: r
+    component: dragon_form_laugh
+    label: 龙形态大笑
+    confidence: medium
+    source: manual_contextual_alias
+    note: ShyvanaDragonLaugh3D 在 ShyvanaSkin04 事件中对应龙形态大笑动作音效，龙形态为 R 技能 Dragon's Descent 状态，3D 仅为音频维度信息。
+  ShyvanaDragonQ1:
+    kind: champion_spell_component
+    spell: q
+    component: dragon_q_stage_1
+    label: 龙形态Q一段
+    confidence: medium
+    source: manual_contextual_alias
+    note: ShyvanaDragonQ1 在 ShyvanaSkin04 事件中对应龙形态 Q 技能 Emberstrike 的一段打击；16.14 描述该技能可再次施放且魔龙形态额外提供一次再施放，共三段。
+  ShyvanaDragonQ2:
+    kind: champion_spell_component
+    spell: q
+    component: dragon_q_stage_2
+    label: 龙形态Q二段
+    confidence: medium
+    source: manual_contextual_alias
+    note: ShyvanaDragonQ2 在 ShyvanaSkin04 事件中对应龙形态 Q 技能 Emberstrike 的二段再施放。
+  ShyvanaDragonQ3:
+    kind: champion_spell_component
+    spell: q
+    component: dragon_q_stage_3
+    label: 龙形态Q三段
+    confidence: medium
+    source: manual_contextual_alias
+    note: ShyvanaDragonQ3 在 ShyvanaSkin04 事件中对应龙形态 Q 技能 Emberstrike 的三段再施放，即魔龙形态额外提供的对单体巨额伤害一击。
+  ShyvanaDragonRTransform:
+    kind: champion_spell_component
+    spell: r
+    component: dragon_transform
+    label: 龙形态变身
+    confidence: medium
+    source: manual_contextual_alias
+    note: ShyvanaDragonRTransform 在 ShyvanaSkin04 事件中对应 R 技能 Dragon's Descent 的变身状态，与 Transform 同义。
+  ShyvanaDragonRecall3D:
+    kind: champion_spell_component
+    spell: r
+    component: dragon_form_recall
+    label: 龙形态回城
+    confidence: medium
+    source: manual_contextual_alias
+    note: ShyvanaDragonRecall3D 在 ShyvanaSkin04 事件中对应龙形态回城动作音效，龙形态为 R 技能 Dragon's Descent 状态，3D 仅为音频维度信息。
+  ShyvanaDragonRespawn3D:
+    kind: champion_spell_component
+    spell: r
+    component: dragon_form_respawn
+    label: 龙形态重生
+    confidence: medium
+    source: manual_contextual_alias
+    note: ShyvanaDragonRespawn3D 在 ShyvanaSkin04 事件中对应龙形态重生动作音效，龙形态为 R 技能 Dragon's Descent 状态，3D 仅为音频维度信息。
+  ShyvanaDragonTaunt3D:
+    kind: champion_spell_component
+    spell: r
+    component: dragon_form_taunt
+    label: 龙形态嘲讽
+    confidence: medium
+    source: manual_contextual_alias
+    note: ShyvanaDragonTaunt3D 在 ShyvanaSkin04 事件中对应龙形态嘲讽动作音效，龙形态为 R 技能 Dragon's Descent 状态，3D 仅为音频维度信息。
   ShyvanaIDDamage:
     kind: champion_spell_component
     spell: p

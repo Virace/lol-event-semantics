@@ -1,0 +1,31 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Shaco
+  champion_id: 35
+  skin_number: 71
+  skin_token: Skin71
+  id: 35071
+  alias: ShacoSkin71
+  names:
+    en_US:
+      - value: Prestige Pandemonium Shaco
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+    zh_CN:
+      - value: 至臻 万魔殿 萨科
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+          - source: game_data
+            version: '16.14'
+skinlines:
+  - id: 229
+    sources:
+      - source: game_data
+        version: '16.14'
+aliases:
+  - ShacoSkin71

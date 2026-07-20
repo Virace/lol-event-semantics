@@ -1,0 +1,23 @@
+schema_version: 1
+entity:
+  type: skin
+  champion_alias: Corki
+  champion_id: 42
+  skin_number: 10
+  skin_token: Skin10
+  id: 42010
+  alias: CorkiSkin10
+  names:
+    en_US:
+      - value: Arcade Corki (Ruby)
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+    zh_CN:
+      - value: 电玩上校 库奇 红色彗星
+        sources:
+          - source: data_dragon
+            version: 16.14.1
+skinlines: []
+aliases:
+  - CorkiSkin10
