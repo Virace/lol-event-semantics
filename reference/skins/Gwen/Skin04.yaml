@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: skin
   champion_alias: Gwen
@@ -12,12 +12,14 @@ entity:
       - value: Space Groove Gwen (Rose Quartz)
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
     zh_CN:
       - value: “百万调音” 格温 我也来补车
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
 skinlines: []
 aliases:
   - GwenSkin04

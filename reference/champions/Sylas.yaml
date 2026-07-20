@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: champion
   id: 517
@@ -8,110 +8,95 @@ entity:
       - value: Sylas
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     zh_CN:
       - value: 塞拉斯
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
   title:
     zh_CN:
       - value: 解脱者
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
   search_alias:
     zh_CN:
       - value: jietuozhe
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
       - value: jtz
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
       - value: sailasi
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
       - value: sls
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
       - value: sn
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
       - value: suannan
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
 spells:
   - slot: E
     ids:
       - value: SylasE
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Abscond / Abduct
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 潜掠/强掳
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -125,13 +110,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -143,44 +126,40 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
   - slot: P
     ids:
       - value: SylasPassive
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Petricite Burst
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 破敌禁法
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -196,13 +175,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -214,44 +191,40 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
   - slot: Q
     ids:
       - value: SylasQ
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Chain Lash
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 锁链鞭击
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -267,13 +240,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -286,44 +257,40 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
   - slot: R
     ids:
       - value: SylasR
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Hijack
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 其人之道
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -337,13 +304,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -355,44 +320,40 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
   - slot: W
     ids:
       - value: SylasW
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Kingslayer
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 弑君突刺
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -406,13 +367,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -424,8 +383,8 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'

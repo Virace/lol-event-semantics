@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: champion
   id: 421
@@ -8,124 +8,107 @@ entity:
       - value: Rek'Sai
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     zh_CN:
       - value: 雷克塞
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
   title:
     zh_CN:
       - value: 虚空遁地兽
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
   nicknames:
     zh_CN:
       - value: 挖掘机
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
       - value: 雷克赛
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
   search_alias:
     zh_CN:
       - value: leikesai
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
       - value: lks
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
       - value: wajueji
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
       - value: wjj
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
       - value: xkdds
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
       - value: xukongdundishou
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
 spells:
   - slot: E
     ids:
       - value: RekSaiE
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Furious Bite / Tunnel
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 狂野之噬 / 挖掘隧道
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -141,13 +124,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -160,44 +141,40 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
   - slot: P
     ids:
       - value: RekSaiPassive
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Fury of the Xer'Sai
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 艾克塞之怒
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -212,13 +189,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -230,44 +205,40 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
   - slot: Q
     ids:
       - value: RekSaiQ
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Queen's Wrath / Prey Seeker
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 女王之怒 / 猎物搜寻
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -282,13 +253,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -301,44 +270,40 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
   - slot: R
     ids:
       - value: RekSaiR
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Void Rush
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 虚空猛冲
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -353,13 +318,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -372,44 +335,40 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
   - slot: W
     ids:
       - value: RekSaiW
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Burrow / Un-burrow
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 遁地 / 破土而出
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -425,13 +384,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -444,8 +401,8 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'

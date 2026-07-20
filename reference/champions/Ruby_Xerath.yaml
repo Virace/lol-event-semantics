@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: champion
   id: 66612
@@ -8,20 +8,23 @@ entity:
       - value: Doom Bot Xerath
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
 spells:
   - slot: E
     ids:
       - value: Ruby_XerathE
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: Shocking Orb
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -34,19 +37,22 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'
   - slot: P
     ids:
       - value: Ruby_XerathPassive
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: Mana Surge
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -60,19 +66,22 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'
   - slot: Q
     ids:
       - value: Ruby_XerathQ
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: Arcanopulse
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -86,19 +95,22 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'
   - slot: R
     ids:
       - value: Ruby_XerathR
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: Rite of the Arcane
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -112,19 +124,22 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'
   - slot: W
     ids:
       - value: Ruby_XerathW
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: Eye of Destruction
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -139,4 +154,5 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'

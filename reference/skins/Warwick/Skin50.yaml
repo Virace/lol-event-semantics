@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: skin
   champion_alias: Warwick
@@ -12,12 +12,14 @@ entity:
       - value: Winterblessed Warwick (Sapphire)
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
     zh_CN:
       - value: 北极星使者 沃里克 智慧纽带
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
 skinlines: []
 aliases:
   - WarwickSkin50

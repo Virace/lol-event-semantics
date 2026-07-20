@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: skinline
   id: 55
@@ -8,11 +8,11 @@ entity:
       - value: Lunar Revel
         sources:
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     zh_CN:
       - value: 春节庆典
         sources:
           - source: game_data
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'

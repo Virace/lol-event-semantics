@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: skin
   champion_alias: Pyke
@@ -12,12 +12,14 @@ entity:
       - value: Sentinel Pyke (Resolute)
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
     zh_CN:
       - value: 光明哨兵 派克 坚定抗击者
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
 skinlines: []
 aliases:
   - PykeSkin43

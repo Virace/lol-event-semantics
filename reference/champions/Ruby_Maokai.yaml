@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: champion
   id: 66611
@@ -8,20 +8,23 @@ entity:
       - value: Doom Bot Maokai
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
 spells:
   - slot: E
     ids:
       - value: Ruby_MaokaiE
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: Sapling Toss
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -35,19 +38,22 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'
   - slot: P
     ids:
       - value: Ruby_MaokaiPassive
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: Sap Magic
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -62,19 +68,22 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'
   - slot: Q
     ids:
       - value: Ruby_MaokaiQ
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: Bramble Smash
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -88,19 +97,22 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'
   - slot: R
     ids:
       - value: Ruby_MaokaiR
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: Nature's Grasp
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -115,19 +127,22 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'
   - slot: W
     ids:
       - value: Ruby_MaokaiW
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: Twisted Advance
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -142,4 +157,5 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'

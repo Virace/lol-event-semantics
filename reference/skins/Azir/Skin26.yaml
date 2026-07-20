@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: skin
   champion_alias: Azir
@@ -12,12 +12,14 @@ entity:
       - value: Attorney Azir (Sapphire)
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
     zh_CN:
       - value: 精英律师 阿兹尔 灵活
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
 skinlines: []
 aliases:
   - AzirSkin26

@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: champion
   id: 84
@@ -8,92 +8,80 @@ entity:
       - value: Akali
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     zh_CN:
       - value: 阿卡丽
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
   title:
     zh_CN:
       - value: 离群之刺
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
   search_alias:
     zh_CN:
       - value: akl
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
       - value: liqunzhici
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
       - value: lqzc
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
 spells:
   - slot: E
     ids:
       - value: AkaliE
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Shuriken Flip
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 我流奥义！隼舞
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -108,13 +96,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -127,44 +113,40 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
   - slot: P
     ids:
       - value: AkaliPassive
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Assassin's Mark
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 我流忍法！潜龙印
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -179,13 +161,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -197,44 +177,40 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
   - slot: Q
     ids:
       - value: AkaliQ
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Five Point Strike
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 我流奥义！寒影
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -248,13 +224,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -266,44 +240,40 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
   - slot: R
     ids:
       - value: AkaliR
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Perfect Execution
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 我流秘奥义！表里杀缭乱
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -317,13 +287,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -335,44 +303,40 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
   - slot: W
     ids:
       - value: AkaliW
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Twilight Shroud
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 我流奥义！霞阵
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -388,13 +352,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -407,8 +369,8 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'

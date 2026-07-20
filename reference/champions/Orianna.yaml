@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: champion
   id: 61
@@ -8,120 +8,104 @@ entity:
       - value: Orianna
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     zh_CN:
       - value: 奥莉安娜
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
   title:
     zh_CN:
       - value: 发条魔灵
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
   nicknames:
     zh_CN:
       - value: 发条
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
   search_alias:
     zh_CN:
       - value: alan
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
       - value: aolianna
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
       - value: fatiao
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
       - value: fatiaomoling
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
       - value: ft
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
       - value: ftml
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
 spells:
   - slot: E
     ids:
       - value: OrianaRedactCommand
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
       - value: OriannaE
         sources:
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: 'Command: Protect'
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 指令：防卫
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -137,13 +121,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -156,44 +138,40 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
   - slot: P
     ids:
       - value: OriannaPassive
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Clockwork Windup
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 发条协奏
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -207,13 +185,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -225,46 +201,42 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
   - slot: Q
     ids:
       - value: OrianaIzunaCommand
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
       - value: OriannaQ
         sources:
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: 'Command: Attack'
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 指令：攻击
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -280,13 +252,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -298,46 +268,42 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
   - slot: R
     ids:
       - value: OrianaDetonateCommand
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
       - value: OriannaR
         sources:
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: 'Command: Shockwave'
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 指令：冲击波
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -352,13 +318,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -370,46 +334,42 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
   - slot: W
     ids:
       - value: OrianaDissonanceCommand
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
       - value: OriannaW
         sources:
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: 'Command: Dissonance'
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 指令：杂音
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -424,13 +384,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -442,8 +400,8 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'

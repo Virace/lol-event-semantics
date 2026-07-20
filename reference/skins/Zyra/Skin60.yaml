@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: skin
   champion_alias: Zyra
@@ -12,12 +12,14 @@ entity:
       - value: Blood Moon Zyra (Rose Quartz)
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
     zh_CN:
       - value: 腥红之月 婕拉 落樱
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
 skinlines: []
 aliases:
   - ZyraSkin60

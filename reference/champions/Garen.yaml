@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: champion
   id: 86
@@ -8,118 +8,102 @@ entity:
       - value: Garen
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     zh_CN:
       - value: 盖伦
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
   title:
     zh_CN:
       - value: 德玛西亚之力
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
   nicknames:
     zh_CN:
       - value: 大宝剑
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
   search_alias:
     zh_CN:
       - value: dabaojian
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
       - value: dbj
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
       - value: demaxiyazhili
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
       - value: dmxyzl
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
       - value: gailun
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
       - value: gl
         sources:
           - source: tencent_101
-            version: '16.13'
-          - source: tencent_101
-            version: '16.14'
+            first_seen: '16.13'
+            last_seen: '16.14'
 spells:
   - slot: E
     ids:
       - value: GarenE
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Judgment
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 审判
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -133,13 +117,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -151,44 +133,40 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
   - slot: P
     ids:
       - value: GarenPassive
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Perseverance
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 坚韧
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -203,13 +181,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -221,44 +197,40 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
   - slot: Q
     ids:
       - value: GarenQ
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Decisive Strike
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 致命打击
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -273,13 +245,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -291,44 +261,40 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
   - slot: R
     ids:
       - value: GarenR
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Demacian Justice
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 德玛西亚正义
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -342,13 +308,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -360,44 +324,40 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
   - slot: W
     ids:
       - value: GarenW
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Courage
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
-            - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.14'
       zh_CN:
         - value: 勇气
           sources:
             - source: data_dragon
-              version: 16.14.1
-            - source: data_dragon
-              version: 16.5.1
+              first_seen: 16.5.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -413,13 +373,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
-              - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -432,8 +390,8 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
-              - source: data_dragon
-                version: 16.5.1
+                first_seen: 16.5.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'

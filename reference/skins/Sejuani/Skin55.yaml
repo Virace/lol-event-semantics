@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: skin
   champion_alias: Sejuani
@@ -12,12 +12,14 @@ entity:
       - value: Pug Trainer Sejuani (Pearl)
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
     zh_CN:
       - value: 哈巴狗训练师 瑟庄妮 曾经抢龙现在训狗
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
 skinlines: []
 aliases:
   - SejuaniSkin55

@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: champion
   id: 66609
@@ -8,20 +8,23 @@ entity:
       - value: Doom Bot Caitlyn
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
 spells:
   - slot: E
     ids:
       - value: Ruby_CaitlynE
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: 90 Caliber Net
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -35,19 +38,22 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'
   - slot: P
     ids:
       - value: Ruby_CaitlynPassive
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: Headshot
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -63,19 +69,22 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'
   - slot: Q
     ids:
       - value: Ruby_CaitlynQ
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: Piltover Peacemaker
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -90,19 +99,22 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'
   - slot: R
     ids:
       - value: Ruby_CaitlynR
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: Ace in the Hole
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -117,19 +129,22 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'
   - slot: W
     ids:
       - value: Ruby_CaitlynW
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: Yordle Snap Trap
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -144,4 +159,5 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'

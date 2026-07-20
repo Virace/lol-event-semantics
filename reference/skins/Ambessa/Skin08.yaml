@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: skin
   champion_alias: Ambessa
@@ -12,21 +12,26 @@ entity:
       - value: T1 Ambessa
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'
     zh_CN:
       - value: T1 安蓓萨
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'
 skinlines:
   - id: 232
     sources:
       - source: game_data
-        version: '16.14'
+        first_seen: '16.14'
+        last_seen: '16.14'
 aliases:
   - AmbessaSkin08
   - AmbessaSkin8

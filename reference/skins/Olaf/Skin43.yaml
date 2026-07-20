@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: skin
   champion_alias: Olaf
@@ -12,12 +12,14 @@ entity:
       - value: 'Pentakill III: Lost Chapter Olaf (Obsidian)'
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
     zh_CN:
       - value: 五杀摇滚 III：遗失的章节 奥拉夫 黑暗
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
 skinlines: []
 aliases:
   - OlafSkin43

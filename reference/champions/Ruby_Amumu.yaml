@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: champion
   id: 66604
@@ -8,20 +8,23 @@ entity:
       - value: Doom Bot Amumu
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
 spells:
   - slot: E
     ids:
       - value: Ruby_AmumuE
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: Tantrum
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -36,19 +39,22 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'
   - slot: P
     ids:
       - value: Ruby_AmumuPassive
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: Cursed Touch
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -63,19 +69,22 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'
   - slot: Q
     ids:
       - value: Ruby_AmumuQ
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: Bandage Toss
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -89,19 +98,22 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'
   - slot: R
     ids:
       - value: Ruby_AmumuR
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: Curse of the Sad Mummy
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -116,19 +128,22 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'
   - slot: W
     ids:
       - value: Ruby_AmumuW
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: Despair
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -143,4 +158,5 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'

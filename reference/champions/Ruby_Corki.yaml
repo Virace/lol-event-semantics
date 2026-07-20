@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: champion
   id: 66602
@@ -8,20 +8,23 @@ entity:
       - value: Doom Bot Corki
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
 spells:
   - slot: E
     ids:
       - value: Ruby_CorkiE
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: Gatling Gun
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -35,19 +38,22 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'
   - slot: P
     ids:
       - value: Ruby_CorkiPassive
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: Hextech Munitions
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -61,19 +67,22 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'
   - slot: Q
     ids:
       - value: Ruby_CorkiQ
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: Phosphorus Bomb
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -88,19 +97,22 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'
   - slot: R
     ids:
       - value: Ruby_CorkiR
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: Missile Barrage
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -116,19 +128,22 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'
   - slot: W
     ids:
       - value: Ruby_CorkiW
         sources:
           - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.5'
     names:
       en_US:
         - value: Valkyrie
           sources:
             - source: game_data
-              version: '16.5'
+              first_seen: '16.5'
+              last_seen: '16.5'
     descriptions:
       en_US:
         snapshots:
@@ -142,4 +157,5 @@ spells:
             review_status: accepted
             sources:
               - source: game_data
-                version: '16.5'
+                first_seen: '16.5'
+                last_seen: '16.5'

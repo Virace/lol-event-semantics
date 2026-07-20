@@ -87,7 +87,7 @@ class ReferenceCollectionTests(unittest.TestCase):
         )
         self.assertEqual(
             entity["title"]["zh_CN"][0]["sources"],
-            [{"source": "tencent_101", "version": "16.13"}],
+            [{"source": "tencent_101", "first_seen": "16.13", "last_seen": "16.13"}],
         )
 
     def test_title_merges_sources_across_inputs_without_duplicating_value(self) -> None:
@@ -120,6 +120,65 @@ class ReferenceCollectionTests(unittest.TestCase):
         self.assertEqual(
             [source["source"] for source in titles[0]["sources"]],
             ["data_dragon", "tencent_101"],
+        )
+
+    def test_source_versions_fold_into_interval(self) -> None:
+        """同一来源跨版本确认时只滚动区间端点，来源行数不随版本数增长。"""
+
+        collection = ReferenceCollection(Path("unused"))
+        for version in ("16.5.1", "16.14.1", "16.9.1"):
+            collection.merge_champion(
+                ReferenceEntityInput(
+                    id=266,
+                    alias="Aatrox",
+                    names={"zh_CN": "亚托克斯"},
+                    source="data_dragon",
+                    version=version,
+                )
+            )
+        sources = collection.champions["Aatrox"]["entity"]["names"]["zh_CN"][0]["sources"]
+
+        self.assertEqual(
+            sources,
+            [{"source": "data_dragon", "first_seen": "16.5.1", "last_seen": "16.14.1"}],
+        )
+
+    def test_legacy_per_version_sources_fold_on_touch(self) -> None:
+        """历史逐版本来源条目在再次合并时就地折叠为区间形式。"""
+
+        collection = ReferenceCollection(Path("unused"))
+        collection.merge_champion(
+            ReferenceEntityInput(
+                id=266,
+                alias="Aatrox",
+                names={"zh_CN": "亚托克斯"},
+                source="data_dragon",
+                version="16.5.1",
+            )
+        )
+        rows = collection.champions["Aatrox"]["entity"]["names"]["zh_CN"][0]["sources"]
+        rows[:] = [
+            {"source": "data_dragon", "version": "16.5.1"},
+            {"source": "data_dragon", "version": "16.14.1"},
+            {"source": "game_data", "version": "16.5"},
+        ]
+
+        collection.merge_champion(
+            ReferenceEntityInput(
+                id=266,
+                alias="Aatrox",
+                names={"zh_CN": "亚托克斯"},
+                source="data_dragon",
+                version="16.15.1",
+            )
+        )
+
+        self.assertEqual(
+            rows,
+            [
+                {"source": "data_dragon", "first_seen": "16.5.1", "last_seen": "16.15.1"},
+                {"source": "game_data", "first_seen": "16.5", "last_seen": "16.5"},
+            ],
         )
 
     def test_merge_champion_without_extra_fields_omits_empty_buckets(self) -> None:
@@ -183,7 +242,7 @@ class ReferenceCollectionTests(unittest.TestCase):
             [item["value"] for item in spell["names"]["en_US"]],
             ["Disintegrate", "Disintegrate!"],
         )
-        self.assertEqual(spell["ids"][0]["sources"][0]["version"], "16.12")
+        self.assertEqual(spell["ids"][0]["sources"][0]["first_seen"], "16.12")
 
     def test_merge_champion_alias_is_case_insensitive(self) -> None:
         """跨来源 alias 大小写漂移时合并到同一英雄。"""
@@ -294,7 +353,7 @@ class ReferenceCollectionTests(unittest.TestCase):
             collection.write()
             manifest = (root / "manifest.yaml").read_text(encoding="utf-8")
 
-        self.assertIn("schema_version: 1", manifest)
+        self.assertIn("schema_version: 2", manifest)
         self.assertIn("- en_US", manifest)
         self.assertIn("main_version: '16.12'", manifest)
         self.assertFalse((root / "16.12").exists())

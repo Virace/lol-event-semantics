@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: skin
   champion_alias: Nidalee
@@ -12,29 +12,26 @@ entity:
       - value: Pharaoh Nidalee
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     zh_CN:
       - value: 艳后 奈德丽
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'
 skinlines:
   - id: 67
     sources:
       - source: game_data
-        version: '16.14'
-      - source: game_data
-        version: '16.5'
+        first_seen: '16.5'
+        last_seen: '16.14'
 aliases:
   - NidaleeSkin04
   - NidaleeSkin4

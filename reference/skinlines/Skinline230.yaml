@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: skinline
   id: 230
@@ -8,9 +8,11 @@ entity:
       - value: Sinful Shores
         sources:
           - source: game_data
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'
     zh_CN:
       - value: 恶魔假日
         sources:
           - source: game_data
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'

@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: skin
   champion_alias: Senna
@@ -12,20 +12,25 @@ entity:
       - value: Warhound Senna
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'
     zh_CN:
       - value: 银焰骑士 赛娜
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'
 skinlines:
   - id: 228
     sources:
       - source: game_data
-        version: '16.14'
+        first_seen: '16.14'
+        last_seen: '16.14'
 aliases:
   - SennaSkin72

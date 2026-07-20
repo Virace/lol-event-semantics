@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: skinline
   id: 13
@@ -8,11 +8,11 @@ entity:
       - value: Dragon World
         sources:
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     zh_CN:
       - value: 巨龙世界
         sources:
           - source: game_data
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'

@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: skin
   champion_alias: Blitzcrank
@@ -12,12 +12,14 @@ entity:
       - value: Space Groove Blitz & Crank (Amethyst)
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
     zh_CN:
       - value: “猫猫” 布里和里茨 暹罗抓不到与我二黑有啥关系
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
 skinlines: []
 aliases:
   - BlitzcrankSkin32

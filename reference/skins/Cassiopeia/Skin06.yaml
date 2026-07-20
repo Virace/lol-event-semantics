@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: skin
   champion_alias: Cassiopeia
@@ -12,12 +12,14 @@ entity:
       - value: Cassiopeia Curse Dusk
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
     zh_CN:
       - value: 魔蛇之拥 卡西奥佩娅 深寒诅咒
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
 skinlines: []
 aliases:
   - CassiopeiaSkin06

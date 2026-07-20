@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: skin
   champion_alias: Lux
@@ -12,29 +12,26 @@ entity:
       - value: Star Guardian Lux
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
-          - source: game_data
-            version: '16.5'
+            first_seen: '16.5'
+            last_seen: '16.14'
     zh_CN:
       - value: 星之守护者 拉克丝
         sources:
           - source: data_dragon
-            version: 16.14.1
-          - source: data_dragon
-            version: 16.5.1
+            first_seen: 16.5.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'
 skinlines:
   - id: 19
     sources:
       - source: game_data
-        version: '16.14'
-      - source: game_data
-        version: '16.5'
+        first_seen: '16.5'
+        last_seen: '16.14'
 aliases:
   - LuxSkin06
   - LuxSkin6

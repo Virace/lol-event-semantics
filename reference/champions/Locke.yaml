@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: champion
   id: 805
@@ -8,60 +8,75 @@ entity:
       - value: Locke
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'
     zh_CN:
       - value: 洛克
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
           - source: tencent_101
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'
   title:
     zh_CN:
       - value: 灰烬驱魔人
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'
           - source: tencent_101
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'
   search_alias:
     zh_CN:
       - value: huijinqumoren
         sources:
           - source: tencent_101
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'
       - value: luoke
         sources:
           - source: tencent_101
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'
 spells:
   - slot: E
     ids:
       - value: LockeE
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Ashen Pursuit
           sources:
             - source: data_dragon
-              version: 16.14.1
+              first_seen: 16.14.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
       zh_CN:
         - value: 灰猎无影
           sources:
             - source: data_dragon
-              version: 16.14.1
+              first_seen: 16.14.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -75,9 +90,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
+                first_seen: 16.14.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -89,32 +106,40 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
+                first_seen: 16.14.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
   - slot: P
     ids:
       - value: LockePassive
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Silver Stake
           sources:
             - source: data_dragon
-              version: 16.14.1
+              first_seen: 16.14.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
       zh_CN:
         - value: 圣银穿心
           sources:
             - source: data_dragon
-              version: 16.14.1
+              first_seen: 16.14.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -128,9 +153,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
+                first_seen: 16.14.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -142,32 +169,40 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
+                first_seen: 16.14.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
   - slot: Q
     ids:
       - value: LockeQ
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Ritual Nails
           sources:
             - source: data_dragon
-              version: 16.14.1
+              first_seen: 16.14.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
       zh_CN:
         - value: 伏魔三钉
           sources:
             - source: data_dragon
-              version: 16.14.1
+              first_seen: 16.14.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -182,9 +217,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
+                first_seen: 16.14.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -196,32 +233,40 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
+                first_seen: 16.14.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
   - slot: R
     ids:
       - value: LockeR
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Purgatory
           sources:
             - source: data_dragon
-              version: 16.14.1
+              first_seen: 16.14.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
       zh_CN:
         - value: 万魔狱
           sources:
             - source: data_dragon
-              version: 16.14.1
+              first_seen: 16.14.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -236,9 +281,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
+                first_seen: 16.14.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -250,32 +297,40 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
+                first_seen: 16.14.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
   - slot: W
     ids:
       - value: LockeW
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
           - source: game_data
-            version: '16.14'
+            first_seen: '16.14'
+            last_seen: '16.14'
     names:
       en_US:
         - value: Soul Ignition
           sources:
             - source: data_dragon
-              version: 16.14.1
+              first_seen: 16.14.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
       zh_CN:
         - value: 灵焰仪式
           sources:
             - source: data_dragon
-              version: 16.14.1
+              first_seen: 16.14.1
+              last_seen: 16.14.1
             - source: game_data
-              version: '16.14'
+              first_seen: '16.14'
+              last_seen: '16.14'
     descriptions:
       en_US:
         snapshots:
@@ -290,9 +345,11 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
+                first_seen: 16.14.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'
       zh_CN:
         snapshots:
           - hash: 
@@ -305,6 +362,8 @@ spells:
             review_status: accepted
             sources:
               - source: data_dragon
-                version: 16.14.1
+                first_seen: 16.14.1
+                last_seen: 16.14.1
               - source: game_data
-                version: '16.14'
+                first_seen: '16.14'
+                last_seen: '16.14'

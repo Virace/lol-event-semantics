@@ -12,7 +12,7 @@ from typing import Any
 from ruamel.yaml import YAML
 
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 DESCRIPTION_AUTO_MERGE_THRESHOLD = 0.97
 SUPPORTED_LANGUAGES = ("en_US", "zh_CN")
 
@@ -323,7 +323,7 @@ class ReferenceCollection:
                 "last_seen": item.version,
                 "similarity_to_previous": round(similarity, 6) if similarity is not None else None,
                 "review_status": "accepted" if similarity is None else "needs_review",
-                "sources": [{"source": item.source, "version": item.version}],
+                "sources": [{"source": item.source, "first_seen": item.version, "last_seen": item.version}],
             }
         )
         self._dirty = True
@@ -440,7 +440,7 @@ def add_sourced_value(rows: list[dict[str, Any]], value: str, source: str, versi
         if row.get("value") == value:
             return add_source(row.setdefault("sources", []), source, version)
 
-    rows.append({"value": value, "sources": [{"source": source, "version": version}]})
+    rows.append({"value": value, "sources": [{"source": source, "first_seen": version, "last_seen": version}]})
     rows.sort(key=lambda row: str(row.get("value") or ""))
     return True
 
@@ -471,26 +471,81 @@ def add_sourced_skinline(rows: list[dict[str, Any]], value: dict[str, Any], sour
         if row.get("id") == normalized.get("id") and row.get("alias") == normalized.get("alias"):
             return add_source(row.setdefault("sources", []), source, version)
 
-    normalized["sources"] = [{"source": source, "version": version}]
+    normalized["sources"] = [{"source": source, "first_seen": version, "last_seen": version}]
     rows.append(normalized)
     rows.sort(key=lambda row: (row.get("id") is None, row.get("id") or 0, str(row.get("alias") or "")))
     return True
 
 
-def add_source(rows: list[dict[str, str]], source: str, version: str) -> bool:
-    """向来源数组追加唯一来源。"""
+def add_source(rows: list[dict[str, Any]], source: str, version: str) -> bool:
+    """在来源数组中记录一次来源确认，按来源折叠为版本区间。
 
-    item = {"source": source, "version": version}
-    if item not in rows:
-        rows.append(item)
-        rows.sort(key=lambda row: (row.get("source", ""), row.get("version", "")))
-        return True
+    每个来源仅保留一行 ``{source, first_seen, last_seen}``，再次确认时只
+    滚动区间端点——来源行数不随游戏版本数增长（入库数据的硬约束）。
+    历史逐版本条目（``{source, version}``）在触碰时就地折叠为区间形式。
 
-    return False
+    Returns:
+        是否发生了改动。
+    """
+
+    changed = fold_source_rows(rows)
+    for row in rows:
+        if row.get("source") == source:
+            changed = set_first_seen_if_older(row, version) or changed
+            changed = set_last_seen_if_newer(row, version) or changed
+            return changed
+
+    rows.append({"source": source, "first_seen": version, "last_seen": version})
+    rows.sort(key=lambda row: str(row.get("source") or ""))
+    return True
+
+
+def fold_source_rows(rows: list[dict[str, Any]]) -> bool:
+    """把来源数组就地折叠为每来源一行的区间形式。
+
+    兼容历史逐版本条目（``{source, version}``）：同来源多行合并为一行，
+    ``first_seen``/``last_seen`` 取所有已见版本的最小/最大值。已是折叠
+    形式时不做改动。
+
+    Returns:
+        是否发生了改动。
+    """
+
+    folded: dict[str, dict[str, Any]] = {}
+    for row in rows:
+        source = str(row.get("source") or "")
+        target = folded.setdefault(source, {"source": source})
+        for key in ("version", "first_seen", "last_seen"):
+            value = row.get(key)
+            if value is None:
+                continue
+            version = str(value)
+            if "first_seen" not in target or version_sort_key(version) < version_sort_key(str(target["first_seen"])):
+                target["first_seen"] = version
+            if "last_seen" not in target or version_sort_key(version) > version_sort_key(str(target["last_seen"])):
+                target["last_seen"] = version
+
+    new_rows = sorted(folded.values(), key=lambda row: str(row.get("source") or ""))
+    if new_rows == rows:
+        return False
+
+    rows[:] = new_rows
+    return True
+
+
+def set_first_seen_if_older(row: dict[str, Any], version: str) -> bool:
+    """仅当版本更早时回拨区间的 first_seen。"""
+
+    current = row.get("first_seen")
+    if current is not None and version_sort_key(str(version)) >= version_sort_key(str(current)):
+        return False
+
+    row["first_seen"] = version
+    return True
 
 
 def set_last_seen_if_newer(row: dict[str, Any], version: str) -> bool:
-    """仅当版本向前推进时更新描述快照的 last_seen。"""
+    """仅当版本向前推进时更新区间的 last_seen。"""
 
     current = row.get("last_seen")
     if current is not None and version_sort_key(str(version)) <= version_sort_key(str(current)):

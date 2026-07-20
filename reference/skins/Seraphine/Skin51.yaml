@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 entity:
   type: skin
   champion_alias: Seraphine
@@ -12,12 +12,14 @@ entity:
       - value: Dumpling Darlings Seraphine (Ruby)
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
     zh_CN:
       - value: 点心宝贝 萨勒芬妮 山楂冰糖葫芦
         sources:
           - source: data_dragon
-            version: 16.14.1
+            first_seen: 16.14.1
+            last_seen: 16.14.1
 skinlines: []
 aliases:
   - SeraphineSkin51
