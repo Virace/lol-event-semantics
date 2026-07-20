@@ -4,178 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from .normalized_translation_model import RenderOptions, RenderResult
+from .normalized_translation_model import FRAME_REGISTRY, RenderOptions, RenderResult
 
-TEMPLATES: dict[str, dict[str, dict[str, tuple[str, ...]]]] = {
-    "ability_state_change": {
-        "zh_CN": {
-            "default": ("champion", "skin", "ability_slot", "ability_component", "rank", "phase"),
-            "main": ("ability_slot", "ability_component", "rank", "phase"),
-            "debug": ("champion", "skin", "ability_slot", "ability_component", "rank", "phase"),
-            "audit": ("champion", "skin", "ability_slot", "ability_component", "rank", "phase"),
-        },
-        "en_US": {
-            "default": ("champion", "skin", "ability_slot", "ability_component", "rank", "phase"),
-            "main": ("ability_slot", "ability_component", "rank", "phase"),
-            "debug": ("champion", "skin", "ability_slot", "ability_component", "rank", "phase"),
-            "audit": ("champion", "skin", "ability_slot", "ability_component", "rank", "phase"),
-        },
-    },
-    "skin_recall_state": {
-        "zh_CN": {
-            "default": ("champion", "skin", "action", "phase"),
-            "main": ("action", "phase"),
-            "debug": ("champion", "skin", "action", "phase"),
-            "audit": ("champion", "skin", "action", "phase"),
-        },
-        "en_US": {
-            "default": ("champion", "skin", "action", "phase"),
-            "main": ("action", "phase"),
-            "debug": ("champion", "skin", "action", "phase"),
-            "audit": ("champion", "skin", "action", "phase"),
-        },
-    },
-    "skin_idle_state": {
-        "zh_CN": {
-            "default": ("champion", "skin", "variant", "ability_slot", "ability_component", "phase"),
-            "main": ("variant", "ability_slot", "ability_component", "phase"),
-            "debug": ("champion", "skin", "variant", "ability_slot", "ability_component", "phase"),
-            "audit": ("champion", "skin", "variant", "ability_slot", "ability_component", "phase"),
-        },
-        "en_US": {
-            "default": ("champion", "skin", "variant", "ability_slot", "ability_component", "phase"),
-            "main": ("variant", "ability_slot", "ability_component", "phase"),
-            "debug": ("champion", "skin", "variant", "ability_slot", "ability_component", "phase"),
-            "audit": ("champion", "skin", "variant", "ability_slot", "ability_component", "phase"),
-        },
-    },
-    "skin_action_state": {
-        "zh_CN": {
-            "default": ("champion", "skin", "action", "phase"),
-            "main": ("action", "phase"),
-            "debug": ("champion", "skin", "action", "phase"),
-            "audit": ("champion", "skin", "action", "phase"),
-        },
-        "en_US": {
-            "default": ("champion", "skin", "action", "phase"),
-            "main": ("action", "phase"),
-            "debug": ("champion", "skin", "action", "phase"),
-            "audit": ("champion", "skin", "action", "phase"),
-        },
-    },
-    "gameplay_phase_control": {
-        "zh_CN": {
-            "default": ("map", "gameplay_event", "phase"),
-            "main": ("gameplay_event", "phase"),
-            "debug": ("map", "gameplay_event", "phase"),
-            "audit": ("map", "gameplay_event", "phase"),
-        },
-        "en_US": {
-            "default": ("map", "gameplay_event", "phase"),
-            "main": ("gameplay_event", "phase"),
-            "debug": ("map", "gameplay_event", "phase"),
-            "audit": ("map", "gameplay_event", "phase"),
-        },
-    },
-    "voice_event": {
-        "zh_CN": {
-            "default": ("champion", "skin", "action", "companion"),
-            "main": ("action", "companion"),
-            "debug": ("champion", "skin", "action", "companion"),
-            "audit": ("champion", "skin", "action", "companion"),
-        },
-        "en_US": {
-            "default": ("champion", "skin", "action", "companion"),
-            "main": ("action", "companion"),
-            "debug": ("champion", "skin", "action", "companion"),
-            "audit": ("champion", "skin", "action", "companion"),
-        },
-    },
-    "ability_cast_event": {
-        "zh_CN": {
-            "default": ("champion", "skin", "ability_slot", "phase"),
-            "main": ("ability_slot", "phase"),
-            "debug": ("champion", "skin", "ability_slot", "phase"),
-            "audit": ("champion", "skin", "ability_slot", "phase"),
-        },
-        "en_US": {
-            "default": ("champion", "skin", "ability_slot", "phase"),
-            "main": ("ability_slot", "phase"),
-            "debug": ("champion", "skin", "ability_slot", "phase"),
-            "audit": ("champion", "skin", "ability_slot", "phase"),
-        },
-    },
-    "kill_or_destroy_event": {
-        "zh_CN": {
-            "default": ("champion", "skin", "kill_method", "trigger", "counterpart", "counter", "companion"),
-            "main": ("kill_method", "trigger", "counterpart", "counter", "companion"),
-            "debug": ("champion", "skin", "kill_method", "trigger", "counterpart", "counter", "companion"),
-            "audit": ("champion", "skin", "kill_method", "trigger", "counterpart", "counter", "companion"),
-        },
-        "en_US": {
-            "default": ("champion", "skin", "kill_method", "trigger", "counterpart", "companion"),
-            "main": ("kill_method", "trigger", "counterpart", "companion"),
-            "debug": ("champion", "skin", "kill_method", "trigger", "counterpart", "companion"),
-            "audit": ("champion", "skin", "kill_method", "trigger", "counterpart", "companion"),
-        },
-    },
-    "champion_interaction_cue": {
-        "zh_CN": {
-            "default": ("champion", "skin", "trigger", "relation", "counterpart", "companion"),
-            "main": ("trigger", "relation", "counterpart", "companion"),
-            "debug": ("champion", "skin", "trigger", "relation", "counterpart", "companion"),
-            "audit": ("champion", "skin", "trigger", "relation", "counterpart", "companion"),
-        },
-        "en_US": {
-            "default": ("champion", "skin", "trigger", "counterpart", "companion"),
-            "main": ("trigger", "counterpart", "companion"),
-            "debug": ("champion", "skin", "trigger", "counterpart", "companion"),
-            "audit": ("champion", "skin", "trigger", "counterpart", "companion"),
-        },
-    },
-    "champion_dialogue_event": {
-        "zh_CN": {
-            "default": ("champion", "skin", "partner", "base_trigger", "turn"),
-            "main": ("partner", "base_trigger", "turn"),
-            "debug": ("champion", "skin", "partner", "base_trigger", "turn"),
-            "audit": ("champion", "skin", "partner", "base_trigger", "turn"),
-        },
-        "en_US": {
-            "default": ("champion", "skin", "partner", "base_trigger", "turn"),
-            "main": ("partner", "base_trigger", "turn"),
-            "debug": ("champion", "skin", "partner", "base_trigger", "turn"),
-            "audit": ("champion", "skin", "partner", "base_trigger", "turn"),
-        },
-    },
-    "shop_voice_event": {
-        "zh_CN": {
-            "default": ("mode", "shop_action", "shop_subject"),
-            "main": ("shop_action", "shop_subject"),
-            "debug": ("mode", "shop_action", "shop_subject"),
-            "audit": ("mode", "shop_action", "shop_subject"),
-        },
-        "en_US": {
-            "default": ("mode", "shop_action", "shop_subject"),
-            "main": ("shop_action", "shop_subject"),
-            "debug": ("mode", "shop_action", "shop_subject"),
-            "audit": ("mode", "shop_action", "shop_subject"),
-        },
-    },
-    "announcer_event": {
-        "zh_CN": {
-            "default": ("mode", "subject", "team", "event"),
-            "main": ("subject", "team", "event"),
-            "debug": ("mode", "subject", "team", "event"),
-            "audit": ("mode", "subject", "team", "event"),
-        },
-        "en_US": {
-            "default": ("mode", "subject", "event", "team"),
-            "main": ("subject", "event", "team"),
-            "debug": ("mode", "subject", "event", "team"),
-            "audit": ("mode", "subject", "event", "team"),
-        },
-    },
-}
 CONTEXT_ROLES = {"champion", "skin", "map", "mode"}
 TECHNICAL_USER_TOKENS = ("Play_", "OnBuffDeactivate", "buffactivate", "3D", "2D")
 # counterpart frame 短语的亚词后缀（builder ASSET_KIND_WORDS 的 zh 侧），
@@ -204,12 +34,7 @@ def render_translation(
     if frame_type is None:
         return RenderResult("", None, confidence, diagnostics=("missing_frame_type",))
 
-    template_roles = roles_for_template(
-        frame_type,
-        active_options.locale,
-        active_options.mode,
-        active_options.known_context,
-    )
+    template_roles = roles_for_template(frame_type, active_options.locale, active_options.mode)
     if not template_roles:
         return RenderResult("", frame_type, confidence, diagnostics=("missing_render_template",))
 
@@ -228,6 +53,10 @@ def render_translation(
         argument = arguments.get(role)
         if not isinstance(argument, dict):
             diagnostics.append(f"missing_role:{role}")
+            continue
+
+        # 上下文省略只看 argument 自带标记（T4.1 机制统一），对所有模式生效。
+        if argument_omitted_for_context(argument, active_options.known_context):
             continue
 
         text, argument_diagnostics = argument_text(argument, active_options.locale, active_options.fallback)
@@ -326,36 +155,53 @@ def argument_text(argument: dict[str, object], locale: str, fallback: str) -> tu
     return text, tuple(diagnostics)
 
 
-def roles_for_template(
-    frame_type: str,
-    locale: str,
-    mode: str,
-    known_context: frozenset[str],
-) -> tuple[str, ...]:
+def roles_for_template(frame_type: str, locale: str, mode: str) -> tuple[str, ...]:
     """选择模板 role 顺序。
+
+    模板只声明 role 顺序，不承担上下文省略职责（T4.1 机制统一，省略见
+    argument_omitted_for_context）。未显式定义的 mode 继承 default，缺失
+    locale 回落 zh_CN，注册表因此只需为有差异的组合显式建模板。
 
     Args:
         frame_type: translation frame 类型。
         locale: 目标语言。
         mode: 渲染模式。
-        known_context: 调用方已知上下文。
 
     Returns:
         role 顺序；没有模板时返回空 tuple。
     """
 
-    locale_templates = TEMPLATES.get(frame_type, {}).get(locale) or TEMPLATES.get(frame_type, {}).get("zh_CN")
+    spec = FRAME_REGISTRY.get(frame_type)
+    if spec is None:
+        return ()
+
+    locale_templates = spec.templates.get(locale) or spec.templates.get("zh_CN")
     if locale_templates is None:
         return ()
 
-    roles = locale_templates.get(mode) or locale_templates.get("default")
-    if roles is None:
-        return ()
+    return locale_templates.get(mode) or locale_templates.get("default") or ()
 
-    if mode == "default":
-        return tuple(role for role in roles if role not in known_context)
 
-    return roles
+def argument_omitted_for_context(argument: dict[str, Any], known_context: frozenset[str]) -> bool:
+    """判断 argument 是否因上下文已知而省略。
+
+    省略判定的唯一依据（T4.1 机制统一）：argument 自带的
+    omit_when_context_known 标记与调用方 known_context 的交集，对所有
+    渲染模式一致生效。counterpart 等不带标记的角色因此天然不可省略。
+
+    Args:
+        argument: translation argument 字典。
+        known_context: 调用方已知上下文。
+
+    Returns:
+        应省略时返回 True。
+    """
+
+    omit_when_known = argument.get("omit_when_context_known")
+    if not isinstance(omit_when_known, list):
+        return False
+
+    return bool(known_context.intersection(str(item) for item in omit_when_known))
 
 
 def join_zh_cn(role_texts: list[tuple[str, str]]) -> str:
@@ -757,6 +603,9 @@ def omitted_roles_for_context(
 ) -> tuple[str, ...]:
     """返回因上下文省略的角色。
 
+    始终按 default 模板的完整 role 集合报告（而非当前模式模板），调用方
+    因此能在 main 等短模板下仍看到 champion/skin 被省略的事实。
+
     Args:
         frame_type: translation frame 类型。
         locale: 目标语言。
@@ -767,18 +616,12 @@ def omitted_roles_for_context(
         已省略角色。
     """
 
-    default_roles = roles_for_template(frame_type, locale, "default", frozenset())
-    omitted = []
-    for role in default_roles:
-        argument = arguments.get(role)
-        if not isinstance(argument, dict):
-            continue
-
-        omit_when_known = argument.get("omit_when_context_known")
-        if isinstance(omit_when_known, list) and known_context.intersection(str(item) for item in omit_when_known):
-            omitted.append(role)
-
-    return tuple(omitted)
+    default_roles = roles_for_template(frame_type, locale, "default")
+    return tuple(
+        role
+        for role in default_roles
+        if isinstance(arguments.get(role), dict) and argument_omitted_for_context(arguments[role], known_context)
+    )
 
 
 def fallback_argument_text(argument: dict[str, object], fallback: str) -> str:

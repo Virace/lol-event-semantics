@@ -10,8 +10,7 @@ from typing import Any
 
 from .decomposition_lexer import parse_shell
 from .normalized_translation_model import (
-    REQUIRED_FRAME_ROLES,
-    SUPPORTED_FRAME_TYPES,
+    FRAME_REGISTRY,
     TRANSLATION_SCHEMA_VERSION,
     RenderOptions,
 )
@@ -630,8 +629,10 @@ def validate_record_translation(
     if translation.get("schema_version") != TRANSLATION_SCHEMA_VERSION:
         issues.append(error("translation_schema_version_invalid", row_path, "translation.schema_version 必须为 1。", raw))
 
+    # frame 支持范围与必需角色都以 FRAME_REGISTRY 为单一事实源（T4.2）。
     frame_type = string_or_none(translation.get("frame_type"))
-    if frame_type is None or frame_type not in SUPPORTED_FRAME_TYPES:
+    frame_spec = FRAME_REGISTRY.get(frame_type) if frame_type is not None else None
+    if frame_spec is None:
         issues.append(error("translation_frame_type_unknown", row_path, f"未知 translation frame_type：{frame_type}。", raw))
 
     arguments = translation.get("arguments")
@@ -641,8 +642,8 @@ def validate_record_translation(
 
     validate_translation_arguments(arguments, row_path, issues, raw)
 
-    if frame_type in REQUIRED_FRAME_ROLES:
-        for role in REQUIRED_FRAME_ROLES[frame_type]:
+    if frame_spec is not None:
+        for role in frame_spec.required_roles:
             if not isinstance(arguments.get(role), dict):
                 issues.append(
                     error(
@@ -653,7 +654,6 @@ def validate_record_translation(
                     )
                 )
 
-    if frame_type in SUPPORTED_FRAME_TYPES:
         validate_translation_render(translation, row_path, row, issues, raw)
 
 

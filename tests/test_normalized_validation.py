@@ -9,6 +9,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from lol_event_semantics.normalized_translation_model import FRAME_REGISTRY, FrameSpec, RenderOptions
+from lol_event_semantics.normalized_translation_renderer import render_translation
 from lol_event_semantics.normalized_validation import validate_normalized_root
 
 
@@ -305,6 +307,93 @@ class MediaBaseActionStateValidationTests(unittest.TestCase):
 
         codes = {issue.code for issue in report.issues}
         self.assertNotIn("translation_missing_for_supported_frame", codes)
+
+
+class FrameRegistryInjectionTests(unittest.TestCase):
+    """验证 frame 注册表是校验与渲染的单一事实源（T4.2）。
+
+    注入临时 frame 而非真加生产 frame：只在注册表加一条，required_roles
+    校验（normalized_validation）与模板渲染（renderer）必须同时看到，
+    证明两侧都直接读 FRAME_REGISTRY、不存在第二份散落配置。
+    """
+
+    PROBE_FRAME = "registry_probe_frame"
+
+    def setUp(self) -> None:
+        """注入临时 probe frame，测试结束后清理。"""
+
+        self.assertNotIn(self.PROBE_FRAME, FRAME_REGISTRY)
+        FRAME_REGISTRY[self.PROBE_FRAME] = FrameSpec(
+            required_roles=("probe",),
+            templates={"zh_CN": {"default": ("probe",), "main": ("probe",)}},
+        )
+        self.addCleanup(FRAME_REGISTRY.pop, self.PROBE_FRAME, None)
+
+    def probe_record(self) -> dict[str, object]:
+        """构造使用 probe frame 的最小 normalized 记录。"""
+
+        record = minimal_record("Play_vo_Annie_RegistryProbe")
+        record["translation"] = {
+            "schema_version": 1,
+            "frame_type": self.PROBE_FRAME,
+            "frame_version": 1,
+            "frame_confidence": "high",
+            "arguments": {
+                "probe": {
+                    "role": "probe",
+                    "labels": {"zh_CN": "探针动作"},
+                    "confidence": "high",
+                    "provenance": {"kind": "test"},
+                },
+            },
+            "provenance": {"builder": "test"},
+        }
+        record["display"] = {
+            "zh_cn_short": "探针动作",
+            "zh_cn_detail": "探针动作",
+            "debug_label": "Play_vo_Annie_RegistryProbe",
+        }
+        return record
+
+    def test_registered_frame_is_rendered_and_validated(self) -> None:
+        """注册表新增一条后，渲染有模板、校验认 frame_type，无任何问题。"""
+
+        record = self.probe_record()
+        translation = record["translation"]
+        assert isinstance(translation, dict)
+
+        result = render_translation(translation, RenderOptions(locale="zh_CN", mode="default"))
+        self.assertEqual(result.text, "探针动作")
+        self.assertNotIn("missing_render_template", result.diagnostics)
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            write_normalized_fixture(root, [record])
+
+            report = validate_normalized_root(root)
+
+        self.assertEqual(report.error_count, 0)
+        self.assertEqual(report.warning_count, 0)
+
+    def test_registered_frame_required_role_is_enforced(self) -> None:
+        """注册表声明的 required_roles 缺失时按硬错误报出。"""
+
+        record = self.probe_record()
+        translation = record["translation"]
+        assert isinstance(translation, dict)
+        arguments = translation["arguments"]
+        assert isinstance(arguments, dict)
+        del arguments["probe"]
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            write_normalized_fixture(root, [record])
+
+            report = validate_normalized_root(root)
+
+        codes = {issue.code for issue in report.issues}
+        self.assertIn("translation_frame_required_role_missing", codes)
+        self.assertNotIn("translation_frame_type_unknown", codes)
 
 
 class DisplayLosslessnessTests(unittest.TestCase):

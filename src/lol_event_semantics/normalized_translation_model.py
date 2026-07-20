@@ -8,37 +8,168 @@ from typing import Mapping
 
 TRANSLATION_SCHEMA_VERSION = 1
 FRAME_VERSION = 1
-SUPPORTED_FRAME_TYPES = (
-    "ability_state_change",
-    "skin_recall_state",
-    "skin_idle_state",
-    "skin_action_state",
-    "gameplay_phase_control",
-    "voice_event",
-    "ability_cast_event",
-    "kill_or_destroy_event",
-    "champion_interaction_cue",
-    "champion_dialogue_event",
-    "announcer_event",
-    "shop_voice_event",
-)
-REQUIRED_FRAME_ROLES: dict[str, tuple[str, ...]] = {
-    "ability_state_change": ("phase",),
-    "skin_recall_state": ("champion", "skin", "action", "phase"),
-    "skin_idle_state": ("champion", "skin"),
+
+
+@dataclass(frozen=True, slots=True)
+class FrameSpec:
+    """translation frame 注册项。
+
+    Attributes:
+        required_roles: frame 必需的语义角色。
+        templates: locale 到 mode 到 role 顺序的渲染模板。未显式定义的
+            mode 由 renderer 查找时继承 default；en_US 与 zh_CN 逐字相同
+            的 frame 不再双写，缺失 locale 回落 zh_CN（见
+            normalized_translation_renderer.roles_for_template）。
+    """
+
+    required_roles: tuple[str, ...]
+    templates: Mapping[str, Mapping[str, tuple[str, ...]]]
+
+
+# frame 单一注册表：新增 frame 只需在此加一条，
+# required_roles 校验（normalized_validation）与模板渲染
+# （normalized_translation_renderer）都直接读这里，避免三处散落配置漂移。
+#
+# 模板维度收敛：debug/audit 与 default 逐字相同，靠 renderer 的
+# mode 继承（未显式定义回落 default）不再双写；en_US 与 zh_CN 逐字相同的
+# frame 只写 zh_CN（缺失 locale 回落 zh_CN），仅角色集或语序有差异的
+# frame（kill_or_destroy_event / champion_interaction_cue /
+# announcer_event）保留显式 en_US。
+FRAME_REGISTRY: dict[str, FrameSpec] = {
+    "ability_state_change": FrameSpec(
+        required_roles=("phase",),
+        templates={
+            "zh_CN": {
+                "default": ("champion", "skin", "ability_slot", "ability_component", "rank", "phase"),
+                "main": ("ability_slot", "ability_component", "rank", "phase"),
+            },
+        },
+    ),
+    "skin_recall_state": FrameSpec(
+        required_roles=("champion", "skin", "action", "phase"),
+        templates={
+            "zh_CN": {
+                "default": ("champion", "skin", "action", "phase"),
+                "main": ("action", "phase"),
+            },
+        },
+    ),
+    "skin_idle_state": FrameSpec(
+        required_roles=("champion", "skin"),
+        templates={
+            "zh_CN": {
+                "default": ("champion", "skin", "variant", "ability_slot", "ability_component", "phase"),
+                "main": ("variant", "ability_slot", "ability_component", "phase"),
+            },
+        },
+    ),
     # 批次5b：media_base 路由接入后，基础皮肤形态（Play_sfx_Galio_Base_… 无
     # SkinNN token）合法缺 skin 角色，skin 不再是必需角色；带皮肤号的记录仍
     # 照常产出 skin argument（黄金样例与渲染回归守护）。
-    "skin_action_state": ("champion", "action", "phase"),
-    "gameplay_phase_control": ("map", "gameplay_event", "phase"),
-    "voice_event": ("action",),
-    "ability_cast_event": ("ability_slot", "phase"),
-    "kill_or_destroy_event": ("champion", "trigger"),
-    "champion_interaction_cue": ("champion", "trigger"),
-    "champion_dialogue_event": ("champion", "partner"),
-    "announcer_event": ("event",),
+    "skin_action_state": FrameSpec(
+        required_roles=("champion", "action", "phase"),
+        templates={
+            "zh_CN": {
+                "default": ("champion", "skin", "action", "phase"),
+                "main": ("action", "phase"),
+            },
+        },
+    ),
+    "gameplay_phase_control": FrameSpec(
+        required_roles=("map", "gameplay_event", "phase"),
+        templates={
+            "zh_CN": {
+                "default": ("map", "gameplay_event", "phase"),
+                "main": ("gameplay_event", "phase"),
+            },
+        },
+    ),
+    "voice_event": FrameSpec(
+        required_roles=("action",),
+        templates={
+            "zh_CN": {
+                "default": ("champion", "skin", "action", "companion"),
+                "main": ("action", "companion"),
+            },
+        },
+    ),
+    "ability_cast_event": FrameSpec(
+        required_roles=("ability_slot", "phase"),
+        templates={
+            "zh_CN": {
+                "default": ("champion", "skin", "ability_slot", "phase"),
+                "main": ("ability_slot", "phase"),
+            },
+        },
+    ),
+    # en_US 无 counter 角色（变体号只进中文措辞），保留显式英文模板。
+    "kill_or_destroy_event": FrameSpec(
+        required_roles=("champion", "trigger"),
+        templates={
+            "zh_CN": {
+                "default": ("champion", "skin", "kill_method", "trigger", "counterpart", "counter", "companion"),
+                "main": ("kill_method", "trigger", "counterpart", "counter", "companion"),
+            },
+            "en_US": {
+                "default": ("champion", "skin", "kill_method", "trigger", "counterpart", "companion"),
+                "main": ("kill_method", "trigger", "counterpart", "companion"),
+            },
+        },
+    ),
+    # en_US 无 relation 角色（在场关系词只进中文措辞），保留显式英文模板。
+    "champion_interaction_cue": FrameSpec(
+        required_roles=("champion", "trigger"),
+        templates={
+            "zh_CN": {
+                "default": ("champion", "skin", "trigger", "relation", "counterpart", "companion"),
+                "main": ("trigger", "relation", "counterpart", "companion"),
+            },
+            "en_US": {
+                "default": ("champion", "skin", "trigger", "counterpart", "companion"),
+                "main": ("trigger", "counterpart", "companion"),
+            },
+        },
+    ),
+    "champion_dialogue_event": FrameSpec(
+        required_roles=("champion", "partner"),
+        templates={
+            "zh_CN": {
+                "default": ("champion", "skin", "partner", "base_trigger", "turn"),
+                "main": ("partner", "base_trigger", "turn"),
+            },
+        },
+    ),
+    # en_US 语序不同（event 前 team 后），保留显式英文模板。
+    "announcer_event": FrameSpec(
+        required_roles=("event",),
+        templates={
+            "zh_CN": {
+                "default": ("mode", "subject", "team", "event"),
+                "main": ("subject", "team", "event"),
+            },
+            "en_US": {
+                "default": ("mode", "subject", "event", "team"),
+                "main": ("subject", "event", "team"),
+            },
+        },
+    ),
     # 批次6d：subject 合法缺席（Browsing/Ambient/General 无特定对象）。
-    "shop_voice_event": ("shop_action",),
+    "shop_voice_event": FrameSpec(
+        required_roles=("shop_action",),
+        templates={
+            "zh_CN": {
+                "default": ("mode", "shop_action", "shop_subject"),
+                "main": ("shop_action", "shop_subject"),
+            },
+        },
+    ),
+}
+
+# 兼容视图：从注册表派生，供仍按旧名字 import 的调用方使用；
+# 新代码应直接读 FRAME_REGISTRY。
+SUPPORTED_FRAME_TYPES = tuple(FRAME_REGISTRY)
+REQUIRED_FRAME_ROLES: dict[str, tuple[str, ...]] = {
+    frame_type: spec.required_roles for frame_type, spec in FRAME_REGISTRY.items()
 }
 
 
@@ -57,6 +188,38 @@ class TranslationBuildContext:
     fallback_locale: str = "en_US"
     champion_labels: Mapping[str, Mapping[str, str]] = field(default_factory=dict)
     skin_labels: Mapping[tuple[str, str], Mapping[str, str]] = field(default_factory=dict)
+    # 大小写折叠索引：事件名 alias 与 reference alias 存在既有拼写分叉
+    # （BelVeth/Belveth、LeBlanc/Leblanc、RekSai/Reksai、Orianna/Oriana…），
+    # 两侧各是自身来源的事实，不改数据、由查表兼容。惰性构建后缓存。
+    _champion_index: dict[str, Mapping[str, str]] | None = field(default=None, init=False, repr=False)
+    _skin_index: dict[tuple[str, str], Mapping[str, str]] | None = field(default=None, init=False, repr=False)
+
+    def champion_label(self, alias: object) -> Mapping[str, str] | None:
+        """按英雄 alias 取 label，精确未命中时折叠大小写重查。"""
+
+        if not isinstance(alias, str) or not alias:
+            return None
+        exact = self.champion_labels.get(alias)
+        if exact is not None:
+            return exact
+        if self._champion_index is None:
+            self._champion_index = {key.lower(): value for key, value in self.champion_labels.items()}
+        return self._champion_index.get(alias.lower())
+
+    def skin_label(self, champion_alias: object, skin_token: object) -> Mapping[str, str] | None:
+        """按 (英雄 alias, 皮肤 token) 取 label，精确未命中时折叠大小写重查。"""
+
+        if not isinstance(champion_alias, str) or not isinstance(skin_token, str):
+            return None
+        exact = self.skin_labels.get((champion_alias, skin_token))
+        if exact is not None:
+            return exact
+        if self._skin_index is None:
+            self._skin_index = {
+                (champion.lower(), token.lower()): value
+                for (champion, token), value in self.skin_labels.items()
+            }
+        return self._skin_index.get((champion_alias.lower(), skin_token.lower()))
 
 
 @dataclass(frozen=True, slots=True)

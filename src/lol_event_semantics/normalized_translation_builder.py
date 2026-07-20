@@ -155,7 +155,7 @@ INTERACTION_TRIGGER_WORDS = {
 }
 KILL_MILESTONE_WORDS = {
     "first": ("首次击杀", "first kill"),
-    "first_blood": ("一血", "first blood"),
+    "first_blood": ("第一滴血", "first blood"),
     "double": ("双杀", "double kill"),
     "triple": ("三杀", "triple kill"),
     "quadra": ("四杀", "quadra kill"),
@@ -166,7 +166,7 @@ KILL_MILESTONE_WORDS = {
 OBJECTIVE_STEAL_WORDS = {
     "dragon": ("巨龙", "dragon"),
     "baron": ("纳什男爵", "baron"),
-    "epic_objective": ("史诗野怪", "epic objective"),
+    "epic_objective": ("史诗级野怪", "epic objective"),
 }
 TIMING_WORDS = {"first": ("首次", "first"), "second": ("再次", "second")}
 RELATION_WORDS = {"ally": ("队友", "ally"), "enemy": ("敌方", "enemy")}
@@ -947,7 +947,7 @@ def shop_champion_label_entry(raw: str, context: TranslationBuildContext) -> Map
         champion label 条目；未命中返回 None。
     """
 
-    entry = context.champion_labels.get(raw)
+    entry = context.champion_label(raw)
     if isinstance(entry, Mapping):
         return entry
 
@@ -1056,7 +1056,7 @@ def companion_argument(
     if raw is None:
         return None
 
-    entry = context.champion_labels.get(raw)
+    entry = context.champion_label(raw)
     zh = string_or_none(entry.get("zh_CN")) if isinstance(entry, Mapping) else None
     if zh is None:
         return None
@@ -1369,7 +1369,7 @@ def append_dialogue_trigger_counterpart(
     if counterpart_raw is None:
         return
 
-    entry = context.champion_labels.get(counterpart_raw)
+    entry = context.champion_label(counterpart_raw)
     zh = string_or_none(entry.get("zh_CN")) if isinstance(entry, Mapping) else None
     if zh is None:
         return
@@ -1458,13 +1458,13 @@ def dialogue_partner_argument(
     fallback_reason = None
     proximity = None
 
-    entry = context.champion_labels.get(lookup)
+    entry = context.champion_label(lookup)
     if isinstance(entry, Mapping):
         zh = string_or_none(entry.get("zh_CN"))
     if zh is None:
         match = PARTNER_PROXIMITY_PATTERN.fullmatch(lookup)
         if match is not None:
-            stripped_entry = context.champion_labels.get(match.group("alias"))
+            stripped_entry = context.champion_label(match.group("alias"))
             stripped_zh = string_or_none(stripped_entry.get("zh_CN")) if isinstance(stripped_entry, Mapping) else None
             if stripped_zh is not None:
                 entry = stripped_entry
@@ -1529,7 +1529,7 @@ def partner_skin_zh_label(raw: str, context: TranslationBuildContext) -> str | N
     if match is None:
         return None
 
-    labels = context.skin_labels.get((match.group("champion"), normalize_skin_token(match.group("skin"))))
+    labels = context.skin_label(match.group("champion"), normalize_skin_token(match.group("skin")))
     if not isinstance(labels, Mapping):
         return None
 
@@ -2055,7 +2055,7 @@ def counterpart_argument(
     fallback_reason = None
 
     if kind == "champion":
-        entry = context.champion_labels.get(alias or "")
+        entry = context.champion_label(alias or "")
         zh = string_or_none(entry.get("zh_CN")) if isinstance(entry, Mapping) else None
         if zh is not None:
             zh_source, confidence = "champion_labels", "high"
@@ -2115,7 +2115,7 @@ def counterpart_skin_zh_label(counterpart: dict[str, object], context: Translati
     if champion_alias is None or skin_token is None:
         return None
 
-    labels = context.skin_labels.get((champion_alias, normalize_skin_token(skin_token)))
+    labels = context.skin_label(champion_alias, normalize_skin_token(skin_token))
     if not isinstance(labels, Mapping):
         return None
 
@@ -2537,7 +2537,7 @@ def champion_argument(
             label = cleaned_alias
         alias = cleaned_alias
 
-    entry = (context or TranslationBuildContext()).champion_labels.get(alias)
+    entry = (context or TranslationBuildContext()).champion_label(alias)
     labels = locale_labels(entry, label or alias)
     provenance: dict[str, object] = {"source": source}
     fallback = False
@@ -2608,7 +2608,7 @@ def skin_argument(
     if champion_alias is None or token is None:
         return None
 
-    labels = context.skin_labels.get((champion_alias, token))
+    labels = context.skin_label(champion_alias, token)
     fallback = labels is None
     return argument_to_dict(
         TranslationArgument(

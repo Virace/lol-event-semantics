@@ -190,11 +190,11 @@ class NormalizedTranslationRendererTests(unittest.TestCase):
                 "gameplay_phase_control",
                 {
                     "map": arg("map", "Map12"),
-                    "gameplay_event": arg("gameplay_event", "一血"),
+                    "gameplay_event": arg("gameplay_event", "第一滴血"),
                     "phase": arg("phase", "阶段选择"),
                 },
-                "Map12 一血阶段选择",
-                "一血阶段选择",
+                "Map12 第一滴血阶段选择",
+                "第一滴血阶段选择",
             ),
             (
                 "voice_event",
