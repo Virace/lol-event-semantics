@@ -70,6 +70,7 @@ class ManifestPair:
         lcu_version: LCU 侧版本显示串。
         game_url: GAME manifest 地址。
         lcu_url: LCU manifest 地址。
+        game_id: GAME manifest 标识（增量游标锚用；解析源缺失时为空串）。
     """
 
     region: str
@@ -77,6 +78,7 @@ class ManifestPair:
     lcu_version: str
     game_url: str
     lcu_url: str
+    game_id: str = ""
 
 
 def main_version(version: str) -> str:
@@ -134,6 +136,7 @@ def resolve_pair(region: str = DEFAULT_REGION, attempts: int = 4, backoff: float
         lcu_version=lcu_version,
         game_url=pair.game.url,
         lcu_url=pair.lcu.url,
+        game_id=str(getattr(pair.game, "manifest_id", "") or ""),
     )
 
 
@@ -212,6 +215,40 @@ def download_champion_bins(extractor, champion: str, out_root: Path) -> list[Pat
 # ---- 本地游戏目录通道（Game/DATA/FINAL 为标准固定布局） ----
 GAME_FINAL_SUBDIR = Path("Game/DATA/FINAL")
 LOCAL_VERSION_FILE = Path("Game/content-metadata.json")
+# 增量判定指纹扫描覆盖的 DATA/FINAL 子目录（英雄 / 字符串表 / 地图 WAD）。
+FINGERPRINT_SUBDIRS = ("Champions", "Localized", "Maps/Shipping")
+
+
+def scan_wad_fingerprints(game_dir: Path) -> dict[str, dict[str, int]]:
+    """扫描本地安装目录中增量判定相关 WAD 的文件指纹。
+
+    覆盖 ``Game/DATA/FINAL`` 下 Champions / Localized / Maps/Shipping
+    三个目录的全部 ``*.wad.client``（含语言变体，与
+    :func:`manifest_diff.classify_wad_path` 的映射口径一致）。键为 GAME
+    manifest 同构的相对路径（无 ``Game/`` 前缀、POSIX 分隔），值为
+    ``{"size": 字节数, "mtime_ns": 纳秒 mtime}``——补丁器重写变化文件
+    即改写这两项；同尺寸同 mtime 的内容改写理论上探测不到，但补丁流程
+    不产生该形态。修复/重装可能整体刷新 mtime，代价只是退化为一次全量
+    重提取（结果幂等）。目录缺失（如精简安装）跳过不报错。
+
+    Returns:
+        指纹快照（键升序），可直接 JSON 序列化进游标并与历史快照做
+        :func:`manifest_diff.fingerprint_diff`。
+    """
+
+    fingerprints: dict[str, dict[str, int]] = {}
+    final_root = game_dir / GAME_FINAL_SUBDIR
+    for subdir in FINGERPRINT_SUBDIRS:
+        directory = final_root / Path(subdir)
+        if not directory.is_dir():
+            continue
+        for wad in sorted(directory.glob("*.wad.client")):
+            stat = wad.stat()
+            fingerprints[f"DATA/FINAL/{subdir}/{wad.name}"] = {
+                "size": stat.st_size,
+                "mtime_ns": stat.st_mtime_ns,
+            }
+    return fingerprints
 
 
 def local_game_version(game_dir: Path) -> str | None:

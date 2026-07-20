@@ -19,9 +19,18 @@ manifest 局部下载，全量偏慢待优化）；提供 ``--game-dir``（本�
     uv run python scripts/download_sources.py --sources stringtable,lobby,rst-hashes
     uv run python scripts/download_sources.py --sources raw-bins --champions Ahri,Ashe
     uv run python scripts/download_sources.py --game-dir "D:/Games/Tencent/WeGameApps/英雄联盟" --sources stringtable,raw-bins --champions all --emit-raw-round .temp/raw-events-round
+    uv run python scripts/download_sources.py --changed-only
+    uv run python scripts/download_sources.py --game-dir "D:/Games/Tencent/WeGameApps/英雄联盟" --changed-only --emit-raw-round .temp/raw-events-round
 
 游标（manifest.json）记录各源版本；同版本重跑自动跳过（--force 覆盖）。
 手工放置文件遵循同一目录 layout 即被识别（游标缺失仅告警）。
+
+增量模式（``--changed-only``，判定逻辑见 :mod:`manifest_diff`）：远程按
+游标锚定的上次 GAME manifest 与当前 manifest 做文件级 diff，本地按上次
+WAD 指纹快照比对，只处理受影响英雄的 raw-bins 与判变语言的字符串表；
+无锚（首跑/旧版游标）回退全量。增量锚只在「stringtable+raw-bins 均在
+本次源集且英雄集为 all」的全覆盖运行后推进——子集运行不动锚，下轮
+diff 仍从旧锚起算（宁多算不漏算）。
 """
 
 from __future__ import annotations
@@ -33,6 +42,13 @@ import sys
 from pathlib import Path
 
 from lol_event_semantics.http_fetch import fetch_bytes
+from lol_event_semantics.manifest_diff import (
+    anchor_eligible,
+    local_affected,
+    narrow_champions,
+    narrow_locales,
+    remote_affected,
+)
 from lol_event_semantics.source_sync import (
     RST_HASHES_URL,
     champion_aliases,
@@ -53,6 +69,7 @@ from lol_event_semantics.wad_source import (
     main_version,
     open_extractor,
     resolve_pair,
+    scan_wad_fingerprints,
 )
 
 ALL_SOURCES = ("stringtable", "lobby", "raw-bins", "rst-hashes")
@@ -75,6 +92,12 @@ def parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--reference-root", type=Path, default=Path("reference"))
     parser.add_argument("--champions", default="all", help="raw-bins 的英雄集：all 或逗号分隔别名")
     parser.add_argument("--force", action="store_true", help="忽略游标强制重下")
+    parser.add_argument(
+        "--changed-only",
+        action="store_true",
+        help="增量模式：按游标锚与当前清单/本地指纹 diff，只处理受影响英雄与判变语言；"
+        "无锚回退全量并落锚（--force 优先，仍走全量）",
+    )
     parser.add_argument(
         "--verify-corpus",
         action="store_true",
@@ -132,6 +155,22 @@ def main(argv: list[str] | None = None) -> int:
     game_extractor = None
     done: dict[str, str] = dict(cursor.get("sources", {}))
 
+    # 增量判定：affected 为 None 表示全量（无锚或未开增量），空集表示确认无变化。
+    local_wads = scan_wad_fingerprints(args.game_dir) if args.game_dir is not None else None
+    affected = None
+    if args.changed_only and not args.force:
+        if args.game_dir is not None:
+            affected = local_affected(cursor.get("local_wads"), local_wads)
+        else:
+            affected = remote_affected(cursor.get("game_manifest"), pair.game_url)
+        if affected is None:
+            print("[changed-only] 游标无增量锚，本轮回退全量并落锚")
+        else:
+            print(
+                f"[changed-only] 变化判定：英雄 {len(affected.champions)}"
+                f" | 地图 {len(affected.map_ids)} | 字符串表语言 {len(affected.stringtable_locales)}"
+            )
+
     for source in sources:
         # raw-bins 按英雄集请求不吃版本跳过；lobby 幂等判据是快照 generatedAt（分支内判断）。
         if (
@@ -144,11 +183,22 @@ def main(argv: list[str] | None = None) -> int:
             continue
 
         if source == "stringtable":
+            out_dir = root / "stringtable"
+            present = {
+                locale
+                for locale in locales
+                if (out_dir / f"Global.{locale}-lol.stringtable").is_file()
+            }
+            todo = tuple(narrow_locales(locales, affected, present))
+            if not todo:
+                print("[skip] stringtable：清单判定各语言未变化（--force 覆盖）")
+                done[source] = "ok"
+                continue
             if args.game_dir is not None:
-                results = local_stringtables(args.game_dir, locales, root / "stringtable")
+                results = local_stringtables(args.game_dir, todo, out_dir)
             else:
                 game_extractor = game_extractor or open_extractor(pair.game_url, work_dir)
-                results = download_stringtables(game_extractor, locales, root / "stringtable")
+                results = download_stringtables(game_extractor, todo, out_dir)
             for locale, path in results.items():
                 print(f"[ok] stringtable {locale} -> {path} ({path.stat().st_size} bytes)")
             done[source] = "ok"
@@ -193,13 +243,24 @@ def main(argv: list[str] | None = None) -> int:
             done[source] = "ok"
 
         elif source == "raw-bins":
-            if args.game_dir is None:
-                game_extractor = game_extractor or open_extractor(pair.game_url, work_dir)
             champs = (
                 champion_aliases(args.reference_root)
                 if args.champions == "all"
                 else [c.strip() for c in args.champions.split(",") if c.strip()]
             )
+            if affected is not None:
+                known = set(champion_aliases(args.reference_root))
+                unknown_champions = [c for c in affected.champions if c not in known]
+                if unknown_champions:
+                    print(f"[warn] raw-bins 受影响 WAD 无 reference 分片（新英雄未收录？）：{unknown_champions}")
+                champs = narrow_champions(champs, affected)
+                if not champs:
+                    print("[skip] raw-bins：清单判定无受影响英雄（--force 覆盖）")
+                    done[source] = "ok"
+                    continue
+                print(f"[changed-only] raw-bins 窄化为 {len(champs)} 个英雄：{', '.join(champs)}")
+            if args.game_dir is None:
+                game_extractor = game_extractor or open_extractor(pair.game_url, work_dir)
             out_root = root / "raw-bins" / "champions"
             for champ in champs:
                 if args.game_dir is not None:
@@ -233,6 +294,18 @@ def main(argv: list[str] | None = None) -> int:
                 print(line)
             done[source] = "ok"
 
+    game_manifest_anchor = cursor.get("game_manifest")
+    local_wads_anchor = cursor.get("local_wads")
+    if anchor_eligible(sources, args.champions):
+        if args.game_dir is not None:
+            local_wads_anchor = local_wads
+        elif pair is not None:
+            game_manifest_anchor = {
+                "id": pair.game_id,
+                "url": pair.game_url,
+                "version": pair.game_version,
+            }
+
     cursor_path.write_text(
         json.dumps(
             {
@@ -241,10 +314,12 @@ def main(argv: list[str] | None = None) -> int:
                 "region": pair.region if pair is not None else None,
                 "game_version": base_game_version,
                 "lcu_version": pair.lcu_version if pair is not None else None,
+                "game_manifest": game_manifest_anchor,
                 "downloaded_at": dt.datetime.now(dt.UTC).isoformat(timespec="seconds"),
                 "rst_hashes_url": RST_HASHES_URL,
                 "lobby_snapshot": cursor.get("lobby_snapshot"),
                 "sources": done,
+                "local_wads": local_wads_anchor,
             },
             ensure_ascii=False,
             indent=2,

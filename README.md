@@ -31,6 +31,11 @@ uv run python scripts/download_sources.py --sources lobby,rst-hashes
 #    远程模式（无本地客户端时）：按 live manifest 局部下载（区服等价，默认 OC；
 #    注：远程全量英雄拉取偏慢，待优化）
 uv run python scripts/download_sources.py --sources stringtable,raw-bins --champions all
+#    增量模式（第二次执行起）：按上次锚定清单/本地 WAD 指纹做文件级 diff，
+#    只处理受影响英雄与判变语言；无锚自动回退全量并落锚（--force 强制全量）
+uv run python scripts/download_sources.py --changed-only
+uv run python scripts/download_sources.py --game-dir "<游戏安装根目录>" --changed-only `
+  --emit-raw-round .temp\raw-events-round
 
 # 2) 把本轮事件名并入累计语料（增量合并，旧事件永不删除）
 uv run python scripts/update_raw_events.py --mode local `
@@ -56,7 +61,7 @@ uv run python scripts/search_stringtable.py 厄塔汗 "first blood"
 | 层 | 来源 | 说明 |
 |---|---|---|
 | L1 | 游戏内字符串表（RST，中英） | 游戏内用词的最权威来源 |
-| L2 | 大厅 JSON（maps/queues/skinlines/skins） | 客户端数据层官方名（地图名/模式名词性区分依据） |
+| L2 | 大厅 JSON（items/maps/queues/skinlines/skins） | 客户端数据层官方名（地图名/模式名词性区分依据） |
 | L3 | 官网 / 联盟宇宙 / 官方公告 | 世界观语域官方词，与 L1 冲突时保留为别名 |
 | L4 | Data Dragon / game-data / hero_list | 结构化官方数据接口 |
 | L5 | 社区（wiki / 惯称） | 官方渠道无此概念时降级使用 |
@@ -74,7 +79,7 @@ uv run python scripts/search_stringtable.py 厄塔汗 "first blood"
   **事件名获取已脚本化**（`download_sources.py --sources raw-bins --emit-raw-round`），
   不再需要手动解包提供；`raw/update-state.json` 是最后成功处理游标。
 - `rules/` 与 `overrides/`：人工维护的规则、词典、上下文别名与精确覆盖。
-- `reference/`：累计精简参考合集（`champions/`、`maps/`、`skinlines/`），解释阶段只读取这里。
+- `reference/`：累计精简参考合集（`champions/`、`maps/`、`skinlines/`、`skins/`、`items/`），解释阶段只读取这里。
 - `data/`：小型 schema、质量基线与样例数据。
 - `dist/`（整体不入库）：
   - `dist/sources/`：数据源下载落点。`manifest.json` 版本游标；
@@ -138,7 +143,7 @@ uv run python scripts/validate_normalized_outputs.py --normalized-root dist/norm
   （sieve.services.riotcdn.net）与 bundle CDN（riotcdn.net），用于按
   manifest 局部提取游戏内字符串表与英雄皮肤 bin。
 - **lol-game-data-snapshot**（github.com/Virace/lol-game-data-snapshot）：
-  自维护的 game-data 快照仓，**大厅 JSON（maps/queues/skinlines/skins）与
+  自维护的 game-data 快照仓，**大厅 JSON（items/maps/queues/skinlines/skins）与
   reference 导入的主渠道**——约 6 小时更新一次，`metadata.json` 提供
   gameVersion 与 LCU manifest 对照信息；需要的新文件在快照仓库侧补充，
   避免本仓库重复实现 LCU WAD 解包。
