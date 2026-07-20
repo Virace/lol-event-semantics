@@ -38,7 +38,7 @@ class GameDataSourceTests(unittest.TestCase):
             if url.endswith("/global/default/v1/champion-summary.json"):
                 return json.dumps([{"id": 1, "alias": "Annie", "name": "Annie"}]).encode("utf-8")
 
-            if url.endswith("/global/zh_cn/v1/champion-summary.json"):
+            if url.endswith("/global/zh_CN/v1/champion-summary.json"):
                 return json.dumps([{"id": 1, "alias": "Annie", "name": "安妮"}], ensure_ascii=False).encode("utf-8")
 
             if url.endswith("/maps.json"):

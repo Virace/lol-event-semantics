@@ -26,7 +26,7 @@ class OnlineSourcesTests(unittest.TestCase):
             if "/global/default/v1/champion-summary.json" in url:
                 return json.dumps([{"id": 1, "alias": "Annie", "name": "Annie"}]).encode("utf-8")
 
-            if "/global/zh_cn/v1/champion-summary.json" in url:
+            if "/global/zh_CN/v1/champion-summary.json" in url:
                 return json.dumps([{"id": 1, "alias": "Annie", "name": "安妮"}], ensure_ascii=False).encode("utf-8")
 
             if url.endswith("/maps.json"):

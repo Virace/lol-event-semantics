@@ -133,10 +133,11 @@ def write_json_bytes(path: Path, payload: Any) -> None:
 
 
 def fetch_bytes(url: str) -> bytes:
-    """使用 urllib 下载 bytes。"""
+    """使用共享重试 fetcher 下载 bytes（见 http_fetch 模块）。"""
 
-    with urllib.request.urlopen(url, timeout=30) as response:
-        return response.read()
+    from .http_fetch import fetch_bytes as fetch_with_retry
+
+    return fetch_with_retry(url)
 
 
 def main_version(version: str) -> str:

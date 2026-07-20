@@ -35,6 +35,7 @@ raw/events/
 - `overrides/`：人工 review 后的精确覆盖和兼容决策。
 - `reference/`：仓库维护的累计精简参考合集，包含 `champions/`、`maps/`、`skinlines/`，解释阶段只读取这里。
 - `.temp/reference-sources/`：被忽略的版本敏感参考输入缓存，不对下游承诺稳定。
+- `dist/sources/`：`scripts/download_sources.py` 的数据源落点（字符串表 / 大厅 JSON / 皮肤 bin / RST key 字典 + 版本游标 `manifest.json`）；layout 与手工放置规范见根 README「目录契约」。
 - `dist/work/<run-id>/`：单次执行中间产物，例如 event-decomposition 和 review-site。
 - `dist/reports/runs/<run-id>/`：规则命中、未知项、候选项和维护审计报告。
 - `dist/normalized/`：唯一对外主数据源，只按实体拆分，不包含完整大包索引。
@@ -101,7 +102,8 @@ rules/low_trust_events.yaml
 自动更新的关键边界：
 
 - `lol-game-data-snapshot` 可提供英雄列表、皮肤列表和 LCU snapshot 状态。
-- 事件名来源必须是 GAME manifest 中的 WAD/BIN，例如 `DATA/FINAL/Champions/Aatrox.wad.client`。
+- 事件名来源必须是 GAME manifest 中的 WAD/BIN，例如 `DATA/FINAL/Champions/Aatrox.wad.client`。本地获取已脚本化：`scripts/download_sources.py --sources raw-bins --emit-raw-round <dir>` 按 manifest 局部提取皮肤 bin 并产出轮次 txt（league-tools 结构化提取，与既有语料生产方式同源），供 `update_raw_events --raw-input-root` 消费；不再需要手动解包提供事件名。
+- 整轮下载出自同一份 manifest，各数据源天然同版本；GAME/LCU manifest 成对校验（major.minor 一致）。
 - `raw/update-state.json` 只作为最后成功处理游标。
 - GAME/LCU 无变化时 workflow 不应生成空报告。
 
