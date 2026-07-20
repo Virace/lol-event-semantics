@@ -11,10 +11,16 @@ dependencies = [
     "league-tools>=1.1.5",
     "msgpack>=1.1.2",
     "ruamel-yaml>=0.19.1",
+    "ruamel-yaml-clib>=0.2.15",
 ]
 
 [project.scripts]
 lookup-normalized-event = "lol_event_semantics.normalized_lookup_cli:main"
+
+[project.optional-dependencies]
+download = [
+    "riotmanifest>=2.4.3",
+]
 
 [dependency-groups]
 dev = [

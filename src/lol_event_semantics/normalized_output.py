@@ -754,7 +754,7 @@ def gameplay_event_label(event: object) -> str:
     """返回玩法事件展示名。"""
 
     labels = {
-        "first_blood": "一血",
+        "first_blood": "第一滴血",
     }
 
     if event is None:
@@ -874,6 +874,9 @@ def write_normalized_outputs(
     output_root: Path,
     *,
     reference_version: str,
+    reference_aliases: dict[tuple[str, str], str] | None = None,
+    resolver: "ChampionEntityResolver | None" = None,
+    translation_context: TranslationBuildContext | None = None,
 ) -> None:
     """写出 normalized 目录。
 
@@ -881,13 +884,21 @@ def write_normalized_outputs(
         records: 拆解记录集合。
         output_root: normalized 输出目录。
         reference_version: 本次生成使用的参考版本。
+        reference_aliases: 可选的预加载实体归一 alias 映射；缺省时从默认
+            reference 根加载。供进程内多次调用复用，避免重复解析全量合集。
+        resolver: 可选的预构建 champion 实体解析器；缺省时从默认根加载。
+        translation_context: 可选的预构建 translation 上下文；缺省时从默认
+            reference 根加载。
     """
 
     clear_generated_outputs(output_root)
     output_root.mkdir(parents=True, exist_ok=True)
-    reference_aliases = load_reference_entity_aliases(DEFAULT_REFERENCE_ROOT)
-    resolver = load_champion_entity_resolver(DEFAULT_REFERENCE_ROOT, DEFAULT_OVERRIDES_ROOT)
-    translation_context = build_translation_context(DEFAULT_REFERENCE_ROOT)
+    if reference_aliases is None:
+        reference_aliases = load_reference_entity_aliases(DEFAULT_REFERENCE_ROOT)
+    if resolver is None:
+        resolver = load_champion_entity_resolver(DEFAULT_REFERENCE_ROOT, DEFAULT_OVERRIDES_ROOT)
+    if translation_context is None:
+        translation_context = build_translation_context(DEFAULT_REFERENCE_ROOT)
     pending_rows: dict[tuple[str, str], list[dict[str, object]]] = defaultdict(list)
 
     for record in records:

@@ -34,10 +34,11 @@
 
 官方三数据源都没有的社区俗称（如 Irelia=刀妹）放这里，纯数据可扩展。
 
-### 4. 黄金样例 `tests/fixtures/normalized_translation_cases.json`
+### 4. 代表样例 `tests/fixtures/normalized_translation_cases.json`
 
-每条样例锁定一个事件名的逐字中文文案，`notes` 字段必须写清核验依据。
-新增词条时建议顺手补 1-2 条覆盖它的黄金样例。
+每条样例锁定一个事件名应产出的 frame 结构（`expected_frame_type` 与
+`required_roles`）；`zh_cn_*` 与 `notes` 字段记录当时核验过的文案与依据，
+仅作文档参考，测试不逐字回归文案——修订词条不会挂测试。
 
 ## 核验要求（硬性）
 

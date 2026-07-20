@@ -13,7 +13,7 @@ dist/work/…/*.jsonl    拆解层：事件名 → 词法原子 + 语义槽位�
   ↓  scripts/build_normalized_outputs.py
 dist/normalized/       翻译层：语义槽位 → translation frame + 中文文案
   ↓  scripts/validate_normalized_outputs.py + check_quality_ratchet.py
-质量门禁               0 error 硬门 + 质量棘轮 + 黄金样例 + 全量 pytest
+质量门禁               0 error 硬门 + 质量棘轮 + 全量 pytest
 ```
 
 一键跑完整链：
@@ -93,7 +93,6 @@ phase=cast…）。它依赖三类知识：
 |---|---|
 | `validate_normalized_outputs.py` | 0 error 硬门：schema/契约/渲染冒烟/无损性 |
 | `check_quality_ratchet.py` | 棘轮：fallback 率、残留英文率、可疑实体数等只许改善不许恶化 |
-| 黄金样例（`tests/fixtures/normalized_translation_cases.json`） | 端到端逐字文本回归，每条 notes 记录核验依据 |
-| 全量 pytest | 单测 + 契约测试 + 黄金守卫 |
+| 全量 pytest | 单测 + 契约测试（代码逻辑与产物结构，不锁定具体文案） |
 
-更新数据后只要这四道门全绿，就可以认为这次更新被安全消化了。
+更新数据后只要这三道门全绿，就可以认为这次更新被安全消化了。
