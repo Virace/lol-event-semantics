@@ -23,6 +23,5 @@
 - Lint：`uv run ruff check src scripts tests`
 - 类型检查：`uv run mypy`
 - 测试：`uv run python -m pytest tests/ -q`
-- 构建：`uv build`
 
 完整测试策略、格式化边界和发布前数据刷新门禁见 `PROJECT_STANDARD.md`。

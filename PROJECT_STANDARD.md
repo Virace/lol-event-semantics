@@ -9,9 +9,9 @@
 ## 2. 技术栈与真实命令
 
 - 运行时：Python 3.12 及以上；`.python-version` 固定当前本地开发解释器为 Python 3.14。
-- 包与环境管理：uv，锁文件为 `uv.lock`。
-- 构建后端：Hatchling，采用 `src/` 包布局。
-- 主要依赖：league-tools、msgpack、ruamel.yaml；下载 GAME manifest 时通过 `download` 可选组启用 riotmanifest。
+- 项目与环境管理：uv，锁文件为 `uv.lock`。
+- 共享模块采用 `src/` 布局；Hatchling 仅用于让 uv 安装项目代码和 console script，不把 wheel/sdist 作为交付物。
+- 主要依赖：league-tools 1.2.0 及以上、msgpack、ruamel.yaml；下载 GAME manifest 时通过 `download` 可选组启用 riotmanifest。
 - 开发工具：pytest、Ruff、mypy。
 
 可执行命令：
@@ -36,11 +36,8 @@ uv run mypy
 # 默认测试门禁
 uv run python -m pytest tests/ -q
 
-# 包导入冒烟
+# 共享模块导入冒烟
 uv run python -c "import lol_event_semantics; print(lol_event_semantics.__version__)"
-
-# 构建 wheel 与 sdist
-uv build
 
 # 发布数据前的本地完整生成、校验、指标与质量棘轮链
 uv run python scripts/run_full_refresh.py
@@ -50,7 +47,7 @@ uv run python scripts/run_full_refresh.py
 
 ## 3. 代码组织
 
-- `src/lol_event_semantics/`：可复用包代码。数据源适配、更新编排、语义拆解、规则加载、normalized 生成、校验和查询逻辑都应在这里形成可测试边界。
+- `src/lol_event_semantics/`：可复用共享模块。数据源适配、更新编排、语义拆解、规则加载、normalized 生成、校验和查询逻辑都应在这里形成可测试边界。
 - `scripts/`：下载、导入、拆解、构建、验证和维护入口。脚本负责解析参数和组合包能力，不复制共享业务逻辑。
 - `tests/`：pytest 收集的单元与文件系统集成测试；固定代表样例放在 `tests/fixtures/`。
 - `raw/events/`：按实体累积且不可删除旧项的原始事件名。
@@ -59,7 +56,7 @@ uv run python scripts/run_full_refresh.py
 - `data/`：小型 schema、样例与质量基线。
 - `dist/`：生成的下游数据、报告和中间产物，整体不入 Git。
 
-依赖方向为 `scripts -> src/lol_event_semantics`；包代码不得反向导入脚本。源数据与规则经拆解层生成结构化记录，再由 normalized 层输出消费者 contract；校验和质量指标只读取生成结果，不成为源数据。只有稳定能力已由多个相关模块组成、需要公开边界或依赖隔离时才建立子包，不为单个小文件或形式化分层创建目录。
+依赖方向为 `scripts -> src/lol_event_semantics`；共享模块不得反向导入脚本。源数据与规则经拆解层生成结构化记录，再由 normalized 层输出消费者 contract；校验和质量指标只读取生成结果，不成为源数据。只有稳定能力已由多个相关模块组成、需要公开边界或依赖隔离时才建立子模块目录，不为单个小文件或形式化分层创建目录。
 
 ## 4. 命名与文档
 
@@ -71,14 +68,14 @@ uv run python scripts/run_full_refresh.py
 
 ## 5. 错误与日志
 
-- 包内对无效调用参数使用 `TypeError`，对内容、状态或外部数据不满足约束使用 `ValueError`；文件和网络边界保留可识别的原始异常链，不用空捕获掩盖失败。
+- 共享模块内对无效调用参数使用 `TypeError`，对内容、状态或外部数据不满足约束使用 `ValueError`；文件和网络边界保留可识别的原始异常链，不用空捕获掩盖失败。
 - CLI 成功返回 0；可预期失败返回非 0，并输出包含失败步骤或可执行修复方向的短消息。`run_full_refresh.py` 遇到阻断步骤失败必须短路，质量棘轮只有在显式允许时才可降级为告警。
 - 机器可读问题写入 JSON/JSONL 报告或稳定字段；终端消息服务人工定位，不把整段堆栈、内部对象或下载内容当作对外 contract。
 - 报告和日志不得记录凭证、令牌、私有 URL 查询参数、用户本地游戏绝对路径或大体积响应体。关联一次刷新使用运行目录和报告清单中的稳定 run 信息，不另造隐式全局状态。
 
 ## 6. 变更门禁
 
-修改过程中实时纠正本轮新增或直接涉及的命名、包路径、脚本/共享逻辑边界和失效文档。除纯文档变化外，至少执行 Ruff、mypy 和受影响测试；构建配置或发布包变化时运行 `uv build`；规则、reference、normalized contract 或产物生成变化时追加完整刷新与代表事件人工抽查。最终交付必须报告已运行命令、未运行门禁、遗留风险和工作树状态。
+修改过程中实时纠正本轮新增或直接涉及的命名、模块路径、脚本/共享逻辑边界和失效文档。除纯文档变化外，至少执行 Ruff、mypy 和受影响测试；依赖或环境配置变化时验证锁文件同步与实际安装；规则、reference、normalized contract 或产物生成变化时追加完整刷新与代表事件人工抽查。项目不发布 Python 包，因此不把 wheel/sdist 构建作为开发或交付门禁。最终交付必须报告已运行命令、未运行门禁、遗留风险和工作树状态。
 
 ### 测试策略
 
@@ -107,6 +104,6 @@ uv run python scripts/run_full_refresh.py
 ## 7. 项目例外
 
 - 项目采用累计 raw/reference 与大量文本规则作为长期知识资产；它们虽然是数据文件，但不是可随时再下载替代的构建缓存。`dist/`、`.temp/` 和大型游戏资产才是禁止提交的生成/临时内容。
-- 本地维护解释器为 Python 3.14，但包声明兼容 Python 3.12 及以上；代码与 mypy 以 3.12 语法和类型能力作为最低边界。
+- 本地维护解释器为 Python 3.14，但项目声明运行于 Python 3.12 及以上；代码与 mypy 以 3.12 语法和类型能力作为最低边界。
 - 由于仓库已有大规模未统一格式化的历史代码，初始化阶段只要求修改过的 Python 文件使用 Ruff formatter，不做全仓库机械重排。复审条件是独立格式化任务获得授权且能保持行为测试全绿。
 - 类型检查采用严格但增量的模块白名单，而不是用宽松全仓库配置制造虚假覆盖。每个新纳入模块必须在 strict 模式下通过。

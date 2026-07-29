@@ -8,7 +8,7 @@ authors = [
 requires-python = ">=3.12"
 readme = "README.md"
 dependencies = [
-    "league-tools>=1.1.5",
+    "league-tools>=1.2.0",
     "msgpack>=1.1.2",
     "ruamel-yaml>=0.19.1",
     "ruamel-yaml-clib>=0.2.15",
@@ -28,6 +28,10 @@ dev = [
     "pytest>=8",
     "ruff>=0.16.0",
 ]
+
+[tool.uv]
+# zstd 1.5.7.3 已被上游撤回；约束传递依赖，避免重新锁定时再次选中。
+constraint-dependencies = ["zstd==1.5.7.2"]
 
 [tool.ruff]
 target-version = "py312"

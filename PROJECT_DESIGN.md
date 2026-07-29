@@ -4,7 +4,7 @@
 
 | 路径 | 职责 |
 | --- | --- |
-| `src/lol_event_semantics/` | 共享 Python 包：来源适配、更新、拆解、翻译、生成、校验和查询 |
+| `src/lol_event_semantics/` | 共享 Python 模块：来源适配、更新、拆解、翻译、生成、校验和查询 |
 | `scripts/` | 参数解析与任务编排薄入口 |
 | `raw/events/` | 不可变、累计的事件名源语料 |
 | `rules/` | 可复用的归一化规则、词典、模板和上下文分片 |
@@ -22,7 +22,7 @@
 - 消费者输出边界：`normalized_translation_*.py`、`normalized_output.py`、`normalized_validation.py`、`quality_metrics.py`、`display_labels.py` 把拆解记录转换为稳定 normalized contract，并校验 manifest、summary、JSONL 与 renderer 一致性。
 - 入口边界：`full_refresh.py` 提供可注入 runner 的编排逻辑；`scripts/run_full_refresh.py`、下载/导入/构建/查询脚本和 `normalized_lookup_cli.py` 负责 CLI 适配。
 
-`scripts/` 可以依赖包模块，包模块不得依赖脚本。来源适配器不得直接写最终 normalized；拆解层不得依赖 `dist/` 中的上次生成结果；展示渲染不得改写 raw 或 reference。
+`scripts/` 可以依赖共享模块，共享模块不得依赖脚本。来源适配器不得直接写最终 normalized；拆解层不得依赖 `dist/` 中的上次生成结果；展示渲染不得改写 raw 或 reference。
 
 ## 核心数据流
 

@@ -2,9 +2,10 @@
 
 ## 技术栈与版本边界
 
-- 包声明支持 Python 3.12 及以上；本地解释器版本由 `.python-version` 管理。
+- 项目运行于 Python 3.12 及以上；本地解释器版本由 `.python-version` 管理。
 - 依赖、虚拟环境和命令统一使用 uv；提交依赖变更时同步提交 `pyproject.toml` 与 `uv.lock`。
-- 包采用 `src/lol_event_semantics/` 布局和 Hatchling 构建，console script 由 `pyproject.toml` 注册。
+- 共享模块采用 `src/lol_event_semantics/` 布局，console script 由 `pyproject.toml` 注册；Hatchling 只服务项目安装，不建立 Python 包发布或构建验收要求。
+- `zstd` 是 league-tools/riotmanifest 的传递依赖，固定为 `1.5.7.2`，避免解析到已被上游撤回的 `1.5.7.3`；league-tools 的最低版本相应为兼容该约束的 `1.2.0`。
 - 默认测试必须可在 GitHub Actions 的 Ubuntu runner 和维护者本地环境离线运行。
 
 ## 数据与兼容约束
@@ -26,7 +27,7 @@
 
 ## 运行与部署环境
 
-- 项目是 Python 库、CLI 和离线数据流水线，不部署常驻服务或数据库。
+- 项目是脚本、CLI 和离线数据流水线，不部署常驻服务或数据库。
 - GitHub Actions 提供默认 CI 和手动 raw/reference 更新；生成数据通过 workflow artifact 交付，`dist/` 不入 Git。
 - 真实 GAME manifest/CDN、本地游戏安装和在线数据源属于可选集成环境，不得成为默认离线测试前提。
 
@@ -40,4 +41,4 @@
 
 ## 项目级例外
 
-累计 `raw/`、`reference/`、`rules/` 和 `overrides/` 是项目知识资产，允许以文本形式入库；这不构成提交完整游戏数据或任意生成缓存的许可。Windows PowerShell 是主要维护命令示例环境，但共享包和默认 CI 不应依赖 Windows 专属路径语义。
+累计 `raw/`、`reference/`、`rules/` 和 `overrides/` 是项目知识资产，允许以文本形式入库；这不构成提交完整游戏数据或任意生成缓存的许可。Windows PowerShell 是主要维护命令示例环境，但共享模块和默认 CI 不应依赖 Windows 专属路径语义。
