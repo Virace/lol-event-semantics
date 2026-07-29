@@ -62,21 +62,26 @@ Anima Squad=幻灵战队。
 ## 提交 PR 前的验证
 
 ```powershell
-# 1. 全量重建 + 校验 + 棘轮（任一步失败即停）
+# 1. 默认静态与类型门禁
+uv run ruff check src scripts tests
+uv run mypy
+
+# 2. 全量重建 + 校验 + 棘轮（任一步失败即停）
 uv run python scripts/run_full_refresh.py `
   --raw-root raw\events --reference-root reference `
   --output-root dist\normalized --work-root dist\work\event-decomposition `
   --report-root dist\reports\runs\latest --baseline data\quality-baseline.json
 
-# 2. 全量测试
+# 3. 全量测试
 uv run python -m pytest
 
-# 3. 抽查你影响到的事件
+# 4. 抽查你影响到的事件
 uv run lookup-normalized-event --event <事件名> --mode main
 ```
 
-验收标准：0 error、棘轮不恶化（改善更好）、pytest 全绿、抽查文案自然
-无歧义。
+验收标准：静态与类型门禁通过、0 error、棘轮不恶化（改善更好）、
+pytest 全绿、抽查文案自然无歧义。只改文档或不影响生成数据的工具配置时，
+可按 `PROJECT_STANDARD.md` 的分层门禁省略完整刷新，但必须说明未运行。
 
 ## 什么不建议在 PR 里改
 

@@ -24,7 +24,32 @@ download = [
 
 [dependency-groups]
 dev = [
+    "mypy>=2.3.0",
     "pytest>=8",
+    "ruff>=0.16.0",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+src = ["src"]
+
+[tool.ruff.lint]
+# 先守住会导致代码无法导入或运行的错误；扩大规则集应作为独立清债任务。
+select = ["E9", "F63", "F7", "F82"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unused_configs = true
+show_error_codes = true
+# 现阶段只把已经完整注解且边界稳定的核心模型与编排模块纳入 strict 门禁。
+files = [
+    "src/lol_event_semantics/__init__.py",
+    "src/lol_event_semantics/_version.py",
+    "src/lol_event_semantics/full_refresh.py",
+    "src/lol_event_semantics/model.py",
+    "src/lol_event_semantics/normalized_translation_model.py",
 ]
 
 [build-system]

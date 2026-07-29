@@ -1,42 +1,28 @@
 # AGENTS.md
 
-This repository stores League of Legends audio event semantics data, rules, and tooling.
+本仓库维护《英雄联盟》音频事件名的语义数据、规则、生成工具与稳定下游产物。
 
-## Scope
+## 适用范围
 
-- This file applies to the repository root and all child paths.
+- 本文件适用于仓库根目录及全部子目录；更深层的局部 `AGENTS.md` 可增加更具体的约束。
+- 每轮代码、配置、测试或数据规则变更前必须读取 `PROJECT_STANDARD.md`。
+- 产品边界、技术约束和模块设计分别以 `PRODUCT.md`、`PROJECT_CONSTRAINTS.md`、`PROJECT_DESIGN.md` 为准。
 
-## Working Rules
+## 不可越过的边界
 
-- Use `uv` for environment management, dependency sync, and command execution.
-- Keep `raw_event_name` as immutable source data. Any readable label or translation must be stored as derived data.
-- Prefer generated artifacts in `dist/` over runtime-only dynamic text assembly when the output is meant to be stable and user-facing.
-- Treat `rules/` and `overrides/` as long-lived source-of-truth inputs. Do not manually edit generated files when the same change belongs in source inputs.
-- Do not commit large temporary datasets, caches, scratch outputs, or one-off exports. Keep local experiments under ignored paths.
-- Keep scripts in `scripts/` thin and task-oriented. Shared logic belongs in `src/lol_event_semantics/`.
-- Keep README and directory notes aligned with the current repository layout whenever the layout changes.
+- 使用 `uv` 管理环境、依赖和命令执行。
+- `raw_event_name` 是不可变源数据；可读标签、翻译和审计信息只能作为派生数据保存。
+- `rules/`、`overrides/` 和累计 `reference/` 是长期源输入；同一变化能在源输入表达时，不手改生成文件。
+- 面向下游的稳定输出应生成到 `dist/`，不把大型临时数据、缓存、游戏资产或一次性导出提交进仓库。
+- `scripts/` 只保留薄入口，共享逻辑放在 `src/lol_event_semantics/`。
+- 目录、命令或公开数据契约变化时，同步更新 README、目录说明与项目规范。
 
-## Repository Layout
+## 常用门禁
 
-- `src/lol_event_semantics/`: shared Python package code.
-- `scripts/`: repository entry scripts for import, compile, validate, and maintenance tasks.
-- `data/`: checked-in small source datasets, schemas, and curated samples.
-- `rules/`: reusable normalization rules, dictionaries, and templates.
-- `overrides/`: manually curated exact overrides and review decisions.
-- `dist/`: generated release artifacts intended for downstream consumption.
+- 安装：`uv sync --dev --locked`
+- Lint：`uv run ruff check src scripts tests`
+- 类型检查：`uv run mypy`
+- 测试：`uv run python -m pytest tests/ -q`
+- 构建：`uv build`
 
-## Python Style
-
-- Prefer small, focused modules and concise names.
-- Every function must include a Google-style docstring.
-- Write docstrings and code comments primarily in Chinese.
-- Add concise comments for logic that is complex, hard to read, constant-heavy, or branch-heavy.
-- Comments should explain intent, constraints, or why a decision exists, not restate obvious code line by line.
-- Do not add placeholder abstractions or speculative framework code before the first real workflow needs them.
-
-## Verification
-
-- Before claiming scaffold work is complete, verify at least:
-  - package import works in the project environment
-  - ignored local environment paths remain ignored by git
-  - `git status --short` matches the expected new files
+完整测试策略、格式化边界和发布前数据刷新门禁见 `PROJECT_STANDARD.md`。
