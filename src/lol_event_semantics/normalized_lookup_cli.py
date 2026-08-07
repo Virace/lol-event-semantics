@@ -8,6 +8,7 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+from lol_event_semantics.dataset_runs import DatasetRunError, resolve_approved_dataset
 from lol_event_semantics.normalized_lookup import lookup_normalized_events
 from lol_event_semantics.normalized_translation_model import RenderOptions
 
@@ -16,7 +17,8 @@ from lol_event_semantics.normalized_translation_model import RenderOptions
 class LookupNormalizedEventArgs:
     """normalized 事件查询参数。"""
 
-    normalized_root: Path
+    normalized_root: Path | None
+    runs_root: Path
     event_names: list[str]
     locale: str
     mode: str
@@ -38,10 +40,16 @@ def main(argv: list[str] | None = None) -> int:
     """
 
     args = parse_args(argv)
-    normalized_stream = args.normalized_root / "normalized-events.jsonl"
-    by_entity_root = args.normalized_root / "by-entity"
+    try:
+        normalized_root = args.normalized_root or resolve_approved_dataset(args.runs_root)
+    except DatasetRunError as exc:
+        print(f"approved normalized dataset not available: {exc}", file=sys.stderr)
+        return 2
+
+    normalized_stream = normalized_root / "normalized-events.jsonl"
+    by_entity_root = normalized_root / "by-entity"
     if not normalized_stream.is_file() and not by_entity_root.exists():
-        print(f"normalized dataset not found: {args.normalized_root}", file=sys.stderr)
+        print(f"normalized dataset not found: {normalized_root}", file=sys.stderr)
         return 2
 
     render_options = RenderOptions(
@@ -51,13 +59,13 @@ def main(argv: list[str] | None = None) -> int:
         fallback=args.fallback,
     )
     results = lookup_normalized_events(
-        args.normalized_root,
+        normalized_root,
         args.event_names,
         render_options=render_options,
         include_record=args.include_record,
     )
     payload = {
-        "normalized_root": str(args.normalized_root),
+        "normalized_root": str(normalized_root),
         "locale": args.locale,
         "mode": args.mode,
         "known_context": sorted(args.known_context),
@@ -88,7 +96,7 @@ def parse_args(argv: list[str] | None = None) -> LookupNormalizedEventArgs:
     """
 
     parser = argparse.ArgumentParser(
-        description="Lookup raw event names in dist/normalized and render translation text.",
+        description="Lookup raw event names in the approved-local dataset and render translation text.",
     )
     parser.add_argument(
         "events",
@@ -110,8 +118,10 @@ def parse_args(argv: list[str] | None = None) -> LookupNormalizedEventArgs:
     parser.add_argument(
         "--normalized-root",
         type=Path,
-        default=Path("dist/normalized"),
-        help="Normalized output root. Defaults to dist/normalized.",
+        help="Explicit normalized root. Omit to resolve dist/runs/approved-local.json.",
+    )
+    parser.add_argument(
+        "--runs-root", type=Path, default=Path("dist/runs"), help="Dataset runs root for approved lookup."
     )
     parser.add_argument("--locale", default="zh_CN", help="Render locale. Defaults to zh_CN.")
     parser.add_argument(
@@ -147,6 +157,7 @@ def parse_args(argv: list[str] | None = None) -> LookupNormalizedEventArgs:
 
     return LookupNormalizedEventArgs(
         normalized_root=namespace.normalized_root,
+        runs_root=namespace.runs_root,
         event_names=event_names,
         locale=namespace.locale,
         mode=namespace.mode,
@@ -213,10 +224,12 @@ def print_human_results(payload: dict[str, object]) -> None:
         payload: 查询结果 payload。
     """
 
+    known_context = payload.get("known_context")
+    known_context_text = ",".join(str(item) for item in known_context) if isinstance(known_context, list) else ""
     print(
         "lookup_normalized_event "
         f"root={payload['normalized_root']} locale={payload['locale']} "
-        f"mode={payload['mode']} known_context={','.join(payload['known_context'])}"
+        f"mode={payload['mode']} known_context={known_context_text}"
     )
     results = payload.get("results")
     if not isinstance(results, list):

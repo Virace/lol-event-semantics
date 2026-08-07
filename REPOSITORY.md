@@ -23,9 +23,9 @@
 ```text
 raw/events/
   -> rules/ + overrides/ + reference/
-  -> dist/work/<run-id>/event-decomposition/
-  -> dist/reports/runs/<run-id>/
-  -> dist/normalized/
+  -> dist/runs/.staging/<run>/{work,normalized,reports}/
+  -> dist/runs/completed/<run>/ or dist/runs/failed/<run>/
+  -> dist/runs/approved-local.json
 ```
 
 各目录职责：
@@ -36,9 +36,8 @@ raw/events/
 - `reference/`：仓库维护的累计精简参考合集，包含 `champions/`、`maps/`、`skinlines/`、`skins/`、`items/`，解释阶段只读取这里。
 - `.temp/reference-sources/`：被忽略的版本敏感参考输入缓存，不对下游承诺稳定。
 - `dist/sources/`：`scripts/download_sources.py` 的数据源落点（字符串表 / 大厅 JSON / 皮肤 bin / RST key 字典 + 版本游标 `manifest.json`）；layout 与手工放置规范见根 README「目录契约」。
-- `dist/work/<run-id>/`：单次执行中间产物，例如 event-decomposition 和 review-site。
-- `dist/reports/runs/<run-id>/`：规则命中、未知项、候选项和维护审计报告。
-- `dist/normalized/`：唯一对外主数据源；`normalized-events.jsonl` 是 V2 首选全量记录流，`pattern-catalog.json` 是公共模式目录，`by-entity/` 与 `entity-summary.json` 在兼容期继续保留；`manifest.json` 用输入树摘要、payload 文件 SHA-256 和 `content_digest` 固化确定性内容身份。
+- `dist/runs/`：事务性数据集运行根；`.staging` 隔离写入，`failed` 保留诊断，`completed` 保存不可变候选，`approved-local.json` 原子指向唯一默认消费数据集。每个 completed run 的 `normalized/` 仍以单流/catalog 为 V2 首选并保留兼容分片；manifest 固化输入树摘要、payload SHA-256 与 `content_digest`。
+- `dist/work/`、`dist/reports/runs/`：仅保留给显式维护命令的旧式独立输出；正式 full refresh 不再写入。
 
 旧的 `manifest/<version>/events` 和 `hashes/<version>/integrated` 路线只作为外部兼容来源存在，不再是本仓库主目录模型。
 
@@ -75,14 +74,14 @@ rules/low_trust_events.yaml
 
 ## 对外数据
 
-下游程序应读取 `dist/normalized/`，不要依赖中间 JSONL、报告、review site 或本地 game-data。
+下游程序应通过 `dist/runs/approved-local.json` 解析 completed `normalized/`，不要默认读取 staging、failed、未批准 candidate、中间 JSONL、报告、review site 或本地 game-data。
 
 当前数据 contract 分层如下：
 
 - `raw/events/` 是源语料层，`raw_event_name` 在所有派生产物中保持原样。
 - `reference/` 是实体、英雄、皮肤、地图和 skinline 的 label/reference 层。
 - `rules/` 与 `overrides/` 是语义解释层，负责把事件名归一为技能、状态、动作、阶段和上下文别名。
-- `dist/normalized/` 是生成的消费者层，V2 消费者优先读取按 `record_id` 排序的 `normalized-events.jsonl`；旧消费者可继续读取按实体拆分的兼容路径和 `display` 预览。
+- approved completed run 的 `normalized/` 是生成的消费者层，V2 消费者优先读取按 `record_id` 排序的 `normalized-events.jsonl`；旧消费者可继续读取按实体拆分的兼容路径和 `display` 预览。
 - `translation` 是 normalized 记录内的本地化渲染层；需要页面上下文省略、不同语言语序或调试审计时，应优先使用它，而不是只依赖固定 `display.zh_cn_short/detail`。
 - normalized 行以 `record_id` 作为公开唯一身份，并保留 `raw_event_name` 原值；`source_scope` / `provenance` 区分 champions、maps 等来源。不能把 raw 名称误当作全局唯一键。
 

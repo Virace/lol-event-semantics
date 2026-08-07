@@ -32,5 +32,8 @@ P1 产品范围已经批准，不代表已经通过 P4 Stable 绝对门禁。
 
 P3-C1 已补全确定性 manifest identity 与 content digest：manifest 不再含运行时间，
 并记录冻结输入 profile、Git dirty 状态、各输入树摘要及每个 payload 文件 SHA-256。
-validator 会复算文件表、content digest 和 dataset id。P3-C2 仍需实现隔离运行与
-approved-local 原子 promotion；因此当前候选尚不能被当作已批准发布状态。
+validator 会复算文件表、content digest 和 dataset id。P3-C2 已把每轮写入隔离到
+`.staging/<run-id>`，成功/失败分别固化到 `completed/`、`failed/`，并提供带
+lock/CAS/clean/report/payload/eligibility 门禁的 `approved-local.json` 原子替换。
+默认 lookup 不再扫描 candidate。P4 尚未产生正式绝对门禁 eligibility attestation，
+因此当前真实 completed candidate 仍不能 promotion 或被当作已批准发布状态。

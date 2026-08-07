@@ -86,7 +86,7 @@ uv run python scripts/run_full_refresh.py
 | 规则、词典和拆解逻辑回归 | 相同输入得到稳定 semantic slots、frame roles 与 provenance | 确定性行为测试 | 仓库内小型规则与 fixture | `tests/test_decomposition_*.py`、`tests/test_normalized_translation_*.py` | 修改解析、规则或渲染时 |
 | raw/reference 更新破坏累计数据或留下半成品 | 旧事件保留，差集正确，失败时原文件与游标不被部分替换 | 临时目录文件系统集成测试 | 本地文件系统与 mocked 下载边界 | `tests/test_raw_update.py`、`tests/test_update_pipeline.py`、`tests/test_source_sync.py` | 修改更新链时 |
 | normalized 消费者 contract 漂移 | manifest、summary、JSONL、translation schema 与 renderer 一致 | contract/行为测试与生成后 validator | 仓库 reference、规则及生成目录 | `tests/test_normalized_*.py`、`scripts/validate_normalized_outputs.py` | 修改输出模型、schema 或发布数据时 |
-| 完整流水线顺序、短路或质量棘轮失效 | 步骤顺序正确，阻断失败停止，指标和棘轮结果可复核 | 编排行为测试；发布前完整刷新 | pytest 注入 runner；完整刷新使用仓库数据 | `tests/test_run_full_refresh.py`、`scripts/run_full_refresh.py` | 修改编排时；发布前 |
+| 完整流水线顺序、短路、隔离 run 或 promotion 失效 | 步骤顺序正确，失败固化且旧 pointer 不变，completed/pointer 身份可复核 | 编排与文件系统状态机测试；发布前完整刷新 | pytest 注入 runner；Windows/Linux 临时目录；完整刷新使用仓库数据 | `tests/test_run_full_refresh.py`、`tests/test_dataset_runs.py`、`scripts/run_full_refresh.py` | 修改编排/promotion 时；发布前 |
 | 外部 CDN、manifest 或第三方数据语义变化 | 真实响应仍满足版本、长度、格式和来源约束 | 默认测试 mock 边界；必要时定向在线验收 | 网络、第三方服务或本地游戏安装 | 对应 source 测试与下载脚本 | 适配器修改时；发布前按需 |
 
 明确 Bug、解析规则、状态转换和输出 contract 优先先写失败测试。第三方接口探索或未知游戏数据先记录可复现输入与验收场景，边界稳定后再固化自动化测试。纯文案、注释、格式、私有重命名和不改变语义的文件移动不新增源码字面量测试，使用目标 diff、静态检查和已有回归证明。
@@ -99,7 +99,7 @@ uv run python scripts/run_full_refresh.py
 - 默认交付门禁：`uv run ruff check src scripts tests`、`uv run mypy`、`uv run python -m pytest tests/ -q`。
 - 发布数据门禁：默认交付门禁、`uv run python scripts/run_full_refresh.py`、代表事件查询与必要的人工审阅。
 
-当前 mypy 只覆盖五个已完整注解的稳定核心模块；新增稳定模块应逐步加入，未纳入部分仍由运行时测试和 Ruff 守护。Ruff 暂不对历史代码执行全规则或全量格式门禁；扩大规则集必须先形成可审阅的独立清债变更。在线源和真实游戏安装链不在默认 CI 中，涉及相应适配器时必须报告是否完成在线验收。
+当前 mypy 只覆盖已完整注解的稳定核心模块；新增稳定模块应逐步加入，未纳入部分仍由运行时测试和 Ruff 守护。Ruff 暂不对历史代码执行全规则或全量格式门禁；扩大规则集必须先形成可审阅的独立清债变更。在线源和真实游戏安装链不在默认 CI 中，涉及相应适配器时必须报告是否完成在线验收。
 
 ## 7. 项目例外
 

@@ -122,6 +122,32 @@ class NormalizedLookupCliTests(unittest.TestCase):
         self.assertEqual(payload["query_count"], 1)
         self.assertEqual(payload["results"][0]["matches"][0]["render"]["text"], "W技能被动防御状态结束")
 
+    def test_cli_default_does_not_consume_unapproved_candidate(self) -> None:
+        """未传显式 root 时只读 approved pointer，不扫描 candidate/legacy 目录。"""
+
+        raw = "Play_sfx_GalioSkin13WPassiveDefense_OnBuffDeactivate"
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            write_lookup_fixture(root / "normalized-candidate", [galio_record()])
+            result = subprocess.run(
+                [
+                    "uv",
+                    "run",
+                    "lookup-normalized-event",
+                    "--runs-root",
+                    str(root / "runs"),
+                    "--event",
+                    raw,
+                ],
+                cwd=Path(__file__).resolve().parents[1],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("approved normalized dataset not available", result.stderr)
+
 
 def galio_record() -> dict[str, object]:
     """构造 Galio translation normalized 记录。"""

@@ -17,7 +17,9 @@
 - 当前 16.14 冻结源未暴露 `lcu_version`，只允许版本化 frozen profile 中记录的显式例外：
   `lobby_snapshot.game_version=16.14` 且 `lcu_manifest_id` 非空；该例外不得扩展到未来 live 采集。
 - `rules/`、`overrides/` 和累计 `reference/` 是解释层的权威输入。生成文件不得反向成为人工维护源。
-- `dist/normalized/` 是唯一对外主数据源；translation schema、frame type、字段和路径变化属于消费者 contract 变更。
+- `dist/runs/approved-local.json` 原子指向的 completed `normalized/` 是唯一默认消费源；
+  `.staging`、`failed`、未批准 `completed` 与旧 `dist/normalized/` 都只能显式用于维护诊断。
+  translation schema、frame type、字段和路径变化属于消费者 contract 变更。
 - `raw_event_name` 必须保留原值但不是公开唯一键；`record_id` 由版本化 canonical tuple 确定，至少包含 raw、来源域/资产和最终 owner，不得包含本机绝对路径、输入顺序、随机数或生成时间。真实 identity 冲突必须 fail-closed 或用可解释来源身份消歧。
 - `zh_CN` 是正式渲染 locale；其他 locale、回退与来源信息必须以结构化 translation 数据表达，不得以兼容 `display` 预览替代正式渲染 contract。
 - VO 是优先支持对象；SFX 必须保留并按 Stable、Experimental、Unsupported 表达支持状态，不能因未稳定而静默丢弃。
@@ -25,6 +27,8 @@
 - YAML/JSON/JSONL 等文本资产必须保持可审阅、确定性和 UTF-8 编码。
 - normalized 内容身份不得包含时间、耗时、绝对路径、输入遍历顺序或随机值；dirty 工作树可生成
   本地候选，但不得进入 approved/published 状态。
+- completed run 不得原地覆盖或修改；promotion 必须校验 payload/report 摘要、clean generator、
+  正式门禁 attestation，并在锁内用 expected previous digest 做 CAS 后原子替换小型 pointer。
 
 ## 安全与隐私
 

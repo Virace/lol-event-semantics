@@ -16,7 +16,8 @@ scripts/download_sources.py        # 初始化/更新入口：一键下载全部
   -> dist/sources/                 # 字符串表 / 大厅 JSON / 皮肤 bin / RST key 字典
 raw/events/ + rules/ + overrides/ + reference/
   -> decomposition JSONL + 审计报告
-  -> dist/normalized/              # 唯一对外主数据源（V2 单流 + 兼容实体分片）
+  -> dist/runs/completed/<run>/normalized/
+  -> dist/runs/approved-local.json # 唯一默认消费入口（原子指向 approved run）
 ```
 
 ## 快速开始
@@ -44,10 +45,10 @@ uv run python scripts/update_raw_events.py --mode local `
   --state-file raw\update-state.json --raw-input-root .temp\raw-events-round `
   --report-root .temp\update-report
 
-# 3) 全量刷新（decompose→build→validate→metrics→ratchet，任一步失败即停）
+# 3) 全量刷新到隔离 run（decompose→build→validate→metrics→ratchet，任一步失败即停）
 uv run python scripts/run_full_refresh.py
 
-# 4) 查询单个事件的解析结果
+# 4) 查询单个事件的已批准解析结果（P4/P5 完成首个 approved-local 后可用）
 uv run lookup-normalized-event --event Play_vo_Annie_QAttack --mode main
 
 # 辅助：客户端字符串表中英同键检索（词条核证工具）
@@ -92,7 +93,11 @@ manifest，数据源之间天然同版本。`16.14` 是本轮 frozen acceptance 
     （GAME WAD，原路径 `data/characters/{champion}/skins/skin{N}.bin`）；
     `rst-hashes/hashes.rst.xxh3.trimmed.txt`。
     **手工放置规范**：手动获取的文件放入上述同名路径即被识别（游标缺失仅告警，不阻断）；不支持其他手工路径。
-  - `dist/normalized/`：对外主数据源；`dist/reports/runs/`：质量与审计报告；`dist/work/`：中间产物。
+  - `dist/runs/.staging/<run>/`：单次刷新隔离写入区；失败不会触碰 approved pointer。
+  - `dist/runs/completed/<run>/`：含 `normalized/`、`reports/`、`run.json`、`completion.json` 的不可变候选。
+  - `dist/runs/failed/<run>/`：含 `failure.json` 与部分诊断的失败运行。
+  - `dist/runs/approved-local.json`：默认消费者唯一入口；同目录临时文件 fsync 后原子替换。
+  - 旧 `dist/normalized/` 只作为显式维护候选路径兼容，不再被默认 lookup 消费。
 
 ## 事件拆解说明
 
@@ -113,7 +118,7 @@ manifest，数据源之间天然同版本。`16.14` 是本轮 frozen acceptance 
 `Play_vo`、皮肤编号、`cast3D`、`2D/3D`、`voProcessing` 等技术 token 进
 `debug_label` 或审计字段，不进短文案。
 
-`dist/normalized/` 记录内的 `translation` 对象是结构化渲染 contract
+approved run 的 normalized 记录内 `translation` 对象是结构化渲染 contract
 （`frame_type`、版本化 `arguments`、多语言 label、`provenance`、fallback
 标记）；`display.zh_cn_short/detail` 是兼容预览字段。需要按页面上下文
 裁剪文案的下游程序应读取 `translation` 并按 `locale`、`mode`、
@@ -132,8 +137,16 @@ manifest，数据源之间天然同版本。`16.14` 是本轮 frozen acceptance 
 缺失的 `lcu_version` 只接受一条例外：lobby snapshot 同为 16.14 且保留非空
 LCU manifest id。dirty 工作树可以生成候选，但后续 promotion 不得批准它。
 
+`run_full_refresh.py` 的每个步骤都绑定同一个 staging run；成功写
+`completion.json` 后同卷 rename 到 `completed/`，失败则写 `failure.json` 后移入
+`failed/`。`promote_dataset_run.py` 只接受 clean、报告/payload 摘要未漂移且带
+正式绝对门禁 attestation 的 completed run，并在独占锁内以 expected previous
+digest 做 CAS。P4 尚未生成正式 attestation，因此当前真实候选仍不可 promotion。
+
 ```bash
-uv run python scripts/validate_normalized_outputs.py --normalized-root dist/normalized --output-json dist/reports/runs/latest/normalized-validation.json
+uv run python scripts/validate_normalized_outputs.py `
+  --normalized-root dist/runs/completed/<run-id>/normalized `
+  --output-json dist/reports/manual/<run-id>-validation.json
 ```
 
 V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX 保留，目标支持
@@ -145,13 +158,13 @@ pending、deferred scope 记录产品决定，不会把已批准范围提前冒�
 ## Pattern Catalog（只读维护报告）
 
 Pattern Catalog 从 semantic frame 派生，不以 `BaseName,Label` 为主模型。生成器会把
-公共消费者目录写入 `dist/normalized/pattern-catalog.json`；下方入口则生成字段更丰富的
+公共消费者目录写入 approved run 的 `normalized/pattern-catalog.json`；下方入口则生成字段更丰富的
 本地维护 inventory，默认读取 `rules/translation_patterns.yaml`，并要求显式指定被忽略
 报告目录中的 JSON/Markdown 输出：
 
 ```powershell
 uv run python scripts/report_translation_patterns.py `
-  --normalized-root dist\normalized `
+  --normalized-root dist\runs\completed\<run-id>\normalized `
   --output-json dist\reports\runs\latest\translation-patterns.json `
   --output-md dist\reports\runs\latest\translation-patterns.md
 ```
@@ -159,8 +172,9 @@ uv run python scripts/report_translation_patterns.py `
 公共 catalog 和维护 inventory 中的候选当前都保持 Experimental；`scope_status=approved`
 仅表示产品范围已获批准，pending 与 deferred 分别表示待精确审阅和暂缓。公共 catalog
 Schema、record Schema 与最小样例位于 `data/schema/`、`data/examples/`，生成时复制进
-`dist/normalized/`。确定性输入/内容身份已实现；事务运行、绝对门禁、promotion、
-review importer 与远端发布尚未实现。
+approved run 的 `normalized/`。确定性输入/内容身份、事务 run 和原子 pointer
+promotion 机制已实现；绝对门禁 attestation、review importer、首个真实 promotion
+与远端发布尚未实现。
 
 ## 自动更新与 CI
 

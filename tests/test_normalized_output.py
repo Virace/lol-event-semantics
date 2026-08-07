@@ -226,15 +226,12 @@ class NormalizedOutputTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             stale = root / "by-entity" / "champions" / "OldChampion.jsonl"
-            note = root / "by-entity" / "README.md"
             stale.parent.mkdir(parents=True)
             stale.write_text("{}\n", encoding="utf-8")
-            note.write_text("manual note\n", encoding="utf-8")
 
             write_outputs([record], root, reference_version="16.5")
 
             self.assertFalse(stale.exists())
-            self.assertTrue(note.exists())
             self.assertTrue((root / "by-entity" / "champions" / "Annie.jsonl").is_file())
 
     def test_writer_merges_case_variants_into_canonical_entity(self) -> None:

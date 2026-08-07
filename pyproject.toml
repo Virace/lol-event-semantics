@@ -51,8 +51,11 @@ show_error_codes = true
 files = [
     "src/lol_event_semantics/__init__.py",
     "src/lol_event_semantics/_version.py",
+    "src/lol_event_semantics/dataset_identity.py",
+    "src/lol_event_semantics/dataset_runs.py",
     "src/lol_event_semantics/full_refresh.py",
     "src/lol_event_semantics/model.py",
+    "src/lol_event_semantics/normalized_lookup_cli.py",
     "src/lol_event_semantics/pattern_catalog.py",
     "src/lol_event_semantics/normalized_translation_model.py",
 ]

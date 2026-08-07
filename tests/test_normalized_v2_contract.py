@@ -9,6 +9,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from lol_event_semantics.dataset_identity import content_digest, describe_payload_files
 from lol_event_semantics.normalized_contract import record_id_for_normalized_record
 from lol_event_semantics.normalized_validation import validate_normalized_root
 from lol_event_semantics.pattern_catalog import (
@@ -172,10 +173,6 @@ def write_v2_fixture(root: Path, rows: list[dict[str, object]]) -> None:
 
     manifest = json.loads((DATA_ROOT / "examples" / "manifest.v2.json").read_text(encoding="utf-8"))
     manifest["record_count"] = len(normalized_rows)
-    (root / "manifest.json").write_text(
-        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
     (root / "entity-summary.json").write_text(
         json.dumps(
             [
@@ -195,6 +192,29 @@ def write_v2_fixture(root: Path, rows: list[dict[str, object]]) -> None:
     )
     shutil.copytree(DATA_ROOT / "schema", root / "schema")
     shutil.copytree(DATA_ROOT / "examples", root / "examples")
+
+    identity = manifest["content_identity"]
+    identity["support_level_counts"] = value_counts(normalized_rows, "support_level")
+    identity["review"]["record_counts"] = value_counts(normalized_rows, "review_status")
+    files = describe_payload_files(root)
+    digest = content_digest(identity, files)
+    manifest["files"] = files
+    manifest["content_digest"] = digest
+    manifest["dataset_id"] = f"local-v1-{digest[:16]}"
+    (root / "manifest.json").write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+def value_counts(rows: list[dict[str, object]], field: str) -> dict[str, int]:
+    """按字符串字段统计 V2 fixture 计数。"""
+
+    counts: dict[str, int] = {}
+    for row in rows:
+        value = str(row[field])
+        counts[value] = counts.get(value, 0) + 1
+    return dict(sorted(counts.items()))
 
 
 if __name__ == "__main__":
