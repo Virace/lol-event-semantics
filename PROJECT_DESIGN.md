@@ -20,6 +20,7 @@
 - 累积更新边界：`reference_ingestion.py`、`reference_collection.py`、`raw_update.py`、`source_sync.py`、`update_pipeline.py` 把外部输入转换为仓库内 reference/raw，并负责差集、游标和失败恢复。
 - 语义边界：`decomposition_*.py`、`rules.py`、`model.py`、`match_audit.py` 读取 raw/reference/rules/overrides，输出保留来源、置信度和未知项的结构化拆解。
 - 消费者输出边界：`normalized_contract.py` 负责版本化 record identity、来源身份与 additive support/render/review 视图；`normalized_translation_*.py`、`normalized_output.py`、`normalized_validation.py`、`quality_metrics.py`、`display_labels.py` 把拆解记录转换为稳定 normalized contract，并校验 manifest、summary、JSONL 与 renderer 一致性。champions/maps 分片中的等价拆解记录先合并 provenance；若最终 canonical identity 仍冲突则 fail-closed。
+- 数据集身份边界：`dataset_identity.py` 对冻结 profile 做版本/计数预检，对 raw、reference、rules、overrides、契约资产和生成器源码计算规范化摘要，并从有序 payload 文件摘要派生 `content_digest`/`dataset_id`；运行时间与路径只属于后续 run metadata。
 - 模式报告边界：`pattern_catalog.py` 只读 normalized 与 `rules/translation_patterns.yaml`，从 semantic frame 汇总 Pattern Catalog inventory；`scripts/report_translation_patterns.py` 只是把 JSON/Markdown 写入调用方指定的被忽略报告路径。输出候选保持 Experimental，并用 approved、pending、deferred scope 区分用户决定；不写 normalized contract 或反向修改规则源。
 - 入口边界：`full_refresh.py` 提供可注入 runner 的编排逻辑；`scripts/run_full_refresh.py`、下载/导入/构建/查询/模式报告脚本和 `normalized_lookup_cli.py` 负责 CLI 适配。
 
@@ -43,6 +44,7 @@ semantic frame + rules/translation_patterns.yaml
 
 canonical normalized rows + committed data/schema + data/examples
   -> normalized-events.jsonl + pattern-catalog.json + compatibility by-entity/
+  -> deterministic manifest content identity + payload file digests
 ```
 
 更新链先在临时位置准备变更，确认差集和输入有效后再替换累计数据与游标。解释链把所有 contextual 分片聚合为一个 RuleBook，避免按当前 owner 局部加载而丢失跨实体命中。消费者链从统一 frame 注册表派生必需角色和模板，减少 builder、validator 与 renderer 之间的重复定义。
@@ -69,7 +71,7 @@ canonical normalized rows + committed data/schema + data/examples
 - 外部来源包括 Riot GAME/LCU manifest 与 CDN、lol-game-data-snapshot、Data Dragon、腾讯英雄列表和 CommunityDragon RST hash；来源权威度和用途见 README。
 - `raw/events/**/*.txt` 与 `raw/update-state.json` 是累计更新输入和成功游标。
 - `rules/**/*.yaml`、`overrides/**/*.yaml`、`reference/**/*.yaml` 是长期可审阅源。
-- `dist/normalized/manifest.json`、`entity-summary.json`、`by-entity/**/*.jsonl` 及记录内 `translation` 是下游数据 contract。
+- `dist/normalized/manifest.json`、`normalized-events.jsonl`、`pattern-catalog.json`、`entity-summary.json`、`by-entity/**/*.jsonl` 及记录内 `translation` 是下游数据 contract。V2 manifest 的文件摘要与内容身份由 validator 复算，任一 payload 漂移均为硬错误。
 - `TRANSLATION_SCHEMA_VERSION`、`FRAME_VERSION`、frame registry 和 required roles 共同约束 renderer/validator；变更时必须同步 builder、validator、测试和文档。
 - `zh_CN` 是当前正式渲染 locale；VO 优先支持，SFX 不删除但按 Stable、Experimental、Unsupported 区分能力边界。
 - `16.14` 是本轮 frozen acceptance profile，不参与未来 live 版本的默认选择。正式消费者 Pattern Catalog schema、promotion 与 review importer 仍是未来工作；当前 inventory 仅使用独立的报告 schema。远端发布也尚未实现。

@@ -5,6 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Mapping
 
+from .display_labels import DisplayLabels
+
 
 TRANSLATION_SCHEMA_VERSION = 1
 FRAME_VERSION = 1
@@ -195,12 +197,20 @@ class TranslationBuildContext:
         fallback_locale: 默认语言缺失时使用的回退语言。
         champion_labels: 英雄 alias 到多语言 label 的映射。
         skin_labels: `(champion_alias, skin_token)` 到多语言 label 的映射。
+        display_labels: 从显式 rules 根加载的展示词表。
+        reference_map_names: 从显式 reference 根加载的地图英文名索引。
+        reference_item_names: 从显式 reference 根加载的装备双语名索引。
+        map_system_entity_labels: 从显式 rules/overrides 根加载的系统实体词条。
     """
 
     default_locale: str = "zh_CN"
     fallback_locale: str = "en_US"
     champion_labels: Mapping[str, Mapping[str, str]] = field(default_factory=dict)
     skin_labels: Mapping[tuple[str, str], Mapping[str, str]] = field(default_factory=dict)
+    display_labels: DisplayLabels | None = None
+    reference_map_names: Mapping[int, str] = field(default_factory=dict)
+    reference_item_names: Mapping[int, Mapping[str, str]] = field(default_factory=dict)
+    map_system_entity_labels: Mapping[str, str] = field(default_factory=dict)
     # 大小写折叠索引：事件名 alias 与 reference alias 存在既有拼写分叉
     # （BelVeth/Belveth、LeBlanc/Leblanc、RekSai/Reksai、Orianna/Oriana…），
     # 两侧各是自身来源的事实，不改数据、由查表兼容。惰性构建后缓存。

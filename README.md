@@ -125,6 +125,13 @@ manifest，数据源之间天然同版本。`16.14` 是本轮 frozen acceptance 
 最终 owner 的 canonical tuple 生成，不依赖本机路径、输入顺序或生成时间；
 `raw_event_name` 仍保持不可变，但不再被当作全数据集天然唯一键。
 
+`manifest.json` 的 V2 内容身份不含生成时间、本机绝对路径或运行耗时。它记录
+冻结 profile、Git commit/dirty 状态、raw/reference/rules/overrides/契约资产与
+生成器源码的规范化摘要，并列出 manifest 之外每个 payload 文件的 SHA-256；
+`content_digest` 和 `dataset_id` 由这些稳定字段确定。当前 `16.14` profile 对
+缺失的 `lcu_version` 只接受一条例外：lobby snapshot 同为 16.14 且保留非空
+LCU manifest id。dirty 工作树可以生成候选，但后续 promotion 不得批准它。
+
 ```bash
 uv run python scripts/validate_normalized_outputs.py --normalized-root dist/normalized --output-json dist/reports/runs/latest/normalized-validation.json
 ```
@@ -152,7 +159,8 @@ uv run python scripts/report_translation_patterns.py `
 公共 catalog 和维护 inventory 中的候选当前都保持 Experimental；`scope_status=approved`
 仅表示产品范围已获批准，pending 与 deferred 分别表示待精确审阅和暂缓。公共 catalog
 Schema、record Schema 与最小样例位于 `data/schema/`、`data/examples/`，生成时复制进
-`dist/normalized/`。绝对门禁、promotion、review importer 与远端发布尚未实现。
+`dist/normalized/`。确定性输入/内容身份已实现；事务运行、绝对门禁、promotion、
+review importer 与远端发布尚未实现。
 
 ## 自动更新与 CI
 

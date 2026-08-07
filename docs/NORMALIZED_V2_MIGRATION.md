@@ -30,5 +30,7 @@ P1 产品范围已经批准，不代表已经通过 P4 Stable 绝对门禁。
 - validator 同时读取 manifest/record V1 和 V2，未知 major fail-closed。
 - lookup 优先 V2 单流；没有单流时回落 legacy by-entity。
 
-P3 会继续补全确定性 manifest identity、content digest 和隔离 promotion；因此
-本阶段的 manifest 仍含运行时间，不应被当作最终 approved-local 身份。
+P3-C1 已补全确定性 manifest identity 与 content digest：manifest 不再含运行时间，
+并记录冻结输入 profile、Git dirty 状态、各输入树摘要及每个 payload 文件 SHA-256。
+validator 会复算文件表、content digest 和 dataset id。P3-C2 仍需实现隔离运行与
+approved-local 原子 promotion；因此当前候选尚不能被当作已批准发布状态。

@@ -4,10 +4,11 @@ from __future__ import annotations
 
 import re
 from collections.abc import Mapping
+from contextlib import nullcontext
 from typing import Any
 
 from .decomposition_model import EventDecompositionRecord, SemanticProfile
-from .display_labels import DisplayLabels, get_display_labels, get_reference_map_names
+from .display_labels import DisplayLabels, get_display_labels, get_reference_map_names, use_display_sources
 from .normalized_translation_model import (
     FRAME_VERSION,
     TRANSLATION_SCHEMA_VERSION,
@@ -23,7 +24,7 @@ LABEL_SOURCE_SKIN_VOTE = "skin_label_vote"
 CHAMPION_ZH_VOTE_FALLBACK_REASON = "champion_zh_label_from_skin_vote"
 
 
-class ChampionLabelEntry(dict):
+class ChampionLabelEntry(dict[str, str]):
     """带 label 来源与名称多形式的英雄多语言 label 映射。
 
     dict 本体仍是 locale 到主 label 的映射，兼容
@@ -233,7 +234,13 @@ def build_translation(
     """
 
     active_context = context or TranslationBuildContext()
-    translation = build_translation_frame(record, active_context)
+    display_scope = (
+        use_display_sources(active_context.display_labels, active_context.reference_map_names)
+        if active_context.display_labels is not None
+        else nullcontext()
+    )
+    with display_scope:
+        translation = build_translation_frame(record, active_context)
     if translation is None:
         return None
 
@@ -1070,7 +1077,9 @@ def companion_argument(
         return None
 
     entry = context.champion_label(raw)
-    zh = string_or_none(entry.get("zh_CN")) if isinstance(entry, Mapping) else None
+    if not isinstance(entry, Mapping):
+        return None
+    zh = string_or_none(entry.get("zh_CN"))
     if zh is None:
         return None
 
@@ -1383,17 +1392,21 @@ def append_dialogue_trigger_counterpart(
         return
 
     entry = context.champion_label(counterpart_raw)
-    zh = string_or_none(entry.get("zh_CN")) if isinstance(entry, Mapping) else None
+    if not isinstance(entry, Mapping):
+        return
+    zh = string_or_none(entry.get("zh_CN"))
     if zh is None:
         return
 
     owner_alias = record.owner.alias if record.owner is not None else None
+    partner_labels = partner.get("labels")
+    partner_en = partner_labels.get("en_US") if isinstance(partner_labels, dict) else None
     partner_names = {
         value.lower()
         for value in (
             string_or_none(partner.get("alias")),
             string_or_none(partner.get("token")),
-            string_or_none((partner.get("labels") or {}).get("en_US") if isinstance(partner.get("labels"), dict) else None),
+            string_or_none(partner_en),
         )
         if value is not None
     }
@@ -2512,7 +2525,6 @@ def build_mode_augment_event(
         返回 None。
     """
 
-    del context  # 增益系事件无 champion/skin 主体，不消费构建上下文。
     slots = record.semantic_slots
     reference_entity = slots.get("reference_entity")
     kind = reference_entity.get("kind") if isinstance(reference_entity, dict) else None
@@ -2556,7 +2568,7 @@ def build_mode_augment_event(
         record,
         "mode_augment_event",
         [
-            mode_augment_mode_argument(record),
+            mode_augment_mode_argument(record, labels=context.map_system_entity_labels or None),
             augment,
             phase,
         ],
@@ -2590,7 +2602,11 @@ def mode_augment_cue(slots: Mapping[str, Any]) -> tuple[str, str] | None:
     return marker, code
 
 
-def mode_augment_mode_argument(record: EventDecompositionRecord) -> dict[str, object] | None:
+def mode_augment_mode_argument(
+    record: EventDecompositionRecord,
+    *,
+    labels: Mapping[str, str] | None = None,
+) -> dict[str, object] | None:
     """构建增益系事件的模式前缀 argument（T3.4 头部词条表）。
 
     候选依次为 owner alias 与 cue 首段家族标记；Augment/Item 是系统/道具
@@ -2600,6 +2616,7 @@ def mode_augment_mode_argument(record: EventDecompositionRecord) -> dict[str, ob
 
     Args:
         record: 拆解记录。
+        labels: 可选的显式 map/system 实体词条；缺省保留旧 helper 行为。
 
     Returns:
         mode 参数；候选均不在词条表内时返回 None。
@@ -2617,7 +2634,7 @@ def mode_augment_mode_argument(record: EventDecompositionRecord) -> dict[str, ob
         if candidate.lower() in MODE_AUGMENT_NON_MODE_MARKERS:
             continue
 
-        zh = map_system_entity_label(candidate)
+        zh = map_system_entity_label(candidate, labels)
         if zh is None:
             continue
 

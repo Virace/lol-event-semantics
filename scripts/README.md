@@ -85,9 +85,13 @@ uv run python scripts/build_review_site.py `
 uv run python scripts/build_normalized_outputs.py `
   --decomposition-root dist\work\event-decomposition `
   --output-root dist\normalized `
-  --reference-version cumulative `
+  --repo-root . --raw-root raw\events `
+  --reference-root reference --rules-root rules --overrides-root overrides `
+  --reference-version 16.14 `
   --pattern-policy rules\translation_patterns.yaml `
-  --contract-assets-root data
+  --contract-assets-root data `
+  --sources-manifest dist\sources\manifest.json `
+  --frozen-profile data\frozen-profile.v1.json
 ```
 
 生成只读 Pattern Catalog 报告（候选仍为 Experimental，scope 可为 approved、pending 或 deferred；不写入 normalized 或规则源）：
@@ -135,10 +139,10 @@ uv run lookup-normalized-event `
 - `.github/workflows/update-raw-events.yml`：手动触发的 raw/reference 更新 workflow；可消费同一 workflow run 中的前置 raw round artifact，也可在可选 `riotmanifest` 可用时用 GAME manifest + `.github/raw-event-requests.example.json` 形状的请求表生成 raw round，报告作为 artifact 保存。
 - `decompose_events.py`：把 raw event name 拆成 lexical atoms、semantic slots、JSONL 产物和 review reports；解释阶段只读取内部 `reference/`，可用 `--write-low-trust-rules` 额外导出低信任规则命中表。
 - `build_review_site.py`：从 decomposition JSONL 构建本地静态 review 页面；输出目录需要用本地 HTTP 服务打开，因为页面数据在 `review-data.json`。
-- `build_normalized_outputs.py`：从 decomposition JSONL 生成 `dist/normalized/` 下游数据；先合并 champions/maps 重叠分片中的等价记录，再写出唯一 `record_id`、来源 provenance、pattern/support/render/review 字段。V2 首选文件是 `normalized-events.jsonl` 与 `pattern-catalog.json`，同时复制 `data/schema/`、`data/examples/` 并保留 `entity-summary.json`、`by-entity/`、`translation` 和 `display` 兼容视图。
+- `build_normalized_outputs.py`：从 decomposition JSONL 生成 `dist/normalized/` 下游数据；先对显式 raw/reference/rules/overrides/source/profile 输入做冻结预检与树摘要，再合并 champions/maps 重叠分片中的等价记录，写出唯一 `record_id`、来源 provenance、pattern/support/render/review 字段和确定性 manifest content identity。V2 首选文件是 `normalized-events.jsonl` 与 `pattern-catalog.json`，同时复制 `data/schema/`、`data/examples/` 并保留 `entity-summary.json`、`by-entity/`、`translation` 和 `display` 兼容视图。
 - `report_translation_patterns.py`：只读 Pattern Catalog 报告入口；默认读取 `rules/translation_patterns.yaml`，以 semantic frame 汇总候选并将 JSON/Markdown 写入显式指定的报告路径。候选保持 Experimental，scope 决策独立记录，不创建 Stable 规则或消费者 contract。
 - `run_full_refresh.py`：本地一键刷新薄壳，按序串联 decompose→build→validate→metrics→ratchet 五个子进程（可选 `--update-first` 在最前插入在线更新）；任一阻断步骤非 0 退出即短路并打印 `FAILED at step: <步骤名> (exit <code>)`，`--allow-ratchet-regression` 让 ratchet 恶化仅告警继续；步骤串联逻辑在 `src/lol_event_semantics/full_refresh.py`。
-- `validate_normalized_outputs.py`：校验 `dist/normalized/` 最终产物；硬错误覆盖 manifest/summary/JSONL 一致性、实体规范化、记录 schema、translation 结构和 renderer smoke，质量警告覆盖可疑实体归属、重复 raw、fallback label、低信任规则残留等；`--fail-on-warning` 可在 warning 存在时返回 2。
+- `validate_normalized_outputs.py`：校验 `dist/normalized/` 最终产物；硬错误覆盖 manifest/summary/JSONL 一致性、manifest 文件摘要与 content digest 复算、实体规范化、记录 schema、translation 结构和 renderer smoke，质量警告覆盖可疑实体归属、重复 raw、fallback label、低信任规则残留等；`--fail-on-warning` 可在 warning 存在时返回 2。
 - `lookup-normalized-event`：项目 console script，按 `raw_event_name` 精确匹配；优先读取 `normalized-events.jsonl`，缺失时回落 `by-entity/**/*.jsonl`，并输出 record/pattern/support/provenance、translation 和 renderer 结果。`scripts/lookup_normalized_event.py` 仅保留为兼容包装。
 - `migrate_contextual_aliases.py`：把 `rules/contextual_aliases.yaml` 迁移为 `rules/contextual/**/*.yaml` 分片。
 - `translate_events.py`：遗留/兼容翻译 CLI，依赖外部 `rcp-be-lol-game-data`。

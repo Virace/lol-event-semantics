@@ -6,6 +6,51 @@
     "contains_full_raw_event_index": {
       "const": true
     },
+    "content_digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "content_digest_algorithm": {
+      "const": "lol-event-semantics.content-digest.v1"
+    },
+    "content_identity": {
+      "additionalProperties": true,
+      "properties": {
+        "base_game_version": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "corpus_scope": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "input_identity": {
+          "type": "object"
+        },
+        "quality_status": {
+          "const": "not_evaluated"
+        },
+        "review": {
+          "type": "object"
+        },
+        "support_level_counts": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "input_identity",
+        "corpus_scope",
+        "base_game_version",
+        "review",
+        "support_level_counts",
+        "quality_status"
+      ],
+      "type": "object"
+    },
+    "dataset_id": {
+      "pattern": "^local-v1-[0-9a-f]{16}$",
+      "type": "string"
+    },
     "dataset_schema_version": {
       "const": "normalized-dataset.v2"
     },
@@ -13,9 +58,36 @@
       "minimum": 0,
       "type": "integer"
     },
-    "generated_at": {
-      "format": "date-time",
-      "type": "string"
+    "files": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "bytes": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "path": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "record_count": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "path",
+          "bytes",
+          "sha256"
+        ],
+        "type": "object"
+      },
+      "minItems": 7,
+      "type": "array"
     },
     "normalized_record_schema_version": {
       "const": 2
@@ -52,7 +124,11 @@
     "dataset_schema_version",
     "normalized_record_schema_version",
     "pattern_catalog_schema_version",
-    "generated_at",
+    "dataset_id",
+    "content_digest",
+    "content_digest_algorithm",
+    "content_identity",
+    "files",
     "reference_version",
     "entity_count",
     "record_count",

@@ -16,6 +16,8 @@
 - 从官方和维护中的参考源导入英雄、皮肤、地图、装备及相关标签。
 - 通过规则、词典和精确覆盖拆解事件，保留置信度、来源与未知片段。
 - 生成 `dist/normalized/` 下的稳定消费者数据和版本化 translation frame contract。
+- 为每份候选生成可复算的输入身份、payload 文件摘要、`content_digest` 和 `dataset_id`，
+  使“相同干净 commit + 相同输入”成为可验证事实，而不是依赖生成时间或目录名。
 - 以 VO 为优先解释和展示对象，同时保留 SFX；SFX 的支持状态明确区分 Stable、Experimental 与 Unsupported。
 - 将 `zh_CN` 作为正式渲染 locale，并保留结构化多语言信息和回退审计。
 - 从 semantic frame 派生只读 Pattern Catalog，供维护者发现可复用的翻译模式候选，而不把候选直接提升为稳定 contract。

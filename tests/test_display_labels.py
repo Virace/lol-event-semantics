@@ -18,6 +18,7 @@ from lol_event_semantics.display_labels import (
     get_reference_item_names,
     get_reference_map_names,
     load_display_labels,
+    use_display_sources,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -173,6 +174,21 @@ class ReferenceMapNamesTests(unittest.TestCase):
         first = get_reference_map_names()
         second = get_reference_map_names()
         self.assertIs(first, second)
+
+    def test_explicit_display_scope_isolated_from_default_cache(self) -> None:
+        """正式构建可注入显式索引，退出作用域后恢复默认缓存。"""
+
+        default_labels = get_display_labels()
+        default_maps = get_reference_map_names()
+        injected_labels = load_display_labels({"maps": {999: "测试地图"}})
+        injected_maps = {999: "Fixture Map"}
+
+        with use_display_sources(injected_labels, injected_maps):
+            self.assertIs(get_display_labels(), injected_labels)
+            self.assertIs(get_reference_map_names(), injected_maps)
+
+        self.assertIs(get_display_labels(), default_labels)
+        self.assertIs(get_reference_map_names(), default_maps)
 
 
 class ReferenceItemNamesTests(unittest.TestCase):

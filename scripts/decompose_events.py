@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from lol_event_semantics.decomposition_lexer import decompose_event_name
+from lol_event_semantics.decomposition_model import EventDecompositionRecord
 from lol_event_semantics.decomposition_profiles import normalize_semantics
 from lol_event_semantics.decomposition_reference import ReferenceIndex, enrich_with_reference
 from lol_event_semantics.decomposition_reports import write_jsonl, write_low_trust_rule_reports, write_reports
@@ -32,6 +33,8 @@ class DecomposeArgs:
     raw_root: Path
     version: str
     reference_root: Path | None
+    rules_root: Path | None
+    overrides_root: Path | None
     output_root: Path
     report_root: Path
     limit: int | None
@@ -73,6 +76,8 @@ def parse_args(argv: list[str] | None = None) -> DecomposeArgs:
         help="Optional metadata label for this decomposition run. Defaults to cumulative.",
     )
     parser.add_argument("--reference-root", type=Path, help="Internal reference collection root, for example reference.")
+    parser.add_argument("--rules-root", type=Path, help="Explicit rules root used by reference enrichment.")
+    parser.add_argument("--overrides-root", type=Path, help="Explicit overrides root used by reference enrichment.")
     parser.add_argument("--output-root", type=Path, required=True, help="Output directory for JSONL artifacts.")
     parser.add_argument("--report-root", type=Path, required=True, help="Output directory for reports.")
     parser.add_argument("--limit", type=int, help="Optional maximum number of unique event names.")
@@ -87,6 +92,8 @@ def parse_args(argv: list[str] | None = None) -> DecomposeArgs:
         raw_root=namespace.raw_root,
         version=namespace.version,
         reference_root=namespace.reference_root,
+        rules_root=namespace.rules_root,
+        overrides_root=namespace.overrides_root,
         output_root=namespace.output_root,
         report_root=namespace.report_root,
         limit=namespace.limit,
@@ -94,14 +101,21 @@ def parse_args(argv: list[str] | None = None) -> DecomposeArgs:
     )
 
 
-def build_records(args: DecomposeArgs, audit: MatchAuditRecorder | None = None):
+def build_records(
+    args: DecomposeArgs,
+    audit: MatchAuditRecorder | None = None,
+) -> list[EventDecompositionRecord]:
     """读取 raw tree 并构建拆解记录。"""
 
     grouped: dict[str, list[str]] = {}
     reference = (
-        ReferenceIndex.from_reference_collection(args.reference_root)
+        ReferenceIndex.from_reference_collection(
+            args.reference_root,
+            rules_root=args.rules_root,
+            overrides_root=args.overrides_root,
+        )
         if args.reference_root is not None
-        else ReferenceIndex.builtins()
+        else ReferenceIndex.builtins(args.rules_root, args.overrides_root)
     )
 
     args.reference = reference

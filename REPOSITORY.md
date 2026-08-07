@@ -38,7 +38,7 @@ raw/events/
 - `dist/sources/`：`scripts/download_sources.py` 的数据源落点（字符串表 / 大厅 JSON / 皮肤 bin / RST key 字典 + 版本游标 `manifest.json`）；layout 与手工放置规范见根 README「目录契约」。
 - `dist/work/<run-id>/`：单次执行中间产物，例如 event-decomposition 和 review-site。
 - `dist/reports/runs/<run-id>/`：规则命中、未知项、候选项和维护审计报告。
-- `dist/normalized/`：唯一对外主数据源；`normalized-events.jsonl` 是 V2 首选全量记录流，`pattern-catalog.json` 是公共模式目录，`by-entity/` 与 `entity-summary.json` 在兼容期继续保留。
+- `dist/normalized/`：唯一对外主数据源；`normalized-events.jsonl` 是 V2 首选全量记录流，`pattern-catalog.json` 是公共模式目录，`by-entity/` 与 `entity-summary.json` 在兼容期继续保留；`manifest.json` 用输入树摘要、payload 文件 SHA-256 和 `content_digest` 固化确定性内容身份。
 
 旧的 `manifest/<version>/events` 和 `hashes/<version>/integrated` 路线只作为外部兼容来源存在，不再是本仓库主目录模型。
 

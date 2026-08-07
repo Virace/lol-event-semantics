@@ -8,6 +8,13 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
+from .dataset_identity import (
+    CONTENT_DIGEST_VERSION,
+    INPUT_IDENTITY_VERSION,
+    content_digest,
+    describe_payload_files,
+    unmanaged_payload_paths,
+)
 from .decomposition_lexer import parse_shell
 from .normalized_contract import (
     RECORD_ID_ALGORITHM_VERSION,
@@ -613,6 +620,7 @@ def validate_v2_dataset(
     catalog_path = root / "pattern-catalog.json"
     catalog = read_json_object(catalog_path, issues) if catalog_path.is_file() else {}
     _validate_v2_pattern_catalog(catalog, shard_records, manifest, issues)
+    _validate_v2_manifest_identity(root, manifest, catalog, shard_records, issues)
 
     for relative in required_files[2:]:
         path = root / relative
@@ -621,6 +629,122 @@ def validate_v2_dataset(
         document = read_json_object(path, issues)
         if relative.startswith("schema/") and document.get("$schema") != "https://json-schema.org/draft/2020-12/schema":
             issues.append(error("json_schema_draft_invalid", relative, "JSON Schema 必须声明 draft 2020-12。"))
+
+
+def _validate_v2_manifest_identity(
+    root: Path,
+    manifest: dict[str, Any],
+    catalog: dict[str, Any],
+    rows: list[dict[str, Any]],
+    issues: list[NormalizedValidationIssue],
+) -> None:
+    """校验 V2 manifest 的输入身份、payload 摘要和数据集主键。"""
+
+    if manifest.get("content_digest_algorithm") != CONTENT_DIGEST_VERSION:
+        issues.append(error("content_digest_algorithm_invalid", "manifest.json", "content digest 算法版本无效。"))
+
+    identity = manifest.get("content_identity")
+    if not isinstance(identity, dict):
+        issues.append(error("content_identity_invalid", "manifest.json", "content_identity 必须是 object。"))
+        return
+    input_identity = identity.get("input_identity")
+    if not isinstance(input_identity, dict) or input_identity.get("schema") != INPUT_IDENTITY_VERSION:
+        issues.append(error("input_identity_invalid", "manifest.json", "input identity 缺失或版本无效。"))
+    elif not _valid_input_identity_shape(input_identity):
+        issues.append(error("input_identity_shape_invalid", "manifest.json", "input identity 字段或摘要形状无效。"))
+    else:
+        profile = input_identity["profile"]
+        if (
+            identity.get("corpus_scope") != profile.get("corpus_scope")
+            or identity.get("base_game_version") != profile.get("base_game_version")
+        ):
+            issues.append(error("content_profile_mismatch", "manifest.json", "content identity 与 frozen profile 不一致。"))
+
+    support_counts = _field_counts(rows, "support_level")
+    review_counts = _field_counts(rows, "review_status")
+    review = identity.get("review")
+    if identity.get("support_level_counts") != support_counts:
+        issues.append(error("support_level_counts_mismatch", "manifest.json", "support_level_counts 与记录不一致。"))
+    if not isinstance(review, dict) or review.get("record_counts") != review_counts:
+        issues.append(error("review_counts_mismatch", "manifest.json", "review record_counts 与记录不一致。"))
+    elif review.get("decision_id") != catalog.get("decision_id"):
+        issues.append(error("review_decision_id_mismatch", "manifest.json", "review decision_id 与 catalog 不一致。"))
+    if identity.get("quality_status") != "not_evaluated":
+        issues.append(error("quality_status_invalid", "manifest.json", "P3-C1 quality_status 必须为 not_evaluated。"))
+
+    files = manifest.get("files")
+    if not isinstance(files, list) or not all(isinstance(entry, dict) for entry in files):
+        issues.append(error("manifest_files_invalid", "manifest.json", "files 必须是文件摘要 object 数组。"))
+        return
+
+    actual_files = describe_payload_files(root)
+    unmanaged = unmanaged_payload_paths(actual_files)
+    if unmanaged:
+        issues.append(
+            error(
+                "unmanaged_payload_file",
+                "manifest.json",
+                f"normalized root 含未管理 payload 文件: {', '.join(unmanaged)}。",
+            )
+        )
+    if files != actual_files:
+        issues.append(error("manifest_files_mismatch", "manifest.json", "files 与实际 payload 文件摘要不一致。"))
+
+    expected_digest = content_digest(identity, files)
+    actual_digest = manifest.get("content_digest")
+    if actual_digest != expected_digest:
+        issues.append(error("content_digest_mismatch", "manifest.json", "content_digest 与内容身份不一致。"))
+    expected_dataset_id = f"local-v1-{expected_digest[:16]}"
+    if manifest.get("dataset_id") != expected_dataset_id:
+        issues.append(error("dataset_id_mismatch", "manifest.json", "dataset_id 与 content_digest 不一致。"))
+
+
+def _valid_input_identity_shape(identity: dict[str, Any]) -> bool:
+    """检查 frozen profile、Git 状态和各输入摘要的最小闭包。"""
+
+    profile = identity.get("profile")
+    state = identity.get("generator_state")
+    inputs = identity.get("inputs")
+    if not isinstance(profile, dict) or not isinstance(state, dict) or not isinstance(inputs, dict):
+        return False
+    if (
+        not isinstance(profile.get("profile_id"), str)
+        or not isinstance(profile.get("corpus_scope"), str)
+        or not isinstance(profile.get("base_game_version"), str)
+        or not isinstance(profile.get("raw_unique_count"), int)
+        or not isinstance(profile.get("accepted_exceptions"), list)
+    ):
+        return False
+    if not isinstance(state.get("commit"), str) or not isinstance(state.get("dirty"), bool):
+        return False
+
+    required_inputs = {
+        "raw",
+        "reference",
+        "reference_manifest",
+        "rules",
+        "overrides",
+        "contract_assets",
+        "generator",
+        "sources_manifest",
+        "frozen_profile",
+    }
+    for name in required_inputs:
+        value = inputs.get(name)
+        digest = value.get("digest") if isinstance(value, dict) else None
+        if not isinstance(digest, str) or re.fullmatch(r"[0-9a-f]{64}", digest) is None:
+            return False
+    return True
+
+
+def _field_counts(rows: list[dict[str, Any]], field: str) -> dict[str, int]:
+    """按与 writer 相同的规则统计 manifest 枚举字段。"""
+
+    counts: dict[str, int] = {}
+    for row in rows:
+        key = str(row.get(field) or "missing")
+        counts[key] = counts.get(key, 0) + 1
+    return dict(sorted(counts.items()))
 
 
 def _validate_v2_stream(

@@ -26,8 +26,15 @@ STEP_METRICS = "metrics"
 class FullRefreshArgs:
     """一键刷新脚本参数。"""
 
+    repo_root: Path
     raw_root: Path
     reference_root: Path
+    rules_root: Path
+    overrides_root: Path
+    contract_assets_root: Path
+    pattern_policy: Path
+    sources_manifest: Path
+    frozen_profile: Path
     output_root: Path
     work_root: Path
     baseline: Path
@@ -117,6 +124,10 @@ def build_steps(args: FullRefreshArgs) -> list[RefreshStep]:
                 str(args.raw_root),
                 "--reference-root",
                 str(args.reference_root),
+                "--rules-root",
+                str(args.rules_root),
+                "--overrides-root",
+                str(args.overrides_root),
                 "--output-root",
                 str(args.work_root),
                 "--report-root",
@@ -133,8 +144,26 @@ def build_steps(args: FullRefreshArgs) -> list[RefreshStep]:
                 str(args.work_root),
                 "--output-root",
                 str(args.output_root),
+                "--repo-root",
+                str(args.repo_root),
+                "--raw-root",
+                str(args.raw_root),
                 "--reference-version",
                 "cumulative",
+                "--reference-root",
+                str(args.reference_root),
+                "--rules-root",
+                str(args.rules_root),
+                "--overrides-root",
+                str(args.overrides_root),
+                "--pattern-policy",
+                str(args.pattern_policy),
+                "--contract-assets-root",
+                str(args.contract_assets_root),
+                "--sources-manifest",
+                str(args.sources_manifest),
+                "--frozen-profile",
+                str(args.frozen_profile),
             ),
         )
     )
@@ -197,8 +226,35 @@ def parse_args(argv: list[str] | None = None) -> FullRefreshArgs:
     parser = argparse.ArgumentParser(
         description="Run the local decompose->build->validate->metrics->ratchet refresh chain.",
     )
+    parser.add_argument("--repo-root", type=Path, default=Path("."), help="Repository root for generator identity.")
     parser.add_argument("--raw-root", type=Path, default=Path("raw/events"), help="Cumulative raw events root.")
     parser.add_argument("--reference-root", type=Path, default=Path("reference"), help="Internal reference root.")
+    parser.add_argument("--rules-root", type=Path, default=Path("rules"), help="Versioned rules root.")
+    parser.add_argument("--overrides-root", type=Path, default=Path("overrides"), help="Manual overrides root.")
+    parser.add_argument(
+        "--contract-assets-root",
+        type=Path,
+        default=Path("data"),
+        help="Committed schema/examples contract root.",
+    )
+    parser.add_argument(
+        "--pattern-policy",
+        type=Path,
+        default=Path("rules/translation_patterns.yaml"),
+        help="Versioned translation pattern policy.",
+    )
+    parser.add_argument(
+        "--sources-manifest",
+        type=Path,
+        default=Path("dist/sources/manifest.json"),
+        help="Frozen source acquisition manifest.",
+    )
+    parser.add_argument(
+        "--frozen-profile",
+        type=Path,
+        default=Path("data/frozen-profile.v1.json"),
+        help="Committed frozen release profile.",
+    )
     parser.add_argument(
         "--output-root",
         type=Path,
@@ -241,8 +297,15 @@ def parse_args(argv: list[str] | None = None) -> FullRefreshArgs:
         parser.error("--update-first requires --game-version and --game-data-base-url")
 
     return FullRefreshArgs(
+        repo_root=namespace.repo_root,
         raw_root=namespace.raw_root,
         reference_root=namespace.reference_root,
+        rules_root=namespace.rules_root,
+        overrides_root=namespace.overrides_root,
+        contract_assets_root=namespace.contract_assets_root,
+        pattern_policy=namespace.pattern_policy,
+        sources_manifest=namespace.sources_manifest,
+        frozen_profile=namespace.frozen_profile,
         output_root=namespace.output_root,
         work_root=namespace.work_root,
         baseline=namespace.baseline,

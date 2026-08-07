@@ -9,7 +9,9 @@ ability_component / gameplay_event 展示词条外置到 ``rules/display_labels.
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Iterator, Mapping
+from contextlib import contextmanager
+from contextvars import ContextVar
 from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
@@ -21,6 +23,8 @@ from .reference_collection import load_reference_collection
 
 DEFAULT_DISPLAY_LABELS_PATH = Path("rules/display_labels.yaml")
 DEFAULT_REFERENCE_ROOT = Path("reference")
+_ACTIVE_DISPLAY_LABELS: ContextVar[DisplayLabels | None]
+_ACTIVE_REFERENCE_MAP_NAMES: ContextVar[Mapping[int, str] | None]
 
 
 @dataclass(frozen=True, slots=True)
@@ -67,6 +71,26 @@ class DisplayLabels:
     shop_action: Mapping[str, tuple[str, str]] = field(default_factory=dict)
     shop_subject: Mapping[str, str] = field(default_factory=dict)
     augments: Mapping[str, tuple[str, str]] = field(default_factory=dict)
+
+
+_ACTIVE_DISPLAY_LABELS = ContextVar("active_display_labels", default=None)
+_ACTIVE_REFERENCE_MAP_NAMES = ContextVar("active_reference_map_names", default=None)
+
+
+@contextmanager
+def use_display_sources(
+    labels: DisplayLabels,
+    reference_map_names: Mapping[int, str],
+) -> Iterator[None]:
+    """在当前构建调用链内注入显式 rules/reference 展示索引。"""
+
+    labels_token = _ACTIVE_DISPLAY_LABELS.set(labels)
+    maps_token = _ACTIVE_REFERENCE_MAP_NAMES.set(reference_map_names)
+    try:
+        yield
+    finally:
+        _ACTIVE_REFERENCE_MAP_NAMES.reset(maps_token)
+        _ACTIVE_DISPLAY_LABELS.reset(labels_token)
 
 
 def parse_display_labels(data: Mapping[str, Any]) -> DisplayLabels:
@@ -208,13 +232,20 @@ def load_display_labels(source: Path | str | Mapping[str, Any] | None = None) ->
     return parse_display_labels(data)
 
 
-@lru_cache(maxsize=1)
 def get_display_labels() -> DisplayLabels:
     """返回进程内缓存的默认展示词表。
 
     Returns:
         从默认 ``rules/display_labels.yaml`` 加载的展示词表；同一进程内只读一次文件。
     """
+
+    active = _ACTIVE_DISPLAY_LABELS.get()
+    return active if active is not None else _get_default_display_labels()
+
+
+@lru_cache(maxsize=1)
+def _get_default_display_labels() -> DisplayLabels:
+    """加载并缓存默认 rules 展示词表。"""
 
     return load_display_labels(DEFAULT_DISPLAY_LABELS_PATH)
 
@@ -328,17 +359,27 @@ def _first_name(entity: Mapping[str, Any], language: str) -> str | None:
         return None
 
     for row in rows:
-        if isinstance(row, Mapping) and isinstance(row.get("value"), str):
-            return row["value"]
+        value = row.get("value") if isinstance(row, Mapping) else None
+        if isinstance(value, str):
+            return value
 
     return None
 
 
-@lru_cache(maxsize=1)
 def get_reference_map_names() -> dict[int, str]:
     """返回进程内缓存的 reference 地图英文真名索引。
 
     与装备名索引共享同一次默认合集加载；同一进程内只读一次 reference 目录。
     """
+
+    active = _ACTIVE_REFERENCE_MAP_NAMES.get()
+    if active is not None:
+        return active if isinstance(active, dict) else dict(active)
+    return _get_default_reference_map_names()
+
+
+@lru_cache(maxsize=1)
+def _get_default_reference_map_names() -> dict[int, str]:
+    """加载并缓存默认 reference 地图英文名索引。"""
 
     return map_names_from_collection(_default_reference_collection())

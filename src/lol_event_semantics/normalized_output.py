@@ -7,13 +7,19 @@ import re
 import shutil
 from collections import defaultdict
 from dataclasses import dataclass
-from datetime import UTC, datetime
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any, Iterable, Mapping
 
 from .decomposition_model import EventDecompositionRecord, SemanticProfile
-from .display_labels import get_reference_item_names
+from .dataset_identity import CONTENT_DIGEST_VERSION, content_digest, describe_payload_files, unmanaged_payload_paths
+from .display_labels import (
+    get_reference_item_names,
+    item_names_from_collection,
+    load_display_labels,
+    load_reference_item_names,
+    map_names_from_collection,
+)
 from .display_tier import classify_display_tier
 from .normalized_contract import (
     apply_normalized_contract,
@@ -32,7 +38,7 @@ from .normalized_translation_builder import (
 )
 from .normalized_translation_model import TranslationBuildContext
 from .normalized_translation_renderer import build_compat_display
-from .pattern_catalog import PatternPolicy, load_pattern_policy
+from .pattern_catalog import PatternPolicy
 from .reference_collection import load_reference_collection, read_yaml
 from .rules import RuleBook, rule_key
 
@@ -42,8 +48,6 @@ TECHNICAL_DISPLAY_TOKENS = ("Play_vo", "Play_sfx", "cast3D", "2D", "3D", "voProc
 DEFAULT_REFERENCE_ROOT = Path("reference")
 DEFAULT_OVERRIDES_ROOT = Path("overrides")
 DEFAULT_RULES_ROOT = Path("rules")
-DEFAULT_PATTERN_POLICY_PATH = DEFAULT_RULES_ROOT / "translation_patterns.yaml"
-DEFAULT_CONTRACT_ASSETS_ROOT = Path("data")
 # rules/contextual/sfx 中承载“实体自身”中文词条分片的保留 owner 值，
 # 与 HA.yaml/SRU.yaml 里描述实体内部子 token 的 owner=HA/SRU 互不冲突。
 MAP_SYSTEM_ENTITY_OWNER = "entity"
@@ -63,12 +67,14 @@ def build_normalized_record(
     record: EventDecompositionRecord,
     *,
     translation_context: TranslationBuildContext | None = None,
+    display_context: NormalizedDisplayContext | None = None,
 ) -> dict[str, object]:
     """把拆解记录转换为对外 normalized 记录。
 
     Args:
         record: 已完成 profile/reference enrichment 的拆解记录。
         translation_context: translation 构建上下文。
+        display_context: legacy display 所需的显式 reference/rules 索引。
 
     Returns:
         可直接写入 JSONL 的 normalized 记录。
@@ -76,8 +82,8 @@ def build_normalized_record(
 
     translation = build_translation(record, translation_context or TranslationBuildContext())
     legacy_display = {
-        "zh_cn_short": build_short_display(record),
-        "zh_cn_detail": build_detail_display(record),
+        "zh_cn_short": build_short_display(record, display_context=display_context),
+        "zh_cn_detail": build_detail_display(record, display_context=display_context),
         "debug_label": build_debug_label(record),
     }
     display: dict[str, object] = dict(
@@ -182,17 +188,21 @@ def item_entity_from_alias(alias: str, known_item_ids: Iterable[int] | None = No
     return entity
 
 
-def item_entity_label(alias: str) -> str | None:
+def item_entity_label(
+    alias: str,
+    item_names: Mapping[int, Mapping[str, str]] | None = None,
+) -> str | None:
     """把装备别名渲染成 reference 装备名（zh 优先，en 兜底）。
 
     Args:
         alias: map/系统域实体别名。
+        item_names: 可选的显式装备名索引；缺省保留旧 helper 行为。
 
     Returns:
         装备名；别名不是可认领装备时返回 None。
     """
 
-    names = get_reference_item_names()
+    names = item_names if item_names is not None else get_reference_item_names()
     entity = item_entity_from_alias(alias, names)
     if entity is None:
         return None
@@ -261,17 +271,22 @@ def sanitize_entity_alias(alias: str | None) -> str:
     return value or "unknown"
 
 
-def build_short_display(record: EventDecompositionRecord) -> str:
+def build_short_display(
+    record: EventDecompositionRecord,
+    *,
+    display_context: NormalizedDisplayContext | None = None,
+) -> str:
     """生成普通用户短展示文案。
 
     Args:
         record: 拆解记录。
+        display_context: legacy display 所需的显式 reference/rules 索引。
 
     Returns:
         面向下游用户的短中文说明，Stop/Mute 壳动词以停止/静音收尾。
     """
 
-    return f"{build_short_display_core(record)}{playback_verb_suffix(record.shell.verb)}"
+    return f"{build_short_display_core(record, display_context=display_context)}{playback_verb_suffix(record.shell.verb)}"
 
 
 def playback_verb_suffix(verb: object) -> str:
@@ -294,18 +309,23 @@ def playback_verb_suffix(verb: object) -> str:
     return labels[0] if labels is not None else ""
 
 
-def build_short_display_core(record: EventDecompositionRecord) -> str:
+def build_short_display_core(
+    record: EventDecompositionRecord,
+    *,
+    display_context: NormalizedDisplayContext | None = None,
+) -> str:
     """按事件族生成不含壳动词后缀的短文案主体。
 
     Args:
         record: 拆解记录。
+        display_context: legacy display 所需的显式 reference/rules 索引。
 
     Returns:
         短中文说明主体。
     """
 
     slots = record.semantic_slots
-    owner = display_owner(record)
+    owner = display_owner(record, display_context=display_context)
     spell_key = slots.get("spell_key") or slots.get("spell_key_hint")
     phase = slots.get("phase")
 
@@ -388,17 +408,22 @@ def build_short_display_core(record: EventDecompositionRecord) -> str:
     return compact_display(f"{owner}{family_label(record.profile.primary_family)}")
 
 
-def build_detail_display(record: EventDecompositionRecord) -> str:
+def build_detail_display(
+    record: EventDecompositionRecord,
+    *,
+    display_context: NormalizedDisplayContext | None = None,
+) -> str:
     """生成详细展示文案。
 
     Args:
         record: 拆解记录。
+        display_context: legacy display 所需的显式 reference/rules 索引。
 
     Returns:
         比短文案略完整的中文说明。
     """
 
-    short = build_short_display(record)
+    short = build_short_display(record, display_context=display_context)
     slots = record.semantic_slots
     details: list[str] = []
 
@@ -432,7 +457,11 @@ def build_debug_label(record: EventDecompositionRecord) -> str:
     return record.raw_event_name
 
 
-def display_owner(record: EventDecompositionRecord) -> str:
+def display_owner(
+    record: EventDecompositionRecord,
+    *,
+    display_context: NormalizedDisplayContext | None = None,
+) -> str:
     """返回适合展示的 owner 名称。
 
     map/系统域记录没有具体 subject 时：可认领的装备别名（数字 id，含
@@ -442,6 +471,7 @@ def display_owner(record: EventDecompositionRecord) -> str:
 
     Args:
         record: 拆解记录。
+        display_context: legacy display 所需的显式 reference/rules 索引。
 
     Returns:
         owner 展示名称。
@@ -454,29 +484,40 @@ def display_owner(record: EventDecompositionRecord) -> str:
     alias = record.owner.alias or record.owner.raw_owner_token or "未知实体"
 
     if record.owner.kind == "map_or_system":
-        item_label = item_entity_label(alias)
+        item_label = item_entity_label(
+            alias,
+            display_context.item_names if display_context is not None else None,
+        )
         if item_label is not None:
             return item_label
 
-        label = map_system_entity_label(alias)
+        label = map_system_entity_label(
+            alias,
+            display_context.map_system_entity_labels if display_context is not None else None,
+        )
         if label is not None:
             return label
 
     return alias
 
 
-def map_system_entity_label(alias: str) -> str | None:
+def map_system_entity_label(
+    alias: str,
+    labels: Mapping[str, str] | None = None,
+) -> str | None:
     """把 map/系统域实体英文别名渲染成人工核对的中文词条。
 
     Args:
         alias: map/系统域实体的原始英文别名（owner.alias）。
+        labels: 可选的显式规则词条索引；缺省保留旧 helper 行为。
 
     Returns:
         中文词条；别名不在 T3.4 头部词条表内时返回 None，调用方原样保留
         英文 alias（宁可保留英文，不硬造翻译——仓库红线）。
     """
 
-    return get_map_system_entity_labels().get(rule_key(alias))
+    active_labels = labels if labels is not None else get_map_system_entity_labels()
+    return active_labels.get(rule_key(alias))
 
 
 def load_map_system_entity_labels(rules_root: Path, overrides_root: Path) -> dict[str, str]:
@@ -954,11 +995,15 @@ def write_normalized_outputs(
     output_root: Path,
     *,
     reference_version: str,
+    reference_root: Path,
+    rules_root: Path,
+    overrides_root: Path,
+    input_identity: Mapping[str, object],
     reference_aliases: dict[tuple[str, str], str] | None = None,
     resolver: "ChampionEntityResolver | None" = None,
     translation_context: TranslationBuildContext | None = None,
-    pattern_policy: PatternPolicy | None = None,
-    contract_assets_root: Path = DEFAULT_CONTRACT_ASSETS_ROOT,
+    pattern_policy: PatternPolicy,
+    contract_assets_root: Path,
 ) -> None:
     """写出 normalized 目录。
 
@@ -966,29 +1011,46 @@ def write_normalized_outputs(
         records: 拆解记录集合。
         output_root: normalized 输出目录。
         reference_version: 本次生成使用的参考版本。
-        reference_aliases: 可选的预加载实体归一 alias 映射；缺省时从默认
-            reference 根加载。供进程内多次调用复用，避免重复解析全量合集。
-        resolver: 可选的预构建 champion 实体解析器；缺省时从默认根加载。
-        translation_context: 可选的预构建 translation 上下文；缺省时从默认
-            reference 根加载。
-        pattern_policy: 可选的 P1 pattern/promotion policy；缺省读取仓库规则源。
+        reference_root: 本次构建实际使用的 reference 根目录。
+        rules_root: 本次构建实际使用的 rules 根目录。
+        overrides_root: 本次构建实际使用的 overrides 根目录。
+        input_identity: 已通过冻结预检的完整输入身份。
+        reference_aliases: 可选的预加载实体归一 alias 映射；缺省时从显式
+            reference_root 加载。供进程内多次调用复用，避免重复解析全量合集。
+        resolver: 可选的预构建 champion 实体解析器；缺省时从显式根加载。
+        translation_context: 可选的预构建 translation 上下文；缺省时从显式
+            reference/rules/overrides 根加载。
+        pattern_policy: 已从显式路径加载的 P1 pattern/promotion policy。
         contract_assets_root: 提交入库的 JSON Schema 与 examples 根目录。
     """
 
     clear_generated_outputs(output_root)
     output_root.mkdir(parents=True, exist_ok=True)
     if reference_aliases is None:
-        reference_aliases = load_reference_entity_aliases(DEFAULT_REFERENCE_ROOT)
+        reference_aliases = load_reference_entity_aliases(reference_root)
     if resolver is None:
-        resolver = load_champion_entity_resolver(DEFAULT_REFERENCE_ROOT, DEFAULT_OVERRIDES_ROOT)
+        resolver = load_champion_entity_resolver(reference_root, overrides_root)
     if translation_context is None:
-        translation_context = build_translation_context(DEFAULT_REFERENCE_ROOT)
-    if pattern_policy is None:
-        pattern_policy = load_pattern_policy(DEFAULT_PATTERN_POLICY_PATH)
+        translation_context = build_translation_context(
+            reference_root,
+            rules_root=rules_root,
+            overrides_root=overrides_root,
+        )
+    display_context = NormalizedDisplayContext(
+        item_names=translation_context.reference_item_names or load_reference_item_names(reference_root),
+        map_system_entity_labels=(
+            translation_context.map_system_entity_labels
+            or load_map_system_entity_labels(rules_root, overrides_root)
+        ),
+    )
     pending_rows: dict[tuple[str, str], list[dict[str, object]]] = defaultdict(list)
 
     for record in records:
-        normalized = build_normalized_record(record, translation_context=translation_context)
+        normalized = build_normalized_record(
+            record,
+            translation_context=translation_context,
+            display_context=display_context,
+        )
         entity = normalized["entity"]
         if not isinstance(entity, dict):
             continue
@@ -1027,24 +1089,44 @@ def write_normalized_outputs(
     write_normalized_event_stream(all_rows, output_root / "normalized-events.jsonl")
     write_json_document(pattern_catalog, output_root / "pattern-catalog.json")
     write_contract_assets(contract_assets_root, output_root)
-    write_manifest(grouped, output_root / "manifest.json", reference_version, pattern_catalog=pattern_catalog)
     write_entity_summary(grouped, output_root / "entity-summary.json", shard_paths)
+    write_manifest(
+        grouped,
+        output_root / "manifest.json",
+        reference_version,
+        pattern_catalog=pattern_catalog,
+        input_identity=input_identity,
+    )
 
 
-def build_translation_context(reference_root: Path = DEFAULT_REFERENCE_ROOT) -> TranslationBuildContext:
+def build_translation_context(
+    reference_root: Path = DEFAULT_REFERENCE_ROOT,
+    *,
+    rules_root: Path = DEFAULT_RULES_ROOT,
+    overrides_root: Path = DEFAULT_OVERRIDES_ROOT,
+) -> TranslationBuildContext:
     """创建 normalized translation 构建上下文。
 
     Args:
         reference_root: 仓库 reference 合集根目录。
+        rules_root: 仓库 rules 根目录。
+        overrides_root: 仓库 overrides 根目录。
 
     Returns:
         包含 reference label 的 translation 构建上下文。
     """
 
+    display_labels = load_display_labels(rules_root / "display_labels.yaml")
+    map_system_labels = load_map_system_entity_labels(rules_root, overrides_root)
     if not reference_root.exists():
-        return TranslationBuildContext()
+        return TranslationBuildContext(
+            display_labels=display_labels,
+            map_system_entity_labels=map_system_labels,
+        )
 
     collection = load_reference_collection(reference_root)
+    reference_map_names = map_names_from_collection(collection)
+    reference_item_names = item_names_from_collection(collection)
     champion_labels: dict[str, ChampionLabelEntry] = {}
     for row in collection.champions.values():
         entity = row.get("entity")
@@ -1072,7 +1154,14 @@ def build_translation_context(reference_root: Path = DEFAULT_REFERENCE_ROOT) -> 
         skin_labels[(champion_alias, skin_token)] = reference_labels(entity)
 
     infer_champion_labels_from_skin_labels(champion_labels, skin_labels)
-    return TranslationBuildContext(champion_labels=champion_labels, skin_labels=skin_labels)
+    return TranslationBuildContext(
+        champion_labels=champion_labels,
+        skin_labels=skin_labels,
+        display_labels=display_labels,
+        reference_map_names=reference_map_names,
+        reference_item_names=reference_item_names,
+        map_system_entity_labels=map_system_labels,
+    )
 
 
 def infer_champion_labels_from_skin_labels(
@@ -1245,6 +1334,14 @@ def add_reference_aliases(
 
         value = sanitize_entity_alias(str(alias))
         aliases[(kind, value.casefold())] = value
+
+
+@dataclass(frozen=True)
+class NormalizedDisplayContext:
+    """normalized legacy display 所需的显式只读索引。"""
+
+    item_names: Mapping[int, Mapping[str, str]]
+    map_system_entity_labels: Mapping[str, str]
 
 
 @dataclass(frozen=True)
@@ -1691,6 +1788,7 @@ def write_manifest(
     reference_version: str,
     *,
     pattern_catalog: dict[str, object],
+    input_identity: Mapping[str, object],
 ) -> None:
     """写出 normalized manifest。
 
@@ -1699,14 +1797,41 @@ def write_manifest(
         output_path: manifest 输出路径。
         reference_version: 本次生成使用的参考版本。
         pattern_catalog: 同批生成的公共 Pattern Catalog。
+        input_identity: 已通过冻结预检的完整输入身份。
     """
 
+    output_root = output_path.parent
+    files = describe_payload_files(output_root)
+    unmanaged = unmanaged_payload_paths(files)
+    if unmanaged:
+        raise ValueError(f"normalized output 含 writer 未管理的 payload 文件: {', '.join(unmanaged)}")
+    rows = [row for entity_rows in grouped.values() for row in entity_rows]
+    support_counts = value_counts(rows, "support_level")
+    review_counts = value_counts(rows, "review_status")
+    profile = input_identity.get("profile")
+    profile = profile if isinstance(profile, Mapping) else {}
+    content_identity: dict[str, object] = {
+        "input_identity": dict(input_identity),
+        "corpus_scope": profile.get("corpus_scope"),
+        "base_game_version": profile.get("base_game_version"),
+        "review": {
+            "decision_id": pattern_catalog.get("decision_id"),
+            "record_counts": review_counts,
+        },
+        "support_level_counts": support_counts,
+        "quality_status": "not_evaluated",
+    }
+    digest = content_digest(content_identity, files)
     manifest = {
         "schema_version": SCHEMA_VERSION,
         "dataset_schema_version": "normalized-dataset.v2",
         "normalized_record_schema_version": SCHEMA_VERSION,
         "pattern_catalog_schema_version": PATTERN_CATALOG_SCHEMA_VERSION,
-        "generated_at": datetime.now(UTC).isoformat(),
+        "dataset_id": f"local-v1-{digest[:16]}",
+        "content_digest": digest,
+        "content_digest_algorithm": CONTENT_DIGEST_VERSION,
+        "content_identity": content_identity,
+        "files": files,
         "reference_version": reference_version,
         "entity_count": len(grouped),
         "record_count": sum(len(rows) for rows in grouped.values()),
@@ -1723,6 +1848,15 @@ def write_manifest(
         ],
     }
     output_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def value_counts(rows: Iterable[Mapping[str, object]], field: str) -> dict[str, int]:
+    """稳定统计 normalized 记录中的枚举字段。"""
+
+    counts: dict[str, int] = defaultdict(int)
+    for row in rows:
+        counts[str(row.get(field) or "missing")] += 1
+    return dict(sorted(counts.items()))
 
 
 def write_entity_summary(

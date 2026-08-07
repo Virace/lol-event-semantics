@@ -36,6 +36,7 @@ from lol_event_semantics.normalized_output import (
     playback_verb_suffix,
     resolve_champion_entity,
 )
+from lol_event_semantics.normalized_validation import validate_normalized_root
 
 
 class ItemEntityResolutionTests(unittest.TestCase):
@@ -176,6 +177,30 @@ class NormalizedOutputTests(unittest.TestCase):
             self.assertTrue(payload["record_id"].startswith("record-v1-"))
             self.assertTrue(manifest["contains_full_raw_event_index"])
             self.assertEqual(manifest["normalized_record_schema_version"], 2)
+            self.assertNotIn("generated_at", manifest)
+            self.assertTrue(manifest["dataset_id"].startswith("local-v1-"))
+            self.assertEqual(len(manifest["content_digest"]), 64)
+            self.assertEqual(validate_normalized_root(root).error_count, 0)
+
+            with tempfile.TemporaryDirectory() as second_temp:
+                second_root = Path(second_temp)
+                write_outputs([record], second_root, reference_version="16.5")
+                self.assertEqual(
+                    (root / "manifest.json").read_bytes(),
+                    (second_root / "manifest.json").read_bytes(),
+                )
+                self.assertEqual(
+                    (root / "normalized-events.jsonl").read_bytes(),
+                    (second_root / "normalized-events.jsonl").read_bytes(),
+                )
+
+            catalog_path = root / "pattern-catalog.json"
+            catalog_path.write_text(catalog_path.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+            (root / "debug.tmp").write_text("not managed\n", encoding="utf-8")
+            tampered = validate_normalized_root(root)
+            tamper_codes = {issue.code for issue in tampered.issues}
+            self.assertIn("manifest_files_mismatch", tamper_codes)
+            self.assertIn("unmanaged_payload_file", tamper_codes)
 
     def test_entity_shard_prefers_resolved_subject_hint(self) -> None:
         """内部 owner 形如 AnnieQ 时，分片仍归到真实英雄 Annie。"""
@@ -1044,6 +1069,7 @@ class NormalizedOutputCliTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
+            repo_root = Path(__file__).resolve().parents[1]
             decomposition_root = root / "event-decomposition"
             output_root = root / "normalized"
             decomposition_root.mkdir()
@@ -1060,8 +1086,22 @@ class NormalizedOutputCliTests(unittest.TestCase):
                     str(decomposition_root),
                     "--output-root",
                     str(output_root),
+                    "--repo-root",
+                    str(repo_root),
+                    "--raw-root",
+                    str(repo_root / "raw" / "events"),
+                    "--reference-root",
+                    str(repo_root / "reference"),
+                    "--rules-root",
+                    str(repo_root / "rules"),
+                    "--overrides-root",
+                    str(repo_root / "overrides"),
+                    "--sources-manifest",
+                    str(repo_root / "dist" / "sources" / "manifest.json"),
+                    "--frozen-profile",
+                    str(repo_root / "data" / "frozen-profile.v1.json"),
                 ],
-                cwd=Path(__file__).resolve().parents[1],
+                cwd=repo_root,
                 check=False,
                 capture_output=True,
                 text=True,

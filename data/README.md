@@ -10,6 +10,8 @@
 - `schema/normalized-event.schema.json`：normalized record V2 Schema。
 - `schema/pattern-catalog.schema.json`：Pattern Catalog V1 Schema。
 - `examples/`：与上述 Schema 对应、身份引用一致的最小消费者样例。
+- `frozen-profile.v1.json`：当前 V1 16.14 验收输入的版本、raw 唯一计数与显式 LCU 例外；
+  它是预检合同，不是历史版本下载能力或未来 live 默认值。
 
 其余边界：
 
