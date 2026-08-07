@@ -43,6 +43,7 @@ def main(argv: list[str] | None = None) -> int:
         f"records={summary['record_count']} "
         f"patterns={summary['pattern_count']} "
         f"stable_proposals={summary['stable_proposal_pattern_count']} "
+        f"approved_scope={summary['approved_scope_pattern_count']} "
         f"sfx_candidates={summary['sfx_candidate_pattern_count']}"
     )
     return 0

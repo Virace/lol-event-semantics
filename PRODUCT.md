@@ -39,5 +39,5 @@
 - 结构化 translation 输出通过 frame、必需角色、locale 回退和 renderer contract 测试。
 - 更新链对差集、版本与失败具有可审计报告，不因中途失败留下部分写入状态。
 - `16.14` 仅是本轮冻结验收 profile，不是长期固定的“最新版本”默认值。
-- Pattern Catalog 的候选始终带 Experimental 与 pending 状态；只有经过后续审阅和 promotion 才可能进入 Stable。
+- Pattern Catalog 候选在正式门禁完成前始终保持 Experimental；`scope_status` 与 `review_status` 分别记录已批准、待精确审阅或暂缓的产品决定，只有完成后续 promotion 才进入 Stable。批准范围同时冻结 canonical pattern ID；未来新增的同 family pattern 默认回到 pending，不能继承历史批准。
 - 默认 CI 能在锁定依赖环境中完成静态检查、类型检查和离线测试。

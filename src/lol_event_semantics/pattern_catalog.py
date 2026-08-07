@@ -47,6 +47,29 @@ class FramePolicy:
 
 
 @dataclass(frozen=True, slots=True)
+class PatternSelector:
+    """基于 canonical signature 的 promotion decision selector。"""
+
+    frame_type: str
+    semantic_profiles: frozenset[str]
+    argument_keys: Mapping[str, frozenset[str | None]]
+    roles_any: frozenset[str]
+
+
+@dataclass(frozen=True, slots=True)
+class PromotionDecisions:
+    """用户批准、待审与暂缓的 pattern scope 决策。"""
+
+    decision_id: str
+    approved: tuple[PatternSelector, ...]
+    approved_pattern_ids: frozenset[str]
+    deferred: tuple[PatternSelector, ...]
+    eligible_default: str
+    ineligible_default: str
+    non_vo_default: str
+
+
+@dataclass(frozen=True, slots=True)
 class PatternPolicy:
     """translation pattern 盘点策略。"""
 
@@ -57,6 +80,7 @@ class PatternPolicy:
     default_review_status: str
     stable_asset_kind: str
     stable_frames: Mapping[str, FramePolicy]
+    promotion_decisions: PromotionDecisions
     sfx_support_level: str
     sfx_review_status: str
 
@@ -152,6 +176,10 @@ def load_pattern_policy(path: Path) -> PatternPolicy:
             semantic_profiles=frozenset(semantic_profiles),
         )
 
+    promotion_decisions = _load_promotion_decisions(
+        _required_mapping(payload, "promotion_decisions"),
+        frames,
+    )
     return PatternPolicy(
         schema_version=schema_version,
         signature_version=signature_version,
@@ -160,9 +188,132 @@ def load_pattern_policy(path: Path) -> PatternPolicy:
         default_review_status=default_review_status,
         stable_asset_kind=stable_asset_kind,
         stable_frames=frames,
+        promotion_decisions=promotion_decisions,
         sfx_support_level=sfx_support_level,
         sfx_review_status=sfx_review_status,
     )
+
+
+def _load_promotion_decisions(
+    payload: Mapping[str, Any],
+    frames: Mapping[str, FramePolicy],
+) -> PromotionDecisions:
+    """加载并校验用户批准的 promotion scope。"""
+
+    eligible_default = _required_string(payload, "eligible_default")
+    ineligible_default = _required_string(payload, "ineligible_default")
+    non_vo_default = _required_string(payload, "non_vo_default")
+    if (eligible_default, ineligible_default, non_vo_default) != ("pending", "deferred", "deferred"):
+        raise ValueError("promotion decision defaults 必须是 pending/deferred/deferred。")
+    approved = _load_pattern_selectors(payload.get("approved"), frames, field="approved")
+    approved_pattern_ids = _load_pattern_ids(payload.get("approved_pattern_ids"))
+    deferred = _load_pattern_selectors(payload.get("deferred"), frames, field="deferred")
+    if not approved:
+        raise ValueError("promotion_decisions.approved 不得为空。")
+    return PromotionDecisions(
+        decision_id=_required_string(payload, "decision_id"),
+        approved=approved,
+        approved_pattern_ids=approved_pattern_ids,
+        deferred=deferred,
+        eligible_default=eligible_default,
+        ineligible_default=ineligible_default,
+        non_vo_default=non_vo_default,
+    )
+
+
+def _load_pattern_ids(value: object) -> frozenset[str]:
+    """加载并校验当前决策精确批准的 canonical pattern id。"""
+
+    if not isinstance(value, list) or not value:
+        raise ValueError("promotion_decisions.approved_pattern_ids 必须是非空列表。")
+    if not all(isinstance(item, str) for item in value):
+        raise ValueError("promotion_decisions.approved_pattern_ids 必须只包含字符串。")
+    pattern_ids = [str(item) for item in value]
+    invalid = [
+        pattern_id
+        for pattern_id in pattern_ids
+        if not pattern_id.startswith(PATTERN_ID_PREFIX)
+        or len(pattern_id) != len(PATTERN_ID_PREFIX) + 64
+        or any(character not in "0123456789abcdef" for character in pattern_id[len(PATTERN_ID_PREFIX) :])
+    ]
+    if invalid:
+        raise ValueError(f"promotion_decisions.approved_pattern_ids 含无效 pattern id: {invalid[0]}")
+    if len(pattern_ids) != len(set(pattern_ids)):
+        raise ValueError("promotion_decisions.approved_pattern_ids 不得重复。")
+    return frozenset(pattern_ids)
+
+
+def _load_pattern_selectors(
+    value: object,
+    frames: Mapping[str, FramePolicy],
+    *,
+    field: str,
+) -> tuple[PatternSelector, ...]:
+    """加载一组只依赖 canonical signature 的 selector。"""
+
+    if not isinstance(value, list):
+        raise ValueError(f"promotion_decisions.{field} 必须是列表。")
+    selectors: list[PatternSelector] = []
+    for index, raw_selector in enumerate(value):
+        if not isinstance(raw_selector, dict):
+            raise ValueError(f"promotion_decisions.{field}[{index}] 必须是 mapping。")
+        frame_type = _required_string(raw_selector, "frame_type")
+        frame_policy = frames.get(frame_type)
+        if frame_policy is None:
+            raise ValueError(f"promotion selector frame 不属于 Stable candidate: {frame_type}")
+        semantic_profiles = _optional_string_set(raw_selector.get("semantic_profiles"), field="semantic_profiles")
+        unknown_profiles = semantic_profiles.difference(frame_policy.semantic_profiles)
+        if unknown_profiles:
+            raise ValueError(f"promotion selector {frame_type} 含未选择 profile: {','.join(sorted(unknown_profiles))}")
+        roles_any = _optional_string_set(raw_selector.get("roles_any"), field="roles_any")
+        argument_keys = _load_selector_argument_keys(
+            raw_selector.get("argument_keys"),
+            frame_type=frame_type,
+            allowed_roles=frame_policy.signature_roles,
+        )
+        selectors.append(
+            PatternSelector(
+                frame_type=frame_type,
+                semantic_profiles=semantic_profiles,
+                argument_keys=argument_keys,
+                roles_any=roles_any,
+            )
+        )
+    return tuple(selectors)
+
+
+def _optional_string_set(value: object, *, field: str) -> frozenset[str]:
+    """加载可缺省的非空字符串集合。"""
+
+    if value is None:
+        return frozenset()
+    if not isinstance(value, list) or not value or not all(isinstance(item, str) and item for item in value):
+        raise ValueError(f"promotion selector {field} 必须是非空字符串列表。")
+    return frozenset(value)
+
+
+def _load_selector_argument_keys(
+    value: object,
+    *,
+    frame_type: str,
+    allowed_roles: tuple[str, ...],
+) -> Mapping[str, frozenset[str | None]]:
+    """加载 selector 允许的 signature argument key。"""
+
+    if value is None:
+        return {}
+    if not isinstance(value, dict) or not value:
+        raise ValueError("promotion selector argument_keys 必须是非空 mapping。")
+    result: dict[str, frozenset[str | None]] = {}
+    for role, raw_values in value.items():
+        if not isinstance(role, str) or role not in allowed_roles:
+            raise ValueError(f"promotion selector {frame_type} 的 argument role 未进入 signature: {role}")
+        if not isinstance(raw_values, list) or not raw_values:
+            raise ValueError(f"promotion selector {frame_type}.{role} 必须是非空列表。")
+        if not all(item is None or (isinstance(item, str) and item) for item in raw_values):
+            raise ValueError(f"promotion selector {frame_type}.{role} 只接受非空字符串或 null。")
+        result[role] = frozenset(raw_values)
+    return result
 
 
 def load_normalized_records(root: Path) -> list[dict[str, Any]]:
@@ -282,12 +433,18 @@ def build_pattern_report(records: Iterable[Mapping[str, Any]], policy: PatternPo
         _build_pattern(pattern_id, signatures[pattern_id], grouped[pattern_id], policy)
         for pattern_id in sorted(grouped)
     ]
+    approved_pattern_ids = policy.promotion_decisions.approved_pattern_ids
     stable_proposals = sorted(
         (pattern for pattern in patterns if pattern["eligibility"]["stable"]),
         key=_review_sort_key,
     )
+    approved_scope_patterns = [pattern for pattern in stable_proposals if pattern["scope_status"] == "approved"]
+    approved_scope_pattern_ids = {str(pattern["pattern_id"]) for pattern in approved_scope_patterns}
+    matched_approved_pattern_ids = approved_pattern_ids.intersection(approved_scope_pattern_ids)
+    unmatched_approved_pattern_ids = sorted(approved_pattern_ids.difference(approved_scope_pattern_ids))
+    pending_proposals = [pattern for pattern in stable_proposals if pattern["scope_status"] == "pending"]
     sfx_candidates = [pattern for pattern in patterns if pattern["signature"]["asset_kind"] == "sfx"]
-    accepted_corpus_candidates = [_accepted_corpus_candidate(pattern) for pattern in stable_proposals]
+    accepted_corpus_candidates = [_accepted_corpus_candidate(pattern) for pattern in approved_scope_patterns]
     blocking_reasons = _sum_named_counts(patterns, "blocking_reasons")
     warning_counts = _sum_named_counts(patterns, "warning_counts")
     support_matrix = _build_support_matrix(patterns, policy)
@@ -296,11 +453,25 @@ def build_pattern_report(records: Iterable[Mapping[str, Any]], policy: PatternPo
     return {
         "report_schema_version": REPORT_SCHEMA_VERSION,
         "pattern_signature_version": SIGNATURE_SCHEMA_VERSION,
+        "promotion_decision": {
+            "decision_id": policy.promotion_decisions.decision_id,
+            "approved_pattern_id_count": len(approved_pattern_ids),
+            "matched_approved_pattern_id_count": len(matched_approved_pattern_ids),
+            "unmatched_approved_pattern_ids": unmatched_approved_pattern_ids,
+        },
         "summary": {
             "record_count": record_count,
             "pattern_count": len(patterns),
             "stable_proposal_pattern_count": len(stable_proposals),
             "stable_proposal_record_count": sum(int(pattern["counts"]["record_count"]) for pattern in stable_proposals),
+            "approved_scope_pattern_count": len(approved_scope_patterns),
+            "approved_scope_record_count": sum(
+                int(pattern["counts"]["record_count"]) for pattern in approved_scope_patterns
+            ),
+            "pending_proposal_pattern_count": len(pending_proposals),
+            "pending_proposal_record_count": sum(
+                int(pattern["counts"]["record_count"]) for pattern in pending_proposals
+            ),
             "sfx_candidate_pattern_count": len(sfx_candidates),
             "blocking_pattern_count": sum(bool(pattern["blocking_reasons"]) for pattern in patterns),
             "warning_pattern_count": sum(bool(pattern["warning_counts"]) for pattern in patterns),
@@ -314,6 +485,8 @@ def build_pattern_report(records: Iterable[Mapping[str, Any]], policy: PatternPo
         "warning_counts": warning_counts,
         "support_matrix": support_matrix,
         "accepted_corpus_candidates": accepted_corpus_candidates,
+        "approved_scope_patterns": approved_scope_patterns,
+        "pending_proposals": pending_proposals,
         "stable_proposals": stable_proposals,
         "sfx_candidates": sfx_candidates,
         "patterns": patterns,
@@ -338,7 +511,9 @@ def render_pattern_markdown(report: Mapping[str, Any]) -> str:
         f"- Signature schema: `{report.get('pattern_signature_version', '')}`",
         f"- Records: {summary.get('record_count', 0)}",
         f"- Patterns: {summary.get('pattern_count', 0)}",
-        f"- Stable proposals: {summary.get('stable_proposal_pattern_count', 0)}",
+        f"- Structurally eligible Stable proposals: {summary.get('stable_proposal_pattern_count', 0)}",
+        f"- Policy-approved scope: {summary.get('approved_scope_pattern_count', 0)}",
+        f"- Pending exact review: {summary.get('pending_proposal_pattern_count', 0)}",
         f"- SFX candidates: {summary.get('sfx_candidate_pattern_count', 0)}",
         "",
     ]
@@ -377,12 +552,13 @@ def _build_pattern(
     blocking = Counter(reason for _record, result in assessments for reason in result.blocking_reasons)
     warnings = Counter(warning for _record, result in assessments for warning in result.warnings)
     eligible_count = sum(not result.blocking_reasons for _record, result in assessments)
-    status = _pattern_status(signature, policy)
     stable = (
         signature.get("asset_kind") == policy.stable_asset_kind
         and signature.get("frame_type") in policy.stable_frames
         and eligible_count == len(assessments)
     )
+    scope_status = _pattern_scope_status(pattern_id, signature, structurally_eligible=stable, policy=policy)
+    status = _pattern_status(signature, policy, scope_status=scope_status)
     examples = [
         _representative_example(record, result)
         for record, result in sorted(assessments, key=lambda item: _record_sort_key(item[0]))[: policy.example_limit]
@@ -395,6 +571,8 @@ def _build_pattern(
         "support_level": status["support_level"],
         "proposed_support_level": status["proposed_support_level"],
         "review_status": status["review_status"],
+        "scope_status": scope_status,
+        "decision_id": policy.promotion_decisions.decision_id,
         "required_roles": required_roles,
         "eligibility": {
             "stable": stable,
@@ -501,8 +679,51 @@ def _assess_record(record: Mapping[str, Any], policy: PatternPolicy) -> RecordAs
     )
 
 
-def _pattern_status(signature: Mapping[str, Any], policy: PatternPolicy) -> dict[str, str | None]:
-    """按资产类型与 frame 返回策略状态。"""
+def _pattern_scope_status(
+    pattern_id: str,
+    signature: Mapping[str, Any],
+    *,
+    structurally_eligible: bool,
+    policy: PatternPolicy,
+) -> str:
+    """按结构门禁和用户决策返回 approved/pending/deferred。"""
+
+    decisions = policy.promotion_decisions
+    if signature.get("asset_kind") != policy.stable_asset_kind:
+        return decisions.non_vo_default
+    if not structurally_eligible:
+        return decisions.ineligible_default
+    if any(_selector_matches(signature, selector) for selector in decisions.deferred):
+        return "deferred"
+    if any(_selector_matches(signature, selector) for selector in decisions.approved):
+        if pattern_id not in decisions.approved_pattern_ids:
+            return decisions.eligible_default
+        return "approved"
+    return decisions.eligible_default
+
+
+def _selector_matches(signature: Mapping[str, Any], selector: PatternSelector) -> bool:
+    """判断 canonical signature 是否命中 promotion selector。"""
+
+    if signature.get("frame_type") != selector.frame_type:
+        return False
+    if selector.semantic_profiles and signature.get("semantic_profile") not in selector.semantic_profiles:
+        return False
+    roles = signature.get("roles")
+    role_set = {str(role) for role in roles} if isinstance(roles, list) else set()
+    if selector.roles_any and role_set.isdisjoint(selector.roles_any):
+        return False
+    argument_keys = _mapping_or_empty(signature.get("argument_keys"))
+    return all(argument_keys.get(role) in allowed for role, allowed in selector.argument_keys.items())
+
+
+def _pattern_status(
+    signature: Mapping[str, Any],
+    policy: PatternPolicy,
+    *,
+    scope_status: str,
+) -> dict[str, str | None]:
+    """按资产类型、frame 与批准 scope 返回当前策略状态。"""
 
     asset_kind = signature.get("asset_kind")
     frame_type = signature.get("frame_type")
@@ -511,8 +732,10 @@ def _pattern_status(signature: Mapping[str, Any], policy: PatternPolicy) -> dict
         if frame_policy is not None:
             return {
                 "support_level": frame_policy.support_level,
-                "proposed_support_level": frame_policy.proposed_support_level,
-                "review_status": frame_policy.review_status,
+                "proposed_support_level": frame_policy.proposed_support_level
+                if scope_status in {"approved", "pending"}
+                else None,
+                "review_status": "accepted" if scope_status == "approved" else frame_policy.review_status,
             }
     if asset_kind == "sfx":
         return {
@@ -648,8 +871,10 @@ def _build_support_matrix(patterns: list[dict[str, Any]], policy: PatternPolicy)
     frames = [_frame_support_row(frame_type, patterns, policy) for frame_type in sorted(frame_types)]
     vo_patterns = [pattern for pattern in patterns if _pattern_signature(pattern).get("asset_kind") == "vo"]
     eligible_vo = [pattern for pattern in vo_patterns if _pattern_is_stable(pattern)]
+    approved_vo = [pattern for pattern in eligible_vo if pattern.get("scope_status") == "approved"]
     vo_record_count = sum(_pattern_record_count(pattern) for pattern in vo_patterns)
     eligible_record_count = sum(_pattern_record_count(pattern) for pattern in eligible_vo)
+    approved_record_count = sum(_pattern_record_count(pattern) for pattern in approved_vo)
     return {
         "frames": frames,
         "vo_eligible_coverage": {
@@ -659,6 +884,14 @@ def _build_support_matrix(patterns: list[dict[str, Any]], policy: PatternPolicy)
             "eligible_stable_record_count": eligible_record_count,
             "pattern_ratio": _safe_ratio(len(eligible_vo), len(vo_patterns)),
             "record_ratio": _safe_ratio(eligible_record_count, vo_record_count),
+        },
+        "policy_approved_coverage": {
+            "approved_pattern_count": len(approved_vo),
+            "approved_record_count": approved_record_count,
+            "eligible_pattern_count": len(eligible_vo),
+            "eligible_record_count": eligible_record_count,
+            "pattern_ratio": _safe_ratio(len(approved_vo), len(eligible_vo)),
+            "record_ratio": _safe_ratio(approved_record_count, eligible_record_count),
         },
     }
 
@@ -674,6 +907,9 @@ def _frame_support_row(
     vo_patterns = [pattern for pattern in frame_patterns if _pattern_signature(pattern).get("asset_kind") == "vo"]
     sfx_patterns = [pattern for pattern in frame_patterns if _pattern_signature(pattern).get("asset_kind") == "sfx"]
     eligible_vo = [pattern for pattern in vo_patterns if _pattern_is_stable(pattern)]
+    approved = [pattern for pattern in frame_patterns if pattern.get("scope_status") == "approved"]
+    pending = [pattern for pattern in frame_patterns if pattern.get("scope_status") == "pending"]
+    deferred = [pattern for pattern in frame_patterns if pattern.get("scope_status") == "deferred"]
     blocked = [pattern for pattern in frame_patterns if bool(pattern.get("blocking_reasons"))]
     blocked_vo = [pattern for pattern in vo_patterns if not _pattern_is_stable(pattern)]
     frame_policy = policy.stable_frames.get(frame_type)
@@ -690,6 +926,12 @@ def _frame_support_row(
         "vo_record_count": vo_record_count,
         "eligible_stable_pattern_count": len(eligible_vo),
         "eligible_stable_record_count": eligible_record_count,
+        "approved_scope_pattern_count": len(approved),
+        "approved_scope_record_count": sum(_pattern_record_count(pattern) for pattern in approved),
+        "pending_scope_pattern_count": len(pending),
+        "pending_scope_record_count": sum(_pattern_record_count(pattern) for pattern in pending),
+        "deferred_scope_pattern_count": len(deferred),
+        "deferred_scope_record_count": sum(_pattern_record_count(pattern) for pattern in deferred),
         "blocked_pattern_count": len(blocked),
         "blocked_record_count": sum(_pattern_record_count(pattern) for pattern in blocked),
         "blocked_vo_pattern_count": len(blocked_vo),
@@ -723,6 +965,8 @@ def _accepted_corpus_candidate(pattern: Mapping[str, Any]) -> dict[str, Any]:
         "raw_event_name": _string_or_none(example.get("raw_event_name")) or "",
         "zh_cn_default": _string_or_none(example.get("zh_cn_default")) or "",
         "zh_cn_main": _string_or_none(example.get("zh_cn_main")) or "",
+        "scope_status": _string_or_none(pattern.get("scope_status")) or "approved",
+        "decision_id": _string_or_none(pattern.get("decision_id")) or "",
         "review_status": "pending",
     }
 
@@ -770,6 +1014,7 @@ def _markdown_support_matrix(value: object) -> list[str]:
 
     matrix = _mapping_or_empty(value)
     coverage = _mapping_or_empty(matrix.get("vo_eligible_coverage"))
+    approved = _mapping_or_empty(matrix.get("policy_approved_coverage"))
     lines = [
         "## Support matrix",
         "",
@@ -778,9 +1023,14 @@ def _markdown_support_matrix(value: object) -> list[str]:
         f"({coverage.get('pattern_ratio', 0)}), records "
         f"{coverage.get('eligible_stable_record_count', 0)}/{coverage.get('total_record_count', 0)} "
         f"({coverage.get('record_ratio', 0)}).",
+        "Policy-approved scope (still Experimental until P4 gates): "
+        f"patterns {approved.get('approved_pattern_count', 0)}/{approved.get('eligible_pattern_count', 0)} "
+        f"({approved.get('pattern_ratio', 0)}), records "
+        f"{approved.get('approved_record_count', 0)}/{approved.get('eligible_record_count', 0)} "
+        f"({approved.get('record_ratio', 0)}).",
         "",
-        "| Frame | Support | Proposed | All patterns | All records | VO patterns | VO records | Eligible VO patterns | Eligible VO records | Blocked VO patterns | Blocked VO records | SFX patterns | VO pattern coverage |",
-        "| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+        "| Frame | Support | Proposed | All patterns | All records | VO patterns | VO records | Eligible VO patterns | Eligible VO records | Approved | Pending | Deferred | Blocked VO patterns | Blocked VO records | SFX patterns | VO pattern coverage |",
+        "| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
     frames = matrix.get("frames")
     if isinstance(frames, list):
@@ -800,6 +1050,9 @@ def _markdown_support_matrix(value: object) -> list[str]:
                         row.get("vo_record_count", 0),
                         row.get("eligible_stable_pattern_count", 0),
                         row.get("eligible_stable_record_count", 0),
+                        row.get("approved_scope_pattern_count", 0),
+                        row.get("pending_scope_pattern_count", 0),
+                        row.get("deferred_scope_pattern_count", 0),
                         row.get("blocked_vo_pattern_count", 0),
                         row.get("blocked_vo_record_count", 0),
                         row.get("sfx_candidate_pattern_count", 0),
@@ -861,15 +1114,15 @@ def _markdown_top_sfx_candidates(value: object, *, limit: int) -> list[str]:
 
 
 def _markdown_accepted_candidates(value: object) -> list[str]:
-    """渲染全部待人工 Review 的 Stable proposal corpus 候选明细。"""
+    """渲染 policy-approved scope 的待审 corpus 候选明细。"""
 
     candidates = value if isinstance(value, list) else []
-    lines = ["## Stable proposal details", ""]
+    lines = ["## Policy-approved scope details", ""]
     if not candidates:
         return [*lines, "None.", ""]
     lines.extend(
         [
-            "All rows remain pending review; none are accepted corpus entries.",
+            "Support scope is approved, but all representative rows remain pending accepted-corpus review.",
             "",
             "| Pattern ID | Frame | Signature family | Required roles | Expected arguments | Representative raw | zh_CN default | zh_CN main | Review |",
             "| --- | --- | --- | --- | --- | --- | --- | --- | --- |",

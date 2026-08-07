@@ -20,7 +20,7 @@
 - 累积更新边界：`reference_ingestion.py`、`reference_collection.py`、`raw_update.py`、`source_sync.py`、`update_pipeline.py` 把外部输入转换为仓库内 reference/raw，并负责差集、游标和失败恢复。
 - 语义边界：`decomposition_*.py`、`rules.py`、`model.py`、`match_audit.py` 读取 raw/reference/rules/overrides，输出保留来源、置信度和未知项的结构化拆解。
 - 消费者输出边界：`normalized_translation_*.py`、`normalized_output.py`、`normalized_validation.py`、`quality_metrics.py`、`display_labels.py` 把拆解记录转换为稳定 normalized contract，并校验 manifest、summary、JSONL 与 renderer 一致性。
-- 模式报告边界：`pattern_catalog.py` 只读 normalized 与 `rules/translation_patterns.yaml`，从 semantic frame 汇总 Pattern Catalog inventory；`scripts/report_translation_patterns.py` 只是把 JSON/Markdown 写入调用方指定的被忽略报告路径。输出候选保持 Experimental 与 pending，不写 normalized contract 或规则源。
+- 模式报告边界：`pattern_catalog.py` 只读 normalized 与 `rules/translation_patterns.yaml`，从 semantic frame 汇总 Pattern Catalog inventory；`scripts/report_translation_patterns.py` 只是把 JSON/Markdown 写入调用方指定的被忽略报告路径。输出候选保持 Experimental，并用 approved、pending、deferred scope 区分用户决定；不写 normalized contract 或反向修改规则源。
 - 入口边界：`full_refresh.py` 提供可注入 runner 的编排逻辑；`scripts/run_full_refresh.py`、下载/导入/构建/查询/模式报告脚本和 `normalized_lookup_cli.py` 负责 CLI 适配。
 
 `scripts/` 可以依赖共享模块，共享模块不得依赖脚本。来源适配器不得直接写最终 normalized；拆解层不得依赖 `dist/` 中的上次生成结果；展示渲染不得改写 raw 或 reference。
@@ -39,7 +39,7 @@ raw/events/ + reference/ + rules/ + overrides/
   -> validator + quality metrics + ratchet
 
 semantic frame + rules/translation_patterns.yaml
-  -> read-only Pattern Catalog report (Experimental + pending)
+  -> read-only Pattern Catalog report (Experimental + approved/pending/deferred scope)
 ```
 
 更新链先在临时位置准备变更，确认差集和输入有效后再替换累计数据与游标。解释链把所有 contextual 分片聚合为一个 RuleBook，避免按当前 owner 局部加载而丢失跨实体命中。消费者链从统一 frame 注册表派生必需角色和模板，减少 builder、validator 与 renderer 之间的重复定义。

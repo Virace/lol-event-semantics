@@ -2,7 +2,8 @@ schema_version: translation-pattern-policy.v1
 signature_version: pattern-signature.v1
 example_limit: 3
 
-# 当前策略只形成待审阅候选，不声明任何 pattern 已获 Stable 支持。
+# 当前 support 仍为 Experimental；promotion_decisions 记录用户批准的
+# 首批 scope，不在 P4 绝对门禁和 accepted corpus 完成前冒充正式 Stable。
 defaults:
   support_level: experimental
   review_status: pending
@@ -52,6 +53,127 @@ stable_proposal:
       review_status: pending
       semantic_profiles: [map_or_system]
       signature_roles: [shop_action]
+
+promotion_decisions:
+  decision_id: v1-initial-vo-2026-08-07
+  approved:
+    - frame_type: ability_cast_event
+      semantic_profiles: [spell_event]
+    - frame_type: voice_event
+      semantic_profiles: [self_action, qualified_action]
+      argument_keys:
+        action:
+          - assist
+          - buy_item
+          - dance
+          - joke_response
+          - level_up
+          - ping
+          - respawn
+          - shop
+          - taunt_response
+          - use_item
+  # 只批准本轮用户实际审阅的 86 个 canonical pattern；同 family 后续新增
+  # pattern 不在此表时仍回到 pending。
+  approved_pattern_ids:
+    # ability_cast_event (54)
+    - pattern-v1-0278eafd1ac2dfc2fe2a794b05302df051fa9223b1fbfd76da339009f040eda8
+    - pattern-v1-068d914c04147485e1e1867a4f4d3321c90a27e7f0506a2961c42f1e554cdabd
+    - pattern-v1-0818c3e960a6e276dd2d30199a85fd3796ee292c183475edb1cbdf7d2f2e34ad
+    - pattern-v1-09827e1350924e600125b205ce709cf932b56a2acf30e96e8c32a5b678ddd50e
+    - pattern-v1-09868680bba44e49a8066d586edb960847c71686b4bb527753e80a724b9f0199
+    - pattern-v1-0c581d556ed9e3ba4b3caaea45590922bf9452804ebecab3ca49c755f72d5f63
+    - pattern-v1-0dc0b4acdff4818dba280590846f3a33ff86c6e3249b74ad08babde66688e2c4
+    - pattern-v1-18cbfd8419bb0b56929ea67f446624f8100627c2232e70b369a8488233453eea
+    - pattern-v1-1cb260cdbfeb5b13c2d0530dfd638fbe9e0b9c05055e2398783db66c4523bd2b
+    - pattern-v1-21f720cb7792af61d0db8212d704c19fb712415a6ddaca34c67fff231066c032
+    - pattern-v1-24bcce2e2d86c945c917c7c79c5e3bfaf19116c155099932b0fa28e11e751907
+    - pattern-v1-2be905ad9fbb925589467ec69271623acb301711268b13dadb61a37afb48d300
+    - pattern-v1-2c787d2d2fca0641c60e5dc43cbffc67c7021423fbb1c717c573d3d2d1cb84db
+    - pattern-v1-302e360d1aac1e6fd12c4777ea2fab380b808568e65d9b2d152ee5966b398ea5
+    - pattern-v1-3110a19c7614c3a728be652c5db611cdf9779116a4a09c78210aa17046e1a4fe
+    - pattern-v1-31c1b66c9d56d92ee3c8925865e599f0c53b5d45507d743c5bc40a2a51e62432
+    - pattern-v1-3391dee40b1af6860827c967fb60c98ff472c1dd0ae6127797784e58ade95fa1
+    - pattern-v1-363d64253b36d4b3c70f495bd76ceab48eb5da716519c8f9837e33efbd6086d7
+    - pattern-v1-43139d8e08aa2f344884bc2a35870a3e3cf1fc435a8c9719ab72ca0e85a4a5a7
+    - pattern-v1-43160a1e1a4c545cfb940dbe7d1b79157d7c4b4c1c15cdabde7efa3352d865ea
+    - pattern-v1-46f98cb3319a567ea264b6be3ccab5708eeef0848e5e9804e1c4af4e73f65f98
+    - pattern-v1-47ba52dc2a15bf55566e92c177022e72fef3ee22087799e5ac2a7d82068aa0f2
+    - pattern-v1-4e4b7a0bb30293222e63b18afa7f974f3874f733543ca8201d8cb75368783040
+    - pattern-v1-53beb442ca9e569cec21b4405a633c3f703ed0fb807153c8a28592d19c0f9f1d
+    - pattern-v1-56d8248a98ea79ca88eea0ad987f0c9840d7349e1bb437cb7b8611c67076d42c
+    - pattern-v1-57b6931ec1b4cf4eb77670b6c8b21a29960eb9ef40e31dd57687533dde78fec7
+    - pattern-v1-5cf098cbdd2b46be9a3464fe34af1da54e4261070af572ff0d54730629fdd75b
+    - pattern-v1-5e0065ddc302e6f833dddb6b885257fa74005b94c61b8ef7e2b3009e8133377c
+    - pattern-v1-618e8c03994079c50e46d0c5a7721ab325159f533a9e44e4fe7fdc6a05f8eb5a
+    - pattern-v1-628e1867c883a3c300a10240314b1bfcfc14baa5e43f9da9a94152c85f594f63
+    - pattern-v1-671eca4924f9aa2e042efa45781d84d8ad0318157a3802692d3c547f48b839a6
+    - pattern-v1-6bd8a82c94442f62343835c84a425fac5d7139ab29d56e334acfa79110eb47c8
+    - pattern-v1-7571154d198fb9a02450047c695bcfededd5bda3d7a525f9f7c764fff279df01
+    - pattern-v1-78afc25577dc1d6f6f5f2fbe3d5033f943c99b2ca607cdf2fab33b06e1a60662
+    - pattern-v1-7bacdbf06b504b6802f10f18ee2797206d7f18c3b824304902876739d2bb1d68
+    - pattern-v1-7ccab6fbceca26a726346bf24e12795aec0d2c39963e62960952a66b63f8af4f
+    - pattern-v1-94626d3521ce7fbd9c0fa4fc4101960d3292b71629a7b6963feaad61064ca471
+    - pattern-v1-a2c41782c95bd9eb316270e7c320c45d87039e7ba4d25d04a5b2952a297f8c84
+    - pattern-v1-b0dd9772686602ebc29f8a59fcb80167bb56203e40e93e6cc9d8ab33a3db6823
+    - pattern-v1-b45edee6d58c325258590a0c72920ea277d8185187e3731d18defeba2535cf2b
+    - pattern-v1-b5decb0c536c3278785d1cb22c61ef5aee09c4d8f0c83075bd47314f0b4700a2
+    - pattern-v1-b71c2f1e0d3775d29a0f02ce8ef3e2874795b8b4ca8508746b36c0a2378ca00d
+    - pattern-v1-baf4d551845865a73da3599abd1098fcc94d90691f23cdb37455fc51a7cbe7e8
+    - pattern-v1-c2da0e6820e0c43fc9e2a1c77186488c0b1cc70119bbefe1083ef0f78957e2f8
+    - pattern-v1-c45fd94807014a15fea5adc3c82dc041ffce5b272d8e053155faa2533b32ee26
+    - pattern-v1-df1cfb48af67ac3e5dc263b4607c26cc108b14d88e0c958e64ecf2b6d5812cb1
+    - pattern-v1-dfb7560cbbcab2fab43dc088484032fe4717d069c63e746771e5afdf1dded99e
+    - pattern-v1-eade895625e2f8fa7b25e65709b24aa415cf039f1c5171ce571fa2af909da804
+    - pattern-v1-f3fc3c051b1379b295bb54ee265d87f59d5b9696479dc6a0585549e798db8232
+    - pattern-v1-f811f2b5f28334dc1c7ad6d018cb4d0de39f53863b731656fbd38ce313101d14
+    - pattern-v1-f9039e1359e212596dea4e1641041949ffa16b36a7c48ed8bf679fb0a7bd94b1
+    - pattern-v1-fb88cbbb7fff53250a0693c704b04101909792b52907f556367c0970084d19a0
+    - pattern-v1-fb9471463f897864c1dcac6dca90173ad10176effb3613d2b0b2bc9c91e31b82
+    - pattern-v1-fef00d320eb691c507f1045ed5338d824725c1b50f4145003ce0bb3138e65740
+    # voice_event (32)
+    - pattern-v1-007385e15a750dc2ad2fd862050c81e3b0e967740b38ca04a8d55728838b6353
+    - pattern-v1-0698e5a441ed57a020b46d437a79eb353f443ec63d7ad46ef02982a51b72b657
+    - pattern-v1-10463982f9aa075e49bd4b1f189bf8c3e85991f20ffaaee80bcd841bf0d38e57
+    - pattern-v1-26f8212dd8f9cf2f6152c1d7612a2f75d42be1051196265aba92a3215f76357b
+    - pattern-v1-2e253fe16d54efb449df5101df2f3fdf8bbec93ac001b5ac7f47cfe90d6882e9
+    - pattern-v1-3327a80285aea1863e3c66c33f1360e4358ce51f74131c377ea957dc744050fe
+    - pattern-v1-343f7b235e38125849ed84ba5a80deb5f64e9dd31f8cdc3d3d0bc19dcac1ef4f
+    - pattern-v1-4bbd0843ab8dcde6af59842a1856ec098519b11c297d4dcb9641e663ab8b048e
+    - pattern-v1-5f6f06bb80e058e9d93f21f4c2b84507521988a83cb70a72bbeceab5e092aa71
+    - pattern-v1-754d1821a4220125efbf68f0d6ef41a589df40034189a21042bf8232b9eb594c
+    - pattern-v1-761a7ffbbe8e28a678e98e40ca7db3811039f3bb23d844d1674a0ec85ebb96bf
+    - pattern-v1-7ba041147a861002f825a5b368104e743f7505e794cf1bdc41b28f475274ef68
+    - pattern-v1-87473748351cd47b2e09eac7b3987ae805f640d6dcf2114432e17f0e449a0692
+    - pattern-v1-89768d76e50ff5edb26ebccc070eefe1d78e7997b1c1ec25a4b827b7f1add7d1
+    - pattern-v1-8bb97c7174781c111eaae79d5e2fe1fdfa6520217fcdbf4b08f3bac36d1d17f6
+    - pattern-v1-8bbdaf4db8663580326610f4bf07bb2dafc0cd9bf9bd3b8df1f453d57bb181c2
+    - pattern-v1-95c783455c25fb68361e065cbafb6739ec52df880428d3ddb197050b14eccc0d
+    - pattern-v1-99b2c14dc0ba341baa79364360c216c12b945242bdab5cbeb249b0e533055233
+    - pattern-v1-a50b9c78abf13ac97513705e7fdfeec292d53107079d62e6e9d31b8f73a57456
+    - pattern-v1-abdade80c8219ba127d56c7eaa0e5625da389853061ce7b2632add7219a15c19
+    - pattern-v1-b204f78654069675f4a4b2a0d0a4cff1a564d6d8966a1609af8fa840e8777f59
+    - pattern-v1-b3106f0377e1a86feb53aef87aa44fbaec39caec3c8333102b2b0c290bebf31d
+    - pattern-v1-b6eafec9cc317c4041a24401e8a64ddea4f5826271276ad636e6454de76f2e5e
+    - pattern-v1-b89321bdc09bb9587fa76c10bd2fa6d26487e74f112c9589f864594277c983a3
+    - pattern-v1-bf845158ae9afbe4c8b42ecd160e5ac86d90f14a0800d6cca447a302180e5512
+    - pattern-v1-d1a7c53d5244940f23d040998b45fa03489051d620f7ea2bb60416d95825b38a
+    - pattern-v1-e322f1f60aac4a00ece1f69d4aab9a526cf5496d26a98fb647bb8ae1f9297eba
+    - pattern-v1-e728b21600a158e8273f4479f3f95fe8ab71bee1066581a2f67d909f42881b0f
+    - pattern-v1-eb1806be3c58307cd3e253e5090d51bc42c987215720491b5143e9f6cc0e9932
+    - pattern-v1-ee533c216aa2cce6579a3fead41e36a374845ec8c606391939832fd23236d489
+    - pattern-v1-f7f5cb0a558b81bc32a6b214c43d845fd46b185cafe4c4243dae9857d89efb24
+    - pattern-v1-feaa9b0d73fd4467ba5afe7b9ce80ee23782b1edabeb1893510b4bebc9237594
+  deferred:
+    - frame_type: announcer_event
+    - frame_type: champion_dialogue_event
+      argument_keys:
+        turn: [null]
+    - frame_type: kill_or_destroy_event
+      roles_any: [counterpart, milestone]
+  eligible_default: pending
+  ineligible_default: deferred
+  non_vo_default: deferred
 
 sfx_candidate:
   support_level: experimental

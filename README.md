@@ -125,8 +125,9 @@ uv run python scripts/validate_normalized_outputs.py --normalized-root dist/norm
 
 V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX 保留，目标支持
 状态为 Stable、Experimental 或 Unsupported。当前 normalized contract 尚未写入这三个
-状态；本阶段只通过下方 inventory 生成 Experimental + pending 候选，不会把未审阅项
-冒充 Stable。
+状态；本阶段只通过下方 inventory 生成 Experimental 候选。报告用 approved、pending、
+deferred scope 记录产品决定，但不会把已批准范围提前冒充 Stable。首批批准冻结为 86 个
+canonical pattern ID；未来同 family 新 ID 仍需重新 Review。
 
 ## Pattern Catalog（只读维护报告）
 
@@ -142,9 +143,10 @@ uv run python scripts/report_translation_patterns.py `
   --output-md dist\reports\runs\latest\translation-patterns.md
 ```
 
-目录中的候选始终带 Experimental 与 pending 状态，不能冒充正式 Stable。正式消费者
-Pattern Catalog schema、promotion、review importer 与远端发布均为未来目标，尚未实现；
-当前只读 inventory 自身带独立版本号，供本地复跑和比较。
+目录中的候选当前始终是 Experimental；`scope_status=approved` 仅表示产品范围已获批准，
+pending 与 deferred 分别表示待精确审阅和暂缓。正式消费者 Pattern Catalog schema、
+绝对门禁、promotion、review importer 与远端发布均为未来目标，尚未实现；当前只读
+inventory 自身带独立版本号，供本地复跑和比较。
 
 ## 自动更新与 CI
 

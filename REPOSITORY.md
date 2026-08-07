@@ -85,7 +85,7 @@ rules/low_trust_events.yaml
 - `dist/normalized/` 是生成的消费者层，按实体拆分并保留兼容 `display` 预览。
 - `translation` 是 normalized 记录内的本地化渲染层；需要页面上下文省略、不同语言语序或调试审计时，应优先使用它，而不是只依赖固定 `display.zh_cn_short/detail`。
 
-V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX 保留在语义词典中，目标支持状态为 Stable、Experimental 或 Unsupported。当前 normalized contract 尚未承载这三个状态；Pattern Catalog 是从 semantic frame 派生的只读维护报告，不是以 `BaseName,Label` 为主模型的另一份词典，其中候选保持 Experimental 与 pending，尚未进入 Stable contract。
+V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX 保留在语义词典中，目标支持状态为 Stable、Experimental 或 Unsupported。当前 normalized contract 尚未承载这三个状态；Pattern Catalog 是从 semantic frame 派生的只读维护报告，不是以 `BaseName,Label` 为主模型的另一份词典。候选仍是 Experimental，approved、pending、deferred scope 只表达产品决策，尚未进入 Stable contract。
 
 普通用户展示文案应回答“这个音频什么时候触发”，例如：
 
