@@ -1,0 +1,58 @@
+schema_version: translation-pattern-policy.v1
+signature_version: pattern-signature.v1
+example_limit: 3
+
+# 当前策略只形成待审阅候选，不声明任何 pattern 已获 Stable 支持。
+defaults:
+  support_level: experimental
+  review_status: pending
+
+stable_proposal:
+  asset_kind: vo
+  frames:
+    voice_event:
+      support_level: experimental
+      proposed_support_level: stable
+      review_status: pending
+      semantic_profiles: [self_action, qualified_action]
+      signature_roles: [action]
+    ability_cast_event:
+      support_level: experimental
+      proposed_support_level: stable
+      review_status: pending
+      semantic_profiles: [spell_event]
+      signature_roles: [ability_slot, phase]
+    kill_or_destroy_event:
+      support_level: experimental
+      proposed_support_level: stable
+      review_status: pending
+      semantic_profiles: [kill_or_score]
+      signature_roles: [kill_method, trigger]
+    champion_interaction_cue:
+      support_level: experimental
+      proposed_support_level: stable
+      review_status: pending
+      semantic_profiles: [interaction]
+      signature_roles: [relation, trigger]
+    champion_dialogue_event:
+      support_level: experimental
+      proposed_support_level: stable
+      review_status: pending
+      semantic_profiles: [dialogue_chain]
+      signature_roles: [base_trigger, turn]
+    announcer_event:
+      support_level: experimental
+      proposed_support_level: stable
+      review_status: pending
+      semantic_profiles: [map_or_system]
+      signature_roles: [event, team]
+    shop_voice_event:
+      support_level: experimental
+      proposed_support_level: stable
+      review_status: pending
+      semantic_profiles: [map_or_system]
+      signature_roles: [shop_action]
+
+sfx_candidate:
+  support_level: experimental
+  review_status: pending

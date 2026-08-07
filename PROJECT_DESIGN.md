@@ -10,7 +10,7 @@
 | `rules/` | 可复用的归一化规则、词典、模板和上下文分片 |
 | `overrides/` | 人工审阅后的精确覆盖、兼容别名和归属决策 |
 | `reference/` | 从外部来源收敛出的累计精简实体参考 |
-| `data/` | 小型 schema、代表样例和质量基线 |
+| `data/` | 小型 schema、代表样例和质量基线；`16.14` 仅作为本轮冻结验收 profile |
 | `tests/` | 确定性行为、contract 与文件系统集成测试 |
 | `dist/` | 被忽略的生成数据、报告、review site 和中间工作目录 |
 
@@ -20,7 +20,8 @@
 - 累积更新边界：`reference_ingestion.py`、`reference_collection.py`、`raw_update.py`、`source_sync.py`、`update_pipeline.py` 把外部输入转换为仓库内 reference/raw，并负责差集、游标和失败恢复。
 - 语义边界：`decomposition_*.py`、`rules.py`、`model.py`、`match_audit.py` 读取 raw/reference/rules/overrides，输出保留来源、置信度和未知项的结构化拆解。
 - 消费者输出边界：`normalized_translation_*.py`、`normalized_output.py`、`normalized_validation.py`、`quality_metrics.py`、`display_labels.py` 把拆解记录转换为稳定 normalized contract，并校验 manifest、summary、JSONL 与 renderer 一致性。
-- 入口边界：`full_refresh.py` 提供可注入 runner 的编排逻辑；`scripts/run_full_refresh.py`、下载/导入/构建/查询脚本和 `normalized_lookup_cli.py` 负责 CLI 适配。
+- 模式报告边界：`pattern_catalog.py` 只读 normalized 与 `rules/translation_patterns.yaml`，从 semantic frame 汇总 Pattern Catalog inventory；`scripts/report_translation_patterns.py` 只是把 JSON/Markdown 写入调用方指定的被忽略报告路径。输出候选保持 Experimental 与 pending，不写 normalized contract 或规则源。
+- 入口边界：`full_refresh.py` 提供可注入 runner 的编排逻辑；`scripts/run_full_refresh.py`、下载/导入/构建/查询/模式报告脚本和 `normalized_lookup_cli.py` 负责 CLI 适配。
 
 `scripts/` 可以依赖共享模块，共享模块不得依赖脚本。来源适配器不得直接写最终 normalized；拆解层不得依赖 `dist/` 中的上次生成结果；展示渲染不得改写 raw 或 reference。
 
@@ -28,7 +29,7 @@
 
 ```text
 外部 GAME/LCU/Data Dragon/官网来源
-  -> 下载与来源校验
+  -> 当轮 live 下载与来源校验
   -> raw/events/ + reference/
 
 raw/events/ + reference/ + rules/ + overrides/
@@ -36,6 +37,9 @@ raw/events/ + reference/ + rules/ + overrides/
   -> normalized translation builder
   -> dist/normalized/ + dist/reports/
   -> validator + quality metrics + ratchet
+
+semantic frame + rules/translation_patterns.yaml
+  -> read-only Pattern Catalog report (Experimental + pending)
 ```
 
 更新链先在临时位置准备变更，确认差集和输入有效后再替换累计数据与游标。解释链把所有 contextual 分片聚合为一个 RuleBook，避免按当前 owner 局部加载而丢失跨实体命中。消费者链从统一 frame 注册表派生必需角色和模板，减少 builder、validator 与 renderer 之间的重复定义。
@@ -46,6 +50,7 @@ raw/events/ + reference/ + rules/ + overrides/
 - `uv run python scripts/update_raw_events.py`：合并 raw/reference 并写更新报告。
 - `uv run python scripts/run_full_refresh.py`：依次执行 decompose、build、validate、metrics、ratchet；阻断步骤失败即停止。
 - `uv run lookup-normalized-event`：按事件名查询生成的 normalized 记录并渲染指定上下文。
+- `uv run python scripts/report_translation_patterns.py`：只读生成 Pattern Catalog JSON/Markdown 报告；默认规则输入为 `rules/translation_patterns.yaml`，输出路径必须由 `--output-json` 与 `--output-md` 显式指定。
 - `.github/workflows/ci.yml`：锁定环境中的静态检查、类型检查与离线测试。
 - `.github/workflows/update-raw-events.yml`：手动更新数据、构建并上传 normalized artifact。
 
@@ -63,5 +68,7 @@ raw/events/ + reference/ + rules/ + overrides/
 - `rules/**/*.yaml`、`overrides/**/*.yaml`、`reference/**/*.yaml` 是长期可审阅源。
 - `dist/normalized/manifest.json`、`entity-summary.json`、`by-entity/**/*.jsonl` 及记录内 `translation` 是下游数据 contract。
 - `TRANSLATION_SCHEMA_VERSION`、`FRAME_VERSION`、frame registry 和 required roles 共同约束 renderer/validator；变更时必须同步 builder、validator、测试和文档。
+- `zh_CN` 是当前正式渲染 locale；VO 优先支持，SFX 不删除但按 Stable、Experimental、Unsupported 区分能力边界。
+- `16.14` 是本轮 frozen acceptance profile，不参与未来 live 版本的默认选择。正式消费者 Pattern Catalog schema、promotion 与 review importer 仍是未来工作；当前 inventory 仅使用独立的报告 schema。远端发布也尚未实现。
 
 当前没有在线服务、数据库或跨进程消息协议。若未来引入这些边界，必须先明确数据所有权、版本兼容、失败恢复和部署环境，再更新本设计与项目约束。

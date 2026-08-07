@@ -2,7 +2,7 @@
 
 ## 仓库定位
 
-`lol-event-semantics` 用来维护《英雄联盟》音频事件名的语义规则、原始事件语料、审计报告和生成产物。
+`lol-event-semantics` 用来维护《英雄联盟》音频事件名的累计语义词典：包括语义规则、原始事件语料、审计报告和生成产物。
 
 本仓库只处理仍属于《英雄联盟》客户端的事件名。云顶之弈 / TFTM 相关事件名不进入 raw 快照、拆解产物、审核报告或对外数据。
 
@@ -85,6 +85,8 @@ rules/low_trust_events.yaml
 - `dist/normalized/` 是生成的消费者层，按实体拆分并保留兼容 `display` 预览。
 - `translation` 是 normalized 记录内的本地化渲染层；需要页面上下文省略、不同语言语序或调试审计时，应优先使用它，而不是只依赖固定 `display.zh_cn_short/detail`。
 
+V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX 保留在语义词典中，目标支持状态为 Stable、Experimental 或 Unsupported。当前 normalized contract 尚未承载这三个状态；Pattern Catalog 是从 semantic frame 派生的只读维护报告，不是以 `BaseName,Label` 为主模型的另一份词典，其中候选保持 Experimental 与 pending，尚未进入 Stable contract。
+
 普通用户展示文案应回答“这个音频什么时候触发”，例如：
 
 ```text
@@ -97,7 +99,7 @@ rules/low_trust_events.yaml
 
 ## 自动更新边界
 
-自动 raw 更新入口和手动 GitHub Actions workflow 已纳入仓库。GAME manifest/WAD/BIN 抽取是可选更新来源，不是对外数据契约。
+自动 raw 更新入口和手动 GitHub Actions workflow 已纳入仓库。GAME manifest/WAD/BIN 抽取是可选更新来源，不是对外数据契约。每轮只采集当时的 live 输入；累计语料保留已合并事件，但不支持指定历史版本下载、重建或回放。`16.14` 仅是本轮 frozen acceptance profile，而非固定的最新版本默认值。
 
 自动更新的关键边界：
 
@@ -116,3 +118,4 @@ rules/low_trust_events.yaml
 - 在线服务部署
 - 大体积原始游戏数据归档
 - 手工编辑最终 normalized 产物
+- 将 Pattern Catalog 候选直接提升为 Stable，或把只读报告作为远端发布产物

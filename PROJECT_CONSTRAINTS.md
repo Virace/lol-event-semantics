@@ -11,10 +11,14 @@
 ## 数据与兼容约束
 
 - `raw_event_name` 是不可变源数据；新版本只增量合并，不因当前版本缺失而删除历史事件。
-- 项目只跟踪 live 最新版本，不承诺历史版本回放。
+- 每轮采集只读取当时的 live 最新版本；项目不提供指定历史版本的下载、重建或回放。累计语料保存已纳入事件名，但不构成历史版本快照服务。
+- `16.14` 是本轮 frozen acceptance profile，仅用于当前验收基线；不得把它编码为长期“最新版本”默认值。
 - GAME 与 LCU 来源必须在同轮内进行主版本一致性校验；不能把不同版本的来源静默混合为同一结果。
 - `rules/`、`overrides/` 和累计 `reference/` 是解释层的权威输入。生成文件不得反向成为人工维护源。
 - `dist/normalized/` 是唯一对外主数据源；translation schema、frame type、字段和路径变化属于消费者 contract 变更。
+- `zh_CN` 是正式渲染 locale；其他 locale、回退与来源信息必须以结构化 translation 数据表达，不得以兼容 `display` 预览替代正式渲染 contract。
+- VO 是优先支持对象；SFX 必须保留并按 Stable、Experimental、Unsupported 表达支持状态，不能因未稳定而静默丢弃。
+- Pattern Catalog 只能从 semantic frame 派生，不能以 `BaseName,Label` 等字符串对作为主模型。其候选在完成未来的正式消费者 schema、promotion 和 review importer 前始终为 Experimental 且 pending，不得冒充 Stable 对外数据；当前 inventory 使用独立版本化报告 schema。
 - YAML/JSON/JSONL 等文本资产必须保持可审阅、确定性和 UTF-8 编码。
 
 ## 安全与隐私
@@ -36,6 +40,7 @@
 - 不手工编辑由脚本管理的 normalized、报告或中间产物来掩盖源规则问题。
 - 不把共享逻辑复制到多个 `scripts/` 入口。
 - 不在未核验官方来源时新增中文展示词。
+- 不把 Pattern Catalog 报告、候选或单次采集结果发布为远端稳定产物；远端发布属于后续阶段。
 - 不用全仓库机械格式化、目录重排或抽象层清理夹带功能变更。
 - 不把临时缓存、一次性实验、完整外部数据快照或本地 review 输出提交到仓库。
 

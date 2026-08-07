@@ -7,6 +7,7 @@
 - 本仓库只处理仍属于《英雄联盟》客户端的事件名。云顶之弈 / TFTM 相关事件名不进入 raw 快照、拆解产物、审计报告或对外数据。
 - 本项目不是音频提取器，不重新分发 GAME WAD、BIN、BNK、WEM、WAV 或任何游戏资产大包。
 - `raw_event_name` 是不可变源数据；一切可读标签与翻译都是派生数据。
+- 产品视图是一部累计语义词典：每轮只采集当前 live 输入，已纳入事件保留在累计语料中；不提供指定历史版本下载、重建或回放。
 
 ## 数据流总览
 
@@ -67,9 +68,10 @@ uv run python scripts/search_stringtable.py 厄塔汗 "first blood"
 | L5 | 社区（wiki / 惯称） | 官方渠道无此概念时降级使用 |
 | L6 | 自译 | 兜底，须标注直译性质 |
 
-版本策略：只跟 live 最新版本（历史版本刻意不做）；GAME 与 LCU manifest
-成对校验（major.minor 一致）；整轮下载出自同一份 manifest，数据源之间
-天然同版本。
+版本策略：每轮只跟 live 最新版本，不提供指定历史版本下载、重建或回放；
+GAME 与 LCU manifest 成对校验（major.minor 一致），整轮下载出自同一份
+manifest，数据源之间天然同版本。`16.14` 是本轮 frozen acceptance profile，
+不是长期固定的最新版本默认值。
 
 ## 目录契约
 
@@ -120,6 +122,29 @@ uv run python scripts/search_stringtable.py 厄塔汗 "first blood"
 ```bash
 uv run python scripts/validate_normalized_outputs.py --normalized-root dist/normalized --output-json dist/reports/runs/latest/normalized-validation.json
 ```
+
+V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX 保留，目标支持
+状态为 Stable、Experimental 或 Unsupported。当前 normalized contract 尚未写入这三个
+状态；本阶段只通过下方 inventory 生成 Experimental + pending 候选，不会把未审阅项
+冒充 Stable。
+
+## Pattern Catalog（只读维护报告）
+
+Pattern Catalog 从 semantic frame 派生，用于发现可复用的翻译模式候选；它不是
+以 `BaseName,Label` 为主模型，也不属于 `dist/normalized/` 的消费者 contract。
+报告入口默认读取 `rules/translation_patterns.yaml`，并要求显式指定被忽略报告目录
+中的 JSON/Markdown 输出：
+
+```powershell
+uv run python scripts/report_translation_patterns.py `
+  --normalized-root dist\normalized `
+  --output-json dist\reports\runs\latest\translation-patterns.json `
+  --output-md dist\reports\runs\latest\translation-patterns.md
+```
+
+目录中的候选始终带 Experimental 与 pending 状态，不能冒充正式 Stable。正式消费者
+Pattern Catalog schema、promotion、review importer 与远端发布均为未来目标，尚未实现；
+当前只读 inventory 自身带独立版本号，供本地复跑和比较。
 
 ## 自动更新与 CI
 

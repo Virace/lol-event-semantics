@@ -88,7 +88,18 @@ uv run python scripts/build_normalized_outputs.py `
   --reference-version cumulative
 ```
 
-本地一键刷新全链（decompose→build→validate→ratchet→metrics）：
+生成只读 Pattern Catalog 报告（候选仍为 Experimental + pending，不写入 normalized 或规则源）：
+
+```powershell
+uv run python scripts/report_translation_patterns.py `
+  --normalized-root dist\normalized `
+  --output-json dist\reports\runs\latest\translation-patterns.json `
+  --output-md dist\reports\runs\latest\translation-patterns.md
+```
+
+该报告从 semantic frame 派生模式，不以 `BaseName,Label` 作为主模型。默认规则输入为 `rules/translation_patterns.yaml`；JSON 和 Markdown 输出必须显式给定并应位于被忽略的报告目录。当前 inventory 有独立版本化报告 schema；正式消费者 schema、promotion、review importer 与远端发布均不属于当前实现。
+
+本地一键刷新全链（decompose→build→validate→metrics→ratchet）：
 
 ```powershell
 uv run python scripts/run_full_refresh.py `
@@ -123,7 +134,8 @@ uv run lookup-normalized-event `
 - `decompose_events.py`：把 raw event name 拆成 lexical atoms、semantic slots、JSONL 产物和 review reports；解释阶段只读取内部 `reference/`，可用 `--write-low-trust-rules` 额外导出低信任规则命中表。
 - `build_review_site.py`：从 decomposition JSONL 构建本地静态 review 页面；输出目录需要用本地 HTTP 服务打开，因为页面数据在 `review-data.json`。
 - `build_normalized_outputs.py`：从 decomposition JSONL 生成 `dist/normalized/` 下游数据；会重写 `manifest.json`、`entity-summary.json` 和 `by-entity/` 下由它管理的生成文件，并为已支持 frame 写出 `translation` 结构化 contract 与兼容 `display` 预览。
-- `run_full_refresh.py`：本地一键刷新薄壳，按序串联 decompose→build→validate→ratchet→metrics 五个子进程（可选 `--update-first` 在最前插入在线更新）；任一阻断步骤非 0 退出即短路并打印 `FAILED at step: <步骤名> (exit <code>)`，`--allow-ratchet-regression` 让 ratchet 恶化仅告警继续；步骤串联逻辑在 `src/lol_event_semantics/full_refresh.py`。
+- `report_translation_patterns.py`：只读 Pattern Catalog 报告入口；默认读取 `rules/translation_patterns.yaml`，以 semantic frame 汇总候选并将 JSON/Markdown 写入显式指定的报告路径。候选保持 Experimental 与 pending，不创建 Stable 规则或消费者 contract。
+- `run_full_refresh.py`：本地一键刷新薄壳，按序串联 decompose→build→validate→metrics→ratchet 五个子进程（可选 `--update-first` 在最前插入在线更新）；任一阻断步骤非 0 退出即短路并打印 `FAILED at step: <步骤名> (exit <code>)`，`--allow-ratchet-regression` 让 ratchet 恶化仅告警继续；步骤串联逻辑在 `src/lol_event_semantics/full_refresh.py`。
 - `validate_normalized_outputs.py`：校验 `dist/normalized/` 最终产物；硬错误覆盖 manifest/summary/JSONL 一致性、实体规范化、记录 schema、translation 结构和 renderer smoke，质量警告覆盖可疑实体归属、重复 raw、fallback label、低信任规则残留等；`--fail-on-warning` 可在 warning 存在时返回 2。
 - `lookup-normalized-event`：项目 console script，按 `raw_event_name` 精确匹配 `dist/normalized/by-entity/**/*.jsonl`，输出实体、semantic、display、translation 和 renderer 结果；`--json` 输出可作为 Web 端查询逻辑参考。`scripts/lookup_normalized_event.py` 仅保留为兼容包装。
 - `migrate_contextual_aliases.py`：把 `rules/contextual_aliases.yaml` 迁移为 `rules/contextual/**/*.yaml` 分片。
