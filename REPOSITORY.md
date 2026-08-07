@@ -84,8 +84,9 @@ rules/low_trust_events.yaml
 - `rules/` 与 `overrides/` 是语义解释层，负责把事件名归一为技能、状态、动作、阶段和上下文别名。
 - `dist/normalized/` 是生成的消费者层，按实体拆分并保留兼容 `display` 预览。
 - `translation` 是 normalized 记录内的本地化渲染层；需要页面上下文省略、不同语言语序或调试审计时，应优先使用它，而不是只依赖固定 `display.zh_cn_short/detail`。
+- normalized 行以 `record_id` 作为公开唯一身份，并保留 `raw_event_name` 原值；`source_scope` / `provenance` 区分 champions、maps 等来源。不能把 raw 名称误当作全局唯一键。
 
-V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX 保留在语义词典中，目标支持状态为 Stable、Experimental 或 Unsupported。当前 normalized contract 尚未承载这三个状态；Pattern Catalog 是从 semantic frame 派生的只读维护报告，不是以 `BaseName,Label` 为主模型的另一份词典。候选仍是 Experimental，approved、pending、deferred scope 只表达产品决策，尚未进入 Stable contract。
+V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX 保留在语义词典中，目标支持状态为 Stable、Experimental 或 Unsupported。normalized 行已增量承载 pattern/support/render/review 字段，但当前 support 仍全部为 Experimental；Pattern Catalog 是从 semantic frame 派生的只读维护报告，不是以 `BaseName,Label` 为主模型的另一份词典。approved、pending、deferred scope 只表达产品决策，尚未完成 Stable promotion。
 
 普通用户展示文案应回答“这个音频什么时候触发”，例如：
 

@@ -119,15 +119,21 @@ manifest，数据源之间天然同版本。`16.14` 是本轮 frozen acceptance 
 裁剪文案的下游程序应读取 `translation` 并按 `locale`、`mode`、
 `known_context` 渲染。生成后运行：
 
+每条兼容记录还会增量写入版本化 `record_id`、`source_scope`、`provenance`、
+`asset_kind`、`pattern_id`、`support_level`、`semantic_frame`、`rendered_labels`、
+`render_status`、`review_status` 和 `warnings`。`record_id` 由 raw、来源域/资产与
+最终 owner 的 canonical tuple 生成，不依赖本机路径、输入顺序或生成时间；
+`raw_event_name` 仍保持不可变，但不再被当作全数据集天然唯一键。
+
 ```bash
 uv run python scripts/validate_normalized_outputs.py --normalized-root dist/normalized --output-json dist/reports/runs/latest/normalized-validation.json
 ```
 
 V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX 保留，目标支持
-状态为 Stable、Experimental 或 Unsupported。当前 normalized contract 尚未写入这三个
-状态；本阶段只通过下方 inventory 生成 Experimental 候选。报告用 approved、pending、
-deferred scope 记录产品决定，但不会把已批准范围提前冒充 Stable。首批批准冻结为 86 个
-canonical pattern ID；未来同 family 新 ID 仍需重新 Review。
+状态为 Stable、Experimental 或 Unsupported。当前生成器已写入 additive support/review
+字段，但在绝对门禁与 promotion 完成前仍全部保持 Experimental。报告用 approved、
+pending、deferred scope 记录产品决定，不会把已批准范围提前冒充 Stable。首批批准冻结为
+86 个 canonical pattern ID；未来同 family 新 ID 仍需重新 Review。
 
 ## Pattern Catalog（只读维护报告）
 

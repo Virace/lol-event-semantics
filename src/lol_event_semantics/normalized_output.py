@@ -14,6 +14,7 @@ from typing import Any, Iterable
 from .decomposition_model import EventDecompositionRecord, SemanticProfile
 from .display_labels import get_reference_item_names
 from .display_tier import classify_display_tier
+from .normalized_contract import apply_normalized_contract, merge_equivalent_decomposition_records
 from .normalized_translation_builder import (
     LABEL_SOURCE_REFERENCE,
     LABEL_SOURCE_SKIN_VOTE,
@@ -26,6 +27,7 @@ from .normalized_translation_builder import (
 )
 from .normalized_translation_model import TranslationBuildContext
 from .normalized_translation_renderer import build_compat_display
+from .pattern_catalog import PatternPolicy, load_pattern_policy
 from .reference_collection import load_reference_collection, read_yaml
 from .rules import RuleBook, rule_key
 
@@ -34,6 +36,7 @@ TECHNICAL_DISPLAY_TOKENS = ("Play_vo", "Play_sfx", "cast3D", "2D", "3D", "voProc
 DEFAULT_REFERENCE_ROOT = Path("reference")
 DEFAULT_OVERRIDES_ROOT = Path("overrides")
 DEFAULT_RULES_ROOT = Path("rules")
+DEFAULT_PATTERN_POLICY_PATH = DEFAULT_RULES_ROOT / "translation_patterns.yaml"
 # rules/contextual/sfx 中承载“实体自身”中文词条分片的保留 owner 值，
 # 与 HA.yaml/SRU.yaml 里描述实体内部子 token 的 owner=HA/SRU 互不冲突。
 MAP_SYSTEM_ENTITY_OWNER = "entity"
@@ -321,7 +324,9 @@ def build_short_display_core(record: EventDecompositionRecord) -> str:
     if record.profile.primary_family == "skin_audio_transition":
         skin_token = slots.get("skin_token")
         skin = f" {skin_token}" if skin_token else ""
-        return compact_display(f"{owner}{skin} 音乐风格{slots.get('genre_index')}过渡{transition_phase_label(slots.get('transition_phase'))}")
+        return compact_display(
+            f"{owner}{skin} 音乐风格{slots.get('genre_index')}过渡{transition_phase_label(slots.get('transition_phase'))}"
+        )
 
     if record.profile.primary_family == "skin_named_state":
         skin_token = slots.get("skin_token")
@@ -943,6 +948,7 @@ def write_normalized_outputs(
     reference_aliases: dict[tuple[str, str], str] | None = None,
     resolver: "ChampionEntityResolver | None" = None,
     translation_context: TranslationBuildContext | None = None,
+    pattern_policy: PatternPolicy | None = None,
 ) -> None:
     """写出 normalized 目录。
 
@@ -955,6 +961,7 @@ def write_normalized_outputs(
         resolver: 可选的预构建 champion 实体解析器；缺省时从默认根加载。
         translation_context: 可选的预构建 translation 上下文；缺省时从默认
             reference 根加载。
+        pattern_policy: 可选的 P1 pattern/promotion policy；缺省读取仓库规则源。
     """
 
     clear_generated_outputs(output_root)
@@ -965,6 +972,8 @@ def write_normalized_outputs(
         resolver = load_champion_entity_resolver(DEFAULT_REFERENCE_ROOT, DEFAULT_OVERRIDES_ROOT)
     if translation_context is None:
         translation_context = build_translation_context(DEFAULT_REFERENCE_ROOT)
+    if pattern_policy is None:
+        pattern_policy = load_pattern_policy(DEFAULT_PATTERN_POLICY_PATH)
     pending_rows: dict[tuple[str, str], list[dict[str, object]]] = defaultdict(list)
 
     for record in records:
@@ -992,6 +1001,10 @@ def write_normalized_outputs(
         pending_rows[(kind, canonical.casefold())].append(normalized)
 
     grouped = canonicalize_entity_groups(pending_rows, reference_aliases)
+    apply_normalized_contract(
+        [row for rows in grouped.values() for row in rows],
+        pattern_policy,
+    )
 
     shard_paths = assign_entity_shard_paths(grouped.keys())
     for (kind, alias), rows in sorted(grouped.items()):
@@ -1589,7 +1602,7 @@ def write_normalized_jsonl(rows: list[dict[str, object]], output_path: Path) -> 
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     with output_path.open("w", encoding="utf-8", newline="\n") as file:
-        for row in sorted(rows, key=lambda item: str(item["raw_event_name"])):
+        for row in sorted(rows, key=lambda item: (str(item["raw_event_name"]), str(item.get("record_id") or ""))):
             file.write(json.dumps(row, ensure_ascii=False, sort_keys=True))
             file.write("\n")
 
@@ -1737,4 +1750,4 @@ def read_decomposition_root(decomposition_root: Path) -> list[EventDecomposition
     for name in ("champions.jsonl", "maps.jsonl"):
         records.extend(read_decomposition_jsonl(decomposition_root / name))
 
-    return records
+    return merge_equivalent_decomposition_records(records)

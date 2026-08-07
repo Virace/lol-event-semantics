@@ -16,6 +16,7 @@
 - GAME 与 LCU 来源必须在同轮内进行主版本一致性校验；不能把不同版本的来源静默混合为同一结果。
 - `rules/`、`overrides/` 和累计 `reference/` 是解释层的权威输入。生成文件不得反向成为人工维护源。
 - `dist/normalized/` 是唯一对外主数据源；translation schema、frame type、字段和路径变化属于消费者 contract 变更。
+- `raw_event_name` 必须保留原值但不是公开唯一键；`record_id` 由版本化 canonical tuple 确定，至少包含 raw、来源域/资产和最终 owner，不得包含本机绝对路径、输入顺序、随机数或生成时间。真实 identity 冲突必须 fail-closed 或用可解释来源身份消歧。
 - `zh_CN` 是正式渲染 locale；其他 locale、回退与来源信息必须以结构化 translation 数据表达，不得以兼容 `display` 预览替代正式渲染 contract。
 - VO 是优先支持对象；SFX 必须保留并按 Stable、Experimental、Unsupported 表达支持状态，不能因未稳定而静默丢弃。
 - Pattern Catalog 只能从 semantic frame 派生，不能以 `BaseName,Label` 等字符串对作为主模型。候选在完成未来的正式消费者 schema、绝对门禁和 promotion 前始终为 Experimental；`scope_status` 可以记录 approved、pending 或 deferred，但 approved scope 也不得冒充 Stable 对外数据。approved 必须同时命中已审 selector 与精确 canonical pattern ID；任何新 ID 默认回到 pending。当前 inventory 使用独立版本化报告 schema。
