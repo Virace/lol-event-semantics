@@ -40,6 +40,9 @@ raw/events/ + reference/ + rules/ + overrides/
 
 semantic frame + rules/translation_patterns.yaml
   -> read-only Pattern Catalog report (Experimental + approved/pending/deferred scope)
+
+canonical normalized rows + committed data/schema + data/examples
+  -> normalized-events.jsonl + pattern-catalog.json + compatibility by-entity/
 ```
 
 更新链先在临时位置准备变更，确认差集和输入有效后再替换累计数据与游标。解释链把所有 contextual 分片聚合为一个 RuleBook，避免按当前 owner 局部加载而丢失跨实体命中。消费者链从统一 frame 注册表派生必需角色和模板，减少 builder、validator 与 renderer 之间的重复定义。

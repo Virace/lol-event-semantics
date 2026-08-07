@@ -1,0 +1,198 @@
+{
+  "$id": "https://lol-event-semantics.local/schema/normalized-event.v2.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "asset_kind": {
+      "enum": [
+        "vo",
+        "sfx",
+        "control",
+        "unknown"
+      ]
+    },
+    "display": {
+      "type": "object"
+    },
+    "entity": {
+      "additionalProperties": true,
+      "properties": {
+        "alias": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "kind": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "alias"
+      ],
+      "type": "object"
+    },
+    "game_version": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "pattern_id": {
+      "pattern": "^pattern-v1-[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_assets": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "source_domains": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "source_paths": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "source_domains",
+        "canonical_assets",
+        "source_paths"
+      ],
+      "type": "object"
+    },
+    "quality": {
+      "type": "object"
+    },
+    "raw_event_name": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "record_id": {
+      "pattern": "^record-v1-[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "record_id_algorithm": {
+      "const": "lol-event-semantics.record-id.v1"
+    },
+    "render_status": {
+      "enum": [
+        "rendered",
+        "fallback",
+        "missing",
+        "not_applicable"
+      ]
+    },
+    "rendered_labels": {
+      "type": "object"
+    },
+    "review_status": {
+      "enum": [
+        "not_required",
+        "pending",
+        "accepted",
+        "rejected",
+        "superseded"
+      ]
+    },
+    "schema_version": {
+      "const": 2
+    },
+    "semantic": {
+      "type": "object"
+    },
+    "semantic_frame": {
+      "oneOf": [
+        {
+          "additionalProperties": true,
+          "properties": {
+            "arguments": {
+              "type": "object"
+            },
+            "frame_type": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "frame_version": {}
+          },
+          "required": [
+            "frame_type",
+            "frame_version",
+            "arguments"
+          ],
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "source_paths": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "source_scope": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "support_level": {
+      "enum": [
+        "stable",
+        "experimental",
+        "unsupported"
+      ]
+    },
+    "translation": {
+      "type": "object"
+    },
+    "warnings": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "schema_version",
+    "record_id",
+    "record_id_algorithm",
+    "raw_event_name",
+    "game_version",
+    "entity",
+    "source_scope",
+    "provenance",
+    "asset_kind",
+    "pattern_id",
+    "support_level",
+    "semantic",
+    "semantic_frame",
+    "display",
+    "rendered_labels",
+    "render_status",
+    "review_status",
+    "quality",
+    "warnings",
+    "source_paths"
+  ],
+  "title": "lol-event-semantics normalized event v2",
+  "type": "object"
+}

@@ -151,8 +151,8 @@ class NormalizedOutputTests(unittest.TestCase):
             with self.subTest(raw=raw):
                 self.assert_readable_short(raw)
 
-    def test_write_outputs_entity_shards_without_full_index(self) -> None:
-        """输出只保留按实体拆分的数据，不生成完整 raw 索引。"""
+    def test_write_outputs_v2_stream_catalog_and_compatibility_shards(self) -> None:
+        """输出 V2 单流/catalog/schema，同时保留按实体兼容分片。"""
 
         record = normalize_semantics(decompose_event_name("Play_vo_Annie_AnnieQ_OnCast", game_version="16.5"))
         with tempfile.TemporaryDirectory() as temp:
@@ -160,15 +160,22 @@ class NormalizedOutputTests(unittest.TestCase):
             write_outputs([record], root, reference_version="16.5")
 
             self.assertTrue((root / "manifest.json").is_file())
+            self.assertTrue((root / "normalized-events.jsonl").is_file())
+            self.assertTrue((root / "pattern-catalog.json").is_file())
             self.assertTrue((root / "entity-summary.json").is_file())
             self.assertTrue((root / "by-entity" / "champions" / "Annie.jsonl").is_file())
+            self.assertTrue((root / "schema" / "normalized-event.schema.json").is_file())
+            self.assertTrue((root / "examples" / "normalized-event.v2.json").is_file())
             self.assertFalse((root / "raw-event-index.json").exists())
 
-            first_line = (root / "by-entity" / "champions" / "Annie.jsonl").read_text(
-                encoding="utf-8"
-            ).splitlines()[0]
+            first_line = (root / "by-entity" / "champions" / "Annie.jsonl").read_text(encoding="utf-8").splitlines()[0]
             payload = json.loads(first_line)
+            manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
             self.assertEqual(payload["raw_event_name"], "Play_vo_Annie_AnnieQ_OnCast")
+            self.assertEqual(payload["schema_version"], 2)
+            self.assertTrue(payload["record_id"].startswith("record-v1-"))
+            self.assertTrue(manifest["contains_full_raw_event_index"])
+            self.assertEqual(manifest["normalized_record_schema_version"], 2)
 
     def test_entity_shard_prefers_resolved_subject_hint(self) -> None:
         """内部 owner 形如 AnnieQ 时，分片仍归到真实英雄 Annie。"""
@@ -221,7 +228,17 @@ class NormalizedOutputTests(unittest.TestCase):
             shard = root / "by-entity" / "champions" / "Belveth.jsonl"
             rows = [json.loads(line) for line in shard.read_text(encoding="utf-8").splitlines()]
 
-            self.assertEqual(summary, [{"alias": "Belveth", "kind": "champion", "path": "by-entity/champions/Belveth.jsonl", "record_count": 2}])
+            self.assertEqual(
+                summary,
+                [
+                    {
+                        "alias": "Belveth",
+                        "kind": "champion",
+                        "path": "by-entity/champions/Belveth.jsonl",
+                        "record_count": 2,
+                    }
+                ],
+            )
             self.assertFalse((root / "by-entity" / "champions" / "Belveth__2.jsonl").exists())
             self.assertEqual([row["entity"]["alias"] for row in rows], ["Belveth", "Belveth"])
             self.assertEqual(
@@ -283,9 +300,7 @@ class ChampionEntityAttributionTests(unittest.TestCase):
     def build_record(raw_event_name: str, source_path: str) -> EventDecompositionRecord:
         """按生产链路构造带来源路径的拆解记录。"""
 
-        return normalize_semantics(
-            decompose_event_name(raw_event_name, game_version="16.5", source_path=source_path)
-        )
+        return normalize_semantics(decompose_event_name(raw_event_name, game_version="16.5", source_path=source_path))
 
     def write_single(self, raw_event_name: str, source_path: str, root: Path) -> None:
         """写出单条记录的 normalized 输出。"""
@@ -701,8 +716,7 @@ class EntityAttributionOverridesValidationTests(unittest.TestCase):
         """alias 大小写不敏感重复时报错。"""
 
         body = (
-            "  - alias: FooPet\n    decision: keep\n    note: x\n"
-            "  - alias: foopet\n    decision: keep\n    note: y\n"
+            "  - alias: FooPet\n    decision: keep\n    note: x\n  - alias: foopet\n    decision: keep\n    note: y\n"
         )
 
         with tempfile.TemporaryDirectory() as temp:
@@ -756,9 +770,7 @@ class NormalizedShellVerbDisplayTests(unittest.TestCase):
     def test_stop_event_legacy_short_display_marks_stop(self) -> None:
         """Stop_ 事件 legacy 短文案以壳动词词表的停止后缀收尾，不得渲染成播放语义。"""
 
-        record = normalize_semantics(
-            decompose_event_name("Stop_sfx_AuroraSkin11_Dance3D_leadin", game_version="16.5")
-        )
+        record = normalize_semantics(decompose_event_name("Stop_sfx_AuroraSkin11_Dance3D_leadin", game_version="16.5"))
         short = build_short_display(record)
         suffix = playback_verb_suffix("stop")
 
@@ -887,9 +899,7 @@ class TranslationContextNameSystemTests(unittest.TestCase):
         """
 
         context = shared_translation_context()
-        entries_with_forms = [
-            entry for entry in context.champion_labels.values() if getattr(entry, "name_forms")
-        ]
+        entries_with_forms = [entry for entry in context.champion_labels.values() if getattr(entry, "name_forms")]
 
         self.assertTrue(entries_with_forms)
         for entry in entries_with_forms:

@@ -16,7 +16,7 @@ scripts/download_sources.py        # 初始化/更新入口：一键下载全部
   -> dist/sources/                 # 字符串表 / 大厅 JSON / 皮肤 bin / RST key 字典
 raw/events/ + rules/ + overrides/ + reference/
   -> decomposition JSONL + 审计报告
-  -> dist/normalized/              # 唯一对外主数据源（按实体分片）
+  -> dist/normalized/              # 唯一对外主数据源（V2 单流 + 兼容实体分片）
 ```
 
 ## 快速开始
@@ -137,10 +137,10 @@ pending、deferred scope 记录产品决定，不会把已批准范围提前冒�
 
 ## Pattern Catalog（只读维护报告）
 
-Pattern Catalog 从 semantic frame 派生，用于发现可复用的翻译模式候选；它不是
-以 `BaseName,Label` 为主模型，也不属于 `dist/normalized/` 的消费者 contract。
-报告入口默认读取 `rules/translation_patterns.yaml`，并要求显式指定被忽略报告目录
-中的 JSON/Markdown 输出：
+Pattern Catalog 从 semantic frame 派生，不以 `BaseName,Label` 为主模型。生成器会把
+公共消费者目录写入 `dist/normalized/pattern-catalog.json`；下方入口则生成字段更丰富的
+本地维护 inventory，默认读取 `rules/translation_patterns.yaml`，并要求显式指定被忽略
+报告目录中的 JSON/Markdown 输出：
 
 ```powershell
 uv run python scripts/report_translation_patterns.py `
@@ -149,10 +149,10 @@ uv run python scripts/report_translation_patterns.py `
   --output-md dist\reports\runs\latest\translation-patterns.md
 ```
 
-目录中的候选当前始终是 Experimental；`scope_status=approved` 仅表示产品范围已获批准，
-pending 与 deferred 分别表示待精确审阅和暂缓。正式消费者 Pattern Catalog schema、
-绝对门禁、promotion、review importer 与远端发布均为未来目标，尚未实现；当前只读
-inventory 自身带独立版本号，供本地复跑和比较。
+公共 catalog 和维护 inventory 中的候选当前都保持 Experimental；`scope_status=approved`
+仅表示产品范围已获批准，pending 与 deferred 分别表示待精确审阅和暂缓。公共 catalog
+Schema、record Schema 与最小样例位于 `data/schema/`、`data/examples/`，生成时复制进
+`dist/normalized/`。绝对门禁、promotion、review importer 与远端发布尚未实现。
 
 ## 自动更新与 CI
 

@@ -9,6 +9,11 @@ from pathlib import Path
 from typing import Any
 
 from .decomposition_lexer import parse_shell
+from .normalized_contract import (
+    RECORD_ID_ALGORITHM_VERSION,
+    record_id_for_normalized_record,
+    source_identity_from_paths,
+)
 from .normalized_translation_model import (
     FRAME_REGISTRY,
     TRANSLATION_SCHEMA_VERSION,
@@ -72,7 +77,7 @@ SUPPORTED_TRANSLATION_PRIMARY_FAMILIES = {
     "media_base",
 }
 # display 无损性校验：detail 必须体现这三个壳动词的中文语义
-#（unmute 的「取消静音」含「静音」，与 mute 共用同一判据）。
+# （unmute 的「取消静音」含「静音」，与 mute 共用同一判据）。
 DISPLAY_DROP_SHELL_VERBS = {"stop", "mute", "unmute"}
 # 交互对象类槽位键（考察 dist/normalized 全量 slots 键得出）：
 # counterpart 来自 interaction/attack 家族，chat_partner 来自 chat 家族。
@@ -87,6 +92,33 @@ SUSPICIOUS_CHAMPION_ALIASES = {
     "sfx",
     "skin",
     "unknown",
+}
+SUPPORTED_MANIFEST_SCHEMA_VERSIONS = {1, 2}
+SUPPORTED_RECORD_SCHEMA_VERSIONS = {1, 2}
+RECORD_ID_PATTERN = re.compile(r"^record-v1-[0-9a-f]{64}$")
+PATTERN_ID_PATTERN = re.compile(r"^pattern-v1-[0-9a-f]{64}$")
+V2_RECORD_REQUIRED_FIELDS = {
+    "record_id",
+    "record_id_algorithm",
+    "source_scope",
+    "provenance",
+    "asset_kind",
+    "pattern_id",
+    "support_level",
+    "semantic_frame",
+    "rendered_labels",
+    "render_status",
+    "review_status",
+    "warnings",
+}
+V2_REQUIRED_OUTPUTS = {
+    "manifest.json",
+    "normalized-events.jsonl",
+    "pattern-catalog.json",
+    "entity-summary.json",
+    "by-entity/",
+    "schema/",
+    "examples/",
 }
 
 
@@ -145,6 +177,7 @@ def validate_normalized_root(root: Path) -> NormalizedValidationReport:
     issues: list[NormalizedValidationIssue] = []
     manifest = read_json_object(root / "manifest.json", issues)
     summary = read_json_array(root / "entity-summary.json", issues)
+    manifest_schema_version = manifest.get("schema_version")
     shard_rows: dict[str, list[dict[str, Any]]] = {}
 
     for path in sorted((root / "by-entity").rglob("*.jsonl")) if (root / "by-entity").exists() else []:
@@ -155,11 +188,23 @@ def validate_normalized_root(root: Path) -> NormalizedValidationReport:
     validate_summary(root, summary, shard_rows, issues)
 
     seen_raw_names: dict[str, str] = {}
+    seen_record_ids: dict[str, str] = {}
     summary_paths_by_entity = summary_entity_paths(summary)
     for rel_path, rows in shard_rows.items():
         for row_index, row in enumerate(rows, start=1):
             row_path = f"{rel_path}:{row_index}"
-            validate_record(row, row_path, rel_path, summary_paths_by_entity, seen_raw_names, issues)
+            validate_record(
+                row,
+                row_path,
+                rel_path,
+                summary_paths_by_entity,
+                seen_raw_names,
+                seen_record_ids,
+                issues,
+            )
+
+    if manifest_schema_version == 2:
+        validate_v2_dataset(root, manifest, shard_rows, issues)
 
     error_count = sum(1 for issue in issues if issue.severity == "error")
     warning_count = sum(1 for issue in issues if issue.severity == "warning")
@@ -256,11 +301,28 @@ def validate_manifest(
     actual_record_count = sum(len(rows) for rows in shard_rows.values())
     actual_entity_count = len(shard_rows)
 
-    if manifest.get("schema_version") != 1:
-        issues.append(error("manifest_schema_version_invalid", "manifest.json", "manifest schema_version 必须为 1。"))
+    schema_version = manifest.get("schema_version")
+    if schema_version not in SUPPORTED_MANIFEST_SCHEMA_VERSIONS:
+        issues.append(
+            error(
+                "manifest_schema_version_invalid",
+                "manifest.json",
+                f"不支持的 manifest schema_version: {schema_version!r}。",
+            )
+        )
 
-    if manifest.get("contains_full_raw_event_index") is not False:
-        issues.append(error("manifest_full_index_flag_invalid", "manifest.json", "manifest 必须声明不包含完整 raw_event_name 索引。"))
+    expected_full_index = schema_version == 2
+    if (
+        schema_version in SUPPORTED_MANIFEST_SCHEMA_VERSIONS
+        and manifest.get("contains_full_raw_event_index") is not expected_full_index
+    ):
+        issues.append(
+            error(
+                "manifest_full_index_flag_invalid",
+                "manifest.json",
+                f"manifest v{schema_version} contains_full_raw_event_index 必须为 {str(expected_full_index).lower()}。",
+            )
+        )
 
     if manifest.get("record_count") != actual_record_count:
         issues.append(
@@ -283,7 +345,10 @@ def validate_manifest(
     if len(summary) != actual_entity_count:
         issues.append(error("summary_entity_count_mismatch", "entity-summary.json", "summary 行数与实际分片数不一致。"))
 
-    for required in ["manifest.json", "entity-summary.json", "by-entity/"]:
+    required_outputs = (
+        V2_REQUIRED_OUTPUTS if schema_version == 2 else {"manifest.json", "entity-summary.json", "by-entity/"}
+    )
+    for required in sorted(required_outputs):
         if required not in (manifest.get("outputs") or []):
             issues.append(error("manifest_output_missing", "manifest.json", f"outputs 缺少 {required}。"))
 
@@ -354,6 +419,7 @@ def validate_record(
     shard_rel_path: str,
     summary_paths_by_entity: dict[tuple[str, str], str],
     seen_raw_names: dict[str, str],
+    seen_record_ids: dict[str, str],
     issues: list[NormalizedValidationIssue],
 ) -> None:
     """校验单条 normalized 记录。"""
@@ -366,8 +432,18 @@ def validate_record(
         if key not in row:
             issues.append(error("record_required_field_missing", row_path, f"记录缺少 {key}。", raw))
 
-    if row.get("schema_version") != 1:
-        issues.append(error("record_schema_version_invalid", row_path, "记录 schema_version 必须为 1。", raw))
+    schema_version = row.get("schema_version")
+    if schema_version not in SUPPORTED_RECORD_SCHEMA_VERSIONS:
+        issues.append(
+            error(
+                "record_schema_version_invalid",
+                row_path,
+                f"不支持的记录 schema_version: {schema_version!r}。",
+                raw,
+            )
+        )
+    elif schema_version == 2:
+        validate_v2_record_fields(row, row_path, seen_record_ids, issues, raw)
 
     entity = row.get("entity")
     if isinstance(entity, dict):
@@ -400,13 +476,262 @@ def validate_record(
     elif translation is not None:
         issues.append(error("translation_arguments_invalid", row_path, "translation 必须是 object。", raw))
     elif is_supported_translation_candidate(row) and not is_tier3_record(row):
-        issues.append(warning("translation_missing_for_supported_frame", row_path, "supported frame 缺少 translation。", raw))
+        issues.append(
+            warning("translation_missing_for_supported_frame", row_path, "supported frame 缺少 translation。", raw)
+        )
 
     if raw is not None:
         if raw in seen_raw_names:
-            issues.append(warning("duplicate_raw_event_name", row_path, f"raw_event_name 已在 {seen_raw_names[raw]} 出现。", raw))
+            issues.append(
+                warning("duplicate_raw_event_name", row_path, f"raw_event_name 已在 {seen_raw_names[raw]} 出现。", raw)
+            )
         else:
             seen_raw_names[raw] = row_path
+
+
+def validate_v2_record_fields(
+    row: dict[str, Any],
+    row_path: str,
+    seen_record_ids: dict[str, str],
+    issues: list[NormalizedValidationIssue],
+    raw: str | None,
+) -> None:
+    """校验 normalized record v2 additive contract。"""
+
+    for field in sorted(V2_RECORD_REQUIRED_FIELDS):
+        if field not in row:
+            issues.append(error("v2_record_required_field_missing", row_path, f"V2 记录缺少 {field}。", raw))
+
+    record_id = string_or_none(row.get("record_id"))
+    if record_id is None or RECORD_ID_PATTERN.fullmatch(record_id) is None:
+        issues.append(error("record_id_invalid", row_path, "record_id 必须是完整 record-v1 SHA-256。", raw))
+    else:
+        previous = seen_record_ids.get(record_id)
+        if previous is not None:
+            issues.append(error("duplicate_record_id", row_path, f"record_id 已在 {previous} 出现。", raw))
+        else:
+            seen_record_ids[record_id] = row_path
+        expected_record_id = record_id_for_normalized_record(row)
+        if record_id != expected_record_id:
+            issues.append(
+                error(
+                    "record_id_identity_mismatch",
+                    row_path,
+                    f"record_id 与 canonical identity 不一致，期望 {expected_record_id}。",
+                    raw,
+                )
+            )
+
+    if row.get("record_id_algorithm") != RECORD_ID_ALGORITHM_VERSION:
+        issues.append(error("record_id_algorithm_invalid", row_path, "record_id_algorithm 不受支持。", raw))
+
+    source_scope = string_or_none(row.get("source_scope"))
+    if source_scope is None:
+        issues.append(error("source_scope_invalid", row_path, "source_scope 必须是非空字符串。", raw))
+
+    provenance = row.get("provenance")
+    if not isinstance(provenance, dict):
+        issues.append(error("provenance_invalid", row_path, "provenance 必须是 object。", raw))
+    else:
+        domains = provenance.get("source_domains")
+        assets = provenance.get("canonical_assets")
+        paths = provenance.get("source_paths")
+        if not isinstance(domains, list) or not domains or not all(isinstance(item, str) and item for item in domains):
+            issues.append(error("provenance_domains_invalid", row_path, "source_domains 必须是非空字符串数组。", raw))
+        if not isinstance(assets, list) or not all(isinstance(item, str) for item in assets):
+            issues.append(error("provenance_assets_invalid", row_path, "canonical_assets 必须是字符串数组。", raw))
+        if not isinstance(paths, list) or not all(isinstance(item, str) and item for item in paths):
+            issues.append(
+                error("provenance_paths_invalid", row_path, "provenance.source_paths 必须是字符串数组。", raw)
+            )
+        elif any(path.startswith("/") or re.match(r"^[A-Za-z]:[\\/]", path) for path in paths):
+            issues.append(error("provenance_absolute_path", row_path, "provenance 不得包含本机绝对路径。", raw))
+        if isinstance(paths, list) and row.get("source_paths") != paths:
+            issues.append(
+                error("provenance_source_paths_mismatch", row_path, "source_paths 与 provenance 不一致。", raw)
+            )
+        if isinstance(paths, list) and all(isinstance(item, str) for item in paths):
+            expected_source_identity = source_identity_from_paths(paths)
+            if provenance != expected_source_identity.to_provenance():
+                issues.append(error("provenance_identity_mismatch", row_path, "provenance 与来源路径身份不一致。", raw))
+            if source_scope != expected_source_identity.scope:
+                issues.append(
+                    error("source_scope_identity_mismatch", row_path, "source_scope 与 provenance 不一致。", raw)
+                )
+
+    if row.get("asset_kind") not in {"vo", "sfx", "control", "unknown"}:
+        issues.append(error("asset_kind_invalid", row_path, "asset_kind 不属于公共四值枚举。", raw))
+
+    pattern_id = string_or_none(row.get("pattern_id"))
+    if pattern_id is None or PATTERN_ID_PATTERN.fullmatch(pattern_id) is None:
+        issues.append(error("pattern_id_invalid", row_path, "pattern_id 必须是完整 pattern-v1 SHA-256。", raw))
+
+    if row.get("support_level") not in {"stable", "experimental", "unsupported"}:
+        issues.append(error("support_level_invalid", row_path, "support_level 不受支持。", raw))
+    if row.get("render_status") not in {"rendered", "fallback", "missing", "not_applicable"}:
+        issues.append(error("render_status_invalid", row_path, "render_status 不受支持。", raw))
+    if row.get("review_status") not in {"not_required", "pending", "accepted", "rejected", "superseded"}:
+        issues.append(error("review_status_invalid", row_path, "review_status 不受支持。", raw))
+
+    semantic_frame = row.get("semantic_frame")
+    if semantic_frame is not None and not isinstance(semantic_frame, dict):
+        issues.append(error("semantic_frame_invalid", row_path, "semantic_frame 必须是 object 或 null。", raw))
+    if not isinstance(row.get("rendered_labels"), dict):
+        issues.append(error("rendered_labels_invalid", row_path, "rendered_labels 必须是 object。", raw))
+    warnings = row.get("warnings")
+    if not isinstance(warnings, list) or not all(isinstance(item, str) for item in warnings):
+        issues.append(error("warnings_invalid", row_path, "warnings 必须是字符串数组。", raw))
+
+
+def validate_v2_dataset(
+    root: Path,
+    manifest: dict[str, Any],
+    shard_rows: dict[str, list[dict[str, Any]]],
+    issues: list[NormalizedValidationIssue],
+) -> None:
+    """校验 V2 单流、Pattern Catalog、Schema/Example 与兼容分片一致。"""
+
+    required_files = (
+        "normalized-events.jsonl",
+        "pattern-catalog.json",
+        "schema/manifest.schema.json",
+        "schema/normalized-event.schema.json",
+        "schema/pattern-catalog.schema.json",
+        "examples/manifest.v2.json",
+        "examples/normalized-event.v2.json",
+        "examples/pattern-catalog.v1.json",
+    )
+    for relative in required_files:
+        if not (root / relative).is_file():
+            issues.append(error("v2_required_file_missing", relative, "V2 数据集缺少必需文件。"))
+
+    stream_path = root / "normalized-events.jsonl"
+    stream_rows = read_jsonl_records(stream_path, root, issues) if stream_path.is_file() else []
+    shard_records = [row for rows in shard_rows.values() for row in rows]
+    _validate_v2_stream(stream_rows, shard_records, manifest, issues)
+
+    catalog_path = root / "pattern-catalog.json"
+    catalog = read_json_object(catalog_path, issues) if catalog_path.is_file() else {}
+    _validate_v2_pattern_catalog(catalog, shard_records, manifest, issues)
+
+    for relative in required_files[2:]:
+        path = root / relative
+        if not path.is_file():
+            continue
+        document = read_json_object(path, issues)
+        if relative.startswith("schema/") and document.get("$schema") != "https://json-schema.org/draft/2020-12/schema":
+            issues.append(error("json_schema_draft_invalid", relative, "JSON Schema 必须声明 draft 2020-12。"))
+
+
+def _validate_v2_stream(
+    stream_rows: list[dict[str, Any]],
+    shard_rows: list[dict[str, Any]],
+    manifest: dict[str, Any],
+    issues: list[NormalizedValidationIssue],
+) -> None:
+    """校验 normalized-events 单流排序、唯一性与分片等价性。"""
+
+    if manifest.get("normalized_record_schema_version") != 2:
+        issues.append(
+            error("normalized_record_schema_version_invalid", "manifest.json", "记录 schema version 必须为 2。")
+        )
+    if manifest.get("dataset_schema_version") != "normalized-dataset.v2":
+        issues.append(error("dataset_schema_version_invalid", "manifest.json", "dataset_schema_version 必须为 v2。"))
+    if manifest.get("record_count") != len(stream_rows):
+        issues.append(
+            error("normalized_stream_record_count_mismatch", "normalized-events.jsonl", "单流行数与 manifest 不一致。")
+        )
+
+    stream_ids = [string_or_none(row.get("record_id")) for row in stream_rows]
+    if any(record_id is None for record_id in stream_ids):
+        issues.append(error("normalized_stream_record_id_missing", "normalized-events.jsonl", "单流记录缺 record_id。"))
+        return
+    ordered_ids = [record_id for record_id in stream_ids if record_id is not None]
+    if ordered_ids != sorted(ordered_ids):
+        issues.append(
+            error("normalized_stream_order_invalid", "normalized-events.jsonl", "单流必须按 record_id 排序。")
+        )
+    if len(ordered_ids) != len(set(ordered_ids)):
+        issues.append(
+            error("normalized_stream_record_id_duplicate", "normalized-events.jsonl", "单流含重复 record_id。")
+        )
+
+    stream_by_id = {str(row.get("record_id")): row for row in stream_rows if row.get("record_id")}
+    shard_by_id = {str(row.get("record_id")): row for row in shard_rows if row.get("record_id")}
+    if set(stream_by_id) != set(shard_by_id):
+        issues.append(
+            error("normalized_stream_identity_mismatch", "normalized-events.jsonl", "单流与 by-entity 身份集合不一致。")
+        )
+    for record_id in sorted(set(stream_by_id).intersection(shard_by_id)):
+        if _canonical_json(stream_by_id[record_id]) != _canonical_json(shard_by_id[record_id]):
+            issues.append(
+                error(
+                    "normalized_stream_row_mismatch",
+                    "normalized-events.jsonl",
+                    f"record_id={record_id} 与 by-entity 内容不一致。",
+                )
+            )
+            break
+
+
+def _validate_v2_pattern_catalog(
+    catalog: dict[str, Any],
+    rows: list[dict[str, Any]],
+    manifest: dict[str, Any],
+    issues: list[NormalizedValidationIssue],
+) -> None:
+    """校验 Pattern Catalog 主键、计数和记录引用闭包。"""
+
+    if catalog.get("schema_version") != 1:
+        issues.append(
+            error("pattern_catalog_schema_version_invalid", "pattern-catalog.json", "catalog schema 必须为 1。")
+        )
+    if manifest.get("pattern_catalog_schema_version") != 1:
+        issues.append(
+            error("manifest_pattern_catalog_schema_version_invalid", "manifest.json", "catalog schema 必须为 1。")
+        )
+    patterns = catalog.get("patterns")
+    if not isinstance(patterns, list):
+        issues.append(error("pattern_catalog_patterns_invalid", "pattern-catalog.json", "patterns 必须是数组。"))
+        return
+    if catalog.get("pattern_count") != len(patterns) or manifest.get("pattern_count") != len(patterns):
+        issues.append(error("pattern_catalog_count_mismatch", "pattern-catalog.json", "pattern_count 与条目数不一致。"))
+
+    pattern_ids: list[str] = []
+    for index, pattern in enumerate(patterns, start=1):
+        if not isinstance(pattern, dict):
+            issues.append(
+                error("pattern_catalog_row_invalid", f"pattern-catalog.json:{index}", "pattern 必须是 object。")
+            )
+            continue
+        pattern_id = string_or_none(pattern.get("pattern_id"))
+        if pattern_id is None or PATTERN_ID_PATTERN.fullmatch(pattern_id) is None:
+            issues.append(error("pattern_catalog_id_invalid", f"pattern-catalog.json:{index}", "pattern_id 无效。"))
+            continue
+        pattern_ids.append(pattern_id)
+    if pattern_ids != sorted(pattern_ids):
+        issues.append(
+            error("pattern_catalog_order_invalid", "pattern-catalog.json", "patterns 必须按 pattern_id 排序。")
+        )
+    if len(pattern_ids) != len(set(pattern_ids)):
+        issues.append(error("pattern_catalog_id_duplicate", "pattern-catalog.json", "catalog 含重复 pattern_id。"))
+
+    referenced_ids = {str(row.get("pattern_id")) for row in rows if row.get("pattern_id")}
+    missing_ids = sorted(referenced_ids.difference(pattern_ids))
+    if missing_ids:
+        issues.append(
+            error(
+                "pattern_catalog_reference_missing",
+                "pattern-catalog.json",
+                f"记录引用 catalog 不存在的 pattern_id: {missing_ids[0]}。",
+            )
+        )
+
+
+def _canonical_json(value: dict[str, Any]) -> str:
+    """返回用于兼容双写比较的 canonical JSON。"""
+
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
 
 def validate_record_entity(
@@ -431,7 +756,9 @@ def validate_record_entity(
         issues.append(error("record_shard_mismatch", row_path, f"记录实体应位于 {expected}。", raw))
 
     if kind == "champion" and is_suspicious_champion_alias(alias):
-        issues.append(warning("suspicious_champion_alias", row_path, f"champion alias 看起来不是最终英雄实体：{alias}。", raw))
+        issues.append(
+            warning("suspicious_champion_alias", row_path, f"champion alias 看起来不是最终英雄实体：{alias}。", raw)
+        )
 
     if kind == "unknown":
         issues.append(warning("unknown_entity_output", row_path, "最终产物仍包含 unknown 实体分片。", raw))
@@ -606,7 +933,9 @@ def validate_record_quality(
 
     unknown_count = quality.get("unknown_count")
     if isinstance(unknown_count, int) and unknown_count > 0:
-        issues.append(warning("unknown_count_in_output", row_path, f"记录仍包含 {unknown_count} 个 unknown fragment。", raw))
+        issues.append(
+            warning("unknown_count_in_output", row_path, f"记录仍包含 {unknown_count} 个 unknown fragment。", raw)
+        )
 
     diagnostics = quality.get("diagnostics")
     if isinstance(diagnostics, list) and diagnostics:
@@ -627,13 +956,17 @@ def validate_record_translation(
             issues.append(error("translation_required_field_missing", row_path, f"translation 缺少 {key}。", raw))
 
     if translation.get("schema_version") != TRANSLATION_SCHEMA_VERSION:
-        issues.append(error("translation_schema_version_invalid", row_path, "translation.schema_version 必须为 1。", raw))
+        issues.append(
+            error("translation_schema_version_invalid", row_path, "translation.schema_version 必须为 1。", raw)
+        )
 
     # frame 支持范围与必需角色都以 FRAME_REGISTRY 为单一事实源（T4.2）。
     frame_type = string_or_none(translation.get("frame_type"))
     frame_spec = FRAME_REGISTRY.get(frame_type) if frame_type is not None else None
     if frame_spec is None:
-        issues.append(error("translation_frame_type_unknown", row_path, f"未知 translation frame_type：{frame_type}。", raw))
+        issues.append(
+            error("translation_frame_type_unknown", row_path, f"未知 translation frame_type：{frame_type}。", raw)
+        )
 
     arguments = translation.get("arguments")
     if not isinstance(arguments, dict):
@@ -668,14 +1001,30 @@ def validate_translation_arguments(
     for argument_key, argument in arguments.items():
         argument_path = f"{row_path}.translation.arguments.{argument_key}"
         if not isinstance(argument_key, str) or not isinstance(argument, dict):
-            issues.append(error("translation_arguments_invalid", argument_path, "translation argument 必须以字符串 role 映射到 object。", raw))
+            issues.append(
+                error(
+                    "translation_arguments_invalid",
+                    argument_path,
+                    "translation argument 必须以字符串 role 映射到 object。",
+                    raw,
+                )
+            )
             continue
 
         role = string_or_none(argument.get("role"))
         if role is None:
-            issues.append(error("translation_argument_role_missing", argument_path, "translation argument 缺少 role。", raw))
+            issues.append(
+                error("translation_argument_role_missing", argument_path, "translation argument 缺少 role。", raw)
+            )
         elif role != argument_key:
-            issues.append(error("translation_arguments_invalid", argument_path, f"argument role={role} 与 key={argument_key} 不一致。", raw))
+            issues.append(
+                error(
+                    "translation_arguments_invalid",
+                    argument_path,
+                    f"argument role={role} 与 key={argument_key} 不一致。",
+                    raw,
+                )
+            )
 
         validate_translation_argument_labels(argument, argument_path, issues, raw)
         validate_translation_argument_quality(argument, argument_path, issues, raw)
@@ -693,10 +1042,19 @@ def validate_translation_argument_labels(
     has_label = isinstance(labels, dict) and any(string_or_none(value) is not None for value in labels.values())
     has_locale_label = isinstance(labels, dict) and string_or_none(labels.get("zh_CN")) is not None
     fallback = argument.get("fallback") is True
-    has_fallback_value = any(string_or_none(argument.get(key)) is not None for key in ("token", "key", "value", "alias", "raw"))
+    has_fallback_value = any(
+        string_or_none(argument.get(key)) is not None for key in ("token", "key", "value", "alias", "raw")
+    )
 
     if not has_label and not (fallback and has_fallback_value):
-        issues.append(error("translation_argument_label_or_fallback_missing", argument_path, "argument 缺少可展示 label 或 fallback 值。", raw))
+        issues.append(
+            error(
+                "translation_argument_label_or_fallback_missing",
+                argument_path,
+                "argument 缺少可展示 label 或 fallback 值。",
+                raw,
+            )
+        )
 
     if isinstance(labels, dict):
         for locale, label in labels.items():
@@ -716,7 +1074,14 @@ def validate_translation_argument_labels(
     if fallback:
         issues.append(warning("translation_label_fallback", argument_path, "argument 使用 fallback label。", raw))
         if string_or_none(argument.get("fallback_reason")) is None:
-            issues.append(warning("translation_fallback_reason_missing", argument_path, "fallback argument 缺少 fallback_reason。", raw))
+            issues.append(
+                warning(
+                    "translation_fallback_reason_missing",
+                    argument_path,
+                    "fallback argument 缺少 fallback_reason。",
+                    raw,
+                )
+            )
 
 
 def validate_translation_argument_quality(
@@ -729,11 +1094,15 @@ def validate_translation_argument_quality(
 
     confidence = string_or_none(argument.get("confidence"))
     if confidence in {None, "low", "failed", "unknown"}:
-        issues.append(warning("translation_argument_low_confidence", argument_path, f"argument confidence={confidence}。", raw))
+        issues.append(
+            warning("translation_argument_low_confidence", argument_path, f"argument confidence={confidence}。", raw)
+        )
 
     provenance = argument.get("provenance")
     if not isinstance(provenance, dict) or not provenance:
-        issues.append(warning("translation_argument_provenance_missing", argument_path, "argument 缺少 provenance。", raw))
+        issues.append(
+            warning("translation_argument_provenance_missing", argument_path, "argument 缺少 provenance。", raw)
+        )
 
 
 def validate_translation_render(
@@ -767,11 +1136,20 @@ def validate_translation_render(
             continue
 
         if not result.text:
-            issues.append(warning("translation_render_context_too_sparse", row_path, f"{render_key} 渲染结果为空。", raw))
+            issues.append(
+                warning("translation_render_context_too_sparse", row_path, f"{render_key} 渲染结果为空。", raw)
+            )
             continue
 
         if has_technical_display_token(result.text):
-            issues.append(error("technical_token_in_rendered_user_text", row_path, f"{render_key} 残留技术 token：{result.text}", raw))
+            issues.append(
+                error(
+                    "technical_token_in_rendered_user_text",
+                    row_path,
+                    f"{render_key} 残留技术 token：{result.text}",
+                    raw,
+                )
+            )
 
         if isinstance(display, dict):
             expected = string_or_none(display.get(display_key))

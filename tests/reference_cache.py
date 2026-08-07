@@ -26,6 +26,7 @@ from lol_event_semantics.normalized_translation_model import TranslationBuildCon
 REPO_ROOT = Path(__file__).resolve().parents[1]
 REFERENCE_ROOT = REPO_ROOT / "reference"
 OVERRIDES_ROOT = REPO_ROOT / "overrides"
+CONTRACT_ASSETS_ROOT = REPO_ROOT / "data"
 
 
 @lru_cache(maxsize=1)
@@ -71,4 +72,5 @@ def write_outputs(
         reference_aliases=entity_aliases(),
         resolver=entity_resolver(),
         translation_context=translation_context(),
+        contract_assets_root=CONTRACT_ASSETS_ROOT,
     )

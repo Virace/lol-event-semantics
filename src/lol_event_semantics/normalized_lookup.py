@@ -30,7 +30,7 @@ def lookup_normalized_events(
     """
 
     queries = unique_non_empty(raw_event_names)
-    matches_by_raw = {query: [] for query in queries}
+    matches_by_raw: dict[str, list[dict[str, object]]] = {query: [] for query in queries}
     active_options = render_options or RenderOptions()
 
     for shard_path, line_number, row in iter_normalized_rows(normalized_root):
@@ -60,7 +60,7 @@ def lookup_normalized_events(
 
 
 def iter_normalized_rows(normalized_root: Path) -> Iterable[tuple[Path, int, dict[str, Any]]]:
-    """遍历 normalized by-entity JSONL 记录。
+    """优先遍历 V2 单流，缺失时回落 legacy by-entity JSONL。
 
     Args:
         normalized_root: normalized 输出根目录。
@@ -72,26 +72,34 @@ def iter_normalized_rows(normalized_root: Path) -> Iterable[tuple[Path, int, dic
         ValueError: JSONL 行不是 object 或无法解析。
     """
 
+    normalized_stream = normalized_root / "normalized-events.jsonl"
+    if normalized_stream.is_file():
+        yield from _iter_jsonl_rows(normalized_stream)
+        return
+
     by_entity_root = normalized_root / "by-entity"
     if not by_entity_root.exists():
         return
 
     for shard_path in sorted(by_entity_root.rglob("*.jsonl")):
-        with shard_path.open("r", encoding="utf-8") as handle:
-            for line_number, line in enumerate(handle, start=1):
-                text = line.strip()
-                if not text:
-                    continue
+        yield from _iter_jsonl_rows(shard_path)
 
-                try:
-                    row = json.loads(text)
-                except json.JSONDecodeError as exc:
-                    raise ValueError(f"{shard_path}:{line_number} JSON 解析失败：{exc}") from exc
 
-                if not isinstance(row, dict):
-                    raise ValueError(f"{shard_path}:{line_number} JSONL 记录必须是 object。")
+def _iter_jsonl_rows(path: Path) -> Iterable[tuple[Path, int, dict[str, Any]]]:
+    """读取一个 normalized JSONL 文件并报告精确行号错误。"""
 
-                yield shard_path, line_number, row
+    with path.open("r", encoding="utf-8") as handle:
+        for line_number, line in enumerate(handle, start=1):
+            text = line.strip()
+            if not text:
+                continue
+            try:
+                row = json.loads(text)
+            except json.JSONDecodeError as exc:
+                raise ValueError(f"{path}:{line_number} JSON 解析失败：{exc}") from exc
+            if not isinstance(row, dict):
+                raise ValueError(f"{path}:{line_number} JSONL 记录必须是 object。")
+            yield path, line_number, row
 
 
 def build_match_info(
@@ -121,7 +129,15 @@ def build_match_info(
     result: dict[str, object] = {
         "path": shard_path.relative_to(normalized_root).as_posix(),
         "line": line_number,
+        "record_id": row.get("record_id"),
         "raw_event_name": row.get("raw_event_name"),
+        "source_scope": row.get("source_scope"),
+        "provenance": row.get("provenance") if isinstance(row.get("provenance"), dict) else None,
+        "asset_kind": row.get("asset_kind"),
+        "pattern_id": row.get("pattern_id"),
+        "support_level": row.get("support_level"),
+        "render_status": row.get("render_status"),
+        "review_status": row.get("review_status"),
         "entity": row.get("entity") if isinstance(row.get("entity"), dict) else None,
         "semantic": summarize_semantic(row.get("semantic")),
         "display": row.get("display") if isinstance(row.get("display"), dict) else None,

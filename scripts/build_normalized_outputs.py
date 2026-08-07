@@ -18,6 +18,7 @@ class BuildNormalizedArgs:
     output_root: Path
     reference_version: str
     pattern_policy: Path
+    contract_assets_root: Path
     report_root: Path | None
 
 
@@ -31,6 +32,7 @@ def main(argv: list[str] | None = None) -> int:
         args.output_root,
         reference_version=args.reference_version,
         pattern_policy=load_pattern_policy(args.pattern_policy),
+        contract_assets_root=args.contract_assets_root,
     )
 
     print(f"records={len(records)} output={args.output_root}")
@@ -60,6 +62,12 @@ def parse_args(argv: list[str] | None = None) -> BuildNormalizedArgs:
         help="Versioned translation pattern and promotion policy.",
     )
     parser.add_argument(
+        "--contract-assets-root",
+        type=Path,
+        default=Path("data"),
+        help="Root containing committed schema/ and examples/ contract assets.",
+    )
+    parser.add_argument(
         "--report-root",
         type=Path,
         help="Reserved report root for future normalized QA reports. Currently unused.",
@@ -71,6 +79,7 @@ def parse_args(argv: list[str] | None = None) -> BuildNormalizedArgs:
         output_root=namespace.output_root,
         reference_version=namespace.reference_version,
         pattern_policy=namespace.pattern_policy,
+        contract_assets_root=namespace.contract_assets_root,
         report_root=namespace.report_root,
     )
 

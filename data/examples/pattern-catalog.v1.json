@@ -1,0 +1,47 @@
+{
+  "decision_id": "v1-initial-vo-2026-08-07",
+  "pattern_count": 1,
+  "pattern_signature_version": "pattern-signature.v1",
+  "patterns": [
+    {
+      "asset_kind": "vo",
+      "en_US_template": null,
+      "example_event_names": [
+        "Play_vo_Annie_Move"
+      ],
+      "frame_type": "voice_event",
+      "frame_version": 1,
+      "introduced_in": "pattern-signature.v1",
+      "optional_roles": [
+        "champion",
+        "companion",
+        "skin"
+      ],
+      "pattern_id": "pattern-v1-2a06475bec597be4e5eea8658ac35ed404874039502e3295c407e468463c22de",
+      "provenance_policy": {
+        "formal_locale": "zh_CN",
+        "required_role_min_confidence": "medium",
+        "stable_requires_no_fallback": true
+      },
+      "record_count": 1,
+      "required_roles": [
+        "action"
+      ],
+      "review_status": "pending",
+      "signature": {
+        "asset_kind": "vo",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "schema_version": "pattern-signature.v1"
+      },
+      "superseded_by": null,
+      "support_level": "experimental",
+      "warning_counts": {},
+      "zh_CN_template": {
+        "default": "{champion} {skin} {action} {companion}",
+        "main": "{action} {companion}"
+      }
+    }
+  ],
+  "schema_version": 1
+}

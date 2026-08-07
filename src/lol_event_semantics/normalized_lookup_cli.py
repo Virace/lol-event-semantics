@@ -38,9 +38,10 @@ def main(argv: list[str] | None = None) -> int:
     """
 
     args = parse_args(argv)
+    normalized_stream = args.normalized_root / "normalized-events.jsonl"
     by_entity_root = args.normalized_root / "by-entity"
-    if not by_entity_root.exists():
-        print(f"normalized by-entity directory not found: {by_entity_root}", file=sys.stderr)
+    if not normalized_stream.is_file() and not by_entity_root.exists():
+        print(f"normalized dataset not found: {args.normalized_root}", file=sys.stderr)
         return 2
 
     render_options = RenderOptions(
@@ -132,8 +133,12 @@ def parse_args(argv: list[str] | None = None) -> LookupNormalizedEventArgs:
         help="Renderer fallback strategy for missing labels.",
     )
     parser.add_argument("--json", dest="json_output", action="store_true", help="Print machine-readable JSON.")
-    parser.add_argument("--include-record", action="store_true", help="Include the full normalized record in JSON output.")
-    parser.add_argument("--allow-missing", action="store_true", help="Return exit code 0 even when some events are missing.")
+    parser.add_argument(
+        "--include-record", action="store_true", help="Include the full normalized record in JSON output."
+    )
+    parser.add_argument(
+        "--allow-missing", action="store_true", help="Return exit code 0 even when some events are missing."
+    )
     namespace = parser.parse_args(argv)
 
     event_names = collect_event_names(namespace.events, namespace.event_options, namespace.events_file)
@@ -321,12 +326,7 @@ def print_render(render: object) -> None:
         print("  render: <no translation>")
         return
 
-    print(
-        "  render: "
-        f"text={render.get('text')} "
-        f"frame={render.get('frame_type')} "
-        f"confidence={render.get('confidence')}"
-    )
+    print(f"  render: text={render.get('text')} frame={render.get('frame_type')} confidence={render.get('confidence')}")
     print(f"  render.used_roles: {','.join(render.get('used_roles') or [])}")
     print(f"  render.omitted_roles: {','.join(render.get('omitted_roles') or [])}")
     diagnostics = render.get("diagnostics") or []
@@ -344,11 +344,7 @@ def print_translation(translation: object) -> None:
     if not isinstance(translation, dict):
         return
 
-    print(
-        "  translation: "
-        f"frame={translation.get('frame_type')} "
-        f"confidence={translation.get('frame_confidence')}"
-    )
+    print(f"  translation: frame={translation.get('frame_type')} confidence={translation.get('frame_confidence')}")
     arguments = translation.get("arguments")
     if not isinstance(arguments, dict):
         return

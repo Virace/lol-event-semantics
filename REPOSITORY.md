@@ -38,7 +38,7 @@ raw/events/
 - `dist/sources/`：`scripts/download_sources.py` 的数据源落点（字符串表 / 大厅 JSON / 皮肤 bin / RST key 字典 + 版本游标 `manifest.json`）；layout 与手工放置规范见根 README「目录契约」。
 - `dist/work/<run-id>/`：单次执行中间产物，例如 event-decomposition 和 review-site。
 - `dist/reports/runs/<run-id>/`：规则命中、未知项、候选项和维护审计报告。
-- `dist/normalized/`：唯一对外主数据源，只按实体拆分，不包含完整大包索引。
+- `dist/normalized/`：唯一对外主数据源；`normalized-events.jsonl` 是 V2 首选全量记录流，`pattern-catalog.json` 是公共模式目录，`by-entity/` 与 `entity-summary.json` 在兼容期继续保留。
 
 旧的 `manifest/<version>/events` 和 `hashes/<version>/integrated` 路线只作为外部兼容来源存在，不再是本仓库主目录模型。
 
@@ -82,11 +82,11 @@ rules/low_trust_events.yaml
 - `raw/events/` 是源语料层，`raw_event_name` 在所有派生产物中保持原样。
 - `reference/` 是实体、英雄、皮肤、地图和 skinline 的 label/reference 层。
 - `rules/` 与 `overrides/` 是语义解释层，负责把事件名归一为技能、状态、动作、阶段和上下文别名。
-- `dist/normalized/` 是生成的消费者层，按实体拆分并保留兼容 `display` 预览。
+- `dist/normalized/` 是生成的消费者层，V2 消费者优先读取按 `record_id` 排序的 `normalized-events.jsonl`；旧消费者可继续读取按实体拆分的兼容路径和 `display` 预览。
 - `translation` 是 normalized 记录内的本地化渲染层；需要页面上下文省略、不同语言语序或调试审计时，应优先使用它，而不是只依赖固定 `display.zh_cn_short/detail`。
 - normalized 行以 `record_id` 作为公开唯一身份，并保留 `raw_event_name` 原值；`source_scope` / `provenance` 区分 champions、maps 等来源。不能把 raw 名称误当作全局唯一键。
 
-V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX 保留在语义词典中，目标支持状态为 Stable、Experimental 或 Unsupported。normalized 行已增量承载 pattern/support/render/review 字段，但当前 support 仍全部为 Experimental；Pattern Catalog 是从 semantic frame 派生的只读维护报告，不是以 `BaseName,Label` 为主模型的另一份词典。approved、pending、deferred scope 只表达产品决策，尚未完成 Stable promotion。
+V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX 保留在语义词典中，目标支持状态为 Stable、Experimental 或 Unsupported。normalized 行已增量承载 pattern/support/render/review 字段，但当前 support 仍全部为 Experimental；公共 `pattern-catalog.json` 与本地维护 inventory 都从 semantic frame 派生，不是以 `BaseName,Label` 为主模型的另一份词典。approved、pending、deferred scope 只表达产品决策，尚未完成 Stable promotion。
 
 普通用户展示文案应回答“这个音频什么时候触发”，例如：
 

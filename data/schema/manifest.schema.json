@@ -1,0 +1,65 @@
+{
+  "$id": "https://lol-event-semantics.local/schema/manifest.v2.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "contains_full_raw_event_index": {
+      "const": true
+    },
+    "dataset_schema_version": {
+      "const": "normalized-dataset.v2"
+    },
+    "entity_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "generated_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "normalized_record_schema_version": {
+      "const": 2
+    },
+    "outputs": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 7,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "pattern_catalog_schema_version": {
+      "const": 1
+    },
+    "pattern_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "record_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "reference_version": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "const": 2
+    }
+  },
+  "required": [
+    "schema_version",
+    "dataset_schema_version",
+    "normalized_record_schema_version",
+    "pattern_catalog_schema_version",
+    "generated_at",
+    "reference_version",
+    "entity_count",
+    "record_count",
+    "pattern_count",
+    "contains_full_raw_event_index",
+    "outputs"
+  ],
+  "title": "lol-event-semantics normalized manifest v2",
+  "type": "object"
+}

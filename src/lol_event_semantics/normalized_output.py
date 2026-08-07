@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -14,7 +15,11 @@ from typing import Any, Iterable
 from .decomposition_model import EventDecompositionRecord, SemanticProfile
 from .display_labels import get_reference_item_names
 from .display_tier import classify_display_tier
-from .normalized_contract import apply_normalized_contract, merge_equivalent_decomposition_records
+from .normalized_contract import (
+    apply_normalized_contract,
+    build_public_pattern_catalog,
+    merge_equivalent_decomposition_records,
+)
 from .normalized_translation_builder import (
     LABEL_SOURCE_REFERENCE,
     LABEL_SOURCE_SKIN_VOTE,
@@ -31,12 +36,14 @@ from .pattern_catalog import PatternPolicy, load_pattern_policy
 from .reference_collection import load_reference_collection, read_yaml
 from .rules import RuleBook, rule_key
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
+PATTERN_CATALOG_SCHEMA_VERSION = 1
 TECHNICAL_DISPLAY_TOKENS = ("Play_vo", "Play_sfx", "cast3D", "2D", "3D", "voProcessing")
 DEFAULT_REFERENCE_ROOT = Path("reference")
 DEFAULT_OVERRIDES_ROOT = Path("overrides")
 DEFAULT_RULES_ROOT = Path("rules")
 DEFAULT_PATTERN_POLICY_PATH = DEFAULT_RULES_ROOT / "translation_patterns.yaml"
+DEFAULT_CONTRACT_ASSETS_ROOT = Path("data")
 # rules/contextual/sfx 中承载“实体自身”中文词条分片的保留 owner 值，
 # 与 HA.yaml/SRU.yaml 里描述实体内部子 token 的 owner=HA/SRU 互不冲突。
 MAP_SYSTEM_ENTITY_OWNER = "entity"
@@ -73,10 +80,12 @@ def build_normalized_record(
         "zh_cn_detail": build_detail_display(record),
         "debug_label": build_debug_label(record),
     }
-    display = build_compat_display(
-        translation,
-        legacy_display=legacy_display,
-        raw_event_name=record.raw_event_name,
+    display: dict[str, object] = dict(
+        build_compat_display(
+            translation,
+            legacy_display=legacy_display,
+            raw_event_name=record.raw_event_name,
+        )
     )
     tier = classify_display_tier(record, has_translation=translation is not None)
     display["tier"] = tier
@@ -949,6 +958,7 @@ def write_normalized_outputs(
     resolver: "ChampionEntityResolver | None" = None,
     translation_context: TranslationBuildContext | None = None,
     pattern_policy: PatternPolicy | None = None,
+    contract_assets_root: Path = DEFAULT_CONTRACT_ASSETS_ROOT,
 ) -> None:
     """写出 normalized 目录。
 
@@ -962,6 +972,7 @@ def write_normalized_outputs(
         translation_context: 可选的预构建 translation 上下文；缺省时从默认
             reference 根加载。
         pattern_policy: 可选的 P1 pattern/promotion policy；缺省读取仓库规则源。
+        contract_assets_root: 提交入库的 JSON Schema 与 examples 根目录。
     """
 
     clear_generated_outputs(output_root)
@@ -1001,17 +1012,22 @@ def write_normalized_outputs(
         pending_rows[(kind, canonical.casefold())].append(normalized)
 
     grouped = canonicalize_entity_groups(pending_rows, reference_aliases)
-    apply_normalized_contract(
-        [row for rows in grouped.values() for row in rows],
+    all_rows = [row for rows in grouped.values() for row in rows]
+    pattern_report = apply_normalized_contract(
+        all_rows,
         pattern_policy,
     )
+    pattern_catalog = build_public_pattern_catalog(pattern_report, pattern_policy)
 
     shard_paths = assign_entity_shard_paths(grouped.keys())
     for (kind, alias), rows in sorted(grouped.items()):
         path = output_root / shard_paths[(kind, alias)]
         write_normalized_jsonl(rows, path)
 
-    write_manifest(grouped, output_root / "manifest.json", reference_version)
+    write_normalized_event_stream(all_rows, output_root / "normalized-events.jsonl")
+    write_json_document(pattern_catalog, output_root / "pattern-catalog.json")
+    write_contract_assets(contract_assets_root, output_root)
+    write_manifest(grouped, output_root / "manifest.json", reference_version, pattern_catalog=pattern_catalog)
     write_entity_summary(grouped, output_root / "entity-summary.json", shard_paths)
 
 
@@ -1571,24 +1587,40 @@ def clear_generated_outputs(output_root: Path) -> None:
         output_root: normalized 输出目录。
     """
 
-    for name in ("manifest.json", "entity-summary.json"):
+    for name in ("manifest.json", "entity-summary.json", "normalized-events.jsonl", "pattern-catalog.json"):
         path = output_root / name
         if path.exists():
             path.unlink()
 
+    for name in ("schema", "examples"):
+        clear_generated_directory(output_root / name)
+
     by_entity = output_root / "by-entity"
-    if not by_entity.exists():
+    if by_entity.exists():
+        for path in by_entity.rglob("*.jsonl"):
+            path.unlink()
+
+        for path in sorted((item for item in by_entity.rglob("*") if item.is_dir()), reverse=True):
+            if not any(path.iterdir()):
+                path.rmdir()
+
+        if not any(by_entity.iterdir()):
+            by_entity.rmdir()
+
+
+def clear_generated_directory(root: Path) -> None:
+    """删除 writer 专属目录中的生成文件并清理空目录。"""
+
+    if not root.exists():
         return
-
-    for path in by_entity.rglob("*.jsonl"):
-        path.unlink()
-
-    for path in sorted((item for item in by_entity.rglob("*") if item.is_dir()), reverse=True):
+    for path in root.rglob("*"):
+        if path.is_file():
+            path.unlink()
+    for path in sorted((item for item in root.rglob("*") if item.is_dir()), reverse=True):
         if not any(path.iterdir()):
             path.rmdir()
-
-    if not any(by_entity.iterdir()):
-        by_entity.rmdir()
+    if not any(root.iterdir()):
+        root.rmdir()
 
 
 def write_normalized_jsonl(rows: list[dict[str, object]], output_path: Path) -> None:
@@ -1607,10 +1639,58 @@ def write_normalized_jsonl(rows: list[dict[str, object]], output_path: Path) -> 
             file.write("\n")
 
 
+def write_normalized_event_stream(rows: list[dict[str, object]], output_path: Path) -> None:
+    """按 record_id 写出 V2 全量稳定记录流。"""
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with output_path.open("w", encoding="utf-8", newline="\n") as file:
+        for row in sorted(rows, key=lambda item: str(item.get("record_id") or "")):
+            file.write(json.dumps(row, ensure_ascii=False, sort_keys=True))
+            file.write("\n")
+
+
+def write_json_document(document: dict[str, object], output_path: Path) -> None:
+    """以确定性格式写出单个 JSON document。"""
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
+        json.dumps(document, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+def write_contract_assets(contract_assets_root: Path, output_root: Path) -> None:
+    """把提交入库的 JSON Schema 与 examples 复制到数据集。"""
+
+    required_assets = {
+        "schema": (
+            "manifest.schema.json",
+            "normalized-event.schema.json",
+            "pattern-catalog.schema.json",
+        ),
+        "examples": (
+            "manifest.v2.json",
+            "normalized-event.v2.json",
+            "pattern-catalog.v1.json",
+        ),
+    }
+    for directory, filenames in required_assets.items():
+        source_root = contract_assets_root / directory
+        target_root = output_root / directory
+        target_root.mkdir(parents=True, exist_ok=True)
+        for filename in filenames:
+            source = source_root / filename
+            if not source.is_file():
+                raise ValueError(f"normalized contract asset 不存在: {source}")
+            shutil.copyfile(source, target_root / filename)
+
+
 def write_manifest(
     grouped: dict[tuple[str, str], list[dict[str, object]]],
     output_path: Path,
     reference_version: str,
+    *,
+    pattern_catalog: dict[str, object],
 ) -> None:
     """写出 normalized manifest。
 
@@ -1618,16 +1698,29 @@ def write_manifest(
         grouped: 按实体分组后的 normalized 记录。
         output_path: manifest 输出路径。
         reference_version: 本次生成使用的参考版本。
+        pattern_catalog: 同批生成的公共 Pattern Catalog。
     """
 
     manifest = {
         "schema_version": SCHEMA_VERSION,
+        "dataset_schema_version": "normalized-dataset.v2",
+        "normalized_record_schema_version": SCHEMA_VERSION,
+        "pattern_catalog_schema_version": PATTERN_CATALOG_SCHEMA_VERSION,
         "generated_at": datetime.now(UTC).isoformat(),
         "reference_version": reference_version,
         "entity_count": len(grouped),
         "record_count": sum(len(rows) for rows in grouped.values()),
-        "contains_full_raw_event_index": False,
-        "outputs": ["manifest.json", "entity-summary.json", "by-entity/"],
+        "pattern_count": pattern_catalog.get("pattern_count"),
+        "contains_full_raw_event_index": True,
+        "outputs": [
+            "manifest.json",
+            "normalized-events.jsonl",
+            "pattern-catalog.json",
+            "entity-summary.json",
+            "by-entity/",
+            "schema/",
+            "examples/",
+        ],
     }
     output_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 

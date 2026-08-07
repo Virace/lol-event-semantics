@@ -141,7 +141,7 @@ def record_id_for_normalized_record(record: Mapping[str, Any]) -> str:
     return f"{RECORD_ID_PREFIX}{hashlib.sha256(payload.encode('utf-8')).hexdigest()}"
 
 
-def apply_normalized_contract(rows: list[dict[str, object]], policy: PatternPolicy) -> None:
+def apply_normalized_contract(rows: list[dict[str, object]], policy: PatternPolicy) -> dict[str, Any]:
     """给兼容行增量写入 V2 identity、support、render 与 review 字段。
 
     Args:
@@ -150,6 +150,9 @@ def apply_normalized_contract(rows: list[dict[str, object]], policy: PatternPoli
 
     Raises:
         ValueError: 两条公开记录得到相同 record_id，或 pattern report 缺项。
+
+    Returns:
+        与写入行使用同一批数据计算的确定性 pattern inventory report。
     """
 
     pattern_report = build_pattern_report(rows, policy)
@@ -194,17 +197,111 @@ def apply_normalized_contract(rows: list[dict[str, object]], policy: PatternPoli
         row["rendered_labels"] = rendered_labels
         row["render_status"] = render_status
         row["warnings"] = _record_warnings(row)
+    return pattern_report
+
+
+def build_public_pattern_catalog(
+    pattern_report: Mapping[str, Any],
+    policy: PatternPolicy,
+) -> dict[str, object]:
+    """从 P1 inventory 生成面向消费者的确定性 Pattern Catalog。"""
+
+    patterns = pattern_report.get("patterns")
+    public_patterns = (
+        [_public_pattern(pattern, policy) for pattern in patterns if isinstance(pattern, dict)]
+        if isinstance(patterns, list)
+        else []
+    )
+    public_patterns.sort(key=lambda pattern: str(pattern["pattern_id"]))
+    return {
+        "schema_version": 1,
+        "pattern_signature_version": pattern_report.get("pattern_signature_version"),
+        "decision_id": policy.promotion_decisions.decision_id,
+        "pattern_count": len(public_patterns),
+        "patterns": public_patterns,
+    }
 
 
 def normalized_asset_kind(raw_event_name: str) -> str:
     """把 lexer asset kind 规整为公共四值枚举。"""
 
     asset_kind = (parse_shell(raw_event_name).asset_kind or "unknown").lower()
+    return public_asset_kind(asset_kind)
+
+
+def public_asset_kind(asset_kind: str) -> str:
+    """把内部 asset namespace 规整为公共四值枚举。"""
+
+    asset_kind = asset_kind.lower()
     if asset_kind in {"vo", "sfx"}:
         return asset_kind
     if asset_kind in CONTROL_ASSET_KINDS:
         return "control"
     return "unknown"
+
+
+def _public_pattern(pattern: Mapping[str, Any], policy: PatternPolicy) -> dict[str, object]:
+    """把 inventory pattern 投影为公共 Pattern Catalog 条目。"""
+
+    signature = pattern.get("signature")
+    signature_mapping = signature if isinstance(signature, dict) else {}
+    frame_type = str(signature_mapping.get("frame_type") or "missing")
+    frame = FRAME_REGISTRY.get(frame_type)
+    required_roles = list(frame.required_roles) if frame is not None else []
+    template_roles = (
+        {role for locale_templates in frame.templates.values() for roles in locale_templates.values() for role in roles}
+        if frame is not None
+        else set()
+    )
+    optional_roles = sorted(template_roles.difference(required_roles))
+    examples = pattern.get("representative_examples")
+    example_event_names = (
+        [
+            str(example.get("raw_event_name"))
+            for example in examples
+            if isinstance(example, dict) and example.get("raw_event_name")
+        ]
+        if isinstance(examples, list)
+        else []
+    )
+    counts = pattern.get("counts")
+    count_mapping = counts if isinstance(counts, dict) else {}
+    warning_counts = pattern.get("warning_counts")
+    return {
+        "pattern_id": str(pattern.get("pattern_id") or ""),
+        "signature": dict(signature_mapping),
+        "asset_kind": public_asset_kind(str(signature_mapping.get("asset_kind") or "unknown")),
+        "frame_type": frame_type,
+        "frame_version": signature_mapping.get("frame_version"),
+        "required_roles": required_roles,
+        "optional_roles": optional_roles,
+        "support_level": str(pattern.get("support_level") or policy.default_support_level),
+        "zh_CN_template": _public_frame_templates(frame_type, "zh_CN"),
+        "en_US_template": _public_frame_templates(frame_type, "en_US"),
+        "provenance_policy": {
+            "stable_requires_no_fallback": True,
+            "required_role_min_confidence": "medium",
+            "formal_locale": "zh_CN",
+        },
+        "example_event_names": example_event_names,
+        "record_count": int(count_mapping.get("record_count") or 0),
+        "warning_counts": dict(warning_counts) if isinstance(warning_counts, dict) else {},
+        "review_status": str(pattern.get("review_status") or policy.default_review_status),
+        "introduced_in": "pattern-signature.v1",
+        "superseded_by": None,
+    }
+
+
+def _public_frame_templates(frame_type: str, locale: str) -> dict[str, str] | None:
+    """把 frame role 顺序编码为公共符号模板。"""
+
+    frame = FRAME_REGISTRY.get(frame_type)
+    if frame is None:
+        return None
+    templates = frame.templates.get(locale)
+    if templates is None:
+        return None
+    return {mode: " ".join(f"{{{role}}}" for role in roles) for mode, roles in sorted(templates.items())}
 
 
 def _decomposition_identity_payload(record: EventDecompositionRecord) -> str:

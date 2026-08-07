@@ -27,7 +27,9 @@ class NormalizedLookupTests(unittest.TestCase):
             results = lookup_normalized_events(
                 root,
                 [raw],
-                render_options=RenderOptions(locale="zh_CN", mode="main", known_context=frozenset({"champion", "skin"})),
+                render_options=RenderOptions(
+                    locale="zh_CN", mode="main", known_context=frozenset({"champion", "skin"})
+                ),
             )
 
         self.assertEqual(len(results), 1)
@@ -48,6 +50,38 @@ class NormalizedLookupTests(unittest.TestCase):
             results = lookup_normalized_events(root, ["Missing_Event"])
 
         self.assertEqual(results, [{"raw_event_name": "Missing_Event", "matched": False, "matches": []}])
+
+    def test_lookup_prefers_v2_stream_over_legacy_shards(self) -> None:
+        """存在 normalized-events 时不再重复扫描 by-entity。"""
+
+        raw = "Play_sfx_GalioSkin13WPassiveDefense_OnBuffDeactivate"
+        stream_row = galio_record()
+        stream_row.update(
+            {
+                "record_id": "record-v1-" + "1" * 64,
+                "source_scope": "champions",
+                "asset_kind": "sfx",
+                "pattern_id": "pattern-v1-" + "2" * 64,
+                "support_level": "experimental",
+                "render_status": "rendered",
+                "review_status": "pending",
+            }
+        )
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            write_lookup_fixture(root, [galio_record()])
+            (root / "normalized-events.jsonl").write_text(
+                json.dumps(stream_row, ensure_ascii=False, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+
+            results = lookup_normalized_events(root, [raw])
+
+        match = results[0]["matches"][0]
+        self.assertEqual(len(results[0]["matches"]), 1)
+        self.assertEqual(match["path"], "normalized-events.jsonl")
+        self.assertEqual(match["record_id"], stream_row["record_id"])
+        self.assertEqual(match["support_level"], "experimental")
 
 
 class NormalizedLookupCliTests(unittest.TestCase):

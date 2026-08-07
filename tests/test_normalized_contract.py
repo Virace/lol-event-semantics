@@ -13,6 +13,7 @@ from lol_event_semantics.decomposition_lexer import decompose_event_name
 from lol_event_semantics.normalized_contract import (
     RECORD_ID_ALGORITHM_VERSION,
     apply_normalized_contract,
+    build_public_pattern_catalog,
     canonical_record_identity,
     merge_equivalent_decomposition_records,
     normalized_asset_kind,
@@ -164,6 +165,25 @@ class NormalizedContractTests(unittest.TestCase):
         row = minimal_normalized_row()
         with self.assertRaisesRegex(ValueError, "record_id collision"):
             apply_normalized_contract([row, copy.deepcopy(row)], self.policy)
+
+    def test_public_pattern_catalog_contains_consumer_contract_fields(self) -> None:
+        """公共 catalog 从同批 inventory 生成稳定模板、角色和审计字段。"""
+
+        row = minimal_normalized_row()
+        report = apply_normalized_contract([row], self.policy)
+        catalog = build_public_pattern_catalog(report, self.policy)
+        pattern = catalog["patterns"][0]
+
+        self.assertEqual(catalog["schema_version"], 1)
+        self.assertEqual(catalog["pattern_count"], 1)
+        self.assertEqual(pattern["pattern_id"], row["pattern_id"])
+        self.assertEqual(pattern["asset_kind"], "vo")
+        self.assertEqual(pattern["required_roles"], ["action"])
+        self.assertEqual(pattern["optional_roles"], ["champion", "companion", "skin"])
+        self.assertEqual(pattern["support_level"], "experimental")
+        self.assertIn("{action}", pattern["zh_CN_template"]["main"])
+        self.assertEqual(pattern["record_count"], 1)
+        self.assertEqual(pattern["example_event_names"], ["Play_vo_Annie_Move"])
 
     def test_public_asset_kind_maps_control_and_unknown_namespaces(self) -> None:
         """公共 asset_kind 只暴露 VO、SFX、control、unknown 四值。"""
