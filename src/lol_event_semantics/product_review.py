@@ -7,10 +7,12 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any, Mapping
 
+from .advisory_lock import AdvisoryLockUnavailableError, advisory_file_lock
 from .dataset_identity import review_decision_identity, review_decision_source_path, rules_tree_digest
 from .review_decisions import (
     BUNDLE_SCHEMA_VERSION,
     ReviewDecisionError,
+    TRANSACTION_LOCK_NAME,
     build_target,
     canonical_digest,
     load_decision_source,
@@ -38,9 +40,13 @@ def build_review_bundle(
     expected_inputs = _mapping(_mapping(_mapping(manifest.get("content_identity")).get("input_identity")).get("inputs"))
     expected_rules = expected_inputs.get("rules")
     expected_review = expected_inputs.get("review_decisions")
-    rules_before = rules_tree_digest(rules_root).to_dict()
-    source = load_decision_source(decision_source_path)
-    rules_after = rules_tree_digest(rules_root).to_dict()
+    try:
+        with advisory_file_lock(rules_root / TRANSACTION_LOCK_NAME):
+            rules_before = rules_tree_digest(rules_root).to_dict()
+            source = load_decision_source(decision_source_path, allow_transaction_state=True)
+            rules_after = rules_tree_digest(rules_root).to_dict()
+    except AdvisoryLockUnavailableError as exc:
+        raise ReviewDecisionError("另一 review source transaction 正在运行") from exc
     if rules_before != rules_after or rules_after != expected_rules:
         raise ReviewDecisionError("rules tree 与 candidate input identity 不一致")
     if review_decision_identity(source) != expected_review:

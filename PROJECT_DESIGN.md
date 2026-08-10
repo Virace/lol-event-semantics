@@ -24,7 +24,7 @@
 - 运行与提升边界：`dataset_runs.py` 独占创建 `.staging` run，固化 success/failure 终态，
   以 completed run + 小型 `approved-local.json` pointer 代替目录覆盖；promotion 在锁内执行
   clean/attestation/report/payload/CAS 门禁与原子替换。`product_review.py` 生成候选绑定的
-  Review Site/bundle，`review_decisions.py` 校验版本化决定、原子应用长期源并为最终数据集
+  Review Site/bundle，`review_decisions.py` 校验版本化决定，以 OS advisory lock + 可恢复 journal 原子应用长期源并为最终数据集
   approval 提供 fail-closed attestation。默认 lookup 只经 pointer 解析。
 - 模式报告边界：`pattern_catalog.py` 从 semantic frame 汇总 Pattern Catalog inventory，并仅把 exact approved 且结构合格的 pattern 投影为 Stable；`scripts/report_translation_patterns.py` 只是把 JSON/Markdown 写入调用方指定的被忽略报告路径，不反向修改规则源。
 - 入口边界：`full_refresh.py` 提供可注入 runner 的编排逻辑；`scripts/run_full_refresh.py`、下载/导入/构建/查询/模式报告脚本和 `normalized_lookup_cli.py` 负责 CLI 适配。

@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import copy
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -168,6 +170,65 @@ def test_source_review_recovers_prepared_journal_after_interruption(
     assert result["status"] == "applied"
     assert read_json(source_path)["status"] == "accepted"
     assert read_json(corpus_path)["review_status"] == "accepted"
+    assert not (tmp_path / review_module.TRANSACTION_DIR_NAME).exists()
+
+
+def test_source_review_recovers_after_hard_killed_process_leaves_lock(tmp_path: Path) -> None:
+    """进程硬退出留下 lock/journal 时，下次 apply 必须先恢复再完整提交。"""
+
+    bundle = source_bundle()
+    source_path = tmp_path / "review-decisions.v1.json"
+    corpus_path = tmp_path / "accepted-corpus.v1.json"
+    write_json(source_path, pending_source())
+    write_json(corpus_path, pending_corpus())
+    before_source = source_path.read_bytes()
+    before_corpus = corpus_path.read_bytes()
+    document = decision_document(bundle, [decision_for(target) for target in bundle["targets"]])
+    child_script = tmp_path / "hard_kill_apply.py"
+    child_script.write_text(
+        "\n".join(
+            [
+                "import json",
+                "import os",
+                "from pathlib import Path",
+                "import lol_event_semantics.review_decisions as review_module",
+                "bundle = json.loads(Path(" + repr(str(tmp_path / "bundle.json")) + ").read_text(encoding='utf-8'))",
+                "document = json.loads(Path("
+                + repr(str(tmp_path / "document.json"))
+                + ").read_text(encoding='utf-8'))",
+                "source_path = Path(" + repr(str(source_path)) + ")",
+                "corpus_path = Path(" + repr(str(corpus_path)) + ")",
+                "real_replace = review_module.os.replace",
+                "calls = 0",
+                "def hard_kill(source, destination):",
+                "    global calls",
+                "    calls += 1",
+                "    if calls == 2:",
+                "        os._exit(73)",
+                "    real_replace(source, destination)",
+                "review_module.os.replace = hard_kill",
+                "review_module.apply_source_review(bundle, document, source_path=source_path, corpus_path=corpus_path)",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    write_json(tmp_path / "bundle.json", bundle)
+    write_json(tmp_path / "document.json", document)
+
+    result = subprocess.run([sys.executable, str(child_script)], check=False)
+
+    assert result.returncode == 73
+    assert (tmp_path / review_module.TRANSACTION_LOCK_NAME).is_file()
+    assert (tmp_path / review_module.TRANSACTION_DIR_NAME).is_dir()
+    assert source_path.read_bytes() != before_source
+    assert corpus_path.read_bytes() == before_corpus
+
+    recovered = apply_source_review(bundle, document, source_path=source_path, corpus_path=corpus_path)
+
+    assert recovered["status"] == "applied"
+    assert read_json(source_path)["status"] == "accepted"
+    assert read_json(corpus_path)["review_status"] == "accepted"
+    assert (tmp_path / review_module.TRANSACTION_LOCK_NAME).is_file()
     assert not (tmp_path / review_module.TRANSACTION_DIR_NAME).exists()
 
 

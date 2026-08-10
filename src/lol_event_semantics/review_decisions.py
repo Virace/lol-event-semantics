@@ -12,6 +12,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Iterable, Iterator, Mapping
 
+from .advisory_lock import AdvisoryLockUnavailableError, advisory_file_lock
 from .dataset_identity import canonical_json_bytes, review_decision_set_digest
 
 __all__ = [
@@ -118,8 +119,19 @@ def load_decision_set(path: Path) -> dict[str, Any]:
 def load_decision_source(path: Path, *, allow_transaction_state: bool = False) -> dict[str, Any]:
     """读取并校验提交入库的长期 review decision source。"""
 
-    if not allow_transaction_state:
-        _reject_unfinished_transaction(path)
+    if allow_transaction_state:
+        return _load_decision_source_unlocked(path)
+    try:
+        with _review_transaction_lock(path):
+            _reject_unfinished_transaction(path)
+            return _load_decision_source_unlocked(path)
+    except ReviewApplyError as exc:
+        raise ReviewDecisionError(str(exc)) from exc
+
+
+def _load_decision_source_unlocked(path: Path) -> dict[str, Any]:
+    """在调用方持有 transaction lock 时读取长期 decision source。"""
+
     document = _read_object(path)
     if document.get("schema_version") != DECISION_SOURCE_SCHEMA_VERSION:
         raise ReviewDecisionError(f"不支持的 decision source schema: {path}")
@@ -573,19 +585,15 @@ def _replace_documents(documents: Mapping[Path, Mapping[str, object]]) -> None:
 def _review_transaction_lock(source_path: Path) -> Iterator[None]:
     lock = source_path.parent / TRANSACTION_LOCK_NAME
     try:
-        _write_bytes(lock, b"locked\n")
-    except FileExistsError as exc:
+        with advisory_file_lock(lock):
+            yield
+    except AdvisoryLockUnavailableError as exc:
         raise ReviewApplyError(f"另一 review source transaction 正在运行: {lock}") from exc
-    try:
-        yield
-    finally:
-        lock.unlink(missing_ok=True)
 
 
 def _reject_unfinished_transaction(source_path: Path) -> None:
     journal = source_path.parent / TRANSACTION_DIR_NAME
-    lock = source_path.parent / TRANSACTION_LOCK_NAME
-    if journal.exists() or lock.exists():
+    if journal.exists():
         raise ReviewDecisionError("检测到未收口的 review source transaction；请重新执行 apply 触发恢复")
 
 

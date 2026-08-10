@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
+from .advisory_lock import AdvisoryLockUnavailableError, advisory_file_lock
 from .raw_events import is_excluded_event_name
 from .reference_collection import read_yaml
 
@@ -97,10 +98,11 @@ def tree_digest(root: Path) -> TreeDigest:
 def rules_tree_digest(rules_root: Path) -> TreeDigest:
     """摘要语义规则树，review 审计 envelope 由独立 identity 规范化。"""
 
-    if (rules_root / REVIEW_TRANSACTION_DIR_NAME).exists() or (rules_root / REVIEW_TRANSACTION_LOCK_NAME).exists():
+    if (rules_root / REVIEW_TRANSACTION_DIR_NAME).exists():
         raise ValueError("rules tree 存在未收口的 review source transaction")
     source = review_decision_source_path(rules_root)
-    paths = [path for path in rules_root.rglob("*") if _is_identity_file(path) and path.resolve() != source]
+    lock = (rules_root / REVIEW_TRANSACTION_LOCK_NAME).resolve()
+    paths = [path for path in rules_root.rglob("*") if _is_identity_file(path) and path.resolve() not in {source, lock}]
     return paths_digest(rules_root, paths)
 
 
@@ -300,12 +302,18 @@ def build_input_identity(
         for path in reference_root.rglob("*")
         if _is_identity_file(path) and path.resolve() != (reference_root / "manifest.yaml").resolve()
     ]
+    try:
+        with advisory_file_lock(rules_root / REVIEW_TRANSACTION_LOCK_NAME):
+            rules_identity = rules_tree_digest(rules_root).to_dict()
+            review_identity = review_decision_identity(_read_json_object(review_decision_source_path(rules_root)))
+    except AdvisoryLockUnavailableError as exc:
+        raise ValueError("另一 review source transaction 正在运行") from exc
     inputs = {
         "raw": tree_digest(raw_root).to_dict(),
         "reference": paths_digest(reference_root, reference_files).to_dict(),
         "reference_manifest": semantic_document_identity(reference_manifest, excluded_keys={"updated_at"}),
-        "rules": rules_tree_digest(rules_root).to_dict(),
-        "review_decisions": review_decision_identity(_read_json_object(review_decision_source_path(rules_root))),
+        "rules": rules_identity,
+        "review_decisions": review_identity,
         "overrides": tree_digest(overrides_root).to_dict(),
         "contract_assets": contract_assets_digest(contract_assets_root).to_dict(),
         "generator": generator_tree_digest(repo_root).to_dict(),
