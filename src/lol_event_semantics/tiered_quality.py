@@ -289,6 +289,7 @@ def build_gate_report(
             "eligible": False,
             "gate_version": GATE_VERSION,
             "automatic_gates_passed": automatic_passed,
+            "lifecycle_state": "awaiting_manual_review" if automatic_passed else "validated",
             "reason": "manual review pending" if automatic_passed else "automatic quality gates failed",
         },
     }

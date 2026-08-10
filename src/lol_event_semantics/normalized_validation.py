@@ -11,6 +11,7 @@ from typing import Any
 from .dataset_identity import (
     CONTENT_DIGEST_VERSION,
     INPUT_IDENTITY_VERSION,
+    REVIEW_DECISION_IDENTITY_VERSION,
     content_digest,
     describe_payload_files,
     unmanaged_payload_paths,
@@ -702,6 +703,22 @@ def _validate_v2_manifest_identity(
         issues.append(error("quality_status_invalid", "manifest.json", "quality_status 不受支持。"))
     if quality_status != "not_evaluated" and not isinstance(identity.get("quality_gate_version"), str):
         issues.append(error("quality_gate_version_missing", "manifest.json", "已评估数据集缺少 quality gate version。"))
+    if quality_status != "not_evaluated" and isinstance(input_identity, dict):
+        inputs = input_identity.get("inputs")
+        review_input = inputs.get("review_decisions") if isinstance(inputs, dict) else None
+        if not _valid_review_decision_identity(review_input):
+            issues.append(error("review_decision_identity_invalid", "manifest.json", "长期审核决定身份缺失或无效。"))
+        elif not isinstance(review, dict) or any(
+            review.get(target) != review_input.get(source)
+            for target, source in (
+                ("decision_set_id", "decision_set_id"),
+                ("decision_set_digest", "digest"),
+                ("decision_status", "status"),
+            )
+        ):
+            issues.append(
+                error("review_decision_identity_mismatch", "manifest.json", "审核决定身份未进入内容 identity。")
+            )
 
     files = manifest.get("files")
     if not isinstance(files, list) or not all(isinstance(entry, dict) for entry in files):
@@ -765,7 +782,24 @@ def _valid_input_identity_shape(identity: dict[str, Any]) -> bool:
         digest = value.get("digest") if isinstance(value, dict) else None
         if not isinstance(digest, str) or re.fullmatch(r"[0-9a-f]{64}", digest) is None:
             return False
+    review_decisions = inputs.get("review_decisions")
+    if review_decisions is not None and not _valid_review_decision_identity(review_decisions):
+        return False
     return True
+
+
+def _valid_review_decision_identity(value: object) -> bool:
+    """检查规范化 review decision identity 形状。"""
+
+    return (
+        isinstance(value, dict)
+        and value.get("algorithm") == REVIEW_DECISION_IDENTITY_VERSION
+        and isinstance(value.get("digest"), str)
+        and re.fullmatch(r"[0-9a-f]{64}", value["digest"]) is not None
+        and isinstance(value.get("decision_set_id"), str)
+        and bool(value["decision_set_id"])
+        and value.get("status") in {"pending", "accepted"}
+    )
 
 
 def _field_counts(rows: list[dict[str, Any]], field: str) -> dict[str, int]:

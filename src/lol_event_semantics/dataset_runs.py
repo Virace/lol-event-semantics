@@ -20,6 +20,7 @@ from .dataset_identity import (
     unmanaged_payload_paths,
 )
 from .full_refresh import RefreshResult
+from .review_decisions import load_review_bundle, validate_dataset_approval
 
 RUN_SCHEMA_VERSION = 1
 COMPLETION_SCHEMA_VERSION = 1
@@ -65,6 +66,7 @@ class CompletedDatasetRun:
     dataset_id: str
     content_digest: str
     quality_gate: str
+    lifecycle_state: str
 
     @property
     def normalized_root(self) -> Path:
@@ -178,6 +180,15 @@ def complete_dataset_run(
     )
     if not isinstance(eligibility.get("eligible"), bool):
         raise DatasetRunError("promotion_eligibility.eligible 必须是 bool")
+    lifecycle_state = eligibility.get("lifecycle_state")
+    if lifecycle_state is None:
+        lifecycle_state = (
+            "awaiting_manual_review"
+            if eligibility.get("automatic_gates_passed") is True and eligibility.get("eligible") is False
+            else "validated"
+        )
+    if lifecycle_state not in {"validated", "awaiting_manual_review"}:
+        raise DatasetRunError("promotion_eligibility.lifecycle_state 无效")
     completed_at = now or datetime.now(UTC)
     document = {
         "schema_version": COMPLETION_SCHEMA_VERSION,
@@ -190,6 +201,7 @@ def complete_dataset_run(
         "normalized_manifest_sha256": sha256_file(run.normalized_root / "manifest.json"),
         "generator_state": _manifest_generator_state(manifest),
         "quality_gate": quality_gate,
+        "lifecycle_state": lifecycle_state,
         "promotion_eligibility": eligibility,
         "non_blocking_failures": non_blocking_failures,
         "steps": _step_documents(result),
@@ -216,6 +228,7 @@ def complete_dataset_run(
         dataset_id=dataset_id,
         content_digest=content_digest,
         quality_gate=quality_gate,
+        lifecycle_state=str(lifecycle_state),
     )
 
 
@@ -285,6 +298,9 @@ def load_completed_run(runs_root: Path, run_id: str) -> CompletedDatasetRun:
         raise DatasetRunError("completion 与 normalized manifest 的 generator state 不一致")
     _verify_report_files(root / "reports", completion.get("reports"))
     quality_gate = _required_string(completion, "quality_gate", "completion")
+    lifecycle_state = completion.get("lifecycle_state", "validated")
+    if lifecycle_state not in {"validated", "awaiting_manual_review"}:
+        raise DatasetRunError("completion lifecycle_state 无效")
     return CompletedDatasetRun(
         runs_root=runs_root,
         run_id=run_id,
@@ -292,6 +308,7 @@ def load_completed_run(runs_root: Path, run_id: str) -> CompletedDatasetRun:
         dataset_id=dataset_id,
         content_digest=content_digest,
         quality_gate=quality_gate,
+        lifecycle_state=str(lifecycle_state),
     )
 
 
@@ -300,6 +317,7 @@ def promote_completed_run(
     run_id: str,
     *,
     expected_previous_digest: str | None,
+    approval: Mapping[str, Any] | None = None,
     now: datetime | None = None,
 ) -> dict[str, object]:
     """在独占锁内用 CAS 与原子替换提升一个 clean completed run。"""
@@ -317,9 +335,25 @@ def promote_completed_run(
         if completed.quality_gate != "passed":
             raise DatasetRunError(f"quality gate 未完全通过，不得 promotion: {completed.quality_gate}")
         eligibility = completion.get("promotion_eligibility")
-        if not isinstance(eligibility, dict) or eligibility.get("eligible") is not True:
-            reason = eligibility.get("reason") if isinstance(eligibility, dict) else "missing attestation"
-            raise DatasetRunError(f"candidate 尚无 promotion eligibility: {reason}")
+        approval_attestation: dict[str, object] | None = None
+        if not isinstance(eligibility, dict):
+            raise DatasetRunError("candidate 尚无 promotion eligibility: missing attestation")
+        if eligibility.get("eligible") is not True:
+            if eligibility.get("automatic_gates_passed") is not True:
+                reason = eligibility.get("reason", "automatic quality gates failed")
+                raise DatasetRunError(f"candidate 尚无 promotion eligibility: {reason}")
+            if approval is None:
+                raise DatasetRunError("candidate 尚无 promotion eligibility: manual review pending")
+            try:
+                bundle = load_review_bundle(completed.root / "reports" / "review-site" / "review-bundle.json")
+                if (
+                    bundle.get("dataset_id") != completed.dataset_id
+                    or bundle.get("content_digest") != completed.content_digest
+                ):
+                    raise DatasetRunError("review bundle 与 completed candidate 身份不一致")
+                approval_attestation = validate_dataset_approval(bundle, approval)
+            except ValueError as exc:
+                raise DatasetRunError(f"dataset approval 无效: {exc}") from exc
         if completion.get("non_blocking_failures") != []:
             raise DatasetRunError("含 non-blocking failure 的 candidate 不得 promotion")
 
@@ -342,6 +376,8 @@ def promote_completed_run(
             "promoted_at": promoted_at.isoformat(),
             "previous_content_digest": actual_previous,
         }
+        if approval_attestation is not None:
+            pointer["review"] = approval_attestation
         _replace_json_atomically(runs_root / APPROVED_POINTER_NAME, pointer)
         return pointer
 

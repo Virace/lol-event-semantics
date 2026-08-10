@@ -103,9 +103,9 @@ uv run python scripts/report_translation_patterns.py `
   --output-md .temp\manual-reports\translation-patterns.md
 ```
 
-该报告从 semantic frame 派生模式，不以 `BaseName,Label` 作为主模型。默认规则输入为 `rules/translation_patterns.yaml`；JSON 和 Markdown 输出必须显式给定并应位于被忽略的报告目录。当前 inventory 有独立版本化报告 schema；review importer、首个 approved-local promotion 与远端发布仍不属于当前实现。
+该报告从 semantic frame 派生模式，不以 `BaseName,Label` 作为主模型。默认规则输入为 `rules/translation_patterns.yaml`；JSON 和 Markdown 输出必须显式给定并应位于被忽略的报告目录。当前 inventory 有独立版本化报告 schema；首个 approved-local promotion 与远端发布仍不属于当前实现。
 
-本地一键刷新全链（decompose→build→validate→quality→metrics→ratchet）：
+本地一键刷新全链（decompose→build→validate→quality→review→metrics→ratchet）：
 
 ```powershell
 uv run python scripts/run_full_refresh.py `
@@ -117,12 +117,21 @@ uv run python scripts/run_full_refresh.py `
 
 每次调用先独占创建 `.staging/<run-id>`，所有 work/normalized/reports 都绑定该 run；任一步阻断失败即写 `failure.json` 并固化到 `failed/`，成功写 `completion.json` 后同卷 rename 到 `completed/`。`--allow-ratchet-regression` 可让 ratchet 恶化只告警并保留 completed candidate，但该 candidate 不可 promotion；`--update-first`（需配 `--game-version` `--game-data-base-url`）在核心链前先跑在线 raw/reference 更新。
 
-promotion CLI 只提供原子机制；P4 attestation 在 P5 用户 Review 前仍明确 `eligible=false`，真实候选会 fail-closed：
+`reports/review-site/` 中的产品审核页导出候选绑定的决定。全接受 source review 后，可用统一入口原子应用并验证；任何需要修改的 action 都会在写前停止，留给 P5-C2 集中修规则：
+
+```powershell
+uv run python scripts/manage_review.py apply `
+  --bundle dist\runs\completed\<run-id>\reports\review-site\review-bundle.json `
+  --decisions <review-decisions.json>
+```
+
+promotion CLI 在自动门禁之外还验证最终 dataset approval；没有 `--decisions` 时，等待人工审核的真实候选会 fail-closed：
 
 ```powershell
 uv run python scripts/promote_dataset_run.py `
   --runs-root dist\runs `
   --run-id <run-id> `
+  --decisions <dataset-approval.json> `
   --expected-previous-digest none
 ```
 
@@ -145,12 +154,13 @@ uv run lookup-normalized-event `
 - `update_raw_events.py`：把本轮 raw round txt 差集合并进累计 `raw/events/`，并可串起 reference 导入。
 - `.github/workflows/update-raw-events.yml`：手动触发的 raw/reference 更新 workflow；可消费同一 workflow run 中的前置 raw round artifact，也可在可选 `riotmanifest` 可用时用 GAME manifest + `.github/raw-event-requests.example.json` 形状的请求表生成 raw round，报告作为 artifact 保存。
 - `decompose_events.py`：把 raw event name 拆成 lexical atoms、semantic slots、JSONL 产物和 review reports；解释阶段只读取内部 `reference/`，可用 `--write-low-trust-rules` 额外导出低信任规则命中表。
-- `build_review_site.py`：从 decomposition JSONL 构建本地静态 review 页面；输出目录需要用本地 HTTP 服务打开，因为页面数据在 `review-data.json`。
+- `build_review_site.py`：从 decomposition JSONL 构建通用维护 review 页面；它不是 P5 产品批准入口。
 - `build_normalized_outputs.py`：从 decomposition JSONL 生成指定 candidate root；先对显式 raw/reference/rules/overrides/source/profile/contract 输入做冻结预检与树摘要，再合并 champions/maps 重叠分片中的等价记录，写出唯一 `record_id`、来源 provenance、pattern/support/render/review 字段、`quality-summary.json` 和确定性 manifest content identity。V2 首选文件是 `normalized-events.jsonl`、`pattern-catalog.json` 与 `quality-summary.json`，同时复制 schema/examples/accepted corpus/无源码 consumer，并保留兼容视图。
 - `report_translation_patterns.py`：只读 Pattern Catalog 维护报告入口；默认读取 `rules/translation_patterns.yaml`，以 semantic frame 汇总 pattern 并将 JSON/Markdown 写入显式指定的报告路径。只有 exact approved 且结构合格的 pattern 为 Stable；未来同 family 新 ID 仍回到 Experimental/pending。
 - `check_tiered_quality.py`：读取 candidate 内的确定性质量摘要和全局 validation 报告，独立执行冻结 decision、86-pattern 集合摘要与 5,061-record 总数的 Stable absolute gates，并相对当前 approved-local 输出 `quality-diff.json`；所有 support-level 新增、移除、晋级和降级都进入 Review 明细，Stable pattern/record 降级会阻断，Experimental warning 只报告。
-- `run_full_refresh.py`：本地一键刷新薄壳，创建隔离 run 后按序串联 decompose→build→validate→quality→metrics→ratchet 六个子进程（可选 `--update-first`）；阻断失败固化 failed，成功固化 completed candidate，不自动 promotion。P4 attestation 只证明自动门禁，P5 Review 前 `eligible=false`。步骤串联逻辑在 `src/lol_event_semantics/full_refresh.py`，run/pointer 状态机在 `dataset_runs.py`。
-- `promote_dataset_run.py`：对 completed run 做 clean generator、正式 eligibility、报告/payload 摘要、独占锁与 expected previous digest CAS 门禁，再原子替换 `approved-local.json`；冲突/锁/门禁分别非 0 退出。
+- `manage_review.py`：构建 candidate-bound 产品 Review Site/bundle，导入并验证版本化决定；全接受 source review 使用 journal/lock 更新长期 decision source 与 accepted corpus，其他 action fail-closed。
+- `run_full_refresh.py`：本地一键刷新薄壳，创建隔离 run 后按序串联 decompose→build→validate→quality→review→metrics→ratchet 七个子进程（可选 `--update-first`）；阻断失败固化 failed，成功固化 completed candidate，不自动 promotion。自动门禁只证明技术状态，用户 Review 前 `eligible=false`。步骤串联逻辑在 `src/lol_event_semantics/full_refresh.py`，run/pointer 状态机在 `dataset_runs.py`。
+- `promote_dataset_run.py`：对 completed run 做 clean generator、正式 eligibility、报告/payload 摘要、独占锁与 expected previous digest CAS 门禁；等待人工 Review 的候选还必须验证 `--decisions` 中的 dataset approval，再原子替换 `approved-local.json`。冲突/锁/门禁分别非 0 退出。
 - `validate_normalized_outputs.py`：校验指定 candidate/approved normalized root；硬错误覆盖 manifest/summary/JSONL 一致性、manifest 文件摘要与 content digest 复算、实体规范化、记录 schema、translation 结构和 renderer smoke，质量警告覆盖可疑实体归属、重复 raw、fallback label、低信任规则残留等；`--fail-on-warning` 可在 warning 存在时返回 2。
 - `lookup-normalized-event`：项目 console script，默认只解引用 `dist/runs/approved-local.json`；维护者可显式传 `--normalized-root` 查询 candidate。按 `raw_event_name` 精确匹配，优先 V2 单流、缺失时回落兼容分片。`scripts/lookup_normalized_event.py` 仅保留为兼容包装。
 - `migrate_contextual_aliases.py`：把 `rules/contextual_aliases.yaml` 迁移为 `rules/contextual/**/*.yaml` 分片。

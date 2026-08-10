@@ -58,7 +58,7 @@ class BuildStepsTests(unittest.TestCase):
 
         self.assertEqual(
             step_names(steps),
-            ["decompose", "build", "validate", "quality", "metrics", "ratchet"],
+            ["decompose", "build", "validate", "quality", "review", "metrics", "ratchet"],
         )
 
         decompose = find_argv(steps, "decompose")
@@ -85,6 +85,21 @@ class BuildStepsTests(unittest.TestCase):
         self.assertEqual(quality[quality.index("--validation-json") + 1], validation_json)
         self.assertTrue(quality[quality.index("--output-json") + 1].endswith("quality-gates.json"))
         self.assertTrue(quality[quality.index("--support-diff-json") + 1].endswith("quality-diff.json"))
+
+        review = find_argv(steps, "review")
+        self.assertIn("manage_review.py", review[1])
+        self.assertEqual(review[2], "build")
+        self.assertEqual(review[review.index("--normalized-root") + 1], as_path("out/normalized"))
+        self.assertEqual(
+            review[review.index("--support-diff") + 1],
+            quality[quality.index("--support-diff-json") + 1],
+        )
+        self.assertEqual(
+            review[review.index("--decision-source") + 1],
+            as_path("rules/review-decisions.v1.json"),
+        )
+        self.assertEqual(review[review.index("--rules-root") + 1], as_path("rules"))
+        self.assertTrue(review[review.index("--output-root") + 1].endswith("review-site"))
 
         ratchet = find_argv(steps, "ratchet")
         self.assertIn("--baseline", ratchet)
@@ -114,7 +129,7 @@ class BuildStepsTests(unittest.TestCase):
 
         self.assertEqual(
             step_names(steps),
-            ["update", "decompose", "build", "validate", "quality", "metrics", "ratchet"],
+            ["update", "decompose", "build", "validate", "quality", "review", "metrics", "ratchet"],
         )
         update = find_argv(steps, "update")
         self.assertIn("update_raw_events.py", update[1])
@@ -131,6 +146,22 @@ class BuildStepsTests(unittest.TestCase):
 
         with self.assertRaises(SystemExit):
             parse_args(["--update-first"])
+
+    def test_decision_source_must_be_fixed_under_rules_root(self) -> None:
+        """外部 decision source 不得影响未绑定该 source 的 candidate。"""
+
+        with self.assertRaises(SystemExit):
+            parse_args(["--decision-source", "outside/review-decisions.v1.json"])
+
+        args = parse_args(
+            [
+                "--rules-root",
+                "fixture-rules",
+                "--decision-source",
+                "fixture-rules/review-decisions.v1.json",
+            ]
+        )
+        self.assertEqual(args.decision_source, Path("fixture-rules/review-decisions.v1.json"))
 
 
 class RunRefreshStepsTests(unittest.TestCase):
@@ -274,7 +305,7 @@ class MainTests(unittest.TestCase):
         self.assertEqual(code, 1)
         # metrics 在 ratchet 之前执行，故 ratchet 阻断失败时 metrics 已产出。
         self.assertIn("metrics", calls)
-        self.assertEqual(calls, ["decompose", "build", "validate", "quality", "metrics", "ratchet"])
+        self.assertEqual(calls, ["decompose", "build", "validate", "quality", "review", "metrics", "ratchet"])
 
 
 def materialize_run_outputs(name: str, argv: list[str]) -> None:
@@ -316,6 +347,10 @@ def materialize_run_outputs(name: str, argv: list[str]) -> None:
             encoding="utf-8",
         )
         diff_path.write_text("{}\n", encoding="utf-8")
+    elif name == "review":
+        output_root = Path(argv[argv.index("--output-root") + 1])
+        output_root.mkdir(parents=True, exist_ok=True)
+        (output_root / "review-bundle.json").write_text("{}\n", encoding="utf-8")
 
 
 if __name__ == "__main__":

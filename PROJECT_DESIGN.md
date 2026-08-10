@@ -23,7 +23,9 @@
 - 数据集身份边界：`dataset_identity.py` 对冻结 profile 做版本/计数预检，对 raw、reference、rules、overrides、契约资产和生成器源码计算规范化摘要，并从有序 payload 文件摘要派生 `content_digest`/`dataset_id`；运行时间与路径只属于后续 run metadata。
 - 运行与提升边界：`dataset_runs.py` 独占创建 `.staging` run，固化 success/failure 终态，
   以 completed run + 小型 `approved-local.json` pointer 代替目录覆盖；promotion 在锁内执行
-  clean/attestation/report/payload/CAS 门禁与原子替换。默认 lookup 只经 pointer 解析。
+  clean/attestation/report/payload/CAS 门禁与原子替换。`product_review.py` 生成候选绑定的
+  Review Site/bundle，`review_decisions.py` 校验版本化决定、原子应用长期源并为最终数据集
+  approval 提供 fail-closed attestation。默认 lookup 只经 pointer 解析。
 - 模式报告边界：`pattern_catalog.py` 从 semantic frame 汇总 Pattern Catalog inventory，并仅把 exact approved 且结构合格的 pattern 投影为 Stable；`scripts/report_translation_patterns.py` 只是把 JSON/Markdown 写入调用方指定的被忽略报告路径，不反向修改规则源。
 - 入口边界：`full_refresh.py` 提供可注入 runner 的编排逻辑；`scripts/run_full_refresh.py`、下载/导入/构建/查询/模式报告脚本和 `normalized_lookup_cli.py` 负责 CLI 适配。
 
@@ -41,6 +43,7 @@ raw/events/ + reference/ + rules/ + overrides/
   -> normalized translation builder
   -> dist/runs/.staging/<run>/{normalized,reports,work}
   -> dist/runs/completed/<run>/ or dist/runs/failed/<run>/
+  -> reports/review-site/{review-bundle.json,index.html}
   -> dist/runs/approved-local.json (promotion only)
   -> global validator + Stable quality gates/support diff + trend metrics/ratchet
 
@@ -58,8 +61,9 @@ canonical normalized rows + committed data/schema + data/examples
 
 - `uv run python scripts/download_sources.py`：准备字符串表、大厅 JSON、皮肤 BIN、RST hash 与 raw round。
 - `uv run python scripts/update_raw_events.py`：合并 raw/reference 并写更新报告。
-- `uv run python scripts/run_full_refresh.py`：在单个隔离 run 内依次执行 decompose、build、validate、quality、metrics、ratchet；quality 阶段以冻结的 decision/pattern-set/record-count 检查 Stable 绝对范围，并将所有 support-level 新增、移除、晋级和降级写入结构化 diff（Stable 降级阻断）；Stable/global/support-diff 任一自动门禁失败即固化 failed，成功固化 completed candidate，但 P5 Review 前不自动 promotion。
-- `uv run python scripts/promote_dataset_run.py`：对带正式门禁 attestation 的 clean completed run 做 lock/CAS/payload 复核与 approved pointer 原子替换。
+- `uv run python scripts/run_full_refresh.py`：在单个隔离 run 内依次执行 decompose、build、validate、quality、review、metrics、ratchet；quality 阶段以冻结的 decision/pattern-set/record-count 检查 Stable 绝对范围，并将所有 support-level 新增、移除、晋级和降级写入结构化 diff（Stable 降级阻断）；review 阶段生成与 candidate 身份绑定的静态页面和 bundle。Stable/global/support-diff 任一自动门禁失败即固化 failed，成功固化 completed candidate，但人工 Review 前不自动 promotion。
+- `uv run python scripts/manage_review.py`：构建、校验并应用版本化人工决定；source review 仅允许全接受时同时替换 decision source 与 accepted corpus，其他 action fail-closed。
+- `uv run python scripts/promote_dataset_run.py`：对带正式门禁 attestation 的 clean completed run 做 lock/CAS/payload 复核；当 candidate 等待人工审核时还必须验证 `--decisions` 指向的 dataset approval，再原子替换 approved pointer。
 - `uv run lookup-normalized-event`：按事件名查询生成的 normalized 记录并渲染指定上下文。
 - `uv run python scripts/report_translation_patterns.py`：只读生成 Pattern Catalog JSON/Markdown 报告；默认规则输入为 `rules/translation_patterns.yaml`，输出路径必须由 `--output-json` 与 `--output-md` 显式指定。
 - `.github/workflows/ci.yml`：锁定环境中的静态检查、类型检查与离线测试。
@@ -80,6 +84,6 @@ canonical normalized rows + committed data/schema + data/examples
 - approved pointer 指向的 `normalized/manifest.json`、`normalized-events.jsonl`、`pattern-catalog.json`、`quality-summary.json`、schemas/examples、兼容分片及记录内 `translation` 是下游数据 contract。V2 manifest 的文件摘要与内容身份由 validator 复算，任一 payload 漂移均为硬错误。
 - `TRANSLATION_SCHEMA_VERSION`、`FRAME_VERSION`、frame registry 和 required roles 共同约束 renderer/validator；变更时必须同步 builder、validator、测试和文档。
 - `zh_CN` 是当前正式渲染 locale；VO 优先支持，SFX 不删除但按 Stable、Experimental、Unsupported 区分能力边界。
-- `16.14` 是本轮 frozen acceptance profile，不参与未来 live 版本的默认选择。正式消费者 Pattern Catalog schema、本地 promotion 机制与分层绝对门禁 attestation 已实现；review importer、首个 approved 数据集与远端发布仍是后续工作。当前 inventory 仍使用独立的报告 schema。
+- `16.14` 是本轮 frozen acceptance profile，不参与未来 live 版本的默认选择。正式消费者 Pattern Catalog schema、本地 promotion 机制、分层绝对门禁 attestation 与全接受 source review importer 已实现；非 accept 决定的产品修复、首个 approved 数据集与远端发布仍是后续工作。当前 inventory 仍使用独立的报告 schema。
 
 当前没有在线服务、数据库或跨进程消息协议。若未来引入这些边界，必须先明确数据所有权、版本兼容、失败恢复和部署环境，再更新本设计与项目约束。

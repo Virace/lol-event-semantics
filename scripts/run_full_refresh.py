@@ -28,6 +28,7 @@ STEP_DECOMPOSE = "decompose"
 STEP_BUILD = "build"
 STEP_VALIDATE = "validate"
 STEP_QUALITY = "quality"
+STEP_REVIEW = "review"
 STEP_RATCHET = "ratchet"
 STEP_METRICS = "metrics"
 
@@ -43,6 +44,7 @@ class FullRefreshArgs:
     overrides_root: Path
     contract_assets_root: Path
     pattern_policy: Path
+    decision_source: Path
     sources_manifest: Path
     frozen_profile: Path
     runs_root: Path
@@ -294,6 +296,25 @@ def build_steps(args: FullRefreshArgs, paths: RefreshPaths) -> list[RefreshStep]
             ),
         )
     )
+    steps.append(
+        (
+            STEP_REVIEW,
+            script_argv(
+                "manage_review.py",
+                "build",
+                "--normalized-root",
+                str(paths.output_root),
+                "--support-diff",
+                str(support_diff_json),
+                "--decision-source",
+                str(args.decision_source),
+                "--rules-root",
+                str(args.rules_root),
+                "--output-root",
+                str(paths.report_root / "review-site"),
+            ),
+        )
+    )
     # metrics 置于 ratchet 之前：与 CI（metrics if:always 在 ratchet 前）对齐，
     # 使 ratchet 阻断失败时 metrics JSON 已产出，兑现 CI 本地等价物定位。
     steps.append(
@@ -349,7 +370,7 @@ def parse_args(argv: list[str] | None = None) -> FullRefreshArgs:
     """解析命令行参数。"""
 
     parser = argparse.ArgumentParser(
-        description="Run the local decompose->build->validate->quality->metrics->ratchet refresh chain.",
+        description="Run the local decompose->build->validate->quality->review->metrics->ratchet refresh chain.",
     )
     parser.add_argument("--repo-root", type=Path, default=Path("."), help="Repository root for generator identity.")
     parser.add_argument("--raw-root", type=Path, default=Path("raw/events"), help="Cumulative raw events root.")
@@ -367,6 +388,12 @@ def parse_args(argv: list[str] | None = None) -> FullRefreshArgs:
         type=Path,
         default=Path("rules/translation_patterns.yaml"),
         help="Versioned translation pattern policy.",
+    )
+    parser.add_argument(
+        "--decision-source",
+        type=Path,
+        default=Path("rules/review-decisions.v1.json"),
+        help="Committed product review decision source.",
     )
     parser.add_argument(
         "--sources-manifest",
@@ -403,6 +430,9 @@ def parse_args(argv: list[str] | None = None) -> FullRefreshArgs:
 
     if namespace.update_first and (namespace.game_version is None or namespace.game_data_base_url is None):
         parser.error("--update-first requires --game-version and --game-data-base-url")
+    expected_decision_source = (namespace.rules_root / "review-decisions.v1.json").resolve()
+    if namespace.decision_source.resolve() != expected_decision_source:
+        parser.error("--decision-source must be <rules-root>/review-decisions.v1.json")
 
     return FullRefreshArgs(
         repo_root=namespace.repo_root,
@@ -412,6 +442,7 @@ def parse_args(argv: list[str] | None = None) -> FullRefreshArgs:
         overrides_root=namespace.overrides_root,
         contract_assets_root=namespace.contract_assets_root,
         pattern_policy=namespace.pattern_policy,
+        decision_source=namespace.decision_source,
         sources_manifest=namespace.sources_manifest,
         frozen_profile=namespace.frozen_profile,
         runs_root=namespace.runs_root,

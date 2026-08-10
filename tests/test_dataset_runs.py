@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 
 from lol_event_semantics.dataset_identity import content_digest
+from lol_event_semantics.review_decisions import canonical_digest, decision_set_digest
 from lol_event_semantics.dataset_runs import (
     APPROVED_POINTER_NAME,
     PROMOTION_LOCK_NAME,
@@ -129,6 +130,95 @@ def test_candidate_without_absolute_gate_attestation_cannot_promote(tmp_path: Pa
         promote_completed_run(tmp_path, candidate.run_id, expected_previous_digest=None)
 
     assert not (tmp_path / APPROVED_POINTER_NAME).exists()
+
+
+def test_manual_review_candidate_requires_valid_dataset_approval(tmp_path: Path) -> None:
+    candidate = complete_manual_review_candidate(tmp_path, seed="manual-pending")
+
+    with pytest.raises(DatasetRunError, match="manual review pending"):
+        promote_completed_run(tmp_path, candidate.run_id, expected_previous_digest=None)
+
+    assert not (tmp_path / APPROVED_POINTER_NAME).exists()
+
+
+def test_manual_review_rejects_stale_identity_or_target_digest(tmp_path: Path) -> None:
+    candidate = complete_manual_review_candidate(tmp_path, seed="stale")
+    approval = dataset_approval(candidate)
+    stale_identity = {**approval, "dataset_id": "other-dataset"}
+
+    with pytest.raises(DatasetRunError, match="dataset approval 无效"):
+        promote_completed_run(tmp_path, candidate.run_id, expected_previous_digest=None, approval=stale_identity)
+
+    stale_target = {
+        **approval,
+        "decisions": [{**approval["decisions"][0], "target_content_hash": "0" * 64}],
+    }
+    stale_target["decision_set_digest"] = decision_set_digest(stale_target["decisions"])
+    with pytest.raises(DatasetRunError, match="dataset approval 无效"):
+        promote_completed_run(tmp_path, candidate.run_id, expected_previous_digest=None, approval=stale_target)
+
+
+def test_valid_manual_dataset_approval_promotes_with_review_attestation(tmp_path: Path) -> None:
+    candidate = complete_manual_review_candidate(tmp_path, seed="approved")
+
+    pointer = promote_completed_run(
+        tmp_path,
+        candidate.run_id,
+        expected_previous_digest=None,
+        approval=dataset_approval(candidate),
+    )
+
+    assert pointer["review"] == {
+        "decision_set_digest": pointer["review"]["decision_set_digest"],
+        "decision_id": "dataset-approval",
+        "reviewer": "reviewer@example.test",
+        "reviewed_at": "2026-08-10T00:00:00+00:00",
+        "source_decision_set_digest": "a" * 64,
+    }
+    assert resolve_approved_dataset(tmp_path) == candidate.normalized_root.resolve()
+
+
+def test_promotion_cli_loads_candidate_bound_dataset_approval(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """CLI 的 --decisions 把最终人工批准传入同一 promotion 状态机。"""
+
+    candidate = complete_manual_review_candidate(tmp_path, seed="cli-approved")
+    decisions_path = tmp_path / "dataset-approval.json"
+    decisions_path.write_text(json.dumps(dataset_approval(candidate)) + "\n", encoding="utf-8")
+
+    code = promote_main(
+        [
+            "--runs-root",
+            str(tmp_path),
+            "--run-id",
+            candidate.run_id,
+            "--expected-previous-digest",
+            "none",
+            "--decisions",
+            str(decisions_path),
+        ]
+    )
+
+    assert code == 0, capsys.readouterr().err
+    assert resolve_approved_dataset(tmp_path) == candidate.normalized_root.resolve()
+
+
+def test_automatic_gate_failure_rejects_even_with_dataset_approval(tmp_path: Path) -> None:
+    candidate = complete_manual_review_candidate(
+        tmp_path,
+        seed="automatic-failed",
+        automatic_gates_passed=False,
+    )
+
+    with pytest.raises(DatasetRunError, match="automatic gates failed"):
+        promote_completed_run(
+            tmp_path,
+            candidate.run_id,
+            expected_previous_digest=None,
+            approval=dataset_approval(candidate),
+        )
 
 
 def test_promotion_cli_reports_invalid_observed_pointer(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
@@ -361,3 +451,82 @@ def eligible_fixture() -> dict[str, object]:
     """返回仅供状态机测试的显式 promotion attestation。"""
 
     return {"eligible": True, "gate_version": "fixture.v1", "reason": "test fixture"}
+
+
+def complete_manual_review_candidate(
+    runs_root: Path,
+    *,
+    seed: str,
+    automatic_gates_passed: bool = True,
+) -> DatasetRun:
+    """固化需要最终 dataset approval 的 completed candidate。"""
+
+    run = create_fixture_run(runs_root, seed=seed)
+    manifest = json.loads((run.normalized_root / "manifest.json").read_text(encoding="utf-8"))
+    dataset_id = str(manifest["dataset_id"])
+    payload = {"dataset_id": dataset_id, "content_digest": manifest["content_digest"]}
+    target = {
+        "target_type": "dataset",
+        "target_id": dataset_id,
+        "target_content_hash": canonical_digest(payload),
+        "payload": payload,
+        "allowed_actions": ["accept"],
+        "required": True,
+    }
+    bundle = {
+        "schema_version": 1,
+        "review_bundle_id": f"bundle-{seed}",
+        "lifecycle_state": "awaiting_manual_review",
+        "dataset_id": dataset_id,
+        "content_digest": manifest["content_digest"],
+        "source_decision_set_digest": "a" * 64,
+        "phase": "dataset_approval",
+        "source_targets": [],
+        "approval_targets": [target],
+        "targets": [target],
+        "required_target_count": 1,
+    }
+    review_root = run.report_root / "review-site"
+    review_root.mkdir()
+    (review_root / "review-bundle.json").write_text(json.dumps(bundle) + "\n", encoding="utf-8")
+    return complete_dataset_run(
+        run,
+        passed_result(),
+        elapsed_seconds=1,
+        promotion_eligibility={
+            "eligible": False,
+            "automatic_gates_passed": automatic_gates_passed,
+            "gate_version": "stable-product-gates.v1",
+            "reason": "manual review pending" if automatic_gates_passed else "automatic gates failed",
+            "lifecycle_state": "awaiting_manual_review",
+        },
+    )
+
+
+def dataset_approval(candidate: DatasetRun) -> dict[str, object]:
+    """构造与 fixture candidate 绑定的最终批准决定。"""
+
+    manifest = json.loads((candidate.normalized_root / "manifest.json").read_text(encoding="utf-8"))
+    payload = {"dataset_id": candidate.dataset_id, "content_digest": candidate.content_digest}
+    decision = {
+        "decision_schema_version": 1,
+        "decision_id": "dataset-approval",
+        "target_type": "dataset",
+        "target_id": candidate.dataset_id,
+        "target_content_hash": canonical_digest(payload),
+        "action": "accept",
+        "rationale": "fixture approval",
+        "reviewer": "reviewer@example.test",
+        "reviewed_at": "2026-08-10T00:00:00+00:00",
+        "payload": payload,
+    }
+    decisions = [decision]
+    return {
+        "schema_version": 1,
+        "review_bundle_id": f"bundle-{manifest['content_identity']['fixture_seed']}",
+        "dataset_id": candidate.dataset_id,
+        "content_digest": candidate.content_digest,
+        "source_decision_set_digest": "a" * 64,
+        "decision_set_digest": decision_set_digest(decisions),
+        "decisions": decisions,
+    }

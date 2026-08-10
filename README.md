@@ -45,7 +45,7 @@ uv run python scripts/update_raw_events.py --mode local `
   --state-file raw\update-state.json --raw-input-root .temp\raw-events-round `
   --report-root .temp\update-report
 
-# 3) 全量刷新到隔离 run（含 global validate、Stable gate、趋势 ratchet）
+# 3) 全量刷新到隔离 run（含 validate、Stable gate、Review Site、趋势 ratchet）
 uv run python scripts/run_full_refresh.py
 
 # 4) 查询单个事件的已批准解析结果（P5 完成首个 approved-local 后可用）
@@ -137,17 +137,39 @@ approved run 的 normalized 记录内 `translation` 对象是结构化渲染 con
 缺失的 `lcu_version` 只接受一条例外：lobby snapshot 同为 16.14 且保留非空
 LCU manifest id。dirty 工作树可以生成候选，但后续 promotion 不得批准它。
 
-`run_full_refresh.py` 的每个步骤都绑定同一个 staging run；成功写
+`run_full_refresh.py` 的每个步骤都绑定同一个 staging run，并把候选绑定的
+`review-bundle.json` 与本地静态 Review Site 写入 `reports/review-site/`；成功写
 `completion.json` 后同卷 rename 到 `completed/`，失败则写 `failure.json` 后移入
 `failed/`。`promote_dataset_run.py` 只接受 clean、报告/payload 摘要未漂移且带
 正式绝对门禁 attestation 的 completed run，并在独占锁内以 expected previous
 digest 做 CAS。P4 自动门禁 attestation 会明确记录 `automatic_gates_passed`，但在
-P5 用户 Review 前始终保持 `eligible=false`，因此不会把技术通过冒充人工批准。
+P5 用户 Review 前始终保持 `eligible=false`，因此不会把技术通过冒充人工批准。人工
+决定以版本化 JSON 导出；Stable 源审阅只在所有目标均接受时原子更新
+`rules/review-decisions.v1.json` 与 accepted corpus，拒绝或需要修改的结果不会部分写入。
+最终数据集批准必须由 Review Site 针对重建后的同一 `dataset_id`/`content_digest` 导出，
+promotion 时通过 `--decisions` 显式传入。
 
 ```bash
 uv run python scripts/validate_normalized_outputs.py `
   --normalized-root dist/runs/completed/<run-id>/normalized `
   --output-json dist/reports/manual/<run-id>-validation.json
+```
+
+审核分两步完成，浏览器页面必须通过本地 HTTP 服务访问：
+
+```powershell
+# 先打开 completed candidate 自带的 source review 页面并导出决定
+uv run python -m http.server 8765 `
+  --directory dist\runs\completed\<run-id>\reports\review-site
+
+# 全部接受后应用长期源决定；存在“需要修改”时此命令 fail-closed 且不写文件
+uv run python scripts/manage_review.py apply `
+  --bundle dist\runs\completed\<run-id>\reports\review-site\review-bundle.json `
+  --decisions <导出的-review-decisions.json>
+
+# 提交长期源后重新生成 clean candidate，完成最终 dataset approval，再晋级
+uv run python scripts/promote_dataset_run.py --run-id <new-run-id> `
+  --decisions <导出的-dataset-approval.json>
 ```
 
 V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX 保留，目标支持
@@ -156,8 +178,8 @@ V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX
 范围仍保持 Experimental。Stable 使用独立 `quality-summary.json` 绝对门禁，不读取也不受
 `quality-baseline.json` 放宽；accepted corpus 的 86 条代表样本逐条精确复算 `zh_CN`
 default/main。门禁还独立冻结 decision ID、86 个 pattern ID 集合摘要和 5,061 条 Stable
-记录总数，不能通过同时缩减 policy 与 corpus 绕过。corpus 当前仍为
-`review_status=pending`，留给 P5 用户 Review。
+记录总数，不能通过同时缩减 policy 与 corpus 绕过。corpus 与
+`rules/review-decisions.v1.json` 的状态必须一致；当前首轮源审阅仍为 pending。
 
 ## Pattern Catalog（只读维护报告）
 
@@ -176,8 +198,8 @@ uv run python scripts/report_translation_patterns.py `
 公共 catalog 仅把 exact approved 且结构合格的 pattern 标记为 Stable；pending 与 deferred
 分别表示待精确审阅和暂缓。公共 manifest/record/catalog/quality Schema、accepted corpus、
 无项目源码 consumer 和最小样例位于 `data/`，生成时复制进 candidate 的 `normalized/`。
-确定性身份、事务 run、分层绝对门禁和原子 pointer 机制已实现；review importer、首个真实
-approved-local promotion 与远端发布仍属于后续阶段。
+确定性身份、事务 run、分层绝对门禁、全接受 source review 的版本化 decision importer 和原子 pointer
+机制已实现；首个真实 approved-local promotion 与远端发布仍属于后续阶段。
 
 ### 无源码消费者快速验证
 

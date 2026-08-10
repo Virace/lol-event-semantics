@@ -15,6 +15,7 @@ from lol_event_semantics.dataset_runs import (
     promote_completed_run,
     read_approved_pointer,
 )
+from lol_event_semantics.review_decisions import ReviewDecisionError, load_decision_set
 
 
 @dataclass(frozen=True, slots=True)
@@ -25,6 +26,7 @@ class PromoteArgs:
     run_id: str
     expected_previous_digest: str | None
     observe_current: bool
+    decisions: Path | None
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -33,6 +35,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     expected = args.expected_previous_digest
     try:
+        approval = load_decision_set(args.decisions) if args.decisions is not None else None
         if args.observe_current:
             current = read_approved_pointer(args.runs_root, required=False)
             expected = str(current["content_digest"]) if current is not None else None
@@ -40,6 +43,7 @@ def main(argv: list[str] | None = None) -> int:
             args.runs_root,
             args.run_id,
             expected_previous_digest=expected,
+            approval=approval,
         )
     except PromotionConflictError as exc:
         print(f"promotion conflict: {exc}", file=sys.stderr)
@@ -47,7 +51,7 @@ def main(argv: list[str] | None = None) -> int:
     except PromotionLockedError as exc:
         print(f"promotion locked: {exc}", file=sys.stderr)
         return 4
-    except (DatasetRunError, OSError) as exc:
+    except (DatasetRunError, ReviewDecisionError, OSError) as exc:
         print(f"promotion rejected: {exc}", file=sys.stderr)
         return 2
 
@@ -61,6 +65,11 @@ def parse_args(argv: list[str] | None = None) -> PromoteArgs:
     parser = argparse.ArgumentParser(description="Promote a clean completed dataset run to approved-local.")
     parser.add_argument("--runs-root", type=Path, default=Path("dist/runs"), help="Transactional dataset runs root.")
     parser.add_argument("--run-id", required=True, help="Completed run id to promote.")
+    parser.add_argument(
+        "--decisions",
+        type=Path,
+        help="Candidate-bound dataset approval exported by the Review Site; required while manual review is pending.",
+    )
     parser.add_argument(
         "--expected-previous-digest",
         help="CAS precondition: 64-char digest, or 'none' when no pointer must exist. Omit to observe current first.",
@@ -80,6 +89,7 @@ def parse_args(argv: list[str] | None = None) -> PromoteArgs:
         run_id=namespace.run_id,
         expected_previous_digest=expected,
         observe_current=observe_current,
+        decisions=namespace.decisions,
     )
 
 

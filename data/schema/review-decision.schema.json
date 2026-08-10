@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/lol-event-semantics/review-decision.schema.json",
+  "title": "lol-event-semantics review decision set v1",
+  "$comment": "decision_set_digest hashes decision schema/id/target/hash/action/payload only; reviewer, rationale, reviewed_at, and exported_at are audit envelope fields.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "review_bundle_id",
+    "dataset_id",
+    "content_digest",
+    "source_decision_set_digest",
+    "decision_set_digest",
+    "decisions"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "review_bundle_id": { "type": "string", "minLength": 1 },
+    "dataset_id": { "type": "string", "minLength": 1 },
+    "content_digest": { "$ref": "#/$defs/digest" },
+    "source_decision_set_digest": { "$ref": "#/$defs/digest" },
+    "decision_set_digest": { "$ref": "#/$defs/digest" },
+    "exported_at": { "type": "string", "format": "date-time" },
+    "decisions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/decision" }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "decision": {
+      "type": "object",
+      "required": [
+        "decision_schema_version",
+        "decision_id",
+        "target_type",
+        "target_id",
+        "target_content_hash",
+        "action",
+        "payload",
+        "rationale",
+        "reviewer",
+        "reviewed_at"
+      ],
+      "properties": {
+        "decision_schema_version": { "const": 1 },
+        "decision_id": { "type": "string", "minLength": 1 },
+        "target_type": {
+          "enum": ["pattern", "record", "exception", "support", "regression", "dataset"]
+        },
+        "target_id": { "type": "string", "minLength": 1 },
+        "target_content_hash": { "$ref": "#/$defs/digest" },
+        "action": {
+          "enum": [
+            "accept",
+            "reject",
+            "edit_template",
+            "override_argument",
+            "change_support_level",
+            "supersede"
+          ]
+        },
+        "payload": { "type": "object" },
+        "rationale": { "type": "string", "minLength": 1 },
+        "reviewer": { "type": "string", "minLength": 1 },
+        "reviewed_at": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

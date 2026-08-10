@@ -1777,12 +1777,16 @@ def write_contract_assets(contract_assets_root: Path, output_root: Path) -> None
             "normalized-event.schema.json",
             "pattern-catalog.schema.json",
             "quality-summary.schema.json",
+            "review-bundle.schema.json",
+            "review-decision.schema.json",
         ),
         "examples": (
             "manifest.v2.json",
             "normalized-event.v2.json",
             "pattern-catalog.v1.json",
             "quality-summary.v1.json",
+            "review-bundle.v1.json",
+            "review-decisions.v1.json",
             "consumer.py",
         ),
     }
@@ -1831,6 +1835,11 @@ def write_manifest(
     review_counts = value_counts(rows, "review_status")
     profile = input_identity.get("profile")
     profile = profile if isinstance(profile, Mapping) else {}
+    input_sections = input_identity.get("inputs")
+    input_sections = input_sections if isinstance(input_sections, Mapping) else {}
+    review_identity = input_sections.get("review_decisions")
+    if not isinstance(review_identity, Mapping):
+        raise ValueError("input identity 缺少 review_decisions")
     content_identity: dict[str, object] = {
         "input_identity": dict(input_identity),
         "corpus_scope": profile.get("corpus_scope"),
@@ -1838,6 +1847,9 @@ def write_manifest(
         "review": {
             "decision_id": pattern_catalog.get("decision_id"),
             "record_counts": review_counts,
+            "decision_set_id": review_identity.get("decision_set_id"),
+            "decision_set_digest": review_identity.get("digest"),
+            "decision_status": review_identity.get("status"),
         },
         "support_level_counts": support_counts,
         "quality_status": quality_summary.get("status"),

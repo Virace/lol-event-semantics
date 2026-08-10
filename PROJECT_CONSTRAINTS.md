@@ -28,7 +28,9 @@
 - normalized 内容身份不得包含时间、耗时、绝对路径、输入遍历顺序或随机值；dirty 工作树可生成
   本地候选，但不得进入 approved/published 状态。
 - completed run 不得原地覆盖或修改；promotion 必须校验 payload/report 摘要、clean generator、
-  正式门禁 attestation，并在锁内用 expected previous digest 做 CAS 后原子替换小型 pointer。
+  正式门禁 attestation；等待人工审核的候选还必须验证与 dataset/content digest 绑定的最终批准决定，
+  并在锁内用 expected previous digest 做 CAS 后原子替换小型 pointer。源审阅决定与 accepted corpus
+  必须作为同一事务更新，任一拒绝、修改要求、stale target 或写入失败都不得留下部分状态。
 
 ## 安全与隐私
 

@@ -16,6 +16,19 @@ from .reference_collection import read_yaml
 TREE_DIGEST_VERSION = "lol-event-semantics.tree-sha256.v1"
 CONTENT_DIGEST_VERSION = "lol-event-semantics.content-digest.v1"
 INPUT_IDENTITY_VERSION = "lol-event-semantics.input-identity.v1"
+REVIEW_DECISION_IDENTITY_VERSION = "lol-event-semantics.review-decision-identity.v1"
+REVIEW_DECISION_SOURCE_NAME = "review-decisions.v1.json"
+REVIEW_TRANSACTION_DIR_NAME = ".review-source-transaction"
+REVIEW_TRANSACTION_LOCK_NAME = ".review-source-transaction.lock"
+REVIEW_DECISION_IDENTITY_FIELDS = (
+    "decision_schema_version",
+    "decision_id",
+    "target_type",
+    "target_id",
+    "target_content_hash",
+    "action",
+    "payload",
+)
 FROZEN_PROFILE_SCHEMA_VERSION = 1
 _IGNORED_TREE_PARTS = frozenset({"__pycache__", ".mypy_cache", ".pytest_cache", ".ruff_cache"})
 _IGNORED_TREE_SUFFIXES = frozenset({".pyc", ".pyo"})
@@ -79,6 +92,31 @@ def tree_digest(root: Path) -> TreeDigest:
     if not root.is_dir():
         raise FileNotFoundError(f"identity tree root 不存在或不是目录: {root}")
     return paths_digest(root, [path for path in root.rglob("*") if _is_identity_file(path)])
+
+
+def rules_tree_digest(rules_root: Path) -> TreeDigest:
+    """摘要语义规则树，review 审计 envelope 由独立 identity 规范化。"""
+
+    if (rules_root / REVIEW_TRANSACTION_DIR_NAME).exists() or (rules_root / REVIEW_TRANSACTION_LOCK_NAME).exists():
+        raise ValueError("rules tree 存在未收口的 review source transaction")
+    source = review_decision_source_path(rules_root)
+    paths = [path for path in rules_root.rglob("*") if _is_identity_file(path) and path.resolve() != source]
+    return paths_digest(rules_root, paths)
+
+
+def review_decision_source_path(rules_root: Path) -> Path:
+    """返回 rules 内不可经 symlink 逃逸的固定 review source。"""
+
+    declared = rules_root / REVIEW_DECISION_SOURCE_NAME
+    if declared.is_symlink():
+        raise ValueError("review decision source 不得是 symlink")
+    resolved_rules = rules_root.resolve()
+    resolved = declared.resolve()
+    try:
+        resolved.relative_to(resolved_rules)
+    except ValueError as exc:
+        raise ValueError("review decision source 必须位于 rules root 内") from exc
+    return resolved
 
 
 def paths_digest(root: Path, paths: Iterable[Path]) -> TreeDigest:
@@ -266,7 +304,8 @@ def build_input_identity(
         "raw": tree_digest(raw_root).to_dict(),
         "reference": paths_digest(reference_root, reference_files).to_dict(),
         "reference_manifest": semantic_document_identity(reference_manifest, excluded_keys={"updated_at"}),
-        "rules": tree_digest(rules_root).to_dict(),
+        "rules": rules_tree_digest(rules_root).to_dict(),
+        "review_decisions": review_decision_identity(_read_json_object(review_decision_source_path(rules_root))),
         "overrides": tree_digest(overrides_root).to_dict(),
         "contract_assets": contract_assets_digest(contract_assets_root).to_dict(),
         "generator": generator_tree_digest(repo_root).to_dict(),
@@ -282,6 +321,49 @@ def build_input_identity(
         "generator_state": state.to_dict(),
         "inputs": inputs,
     }
+
+
+def review_decision_identity(document: Mapping[str, Any]) -> dict[str, object]:
+    """提取并复算长期 review decision source 的稳定内容身份。"""
+
+    schema_version = document.get("schema_version")
+    decision_set_id = document.get("decision_set_id")
+    status = document.get("status")
+    decisions = document.get("decisions")
+    if schema_version != 1:
+        raise ValueError("review decision source schema_version 必须为 1")
+    if not isinstance(decision_set_id, str) or not decision_set_id:
+        raise ValueError("review decision source decision_set_id 无效")
+    if status not in {"pending", "accepted"}:
+        raise ValueError("review decision source status 无效")
+    if not isinstance(decisions, list) or any(not isinstance(item, dict) for item in decisions):
+        raise ValueError("review decision source decisions 必须是 object array")
+    digest = review_decision_set_digest(decisions)
+    if document.get("decision_set_digest") != digest:
+        raise ValueError("review decision source digest 与 canonical decisions 不一致")
+    if status == "pending" and decisions:
+        raise ValueError("pending review decision source 不得包含决定")
+    return {
+        "algorithm": REVIEW_DECISION_IDENTITY_VERSION,
+        "digest": digest,
+        "decision_set_id": decision_set_id,
+        "status": status,
+    }
+
+
+def review_decision_set_digest(decisions: Iterable[Mapping[str, object]]) -> str:
+    """仅对决定语义求摘要，排除 reviewer、rationale 和界面时间。"""
+
+    normalized = [{field: item.get(field) for field in REVIEW_DECISION_IDENTITY_FIELDS} for item in decisions]
+    ordered = sorted(
+        normalized,
+        key=lambda item: (
+            str(item.get("target_type") or ""),
+            str(item.get("target_id") or ""),
+            str(item.get("decision_id") or ""),
+        ),
+    )
+    return hashlib.sha256(canonical_json_bytes(ordered)).hexdigest()
 
 
 def describe_payload_files(output_root: Path) -> list[dict[str, object]]:

@@ -39,4 +39,7 @@ validator 会复算文件表、content digest 和 dataset id。P3-C2 已把每�
 `.staging/<run-id>`，成功/失败分别固化到 `completed/`、`failed/`，并提供带
 lock/CAS/clean/report/payload/eligibility 门禁的 `approved-local.json` 原子替换。
 默认 lookup 不再扫描 candidate。P4 attestation 在 P5 用户 Review 前保持 `eligible=false`，
-因此当前真实 completed candidate 仍不能 promotion 或被当作已批准发布状态。
+因此当前真实 completed candidate 仍不能仅凭自动门禁 promotion 或被当作已批准发布状态。
+P5 为每个 completed candidate 生成 `reports/review-site/`，source review 决定可在完整接受时
+原子应用到长期 decision source 与 accepted corpus；重建后的 candidate 只有携带匹配
+`dataset_id`、`content_digest` 和 source decision digest 的最终 dataset approval 才能 promotion。

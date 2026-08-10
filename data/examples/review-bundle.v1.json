@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "review_bundle_id": "review-bundle-v1-example",
+  "lifecycle_state": "awaiting_manual_review",
+  "phase": "source_review",
+  "dataset_id": "local-v1-example",
+  "content_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+  "source_decision_set_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "source_targets": [
+    {
+      "target_type": "pattern",
+      "target_id": "pattern-v1-example",
+      "target_content_hash": "62bf21dabba2318b1f0bee25d6d4c6d3d76e07525429674c8192bfc8a2942394",
+      "allowed_actions": ["accept", "reject"],
+      "required": true,
+      "payload": { "message": "example" }
+    }
+  ],
+  "approval_targets": [
+    {
+      "target_type": "dataset",
+      "target_id": "local-v1-example",
+      "target_content_hash": "e3403e52751621bb3c87aca5e22a41d82781065268e60910dca138229fcfdd8d",
+      "allowed_actions": ["accept", "reject"],
+      "required": true,
+      "payload": {
+        "dataset_id": "local-v1-example",
+        "content_digest": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ],
+  "targets": [
+    {
+      "target_type": "pattern",
+      "target_id": "pattern-v1-example",
+      "target_content_hash": "62bf21dabba2318b1f0bee25d6d4c6d3d76e07525429674c8192bfc8a2942394",
+      "allowed_actions": ["accept", "reject"],
+      "required": true,
+      "payload": { "message": "example" }
+    }
+  ],
+  "required_target_count": 1
+}

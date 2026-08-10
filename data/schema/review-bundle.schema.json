@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/lol-event-semantics/review-bundle.schema.json",
+  "title": "lol-event-semantics review bundle v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "review_bundle_id",
+    "lifecycle_state",
+    "phase",
+    "dataset_id",
+    "content_digest",
+    "source_decision_set_digest",
+    "source_targets",
+    "approval_targets",
+    "targets",
+    "required_target_count"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "review_bundle_id": { "type": "string", "minLength": 1 },
+    "lifecycle_state": { "const": "awaiting_manual_review" },
+    "phase": { "enum": ["source_review", "dataset_approval"] },
+    "dataset_id": { "type": "string", "minLength": 1 },
+    "content_digest": { "$ref": "#/$defs/digest" },
+    "source_decision_set_digest": { "$ref": "#/$defs/digest" },
+    "source_targets": { "$ref": "#/$defs/targets" },
+    "approval_targets": { "$ref": "#/$defs/targets" },
+    "targets": { "$ref": "#/$defs/targets" },
+    "required_target_count": { "type": "integer", "minimum": 0 }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "targets": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/target" }
+    },
+    "target": {
+      "type": "object",
+      "required": [
+        "target_type",
+        "target_id",
+        "target_content_hash",
+        "allowed_actions",
+        "required",
+        "payload"
+      ],
+      "properties": {
+        "target_type": {
+          "enum": ["pattern", "record", "exception", "support", "regression", "dataset"]
+        },
+        "target_id": { "type": "string", "minLength": 1 },
+        "target_content_hash": { "$ref": "#/$defs/digest" },
+        "allowed_actions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "accept",
+              "reject",
+              "edit_template",
+              "override_argument",
+              "change_support_level",
+              "supersede"
+            ]
+          }
+        },
+        "required": { "type": "boolean" },
+        "payload": { "type": "object" }
+      },
+      "additionalProperties": false
+    }
+  }
+}
