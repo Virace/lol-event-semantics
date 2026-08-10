@@ -407,6 +407,8 @@ def promotion_lock(runs_root: Path) -> Iterator[None]:
 
 def _describe_report_files(report_root: Path) -> list[dict[str, object]]:
     required = {"normalized-validation.json", "quality-metrics.json"}
+    if (report_root / "quality-gates.json").is_file():
+        required.update({"quality-diff.json", "quality-gates.json"})
     actual_paths = sorted(
         (path for path in report_root.rglob("*") if path.is_file()),
         key=lambda path: path.relative_to(report_root).as_posix(),

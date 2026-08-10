@@ -730,12 +730,16 @@ def _pattern_status(
     if asset_kind == policy.stable_asset_kind and isinstance(frame_type, str):
         frame_policy = policy.stable_frames.get(frame_type)
         if frame_policy is not None:
+            if scope_status == "approved":
+                return {
+                    "support_level": "stable",
+                    "proposed_support_level": None,
+                    "review_status": "accepted",
+                }
             return {
                 "support_level": frame_policy.support_level,
-                "proposed_support_level": frame_policy.proposed_support_level
-                if scope_status in {"approved", "pending"}
-                else None,
-                "review_status": "accepted" if scope_status == "approved" else frame_policy.review_status,
+                "proposed_support_level": frame_policy.proposed_support_level if scope_status == "pending" else None,
+                "review_status": frame_policy.review_status,
             }
     if asset_kind == "sfx":
         return {
@@ -1023,7 +1027,7 @@ def _markdown_support_matrix(value: object) -> list[str]:
         f"({coverage.get('pattern_ratio', 0)}), records "
         f"{coverage.get('eligible_stable_record_count', 0)}/{coverage.get('total_record_count', 0)} "
         f"({coverage.get('record_ratio', 0)}).",
-        "Policy-approved scope (still Experimental until P4 gates): "
+        "Policy-approved exact Stable scope: "
         f"patterns {approved.get('approved_pattern_count', 0)}/{approved.get('eligible_pattern_count', 0)} "
         f"({approved.get('pattern_ratio', 0)}), records "
         f"{approved.get('approved_record_count', 0)}/{approved.get('eligible_record_count', 0)} "

@@ -20,7 +20,9 @@ FROZEN_PROFILE_SCHEMA_VERSION = 1
 _IGNORED_TREE_PARTS = frozenset({"__pycache__", ".mypy_cache", ".pytest_cache", ".ruff_cache"})
 _IGNORED_TREE_SUFFIXES = frozenset({".pyc", ".pyo"})
 _VERSION_PREFIX = re.compile(r"^(?P<major>\d+)\.(?P<minor>\d+)(?:\.|$)")
-_PAYLOAD_TOP_LEVEL_FILES = frozenset({"normalized-events.jsonl", "pattern-catalog.json", "entity-summary.json"})
+_PAYLOAD_TOP_LEVEL_FILES = frozenset(
+    {"normalized-events.jsonl", "pattern-catalog.json", "quality-summary.json", "entity-summary.json"}
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -129,6 +131,10 @@ def contract_assets_digest(contract_assets_root: Path) -> TreeDigest:
         if not root.is_dir():
             raise FileNotFoundError(f"contract assets root 不存在: {root}")
         files.extend(path for path in root.rglob("*") if _is_identity_file(path))
+    corpus = contract_assets_root / "accepted-corpus.v1.json"
+    if not corpus.is_file():
+        raise FileNotFoundError(f"contract accepted corpus 不存在: {corpus}")
+    files.append(corpus)
     return paths_digest(contract_assets_root, files)
 
 

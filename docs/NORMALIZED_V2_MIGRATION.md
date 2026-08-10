@@ -2,7 +2,7 @@
 
 V2 是 additive migration。现有 `by-entity/**/*.jsonl`、`entity-summary.json`、
 `translation` 和 `display` 在兼容期继续生成；新消费者应优先读取
-`normalized-events.jsonl` 和 `pattern-catalog.json`。
+`normalized-events.jsonl`、`pattern-catalog.json` 和 `quality-summary.json`。
 
 ## 主键与查询
 
@@ -18,13 +18,16 @@ V2 正式增加 `record_id`、`record_id_algorithm`、`source_scope`、`provenan
 `asset_kind`、`pattern_id`、`support_level`、`semantic_frame`、`rendered_labels`、
 `render_status`、`review_status` 和 `warnings`。旧字段不删除。
 
-当前 `support_level` 仍全部为 `experimental`；`review_status=accepted` 只表示
-P1 产品范围已经批准，不代表已经通过 P4 Stable 绝对门禁。
+P4 仅将 exact approved 且通过绝对门禁的 86 个 pattern 标记 Stable；其余
+pattern 仍为 Experimental。`review_status=accepted` 表示 P1 产品范围已批准，
+但 Stable candidate 仍不等于 approved-local。
 
 ## Schema 与兼容策略
 
 - manifest `schema_version=2`，record `schema_version=2`，Pattern Catalog
   `schema_version=1`。
+- manifest V2 additive 接受旧 `quality_status=not_evaluated`；P4 writer 使用
+  `passed|failed`、`quality_gate_version` 和必需的 `quality-summary.json`。
 - Schema 与最小样例同时位于数据集 `schema/`、`examples/`，源文件在仓库
   `data/`。
 - validator 同时读取 manifest/record V1 和 V2，未知 major fail-closed。
@@ -35,5 +38,5 @@ P3-C1 已补全确定性 manifest identity 与 content digest：manifest 不再�
 validator 会复算文件表、content digest 和 dataset id。P3-C2 已把每轮写入隔离到
 `.staging/<run-id>`，成功/失败分别固化到 `completed/`、`failed/`，并提供带
 lock/CAS/clean/report/payload/eligibility 门禁的 `approved-local.json` 原子替换。
-默认 lookup 不再扫描 candidate。P4 尚未产生正式绝对门禁 eligibility attestation，
+默认 lookup 不再扫描 candidate。P4 attestation 在 P5 用户 Review 前保持 `eligible=false`，
 因此当前真实 completed candidate 仍不能 promotion 或被当作已批准发布状态。

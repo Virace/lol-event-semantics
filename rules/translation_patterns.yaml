@@ -2,8 +2,8 @@ schema_version: translation-pattern-policy.v1
 signature_version: pattern-signature.v1
 example_limit: 3
 
-# 当前 support 仍为 Experimental；promotion_decisions 记录用户批准的
-# 首批 scope，不在 P4 绝对门禁和 accepted corpus 完成前冒充正式 Stable。
+# 默认 support 为 Experimental；promotion_decisions 记录用户批准的首批
+# exact scope，P4 仅在结构门禁与 accepted corpus 通过时投影为 Stable。
 defaults:
   support_level: experimental
   review_status: pending

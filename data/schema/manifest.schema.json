@@ -28,7 +28,14 @@
           "type": "object"
         },
         "quality_status": {
-          "const": "not_evaluated"
+          "enum": [
+            "not_evaluated",
+            "passed",
+            "failed"
+          ]
+        },
+        "quality_gate_version": {
+          "type": "string"
         },
         "review": {
           "type": "object"

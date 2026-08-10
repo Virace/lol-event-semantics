@@ -1,8 +1,9 @@
-"""本地一键数据刷新：decompose→build→validate→metrics→ratchet 全链串联。"""
+"""本地一键数据刷新：build、全局验证、Stable 门禁与趋势棘轮全链串联。"""
 
 from __future__ import annotations
 
 import argparse
+import json
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -26,6 +27,7 @@ STEP_UPDATE = "update"
 STEP_DECOMPOSE = "decompose"
 STEP_BUILD = "build"
 STEP_VALIDATE = "validate"
+STEP_QUALITY = "quality"
 STEP_RATCHET = "ratchet"
 STEP_METRICS = "metrics"
 
@@ -76,7 +78,7 @@ def main(argv: list[str] | None = None, *, runner: StepRunner | None = None) -> 
             repo_root=args.repo_root,
             command=["python", "scripts/run_full_refresh.py", *command_args],
         )
-    except (OSError, DatasetRunError) as exc:
+    except (OSError, ValueError, DatasetRunError) as exc:
         print(f"FAILED to create dataset run: {exc}")
         return 2
 
@@ -122,8 +124,9 @@ def main(argv: list[str] | None = None, *, runner: StepRunner | None = None) -> 
             run,
             result,
             elapsed_seconds=perf_counter() - started,
+            promotion_eligibility=load_promotion_eligibility(paths.report_root / "quality-gates.json"),
         )
-    except (OSError, DatasetRunError) as exc:
+    except (OSError, ValueError, DatasetRunError) as exc:
         failed_root = record_failed_run(
             run,
             result=result,
@@ -177,6 +180,8 @@ def build_steps(args: FullRefreshArgs, paths: RefreshPaths) -> list[RefreshStep]
 
     # report_root 下派生 validation 与 metrics 的固定报告路径，与 CI 口径一致。
     validation_json = paths.report_root / "normalized-validation.json"
+    quality_gates_json = paths.report_root / "quality-gates.json"
+    support_diff_json = paths.report_root / "quality-diff.json"
     metrics_json = paths.report_root / "quality-metrics.json"
 
     steps: list[RefreshStep] = []
@@ -271,6 +276,24 @@ def build_steps(args: FullRefreshArgs, paths: RefreshPaths) -> list[RefreshStep]
             ),
         )
     )
+    steps.append(
+        (
+            STEP_QUALITY,
+            script_argv(
+                "check_tiered_quality.py",
+                "--normalized-root",
+                str(paths.output_root),
+                "--validation-json",
+                str(validation_json),
+                "--runs-root",
+                str(args.runs_root),
+                "--output-json",
+                str(quality_gates_json),
+                "--support-diff-json",
+                str(support_diff_json),
+            ),
+        )
+    )
     # metrics 置于 ratchet 之前：与 CI（metrics if:always 在 ratchet 前）对齐，
     # 使 ratchet 阻断失败时 metrics JSON 已产出，兑现 CI 本地等价物定位。
     steps.append(
@@ -306,6 +329,16 @@ def build_steps(args: FullRefreshArgs, paths: RefreshPaths) -> list[RefreshStep]
     return steps
 
 
+def load_promotion_eligibility(path: Path) -> dict[str, object]:
+    """从已通过的 P4 门禁报告读取不可伪造为最终人工批准的 attestation。"""
+
+    report = json.loads(path.read_text(encoding="utf-8"))
+    eligibility = report.get("promotion_eligibility") if isinstance(report, dict) else None
+    if not isinstance(eligibility, dict):
+        raise ValueError(f"quality gate report 缺少 promotion_eligibility: {path}")
+    return dict(eligibility)
+
+
 def script_argv(script_name: str, *script_args: str) -> list[str]:
     """构造 [python, scripts/<name>, *args] 形式的子进程 argv。"""
 
@@ -316,7 +349,7 @@ def parse_args(argv: list[str] | None = None) -> FullRefreshArgs:
     """解析命令行参数。"""
 
     parser = argparse.ArgumentParser(
-        description="Run the local decompose->build->validate->metrics->ratchet refresh chain.",
+        description="Run the local decompose->build->validate->quality->metrics->ratchet refresh chain.",
     )
     parser.add_argument("--repo-root", type=Path, default=Path("."), help="Repository root for generator identity.")
     parser.add_argument("--raw-root", type=Path, default=Path("raw/events"), help="Cumulative raw events root.")

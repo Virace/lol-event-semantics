@@ -28,6 +28,7 @@ from .normalized_translation_model import (
 )
 from .normalized_translation_renderer import render_translation
 from .quality_metrics import is_fallback_label
+from .tiered_quality import stable_scope_contract_passes
 
 TECHNICAL_DISPLAY_PATTERNS = (
     "Play_",
@@ -127,6 +128,7 @@ V2_REQUIRED_OUTPUTS = {
     "schema/",
     "examples/",
 }
+V2_EVALUATED_OUTPUTS = {"quality-summary.json"}
 
 
 @dataclass(slots=True)
@@ -353,8 +355,18 @@ def validate_manifest(
         issues.append(error("summary_entity_count_mismatch", "entity-summary.json", "summary 行数与实际分片数不一致。"))
 
     required_outputs = (
-        V2_REQUIRED_OUTPUTS if schema_version == 2 else {"manifest.json", "entity-summary.json", "by-entity/"}
+        V2_REQUIRED_OUTPUTS
+        if schema_version == 2
+        else {
+            "manifest.json",
+            "entity-summary.json",
+            "by-entity/",
+        }
     )
+    identity = manifest.get("content_identity")
+    quality_status = identity.get("quality_status") if isinstance(identity, dict) else None
+    if schema_version == 2 and quality_status != "not_evaluated":
+        required_outputs = required_outputs.union(V2_EVALUATED_OUTPUTS)
     for required in sorted(required_outputs):
         if required not in (manifest.get("outputs") or []):
             issues.append(error("manifest_output_missing", "manifest.json", f"outputs 缺少 {required}。"))
@@ -598,7 +610,7 @@ def validate_v2_dataset(
 ) -> None:
     """校验 V2 单流、Pattern Catalog、Schema/Example 与兼容分片一致。"""
 
-    required_files = (
+    required_files = [
         "normalized-events.jsonl",
         "pattern-catalog.json",
         "schema/manifest.schema.json",
@@ -607,7 +619,19 @@ def validate_v2_dataset(
         "examples/manifest.v2.json",
         "examples/normalized-event.v2.json",
         "examples/pattern-catalog.v1.json",
-    )
+    ]
+    identity = manifest.get("content_identity")
+    quality_status = identity.get("quality_status") if isinstance(identity, dict) else None
+    if quality_status != "not_evaluated":
+        required_files.extend(
+            (
+                "quality-summary.json",
+                "schema/quality-summary.schema.json",
+                "examples/quality-summary.v1.json",
+                "examples/accepted-corpus.v1.json",
+                "examples/consumer.py",
+            )
+        )
     for relative in required_files:
         if not (root / relative).is_file():
             issues.append(error("v2_required_file_missing", relative, "V2 数据集缺少必需文件。"))
@@ -620,11 +644,14 @@ def validate_v2_dataset(
     catalog_path = root / "pattern-catalog.json"
     catalog = read_json_object(catalog_path, issues) if catalog_path.is_file() else {}
     _validate_v2_pattern_catalog(catalog, shard_records, manifest, issues)
+    quality_path = root / "quality-summary.json"
+    quality = read_json_object(quality_path, issues) if quality_path.is_file() else {}
+    _validate_v2_quality_summary(quality, catalog, shard_records, manifest, issues)
     _validate_v2_manifest_identity(root, manifest, catalog, shard_records, issues)
 
     for relative in required_files[2:]:
         path = root / relative
-        if not path.is_file():
+        if not path.is_file() or path.suffix != ".json":
             continue
         document = read_json_object(path, issues)
         if relative.startswith("schema/") and document.get("$schema") != "https://json-schema.org/draft/2020-12/schema":
@@ -654,11 +681,12 @@ def _validate_v2_manifest_identity(
         issues.append(error("input_identity_shape_invalid", "manifest.json", "input identity 字段或摘要形状无效。"))
     else:
         profile = input_identity["profile"]
-        if (
-            identity.get("corpus_scope") != profile.get("corpus_scope")
-            or identity.get("base_game_version") != profile.get("base_game_version")
-        ):
-            issues.append(error("content_profile_mismatch", "manifest.json", "content identity 与 frozen profile 不一致。"))
+        if identity.get("corpus_scope") != profile.get("corpus_scope") or identity.get(
+            "base_game_version"
+        ) != profile.get("base_game_version"):
+            issues.append(
+                error("content_profile_mismatch", "manifest.json", "content identity 与 frozen profile 不一致。")
+            )
 
     support_counts = _field_counts(rows, "support_level")
     review_counts = _field_counts(rows, "review_status")
@@ -669,8 +697,11 @@ def _validate_v2_manifest_identity(
         issues.append(error("review_counts_mismatch", "manifest.json", "review record_counts 与记录不一致。"))
     elif review.get("decision_id") != catalog.get("decision_id"):
         issues.append(error("review_decision_id_mismatch", "manifest.json", "review decision_id 与 catalog 不一致。"))
-    if identity.get("quality_status") != "not_evaluated":
-        issues.append(error("quality_status_invalid", "manifest.json", "P3-C1 quality_status 必须为 not_evaluated。"))
+    quality_status = identity.get("quality_status")
+    if quality_status not in {"not_evaluated", "passed", "failed"}:
+        issues.append(error("quality_status_invalid", "manifest.json", "quality_status 不受支持。"))
+    if quality_status != "not_evaluated" and not isinstance(identity.get("quality_gate_version"), str):
+        issues.append(error("quality_gate_version_missing", "manifest.json", "已评估数据集缺少 quality gate version。"))
 
     files = manifest.get("files")
     if not isinstance(files, list) or not all(isinstance(entry, dict) for entry in files):
@@ -848,6 +879,66 @@ def _validate_v2_pattern_catalog(
                 "pattern_catalog_reference_missing",
                 "pattern-catalog.json",
                 f"记录引用 catalog 不存在的 pattern_id: {missing_ids[0]}。",
+            )
+        )
+
+
+def _validate_v2_quality_summary(
+    quality: dict[str, Any],
+    catalog: dict[str, Any],
+    rows: list[dict[str, Any]],
+    manifest: dict[str, Any],
+    issues: list[NormalizedValidationIssue],
+) -> None:
+    """校验确定性分层质量摘要与公开记录/Pattern Catalog 一致。"""
+
+    identity = manifest.get("content_identity")
+    identity_mapping = identity if isinstance(identity, dict) else {}
+    quality_status = identity_mapping.get("quality_status")
+    if quality_status == "not_evaluated":
+        return
+    if not quality:
+        issues.append(error("quality_summary_missing", "quality-summary.json", "已评估数据集缺少质量摘要。"))
+        return
+    if quality.get("schema_version") != 1:
+        issues.append(error("quality_summary_schema_invalid", "quality-summary.json", "质量摘要 schema 必须为 1。"))
+    if quality.get("status") != quality_status:
+        issues.append(error("quality_summary_status_mismatch", "quality-summary.json", "质量状态与 manifest 不一致。"))
+    if quality.get("gate_version") != identity_mapping.get("quality_gate_version"):
+        issues.append(
+            error("quality_gate_version_mismatch", "quality-summary.json", "质量门禁版本与 manifest 不一致。")
+        )
+    if quality.get("decision_id") != catalog.get("decision_id"):
+        issues.append(error("quality_decision_id_mismatch", "quality-summary.json", "质量决策与 catalog 不一致。"))
+
+    global_summary = quality.get("global")
+    global_mapping = global_summary if isinstance(global_summary, dict) else {}
+    support = global_mapping.get("support")
+    if global_mapping.get("record_count") != len(rows):
+        issues.append(error("quality_record_count_mismatch", "quality-summary.json", "全局记录数与数据不一致。"))
+    if global_mapping.get("pattern_count") != catalog.get("pattern_count"):
+        issues.append(
+            error("quality_pattern_count_mismatch", "quality-summary.json", "全局 pattern 数与 catalog 不一致。")
+        )
+    if not isinstance(support, dict) or support.get("record_counts") != _field_counts(rows, "support_level"):
+        issues.append(error("quality_support_counts_mismatch", "quality-summary.json", "支持等级记录数与数据不一致。"))
+
+    stable = quality.get("stable")
+    corpus = quality.get("accepted_corpus")
+    if not isinstance(stable, dict) or stable.get("require_zero") is not True:
+        issues.append(error("stable_gate_not_absolute", "quality-summary.json", "Stable 门禁必须 require_zero。"))
+    elif quality_status == "passed" and stable.get("violation_counts"):
+        issues.append(
+            error("stable_gate_violation_nonzero", "quality-summary.json", "通过状态不得含 Stable violation。")
+        )
+    if quality_status == "passed" and (not isinstance(corpus, dict) or corpus.get("passed") is not True):
+        issues.append(error("accepted_corpus_not_passed", "quality-summary.json", "accepted corpus 精确断言未通过。"))
+    if quality_status == "passed" and not stable_scope_contract_passes(quality):
+        issues.append(
+            error(
+                "stable_scope_contract_mismatch",
+                "quality-summary.json",
+                "通过状态未命中冻结的 Stable decision、pattern 集合或 record 总数。",
             )
         )
 

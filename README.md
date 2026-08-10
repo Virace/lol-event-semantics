@@ -45,11 +45,11 @@ uv run python scripts/update_raw_events.py --mode local `
   --state-file raw\update-state.json --raw-input-root .temp\raw-events-round `
   --report-root .temp\update-report
 
-# 3) 全量刷新到隔离 run（decompose→build→validate→metrics→ratchet，任一步失败即停）
+# 3) 全量刷新到隔离 run（含 global validate、Stable gate、趋势 ratchet）
 uv run python scripts/run_full_refresh.py
 
-# 4) 查询单个事件的已批准解析结果（P4/P5 完成首个 approved-local 后可用）
-uv run lookup-normalized-event --event Play_vo_Annie_QAttack --mode main
+# 4) 查询单个事件的已批准解析结果（P5 完成首个 approved-local 后可用）
+uv run lookup-normalized-event --event Play_vo_AatroxSkin01_AatroxE_cast3D --mode main
 
 # 辅助：客户端字符串表中英同键检索（词条核证工具）
 uv run python scripts/search_stringtable.py 厄塔汗 "first blood"
@@ -141,7 +141,8 @@ LCU manifest id。dirty 工作树可以生成候选，但后续 promotion 不得
 `completion.json` 后同卷 rename 到 `completed/`，失败则写 `failure.json` 后移入
 `failed/`。`promote_dataset_run.py` 只接受 clean、报告/payload 摘要未漂移且带
 正式绝对门禁 attestation 的 completed run，并在独占锁内以 expected previous
-digest 做 CAS。P4 尚未生成正式 attestation，因此当前真实候选仍不可 promotion。
+digest 做 CAS。P4 自动门禁 attestation 会明确记录 `automatic_gates_passed`，但在
+P5 用户 Review 前始终保持 `eligible=false`，因此不会把技术通过冒充人工批准。
 
 ```bash
 uv run python scripts/validate_normalized_outputs.py `
@@ -150,10 +151,13 @@ uv run python scripts/validate_normalized_outputs.py `
 ```
 
 V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX 保留，目标支持
-状态为 Stable、Experimental 或 Unsupported。当前生成器已写入 additive support/review
-字段，但在绝对门禁与 promotion 完成前仍全部保持 Experimental。报告用 approved、
-pending、deferred scope 记录产品决定，不会把已批准范围提前冒充 Stable。首批批准冻结为
-86 个 canonical pattern ID；未来同 family 新 ID 仍需重新 Review。
+状态为 Stable、Experimental 或 Unsupported。首批 86 个精确批准的 canonical pattern
+在 candidate 中晋级为 Stable，共覆盖 5,061 条记录；同 family 的新 ID、全部 SFX 和暂缓
+范围仍保持 Experimental。Stable 使用独立 `quality-summary.json` 绝对门禁，不读取也不受
+`quality-baseline.json` 放宽；accepted corpus 的 86 条代表样本逐条精确复算 `zh_CN`
+default/main。门禁还独立冻结 decision ID、86 个 pattern ID 集合摘要和 5,061 条 Stable
+记录总数，不能通过同时缩减 policy 与 corpus 绕过。corpus 当前仍为
+`review_status=pending`，留给 P5 用户 Review。
 
 ## Pattern Catalog（只读维护报告）
 
@@ -169,18 +173,32 @@ uv run python scripts/report_translation_patterns.py `
   --output-md dist\reports\runs\latest\translation-patterns.md
 ```
 
-公共 catalog 和维护 inventory 中的候选当前都保持 Experimental；`scope_status=approved`
-仅表示产品范围已获批准，pending 与 deferred 分别表示待精确审阅和暂缓。公共 catalog
-Schema、record Schema 与最小样例位于 `data/schema/`、`data/examples/`，生成时复制进
-approved run 的 `normalized/`。确定性输入/内容身份、事务 run 和原子 pointer
-promotion 机制已实现；绝对门禁 attestation、review importer、首个真实 promotion
-与远端发布尚未实现。
+公共 catalog 仅把 exact approved 且结构合格的 pattern 标记为 Stable；pending 与 deferred
+分别表示待精确审阅和暂缓。公共 manifest/record/catalog/quality Schema、accepted corpus、
+无项目源码 consumer 和最小样例位于 `data/`，生成时复制进 candidate 的 `normalized/`。
+确定性身份、事务 run、分层绝对门禁和原子 pointer 机制已实现；review importer、首个真实
+approved-local promotion 与远端发布仍属于后续阶段。
+
+### 无源码消费者快速验证
+
+下面的入口只使用 Python 标准库，同时校验 JSON Schema、manifest 必需路径和实际 payload
+文件集闭包、逐文件哈希、`content_digest`、quality/catalog 身份、JSONL 排序与 Pattern Catalog
+引用。把 `<run-id>` 换成一次 P4 completed candidate；三个命令分别证明 Stable 命中、
+Experimental 明示与稳定 MISS：
+
+```powershell
+$root = "dist\runs\completed\<run-id>\normalized"
+uv run python "$root\examples\consumer.py" --root $root --query Play_vo_AatroxSkin01_AatroxE_cast3D --expect stable
+uv run python "$root\examples\consumer.py" --root $root --query Play_vo_Annie_Move2DStandard --expect experimental
+uv run python "$root\examples\consumer.py" --root $root --query Play_vo_NotARealEvent --expect miss
+```
 
 ## 自动更新与 CI
 
 `.github/workflows/update-raw-events.yml` 为手动触发的更新 workflow
 （在线最小子集 + 全量重建 + 质量棘轮门禁 + normalized artifact 发布）。
-本地等价物为 `scripts/run_full_refresh.py`。更新流程详解见
+远端 workflow 仍是旧式 artifact 路径，不等同于本地 approved-local 发布链；本地权威入口为
+`scripts/run_full_refresh.py`。更新流程详解见
 `docs/UPDATE_WORKFLOW.md`，贡献指引见 `CONTRIBUTING.md`，仓库分层说明见
 `REPOSITORY.md`。
 

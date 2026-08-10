@@ -36,7 +36,7 @@ raw/events/
 - `reference/`：仓库维护的累计精简参考合集，包含 `champions/`、`maps/`、`skinlines/`、`skins/`、`items/`，解释阶段只读取这里。
 - `.temp/reference-sources/`：被忽略的版本敏感参考输入缓存，不对下游承诺稳定。
 - `dist/sources/`：`scripts/download_sources.py` 的数据源落点（字符串表 / 大厅 JSON / 皮肤 bin / RST key 字典 + 版本游标 `manifest.json`）；layout 与手工放置规范见根 README「目录契约」。
-- `dist/runs/`：事务性数据集运行根；`.staging` 隔离写入，`failed` 保留诊断，`completed` 保存不可变候选，`approved-local.json` 原子指向唯一默认消费数据集。每个 completed run 的 `normalized/` 仍以单流/catalog 为 V2 首选并保留兼容分片；manifest 固化输入树摘要、payload SHA-256 与 `content_digest`。
+- `dist/runs/`：事务性数据集运行根；`.staging` 隔离写入，`failed` 保留诊断，`completed` 保存不可变候选，`approved-local.json` 原子指向唯一默认消费数据集。每个 completed run 的 `normalized/` 以单流/catalog/quality-summary 为 V2 首选并保留兼容分片；manifest 固化输入树摘要、payload SHA-256 与 `content_digest`。
 - `dist/work/`、`dist/reports/runs/`：仅保留给显式维护命令的旧式独立输出；正式 full refresh 不再写入。
 
 旧的 `manifest/<version>/events` 和 `hashes/<version>/integrated` 路线只作为外部兼容来源存在，不再是本仓库主目录模型。
@@ -85,7 +85,7 @@ rules/low_trust_events.yaml
 - `translation` 是 normalized 记录内的本地化渲染层；需要页面上下文省略、不同语言语序或调试审计时，应优先使用它，而不是只依赖固定 `display.zh_cn_short/detail`。
 - normalized 行以 `record_id` 作为公开唯一身份，并保留 `raw_event_name` 原值；`source_scope` / `provenance` 区分 champions、maps 等来源。不能把 raw 名称误当作全局唯一键。
 
-V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX 保留在语义词典中，目标支持状态为 Stable、Experimental 或 Unsupported。normalized 行已增量承载 pattern/support/render/review 字段，但当前 support 仍全部为 Experimental；公共 `pattern-catalog.json` 与本地维护 inventory 都从 semantic frame 派生，不是以 `BaseName,Label` 为主模型的另一份词典。approved、pending、deferred scope 只表达产品决策，尚未完成 Stable promotion。
+V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX 保留在语义词典中，支持状态为 Stable、Experimental 或 Unsupported。首批 exact approved 的 86 个 VO pattern 在 candidate 内为 Stable，其余范围仍为 Experimental；公共 catalog 与维护 inventory 都从 semantic frame 派生，不是以 `BaseName,Label` 为主模型的另一份词典。Stable absolute gates 与 accepted corpus 已进入本地 full refresh，用户 Review/promotion 仍是 approved-local 的独立后续门禁。
 
 普通用户展示文案应回答“这个音频什么时候触发”，例如：
 

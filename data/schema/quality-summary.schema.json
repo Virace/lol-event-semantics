@@ -1,0 +1,82 @@
+{
+  "$id": "https://lol-event-semantics.local/schema/quality-summary.v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "accepted_corpus": {
+      "additionalProperties": true,
+      "properties": {
+        "entry_count": {"minimum": 1, "type": "integer"},
+        "failed_entry_count": {"minimum": 0, "type": "integer"},
+        "passed": {"type": "boolean"},
+        "results": {"items": {"type": "object"}, "type": "array"}
+      },
+      "required": ["entry_count", "failed_entry_count", "passed", "results"],
+      "type": "object"
+    },
+    "decision_id": {"minLength": 1, "type": "string"},
+    "experimental": {"type": "object"},
+    "gate_version": {"const": "stable-product-gates.v1"},
+    "global": {
+      "additionalProperties": true,
+      "properties": {
+        "pattern_count": {"minimum": 0, "type": "integer"},
+        "record_count": {"minimum": 0, "type": "integer"},
+        "support": {"type": "object"}
+      },
+      "required": ["record_count", "pattern_count", "support"],
+      "type": "object"
+    },
+    "schema_version": {"const": 1},
+    "scope_contract": {
+      "additionalProperties": false,
+      "properties": {
+        "actual_pattern_count": {"minimum": 0, "type": "integer"},
+        "actual_pattern_ids_digest": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+        "actual_record_count": {"minimum": 0, "type": "integer"},
+        "decision_id": {"minLength": 1, "type": "string"},
+        "expected_pattern_count": {"minimum": 1, "type": "integer"},
+        "expected_pattern_ids_digest": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+        "expected_record_count": {"minimum": 1, "type": "integer"},
+        "matched": {"type": "boolean"}
+      },
+      "required": [
+        "decision_id",
+        "expected_pattern_count",
+        "actual_pattern_count",
+        "expected_record_count",
+        "actual_record_count",
+        "expected_pattern_ids_digest",
+        "actual_pattern_ids_digest",
+        "matched"
+      ],
+      "type": "object"
+    },
+    "stable": {
+      "additionalProperties": true,
+      "properties": {
+        "passed": {"type": "boolean"},
+        "require_zero": {"const": true},
+        "violation_counts": {"type": "object"}
+      },
+      "required": ["passed", "require_zero", "violation_counts"],
+      "type": "object"
+    },
+    "status": {"enum": ["passed", "failed"]},
+    "unsupported": {"type": "object"}
+  },
+  "required": [
+    "schema_version",
+    "gate_version",
+    "status",
+    "decision_id",
+    "scope_contract",
+    "global",
+    "stable",
+    "experimental",
+    "unsupported",
+    "accepted_corpus"
+  ],
+  "title": "lol-event-semantics tiered quality summary v1",
+  "type": "object"
+}

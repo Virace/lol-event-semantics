@@ -37,7 +37,7 @@ class BuildStepsTests(unittest.TestCase):
     """验证默认参数下的步骤组装。"""
 
     def test_core_chain_order_and_argv(self) -> None:
-        """默认五步顺序正确且 argv 含正确参数。"""
+        """默认六步顺序正确且 argv 含正确参数。"""
 
         args = parse_args(
             [
@@ -58,7 +58,7 @@ class BuildStepsTests(unittest.TestCase):
 
         self.assertEqual(
             step_names(steps),
-            ["decompose", "build", "validate", "metrics", "ratchet"],
+            ["decompose", "build", "validate", "quality", "metrics", "ratchet"],
         )
 
         decompose = find_argv(steps, "decompose")
@@ -80,6 +80,11 @@ class BuildStepsTests(unittest.TestCase):
         self.assertIn(as_path("out/normalized"), validate)
         validation_json = validate[validate.index("--output-json") + 1]
         self.assertTrue(validation_json.endswith("normalized-validation.json"))
+
+        quality = find_argv(steps, "quality")
+        self.assertEqual(quality[quality.index("--validation-json") + 1], validation_json)
+        self.assertTrue(quality[quality.index("--output-json") + 1].endswith("quality-gates.json"))
+        self.assertTrue(quality[quality.index("--support-diff-json") + 1].endswith("quality-diff.json"))
 
         ratchet = find_argv(steps, "ratchet")
         self.assertIn("--baseline", ratchet)
@@ -109,7 +114,7 @@ class BuildStepsTests(unittest.TestCase):
 
         self.assertEqual(
             step_names(steps),
-            ["update", "decompose", "build", "validate", "metrics", "ratchet"],
+            ["update", "decompose", "build", "validate", "quality", "metrics", "ratchet"],
         )
         update = find_argv(steps, "update")
         self.assertIn("update_raw_events.py", update[1])
@@ -269,7 +274,7 @@ class MainTests(unittest.TestCase):
         self.assertEqual(code, 1)
         # metrics 在 ratchet 之前执行，故 ratchet 阻断失败时 metrics 已产出。
         self.assertIn("metrics", calls)
-        self.assertEqual(calls, ["decompose", "build", "validate", "metrics", "ratchet"])
+        self.assertEqual(calls, ["decompose", "build", "validate", "quality", "metrics", "ratchet"])
 
 
 def materialize_run_outputs(name: str, argv: list[str]) -> None:
@@ -292,6 +297,25 @@ def materialize_run_outputs(name: str, argv: list[str]) -> None:
         output_path = Path(argv[argv.index("--output-json") + 1])
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text("{}\n", encoding="utf-8")
+    elif name == "quality":
+        output_path = Path(argv[argv.index("--output-json") + 1])
+        diff_path = Path(argv[argv.index("--support-diff-json") + 1])
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(
+            json.dumps(
+                {
+                    "promotion_eligibility": {
+                        "eligible": False,
+                        "gate_version": "stable-product-gates.v1",
+                        "automatic_gates_passed": True,
+                        "reason": "manual review pending",
+                    }
+                }
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        diff_path.write_text("{}\n", encoding="utf-8")
 
 
 if __name__ == "__main__":

@@ -41,6 +41,7 @@ from .normalized_translation_renderer import build_compat_display
 from .pattern_catalog import PatternPolicy
 from .reference_collection import load_reference_collection, read_yaml
 from .rules import RuleBook, rule_key
+from .tiered_quality import build_quality_summary, load_accepted_corpus
 
 SCHEMA_VERSION = 2
 PATTERN_CATALOG_SCHEMA_VERSION = 1
@@ -286,7 +287,9 @@ def build_short_display(
         面向下游用户的短中文说明，Stop/Mute 壳动词以停止/静音收尾。
     """
 
-    return f"{build_short_display_core(record, display_context=display_context)}{playback_verb_suffix(record.shell.verb)}"
+    return (
+        f"{build_short_display_core(record, display_context=display_context)}{playback_verb_suffix(record.shell.verb)}"
+    )
 
 
 def playback_verb_suffix(verb: object) -> str:
@@ -1039,8 +1042,7 @@ def write_normalized_outputs(
     display_context = NormalizedDisplayContext(
         item_names=translation_context.reference_item_names or load_reference_item_names(reference_root),
         map_system_entity_labels=(
-            translation_context.map_system_entity_labels
-            or load_map_system_entity_labels(rules_root, overrides_root)
+            translation_context.map_system_entity_labels or load_map_system_entity_labels(rules_root, overrides_root)
         ),
     )
     pending_rows: dict[tuple[str, str], list[dict[str, object]]] = defaultdict(list)
@@ -1080,6 +1082,8 @@ def write_normalized_outputs(
         pattern_policy,
     )
     pattern_catalog = build_public_pattern_catalog(pattern_report, pattern_policy)
+    accepted_corpus = load_accepted_corpus(contract_assets_root / "accepted-corpus.v1.json")
+    quality_summary = build_quality_summary(all_rows, pattern_report, pattern_catalog, accepted_corpus)
 
     shard_paths = assign_entity_shard_paths(grouped.keys())
     for (kind, alias), rows in sorted(grouped.items()):
@@ -1088,6 +1092,7 @@ def write_normalized_outputs(
 
     write_normalized_event_stream(all_rows, output_root / "normalized-events.jsonl")
     write_json_document(pattern_catalog, output_root / "pattern-catalog.json")
+    write_json_document(quality_summary, output_root / "quality-summary.json")
     write_contract_assets(contract_assets_root, output_root)
     write_entity_summary(grouped, output_root / "entity-summary.json", shard_paths)
     write_manifest(
@@ -1095,6 +1100,7 @@ def write_normalized_outputs(
         output_root / "manifest.json",
         reference_version,
         pattern_catalog=pattern_catalog,
+        quality_summary=quality_summary,
         input_identity=input_identity,
     )
 
@@ -1684,7 +1690,13 @@ def clear_generated_outputs(output_root: Path) -> None:
         output_root: normalized 输出目录。
     """
 
-    for name in ("manifest.json", "entity-summary.json", "normalized-events.jsonl", "pattern-catalog.json"):
+    for name in (
+        "manifest.json",
+        "entity-summary.json",
+        "normalized-events.jsonl",
+        "pattern-catalog.json",
+        "quality-summary.json",
+    ):
         path = output_root / name
         if path.exists():
             path.unlink()
@@ -1764,11 +1776,14 @@ def write_contract_assets(contract_assets_root: Path, output_root: Path) -> None
             "manifest.schema.json",
             "normalized-event.schema.json",
             "pattern-catalog.schema.json",
+            "quality-summary.schema.json",
         ),
         "examples": (
             "manifest.v2.json",
             "normalized-event.v2.json",
             "pattern-catalog.v1.json",
+            "quality-summary.v1.json",
+            "consumer.py",
         ),
     }
     for directory, filenames in required_assets.items():
@@ -1780,6 +1795,10 @@ def write_contract_assets(contract_assets_root: Path, output_root: Path) -> None
             if not source.is_file():
                 raise ValueError(f"normalized contract asset 不存在: {source}")
             shutil.copyfile(source, target_root / filename)
+    corpus = contract_assets_root / "accepted-corpus.v1.json"
+    if not corpus.is_file():
+        raise ValueError(f"normalized accepted corpus 不存在: {corpus}")
+    shutil.copyfile(corpus, output_root / "examples" / "accepted-corpus.v1.json")
 
 
 def write_manifest(
@@ -1788,6 +1807,7 @@ def write_manifest(
     reference_version: str,
     *,
     pattern_catalog: dict[str, object],
+    quality_summary: dict[str, object],
     input_identity: Mapping[str, object],
 ) -> None:
     """写出 normalized manifest。
@@ -1797,6 +1817,7 @@ def write_manifest(
         output_path: manifest 输出路径。
         reference_version: 本次生成使用的参考版本。
         pattern_catalog: 同批生成的公共 Pattern Catalog。
+        quality_summary: 同批生成的确定性分层质量摘要。
         input_identity: 已通过冻结预检的完整输入身份。
     """
 
@@ -1819,7 +1840,8 @@ def write_manifest(
             "record_counts": review_counts,
         },
         "support_level_counts": support_counts,
-        "quality_status": "not_evaluated",
+        "quality_status": quality_summary.get("status"),
+        "quality_gate_version": quality_summary.get("gate_version"),
     }
     digest = content_digest(content_identity, files)
     manifest = {
@@ -1841,6 +1863,7 @@ def write_manifest(
             "manifest.json",
             "normalized-events.jsonl",
             "pattern-catalog.json",
+            "quality-summary.json",
             "entity-summary.json",
             "by-entity/",
             "schema/",

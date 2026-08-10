@@ -40,6 +40,7 @@ def test_contract_assets_digest_excludes_quality_baseline(tmp_path: Path) -> Non
     (tmp_path / "examples").mkdir()
     (tmp_path / "schema" / "record.json").write_text("{}\n", encoding="utf-8")
     (tmp_path / "examples" / "record.json").write_text("{}\n", encoding="utf-8")
+    (tmp_path / "accepted-corpus.v1.json").write_text("{}\n", encoding="utf-8")
     (tmp_path / "quality-baseline.json").write_text('{"warnings": 1}\n', encoding="utf-8")
     before = contract_assets_digest(tmp_path)
 

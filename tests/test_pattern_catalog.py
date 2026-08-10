@@ -204,8 +204,8 @@ class PatternCatalogTests(unittest.TestCase):
             build_pattern_report([assist, dance], approved_policy)["accepted_corpus_candidates"],
         )
 
-    def test_user_approved_scope_is_audited_without_premature_stable_support(self) -> None:
-        """批准 scope、待精确审与暂缓状态独立于正式 support level。"""
+    def test_user_approved_scope_becomes_exact_stable_support(self) -> None:
+        """P4 只把精确批准且结构合格的 pattern 晋级 Stable。"""
 
         dance = voice_record("Play_vo_Annie_Dance")
         set_voice_action(dance, "dance", "跳舞")
@@ -230,8 +230,8 @@ class PatternCatalogTests(unittest.TestCase):
         pending = by_scope["pending"]
         deferred = by_scope["deferred"]
 
-        self.assertEqual(approved["support_level"], "experimental")
-        self.assertEqual(approved["proposed_support_level"], "stable")
+        self.assertEqual(approved["support_level"], "stable")
+        self.assertIsNone(approved["proposed_support_level"])
         self.assertEqual(approved["review_status"], "accepted")
         self.assertEqual(pending["review_status"], "pending")
         self.assertEqual(pending["proposed_support_level"], "stable")

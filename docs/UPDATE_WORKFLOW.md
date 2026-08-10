@@ -9,11 +9,13 @@
 ```text
 raw/events/            原始事件名（不可变源数据，累积式）
   ↓  scripts/decompose_events.py
-dist/work/…/*.jsonl    拆解层：事件名 → 词法原子 + 语义槽位（无损）
+dist/runs/.staging/<run>/work/*.jsonl
+                       拆解层：事件名 → 词法原子 + 语义槽位（无损）
   ↓  scripts/build_normalized_outputs.py
-dist/normalized/       翻译层：语义槽位 → translation frame + 中文文案
-  ↓  scripts/validate_normalized_outputs.py + check_quality_ratchet.py
-质量门禁               0 error 硬门 + 质量棘轮 + 全量 pytest
+dist/runs/.staging/<run>/normalized/
+                       翻译层：语义槽位 → translation frame + 中文文案
+  ↓  global validate + Stable absolute gates + trend ratchet
+质量门禁               0 error + Stable/accepted corpus 全零硬门 + Experimental 趋势 + 全量 pytest
 ```
 
 一键跑完整链：
@@ -21,8 +23,7 @@ dist/normalized/       翻译层：语义槽位 → translation frame + 中文�
 ```powershell
 uv run python scripts/run_full_refresh.py `
   --raw-root raw\events --reference-root reference `
-  --output-root dist\normalized --work-root dist\work\event-decomposition `
-  --report-root dist\reports\runs\latest --baseline data\quality-baseline.json
+  --runs-root dist\runs --baseline data\quality-baseline.json
 ```
 
 任何一步失败即停（`FAILED at step: <步骤名>`）。
@@ -74,8 +75,8 @@ phase=cast…）。它依赖三类知识：
 
 所以新概念出现时的时间线是：
 
-1. 新词落到 legacy/fallback → fallback 率上升或 `translation_missing`
-   警告出现 → 质量棘轮（`data/quality-baseline.json`）阻断或报告显现；
+1. 新词落到 legacy/fallback → Stable 范围由绝对门禁立即阻断；Experimental
+   范围的 fallback 率上升或 `translation_missing` 则由趋势棘轮阻断或报告显现；
 2. 人工核验词义——**一手来源优先级：国服客户端字符串表（中英同键对
    照）> Data Dragon 中英同键 > 官方公告**。社区惯称不可直接采信（本
    仓库已勘出 Godlike=接近神、Anima Squad=幻灵战队、Rakan=洛 等多处

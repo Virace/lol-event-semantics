@@ -1,0 +1,3663 @@
+{
+  "schema_version": 1,
+  "corpus_id": "v1-initial-vo-2026-08-07",
+  "decision_id": "v1-initial-vo-2026-08-07",
+  "selection_policy": "lexicographically-first-record.v1",
+  "review_status": "pending",
+  "entries": [
+    {
+      "pattern_id": "pattern-v1-007385e15a750dc2ad2fd862050c81e3b0e967740b38ca04a8d55728838b6353",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "assist",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "assist",
+        "roles": [
+          "action",
+          "champion"
+        ],
+        "argument_keys": {
+          "action": "assist"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion"
+        ],
+        "signature_keys": {
+          "action": "assist"
+        }
+      },
+      "raw_event_name": "Play_vo_Kalista_Assist3DGeneral",
+      "zh_cn_default": "卡莉丝塔 协助语音",
+      "zh_cn_main": "协助语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-0278eafd1ac2dfc2fe2a794b05302df051fa9223b1fbfd76da339009f040eda8",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "w",
+          "phase": "end"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "w",
+          "phase": "end"
+        }
+      },
+      "raw_event_name": "Play_vo_Akshan_Spell3DWEnd",
+      "zh_cn_default": "阿克尚 W技能结束",
+      "zh_cn_main": "W技能结束",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-068d914c04147485e1e1867a4f4d3321c90a27e7f0506a2961c42f1e554cdabd",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "r",
+          "phase": "cast"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "r",
+          "phase": "cast"
+        }
+      },
+      "raw_event_name": "Play_vo_AatroxSkin01_AatroxR_cast3D",
+      "zh_cn_default": "亚托克斯 仲裁圣骑 R技能释放",
+      "zh_cn_main": "R技能释放",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-0698e5a441ed57a020b46d437a79eb353f443ec63d7ad46ef02982a51b72b657",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "use_item",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "use_item",
+        "roles": [
+          "action",
+          "champion",
+          "qualifier",
+          "skin"
+        ],
+        "argument_keys": {
+          "action": "use_item"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion",
+          "qualifier",
+          "skin"
+        ],
+        "signature_keys": {
+          "action": "use_item"
+        }
+      },
+      "raw_event_name": "Play_vo_AatroxSkin01_UseItem3DGuardianAngelR",
+      "zh_cn_default": "亚托克斯 仲裁圣骑 使用装备语音",
+      "zh_cn_main": "使用装备语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-0818c3e960a6e276dd2d30199a85fd3796ee292c183475edb1cbdf7d2f2e34ad",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "e",
+          "phase": "end"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "e",
+          "phase": "end"
+        }
+      },
+      "raw_event_name": "Play_vo_Gangplank_Spell3DEEnd",
+      "zh_cn_default": "普朗克 E技能结束",
+      "zh_cn_main": "E技能结束",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-09827e1350924e600125b205ce709cf932b56a2acf30e96e8c32a5b678ddd50e",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "w",
+          "phase": "end"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "w",
+          "phase": "end"
+        }
+      },
+      "raw_event_name": "Play_vo_DrMundoSkin03_Spell3DWEnd",
+      "zh_cn_default": "蒙多医生 律政大亨 蒙多 W技能结束",
+      "zh_cn_main": "W技能结束",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-09868680bba44e49a8066d586edb960847c71686b4bb527753e80a724b9f0199",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "r",
+          "phase": "rankthree"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "r",
+          "phase": "rankthree"
+        }
+      },
+      "raw_event_name": "Play_vo_EzrealSkin05_Spell2DRRankThree",
+      "zh_cn_default": "伊泽瑞尔 未来战士 R技能3级",
+      "zh_cn_main": "R技能3级",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-0c581d556ed9e3ba4b3caaea45590922bf9452804ebecab3ca49c755f72d5f63",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "r",
+          "phase": "hit"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "r",
+          "phase": "hit"
+        }
+      },
+      "raw_event_name": "Play_vo_BelVeth_Spell3DRHit",
+      "zh_cn_default": "卑尔维斯 R技能命中",
+      "zh_cn_main": "R技能命中",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-0dc0b4acdff4818dba280590846f3a33ff86c6e3249b74ad08babde66688e2c4",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "p",
+          "phase": "hit"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "p",
+          "phase": "hit"
+        }
+      },
+      "raw_event_name": "Play_vo_LuxSkin42_LuxPrismaticWaveMissile_hit3D",
+      "zh_cn_default": "拉克丝 至高天 P技能命中",
+      "zh_cn_main": "P技能命中",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-10463982f9aa075e49bd4b1f189bf8c3e85991f20ffaaee80bcd841bf0d38e57",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "use_item",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "use_item",
+        "roles": [
+          "action",
+          "champion",
+          "qualifier"
+        ],
+        "argument_keys": {
+          "action": "use_item"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion",
+          "qualifier"
+        ],
+        "signature_keys": {
+          "action": "use_item"
+        }
+      },
+      "raw_event_name": "Play_vo_Aatrox_UseItem3DGuardianAngelR",
+      "zh_cn_default": "亚托克斯 使用装备语音",
+      "zh_cn_main": "使用装备语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-18cbfd8419bb0b56929ea67f446624f8100627c2232e70b369a8488233453eea",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "w",
+          "phase": "hit"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "w",
+          "phase": "hit"
+        }
+      },
+      "raw_event_name": "Play_vo_Caitlyn_CaitlynWSnare_Jade_hit3D",
+      "zh_cn_default": "凯特琳 W技能命中",
+      "zh_cn_main": "W技能命中",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-1cb260cdbfeb5b13c2d0530dfd638fbe9e0b9c05055e2398783db66c4523bd2b",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "e",
+          "phase": "cast"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "e",
+          "phase": "cast"
+        }
+      },
+      "raw_event_name": "Play_vo_AatroxSkin01_AatroxE_cast3D",
+      "zh_cn_default": "亚托克斯 仲裁圣骑 E技能释放",
+      "zh_cn_main": "E技能释放",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-21f720cb7792af61d0db8212d704c19fb712415a6ddaca34c67fff231066c032",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "q",
+          "phase": "end"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "q",
+          "phase": "end"
+        }
+      },
+      "raw_event_name": "Play_vo_AurelionSol_Spell3DQEnd",
+      "zh_cn_default": "奥瑞利安·索尔 Q技能结束",
+      "zh_cn_main": "Q技能结束",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-24bcce2e2d86c945c917c7c79c5e3bfaf19116c155099932b0fa28e11e751907",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "e",
+          "phase": "start"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "e",
+          "phase": "start"
+        }
+      },
+      "raw_event_name": "Play_vo_YoneSkin55_YoneE_Sound_Processing_Start",
+      "zh_cn_default": "永恩 西部魔影 E技能开始",
+      "zh_cn_main": "E技能开始",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-26f8212dd8f9cf2f6152c1d7612a2f75d42be1051196265aba92a3215f76357b",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "level_up",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "level_up",
+        "roles": [
+          "action",
+          "champion"
+        ],
+        "argument_keys": {
+          "action": "level_up"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion"
+        ],
+        "signature_keys": {
+          "action": "level_up"
+        }
+      },
+      "raw_event_name": "Play_vo_Azir_LevelUp2DEighteen",
+      "zh_cn_default": "阿兹尔 升至18级语音",
+      "zh_cn_main": "升至18级语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-2be905ad9fbb925589467ec69271623acb301711268b13dadb61a37afb48d300",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "r",
+          "phase": "hit"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "r",
+          "phase": "hit"
+        }
+      },
+      "raw_event_name": "Play_vo_BelVethSkin10_Spell3DRHit",
+      "zh_cn_default": "卑尔维斯 星界女神 R技能命中",
+      "zh_cn_main": "R技能命中",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-2c787d2d2fca0641c60e5dc43cbffc67c7021423fbb1c717c573d3d2d1cb84db",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "w",
+          "phase": "miss"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "w",
+          "phase": "miss"
+        }
+      },
+      "raw_event_name": "Play_vo_KaisaSkin14_KaisaW_miss3D",
+      "zh_cn_default": "卡莎 K/DA W技能落空",
+      "zh_cn_main": "W技能落空",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-2e253fe16d54efb449df5101df2f3fdf8bbec93ac001b5ac7f47cfe90d6882e9",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "taunt_response",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "taunt_response",
+        "roles": [
+          "action",
+          "champion"
+        ],
+        "argument_keys": {
+          "action": "taunt_response"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion"
+        ],
+        "signature_keys": {
+          "action": "taunt_response"
+        }
+      },
+      "raw_event_name": "Play_vo_Ahri_TauntResponse3DGeneral",
+      "zh_cn_default": "阿狸 嘲讽回应语音",
+      "zh_cn_main": "嘲讽回应语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-302e360d1aac1e6fd12c4777ea2fab380b808568e65d9b2d152ee5966b398ea5",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "p",
+          "phase": "hit"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "p",
+          "phase": "hit"
+        }
+      },
+      "raw_event_name": "Play_vo_Lux_LuxPrismaticWaveMissile_hit3D",
+      "zh_cn_default": "拉克丝 P技能命中",
+      "zh_cn_main": "P技能命中",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-3110a19c7614c3a728be652c5db611cdf9779116a4a09c78210aa17046e1a4fe",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "q",
+          "phase": "hit"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "q",
+          "phase": "hit"
+        }
+      },
+      "raw_event_name": "Play_vo_Aurora_AuroraQ_hit3D",
+      "zh_cn_default": "阿萝拉 Q技能命中",
+      "zh_cn_main": "Q技能命中",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-31c1b66c9d56d92ee3c8925865e599f0c53b5d45507d743c5bc40a2a51e62432",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "q",
+          "phase": "rankone"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "q",
+          "phase": "rankone"
+        }
+      },
+      "raw_event_name": "Play_vo_EzrealSkin05_Spell2DQRankOne",
+      "zh_cn_default": "伊泽瑞尔 未来战士 Q技能1级",
+      "zh_cn_main": "Q技能1级",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-3327a80285aea1863e3c66c33f1360e4358ce51f74131c377ea957dc744050fe",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "dance",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "dance",
+        "roles": [
+          "action",
+          "champion",
+          "companion",
+          "skin"
+        ],
+        "argument_keys": {
+          "action": "dance"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion",
+          "companion",
+          "skin"
+        ],
+        "signature_keys": {
+          "action": "dance"
+        }
+      },
+      "raw_event_name": "Play_vo_RakanSkin05_WithXayahDance3D",
+      "zh_cn_default": "洛 星之守护者 跳舞语音（霞在附近）",
+      "zh_cn_main": "跳舞语音（霞在附近）",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-3391dee40b1af6860827c967fb60c98ff472c1dd0ae6127797784e58ade95fa1",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "r",
+          "phase": "ranktwo"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "r",
+          "phase": "ranktwo"
+        }
+      },
+      "raw_event_name": "Play_vo_Hwei_Spell2DRRankTwo",
+      "zh_cn_default": "彗 R技能2级",
+      "zh_cn_main": "R技能2级",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-343f7b235e38125849ed84ba5a80deb5f64e9dd31f8cdc3d3d0bc19dcac1ef4f",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "taunt_response",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "taunt_response",
+        "roles": [
+          "action",
+          "champion",
+          "qualifier"
+        ],
+        "argument_keys": {
+          "action": "taunt_response"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion",
+          "qualifier"
+        ],
+        "signature_keys": {
+          "action": "taunt_response"
+        }
+      },
+      "raw_event_name": "Play_vo_Galio_TauntResponse3DPoppy",
+      "zh_cn_default": "加里奥 嘲讽回应语音",
+      "zh_cn_main": "嘲讽回应语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-363d64253b36d4b3c70f495bd76ceab48eb5da716519c8f9837e33efbd6086d7",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "q",
+          "phase": "ready"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "q",
+          "phase": "ready"
+        }
+      },
+      "raw_event_name": "Play_vo_YoneSkin19_Spell3DQ3Ready",
+      "zh_cn_default": "永恩 黎明使者 Q技能就绪",
+      "zh_cn_main": "Q技能就绪",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-43139d8e08aa2f344884bc2a35870a3e3cf1fc435a8c9719ab72ca0e85a4a5a7",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "p",
+          "phase": "end"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "p",
+          "phase": "end"
+        }
+      },
+      "raw_event_name": "Play_vo_Irelia_Spell3DPEnd_01",
+      "zh_cn_default": "艾瑞莉娅 P技能结束",
+      "zh_cn_main": "P技能结束",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-43160a1e1a4c545cfb940dbe7d1b79157d7c4b4c1c15cdabde7efa3352d865ea",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "e",
+          "phase": "stop"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "e",
+          "phase": "stop"
+        }
+      },
+      "raw_event_name": "Play_vo_YoneSkin55_YoneE_Sound_Processing_Stop",
+      "zh_cn_default": "永恩 西部魔影 E技能停止",
+      "zh_cn_main": "E技能停止",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-46f98cb3319a567ea264b6be3ccab5708eeef0848e5e9804e1c4af4e73f65f98",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "w",
+          "phase": "cast"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "w",
+          "phase": "cast"
+        }
+      },
+      "raw_event_name": "Play_vo_Aatrox_AatroxW_cast3D",
+      "zh_cn_default": "亚托克斯 W技能释放",
+      "zh_cn_main": "W技能释放",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-47ba52dc2a15bf55566e92c177022e72fef3ee22087799e5ac2a7d82068aa0f2",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "e",
+          "phase": "hit"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "e",
+          "phase": "hit"
+        }
+      },
+      "raw_event_name": "Play_vo_Ahri_AhriEMissile_hit3D",
+      "zh_cn_default": "阿狸 E技能命中",
+      "zh_cn_main": "E技能命中",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-4bbd0843ab8dcde6af59842a1856ec098519b11c297d4dcb9641e663ab8b048e",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "joke_response",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "joke_response",
+        "roles": [
+          "action",
+          "champion"
+        ],
+        "argument_keys": {
+          "action": "joke_response"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion"
+        ],
+        "signature_keys": {
+          "action": "joke_response"
+        }
+      },
+      "raw_event_name": "Play_vo_Ahri_JokeResponse3DGeneral",
+      "zh_cn_default": "阿狸 玩笑回应语音",
+      "zh_cn_main": "玩笑回应语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-4e4b7a0bb30293222e63b18afa7f974f3874f733543ca8201d8cb75368783040",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "e",
+          "phase": "rankone"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "e",
+          "phase": "rankone"
+        }
+      },
+      "raw_event_name": "Play_vo_Udyr_Spell2DERankOne",
+      "zh_cn_default": "乌迪尔 E技能1级",
+      "zh_cn_main": "E技能1级",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-53beb442ca9e569cec21b4405a633c3f703ed0fb807153c8a28592d19c0f9f1d",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "r",
+          "phase": "end"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "r",
+          "phase": "end"
+        }
+      },
+      "raw_event_name": "Play_vo_Ahri_Spell3DREnd",
+      "zh_cn_default": "阿狸 R技能结束",
+      "zh_cn_main": "R技能结束",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-56d8248a98ea79ca88eea0ad987f0c9840d7349e1bb437cb7b8611c67076d42c",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "r",
+          "phase": "miss"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "r",
+          "phase": "miss"
+        }
+      },
+      "raw_event_name": "Play_vo_Smolder_SmolderRMomMissileSweetspot_miss3D",
+      "zh_cn_default": "斯莫德 R技能落空",
+      "zh_cn_main": "R技能落空",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-57b6931ec1b4cf4eb77670b6c8b21a29960eb9ef40e31dd57687533dde78fec7",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "q",
+          "phase": "end"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "q",
+          "phase": "end"
+        }
+      },
+      "raw_event_name": "Play_vo_AurelionSolSkin02_Spell3DQEnd",
+      "zh_cn_default": "奥瑞利安·索尔 霸天龙神 Q技能结束",
+      "zh_cn_main": "Q技能结束",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-5cf098cbdd2b46be9a3464fe34af1da54e4261070af572ff0d54730629fdd75b",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "q",
+          "phase": "miss"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "q",
+          "phase": "miss"
+        }
+      },
+      "raw_event_name": "Play_vo_DianaSkin47_DianaQOuterMissile_miss3D",
+      "zh_cn_default": "黛安娜 北极星神 Q技能落空",
+      "zh_cn_main": "Q技能落空",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-5e0065ddc302e6f833dddb6b885257fa74005b94c61b8ef7e2b3009e8133377c",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "q",
+          "phase": "cast"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "q",
+          "phase": "cast"
+        }
+      },
+      "raw_event_name": "Play_vo_AatroxSkin01_AatroxQ2_cast3D",
+      "zh_cn_default": "亚托克斯 仲裁圣骑 Q技能释放",
+      "zh_cn_main": "Q技能释放",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-5f6f06bb80e058e9d93f21f4c2b84507521988a83cb70a72bbeceab5e092aa71",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "buy_item",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "buy_item",
+        "roles": [
+          "action",
+          "champion",
+          "skin"
+        ],
+        "argument_keys": {
+          "action": "buy_item"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion",
+          "skin"
+        ],
+        "signature_keys": {
+          "action": "buy_item"
+        }
+      },
+      "raw_event_name": "Play_vo_AhriSkin86_BuyItem2DGeneral",
+      "zh_cn_default": "阿狸 联盟不朽 购买装备语音",
+      "zh_cn_main": "购买装备语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-618e8c03994079c50e46d0c5a7721ab325159f533a9e44e4fe7fdc6a05f8eb5a",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "p",
+          "phase": "cast"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "p",
+          "phase": "cast"
+        }
+      },
+      "raw_event_name": "Play_vo_AhriSkin14_AhriPassive_cast3D",
+      "zh_cn_default": "阿狸 星之守护者 P技能释放",
+      "zh_cn_main": "P技能释放",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-628e1867c883a3c300a10240314b1bfcfc14baa5e43f9da9a94152c85f594f63",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "p",
+          "phase": "ready"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "p",
+          "phase": "ready"
+        }
+      },
+      "raw_event_name": "Play_vo_CamilleSkin01_Spell3DPReady",
+      "zh_cn_default": "卡蜜尔 源代码 P技能就绪",
+      "zh_cn_main": "P技能就绪",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-671eca4924f9aa2e042efa45781d84d8ad0318157a3802692d3c547f48b839a6",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "e",
+          "phase": "cast"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "e",
+          "phase": "cast"
+        }
+      },
+      "raw_event_name": "Play_vo_Aatrox_AatroxE_cast3D",
+      "zh_cn_default": "亚托克斯 E技能释放",
+      "zh_cn_main": "E技能释放",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-6bd8a82c94442f62343835c84a425fac5d7139ab29d56e334acfa79110eb47c8",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "p",
+          "phase": "end"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "p",
+          "phase": "end"
+        }
+      },
+      "raw_event_name": "Play_vo_IreliaSkin01_Spell3DPEnd_01",
+      "zh_cn_default": "艾瑞莉娅 夜刃 P技能结束",
+      "zh_cn_main": "P技能结束",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-754d1821a4220125efbf68f0d6ef41a589df40034189a21042bf8232b9eb594c",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "ping",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "ping",
+        "roles": [
+          "action",
+          "champion",
+          "qualifier"
+        ],
+        "argument_keys": {
+          "action": "ping"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion",
+          "qualifier"
+        ],
+        "signature_keys": {
+          "action": "ping"
+        }
+      },
+      "raw_event_name": "Play_vo_Irelia_Ping2DOnMyWay",
+      "zh_cn_default": "艾瑞莉娅 信号语音",
+      "zh_cn_main": "信号语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-7571154d198fb9a02450047c695bcfededd5bda3d7a525f9f7c764fff279df01",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "r",
+          "phase": "end"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "r",
+          "phase": "end"
+        }
+      },
+      "raw_event_name": "Play_vo_AhriSkin14_Spell3DREnd",
+      "zh_cn_default": "阿狸 星之守护者 R技能结束",
+      "zh_cn_main": "R技能结束",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-761a7ffbbe8e28a678e98e40ca7db3811039f3bb23d844d1674a0ec85ebb96bf",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "dance",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "dance",
+        "roles": [
+          "action",
+          "champion"
+        ],
+        "argument_keys": {
+          "action": "dance"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion"
+        ],
+        "signature_keys": {
+          "action": "dance"
+        }
+      },
+      "raw_event_name": "Play_vo_AurelionSol_Dance3DGeneral",
+      "zh_cn_default": "奥瑞利安·索尔 跳舞语音",
+      "zh_cn_main": "跳舞语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-78afc25577dc1d6f6f5f2fbe3d5033f943c99b2ca607cdf2fab33b06e1a60662",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "w",
+          "phase": "start"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "w",
+          "phase": "start"
+        }
+      },
+      "raw_event_name": "Play_vo_EvelynnSkin24_EvelynnW_OnEnemy_start",
+      "zh_cn_default": "伊芙琳 魔女 W技能开始",
+      "zh_cn_main": "W技能开始",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-7ba041147a861002f825a5b368104e743f7505e794cf1bdc41b28f475274ef68",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "joke_response",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "joke_response",
+        "roles": [
+          "action",
+          "champion",
+          "qualifier"
+        ],
+        "argument_keys": {
+          "action": "joke_response"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion",
+          "qualifier"
+        ],
+        "signature_keys": {
+          "action": "joke_response"
+        }
+      },
+      "raw_event_name": "Play_vo_Urgot_JokeResponse3DKarthus",
+      "zh_cn_default": "厄加特 玩笑回应语音",
+      "zh_cn_main": "玩笑回应语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-7bacdbf06b504b6802f10f18ee2797206d7f18c3b824304902876739d2bb1d68",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "r",
+          "phase": "rankone"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "r",
+          "phase": "rankone"
+        }
+      },
+      "raw_event_name": "Play_vo_AurelionSol_Spell2DRRankOne",
+      "zh_cn_default": "奥瑞利安·索尔 R技能1级",
+      "zh_cn_main": "R技能1级",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-7ccab6fbceca26a726346bf24e12795aec0d2c39963e62960952a66b63f8af4f",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "q",
+          "phase": "ready"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "q",
+          "phase": "ready"
+        }
+      },
+      "raw_event_name": "Play_vo_Zeri_ZeriQPassiveReady_OnBuffActivate",
+      "zh_cn_default": "泽丽 Q技能就绪",
+      "zh_cn_main": "Q技能就绪",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-87473748351cd47b2e09eac7b3987ae805f640d6dcf2114432e17f0e449a0692",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "respawn",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "respawn",
+        "roles": [
+          "action",
+          "champion",
+          "qualifier",
+          "skin"
+        ],
+        "argument_keys": {
+          "action": "respawn"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion",
+          "qualifier",
+          "skin"
+        ],
+        "signature_keys": {
+          "action": "respawn"
+        }
+      },
+      "raw_event_name": "Play_vo_EkkoSkin03_Respawn2DKillerCaitlyn",
+      "zh_cn_default": "艾克 源计划：自由 重生语音",
+      "zh_cn_main": "重生语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-89768d76e50ff5edb26ebccc070eefe1d78e7997b1c1ec25a4b827b7f1add7d1",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "assist",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "assist",
+        "roles": [
+          "action",
+          "champion",
+          "skin"
+        ],
+        "argument_keys": {
+          "action": "assist"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion",
+          "skin"
+        ],
+        "signature_keys": {
+          "action": "assist"
+        }
+      },
+      "raw_event_name": "Play_vo_GalioSkin40_Assist3DGeneral",
+      "zh_cn_default": "加里奥 神盾机甲 协助语音",
+      "zh_cn_main": "协助语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-8bb97c7174781c111eaae79d5e2fe1fdfa6520217fcdbf4b08f3bac36d1d17f6",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "joke_response",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "joke_response",
+        "roles": [
+          "action",
+          "champion",
+          "qualifier",
+          "skin"
+        ],
+        "argument_keys": {
+          "action": "joke_response"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion",
+          "qualifier",
+          "skin"
+        ],
+        "signature_keys": {
+          "action": "joke_response"
+        }
+      },
+      "raw_event_name": "Play_vo_AsheSkin17_JokeResponse3DLucianSkin08",
+      "zh_cn_default": "艾希 西部天使 玩笑回应语音",
+      "zh_cn_main": "玩笑回应语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-8bbdaf4db8663580326610f4bf07bb2dafc0cd9bf9bd3b8df1f453d57bb181c2",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "use_item",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "use_item",
+        "roles": [
+          "action",
+          "champion",
+          "skin"
+        ],
+        "argument_keys": {
+          "action": "use_item"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion",
+          "skin"
+        ],
+        "signature_keys": {
+          "action": "use_item"
+        }
+      },
+      "raw_event_name": "Play_vo_AhriSkin14_UseItem2DPotion",
+      "zh_cn_default": "阿狸 星之守护者 使用药水语音",
+      "zh_cn_main": "使用药水语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-94626d3521ce7fbd9c0fa4fc4101960d3292b71629a7b6963feaad61064ca471",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "r",
+          "phase": "cast"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "r",
+          "phase": "cast"
+        }
+      },
+      "raw_event_name": "Play_vo_Aatrox_AatroxR_cast3D",
+      "zh_cn_default": "亚托克斯 R技能释放",
+      "zh_cn_main": "R技能释放",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-95c783455c25fb68361e065cbafb6739ec52df880428d3ddb197050b14eccc0d",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "buy_item",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "buy_item",
+        "roles": [
+          "action",
+          "champion"
+        ],
+        "argument_keys": {
+          "action": "buy_item"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion"
+        ],
+        "signature_keys": {
+          "action": "buy_item"
+        }
+      },
+      "raw_event_name": "Play_vo_AurelionSol_BuyItem2DGeneral",
+      "zh_cn_default": "奥瑞利安·索尔 购买装备语音",
+      "zh_cn_main": "购买装备语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-99b2c14dc0ba341baa79364360c216c12b945242bdab5cbeb249b0e533055233",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "taunt_response",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "taunt_response",
+        "roles": [
+          "action",
+          "champion",
+          "skin"
+        ],
+        "argument_keys": {
+          "action": "taunt_response"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion",
+          "skin"
+        ],
+        "signature_keys": {
+          "action": "taunt_response"
+        }
+      },
+      "raw_event_name": "Play_vo_AatroxSkin33_TauntResponse3DGeneral",
+      "zh_cn_default": "亚托克斯 海魔至尊 嘲讽回应语音",
+      "zh_cn_main": "嘲讽回应语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-a2c41782c95bd9eb316270e7c320c45d87039e7ba4d25d04a5b2952a297f8c84",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "q",
+          "phase": "miss"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "q",
+          "phase": "miss"
+        }
+      },
+      "raw_event_name": "Play_vo_Ezreal_EzrealQ_miss3D",
+      "zh_cn_default": "伊泽瑞尔 Q技能落空",
+      "zh_cn_main": "Q技能落空",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-a50b9c78abf13ac97513705e7fdfeec292d53107079d62e6e9d31b8f73a57456",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "joke_response",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "joke_response",
+        "roles": [
+          "action",
+          "champion",
+          "skin"
+        ],
+        "argument_keys": {
+          "action": "joke_response"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion",
+          "skin"
+        ],
+        "signature_keys": {
+          "action": "joke_response"
+        }
+      },
+      "raw_event_name": "Play_vo_AatroxSkin33_JokeResponse3DGeneral",
+      "zh_cn_default": "亚托克斯 海魔至尊 玩笑回应语音",
+      "zh_cn_main": "玩笑回应语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-abdade80c8219ba127d56c7eaa0e5625da389853061ce7b2632add7219a15c19",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "ping",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "ping",
+        "roles": [
+          "action",
+          "champion",
+          "qualifier",
+          "skin"
+        ],
+        "argument_keys": {
+          "action": "ping"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion",
+          "qualifier",
+          "skin"
+        ],
+        "signature_keys": {
+          "action": "ping"
+        }
+      },
+      "raw_event_name": "Play_vo_AatroxSkin33_Ping2DAssistMe",
+      "zh_cn_default": "亚托克斯 海魔至尊 信号语音",
+      "zh_cn_main": "信号语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-b0dd9772686602ebc29f8a59fcb80167bb56203e40e93e6cc9d8ab33a3db6823",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "w",
+          "phase": "miss"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "w",
+          "phase": "miss"
+        }
+      },
+      "raw_event_name": "Play_vo_Kaisa_KaisaW_miss3D",
+      "zh_cn_default": "卡莎 W技能落空",
+      "zh_cn_main": "W技能落空",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-b204f78654069675f4a4b2a0d0a4cff1a564d6d8966a1609af8fa840e8777f59",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "level_up",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "level_up",
+        "roles": [
+          "action",
+          "champion",
+          "skin"
+        ],
+        "argument_keys": {
+          "action": "level_up"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion",
+          "skin"
+        ],
+        "signature_keys": {
+          "action": "level_up"
+        }
+      },
+      "raw_event_name": "Play_vo_AhriSkin86_LevelUp2DGeneral",
+      "zh_cn_default": "阿狸 联盟不朽 升级语音",
+      "zh_cn_main": "升级语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-b3106f0377e1a86feb53aef87aa44fbaec39caec3c8333102b2b0c290bebf31d",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "shop",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "shop",
+        "roles": [
+          "action",
+          "champion"
+        ],
+        "argument_keys": {
+          "action": "shop"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion"
+        ],
+        "signature_keys": {
+          "action": "shop"
+        }
+      },
+      "raw_event_name": "Play_vo_Aurora_Shop2DOpen",
+      "zh_cn_default": "阿萝拉 打开商店语音",
+      "zh_cn_main": "打开商店语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-b45edee6d58c325258590a0c72920ea277d8185187e3731d18defeba2535cf2b",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "p",
+          "phase": "ready"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "p",
+          "phase": "ready"
+        }
+      },
+      "raw_event_name": "Play_vo_Camille_Spell3DPReady",
+      "zh_cn_default": "卡蜜尔 P技能就绪",
+      "zh_cn_main": "P技能就绪",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-b5decb0c536c3278785d1cb22c61ef5aee09c4d8f0c83075bd47314f0b4700a2",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "w",
+          "phase": "cast"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "w",
+          "phase": "cast"
+        }
+      },
+      "raw_event_name": "Play_vo_AatroxSkin01_AatroxW_cast3D",
+      "zh_cn_default": "亚托克斯 仲裁圣骑 W技能释放",
+      "zh_cn_main": "W技能释放",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-b6eafec9cc317c4041a24401e8a64ddea4f5826271276ad636e6454de76f2e5e",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "shop",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "shop",
+        "roles": [
+          "action",
+          "champion",
+          "skin"
+        ],
+        "argument_keys": {
+          "action": "shop"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion",
+          "skin"
+        ],
+        "signature_keys": {
+          "action": "shop"
+        }
+      },
+      "raw_event_name": "Play_vo_AatroxSkin33_Shop2DOpen",
+      "zh_cn_default": "亚托克斯 海魔至尊 打开商店语音",
+      "zh_cn_main": "打开商店语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-b71c2f1e0d3775d29a0f02ce8ef3e2874795b8b4ca8508746b36c0a2378ca00d",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "q",
+          "phase": "cast"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "q",
+          "phase": "cast"
+        }
+      },
+      "raw_event_name": "Play_vo_Aatrox_AatroxQ2_cast3D",
+      "zh_cn_default": "亚托克斯 Q技能释放",
+      "zh_cn_main": "Q技能释放",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-b89321bdc09bb9587fa76c10bd2fa6d26487e74f112c9589f864594277c983a3",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "respawn",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "respawn",
+        "roles": [
+          "action",
+          "champion",
+          "skin"
+        ],
+        "argument_keys": {
+          "action": "respawn"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion",
+          "skin"
+        ],
+        "signature_keys": {
+          "action": "respawn"
+        }
+      },
+      "raw_event_name": "Play_vo_AatroxSkin33_Respawn2DGeneral",
+      "zh_cn_default": "亚托克斯 海魔至尊 重生语音",
+      "zh_cn_main": "重生语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-baf4d551845865a73da3599abd1098fcc94d90691f23cdb37455fc51a7cbe7e8",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "r",
+          "phase": "rankone"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "r",
+          "phase": "rankone"
+        }
+      },
+      "raw_event_name": "Play_vo_AatroxSkin33_Spell2DRRankOne",
+      "zh_cn_default": "亚托克斯 海魔至尊 R技能1级",
+      "zh_cn_main": "R技能1级",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-bf845158ae9afbe4c8b42ecd160e5ac86d90f14a0800d6cca447a302180e5512",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "use_item",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "use_item",
+        "roles": [
+          "action",
+          "champion"
+        ],
+        "argument_keys": {
+          "action": "use_item"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion"
+        ],
+        "signature_keys": {
+          "action": "use_item"
+        }
+      },
+      "raw_event_name": "Play_vo_Azir_UseItem2DWard",
+      "zh_cn_default": "阿兹尔 使用守卫语音",
+      "zh_cn_main": "使用守卫语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-c2da0e6820e0c43fc9e2a1c77186488c0b1cc70119bbefe1083ef0f78957e2f8",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "r",
+          "phase": "ranktwo"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "r",
+          "phase": "ranktwo"
+        }
+      },
+      "raw_event_name": "Play_vo_AsheSkin76_Spell2DRRankTwo",
+      "zh_cn_default": "艾希 灵魂莲华 R技能2级",
+      "zh_cn_main": "R技能2级",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-c45fd94807014a15fea5adc3c82dc041ffce5b272d8e053155faa2533b32ee26",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "w",
+          "phase": "rankone"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "w",
+          "phase": "rankone"
+        }
+      },
+      "raw_event_name": "Play_vo_EzrealSkin05_Spell2DWRankOne",
+      "zh_cn_default": "伊泽瑞尔 未来战士 W技能1级",
+      "zh_cn_main": "W技能1级",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-d1a7c53d5244940f23d040998b45fa03489051d620f7ea2bb60416d95825b38a",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "buy_item",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "buy_item",
+        "roles": [
+          "action",
+          "champion",
+          "qualifier",
+          "skin"
+        ],
+        "argument_keys": {
+          "action": "buy_item"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion",
+          "qualifier",
+          "skin"
+        ],
+        "signature_keys": {
+          "action": "buy_item"
+        }
+      },
+      "raw_event_name": "Play_vo_AsheSkin08_BuyItem2DBerserkersGreaves",
+      "zh_cn_default": "艾希 源计划：联合 购买装备语音",
+      "zh_cn_main": "购买装备语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-df1cfb48af67ac3e5dc263b4607c26cc108b14d88e0c958e64ecf2b6d5812cb1",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "w",
+          "phase": "start"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "w",
+          "phase": "start"
+        }
+      },
+      "raw_event_name": "Play_vo_Evelynn_EvelynnW_OnEnemy_start",
+      "zh_cn_default": "伊芙琳 W技能开始",
+      "zh_cn_main": "W技能开始",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-dfb7560cbbcab2fab43dc088484032fe4717d069c63e746771e5afdf1dded99e",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "w",
+          "phase": "hit"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "w",
+          "phase": "hit"
+        }
+      },
+      "raw_event_name": "Play_vo_AhriSkin04_AhriWDamageMissile_hit3DSkin04",
+      "zh_cn_default": "阿狸 偶像歌手 W技能命中",
+      "zh_cn_main": "W技能命中",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-e322f1f60aac4a00ece1f69d4aab9a526cf5496d26a98fb647bb8ae1f9297eba",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "buy_item",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "buy_item",
+        "roles": [
+          "action",
+          "champion",
+          "qualifier"
+        ],
+        "argument_keys": {
+          "action": "buy_item"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion",
+          "qualifier"
+        ],
+        "signature_keys": {
+          "action": "buy_item"
+        }
+      },
+      "raw_event_name": "Play_vo_AurelionSol_BuyItem2DGuardiansOrb",
+      "zh_cn_default": "奥瑞利安·索尔 购买装备语音",
+      "zh_cn_main": "购买装备语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-e728b21600a158e8273f4479f3f95fe8ab71bee1066581a2f67d909f42881b0f",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "respawn",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "respawn",
+        "roles": [
+          "action",
+          "champion",
+          "qualifier"
+        ],
+        "argument_keys": {
+          "action": "respawn"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion",
+          "qualifier"
+        ],
+        "signature_keys": {
+          "action": "respawn"
+        }
+      },
+      "raw_event_name": "Play_vo_Ekko_Respawn2DKillerCaitlyn",
+      "zh_cn_default": "艾克 重生语音",
+      "zh_cn_main": "重生语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-eade895625e2f8fa7b25e65709b24aa415cf039f1c5171ce571fa2af909da804",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "e",
+          "phase": "end"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "e",
+          "phase": "end"
+        }
+      },
+      "raw_event_name": "Play_vo_GangplankSkin05_Spell3DEEnd",
+      "zh_cn_default": "普朗克 特种部队 E技能结束",
+      "zh_cn_main": "E技能结束",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-eb1806be3c58307cd3e253e5090d51bc42c987215720491b5143e9f6cc0e9932",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "dance",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "dance",
+        "roles": [
+          "action",
+          "champion",
+          "skin"
+        ],
+        "argument_keys": {
+          "action": "dance"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion",
+          "skin"
+        ],
+        "signature_keys": {
+          "action": "dance"
+        }
+      },
+      "raw_event_name": "Play_vo_AurelionSolSkin02_Dance3DGeneral",
+      "zh_cn_default": "奥瑞利安·索尔 霸天龙神 跳舞语音",
+      "zh_cn_main": "跳舞语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-ee533c216aa2cce6579a3fead41e36a374845ec8c606391939832fd23236d489",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "dance",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "dance",
+        "roles": [
+          "action",
+          "champion",
+          "companion"
+        ],
+        "argument_keys": {
+          "action": "dance"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion",
+          "companion"
+        ],
+        "signature_keys": {
+          "action": "dance"
+        }
+      },
+      "raw_event_name": "Play_vo_Rakan_WithXayahDance3D",
+      "zh_cn_default": "洛 跳舞语音（霞在附近）",
+      "zh_cn_main": "跳舞语音（霞在附近）",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-f3fc3c051b1379b295bb54ee265d87f59d5b9696479dc6a0585549e798db8232",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "p",
+          "phase": "cast"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "p",
+          "phase": "cast"
+        }
+      },
+      "raw_event_name": "Play_vo_Ahri_AhriPassive_cast3D",
+      "zh_cn_default": "阿狸 P技能释放",
+      "zh_cn_main": "P技能释放",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-f7f5cb0a558b81bc32a6b214c43d845fd46b185cafe4c4243dae9857d89efb24",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "respawn",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "respawn",
+        "roles": [
+          "action",
+          "champion"
+        ],
+        "argument_keys": {
+          "action": "respawn"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion"
+        ],
+        "signature_keys": {
+          "action": "respawn"
+        }
+      },
+      "raw_event_name": "Play_vo_Ahri_Respawn2DGeneral",
+      "zh_cn_default": "阿狸 重生语音",
+      "zh_cn_main": "重生语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-f811f2b5f28334dc1c7ad6d018cb4d0de39f53863b731656fbd38ce313101d14",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "q",
+          "phase": "rankone"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "q",
+          "phase": "rankone"
+        }
+      },
+      "raw_event_name": "Play_vo_Udyr_Spell2DQRankOne",
+      "zh_cn_default": "乌迪尔 Q技能1级",
+      "zh_cn_main": "Q技能1级",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-f9039e1359e212596dea4e1641041949ffa16b36a7c48ed8bf679fb0a7bd94b1",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "e",
+          "phase": "hit"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "e",
+          "phase": "hit"
+        }
+      },
+      "raw_event_name": "Play_vo_AhriSkin04_AhriEMissile_hit3DSkin04",
+      "zh_cn_default": "阿狸 偶像歌手 E技能命中",
+      "zh_cn_main": "E技能命中",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-fb88cbbb7fff53250a0693c704b04101909792b52907f556367c0970084d19a0",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "argument_keys": {
+          "ability_slot": "w",
+          "phase": "rankone"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase"
+        ],
+        "signature_keys": {
+          "ability_slot": "w",
+          "phase": "rankone"
+        }
+      },
+      "raw_event_name": "Play_vo_Udyr_Spell2DWRankOne",
+      "zh_cn_default": "乌迪尔 W技能1级",
+      "zh_cn_main": "W技能1级",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-fb9471463f897864c1dcac6dca90173ad10176effb3613d2b0b2bc9c91e31b82",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "e",
+          "phase": "rankone"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "e",
+          "phase": "rankone"
+        }
+      },
+      "raw_event_name": "Play_vo_EzrealSkin05_Spell2DERankOne",
+      "zh_cn_default": "伊泽瑞尔 未来战士 E技能1级",
+      "zh_cn_main": "E技能1级",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-feaa9b0d73fd4467ba5afe7b9ce80ee23782b1edabeb1893510b4bebc9237594",
+      "frame_type": "voice_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "self_action",
+        "primary_family": "taunt_response",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "trigger_family": "taunt_response",
+        "roles": [
+          "action",
+          "champion",
+          "qualifier",
+          "skin"
+        ],
+        "argument_keys": {
+          "action": "taunt_response"
+        }
+      },
+      "required_roles": [
+        "action"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "action",
+          "champion",
+          "qualifier",
+          "skin"
+        ],
+        "signature_keys": {
+          "action": "taunt_response"
+        }
+      },
+      "raw_event_name": "Play_vo_DariusSkin15_TauntResponse3DGarenSkin13",
+      "zh_cn_default": "德莱厄斯 神王 嘲讽回应语音",
+      "zh_cn_main": "嘲讽回应语音",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    },
+    {
+      "pattern_id": "pattern-v1-fef00d320eb691c507f1045ed5338d824725c1b50f4145003ce0bb3138e65740",
+      "frame_type": "ability_cast_event",
+      "signature": {
+        "schema_version": "pattern-signature.v1",
+        "asset_kind": "vo",
+        "semantic_profile": "spell_event",
+        "primary_family": "spell",
+        "frame_type": "ability_cast_event",
+        "frame_version": 1,
+        "trigger_family": "spell",
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "argument_keys": {
+          "ability_slot": "q",
+          "phase": "hit"
+        }
+      },
+      "required_roles": [
+        "ability_slot",
+        "phase"
+      ],
+      "expected_arguments": {
+        "roles": [
+          "ability_slot",
+          "champion",
+          "phase",
+          "skin"
+        ],
+        "signature_keys": {
+          "ability_slot": "q",
+          "phase": "hit"
+        }
+      },
+      "raw_event_name": "Play_vo_DianaSkin47_DianaQInnerMissile_hit3D",
+      "zh_cn_default": "黛安娜 北极星神 Q技能命中",
+      "zh_cn_main": "Q技能命中",
+      "scope_status": "approved",
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "review_status": "pending"
+    }
+  ]
+}
