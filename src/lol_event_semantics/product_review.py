@@ -571,7 +571,7 @@ def _review_html() -> str:
       decision_set_digest:await sha256(exported.map(decisionIdentity)),
       exported_at:new Date().toISOString()
     };
-    const blob = new Blob([JSON.stringify(decisionDocument,null,2)+'\n'], {type:'application/json'});
+    const blob = new Blob([JSON.stringify(decisionDocument,null,2)+'\\n'], {type:'application/json'});
     const link = window.document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.href = url; link.download = `${bundle.dataset_id}-review-decisions.json`; link.click();

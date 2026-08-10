@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 
 from lol_event_semantics.dataset_identity import review_decision_identity, rules_tree_digest
-from lol_event_semantics.product_review import build_review_bundle
+from lol_event_semantics.product_review import build_review_bundle, write_review_site
 from lol_event_semantics.review_decisions import decision_set_digest
 
 
@@ -52,6 +52,17 @@ def test_bundle_identity_is_stable_for_same_candidate(tmp_path: Path) -> None:
     assert first["review_bundle_id"] == second["review_bundle_id"]
     assert first["source_targets"] == second["source_targets"]
     assert first["approval_targets"] == second["approval_targets"]
+
+
+def test_review_site_preserves_json_newline_escape(tmp_path: Path) -> None:
+    """生成页面不得把导出 JSON 的换行转义展开成非法 JavaScript 跨行字符串。"""
+
+    normalized_root, support_diff_path, source_path, _ = write_review_inputs(tmp_path)
+    bundle = build_review_bundle(normalized_root, support_diff_path, source_path, source_path.parent)
+    _, site_path = write_review_site(bundle, tmp_path / "review-site")
+
+    html = site_path.read_text(encoding="utf-8")
+    assert "JSON.stringify(decisionDocument,null,2)+'\\n'" in html
 
 
 def write_review_inputs(tmp_path: Path) -> tuple[Path, Path, Path, Path]:
