@@ -6,6 +6,131 @@
 # 计数触发(每第N次)、施法后触发、主动开启、目标标记/位置条件类不入选。
 # note 溯源均引用 reference/champions/<英雄>.yaml 的 zh_CN 描述快照。
 schema_version: 1
+trusted_single_key_residuals:
+  Darius:
+    q:
+      cast:
+        note: reference/champions/Darius.yaml 明确 DariusQ；raw cue 的 DariusQCast 在两套主题 owner 下稳定表示 Q 释放段。
+  Heimerdinger:
+    q:
+      spawndestroyaudio:
+        note: reference/champions/Heimerdinger.yaml 明确 Q 炮台；多炮台 owner 的 QSpawnDestroyAudio 稳定表示 Q 炮台状态。
+  Kalista:
+    e:
+      xpunge:
+        note: reference/champions/Kalista.yaml 的 E 包含 KalistaExpungeWrapper；VO cue 使用其稳定短前缀 KalistaExpunge。
+  Maokai:
+    r:
+      mis:
+        note: reference/champions/Maokai.yaml 明确 MaokaiR；跨皮肤 raw cue 的 Rmis/RMis 稳定表示 R missile 命中段。
+      soundmis:
+        note: reference/champions/Maokai.yaml 明确 MaokaiR；跨皮肤 MaokaiRsoundmis cue 稳定表示 R missile 音效段。
+  Katarina:
+    q:
+      mis:
+        note: reference/champions/Katarina.yaml 明确 KatarinaQ；跨皮肤 KatarinaQMis cue 稳定表示 Q missile。
+    r:
+      mis:
+        note: reference/champions/Katarina.yaml 明确 KatarinaR；KatarinaRMis cue 稳定表示 R 效果段。
+      sound:
+        note: reference/champions/Katarina.yaml 明确 KatarinaR；跨皮肤 KatarinaRSound cue 稳定表示 R 音效段。
+      triggersound:
+        note: reference/champions/Katarina.yaml 明确 KatarinaR；KatarinaRTriggerSound cue 稳定表示 R 触发音效段。
+  Locke:
+    r:
+      pickup:
+        note: reference/champions/Locke.yaml 明确 LockeR；本体与图腾 raw 均有 LockeRPickUp cue。
+      suckin:
+        note: reference/champions/Locke.yaml 明确 LockeR；本体与图腾 raw 均有 LockeRSuckIn cue。
+  Rengar:
+    q:
+      emp:
+        note: reference/champions/Rengar.yaml 明确 RengarQ；跨 raw cue 的 QEmp/Qemp 稳定表示强化 Q。
+  Smolder:
+    q:
+      upgrade:
+        note: reference/champions/Smolder.yaml 明确 SmolderQ；raw 中 SmolderQUpgrade 是 Q 升级提示。
+  Shen:
+    q:
+      buffstrong:
+        note: reference/champions/Shen.yaml 明确 ShenQ；跨形态 ShenQBuffStrong cue 稳定属于 Q 增益段。
+      buffweak:
+        note: reference/champions/Shen.yaml 明确 ShenQ；跨形态 ShenQBuffWeak cue 稳定属于 Q 增益段。
+  Sona:
+    e:
+      hasteself:
+        note: reference/champions/Sona.yaml 明确 SonaE；跨皮肤 SonaEHasteSelf cue 稳定属于 E 加速段。
+      haste:
+        note: reference/champions/Sona.yaml 明确 SonaE；跨皮肤 SonaEHaste cue 稳定属于 E 加速段。
+      passiveattack:
+        note: reference/champions/Sona.yaml 明确 SonaE；跨皮肤 SonaEPassiveAttack cue 稳定属于 E 强化攻击段。
+    q:
+      passiveattack:
+        note: reference/champions/Sona.yaml 明确 SonaQ；跨皮肤 SonaQPassiveAttack cue 稳定属于 Q 强化攻击段。
+      proc:
+        note: reference/champions/Sona.yaml 明确 SonaQ；SonaQProc cue 稳定属于 Q 触发段。
+      procattacker:
+        note: reference/champions/Sona.yaml 明确 SonaQ；跨皮肤 SonaQProcAttacker cue 稳定属于 Q 触发段。
+    w:
+      passiveattack:
+        note: reference/champions/Sona.yaml 明确 SonaW；跨皮肤 SonaWPassiveAttack cue 稳定属于 W 强化攻击段。
+      shield:
+        note: reference/champions/Sona.yaml 明确 SonaW；跨皮肤 SonaWShield cue 稳定属于 W 护盾段。
+  Syndra:
+    r:
+      spell:
+        note: reference/champions/Syndra.yaml 明确 SyndraR；跨皮肤 SyndraRSpell cue 稳定属于 R。
+    w:
+      cast:
+        note: reference/champions/Syndra.yaml 明确 SyndraW；跨皮肤 SyndraWCast cue 稳定属于 W 释放段。
+  Teemo:
+    r:
+      trap:
+        note: reference/champions/Teemo.yaml 明确 TeemoR；蘑菇 owner 下 TeemoRTrap cue 稳定属于 R 陷阱。
+  Varus:
+    q:
+      empoweredfired:
+        note: reference/champions/Varus.yaml 明确 VarusQ；跨形态 VarusQEmpoweredFired cue 稳定属于 Q 强化发射段。
+      empoweredwchargesfx:
+        note: reference/champions/Varus.yaml 明确 VarusQ；VarusQEmpoweredWChargeSFX 是 Q 蓄力承接 W 强化的组合 cue，以 Q 槽保留主动作。
+    w:
+      basicattack:
+        note: reference/champions/Varus.yaml 明确 VarusW；跨形态 VarusWBasicAttack cue 稳定属于 W 强化普攻段。
+      basicattack2:
+        note: reference/champions/Varus.yaml 明确 VarusW；跨形态 VarusWBasicAttack2 cue 稳定属于 W 强化普攻段。
+  Warwick:
+    r:
+      sound:
+        note: reference/champions/Warwick.yaml 明确 WarwickR；多个皮肤的 Rsound/UltimateEfforts cue 稳定属于 R。
+    w:
+      activemiss:
+        note: reference/champions/Warwick.yaml 明确 WarwickW；多皮肤 SFX/VO 全套 WActiveMiss cue 稳定属于 W。
+  Yasuo:
+    r:
+      knockup:
+        note: reference/champions/Yasuo.yaml 明确 YasuoR；yasuorknockup cue 稳定表示 R 的击飞条件段。
+  Ziggs:
+    q:
+      spell:
+        note: reference/champions/Ziggs.yaml 明确 ZiggsQ；跨皮肤 ZiggsQSpell cue 稳定属于 Q。
+      spell2:
+        note: reference/champions/Ziggs.yaml 明确 ZiggsQ；跨皮肤 ZiggsQSpell2 cue 稳定属于 Q 的阶段变体。
+      spell3:
+        note: reference/champions/Ziggs.yaml 明确 ZiggsQ；跨皮肤 ZiggsQSpell3 cue 稳定属于 Q 的阶段变体。
+    r:
+      impactsound:
+        note: reference/champions/Ziggs.yaml 明确 ZiggsR；跨皮肤 ZiggsRImpactSound cue 稳定属于 R 命中音效段。
+  Zyra:
+    e:
+      plantattack:
+        note: reference/champions/Zyra.yaml 明确 ZyraE；植物 owner 下 ZyraEPlantAttack cue 稳定属于 E 植物攻击段。
+      plantattack2:
+        note: reference/champions/Zyra.yaml 明确 ZyraE；植物 owner 下 ZyraEPlantAttack2 cue 稳定属于 E 植物攻击变体。
+    q:
+      plantmissile:
+        note: reference/champions/Zyra.yaml 明确 ZyraQ；植物 owner 下 ZyraQPlantMissile cue 稳定属于 Q 植物投射段。
+      plantmissileonspawn:
+        note: reference/champions/Zyra.yaml 明确 ZyraQ；植物 owner 下 ZyraQPlantMissileOnSpawn cue 稳定属于 Q 植物生成段。
 attack_modifier_spells:
   Aatrox:
     p:

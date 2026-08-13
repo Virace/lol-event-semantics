@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from .normalized_translation_model import FRAME_REGISTRY, RenderOptions, RenderResult
@@ -74,7 +75,9 @@ def render_translation(
         frame_type=frame_type,
         confidence=confidence,
         used_roles=tuple(used_roles),
-        omitted_roles=omitted_roles_for_context(frame_type, active_options.locale, active_options.known_context, arguments),
+        omitted_roles=omitted_roles_for_context(
+            frame_type, active_options.locale, active_options.known_context, arguments
+        ),
         diagnostics=tuple(dict.fromkeys(diagnostics)),
     )
 
@@ -524,7 +527,7 @@ def insert_before_asset_word(base: str, insert: str) -> str:
 
 
 def strip_repeated_champion_from_skin(skin_text: str, champion_text: str) -> str:
-    """去掉皮肤名末尾重复的英雄名（整名匹配，兼容变体与间隔号写法）。
+    """去掉官方皮肤 label 中重复的英雄所有者名。
 
     Args:
         skin_text: 皮肤 label。
@@ -538,11 +541,11 @@ def strip_repeated_champion_from_skin(skin_text: str, champion_text: str) -> str
         return skin_text
 
     segments = skin_text.split(" ")
-    if len(segments) < 2:
-        return skin_text
 
     # 官方皮肤名可能把“·”写成独立空格段（奥瑞利安 · 索尔），比较时去空格按整名对齐。
     normalized_champion = champion_text.replace(" ", "")
+    if skin_text.replace(" ", "") == normalized_champion:
+        return skin_text
     for start in range(1, len(segments)):
         remainder = " ".join(segments[:start])
         if remainder.endswith("·"):
@@ -556,7 +559,47 @@ def strip_repeated_champion_from_skin(skin_text: str, champion_text: str) -> str
     last_segment = segments[-1]
     remainder = " ".join(segments[:-1])
     if last_segment != champion_text and last_segment.endswith(champion_text) and not remainder.endswith("·"):
-        return remainder
+        return remainder or skin_text
+
+    # 有些官方 label 把英雄名放在前缀或中间（如「图奇 · 影足」和
+    # 「K/DA ALL OUT 萨勒芬妮 独立音乐人」），也有使用正式全名首段/常用短名的情况
+    # （「舰队司令 烈娜塔」「律政大亨 蒙多」）。这里只接受完整名称、间隔号全名，
+    # 或 skin label 中与正式名称开头一致的独立词，避免任意子串剥离。
+    candidates = [champion_text]
+    compact_champion = re.sub(r"\s+", "", champion_text)
+    champion_parts = [part.strip() for part in re.split(r"\s*·\s*", champion_text) if part.strip()]
+    if len(champion_parts) > 1:
+        candidates.append(champion_parts[0])
+    for token in re.findall(r"[A-Za-z0-9\u3400-\u9fff]+", skin_text):
+        if 2 <= len(token) < len(compact_champion) and compact_champion.startswith(token):
+            candidates.append(token)
+
+    full_name_pattern = None
+    if len(champion_parts) > 1:
+        full_name_pattern = r"\s*·\s*".join(re.escape(part) for part in champion_parts)
+
+    patterns = [full_name_pattern] if full_name_pattern is not None else []
+    patterns.extend(re.escape(candidate) for candidate in dict.fromkeys(candidates) if candidate)
+    for candidate_pattern in patterns:
+        match = re.search(
+            rf"(?<![A-Za-z0-9\u3400-\u9fff])(?:{candidate_pattern})(?![A-Za-z0-9\u3400-\u9fff])",
+            skin_text,
+        )
+        if match is None:
+            continue
+
+        compact_match = re.sub(r"\s+", "", match.group(0))
+        prefix = skin_text[: match.start()].rstrip()
+        # 「索尔」这类两字简称不能从「奥瑞利安 · 索尔」末尾单独剥离。
+        if len(compact_match) <= 2 and prefix.endswith("·") and compact_match == compact_champion:
+            continue
+
+        stripped = f"{skin_text[: match.start()]} {skin_text[match.end() :]}"
+        stripped = " ".join(stripped.split())
+        stripped = re.sub(r"^[·:：]\s*", "", stripped)
+        stripped = re.sub(r"\s*·$", "", stripped).strip()
+        if stripped:
+            return stripped
 
     return skin_text
 

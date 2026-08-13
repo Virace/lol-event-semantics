@@ -98,6 +98,57 @@
           "warning_counts": {
             "type": "object"
           },
+          "zh_cn_label_variants": {
+            "additionalProperties": {
+              "additionalProperties": false,
+              "properties": {
+                "distinct_label_count": {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                "variants": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "label": {
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "record_count": {
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      "sample_raw_event_names": {
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "minItems": 1,
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "label",
+                      "record_count",
+                      "sample_raw_event_names"
+                    ],
+                    "type": "object"
+                  },
+                  "minItems": 1,
+                  "type": "array"
+                }
+              },
+              "required": [
+                "distinct_label_count",
+                "variants"
+              ],
+              "type": "object"
+            },
+            "propertyNames": {
+              "minLength": 1
+            },
+            "type": "object"
+          },
           "zh_CN_template": {
             "type": [
               "object",
@@ -120,6 +171,7 @@
           "example_event_names",
           "record_count",
           "warning_counts",
+          "zh_cn_label_variants",
           "review_status",
           "introduced_in",
           "superseded_by"

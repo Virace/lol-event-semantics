@@ -1041,7 +1041,9 @@ class ReferenceEnrichmentTests(unittest.TestCase):
                 self.assertEqual(record.profile.semantic_profile, SemanticProfile.SPELL_EVENT)
                 self.assertEqual(record.semantic_slots["subject"]["alias"], alias)
                 self.assertEqual(record.semantic_slots["spell_key"], spell_key)
-                candidate = next(candidate for candidate in record.candidates if candidate["kind"] == "inferred_champion_spell")
+                candidate = next(
+                    candidate for candidate in record.candidates if candidate["kind"] == "inferred_champion_spell"
+                )
                 self.assertEqual(candidate["matched_term"], matched_term)
                 self.assertEqual(candidate["match_source"], "dragontail_spell_id")
                 self.assertGreaterEqual(candidate["score"], 90)
@@ -1407,7 +1409,12 @@ class ReferenceEnrichmentTests(unittest.TestCase):
             (
                 "Play_jinx_skin60_slotmachine_buffactivate_hextech",
                 "skin_named_state",
-                {"subject_hint": "Jinx", "skin_token": "Skin60", "state_key": "slotmachine", "state_variant": "hextech"},
+                {
+                    "subject_hint": "Jinx",
+                    "skin_token": "Skin60",
+                    "state_key": "slotmachine",
+                    "state_variant": "hextech",
+                },
             ),
             (
                 "UnMute_sfx_JhinSkin25_Idle_Passive_buffactivate",
@@ -1698,6 +1705,123 @@ class ReferenceEnrichmentTests(unittest.TestCase):
                 self.assertIsNotNone(resolved)
                 self.assertTrue(resolved.kind)
                 self.assertTrue(resolved.label)
+
+
+class ReferenceSpellResolutionRegressionTests(unittest.TestCase):
+    """验证 reference spell id 与单字母槽位前缀的归属边界。"""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        """加载仓库累计 reference，覆盖真实英雄内部技能 id。"""
+
+        cls.index = ReferenceIndex.from_reference_collection(Path(__file__).parents[1] / "reference")
+
+    def enrich(self, raw_event_name: str):
+        """按生产拆解链路解析一条回归事件。"""
+
+        return enrich_with_reference(
+            normalize_semantics(decompose_event_name(raw_event_name, game_version="16.5")),
+            self.index,
+        )
+
+    def test_lux_prismatic_wave_missile_prefers_reference_spell_id(self) -> None:
+        """LuxPrismaticWaveMissile 应由 W 的精确 reference id 归属。"""
+
+        record = self.enrich("Play_vo_Lux_LuxPrismaticWaveMissile_hit3D")
+
+        self.assertEqual(record.semantic_slots["subject"]["alias"], "Lux")
+        self.assertEqual(record.semantic_slots["spell_key"], "w")
+        self.assertEqual(record.semantic_slots["spell_match"]["match_source"], "reference_spell_id")
+        self.assertEqual(record.confidence.value, "high")
+
+    def test_renekton_execute_does_not_match_e_slot_prefix(self) -> None:
+        """Execute 不能仅因 RenektonE 前缀被误判为 E。"""
+
+        record = self.enrich("Play_sfx_Renekton_RenektonExecute_OnCast")
+
+        self.assertIsNone(record.semantic_slots.get("spell_key"))
+        self.assertFalse(any(candidate["kind"] == "inferred_champion_spell" for candidate in record.candidates))
+
+    def test_renekton_pre_execute_resolves_w_from_reference_spell_id(self) -> None:
+        """PreExecute 有精确 reference id 时应稳定解析为 W。"""
+
+        record = self.enrich("Play_sfx_Renekton_RenektonPreExecute_OnCast")
+
+        self.assertEqual(record.semantic_slots["spell_key"], "w")
+        self.assertEqual(record.semantic_slots["spell_match"]["match_source"], "reference_spell_id")
+        self.assertEqual(record.confidence.value, "high")
+
+    def test_jayce_ranged_attack_does_not_match_r_slot_prefix(self) -> None:
+        """RangedAttack 不能仅因 JayceR 前缀被误判为 R。"""
+
+        record = self.enrich("Play_sfx_Jayce_JayceRangedAttack_OnCast")
+
+        self.assertIsNone(record.semantic_slots.get("spell_key"))
+        self.assertFalse(any(candidate["kind"] == "inferred_champion_spell" for candidate in record.candidates))
+
+    def test_owner_prefixed_hint_is_only_promoted_with_reference_evidence(self) -> None:
+        """hint 保留匹配线索；普通词首不能仅凭 hint 升级为 spell_key。"""
+
+        cases = [
+            ("Play_vo_Renekton_RenektonExecute_cast3D", "e", None),
+            ("Play_vo_JayceSkin35_JayceRangedAttack_cast3D", "r", None),
+            ("Play_vo_RengarSkin08_RengarQemp_cast3D", "q", "q"),
+            ("Play_vo_Maokai_MaokaiRmis_OnHit", "r", "r"),
+            ("Play_vo_Kalista_KalistaExpunge_cast3D", "e", "e"),
+            ("Play_vo_Caitlyn_CaitlynWSnare_Jade_hit3D", "w", None),
+            ("Play_sfx_AkaliSkin02_AkaliRb_OnCast", "r", None),
+        ]
+        for raw, expected_hint, expected_key in cases:
+            with self.subTest(raw=raw):
+                record = self.enrich(raw)
+                self.assertEqual(record.semantic_slots.get("spell_key_hint"), expected_hint)
+                self.assertEqual(record.semantic_slots.get("spell_key"), expected_key)
+
+    def test_manual_trusted_residuals_restore_obvious_unknown_vo_spell_cues(self) -> None:
+        """跨皮肤 raw 族与 reference 均确认的 VO 技能 cue 不得退成纯 fallback。"""
+
+        cases = [
+            ("Play_vo_Smolder_SmolderQUpgrade", "q"),
+            ("Play_vo_WarwickSkin16_WarwickRsound_UltimateEfforts", "r"),
+            ("Play_vo_WarwickSkin16_WarwickWActiveMiss", "w"),
+            ("Play_sfx_Darius_NorseKing_DariusQCast_OnBuffDeactivate", "q"),
+            ("Play_sfx_HeimerTBlue_HeimerdingerQSpawnDestroyAudio_OnBuffActivate", "q"),
+            ("Play_sfx_LockeTotem_LockeRPickUp_buffactivate_foley_loop", "r"),
+            ("Play_sfx_Maokai_Maokairsoundmis_OnMissileLaunch", "r"),
+            ("Play_sfx_PaxSona_SonaQProcAttacker_buffactivate", "q"),
+            ("Play_sfx_PaxSona_SonaWShield_buffactivate", "w"),
+            ("Play_sfx_PaxSona_SonaEPassiveAttack_buffactivate", "e"),
+            ("Play_sfx_SyndraJusticar_SyndraRSpell_OnCast", "r"),
+            ("Play_sfx_SyndraJusticar_SyndraWCast_OnCast", "w"),
+            ("Play_sfx_TeemoMushroom_TeemoRTrap_OnBuffActivate", "r"),
+            ("Play_sfx_VarusAscended_VarusQEmpoweredWChargeSFX_OnBuffActivate", "q"),
+            ("Play_sfx_VarusAscended_VarusWBasicAttack_OnBuffActivate", "w"),
+            ("Play_sfx_XmasKatarina_KatarinaQMis_OnMissileLaunch", "q"),
+            ("Play_sfx_XmasKatarina_KatarinaRSound_OnBuffActivate", "r"),
+            ("Stop_sfx_XmasKatarina_KatarinaRTriggerSound_OnMissileCast", "r"),
+            ("Play_sfx_ZiggsPoolParty_ZiggsQSpell_OnCast", "q"),
+            ("Play_sfx_ZiggsPoolParty_ZiggsRImpactSound_OnHit", "r"),
+            ("Play_sfx_ZyraThornPlant_ZyraQPlantMissile_OnMissileLaunch", "q"),
+            ("Play_sfx_ZyraGraspingPlant_ZyraEPlantAttack_OnCast", "e"),
+        ]
+        for raw, expected_key in cases:
+            with self.subTest(raw=raw):
+                record = self.enrich(raw)
+                self.assertEqual(record.semantic_slots.get("spell_key"), expected_key)
+                self.assertEqual(record.confidence.value, "high")
+                self.assertIn(
+                    "trusted_single_key_residual",
+                    record.semantic_slots["spell_match"]["components"],
+                )
+
+    def test_heimer_rq_engine_audio_preserves_empowered_q_turret_context(self) -> None:
+        """RQEngineAudio 不只标为 R，还保留 R 强化 Q 炮台组件。"""
+
+        record = self.enrich("Play_sfx_HeimerTBlue_HeimerdingerRQEngineAudio_OnBuffActivate")
+
+        self.assertEqual(record.semantic_slots.get("spell_key"), "r")
+        self.assertEqual(record.semantic_slots["contextual_alias"]["component"], "empowered_q_turret")
+        self.assertEqual(record.confidence.value, "high")
 
 
 class ShopkeeperVoiceSlotsTests(unittest.TestCase):

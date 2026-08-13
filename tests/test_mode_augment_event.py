@@ -36,6 +36,7 @@ INJECTED_LABELS = DisplayLabels(
         "overall": ("整段音效", "full sfx"),
     },
     augments={
+        "Ceremony": ("测试仪式增益", "Test Ceremony Augment"),
         "Goredrink": ("测试增益", "Test Augment"),
         "MadeUpAug": ("虚构增益", "Made Up Aug"),
         "ServeBeyondDeath": ("超越死亡的效劳", "Serve Beyond Death"),
@@ -114,16 +115,45 @@ class ModeAugmentDispatchTests(unittest.TestCase):
         for role in FRAME_REGISTRY["mode_augment_event"].required_roles:
             self.assertIn(role, args)
 
-    def test_champion_spell_records_keep_ability_frames(self) -> None:
-        """借用英雄技能的增益记录仍由 ability builder 承接，不被抢占。"""
+    def test_explicit_borrowed_champion_spell_records_keep_ability_frames(self) -> None:
+        """显式 owner+槽位+组件段由 ability builder 承接，不被增益 frame 抢占。"""
 
-        record = enriched_record("Play_sfx_Augment_ARAM_Oathsworn_KalistaRMis_OnCast")
-        with patch(GET_LABELS_TARGET, return_value=INJECTED_LABELS):
-            translation = build_translation(record, TranslationBuildContext())
+        cases = [
+            ("Play_sfx_Augment_ARAM_Oathsworn_KalistaRMis_OnCast", "ability_cast_event", "r"),
+            (
+                "Play_sfx_Augment_ARAM_MidnightExpress_ThreshWShield_OnBuffActivate",
+                "ability_state_change",
+                "w",
+            ),
+            (
+                "Play_sfx_Augment_ARAM_HoldVeryStill_TeemoPStealthBuff_OnBuffActivate",
+                "ability_state_change",
+                "p",
+            ),
+        ]
+        for raw_event_name, expected_frame, expected_slot in cases:
+            with self.subTest(raw_event_name=raw_event_name):
+                record = enriched_record(raw_event_name)
+                with patch(GET_LABELS_TARGET, return_value=INJECTED_LABELS):
+                    translation = build_translation(record, TranslationBuildContext())
 
-        self.assertIsNotNone(translation)
-        assert translation is not None
-        self.assertEqual(translation["frame_type"], "ability_cast_event")
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], expected_frame)
+                self.assertEqual(translation["arguments"]["ability_slot"]["value"], expected_slot)
+
+    def test_non_spell_ultimate_word_stays_mode_augment_event(self) -> None:
+        """Ultimate 普通词段不能被 broad Ult hint 误判为 R 技能。"""
+
+        for shell_verb in ("Play", "Stop"):
+            with self.subTest(shell_verb=shell_verb):
+                record = enriched_record(f"{shell_verb}_sfx_Cherry_Augment_Ceremony_UltimateBackup_buffactivate")
+                with patch(GET_LABELS_TARGET, return_value=INJECTED_LABELS):
+                    translation = build_translation(record, TranslationBuildContext())
+
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], "mode_augment_event")
 
 
 class ModeAugmentGateTests(unittest.TestCase):
@@ -133,9 +163,7 @@ class ModeAugmentGateTests(unittest.TestCase):
         """词表外 Code 不建 frame，记录维持 legacy 展示。"""
 
         record = enriched_record("Play_sfx_Cherry_Augment_Goredrink_buffactivate")
-        self.assertIsNone(
-            build_mode_augment_event(record, TranslationBuildContext(), labels=DisplayLabels())
-        )
+        self.assertIsNone(build_mode_augment_event(record, TranslationBuildContext(), labels=DisplayLabels()))
         with patch(GET_LABELS_TARGET, return_value=DisplayLabels()):
             self.assertIsNone(build_translation(record, TranslationBuildContext()))
 
@@ -151,9 +179,7 @@ class ModeAugmentGateTests(unittest.TestCase):
         """reference_entity 不属三家族的记录不进本 builder。"""
 
         record = enriched_record("Play_sfx_GalioSkin13WPassiveDefense_OnBuffDeactivate")
-        self.assertIsNone(
-            build_mode_augment_event(record, TranslationBuildContext(), labels=INJECTED_LABELS)
-        )
+        self.assertIsNone(build_mode_augment_event(record, TranslationBuildContext(), labels=INJECTED_LABELS))
 
 
 class ModeAugmentPhaseSynthesisTests(unittest.TestCase):

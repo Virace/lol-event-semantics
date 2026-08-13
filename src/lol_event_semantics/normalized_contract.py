@@ -267,6 +267,7 @@ def _public_pattern(pattern: Mapping[str, Any], policy: PatternPolicy) -> dict[s
     counts = pattern.get("counts")
     count_mapping = counts if isinstance(counts, dict) else {}
     warning_counts = pattern.get("warning_counts")
+    zh_cn_label_variants = pattern.get("zh_cn_label_variants")
     return {
         "pattern_id": str(pattern.get("pattern_id") or ""),
         "signature": dict(signature_mapping),
@@ -276,6 +277,7 @@ def _public_pattern(pattern: Mapping[str, Any], policy: PatternPolicy) -> dict[s
         "required_roles": required_roles,
         "optional_roles": optional_roles,
         "support_level": str(pattern.get("support_level") or policy.default_support_level),
+        "zh_cn_label_variants": dict(zh_cn_label_variants) if isinstance(zh_cn_label_variants, dict) else {},
         "zh_CN_template": _public_frame_templates(frame_type, "zh_CN"),
         "en_US_template": _public_frame_templates(frame_type, "en_US"),
         "provenance_policy": {

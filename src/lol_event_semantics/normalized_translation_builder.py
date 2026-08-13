@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from collections.abc import Mapping
 from contextlib import nullcontext
+from dataclasses import dataclass
 from typing import Any
 
 from .decomposition_model import EventDecompositionRecord, SemanticProfile
@@ -22,6 +23,21 @@ from .rules import rule_key
 LABEL_SOURCE_REFERENCE = "reference_names"
 LABEL_SOURCE_SKIN_VOTE = "skin_label_vote"
 CHAMPION_ZH_VOTE_FALLBACK_REASON = "champion_zh_label_from_skin_vote"
+
+
+@dataclass(frozen=True, slots=True)
+class VoiceQualifierResolution:
+    """voice_event qualifier 的单一解析结果，供 action 与 argument 共用。"""
+
+    key: str
+    zh_cn: str
+    en_us: str
+    token: str | None
+    confidence: str
+    fallback: bool
+    source: str
+    action_mode: str
+    value: str | None = None
 
 
 class ChampionLabelEntry(dict[str, str]):
@@ -64,6 +80,7 @@ class ChampionLabelEntry(dict[str, str]):
             for form, locales in (name_forms or {}).items()
         }
 
+
 STATE_ACTIVATE_PHASES = {"on_buff_activate", "buff_activate", "buffactivate", "activate"}
 STATE_DEACTIVATE_PHASES = {"on_buff_deactivate", "buff_deactivate", "buffdeactivate", "deactivate"}
 VOICE_EVENT_FAMILIES = {
@@ -72,6 +89,7 @@ VOICE_EVENT_FAMILIES = {
     "joke": "玩笑",
     "laugh": "大笑",
     "dance": "跳舞",
+    "dance_response": "舞蹈回应",
     # 批次3（2026-07-18 SPEC 措辞表）：self_action/qualified_action 高频家族。
     # 这些家族仅 vo 记录建 frame（见 SELF_ACTION_VOICE_FAMILIES 分派收口），
     # legacy 短文案路径（normalized_output）对它们跳过本表，非 vo 兜底记录
@@ -100,6 +118,7 @@ SELF_ACTION_VOICE_FAMILIES = frozenset(
         "recall",
         "respawn",
         "taunt_response",
+        "dance_response",
         "ping",
         "joke_response",
         "use_item",
@@ -112,19 +131,24 @@ SELF_ACTION_VOICE_FAMILIES = frozenset(
 VOICE_QUALIFIER_PHRASES = {
     ("recall", "cancel"): ("取消回城", "cancel recall"),
     ("use_item", "ward"): ("使用守卫", "use ward"),
+    ("use_item", "group2dward"): ("使用守卫", "use ward"),
     ("use_item", "potion"): ("使用药水", "use potion"),
     ("use_item", "healthpotion"): ("使用药水", "use potion"),
-    ("shop", "open"): ("打开商店", "open shop"),
-    ("shop", "close"): ("关闭商店", "close shop"),
+    ("shop", "open"): ("进店", "shop enter"),
+    ("shop", "close"): ("离店", "shop leave"),
     ("level_up", "six"): ("升至6级", "level up to 6"),
     ("level_up", "eleven"): ("升至11级", "level up to 11"),
     ("level_up", "fifteen"): ("升至15级", "level up to 15"),
     ("level_up", "eighteen"): ("升至18级", "level up to 18"),
 }
+VOICE_QUALIFIER_CANONICAL_KEYS = {
+    ("use_item", "group2dward"): "ward",
+    ("use_item", "healthpotion"): "potion",
+}
 # move 距离特例：semantic_slots.distance=long → 远距离移动（SPEC 措辞表）。
 VOICE_MOVE_LONG_PHRASE = ("远距离移动", "long distance move")
 # 无信息增量的通用 qualifier（General/Standard 等），不产生 qualifier argument。
-GENERIC_ACTION_QUALIFIERS = frozenset({"general", "generic", "standard"})
+GENERIC_ACTION_QUALIFIERS = frozenset({"general", "generic", "loop", "standard"})
 # 壳动词只有偏离默认播放语义的才需要出现在文案里（信息无损：stop/mute/unmute
 # 都不可反转为播放）。本表是壳动词中文措辞的单一来源：playback argument 与
 # normalized_output.playback_verb_suffix（legacy 短文案后缀）共用，两条路径措辞
@@ -215,6 +239,9 @@ MEDIA_BASE_ACTION_DIMENSION_PATTERN = re.compile(r"(?P<action>[A-Za-z]+)(?P<dime
 # 同时归一出 provenance 的对象类别（Item→道具，ARAM/Augment→增益）。
 MODE_AUGMENT_REFERENCE_KINDS = frozenset({"augment_system", "game_mode", "item_system"})
 MODE_AUGMENT_CUE_MARKERS = {"aram": "augment", "augment": "augment", "item": "item"}
+MODE_AUGMENT_BORROWED_SPELL_PATTERN = re.compile(
+    r"(?P<owner>[A-Z][A-Za-z0-9]*?)(?P<spell_key>[QWERP])(?P<residual>[A-Z][A-Za-z0-9]+)"
+)
 # 系统/道具域标记不是模式名，模式前缀候选跳过不查 T3.4 词条表。
 MODE_AUGMENT_NON_MODE_MARKERS = frozenset({"augment", "item"})
 
@@ -273,10 +300,7 @@ def build_translation_frame(
 
     # 批次4：dialogue_chain profile（primary_family=dialogue 同源，双条件防
     # 未来 profile/family 单边漂移）整链走 champion_dialogue_event。
-    if (
-        record.profile.semantic_profile is SemanticProfile.DIALOGUE_CHAIN
-        or record.profile.primary_family == "dialogue"
-    ):
+    if record.profile.semantic_profile is SemanticProfile.DIALOGUE_CHAIN or record.profile.primary_family == "dialogue":
         return build_champion_dialogue_event(record, context)
 
     # 批次5a：播报员超族（family 与 system_voice_kind 双条件防单边漂移）
@@ -287,10 +311,7 @@ def build_translation_frame(
     ):
         return build_announcer_event(record, context)
 
-    if (
-        record.profile.primary_family == "move"
-        and record.profile.semantic_profile is SemanticProfile.QUALIFIED_ACTION
-    ):
+    if record.profile.primary_family == "move" and record.profile.semantic_profile is SemanticProfile.QUALIFIED_ACTION:
         # Move2DFirst:无交互对象的首次移动台词(qualified_action),
         # 与 interaction 的 move 共用同一措辞(「首次移动语音」)。
         return build_champion_interaction_cue(record, context)
@@ -403,7 +424,7 @@ def build_ability_state_change(
 
     phase = phase_argument(slots.get("phase") or phase_from_cue_path(slots), "ability_state_change")
     component = ability_component_argument(slots)
-    slot = ability_slot_argument(slots.get("spell_key") or slots.get("spell_key_hint"))
+    slot = ability_slot_argument(resolved_spell_key_for_translation(record))
 
     if phase is None or (component is None and slot is None):
         return None
@@ -1038,11 +1059,10 @@ def build_voice_event(
         action,
         companion_argument(record, context),
     ]
-    if record.profile.primary_family in SELF_ACTION_VOICE_FAMILIES:
-        # 批次3：未被核心词消化的 qualifier 无损进 arguments（qualifier role
-        # 不在 voice_event 渲染模板中，任何模式都不进文案；既有 5 家族的
-        # frame 内容保持不变，不做范围外扩充）。
-        arguments.append(voice_qualifier_argument(record))
+    # qualifier 始终保留为结构化角色：已核验值参与 pattern signature，
+    # 未核验值统一归入低置信待审组。动作标签负责用户可见表达，qualifier
+    # 本身不在 voice_event 模板中重复渲染。
+    arguments.append(voice_qualifier_argument(record))
 
     return build_frame(record, "voice_event", arguments)
 
@@ -1130,14 +1150,7 @@ def build_self_action_voice_event(
 
 
 def voice_qualifier_argument(record: EventDecompositionRecord) -> dict[str, object] | None:
-    """构建批次3 家族的无损 qualifier argument（数据角色，不进渲染模板）。
-
-    取值优先级：move 的 movement_context/spell_state 结构化槽位 → 通用
-    qualifier 字符串。通用 qualifier（General/Standard 等）、已被核心词
-    特例消化的 qualifier（Cancel/Ward/Open/级别词等）与含技术 token 的
-    值（如 Group2DWard）不产生 argument；后者信息仍无损保留在
-    semantic.slots.qualifier，不进用户可见 label（validation 对 zh label
-    的技术 token 判 error）。
+    """构建 voice_event 的结构化 qualifier argument（数据角色，不重复渲染）。
 
     Args:
         record: 拆解记录。
@@ -1146,68 +1159,145 @@ def voice_qualifier_argument(record: EventDecompositionRecord) -> dict[str, obje
         qualifier 参数；无可保留修饰时返回 None。
     """
 
-    slots = record.semantic_slots
-    family = record.profile.primary_family
-
-    if family == "move":
-        movement_context = slots.get("movement_context")
-        if isinstance(movement_context, dict):
-            label = string_or_none(movement_context.get("label")) or string_or_none(movement_context.get("raw"))
-            if label is not None and not has_technical_qualifier_token(label):
-                return argument_to_dict(
-                    TranslationArgument(
-                        role="qualifier",
-                        labels={"zh_CN": label, "en_US": label},
-                        confidence="high",
-                        provenance={
-                            "source": "semantic_slots.movement_context",
-                            "context_kind": string_or_none(movement_context.get("kind")),
-                        },
-                        key=string_or_none(movement_context.get("key")),
-                        token=string_or_none(movement_context.get("raw")),
-                    )
-                )
-
-        spell_state = slots.get("spell_state")
-        if isinstance(spell_state, dict):
-            raw = string_or_none(spell_state.get("raw"))
-            if raw is not None and not has_technical_qualifier_token(raw):
-                return argument_to_dict(
-                    TranslationArgument(
-                        role="qualifier",
-                        labels={"zh_CN": raw, "en_US": raw},
-                        confidence="medium",
-                        provenance={"source": "semantic_slots.spell_state"},
-                        key=raw.lower(),
-                        value=string_or_none(spell_state.get("spell_key")),
-                        token=raw,
-                    )
-                )
-
-    qualifier = string_or_none(slots.get("qualifier"))
-    if qualifier is None:
+    resolution = resolve_voice_qualifier(record.profile.primary_family, record.semantic_slots)
+    if resolution is None:
         return None
-
-    lowered = qualifier.lower()
-    if lowered in GENERIC_ACTION_QUALIFIERS:
-        return None
-
-    if (family, lowered) in VOICE_QUALIFIER_PHRASES or (family == "move" and voice_move_distance(slots) is not None):
-        # 已被 action 核心词整体表达，不重复输出。
-        return None
-
-    if has_technical_qualifier_token(qualifier):
-        return None
-
     return argument_to_dict(
         TranslationArgument(
             role="qualifier",
-            labels={"zh_CN": qualifier, "en_US": qualifier},
-            confidence="high",
-            provenance={"source": "semantic_slots.qualifier"},
-            key=lowered,
-            token=qualifier,
+            labels={"zh_CN": resolution.zh_cn, "en_US": resolution.en_us},
+            confidence=resolution.confidence,
+            provenance={"source": resolution.source, "rendered_via": "action"},
+            key=resolution.key,
+            value=resolution.value,
+            token=resolution.token,
+            fallback=resolution.fallback,
+            fallback_reason="unreviewed_voice_qualifier" if resolution.fallback else None,
         )
+    )
+
+
+def resolve_voice_qualifier(
+    primary_family: str,
+    slots: Mapping[str, Any],
+) -> VoiceQualifierResolution | None:
+    """统一解析 voice qualifier，避免 action 与结构化 argument 发生漂移。"""
+
+    raw = string_or_none(slots.get("qualifier"))
+    movement_context = slots.get("movement_context")
+    spell_state = slots.get("spell_state")
+
+    if primary_family == "move" and isinstance(movement_context, Mapping):
+        context_raw = string_or_none(movement_context.get("raw"))
+        known = _known_voice_qualifier(context_raw)
+        if known is not None:
+            return known
+        return _unreviewed_voice_qualifier(
+            zh_cn="待审移动修饰",
+            en_us=f"unreviewed movement qualifier ({context_raw})" if context_raw else "unreviewed movement qualifier",
+            token=context_raw,
+            source="semantic_slots.movement_context",
+        )
+
+    if primary_family == "move" and isinstance(spell_state, Mapping):
+        state_raw = string_or_none(spell_state.get("raw"))
+        return _unreviewed_voice_qualifier(
+            zh_cn="待审技能状态",
+            en_us=f"unreviewed spell state ({state_raw})" if state_raw else "unreviewed spell state",
+            token=state_raw,
+            source="semantic_slots.spell_state",
+            value=string_or_none(spell_state.get("spell_key")),
+        )
+
+    if primary_family == "move" and voice_move_distance(slots) is not None:
+        return VoiceQualifierResolution(
+            key="long",
+            zh_cn=VOICE_MOVE_LONG_PHRASE[0],
+            en_us=VOICE_MOVE_LONG_PHRASE[1],
+            token=raw,
+            confidence="high",
+            fallback=False,
+            source="semantic_slots.distance",
+            action_mode="replace",
+        )
+
+    if raw is None or raw.lower() in GENERIC_ACTION_QUALIFIERS:
+        return None
+
+    lowered = raw.lower()
+    phrase = VOICE_QUALIFIER_PHRASES.get((primary_family, lowered))
+    if phrase is not None:
+        return VoiceQualifierResolution(
+            key=VOICE_QUALIFIER_CANONICAL_KEYS.get((primary_family, lowered), lowered),
+            zh_cn=phrase[0],
+            en_us=phrase[1],
+            token=raw,
+            confidence="high",
+            fallback=False,
+            source="semantic_slots.qualifier",
+            action_mode="replace",
+        )
+
+    known = _known_voice_qualifier(raw)
+    if known is not None:
+        return known
+
+    if has_technical_qualifier_token(raw):
+        return _unreviewed_voice_qualifier(
+            zh_cn="待审技术修饰",
+            en_us=f"unreviewed technical qualifier ({raw})",
+            token=raw,
+            source="semantic_slots.qualifier",
+        )
+
+    return _unreviewed_voice_qualifier(
+        zh_cn=f"待审修饰（{raw}）",
+        en_us=f"unreviewed qualifier ({raw})",
+        token=raw,
+        source="semantic_slots.qualifier",
+    )
+
+
+def _known_voice_qualifier(raw: str | None) -> VoiceQualifierResolution | None:
+    """从核验词表解析可直接展示的 qualifier。"""
+
+    if raw is None:
+        return None
+    words = get_display_labels().voice_qualifier.get(raw.lower())
+    if words is None:
+        return None
+    return VoiceQualifierResolution(
+        key=raw.lower(),
+        zh_cn=words[0],
+        en_us=words[1],
+        token=raw,
+        confidence="high",
+        fallback=False,
+        source="display_labels.voice_qualifier",
+        action_mode="prefix",
+    )
+
+
+def _unreviewed_voice_qualifier(
+    *,
+    zh_cn: str,
+    en_us: str,
+    token: str | None,
+    source: str,
+    value: str | None = None,
+) -> VoiceQualifierResolution:
+    """构造统一的低置信 qualifier，canonical key 不携带参数值。"""
+
+    return VoiceQualifierResolution(
+        key="unreviewed",
+        zh_cn=zh_cn,
+        en_us=en_us,
+        token=token,
+        confidence="low",
+        fallback=True,
+        source=source,
+        action_mode="prefix",
+        value=value,
     )
 
 
@@ -1750,7 +1840,12 @@ def build_announcer_event(
     return build_frame(
         record,
         "announcer_event",
-        [announcer_mode_argument(record.semantic_slots, active_labels), event_argument, team_argument, subject_argument],
+        [
+            announcer_mode_argument(record.semantic_slots, active_labels),
+            event_argument,
+            team_argument,
+            subject_argument,
+        ],
     )
 
 
@@ -2065,12 +2160,7 @@ def counterpart_argument(
     alias = string_or_none(counterpart.get("alias"))
     key = string_or_none(counterpart.get("key"))
     raw = string_or_none(counterpart.get("raw"))
-    english = (
-        string_or_none(counterpart.get("label"))
-        or raw
-        or alias
-        or key
-    )
+    english = string_or_none(counterpart.get("label")) or raw or alias or key
     if english is None:
         return None
 
@@ -2409,16 +2499,26 @@ def voice_action_argument(
     en_core = primary_family.replace("_", " ")
     active_slots = slots or {}
     consumed_qualifier = None
+    action_key = primary_family
+    confidence = "high"
+    qualifier = resolve_voice_qualifier(primary_family, active_slots)
+    if qualifier is not None:
+        if qualifier.action_mode == "replace":
+            zh_core, en_core = qualifier.zh_cn, qualifier.en_us
+        else:
+            zh_core = f"{qualifier.zh_cn}{zh_core}"
+            en_core = f"{qualifier.en_us} {en_core}"
+        consumed_qualifier = qualifier.token or qualifier.key
+        confidence = qualifier.confidence
 
-    if primary_family == "move" and voice_move_distance(active_slots) is not None:
-        zh_core, en_core = VOICE_MOVE_LONG_PHRASE
-        consumed_qualifier = "long"
-    else:
-        qualifier = string_or_none(active_slots.get("qualifier"))
-        phrase = VOICE_QUALIFIER_PHRASES.get((primary_family, qualifier.lower())) if qualifier is not None else None
-        if phrase is not None:
-            zh_core, en_core = phrase
-            consumed_qualifier = qualifier
+    if (
+        primary_family == "shop"
+        and isinstance(consumed_qualifier, str)
+        and consumed_qualifier.lower() in {"open", "close"}
+    ):
+        # Open/Close 是相反的玩家状态；不能继续共用 shop key，否则模式签名
+        # 会把进店和离店合并成同一语义模式。
+        action_key = f"shop_{consumed_qualifier.lower()}"
 
     provenance: dict[str, object] = {"source": "profile.primary_family", "frame_type": "voice_event"}
     if consumed_qualifier is not None:
@@ -2429,9 +2529,9 @@ def voice_action_argument(
         TranslationArgument(
             role="action",
             labels={"zh_CN": f"{zh_core}{zh_word}", "en_US": f"{en_core} {en_word}"},
-            confidence="high",
+            confidence=confidence,
             provenance=provenance,
-            key=primary_family,
+            key=action_key,
         )
     )
 
@@ -2472,7 +2572,7 @@ def build_ability_cast_event(
         return None
 
     slots = record.semantic_slots
-    slot = ability_slot_argument(slots.get("spell_key") or slots.get("spell_key_hint"))
+    slot = ability_slot_argument(resolved_spell_key_for_translation(record))
     phase = phase_argument(slots.get("phase") or phase_from_cue_path(slots), "ability_cast_event")
 
     # 仅真无相位（slots.phase 为空）时合成；词表外相位（missile_cast/stun 等）
@@ -2670,11 +2770,7 @@ def build_frame(
         JSON 友好的 translation frame 字典。
     """
 
-    argument_map = {
-        str(argument["role"]): argument
-        for argument in arguments
-        if argument is not None
-    }
+    argument_map = {str(argument["role"]): argument for argument in arguments if argument is not None}
     return {
         "schema_version": TRANSLATION_SCHEMA_VERSION,
         "frame_type": frame_type,
@@ -2840,6 +2936,63 @@ def ability_slot_argument(spell_key: object) -> dict[str, object] | None:
             value=value,
         )
     )
+
+
+def resolved_spell_key_for_translation(record: EventDecompositionRecord) -> object:
+    """返回允许进入用户 translation frame 的技能槽位。
+
+    reference/rule 解析出的 ``spell_key`` 优先。owner-prefix hint 允许承接
+    ``CaitlynWSnare`` 等大写内部词根和 ``AkaliRb`` 单字母变体，但再次
+    拒绝拆走普通 PascalCase 词首后留下的小写长 residual。
+    """
+
+    spell_key = record.semantic_slots.get("spell_key")
+    if spell_key is not None:
+        return spell_key
+    hint = record.semantic_slots.get("spell_key_hint")
+    if hint is not None:
+        residual = record.semantic_slots.get("alias_residual") or record.semantic_slots.get("effect_residual")
+        if isinstance(residual, str) and len(residual) > 1 and residual[0].islower():
+            return None
+        return hint
+
+    return mode_augment_spell_key_hint(record.semantic_slots)
+
+
+def mode_augment_spell_key_hint(slots: Mapping[str, Any]) -> str | None:
+    """从增益 Code 后的显式英雄技能段提取借用技能键位。
+
+    仅接受 owner 前缀、单字母槽位与大写开头的实质组件 residual 三段
+    连续出现的形态；普通 PascalCase 词（如 ``UltimateBackup``）不进入
+    ability frame。
+
+    Args:
+        slots: 拆解记录 semantic slots。
+
+    Returns:
+        小写技能键位；cue 结构或技能段不满足强边界时返回 None。
+    """
+
+    reference_entity = slots.get("reference_entity")
+    kind = reference_entity.get("kind") if isinstance(reference_entity, dict) else None
+    cue_path = slots.get("cue_path")
+    if (
+        kind not in MODE_AUGMENT_REFERENCE_KINDS
+        or mode_augment_cue(slots) is None
+        or not isinstance(cue_path, list)
+        or len(cue_path) < 3
+    ):
+        return None
+
+    spell_segment = cue_path[2]
+    if not isinstance(spell_segment, str):
+        return None
+
+    match = MODE_AUGMENT_BORROWED_SPELL_PATTERN.fullmatch(spell_segment)
+    if match is None:
+        return None
+
+    return match.group("spell_key").lower()
 
 
 def ability_component_argument(
@@ -3033,9 +3186,7 @@ def map_argument(
         return None
 
     active_labels = labels if labels is not None else get_display_labels()
-    active_reference_names = (
-        reference_map_names if reference_map_names is not None else get_reference_map_names()
-    )
+    active_reference_names = reference_map_names if reference_map_names is not None else get_reference_map_names()
 
     placeholder = f"Map{map_id}"
     reference_name = active_reference_names.get(map_id)

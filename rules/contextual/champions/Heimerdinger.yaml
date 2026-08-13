@@ -1,6 +1,14 @@
 scope: champion
 owner: Heimerdinger
 aliases:
+  HeimerdingerRQEngineAudio:
+    kind: champion_spell_component
+    spell: r
+    component: empowered_q_turret
+    label: R强化Q炮台
+    confidence: high
+    source: manual_contextual_alias
+    note: HeimerdingerRQEngineAudio 是 R 强化 Q 炮台的精确内部 cue，仅匹配该完整 token。
   HeimerTurretShutdown:
     kind: champion_spell_component
     spell: q

@@ -172,6 +172,9 @@ def build_review_bundle(
             "record_count": _mapping(quality.get("stable")).get("record_count"),
             "accepted_corpus_entry_count": len(corpus_by_id),
             "violations": deepcopy(_mapping(quality.get("stable")).get("violation_counts")),
+            "confidence_distribution": deepcopy(_mapping(quality.get("stable")).get("confidence_distribution")),
+            "residual_english": deepcopy(_mapping(quality.get("stable")).get("residual_english")),
+            "qualifier_coverage": deepcopy(_mapping(quality.get("stable")).get("qualifier_coverage")),
             "support_transition_counts": deepcopy(support_diff.get("transition_counts")),
         },
         "experimental_summary": _experimental_summary(quality),
@@ -224,6 +227,7 @@ def _pattern_payload(pattern: Mapping[str, Any]) -> dict[str, Any]:
         "support_level",
         "warning_counts",
         "provenance_policy",
+        "zh_cn_label_variants",
     )
     return {field: deepcopy(pattern.get(field)) for field in fields}
 
@@ -253,6 +257,9 @@ def _experimental_summary(quality: Mapping[str, Any]) -> dict[str, Any]:
         "promotion_candidate_pattern_count": experimental.get("promotion_candidate_pattern_count"),
         "promotion_candidate_record_count": experimental.get("promotion_candidate_record_count"),
         "render_status_counts": deepcopy(experimental.get("render_status_counts")),
+        "confidence_distribution": deepcopy(experimental.get("confidence_distribution")),
+        "residual_english": deepcopy(experimental.get("residual_english")),
+        "qualifier_coverage": deepcopy(experimental.get("qualifier_coverage")),
         "top_unresolved_tokens": deepcopy(_list(top_tokens.get("unresolved"))[:10]),
         "top_warnings": deepcopy(_list(experimental.get("top_warnings"))[:10]),
     }
@@ -428,8 +435,13 @@ def _review_html() -> str:
     document.getElementById('riskSummary').innerHTML = `<h2>变化与风险摘要</h2>
       <div class="meta"><div><b>Stable support diff</b><code>${compact(stable.support_transition_counts)}</code></div>
       <div><b>Stable violations</b><code>${compact(stable.violations)}</code></div>
+      <div><b>Stable 语义/Frame 置信度</b><code>${compact(stable.confidence_distribution)}</code></div>
+      <div><b>Stable 英文残留</b><code>${compact(stable.residual_english)}</code></div>
+      <div><b>Stable qualifier 覆盖</b><code>${compact(stable.qualifier_coverage)}</code></div>
       <div><b>Experimental records</b>${esc(experimental.record_count)}</div>
       <div><b>Experimental promotion candidates</b>${esc(experimental.promotion_candidate_pattern_count)} patterns / ${esc(experimental.promotion_candidate_record_count)} records</div>
+      <div><b>Experimental 语义/Frame 置信度</b><code>${compact(experimental.confidence_distribution)}</code></div>
+      <div><b>Experimental qualifier 覆盖</b><code>${compact(experimental.qualifier_coverage)}</code></div>
       <div><b>异常项</b>${esc(exceptions.length)}</div></div>
       <p><b>Experimental 未解析 token：</b> ${experimental.top_unresolved_tokens.length ? experimental.top_unresolved_tokens.map(compact).join('；') : '无'}</p>
       <p><b>Experimental 高频警告：</b> ${experimental.top_warnings.length ? experimental.top_warnings.map(compact).join('；') : '无'}</p>
@@ -481,6 +493,7 @@ def _review_html() -> str:
         <div><b>Signature</b><code>${compact(pattern.signature)}</code></div><div><b>必需角色</b><code>${compact(pattern.required_roles)}</code></div>
         <div><b>可选角色</b><code>${compact(pattern.optional_roles)}</code></div><div><b>中文模板</b><code>${compact(pattern.zh_CN_template)}</code></div>
         <div><b>证据策略</b><code>${compact(pattern.provenance_policy)}</code></div><div><b>警告计数</b><code>${compact(pattern.warning_counts)}</code></div>
+        <div><b>中文标签变体</b><code>${compact(pattern.zh_cn_label_variants)}</code></div>
         <div><b>本轮 support change</b><code>${compact(payload.support_change)}</code></div></div>`;
     } else if (target.target_type === 'support') {
       detail = `<div class="meta"><div><b>Stable patterns</b>${esc(payload.stable.pattern_count)}</div><div><b>Stable records</b>${esc(payload.stable.record_count)}</div>

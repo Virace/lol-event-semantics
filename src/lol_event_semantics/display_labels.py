@@ -53,6 +53,9 @@ class DisplayLabels:
         shop_subject: 商店老板对象 token（装备/条件）到中文词条的映射
             （批次6d，宁缺毋错，表外对象不建 frame；英雄/皮肤/地区阵营
             走各自解析链不入此表）。
+        voice_qualifier: 自身动作语音 qualifier 到 ``(zh_CN, en_US)``
+            展示词的映射。仅收录已核验的中文；表外项由 builder 明确标记
+            为待审，不能伪装成稳定的泛化动作。
         augments: Arena/ARAM 增益与斗魂竞技场道具 Code 到 ``(zh_CN, en_US)``
             官方名的映射（客户端字符串表命名 key 中英同键对照；宁缺毋错，
             表外 Code 不建 frame）。
@@ -70,6 +73,7 @@ class DisplayLabels:
     announcer_mode: Mapping[str, str] = field(default_factory=dict)
     shop_action: Mapping[str, tuple[str, str]] = field(default_factory=dict)
     shop_subject: Mapping[str, str] = field(default_factory=dict)
+    voice_qualifier: Mapping[str, tuple[str, str]] = field(default_factory=dict)
     augments: Mapping[str, tuple[str, str]] = field(default_factory=dict)
 
 
@@ -121,6 +125,7 @@ def parse_display_labels(data: Mapping[str, Any]) -> DisplayLabels:
         announcer_mode=_parse_scalar_section(announcer.get("mode")),
         shop_action=_parse_pair_section(shop.get("action")),
         shop_subject=_parse_scalar_section(shop.get("subject")),
+        voice_qualifier=_parse_pair_section(data.get("voice_qualifier")),
         augments=_parse_pair_section(data.get("augments")),
     )
 
@@ -312,9 +317,7 @@ def item_names_from_collection(collection: Any) -> dict[int, dict[str, str]]:
             continue
 
         labels = {
-            language: value
-            for language in ("zh_CN", "en_US")
-            if (value := _first_name(entity, language)) is not None
+            language: value for language in ("zh_CN", "en_US") if (value := _first_name(entity, language)) is not None
         }
         if labels:
             names[item_id] = labels

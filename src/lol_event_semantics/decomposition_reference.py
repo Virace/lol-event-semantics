@@ -992,7 +992,9 @@ def apply_champion_contextual_alias(record: EventDecompositionRecord, reference:
     for index, atom in enumerate(record.lexical_atoms):
         for lookup_owner in lookup_owners:
             for token in contextual_alias_lookup_tokens(atom, lookup_owner):
-                rule = reference.rules.contextual_alias_for("champion", lookup_owner, token) if reference.rules else None
+                rule = (
+                    reference.rules.contextual_alias_for("champion", lookup_owner, token) if reference.rules else None
+                )
 
                 if rule is None:
                     continue
@@ -1420,7 +1422,9 @@ def add_ultimate_spellbook_spell_candidate(record: EventDecompositionRecord, ref
     if phase is not None:
         record.semantic_slots["phase"] = phase
 
-    record.confidence = max_confidence(record.confidence, DecompositionConfidence.HIGH if spell is not None else DecompositionConfidence.MEDIUM)
+    record.confidence = max_confidence(
+        record.confidence, DecompositionConfidence.HIGH if spell is not None else DecompositionConfidence.MEDIUM
+    )
     clear_unknowns_by_keys(record, {"ultbook", compact(spell_atom.raw), "r"})
 
 
@@ -1626,7 +1630,10 @@ def set_inferred_spell_profile(record: EventDecompositionRecord, candidate: dict
 
     score = int(candidate["score"])
 
-    if record.profile.semantic_profile is SemanticProfile.UNKNOWN_PROFILE or record.semantic_slots.get("trigger_family") == "sfx_event":
+    if (
+        record.profile.semantic_profile is SemanticProfile.UNKNOWN_PROFILE
+        or record.semantic_slots.get("trigger_family") == "sfx_event"
+    ):
         record.profile = EventProfile(
             primary_family="spell",
             semantic_profile=SemanticProfile.SPELL_EVENT,
@@ -2684,7 +2691,14 @@ def infer_spell_candidate_for_subject(
             if match is None:
                 continue
 
+            manual_residual = manual_trusted_single_key_residual(match, subject, spell, reference.rules)
+            if not has_trusted_single_key_residual(match, subject, spell, reference.rules):
+                continue
+
             score, components = score_spell_match(record, spell, match, owner_matches, subject_prefix)
+            if manual_residual is not None:
+                score = min(100, score + 20)
+                components.append("trusted_single_key_residual")
 
             if score < 70:
                 # 裸 Passive 门(Gate②)的哨兵 reason 不落 record，这里显式留审计痕使丢弃可见
@@ -2702,7 +2716,9 @@ def infer_spell_candidate_for_subject(
         keyword_match = description_keyword_match(stripped_raw, spell)
 
         # BasicAttack/CritAttack 类通用词极易把普攻音效误标成技能，仅白名单英雄槽位放行
-        if keyword_match is not None and not generic_attack_inference_allowed(keyword_match, subject, spell, reference.rules):
+        if keyword_match is not None and not generic_attack_inference_allowed(
+            keyword_match, subject, spell, reference.rules
+        ):
             keyword_match = None
         elif keyword_match is not None and is_generic_attack_keyword_match(keyword_match):
             # 白名单放行留痕在调用点记录，generic_attack_inference_allowed 谓词保持无副作用
@@ -2772,17 +2788,56 @@ def can_prefix_match_spell_term(term: str, source: str) -> bool:
     return len(term) >= 4 or source in {"spell_key", "passive_key"}
 
 
+def has_trusted_single_key_residual(
+    match: SpellTermMatch,
+    subject: ReferenceEntity,
+    spell: ReferenceSpell,
+    rules: RuleBook | None,
+) -> bool:
+    """限制英雄名加单字母槽位的前缀匹配只接受受控后缀。
+
+    ``LuxP...``、``RenektonE...`` 这类内部名不能仅因首字母与槽位相同
+    就归属技能。只有后缀能够被既有 residual modifier 规则完整拆解时，才把
+    ``<Champion><Q/W/E/R/P><modifier>`` 视为可信的内部技能命名。
+    """
+
+    if match.match_type != "prefix" or match.source not in {"spell_key", "passive_key"}:
+        return True
+
+    if match.term != f"{subject.key}{spell.spell_key}":
+        return True
+
+    modifiers, unresolved = parse_residual_modifiers(match.residual, rules)
+    return (bool(modifiers) and not unresolved) or manual_trusted_single_key_residual(
+        match, subject, spell, rules
+    ) is not None
+
+
+def manual_trusted_single_key_residual(
+    match: SpellTermMatch,
+    subject: ReferenceEntity,
+    spell: ReferenceSpell,
+    rules: RuleBook | None,
+) -> object | None:
+    """返回单字母技能 residual 的显式人工证据。"""
+
+    if (
+        rules is None
+        or match.match_type != "prefix"
+        or match.source not in {"spell_key", "passive_key"}
+        or match.term != f"{subject.key}{spell.spell_key}"
+    ):
+        return None
+    return rules.trusted_spell_residual_for(subject.alias or subject.key, spell.spell_key, match.residual)
+
+
 def description_keyword_match(stripped_key: str, spell: ReferenceSpell) -> SpellTermMatch | None:
     """用描述关键词弱匹配视觉化技能名。"""
 
     if not spell.keywords:
         return None
 
-    token_words = [
-        compact(word)
-        for word in split_identifier(stripped_key)
-        if is_spell_keyword(word)
-    ]
+    token_words = [compact(word) for word in split_identifier(stripped_key) if is_spell_keyword(word)]
 
     if len(token_words) < 2:
         return None
@@ -2909,6 +2964,9 @@ def score_spell_match(
     elif match.source == "dragontail_spell_id":
         score += 45
         components.append("dragontail_spell_id")
+    elif match.source == "reference_spell_id":
+        score += 45
+        components.append("reference_spell_id")
     elif match.source == "dragontail_image":
         score += 40
         components.append("dragontail_image")
@@ -2954,14 +3012,8 @@ def residual_keyword_hits(residual: str, spell: ReferenceSpell) -> list[str]:
     """查看 residual 是否落在技能描述关键词中。"""
 
     keyword_set = set(spell.keywords)
-    return [
-        word
-        for word in split_identifier(residual)
-        if is_spell_keyword(word) and compact(word) in keyword_set
-    ] + [
-        keyword
-        for keyword in keyword_set
-        if len(keyword) >= 4 and keyword in residual
+    return [word for word in split_identifier(residual) if is_spell_keyword(word) and compact(word) in keyword_set] + [
+        keyword for keyword in keyword_set if len(keyword) >= 4 and keyword in residual
     ]
 
 
@@ -3043,11 +3095,7 @@ def parse_residual_modifiers(
 
     while cursor < len(key):
         hit = next(
-            (
-                (term, modifier)
-                for term, modifier in terms
-                if key.startswith(term, cursor)
-            ),
+            ((term, modifier) for term, modifier in terms if key.startswith(term, cursor)),
             None,
         )
 
@@ -3100,8 +3148,7 @@ def has_phase_context(record: EventDecompositionRecord) -> bool:
         raw_key = compact(atom.raw)
 
         if raw_key.startswith("on") and any(
-            phase in raw_key
-            for phase in ["buffactivate", "buffdeactivate", "cast", "hit", "missile", "launch"]
+            phase in raw_key for phase in ["buffactivate", "buffdeactivate", "cast", "hit", "missile", "launch"]
         ):
             return True
 
@@ -3164,10 +3211,7 @@ def append_candidate(record: EventDecompositionRecord, candidate: dict[str, Any]
     """去重追加候选解释。"""
 
     key = json.dumps(candidate, ensure_ascii=False, sort_keys=True)
-    existing = {
-        json.dumps(item, ensure_ascii=False, sort_keys=True)
-        for item in record.candidates
-    }
+    existing = {json.dumps(item, ensure_ascii=False, sort_keys=True) for item in record.candidates}
 
     if key not in existing:
         record.candidates.append(candidate)
@@ -3329,7 +3373,9 @@ def audit_attack_modifier_whitelist_hit(
 ) -> None:
     """记录普攻改写白名单放行普攻类关键词推断。"""
 
-    entry = rules.attack_modifier_spell_for(subject.alias or subject.key, spell.spell_key) if rules is not None else None
+    entry = (
+        rules.attack_modifier_spell_for(subject.alias or subject.key, spell.spell_key) if rules is not None else None
+    )
 
     if entry is None:
         return
@@ -3543,7 +3589,9 @@ def first_phase_value(record: EventDecompositionRecord) -> str | None:
     """返回记录中第一个阶段值。"""
 
     for atom in record.lexical_atoms:
-        phase = part_value(atom, "phase_or_state_token") or part_value(atom, "phase_token") or phase_alias_from_atom(atom)
+        phase = (
+            part_value(atom, "phase_or_state_token") or part_value(atom, "phase_token") or phase_alias_from_atom(atom)
+        )
 
         if phase is not None:
             return phase
@@ -3633,8 +3681,7 @@ def is_phase_like_atom(atom: LexicalAtom) -> bool:
     raw_key = compact(atom.raw)
 
     if raw_key.startswith("on") and any(
-        phase in raw_key
-        for phase in ["buffactivate", "buffdeactivate", "cast", "hit", "missile", "launch"]
+        phase in raw_key for phase in ["buffactivate", "buffdeactivate", "cast", "hit", "missile", "launch"]
     ):
         return True
 
@@ -3665,11 +3712,7 @@ def clear_unknowns_by_keys(record: EventDecompositionRecord, compact_keys: set[s
     """移除已经被结构化解释覆盖的未知项。"""
 
     targets = {compact(key) for key in compact_keys if key}
-    record.unknowns = [
-        unknown
-        for unknown in record.unknowns
-        if compact(unknown.raw) not in targets
-    ]
+    record.unknowns = [unknown for unknown in record.unknowns if compact(unknown.raw) not in targets]
 
 
 def clear_contextual_unknowns(

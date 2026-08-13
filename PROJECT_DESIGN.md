@@ -19,14 +19,14 @@
 - 来源边界：`http_fetch.py`、`online_sources.py`、`game_manifest*.py`、`game_wad_events.py`、`data_dragon_source.py`、`tencent_hero_list_source.py` 负责获取并校验外部数据，不解释事件语义。
 - 累积更新边界：`reference_ingestion.py`、`reference_collection.py`、`raw_update.py`、`source_sync.py`、`update_pipeline.py` 把外部输入转换为仓库内 reference/raw，并负责差集、游标和失败恢复。
 - 语义边界：`decomposition_*.py`、`rules.py`、`model.py`、`match_audit.py` 读取 raw/reference/rules/overrides，输出保留来源、置信度和未知项的结构化拆解。
-- 消费者输出边界：`normalized_contract.py` 负责版本化 record identity、来源身份与 additive support/render/review 视图；`normalized_translation_*.py`、`normalized_output.py`、`normalized_validation.py`、`tiered_quality.py`、`quality_metrics.py`、`display_labels.py` 把拆解记录转换为稳定 normalized contract。`tiered_quality.py` 拥有 Stable absolute gates、accepted corpus 和 support diff；旧 `quality_metrics.py` 只保留全局趋势棘轮。champions/maps 分片中的等价拆解记录先合并 provenance；若最终 canonical identity 仍冲突则 fail-closed。
+- 消费者输出边界：`normalized_contract.py` 负责版本化 record identity、来源身份与 additive support/render/review 视图；`normalized_translation_*.py`、`normalized_output.py`、`normalized_validation.py`、`tiered_quality.py`、`quality_metrics.py`、`display_labels.py` 把拆解记录转换为稳定 normalized contract。`tiered_quality.py` 拥有 Stable absolute gates、accepted corpus 和 support diff，并对带未解析 residual 的单字母技能键启发式 fail-closed；旧 `quality_metrics.py` 只保留全局趋势棘轮。champions/maps 分片中的等价拆解记录先合并 provenance；若最终 canonical identity 仍冲突则 fail-closed。
 - 数据集身份边界：`dataset_identity.py` 对冻结 profile 做版本/计数预检，对 raw、reference、rules、overrides、契约资产和生成器源码计算规范化摘要，并从有序 payload 文件摘要派生 `content_digest`/`dataset_id`；运行时间与路径只属于后续 run metadata。
 - 运行与提升边界：`dataset_runs.py` 独占创建 `.staging` run，固化 success/failure 终态，
   以 completed run + 小型 `approved-local.json` pointer 代替目录覆盖；promotion 在锁内执行
   clean/attestation/report/payload/CAS 门禁与原子替换。`product_review.py` 生成候选绑定的
   Review Site/bundle，`review_decisions.py` 校验版本化决定，以 OS advisory lock + 可恢复 journal 原子应用长期源并为最终数据集
   approval 提供 fail-closed attestation。默认 lookup 只经 pointer 解析。
-- 模式报告边界：`pattern_catalog.py` 从 semantic frame 汇总 Pattern Catalog inventory，并仅把 exact approved 且结构合格的 pattern 投影为 Stable；`scripts/report_translation_patterns.py` 只是把 JSON/Markdown 写入调用方指定的被忽略报告路径，不反向修改规则源。
+- 模式报告边界：`pattern_catalog.py` 从 semantic frame 汇总 Pattern Catalog inventory，并仅把 exact approved 且结构合格的 pattern 投影为 Stable；它保留 pattern 的全部非实体中文标签变体，供 Product Review 检查语义漂移。`scripts/report_translation_patterns.py` 只是把 JSON/Markdown 写入调用方指定的被忽略报告路径，不反向修改规则源。
 - 入口边界：`full_refresh.py` 提供可注入 runner 的编排逻辑；`scripts/run_full_refresh.py`、下载/导入/构建/查询/模式报告脚本和 `normalized_lookup_cli.py` 负责 CLI 适配。
 
 `scripts/` 可以依赖共享模块，共享模块不得依赖脚本。来源适配器不得直接写最终 normalized；拆解层不得依赖 `dist/` 中的上次生成结果；展示渲染不得改写 raw 或 reference。
@@ -44,6 +44,7 @@ raw/events/ + reference/ + rules/ + overrides/
   -> dist/runs/.staging/<run>/{normalized,reports,work}
   -> dist/runs/completed/<run>/ or dist/runs/failed/<run>/
   -> reports/review-site/{review-bundle.json,index.html}
+     (Stable/Experimental 置信度、英文残留、qualifier 覆盖、非实体标签变体)
   -> dist/runs/approved-local.json (promotion only)
   -> global validator + Stable quality gates/support diff + trend metrics/ratchet
 

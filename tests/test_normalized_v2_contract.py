@@ -262,6 +262,30 @@ class NormalizedV2ContractTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 2)
         self.assertIn("payload closure mismatch", completed.stdout)
 
+    def test_source_free_consumer_enforces_dynamic_pattern_variant_schema(self) -> None:
+        """动态 role 名和 role payload 必须经过完整递归 Schema 校验。"""
+
+        for case, expected_error in (("empty_role", "is too short"), ("nested_extra", "has extra fields")):
+            with self.subTest(case=case):
+                with tempfile.TemporaryDirectory() as temp:
+                    root = Path(temp)
+                    write_v2_fixture(root, [v2_record()])
+                    catalog_path = root / "pattern-catalog.json"
+                    catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+                    variants = catalog["patterns"][0]["zh_cn_label_variants"]
+                    if case == "empty_role":
+                        variants[""] = variants.pop("action")
+                    else:
+                        variants["action"]["unexpected"] = True
+                    catalog_path.write_text(json.dumps(catalog, ensure_ascii=False), encoding="utf-8")
+                    manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+                    rewrite_manifest_identity(root, manifest)
+
+                    completed = run_source_free_consumer(root)
+
+                self.assertEqual(completed.returncode, 2)
+                self.assertIn(expected_error, completed.stdout)
+
 
 def run_source_free_consumer(root: Path) -> subprocess.CompletedProcess[str]:
     """以无项目 import 环境运行 fixture 内 consumer。"""

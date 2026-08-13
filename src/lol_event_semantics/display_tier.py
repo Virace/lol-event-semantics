@@ -26,7 +26,7 @@ from __future__ import annotations
 
 from typing import Final
 
-from .decomposition_model import EventDecompositionRecord
+from .decomposition_model import EventDecompositionRecord, SemanticProfile
 
 # 已由 translation frame 承接的高价值家族：即便个别记录因翻译构建缺口暂时
 # 没有 translation 对象（如 champion_status_state 部分记录），也按同族对待，
@@ -72,9 +72,7 @@ TIER3_TECHNICAL_FAMILIES: Final[frozenset[str]] = frozenset(
 # 语料里那些家族 100% 是 vo 资产，没有非 vo 实例；只有这五个家族同时存在 vo
 # 与非 vo 实例，因此只需要对它们显式写 vo 分支。若未来语料出现新的非 vo
 # dance/joke 记录，不会被本集合自动兜住，需要另行核实后加入。
-TIER3_IF_NOT_VO_FAMILIES: Final[frozenset[str]] = frozenset(
-    {"death", "homeguard", "recall", "respawn", "winddown"}
-)
+TIER3_IF_NOT_VO_FAMILIES: Final[frozenset[str]] = frozenset({"death", "homeguard", "recall", "respawn", "winddown"})
 
 # Wwise 参数/开关类壳动词：即便资产段恰好被解析成 vo/sfx，动词本身已表明这是
 # 控制信号（切换素材、设置参数）而非播放台词，统一按纯技术处理。
@@ -85,6 +83,33 @@ TIER3_CONTROL_VERBS: Final[frozenset[str]] = frozenset({"set", "setstate", "swit
 # 塔摧毁等有玩家语义的 map 家族记录 cue_path 第二段是具体对象名（如
 # ChaosTurret），不在本集合内；语义存疑的子类（SRX/Crepe 等）保守保留 Tier2。
 MAP_AMBIENCE_CUE_TOKENS: Final[frozenset[str]] = frozenset({"ambience", "bloom", "emitter"})
+
+
+def is_akshan_revive_sfx(record: EventDecompositionRecord) -> bool:
+    """判断记录是否属于已核验的 Akshan 复活音效簇。
+
+    Args:
+        record: 已完成语义拆解的事件记录。
+
+    Returns:
+        owner、effect 与 phase 均精确命中当前已核验簇时返回 True。
+    """
+
+    slots = record.semantic_slots
+    verb = record.shell.verb
+    return (
+        record.profile.primary_family == "sfx"
+        and record.profile.semantic_profile is SemanticProfile.SPELL_EVENT
+        and record.shell.asset_kind == "sfx"
+        and isinstance(verb, str)
+        and verb.lower() in {"mute", "play"}
+        and record.owner.alias == "Akshan"
+        and slots.get("sfx_scope") == "champion_sfx"
+        and slots.get("phase") == "revive"
+        and slots.get("effect_head") == "AkshanWRevive"
+        and slots.get("effect_base") == "WRevive"
+        and slots.get("effect_residual") == "Revive"
+    )
 
 
 def classify_display_tier(record: EventDecompositionRecord, *, has_translation: bool) -> int:
@@ -110,6 +135,11 @@ def classify_display_tier(record: EventDecompositionRecord, *, has_translation: 
 
     if has_translation or primary_family in TIER1_COVERED_FAMILIES:
         return 1
+
+    # Akshan W 的复活音效已由产品语义核验；仅凭通用 spell_key_hint 不能放行，
+    # 否则 RenektonExecute/JayceRangedAttack 等普通词首会被误展示为 E/R 技能。
+    if is_akshan_revive_sfx(record):
+        return 2
 
     if primary_family in TIER3_TECHNICAL_FAMILIES and asset_kind != "vo":
         return 3

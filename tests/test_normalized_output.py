@@ -314,6 +314,31 @@ class MapSystemEntityDisplayTests(unittest.TestCase):
         self.assertTrue(short)
         self.assertNotIn("loop", short.lower())
 
+    def test_map_system_end_phase_is_not_dropped(self) -> None:
+        """map/system 兜底仍必须展示已解析的 end 阶段。"""
+
+        record = normalize_semantics(
+            decompose_event_name(
+                "Play_sfx_Ruby_RyzeRChannel_end",
+                game_version="16.5",
+            )
+        )
+
+        self.assertEqual(build_short_display(record), "Ruby结束")
+
+    def test_unresolved_spell_still_renders_known_phase(self) -> None:
+        """技能归属 fail-closed 时不能同时丢弃已解析的状态阶段。"""
+
+        record = normalize_semantics(
+            decompose_event_name(
+                "Play_sfx_Zac_zacrebirthstart_OnBuffActivate",
+                game_version="16.5",
+            )
+        )
+
+        self.assertEqual(record.profile.semantic_profile, SemanticProfile.SPELL_EVENT)
+        self.assertEqual(build_short_display(record), "Zac状态启动")
+
 
 class ChampionEntityAttributionTests(unittest.TestCase):
     """验证 champion 实体归一：碎片 alias 归属真实英雄且信息无损。"""
@@ -1204,6 +1229,27 @@ class DisplayTierTests(unittest.TestCase):
                 self.assertEqual(display["tier"], 2)
                 self.assertIsInstance(display["zh_cn_short"], str)
                 self.assertTrue(display["zh_cn_short"])
+                if raw.startswith("Mute_sfx_Akshan"):
+                    short = display["zh_cn_short"]
+                    assert isinstance(short, str)
+                    self.assertEqual(short, "复活音效静音")
+                    self.assertNotRegex(short, r"[A-Za-z]")
+
+    def test_tier3_rejects_unverified_spell_key_hints(self) -> None:
+        """普通词首误拆出的 E/R hint 不得暴露为技能短文案。"""
+
+        cases = [
+            "Play_sfx_RenektonSkin17_RenektonExecute_OnCast",
+            "Play_sfx_JayceSkin03_JayceRangedAttack2_OnCast",
+        ]
+
+        for raw in cases:
+            with self.subTest(raw=raw):
+                normalized = self.build(raw)
+                display = normalized["display"]
+                self.assertIsInstance(display, dict)
+                self.assertEqual(display["tier"], 3)
+                self.assertIsNone(display["zh_cn_short"])
 
     def test_tier1_vo_asset_within_technical_families(self) -> None:
         """普攻/暴击/待机/材质开关家族里混入的 vo 语音判 Tier1，不随家族误判 Tier3。

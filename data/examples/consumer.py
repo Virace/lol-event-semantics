@@ -11,10 +11,10 @@ from pathlib import Path, PurePosixPath
 from typing import Any, Mapping
 
 CONTENT_DIGEST_VERSION = "lol-event-semantics.content-digest.v1"
-V1_STABLE_DECISION_ID = "v1-initial-vo-2026-08-07"
-V1_STABLE_PATTERN_COUNT = 86
-V1_STABLE_RECORD_COUNT = 5061
-V1_STABLE_PATTERN_IDS_DIGEST = "e1954528a33188c23ede9d633cd8c5828c3c588fa7862dc2261fd4abec798912"
+V1_STABLE_DECISION_ID = "v1-semantic-fix-2026-08-11"
+V1_STABLE_PATTERN_COUNT = 91
+V1_STABLE_RECORD_COUNT = 4387
+V1_STABLE_PATTERN_IDS_DIGEST = "978aa170afcdfab84833a88fc14efcc32bab63f0de85cba6e2851d886971e9e7"
 REQUIRED_PAYLOAD_PATHS = frozenset(
     {
         "examples/consumer.py",
@@ -317,10 +317,18 @@ def _validate(value: Any, schema: Mapping[str, Any], path: str) -> None:
                 raise ValueError(f"{path} is missing required fields: {','.join(missing)}")
         properties = schema.get("properties")
         property_map = properties if isinstance(properties, dict) else {}
-        if schema.get("additionalProperties") is False:
-            extras = sorted(set(value).difference(property_map))
+        property_names = schema.get("propertyNames")
+        if isinstance(property_names, dict):
+            for field in value:
+                _validate(field, property_names, f"{path} property name {field!r}")
+        extras = sorted(set(value).difference(property_map))
+        additional_properties = schema.get("additionalProperties")
+        if additional_properties is False:
             if extras:
                 raise ValueError(f"{path} has extra fields: {','.join(extras)}")
+        elif isinstance(additional_properties, dict):
+            for field in extras:
+                _validate(value[field], additional_properties, f"{path}.{field}")
         for field, field_schema in property_map.items():
             if field in value and isinstance(field_schema, dict):
                 _validate(value[field], field_schema, f"{path}.{field}")

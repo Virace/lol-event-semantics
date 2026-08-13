@@ -184,6 +184,21 @@ class NormalizedContractTests(unittest.TestCase):
         self.assertIn("{action}", pattern["zh_CN_template"]["main"])
         self.assertEqual(pattern["record_count"], 1)
         self.assertEqual(pattern["example_event_names"], ["Play_vo_Annie_Move"])
+        self.assertEqual(
+            pattern["zh_cn_label_variants"],
+            {
+                "action": {
+                    "distinct_label_count": 1,
+                    "variants": [
+                        {
+                            "label": "移动",
+                            "record_count": 1,
+                            "sample_raw_event_names": ["Play_vo_Annie_Move"],
+                        }
+                    ],
+                }
+            },
+        )
 
     def test_public_asset_kind_maps_control_and_unknown_namespaces(self) -> None:
         """公共 asset_kind 只暴露 VO、SFX、control、unknown 四值。"""

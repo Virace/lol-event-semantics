@@ -20,7 +20,7 @@ from .display_labels import (
     load_reference_item_names,
     map_names_from_collection,
 )
-from .display_tier import classify_display_tier
+from .display_tier import classify_display_tier, is_akshan_revive_sfx
 from .normalized_contract import (
     apply_normalized_contract,
     build_public_pattern_catalog,
@@ -381,8 +381,16 @@ def build_short_display_core(
     if modifier is not None and modifier.get("display"):
         return compact_display(f"{owner}{modifier['display']}")
 
+    if is_akshan_revive_sfx(record):
+        return "复活音效"
+
     if spell_key:
         return compact_display(f"{owner} {str(spell_key).upper()} 技能{phase_label(phase)}")
+
+    if record.profile.semantic_profile is SemanticProfile.SPELL_EVENT:
+        phase_text = map_system_phase_label(phase)
+        if phase_text:
+            return compact_display(f"{owner}{phase_text}")
 
     if record.profile.primary_family == "move":
         return compact_display(f"{owner}移动")
@@ -850,6 +858,7 @@ def map_system_phase_label(phase: object) -> str:
         return direct
 
     underscored_aliases = {
+        "end": "结束",
         "missile_launch": "发射",
         "missile_cast": "发射",
         "on_buff_activate": "状态启动",

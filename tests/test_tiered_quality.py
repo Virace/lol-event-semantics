@@ -107,6 +107,68 @@ class TieredQualityTests(unittest.TestCase):
         self.assertEqual(counts, {"abbreviation": 1, "proper_noun": 1, "technical": 1})
         self.assertEqual(summary["status"], "passed")
 
+    def test_structured_qualifier_english_blocks_even_when_renderer_hides_it(self) -> None:
+        """不进入 main/default 模板的 qualifier 仍必须接受英文残留门禁。"""
+
+        record = ability_record()
+        record["translation"]["arguments"]["qualifier"] = argument("qualifier", "open", "Open")
+        rows, report, catalog, corpus = build_contract([record])
+
+        summary = build_test_quality_summary(rows, report, catalog, corpus)
+
+        self.assertEqual(rows[0]["rendered_labels"]["zh_CN"]["main"], "Q技能释放")
+        self.assertEqual(summary["status"], "failed")
+        self.assertIn("unresolved_english", summary["stable"]["violation_counts"])
+        self.assertEqual(summary["stable"]["qualifier_coverage"]["unresolved_english_record_count"], 1)
+
+    def test_unresolved_single_key_spell_residual_blocks_without_rejecting_other_medium_records(self) -> None:
+        """只阻断带未解释后缀的单字母技能启发式，不一刀切全部 medium。"""
+
+        ability = ability_record()
+        ability["translation"]["frame_confidence"] = "medium"
+        ability["semantic"]["slots"].update(
+            {
+                "source": "event_name_heuristic",
+                "subject": {"key": "annie"},
+                "spell_key": "q",
+                "spell_match": {"match_source": "spell_key", "matched_term": "annieq"},
+                "unresolved_residual": "angedattack",
+            }
+        )
+        voice = voice_record("Play_vo_Annie_Move")
+        voice["translation"]["frame_confidence"] = "medium"
+        rows, report, catalog, corpus = build_contract([ability, voice])
+
+        summary = build_test_quality_summary(rows, report, catalog, corpus)
+
+        self.assertEqual(summary["status"], "failed")
+        self.assertEqual(summary["stable"]["violation_counts"], {"unresolved_single_key_spell_residual": 1})
+        self.assertEqual(summary["global"]["confidence_distribution"]["frame"], {"medium": 2})
+
+    def test_full_passive_match_with_residual_is_not_a_single_key_false_positive(self) -> None:
+        """完整 Passive 词条不是 owner + P 的单字母误拆。"""
+
+        ability = ability_record()
+        ability["translation"]["frame_confidence"] = "medium"
+        ability["semantic"]["slots"].update(
+            {
+                "source": "event_name_heuristic",
+                "subject": {"key": "sion"},
+                "spell_key": "p",
+                "spell_match": {"match_source": "passive_key", "matched_term": "sionpassive"},
+                "unresolved_residual": "delay",
+            }
+        )
+        rows, report, catalog, corpus = build_contract([ability])
+
+        summary = build_test_quality_summary(rows, report, catalog, corpus)
+
+        self.assertEqual(summary["status"], "passed")
+        self.assertNotIn(
+            "unresolved_single_key_spell_residual",
+            summary["stable"]["violation_counts"],
+        )
+
     def test_corpus_text_drift_blocks_stable(self) -> None:
         rows, report, catalog, corpus = build_contract([ability_record()])
         corpus["entries"][0]["zh_cn_main"] = "错误文案"
@@ -118,7 +180,7 @@ class TieredQualityTests(unittest.TestCase):
         self.assertIn("accepted_corpus_failure", summary["stable"]["violation_counts"])
 
     def test_v1_scope_rejects_coordinated_policy_and_corpus_shrink(self) -> None:
-        """首个 candidate 也必须命中冻结的 86 patterns / 5,061 records。"""
+        """candidate 必须命中冻结的 91 patterns / 4,387 records。"""
 
         rows, report, catalog, corpus = build_contract([ability_record()])
 
@@ -219,13 +281,14 @@ class TieredQualityTests(unittest.TestCase):
         )
 
     def test_committed_corpus_matches_exact_approved_policy(self) -> None:
-        """提交的 86 条 corpus 与 exact approval 集合一一对应且仍待 P5 Review。"""
+        """提交的 91 条 corpus 与已完成的 exact source approval 一一对应。"""
 
         corpus = load_accepted_corpus(ROOT / "data" / "accepted-corpus.v1.json")
         pattern_ids = {entry["pattern_id"] for entry in corpus["entries"]}
 
-        self.assertEqual(corpus["review_status"], "pending")
-        self.assertEqual(len(pattern_ids), 86)
+        self.assertEqual(corpus["review_status"], "accepted")
+        self.assertTrue(all(entry["review_status"] == "accepted" for entry in corpus["entries"]))
+        self.assertEqual(len(pattern_ids), 91)
         self.assertEqual(pattern_ids, POLICY.promotion_decisions.approved_pattern_ids)
         digest = hashlib.sha256(json.dumps(sorted(pattern_ids), separators=(",", ":")).encode()).hexdigest()
         self.assertEqual(corpus["decision_id"], V1_STABLE_SCOPE.decision_id)

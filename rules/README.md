@@ -13,7 +13,7 @@
 - `residual_modifiers.yaml`：可信技能/实体 stem 命中后解析的结构化修饰符。
 - `external_entities.yaml`：区域、物种、阵营、结构物和中立生物等手工 fallback 实体。
 - `low_trust_events.yaml`：已审阅的整句 exact fallback。命中后可把低置信噪声提升为 `medium`，但会在 `semantic_slots.low_trust_rule` 保留 `trust: low`。
-- `spell_match_constraints.yaml`：普攻类通用关键词（BasicAttack/CritAttack）允许推断为英雄技能的白名单；未列入的英雄槽位丢弃 `description_keywords` 弱匹配候选，事件回落普攻家族展示。
+- `spell_match_constraints.yaml`：普攻类通用关键词（BasicAttack/CritAttack）允许推断为英雄技能的白名单，以及经 reference/raw 证据确认的 `owner + 单字母槽位 + residual` 精确白名单；未列入的弱匹配或 residual 不提升为技能槽位。
 
 ## 上下文别名布局
 

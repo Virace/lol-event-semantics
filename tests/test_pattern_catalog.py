@@ -56,7 +56,7 @@ class PatternCatalogTests(unittest.TestCase):
             self.assertEqual(frame.review_status, "pending")
             self.assertTrue(frame.semantic_profiles)
         decisions = self.policy.promotion_decisions
-        self.assertEqual(decisions.decision_id, "v1-initial-vo-2026-08-07")
+        self.assertEqual(decisions.decision_id, "v1-semantic-fix-2026-08-11")
         self.assertEqual(
             (decisions.eligible_default, decisions.ineligible_default, decisions.non_vo_default),
             ("pending", "deferred", "deferred"),
@@ -64,7 +64,7 @@ class PatternCatalogTests(unittest.TestCase):
         self.assertEqual(
             [selector.frame_type for selector in decisions.approved], ["ability_cast_event", "voice_event"]
         )
-        self.assertEqual(len(decisions.approved_pattern_ids), 86)
+        self.assertEqual(len(decisions.approved_pattern_ids), 91)
 
     def test_policy_rejects_invalid_or_duplicate_approved_pattern_ids(self) -> None:
         """精确批准表只接受不重复的 canonical pattern id。"""
@@ -133,7 +133,7 @@ class PatternCatalogTests(unittest.TestCase):
         self.assertEqual(first_signature["schema_version"], SIGNATURE_SCHEMA_VERSION)
         self.assertEqual(first_signature["asset_kind"], "vo")
         self.assertEqual(first_signature["frame_version"], 1)
-        self.assertEqual(first_signature["argument_keys"], {"action": "move"})
+        self.assertEqual(first_signature["argument_keys"], {"action": "move", "qualifier": None})
         self.assertEqual(first_signature["roles"], ["action", "champion"])
         pattern_id = pattern_id_for_signature(first_signature)
         self.assertRegex(pattern_id, re.compile(r"^pattern-v1-[0-9a-f]{64}$"))
@@ -185,6 +185,66 @@ class PatternCatalogTests(unittest.TestCase):
             [example["raw_event_name"] for example in examples],
             ["Play_vo_Ahri_Move", "Play_vo_Annie_Move", "Play_vo_Zed_Move"],
         )
+
+    def test_pattern_retains_all_zh_cn_label_variants_with_bounded_event_samples(self) -> None:
+        """同一 canonical pattern 的中文文案变体不能被首个样例遮蔽。"""
+
+        first = voice_record("Play_vo_Annie_Move")
+        second = voice_record("Play_vo_Ahri_Move")
+        second["translation"]["arguments"]["action"]["labels"]["zh_CN"] = "移动中"
+        third = voice_record("Play_vo_Zed_Move")
+        third["translation"]["arguments"]["action"]["labels"]["zh_CN"] = "移动中"
+
+        pattern = build_pattern_report([third, first, second], self.policy)["patterns"][0]
+        variants = pattern["zh_cn_label_variants"]["action"]
+
+        self.assertEqual(variants["distinct_label_count"], 2)
+        self.assertEqual(
+            variants["variants"],
+            [
+                {"label": "移动", "record_count": 1, "sample_raw_event_names": ["Play_vo_Annie_Move"]},
+                {
+                    "label": "移动中",
+                    "record_count": 2,
+                    "sample_raw_event_names": ["Play_vo_Ahri_Move", "Play_vo_Zed_Move"],
+                },
+            ],
+        )
+        self.assertNotIn("champion", pattern["zh_cn_label_variants"])
+
+    def test_voice_qualifier_key_splits_stable_candidates_and_blocks_unreviewed_values(self) -> None:
+        """缺失、已核验和待审 qualifier 不能混用同一个 Stable 候选。"""
+
+        missing = voice_record("Play_vo_Annie_Ping2D")
+        reviewed = voice_record("Play_vo_Annie_Ping2DOnMyWay")
+        reviewed["translation"]["arguments"]["qualifier"] = argument("qualifier", "onmyway", "正在路上")
+        unreviewed = voice_record("Play_vo_Annie_Ping2DTarget")
+        unreviewed["translation"]["arguments"]["qualifier"] = argument("qualifier", "unreviewed", "待审修饰（Target）")
+        unreviewed["translation"]["arguments"]["qualifier"]["confidence"] = "low"
+        unreviewed["translation"]["arguments"]["qualifier"]["fallback"] = True
+
+        self.assertEqual(
+            canonical_pattern_signature(missing, self.policy)["argument_keys"],
+            {"action": "move", "qualifier": None},
+        )
+
+        report = build_pattern_report([missing, reviewed, unreviewed], self.policy)
+        proposal_keys = [pattern["signature"]["argument_keys"] for pattern in report["stable_proposals"]]
+        blocked = next(
+            pattern
+            for pattern in report["patterns"]
+            if pattern["signature"]["argument_keys"] == {"action": "move", "qualifier": "unreviewed"}
+        )
+
+        self.assertCountEqual(
+            proposal_keys,
+            [
+                {"action": "move", "qualifier": None},
+                {"action": "move", "qualifier": "onmyway"},
+            ],
+        )
+        self.assertFalse(blocked["eligibility"]["stable"])
+        self.assertIn("fallback_argument:qualifier", blocked["blocking_reasons"])
 
     def test_review_candidates_sort_by_frame_signature_then_id(self) -> None:
         """待审候选按语义家族组织，不按 SHA-256 随机打散。"""
@@ -487,10 +547,13 @@ class PatternCatalogTests(unittest.TestCase):
             )
             self.assertEqual(candidate["review_status"], "pending")
             self.assertEqual(candidate["scope_status"], "approved")
-            self.assertEqual(candidate["decision_id"], "v1-initial-vo-2026-08-07")
+            self.assertEqual(candidate["decision_id"], "v1-semantic-fix-2026-08-11")
             self.assertEqual(candidate["required_roles"], ["action"])
             self.assertEqual(candidate["expected_arguments"]["roles"], ["action", "champion"])
-            self.assertEqual(candidate["expected_arguments"]["signature_keys"], {"action": "dance"})
+            self.assertEqual(
+                candidate["expected_arguments"]["signature_keys"],
+                {"action": "dance", "qualifier": None},
+            )
             self.assertTrue(candidate["zh_cn_default"])
             self.assertTrue(candidate["zh_cn_main"])
 

@@ -12,7 +12,7 @@
 - `schema/quality-summary.schema.json`：分层质量摘要与冻结 decision/pattern-set/record-count 的 Stable 绝对门禁 Schema。
 - `schema/review-decision.schema.json`：候选绑定、可哈希且带审核人/时间/理由的版本化人工决定 Schema。
 - `schema/review-bundle.schema.json`：Review Site 输入、source review 和最终 dataset approval 目标的 Schema。
-- `accepted-corpus.v1.json`：首批 86 个 Stable pattern 的精确 zh_CN default/main 代表样本；P5 Review 前状态为 pending。
+- `accepted-corpus.v1.json`：语义复核迁移后的 91 个 Stable pattern 精确 zh_CN default/main 代表样本；首轮 P5 source review 已接受，后续候选仍需 dataset approval。
 - `examples/`：与上述 Schema 对应的最小样例、accepted corpus 副本，以及只依赖 Python 标准库的 `consumer.py`；consumer 会先证明必需消费路径与实际 payload 全部处于 manifest hash/digest 闭包，再查询单流。
 - `frozen-profile.v1.json`：当前 V1 16.14 验收输入的版本、raw 唯一计数与显式 LCU 例外；
   它是预检合同，不是历史版本下载能力或未来 live 默认值。

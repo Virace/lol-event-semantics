@@ -50,10 +50,10 @@ class StableScope:
 
 
 V1_STABLE_SCOPE = StableScope(
-    decision_id="v1-initial-vo-2026-08-07",
-    pattern_count=86,
-    record_count=5061,
-    pattern_ids_digest="e1954528a33188c23ede9d633cd8c5828c3c588fa7862dc2261fd4abec798912",
+    decision_id="v1-semantic-fix-2026-08-11",
+    pattern_count=91,
+    record_count=4387,
+    pattern_ids_digest="978aa170afcdfab84833a88fc14efcc32bab63f0de85cba6e2851d886971e9e7",
 )
 
 
@@ -192,6 +192,7 @@ def build_quality_summary(
             "record_count": len(row_list),
             "pattern_count": len(patterns),
             "support": support,
+            "confidence_distribution": _confidence_distribution(row_list),
             "residual_english": _merge_english(
                 stable_english,
                 experimental["residual_english"],
@@ -205,7 +206,9 @@ def build_quality_summary(
             "pattern_count": len(catalog_stable_ids),
             "approved_pattern_count": len(approved_ids),
             "violation_counts": violation_counts,
+            "confidence_distribution": _confidence_distribution(stable_rows),
             "residual_english": stable_english,
+            "qualifier_coverage": _qualifier_coverage(stable_rows),
         },
         "experimental": experimental,
         "unsupported": unsupported,
@@ -338,6 +341,10 @@ def _stable_violations(row: Mapping[str, Any], pattern: Mapping[str, Any] | None
     if frame_type != pattern.get("frame_type") or frame_type not in FRAME_REGISTRY:
         violations["wrong_frame"] += 1
         return violations
+    if frame_type == "ability_cast_event" and _has_unresolved_single_key_spell_residual(row):
+        # 单字母槽位前缀后仍有未解释残片时，不能把普通词首字母伪造成技能键。
+        # 只阻断这条已证实的错误路径；其他 medium 记录继续在 Review 摘要中可见。
+        violations["unresolved_single_key_spell_residual"] += 1
     arguments = translation.get("arguments")
     if not isinstance(arguments, dict):
         violations["missing_arguments"] += 1
@@ -384,6 +391,33 @@ def _stable_violations(row: Mapping[str, Any], pattern: Mapping[str, Any] | None
     return violations
 
 
+def _has_unresolved_single_key_spell_residual(row: Mapping[str, Any]) -> bool:
+    """判断记录是否仍依赖带未解析后缀的单字母技能启发式。"""
+
+    semantic = row.get("semantic")
+    slots = semantic.get("slots") if isinstance(semantic, dict) else None
+    spell_match = slots.get("spell_match") if isinstance(slots, dict) else None
+    if not isinstance(spell_match, dict):
+        return False
+    subject = slots.get("subject")
+    subject_key = subject.get("key") if isinstance(subject, dict) else None
+    spell_key = slots.get("spell_key")
+    matched_term = spell_match.get("matched_term")
+    components = spell_match.get("components")
+    expected_single_key_term = (
+        f"{subject_key}{spell_key}".lower() if isinstance(subject_key, str) and isinstance(spell_key, str) else None
+    )
+    return (
+        slots.get("source") == "event_name_heuristic"
+        and spell_match.get("match_source") in {"spell_key", "passive_key"}
+        and not (isinstance(components, list) and "trusted_single_key_residual" in components)
+        and isinstance(matched_term, str)
+        and matched_term.lower() == expected_single_key_term
+        and isinstance(slots.get("unresolved_residual"), str)
+        and bool(str(slots["unresolved_residual"]).strip())
+    )
+
+
 def _classify_english(row: Mapping[str, Any], *, rerender: bool = False) -> dict[str, list[str]]:
     classified: dict[str, set[str]] = {
         "ability_key": set(),
@@ -414,6 +448,12 @@ def _classify_english(row: Mapping[str, Any], *, rerender: bool = False) -> dict
         used_labels = _labels_present_in_text(argument_map, text)
         for token in ENGLISH_TOKEN.findall(text):
             category = _english_category(token, translation, argument_map, used_labels, alias)
+            classified[category].add(token)
+    # qualifier 等结构化角色不一定进入 default/main 模板；仅扫描渲染结果会
+    # 静默遗漏这类中文标签中的英文残留。
+    for role, label in _argument_zh_cn_labels(argument_map).items():
+        for token in ENGLISH_TOKEN.findall(label):
+            category = _english_category(token, translation, argument_map, {role: label}, alias)
             classified[category].add(token)
     return {category: sorted(tokens) for category, tokens in classified.items()}
 
@@ -462,6 +502,18 @@ def _labels_present_in_text(arguments: Mapping[str, Any], text: str) -> dict[str
             and value
             and (value in text or not text_tokens.isdisjoint(value_tokens))
         ):
+            labels[role] = value
+    return labels
+
+
+def _argument_zh_cn_labels(arguments: Mapping[str, Any]) -> dict[str, str]:
+    """提取全部结构化 argument 的非空中文标签。"""
+
+    labels: dict[str, str] = {}
+    for role, argument in arguments.items():
+        raw_labels = argument.get("labels") if isinstance(argument, dict) else None
+        value = raw_labels.get("zh_CN") if isinstance(raw_labels, dict) else None
+        if isinstance(role, str) and isinstance(value, str) and value:
             labels[role] = value
     return labels
 
@@ -556,7 +608,9 @@ def _experimental_summary(rows: list[dict[str, Any]], report: Mapping[str, Any])
         "blocking": False,
         "record_count": len(experimental),
         "render_status_counts": dict(sorted(statuses.items())),
+        "confidence_distribution": _confidence_distribution(experimental),
         "residual_english": _english_summary(experimental),
+        "qualifier_coverage": _qualifier_coverage(experimental),
         "top_warnings": [
             {"code": code, "record_count": count}
             for code, count in sorted(warnings.items(), key=lambda item: (-item[1], item[0]))[:20]
@@ -580,7 +634,9 @@ def _unsupported_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "blocking": False,
         "record_count": len(unsupported),
         "asset_kind_counts": dict(sorted(kinds.items())),
+        "confidence_distribution": _confidence_distribution(unsupported),
         "residual_english": _english_summary(unsupported),
+        "qualifier_coverage": _qualifier_coverage(unsupported),
     }
 
 
@@ -614,6 +670,58 @@ def _merge_english(*summaries: Mapping[str, Any]) -> dict[str, Any]:
         if isinstance(raw_counts, dict):
             counts.update({str(key): int(value) for key, value in raw_counts.items()})
     return {"record_counts_by_category": dict(sorted(counts.items()))}
+
+
+def _confidence_distribution(rows: Iterable[Mapping[str, Any]]) -> dict[str, dict[str, int]]:
+    """汇总记录语义与 translation frame 的置信度，保留未知值以便审核。"""
+
+    semantic = Counter()
+    frame = Counter()
+    for row in rows:
+        semantic_data = row.get("semantic")
+        translation = row.get("translation")
+        semantic[
+            str(semantic_data.get("confidence") or "unknown").lower() if isinstance(semantic_data, dict) else "unknown"
+        ] += 1
+        frame[
+            str(translation.get("frame_confidence") or "unknown").lower()
+            if isinstance(translation, dict)
+            else "unknown"
+        ] += 1
+    return {"semantic": dict(sorted(semantic.items())), "frame": dict(sorted(frame.items()))}
+
+
+def _qualifier_coverage(rows: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
+    """汇总可见与不进入模板的 qualifier 标签，暴露其英文残留风险。"""
+
+    record_count = 0
+    unresolved_records = 0
+    tokens: Counter[str] = Counter()
+    for row in rows:
+        translation = row.get("translation")
+        arguments = translation.get("arguments") if isinstance(translation, dict) else None
+        qualifier = arguments.get("qualifier") if isinstance(arguments, dict) else None
+        labels = qualifier.get("labels") if isinstance(qualifier, dict) else None
+        label = labels.get("zh_CN") if isinstance(labels, dict) else None
+        if not isinstance(label, str) or not label:
+            continue
+        record_count += 1
+        unresolved = [
+            token
+            for token in ENGLISH_TOKEN.findall(label)
+            if _english_category(token, translation, arguments, {"qualifier": label}, "") == "unresolved"
+        ]
+        if unresolved:
+            unresolved_records += 1
+            tokens.update(unresolved)
+    return {
+        "record_count": record_count,
+        "unresolved_english_record_count": unresolved_records,
+        "top_unresolved_tokens": [
+            {"token": token, "record_count": count}
+            for token, count in sorted(tokens.items(), key=lambda item: (-item[1], item[0]))[:50]
+        ],
+    }
 
 
 def _tier_counts(rows: list[dict[str, Any]], patterns: list[dict[str, Any]]) -> dict[str, Any]:

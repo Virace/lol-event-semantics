@@ -105,6 +105,9 @@ manifest，数据源之间天然同版本。`16.14` 是本轮 frozen acceptance 
 - 上下文别名主要维护在 `rules/contextual/**/*.yaml`；`rules/contextual_aliases.yaml` 保留为迁移和兼容来源。规则运行时全量聚合为一个 RuleBook，不按 owner 局部加载。
 - 展示词表维护在 `rules/display_labels.yaml`（phase/action/counterpart/shop/announcer 等域），扩词条改词表、不改代码。
 - residual modifier 在 `rules/residual_modifiers.yaml`；手工 fallback 实体在 `rules/external_entities.yaml`；已审阅整句 fallback 在 `rules/low_trust_events.yaml`（保留 `trust: low` 标记）。
+- 单字母 `P/Q/W/E/R` 技能键若前缀猜测后仍有未解析 residual，不得进入 Stable；只有受控 modifier 解析或参考技能 ID 的明确匹配才能提高置信度。
+- VO qualifier 使用结构化 key 分组：已核验 key 渲染为对应中文，未知 key 明示为待审并保留 fallback，不能混入 Stable。`ShopOpen/ShopClose` 分别渲染为“进店/离店”，`DanceResponse` 是独立于普通舞蹈的回应语义。
+- 皮肤短展示会移除与上下文英雄重复的 owner 名称，保留皮肤本体及其他有效描述。
 
 ## 展示数据与结构化翻译 contract
 
@@ -149,6 +152,10 @@ P5 用户 Review 前始终保持 `eligible=false`，因此不会把技术通过�
 最终数据集批准必须由 Review Site 针对重建后的同一 `dataset_id`/`content_digest` 导出，
 promotion 时通过 `--decisions` 显式传入。
 
+Review Site 同时展示 Stable/Experimental 的置信度分布、Stable 中文标签中的英文残留、
+qualifier 覆盖，以及每个 pattern 的全部非实体中文标签变体；这些是审核证据，不代表
+候选已获接受或可晋级。
+
 ```bash
 uv run python scripts/validate_normalized_outputs.py `
   --normalized-root dist/runs/completed/<run-id>/normalized `
@@ -173,13 +180,14 @@ uv run python scripts/promote_dataset_run.py --run-id <new-run-id> `
 ```
 
 V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX 保留，目标支持
-状态为 Stable、Experimental 或 Unsupported。首批 86 个精确批准的 canonical pattern
-在 candidate 中晋级为 Stable，共覆盖 5,061 条记录；同 family 的新 ID、全部 SFX 和暂缓
+状态为 Stable、Experimental 或 Unsupported。语义复核后的 91 个精确批准 canonical pattern
+在 candidate 中晋级为 Stable，共覆盖 4,387 条记录；同 family 的新 ID、全部 SFX 和暂缓
 范围仍保持 Experimental。Stable 使用独立 `quality-summary.json` 绝对门禁，不读取也不受
-`quality-baseline.json` 放宽；accepted corpus 的 86 条代表样本逐条精确复算 `zh_CN`
-default/main。门禁还独立冻结 decision ID、86 个 pattern ID 集合摘要和 5,061 条 Stable
+`quality-baseline.json` 放宽；accepted corpus 的 91 条代表样本逐条精确复算 `zh_CN`
+default/main。门禁还独立冻结 decision ID、91 个 pattern ID 集合摘要和 4,387 条 Stable
 记录总数，不能通过同时缩减 policy 与 corpus 绕过。corpus 与
-`rules/review-decisions.v1.json` 的状态必须一致；当前首轮源审阅仍为 pending。
+`rules/review-decisions.v1.json` 的状态必须一致；首轮 92 项源审阅已全部接受，后续
+clean candidate 进入 dataset approval，仍需候选绑定的最终批准才能晋级。
 
 ## Pattern Catalog（只读维护报告）
 

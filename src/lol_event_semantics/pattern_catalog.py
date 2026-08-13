@@ -585,6 +585,7 @@ def _build_pattern(
         "blocking_reasons": dict(sorted(blocking.items())),
         "warning_counts": dict(sorted(warnings.items())),
         "representative_examples": examples,
+        "zh_cn_label_variants": _zh_cn_label_variants(assessments, policy.example_limit),
     }
 
 
@@ -761,6 +762,40 @@ def _representative_example(record: Mapping[str, Any], result: RecordAssessment)
         "raw_event_name": _string_or_none(record.get("raw_event_name")) or "",
         "zh_cn_default": result.zh_cn_default,
         "zh_cn_main": result.zh_cn_main,
+    }
+
+
+def _zh_cn_label_variants(
+    assessments: Iterable[tuple[Mapping[str, Any], RecordAssessment]],
+    example_limit: int,
+) -> dict[str, dict[str, object]]:
+    """按角色汇总全部中文标签变体，并仅保留有界的事件样例。"""
+
+    variants: dict[str, dict[str, list[str]]] = defaultdict(lambda: defaultdict(list))
+    for record, _result in assessments:
+        translation = _mapping_or_empty(record.get("translation"))
+        arguments = _mapping_or_empty(translation.get("arguments"))
+        raw_event_name = _string_or_none(record.get("raw_event_name")) or ""
+        for role, argument in arguments.items():
+            if role in PARAMETERIZED_ENTITY_ROLES:
+                continue
+            labels = _mapping_or_empty(_mapping_or_empty(argument).get("labels"))
+            label = _string_or_none(labels.get("zh_CN"))
+            if isinstance(role, str) and label is not None:
+                variants[role][label].append(raw_event_name)
+    return {
+        role: {
+            "distinct_label_count": len(by_label),
+            "variants": [
+                {
+                    "label": label,
+                    "record_count": len(raw_event_names),
+                    "sample_raw_event_names": sorted(raw_event_names)[:example_limit],
+                }
+                for label, raw_event_names in sorted(by_label.items())
+            ],
+        }
+        for role, by_label in sorted(variants.items())
     }
 
 

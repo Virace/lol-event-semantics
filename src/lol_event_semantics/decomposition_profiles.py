@@ -22,6 +22,7 @@ SIMPLE_ACTION_TRIGGERS = {
     "buyitem",
     "critattack",
     "dance",
+    "danceresponse",
     "death",
     "firstmove",
     "gameend",
@@ -111,6 +112,7 @@ TRIGGER_FAMILY_NAMES = {
     "firstmove": "first_move",
     "gameend": "game_end",
     "joketauntresponse": "joke_taunt_response",
+    "danceresponse": "dance_response",
     "jokeresponse": "joke_response",
     "killchampion": "kill",
     "levelup": "level_up",
@@ -146,7 +148,11 @@ def normalize_semantics(record: EventDecompositionRecord) -> EventDecompositionR
         return record
     elif fill_structured_state_event(record):
         return record
-    elif trigger is None and should_prefer_generic_sfx(record, first_atom, trigger) and fill_sfx_event(record, first_atom):
+    elif (
+        trigger is None
+        and should_prefer_generic_sfx(record, first_atom, trigger)
+        and fill_sfx_event(record, first_atom)
+    ):
         return record
     elif fill_skin_recall_state_event(record):
         return record
@@ -1318,8 +1324,10 @@ def first_full_phase(record: EventDecompositionRecord) -> str | None:
     """优先读取 OnBuffCast 这类完整 phase alias。"""
 
     for atom in record.lexical_atoms:
-        phase = phase_alias_from_atom(atom) or first_part_value(atom, "phase_or_state_token") or first_part_value(
-            atom, "phase_token"
+        phase = (
+            phase_alias_from_atom(atom)
+            or first_part_value(atom, "phase_or_state_token")
+            or first_part_value(atom, "phase_token")
         )
 
         if phase is not None:
@@ -2414,7 +2422,8 @@ def fill_sfx_event(record: EventDecompositionRecord, atom: LexicalAtom) -> bool:
     spell_hint = owner_prefixed_spell_hint(record, effect_head)
     semantic_profile = (
         SemanticProfile.SPELL_EVENT
-        if scope == "champion_sfx" and (phase is not None or infer_spell_key_hint(effect_head) is not None or spell_hint is not None)
+        if scope == "champion_sfx"
+        and (phase is not None or infer_spell_key_hint(effect_head) is not None or spell_hint is not None)
         else SemanticProfile.MAP_OR_SYSTEM
     )
     record.profile = EventProfile(
@@ -2588,7 +2597,9 @@ def fill_other_audio_or_control_event(record: EventDecompositionRecord, atom: Le
         "cue_path": [tail.raw for tail in record.lexical_atoms],
         "source": "raw_other_audio_event_name",
     }
-    record.confidence = DecompositionConfidence.MEDIUM if scope in {"music", "item_or_system"} else DecompositionConfidence.LOW
+    record.confidence = (
+        DecompositionConfidence.MEDIUM if scope in {"music", "item_or_system"} else DecompositionConfidence.LOW
+    )
     record.unknowns.clear()
     return True
 
@@ -2953,7 +2964,11 @@ def first_phase_from_atoms(atoms: list[LexicalAtom]) -> str | None:
     """返回 atom 列表中的第一个阶段。"""
 
     for atom in atoms:
-        phase = first_part_value(atom, "phase_or_state_token") or first_part_value(atom, "phase_token") or phase_alias_from_atom(atom)
+        phase = (
+            first_part_value(atom, "phase_or_state_token")
+            or first_part_value(atom, "phase_token")
+            or phase_alias_from_atom(atom)
+        )
 
         if phase is not None:
             return phase
@@ -2982,7 +2997,9 @@ def set_unknown_profile(record: EventDecompositionRecord, reason: str) -> None:
         return
 
     raw = record.lexical_atoms[0].raw
-    unknown_kind = UnknownKind.AMBIGUOUS_SPELL_ALIAS if looks_like_named_spell_alias(raw) else UnknownKind.UNKNOWN_HEAD_TOKEN
+    unknown_kind = (
+        UnknownKind.AMBIGUOUS_SPELL_ALIAS if looks_like_named_spell_alias(raw) else UnknownKind.UNKNOWN_HEAD_TOKEN
+    )
     record.unknowns.append(
         UnknownFragment(
             kind=unknown_kind,
@@ -3121,7 +3138,9 @@ def fill_kill(record: EventDecompositionRecord, atom: LexicalAtom) -> None:
     kill_method = parse_kill_method_residue(residue)
     objective_steal = parse_objective_steal_residue(residue)
     qualifier = normalize_kill_qualifier(residue)
-    counterpart = None if milestone or counter or kill_method or objective_steal or qualifier else unresolved_counterpart(residue)
+    counterpart = (
+        None if milestone or counter or kill_method or objective_steal or qualifier else unresolved_counterpart(residue)
+    )
 
     record.profile = EventProfile(
         primary_family="kill",
@@ -3192,7 +3211,9 @@ def fill_receive(record: EventDecompositionRecord, atom: LexicalAtom) -> None:
 
     record.profile = EventProfile(
         primary_family="receive",
-        semantic_profile=SemanticProfile.SELF_ACTION if received_effect is not None else SemanticProfile.UNKNOWN_PROFILE,
+        semantic_profile=SemanticProfile.SELF_ACTION
+        if received_effect is not None
+        else SemanticProfile.UNKNOWN_PROFILE,
         requires_context=received_effect is None,
         reason="matched receive trigger",
     )
@@ -3716,7 +3737,10 @@ def parse_nested_action_residue(raw: str | None) -> dict[str, object] | None:
     if raw is None:
         return None
 
-    match = re.fullmatch(r"(?P<trigger>JokeResponse|TauntResponse)(?P<dimension>[0-9]D)?(?P<qualifier>General)?", raw)
+    match = re.fullmatch(
+        r"(?P<trigger>DanceResponse|JokeResponse|TauntResponse)(?P<dimension>[0-9]D)?(?P<qualifier>General)?",
+        raw,
+    )
 
     if match is None:
         return None

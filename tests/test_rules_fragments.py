@@ -266,6 +266,29 @@ class SpellMatchConstraintRuleTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 RuleBook.load(rules, overrides)
 
+    def test_trusted_spell_residuals_load_and_query(self) -> None:
+        """可信 residual 必须按英雄、槽位和完整 residual 精确命中。"""
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            rules = root / "rules"
+            overrides = root / "overrides"
+            rules.mkdir()
+            overrides.mkdir()
+            RuleFragmentTests().write_minimal_rule_files(rules, overrides)
+            (rules / "spell_match_constraints.yaml").write_text(
+                "trusted_single_key_residuals:\n  Rengar:\n    q:\n      emp:\n        note: 强化 Q。\n",
+                encoding="utf-8",
+            )
+
+            book = RuleBook.load(rules, overrides)
+
+            entry = book.trusted_spell_residual_for("Rengar", "q", "Emp")
+            self.assertIsNotNone(entry)
+            self.assertEqual(entry.note, "强化 Q。")
+            self.assertIsNone(book.trusted_spell_residual_for("Rengar", "q", "Execute"))
+            self.assertIsNone(book.trusted_spell_residual_for("Renekton", "e", "xecute"))
+
 
 if __name__ == "__main__":
     unittest.main()

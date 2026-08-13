@@ -21,7 +21,9 @@ TRAILING_PHASE_DIMENSION_PATTERN = re.compile(
     r"^(cast|hit|buffactivate|buffdeactivate|buffcast|missilelaunch|missilecast)([0-9]D)(.*)$",
     re.IGNORECASE,
 )
-PHASE_SUFFIX_PATTERN = re.compile(r"(Cast|Hit|End|Ready|Root|Stun|Max|Revive|RankOne|RankTwo|RankThree|RankFour|RankFive)$")
+PHASE_SUFFIX_PATTERN = re.compile(
+    r"(Cast|Hit|End|Ready|Root|Stun|Max|Revive|RankOne|RankTwo|RankThree|RankFour|RankFive)$"
+)
 # 仅当整个 chunk 恰好是某个高置信相位词时才识别（大小写不敏感），避免把
 # SwordSwap / GameStart 这类复合残留按后缀错切成相位。
 LONE_PHASE_WORD_PATTERN = re.compile(
@@ -41,7 +43,7 @@ SHELL_VERB_PATTERN = re.compile(
 # 控制类动词的第二段只允许已知资产段或 Wwise 控制组段；
 # Switch_Rakan_*、SetState_EkkoSkin19_* 的第二段属于 body（owner），不能被壳吞掉。
 # Play/Stop/Mute 保留历史通配剥离：下游 profile/reference 语义
-#（如 Play_UrgotSkin09_Recall_* 的 skin_recall_state）依赖这一形态。
+# （如 Play_UrgotSkin09_Recall_* 的 skin_recall_state）依赖这一形态。
 SHELL_ASSET_KINDS = {"vo", "sfx", "sxf", "mus", "music"}
 SHELL_CONTROL_GROUPS = {"switch", "state", "champ", "event", "rtpc", "item", "npe", "ui", "voicepitch"}
 SHELL_WILDCARD_ASSET_VERBS = {"play", "stop", "mute"}
@@ -85,10 +87,7 @@ def decompose_event_name(
 
     owner_token, body_chunks = split_owner_and_chunks(shell.body)
     record.owner = parse_owner(owner_token, scope)
-    record.lexical_atoms = [
-        lex_chunk(chunk, index, record.owner.alias)
-        for index, chunk in enumerate(body_chunks)
-    ]
+    record.lexical_atoms = [lex_chunk(chunk, index, record.owner.alias) for index, chunk in enumerate(body_chunks)]
 
     if not record.lexical_atoms:
         record.unknowns.append(
@@ -329,6 +328,7 @@ def peel_trigger(chunk: str) -> tuple[str | None, str]:
         "FirstEncounter",
         "KillChampion",
         "JokeTauntResponse",
+        "DanceResponse",
         "TauntResponse",
         "JokeResponse",
         "MasteryResponse",

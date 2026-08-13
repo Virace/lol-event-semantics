@@ -2,12 +2,23 @@
 
 from __future__ import annotations
 
+import copy
 import json
+from dataclasses import replace
 from pathlib import Path
 
 from lol_event_semantics.dataset_identity import review_decision_identity, rules_tree_digest
+from lol_event_semantics.normalized_contract import apply_normalized_contract, build_public_pattern_catalog
+from lol_event_semantics.pattern_catalog import (
+    canonical_pattern_signature,
+    load_pattern_policy,
+    pattern_id_for_signature,
+)
 from lol_event_semantics.product_review import build_review_bundle, write_review_site
 from lol_event_semantics.review_decisions import decision_set_digest
+
+ROOT = Path(__file__).parents[1]
+POLICY_PATH = ROOT / "rules" / "translation_patterns.yaml"
 
 
 def test_bundle_transitions_from_source_review_to_dataset_approval(tmp_path: Path) -> None:
@@ -52,6 +63,59 @@ def test_bundle_identity_is_stable_for_same_candidate(tmp_path: Path) -> None:
     assert first["review_bundle_id"] == second["review_bundle_id"]
     assert first["source_targets"] == second["source_targets"]
     assert first["approval_targets"] == second["approval_targets"]
+
+
+def test_bundle_exposes_label_variants_and_quality_risk_coverage(tmp_path: Path) -> None:
+    """Review target 与摘要必须带上未渲染结构化风险的审核证据。"""
+
+    normalized_root, support_diff_path, source_path, _ = write_review_inputs(tmp_path)
+    first = json.loads((ROOT / "data" / "examples" / "normalized-event.v2.json").read_text(encoding="utf-8"))
+    first["raw_event_name"] = "Play_vo_Annie_Dance"
+    first["translation"]["arguments"]["action"]["key"] = "dance"
+    first["translation"]["arguments"]["action"]["labels"] = {"zh_CN": "跳舞", "en_US": "dance"}
+    second = copy.deepcopy(first)
+    second["raw_event_name"] = "Play_vo_Ahri_Dance"
+    second["entity"]["alias"] = "Ahri"
+    second["source_paths"] = ["raw/events/champions/103.txt"]
+    second["translation"]["arguments"]["action"]["labels"]["zh_CN"] = "舞蹈"
+    records = [first, second]
+    policy = load_pattern_policy(POLICY_PATH)
+    pattern_id = pattern_id_for_signature(canonical_pattern_signature(records[0], policy))
+    decisions = replace(
+        policy.promotion_decisions,
+        approved_pattern_ids=policy.promotion_decisions.approved_pattern_ids | {pattern_id},
+    )
+    approved_policy = replace(policy, promotion_decisions=decisions)
+    report = apply_normalized_contract(records, approved_policy)
+    catalog = build_public_pattern_catalog(report, approved_policy)
+    write_json(normalized_root / "pattern-catalog.json", catalog)
+    corpus_path = normalized_root / "examples" / "accepted-corpus.v1.json"
+    corpus = read_json(corpus_path)
+    corpus["entries"][0]["pattern_id"] = pattern_id
+    write_json(corpus_path, corpus)
+    quality = read_json(normalized_root / "quality-summary.json")
+    quality["stable"].update(
+        {
+            "record_count": 2,
+            "confidence_distribution": {"semantic": {"high": 1}, "frame": {"high": 1}},
+            "residual_english": {"record_counts_by_category": {"unresolved": 1}},
+            "qualifier_coverage": {"record_count": 1, "unresolved_english_record_count": 1},
+        }
+    )
+    quality["experimental"].update(
+        {
+            "confidence_distribution": {"semantic": {"medium": 2}, "frame": {"medium": 2}},
+            "qualifier_coverage": {"record_count": 2, "unresolved_english_record_count": 2},
+        }
+    )
+    write_json(normalized_root / "quality-summary.json", quality)
+
+    bundle = build_review_bundle(normalized_root, support_diff_path, source_path, source_path.parent)
+    pattern = bundle["source_targets"][0]["payload"]["pattern"]
+
+    assert pattern["zh_cn_label_variants"]["action"]["distinct_label_count"] == 2
+    assert bundle["stable_summary"]["qualifier_coverage"]["unresolved_english_record_count"] == 1
+    assert bundle["experimental_summary"]["confidence_distribution"]["frame"] == {"medium": 2}
 
 
 def test_review_site_preserves_json_newline_escape(tmp_path: Path) -> None:

@@ -269,6 +269,14 @@ shop:
     Stormsurge: 风暴狂涌
     YommusGhostblade: 幽梦之灵
 
+# 自身动作语音中可直接展示的 qualifier。仅复用已在现有规则中核验的中文：
+# 表外 token 由 builder 输出为低置信「待审修饰」，不可静默落入泛化家族名。
+voice_qualifier:
+  onmyway: {zh_CN: 正在路上, en_US: on my way}
+  assistme: {zh_CN: 协助我, en_US: assist me}
+  danger: {zh_CN: 危险, en_US: danger}
+  river: {zh_CN: 河道, en_US: river}
+
 announcer:
   # 播报员事件词表（批次5a 第一批，主代理裁决，逐字使用）。
   # event 的 key 为剥去 On 时机前缀与队伍尾缀后的英文词干（精确匹配），
