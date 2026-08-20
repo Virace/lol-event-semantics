@@ -18,6 +18,7 @@ from .decomposition_model import (
 )
 from .game_data import compact
 from .match_audit import SPELL_MATCH_CONSTRAINTS_SOURCE_PATH, MatchAuditEvent, record_match
+from .mode_namespace import ModeNamespace, mode_namespace_for_token, split_mode_entity_alias
 from .reference_collection import load_reference_collection
 from .rules import ContextualAlias, LowTrustEventRule, RuleBook
 
@@ -530,7 +531,10 @@ class ReferenceIndex:
             self.entities[ref.key] = ref
 
     def add_champion_entity(self, entity: ReferenceEntity) -> None:
-        """注册英雄实体及其可安全使用的别名。"""
+        """注册英雄实体，并按稳定优先级解决别名冲突。
+
+        规范 alias 优先；同为展示名或兼容别名时，基础英雄优先于扩展模式实体。
+        """
 
         aliases = dedupe_preserve_order(
             [
@@ -545,8 +549,11 @@ class ReferenceIndex:
             if not alias:
                 continue
 
-            self.entities[alias] = entity
-            self.champions_by_alias[alias] = entity
+            champion = self.champions_by_alias.get(alias)
+            if champion is None or champion_alias_rank(entity, alias) < champion_alias_rank(champion, alias):
+                champion = entity
+                self.champions_by_alias[alias] = champion
+            self.entities[alias] = champion
 
         if entity.id is not None:
             self.champions_by_id[entity.id] = entity
@@ -808,6 +815,7 @@ def enrich_with_reference(
     add_inferred_champion_spell_candidate(record, reference)
     add_spell_combo_candidate(record, reference)
     add_composite_owner_candidate(record, reference)
+    add_mode_namespace_candidate(record, reference)
     apply_low_trust_event_rule(record, reference)
     return record
 
@@ -1220,6 +1228,118 @@ def add_mode_champion_actor_candidate(record: EventDecompositionRecord, referenc
     record.confidence = max_confidence(record.confidence, DecompositionConfidence.MEDIUM)
     backfill_phase(record)
     clear_unknowns_by_keys(record, {actor.key, compact(actor_atom.raw), compact(spell_atom.raw), spell_key})
+
+
+def add_mode_namespace_candidate(record: EventDecompositionRecord, reference: ReferenceIndex) -> None:
+    """为已确认前缀补充统一的模式上下文。"""
+
+    match = record_mode_namespace(record)
+
+    if match is None:
+        return
+
+    namespace, raw, position = match
+    existing_context = record.semantic_slots.get("mode_context")
+
+    if isinstance(existing_context, dict) and existing_context.get("key") not in {None, namespace.key}:
+        return
+
+    if not isinstance(existing_context, dict):
+        record.semantic_slots["mode_context"] = {
+            "key": namespace.key,
+            "label": namespace.label,
+            "source": "mode_namespace_convention",
+        }
+
+    actor, actor_role = mode_actor_for_record(record, reference, namespace)
+
+    if actor is not None and "mode_actor" not in record.semantic_slots:
+        record.semantic_slots["mode_actor"] = actor.to_dict()
+
+    if actor is not None and actor_role == "boss" and "subject" not in record.semantic_slots:
+        record.semantic_slots["subject"] = actor.to_dict()
+
+    candidate: dict[str, Any] = {
+        "kind": "mode_namespace",
+        "raw_event_name": record.raw_event_name,
+        "raw": raw,
+        "position": position,
+        "mode": namespace.key,
+        "mode_label": namespace.label,
+        "confidence": "high",
+        "evidence": "declared mode namespace prefix",
+        "meaning": f"{raw} identifies the {namespace.label} namespace.",
+    }
+
+    if actor is not None:
+        candidate["actor"] = actor.to_dict()
+
+    if actor_role is not None:
+        candidate["actor_role"] = actor_role
+
+    append_candidate(record, candidate)
+    clear_unknowns_by_keys(record, {raw, namespace.prefix})
+
+
+def record_mode_namespace(record: EventDecompositionRecord) -> tuple[ModeNamespace, str, str] | None:
+    """从 owner 或词法限定词中查找模式前缀。"""
+
+    owner = record.owner.raw_owner_token or record.owner.alias
+
+    if owner:
+        namespace = mode_namespace_for_token(owner)
+
+        if namespace is not None:
+            return namespace, owner, "owner"
+
+    for atom in record.lexical_atoms:
+        namespace = mode_namespace_for_token(atom.raw)
+
+        if namespace is not None:
+            return namespace, atom.raw, "qualifier"
+
+    return None
+
+
+def mode_actor_for_record(
+    record: EventDecompositionRecord,
+    reference: ReferenceIndex,
+    namespace: ModeNamespace,
+) -> tuple[ReferenceEntity | None, str | None]:
+    """解析模式事件中的基础英雄演员。"""
+
+    if namespace.key == "strawberry":
+        for index, atom in enumerate(record.lexical_atoms[:-1]):
+            if compact(atom.raw) != "boss":
+                continue
+
+            actor = reference.resolve_token(record.lexical_atoms[index + 1].raw, record.raw_event_name)
+
+            if actor is not None and actor.kind == "champion":
+                return actor, "boss"
+
+    for owner in [record.owner.alias, record.owner.raw_owner_token]:
+        if not owner:
+            continue
+
+        actor = reference.resolve_token(owner, record.raw_event_name)
+
+        if actor is not None and actor.kind == "skin":
+            champion_alias = actor.metadata.get("champion_alias")
+            actor = reference.resolve_token(str(champion_alias or ""), record.raw_event_name)
+
+        if actor is not None and actor.kind == "champion":
+            return actor, None
+
+    subject = record.semantic_slots.get("subject")
+
+    if isinstance(subject, dict):
+        actor = reference.resolve_token(str(subject.get("alias") or subject.get("label") or ""), record.raw_event_name)
+
+        if actor is not None and actor.kind == "champion":
+            return actor, None
+
+    return None, None
 
 
 def apply_tail_modifier_rules(record: EventDecompositionRecord, reference: ReferenceIndex) -> None:
@@ -2124,6 +2244,17 @@ def champion_extra_aliases(entity: ReferenceEntity) -> list[str]:
         aliases.append("wuko")
 
     return aliases
+
+
+def champion_alias_rank(entity: ReferenceEntity, alias: str) -> tuple[bool, bool, str]:
+    """返回同名候选优先级，避免扩展模式实体覆盖基础英雄。
+
+    规范 alias 优先于派生名称；派生名称冲突时，基础英雄优先于模式实体。
+    """
+
+    exact = alias in {entity.key, compact(entity.alias or "")}
+    mode_entity = split_mode_entity_alias(entity.alias or "") is not None
+    return (not exact, mode_entity, entity.key)
 
 
 def skin_number_from_row(row: dict[str, Any], champion: ReferenceEntity) -> int | None:
@@ -3289,11 +3420,12 @@ def audit_event_for_candidate(
             token=str(candidate.get("raw") or ""),
         )
 
-    if kind in {"mode_champion_actor", "composite_owner", "structured_counterpart"}:
+    if kind in {"mode_champion_actor", "mode_namespace", "composite_owner", "structured_counterpart"}:
         source = str(candidate.get("evidence") or kind)
+        mode_suffix = f":{candidate.get('mode')}" if kind == "mode_namespace" else ""
         return MatchAuditEvent(
             matcher_kind="inference",
-            rule_id=f"inference:{kind}",
+            rule_id=f"inference:{kind}{mode_suffix}",
             source_path=source,
             raw_event_name=record.raw_event_name,
             owner=record.owner.alias or record.owner.raw_owner_token,

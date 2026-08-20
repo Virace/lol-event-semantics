@@ -718,6 +718,65 @@ class ReferenceIndexTests(unittest.TestCase):
         self.assertEqual(spell.spell_key, "q")
         self.assertEqual(spell.terms["nulllance"], "reference_spell_id")
 
+    def test_base_champion_precedes_mode_variant_name(self) -> None:
+        """模式变体的同名展示标签不得覆盖基础英雄。"""
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "reference"
+            collection = ReferenceCollection(root)
+            collection.merge_champion(
+                ReferenceEntityInput(
+                    id=90022,
+                    alias="Ashe",
+                    names={"en_US": "Ashe"},
+                    source="game_data",
+                    version="16.16",
+                )
+            )
+            collection.merge_champion(
+                ReferenceEntityInput(
+                    id=1,
+                    alias="Jade_Ashe",
+                    names={"en_US": "Ashe"},
+                    source="game_data",
+                    version="16.16",
+                )
+            )
+            collection.merge_champion(
+                ReferenceEntityInput(
+                    id=90062,
+                    alias="MonkeyKing",
+                    names={"en_US": "Wukong"},
+                    source="game_data",
+                    version="16.16",
+                )
+            )
+            collection.merge_champion(
+                ReferenceEntityInput(
+                    id=2,
+                    alias="Jade_Wukong",
+                    names={"en_US": "Wukong"},
+                    source="game_data",
+                    version="16.16",
+                )
+            )
+            collection.write()
+
+            index = ReferenceIndex.from_reference_collection(root)
+            ashe = index.resolve_token("Ashe")
+            jade_ashe = index.resolve_token("Jade_Ashe")
+            wukong = index.resolve_token("Wukong")
+            jade_wukong = index.resolve_token("Jade_Wukong")
+
+        self.assertIsNotNone(ashe)
+        self.assertEqual(ashe.alias, "Ashe")
+        self.assertIsNotNone(jade_ashe)
+        self.assertEqual(jade_ashe.alias, "Jade_Ashe")
+        self.assertIsNotNone(wukong)
+        self.assertEqual(wukong.alias, "MonkeyKing")
+        self.assertIsNotNone(jade_wukong)
+        self.assertEqual(jade_wukong.alias, "Jade_Wukong")
+
     def test_reference_collection_resolves_champion_skin_token(self) -> None:
         """reference collection 中的具体皮肤可按 GalioSkin13 解析。"""
 
@@ -1507,12 +1566,41 @@ class ReferenceEnrichmentTests(unittest.TestCase):
         self.assertEqual(record.profile.semantic_profile, SemanticProfile.SELF_ACTION)
         self.assertEqual(record.semantic_slots["trigger_family"], "death")
         self.assertEqual(record.semantic_slots["mode_context"]["key"], "ruby")
+        self.assertEqual(record.semantic_slots["mode_context"]["source"], "manual_contextual_alias")
         self.assertEqual(record.semantic_slots["mode_entity"]["kind"], "mode_boss")
         self.assertEqual(record.semantic_slots["mode_actor"]["raw"], "FNVeigar")
         candidate = next(candidate for candidate in record.candidates if candidate["kind"] == "contextual_alias")
         self.assertEqual(candidate["raw"], "Boss")
         self.assertEqual(candidate["source"], "manual_contextual_alias")
         self.assertFalse(any(unknown.raw == "Boss" for unknown in record.unknowns))
+
+    def test_jade_qualifier_gets_classic_mode_context(self) -> None:
+        record = self.enrich("Play_vo_Caitlyn_CaitlynWSnare_Jade_hit3D")
+
+        self.assertEqual(record.semantic_slots["mode_context"]["key"], "jade")
+        self.assertEqual(record.semantic_slots["mode_context"]["label"], "经典模式")
+        candidate = next(candidate for candidate in record.candidates if candidate["kind"] == "mode_namespace")
+        self.assertEqual(candidate["raw"], "Jade")
+        self.assertEqual(candidate["position"], "qualifier")
+        self.assertEqual(record.raw_event_name, "Play_vo_Caitlyn_CaitlynWSnare_Jade_hit3D")
+
+    def test_strawberry_boss_gets_pve_mode_context_and_actor(self) -> None:
+        record = self.enrich("Play_sfx_Strawberry_Boss_Aatrox_AatroxQ1_cast")
+
+        self.assertEqual(record.semantic_slots["mode_context"]["key"], "strawberry")
+        self.assertEqual(record.semantic_slots["mode_context"]["label"], "PVE 模式")
+        self.assertEqual(record.semantic_slots["subject"]["alias"], "Aatrox")
+        self.assertEqual(record.semantic_slots["mode_actor"]["alias"], "Aatrox")
+        candidate = next(candidate for candidate in record.candidates if candidate["kind"] == "mode_namespace")
+        self.assertEqual(candidate["raw"], "Strawberry")
+        self.assertEqual(candidate["position"], "owner")
+        self.assertEqual(candidate["actor_role"], "boss")
+
+    def test_mode_prefix_does_not_match_ruby_crystal_item_name(self) -> None:
+        record = self.enrich("Play_vo_Galio_BuyItem2DRubyCrystal")
+
+        self.assertNotIn("mode_context", record.semantic_slots)
+        self.assertFalse(any(candidate["kind"] == "mode_namespace" for candidate in record.candidates))
 
     def test_game_mode_ruby_boss_uses_nested_mode_context(self) -> None:
         record = self.enrich("Play_sfx_GameMode_Ruby_Boss_FNVeigar_Death")
@@ -1554,6 +1642,7 @@ class ReferenceEnrichmentTests(unittest.TestCase):
 
         self.assertEqual(record.profile.semantic_profile, SemanticProfile.SPELL_EVENT)
         self.assertEqual(record.semantic_slots["mode_context"]["key"], "ruby")
+        self.assertEqual(record.semantic_slots["mode_context"]["source"], "mode_actor_convention")
         self.assertEqual(record.semantic_slots["mode_actor"]["alias"], "Brand")
         self.assertEqual(record.semantic_slots["subject"]["alias"], "Brand")
         self.assertEqual(record.semantic_slots["spell_key"], "p")
