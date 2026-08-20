@@ -22,6 +22,7 @@ __all__ = [
     "DECISION_SOURCE_SCHEMA_VERSION",
     "ReviewApplyError",
     "ReviewDecisionError",
+    "SourceReviewStaleError",
     "apply_source_review",
     "build_target",
     "canonical_digest",
@@ -53,6 +54,14 @@ class ReviewDecisionError(ValueError):
 
 class ReviewApplyError(ReviewDecisionError):
     """决定尚不能安全应用到长期源。"""
+
+
+class SourceReviewStaleError(ReviewDecisionError):
+    """已接受的长期源决定不再命中当前稳定审核目标。"""
+
+
+class _DecisionTargetStaleError(ReviewDecisionError):
+    """决定结构有效，但绑定的审核目标集合或内容已经变化。"""
 
 
 def canonical_digest(value: object) -> str:
@@ -224,9 +233,9 @@ def validate_decision_set(
             raise ReviewDecisionError(f"同一 target 存在冲突决定: {target_type}:{target_id}")
         target = targets.get(key)
         if target is None:
-            raise ReviewDecisionError(f"decision 引用未知 target: {target_type}:{target_id}")
+            raise _DecisionTargetStaleError(f"decision 引用未知 target: {target_type}:{target_id}")
         if target_hash != target.get("target_content_hash"):
-            raise ReviewDecisionError(f"decision target_content_hash 已过期: {target_type}:{target_id}")
+            raise _DecisionTargetStaleError(f"decision target_content_hash 已过期: {target_type}:{target_id}")
         allowed = target.get("allowed_actions")
         if not isinstance(allowed, list) or action not in allowed:
             raise ReviewDecisionError(f"target 不允许 action={action}: {target_type}:{target_id}")
@@ -241,7 +250,7 @@ def validate_decision_set(
             if target.get("required") is True and (target_type, target_id) not in seen_targets
         )
         if missing:
-            raise ReviewDecisionError(f"decision set 尚有未决定目标: {', '.join(missing)}")
+            raise _DecisionTargetStaleError(f"decision set 尚有未决定目标: {', '.join(missing)}")
 
     expected_digest = decision_set_digest(normalized)
     if document.get("decision_set_digest") != expected_digest:
@@ -301,6 +310,7 @@ def _apply_accepted_source_review(
     corpus = _read_object(corpus_path)
     entries = _object_list(corpus.get("entries"), "accepted corpus entries")
     _verify_corpus_targets(bundle, entries)
+    _verify_corpus_contract(bundle, corpus)
     pattern_decisions = {
         str(decision["target_id"]): decision for decision in decisions if decision.get("target_type") == "pattern"
     }
@@ -372,7 +382,10 @@ def verify_source_review(
         "decision_set_digest": source.get("decision_set_digest"),
         "decisions": decisions,
     }
-    validated = validate_decision_set(verification_bundle, verification_document)
+    try:
+        validated = validate_decision_set(verification_bundle, verification_document)
+    except _DecisionTargetStaleError as exc:
+        raise SourceReviewStaleError(str(exc)) from exc
     decisions = _object_list(validated.get("decisions"), "validated source decisions")
     targets = _target_map(bundle.get("source_targets"), "source targets")
     by_target = {(str(item.get("target_type")), str(item.get("target_id"))): item for item in decisions}
@@ -381,12 +394,13 @@ def verify_source_review(
             continue
         decision = by_target.get(key)
         if decision is None or decision.get("action") != "accept":
-            raise ReviewDecisionError(f"source target 尚未接受: {key[0]}:{key[1]}")
+            raise ReviewDecisionError(f"accepted source 含未接受目标: {key[0]}:{key[1]}")
         if decision.get("target_content_hash") != target.get("target_content_hash"):
-            raise ReviewDecisionError(f"source target hash 已漂移: {key[0]}:{key[1]}")
+            raise SourceReviewStaleError(f"source target hash 已漂移: {key[0]}:{key[1]}")
 
     entries = _object_list(corpus.get("entries"), "accepted corpus entries")
     _verify_corpus_targets(bundle, entries)
+    _verify_corpus_contract(bundle, corpus)
     if corpus.get("review_status") != "accepted" or any(entry.get("review_status") != "accepted" for entry in entries):
         raise ReviewDecisionError("accepted corpus 仍含 pending entry")
     if corpus.get("review_decision_set_digest") != source.get("decision_set_digest"):
@@ -418,10 +432,32 @@ def _verify_corpus_targets(bundle: Mapping[str, Any], entries: list[dict[str, An
         payload = target.get("payload")
         expected = payload.get("accepted_corpus") if isinstance(payload, dict) else None
         if not isinstance(expected, dict):
-            continue
+            raise ReviewDecisionError(f"source pattern target 缺少 accepted_corpus: {pattern_id}")
         actual = {field: deepcopy(entries_by_id[pattern_id].get(field)) for field in expected}
         if actual != expected:
             raise ReviewDecisionError(f"accepted corpus 已漂移: {pattern_id}")
+
+
+def _verify_corpus_contract(bundle: Mapping[str, Any], corpus: Mapping[str, Any]) -> None:
+    """证明 corpus 根级选择合同仍与 support target 一致。"""
+
+    targets = _target_map(bundle.get("source_targets"), "source targets")
+    support_targets = [target for (target_type, _), target in targets.items() if target_type == "support"]
+    if len(support_targets) != 1:
+        raise ReviewDecisionError("source targets 必须包含一个 support target")
+    payload = support_targets[0].get("payload")
+    expected = payload.get("accepted_corpus") if isinstance(payload, dict) else None
+    if not isinstance(expected, dict):
+        raise ReviewDecisionError("support target 缺少 accepted_corpus 合同")
+    actual = {
+        "schema_version": corpus.get("schema_version"),
+        "corpus_id": corpus.get("corpus_id"),
+        "decision_id": corpus.get("decision_id"),
+        "selection_policy": deepcopy(corpus.get("selection_policy")),
+        "entry_count": len(_object_list(corpus.get("entries"), "accepted corpus entries")),
+    }
+    if actual != expected:
+        raise ReviewDecisionError("accepted corpus 根合同已漂移")
 
 
 def validate_dataset_approval(

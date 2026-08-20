@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://example.invalid/lol-event-semantics/review-bundle.schema.json",
   "title": "lol-event-semantics review bundle v1",
+  "$comment": "Source target payloads carry their own target_contract_version; target_content_hash binds the payload while bundle-level diagnostics may remain non-hashed review evidence.",
   "type": "object",
   "required": [
     "schema_version",

@@ -12,6 +12,7 @@ from .dataset_identity import review_decision_identity, review_decision_source_p
 from .review_decisions import (
     BUNDLE_SCHEMA_VERSION,
     ReviewDecisionError,
+    SourceReviewStaleError,
     TRANSACTION_LOCK_NAME,
     build_target,
     canonical_digest,
@@ -20,6 +21,8 @@ from .review_decisions import (
 )
 
 __all__ = ["build_review_bundle", "write_review_site"]
+
+SOURCE_TARGET_CONTRACT_VERSION = "stable-source-target.v1"
 
 
 def build_review_bundle(
@@ -79,9 +82,9 @@ def build_review_bundle(
         if entry is None:
             raise ReviewDecisionError(f"Stable pattern 缺少 accepted corpus: {pattern_id}")
         payload = {
-            "pattern": _pattern_payload(pattern),
+            "target_contract_version": SOURCE_TARGET_CONTRACT_VERSION,
+            "pattern": _stable_pattern_payload(pattern),
             "accepted_corpus": _corpus_payload(entry),
-            "support_change": deepcopy(pattern_changes.get(pattern_id)),
         }
         target = build_target(
             "pattern",
@@ -95,14 +98,20 @@ def build_review_bundle(
             {
                 "pattern_id": pattern_id,
                 "target_content_hash": target["target_content_hash"],
-                **payload,
+                "pattern": _pattern_payload(pattern),
+                "accepted_corpus": _corpus_payload(entry),
+                "support_change": deepcopy(pattern_changes.get(pattern_id)),
             }
         )
 
     support_payload = {
+        "target_contract_version": SOURCE_TARGET_CONTRACT_VERSION,
         "decision_id": quality.get("decision_id"),
-        "scope_contract": deepcopy(quality.get("scope_contract")),
-        "stable": deepcopy(quality.get("stable")),
+        "stable_scope": _stable_scope_payload(quality),
+        "accepted_corpus": _corpus_contract_payload(corpus),
+    }
+    support_diff_evidence = {
+        "digest": canonical_digest(support_diff),
         "baseline": support_diff.get("baseline"),
         "current": deepcopy(support_diff.get("current")),
         "transition_counts": deepcopy(support_diff.get("transition_counts")),
@@ -128,7 +137,7 @@ def build_review_bundle(
         "generator_dirty": generator_state.get("dirty"),
         "quality_status": quality.get("status"),
         "stable_scope": deepcopy(quality.get("scope_contract")),
-        "support_diff_digest": canonical_digest(support_diff),
+        "support_diff_digest": support_diff_evidence["digest"],
         "source_decision_set_digest": source["decision_set_digest"],
     }
     approval_targets = [
@@ -143,20 +152,9 @@ def build_review_bundle(
 
     source_accepted = source.get("status") == "accepted" and corpus.get("review_status") == "accepted"
     phase = "dataset_approval" if source_accepted else "source_review"
-    targets = approval_targets if source_accepted else source_targets
-    identity = {
-        "dataset_id": dataset_id,
-        "content_digest": content_digest,
-        "source_decision_set_digest": source["decision_set_digest"],
-        "source_target_hashes": [target["target_content_hash"] for target in source_targets],
-        "approval_target_hashes": [target["target_content_hash"] for target in approval_targets],
-        "phase": phase,
-    }
     bundle: dict[str, Any] = {
         "schema_version": BUNDLE_SCHEMA_VERSION,
-        "review_bundle_id": f"review-bundle-v1-{canonical_digest(identity)[:16]}",
         "lifecycle_state": "awaiting_manual_review",
-        "phase": phase,
         "dataset_id": dataset_id,
         "content_digest": content_digest,
         "generator_state": deepcopy(generator_state),
@@ -164,9 +162,14 @@ def build_review_bundle(
         "source_decision_set_digest": source["decision_set_digest"],
         "source_targets": source_targets,
         "approval_targets": approval_targets,
-        "targets": targets,
-        "required_target_count": sum(target["required"] is True for target in targets),
         "stable_patterns": stable_cards,
+        "pattern_support_changes": {
+            pattern_id: deepcopy(pattern_changes.get(pattern_id))
+            for pattern_id in sorted(
+                _required_text(pattern, "pattern_id", "stable pattern") for pattern in stable_patterns
+            )
+        },
+        "support_diff_evidence": support_diff_evidence,
         "stable_summary": {
             "pattern_count": len(stable_patterns),
             "record_count": _mapping(quality.get("stable")).get("record_count"),
@@ -186,8 +189,18 @@ def build_review_bundle(
             "查看异常项与 Experimental 摘要；它们不因本次批准自动进入 Stable。",
         ],
     }
+    _activate_bundle_phase(bundle, phase)
     if source_accepted:
-        bundle["source_verification"] = verify_source_review(bundle, source, corpus)
+        try:
+            bundle["source_verification"] = verify_source_review(bundle, source, corpus)
+        except SourceReviewStaleError as exc:
+            _activate_bundle_phase(bundle, "source_review")
+            bundle["source_verification"] = {
+                "status": "stale",
+                "reason": str(exc),
+                "decision_set_digest": source["decision_set_digest"],
+                "accepted_corpus_entry_count": len(corpus_by_id),
+            }
     else:
         bundle["source_verification"] = {
             "status": "pending",
@@ -195,6 +208,27 @@ def build_review_bundle(
             "accepted_corpus_entry_count": 0,
         }
     return bundle
+
+
+def _activate_bundle_phase(bundle: dict[str, Any], phase: str) -> None:
+    """切换当前审核阶段，并重算由阶段和目标共同绑定的 bundle 身份。"""
+
+    targets_key = "approval_targets" if phase == "dataset_approval" else "source_targets"
+    targets = _objects(bundle.get(targets_key))
+    bundle["phase"] = phase
+    bundle["targets"] = targets
+    bundle["required_target_count"] = sum(target.get("required") is True for target in targets)
+    identity = {
+        "dataset_id": bundle["dataset_id"],
+        "content_digest": bundle["content_digest"],
+        "source_decision_set_digest": bundle["source_decision_set_digest"],
+        "source_target_hashes": [target["target_content_hash"] for target in _objects(bundle.get("source_targets"))],
+        "approval_target_hashes": [
+            target["target_content_hash"] for target in _objects(bundle.get("approval_targets"))
+        ],
+        "phase": phase,
+    }
+    bundle["review_bundle_id"] = f"review-bundle-v1-{canonical_digest(identity)[:16]}"
 
 
 def write_review_site(bundle: Mapping[str, Any], output_root: Path) -> tuple[Path, Path]:
@@ -230,6 +264,67 @@ def _pattern_payload(pattern: Mapping[str, Any]) -> dict[str, Any]:
         "zh_cn_label_variants",
     )
     return {field: deepcopy(pattern.get(field)) for field in fields}
+
+
+def _stable_pattern_payload(pattern: Mapping[str, Any]) -> dict[str, Any]:
+    """投影需要长期重审的 pattern 语义，排除语料计数与样例证据。"""
+
+    fields = (
+        "signature",
+        "required_roles",
+        "optional_roles",
+        "zh_CN_template",
+        "en_US_template",
+        "provenance_policy",
+    )
+    payload = {field: deepcopy(pattern.get(field)) for field in fields}
+    payload["zh_cn_labels"] = _stable_zh_cn_labels(pattern.get("zh_cn_label_variants"))
+    return payload
+
+
+def _stable_zh_cn_labels(value: object) -> dict[str, list[str]]:
+    """把 label variants 归一为 role -> 唯一中文字符串集合。"""
+
+    result: dict[str, list[str]] = {}
+    for role, summary in sorted(_mapping(value).items()):
+        variants = _objects(_mapping(summary).get("variants"))
+        labels = sorted({label for item in variants if isinstance((label := item.get("label")), str) and label})
+        result[str(role)] = labels
+    return result
+
+
+def _stable_scope_payload(quality: Mapping[str, Any]) -> dict[str, Any]:
+    """投影冻结 Stable 范围合同，排除诊断统计。"""
+
+    scope = _mapping(quality.get("scope_contract"))
+    expected = {
+        "pattern_count": scope.get("expected_pattern_count"),
+        "pattern_ids_digest": scope.get("expected_pattern_ids_digest"),
+        "record_count": scope.get("expected_record_count"),
+    }
+    actual = {
+        "pattern_count": scope.get("actual_pattern_count"),
+        "pattern_ids_digest": scope.get("actual_pattern_ids_digest"),
+        "record_count": scope.get("actual_record_count"),
+    }
+    if scope.get("matched") is not True or expected != actual:
+        raise ReviewDecisionError("Stable scope contract 未精确命中冻结范围")
+    return {
+        **actual,
+    }
+
+
+def _corpus_contract_payload(corpus: Mapping[str, Any]) -> dict[str, Any]:
+    """投影 corpus 根级选择合同；逐 entry 内容由 pattern targets 绑定。"""
+
+    entries = _objects(corpus.get("entries"))
+    return {
+        "schema_version": corpus.get("schema_version"),
+        "corpus_id": corpus.get("corpus_id"),
+        "decision_id": corpus.get("decision_id"),
+        "selection_policy": deepcopy(corpus.get("selection_policy")),
+        "entry_count": len(entries),
+    }
 
 
 def _corpus_payload(entry: Mapping[str, Any]) -> dict[str, Any]:
@@ -461,7 +556,12 @@ def _review_html() -> str:
     const all = bundle.phase === 'source_review' ? bundle.source_targets : [...bundle.source_targets, ...bundle.approval_targets];
     return all.filter(target => {
       if (type && target.target_type !== type) return false;
-      const haystack = JSON.stringify(target.payload).toLowerCase() + ' ' + target.target_id.toLowerCase();
+      const evidence = target.target_type === 'pattern' ? {
+          card:bundle.stable_patterns?.find(item => item.pattern_id === target.target_id),
+          support_change:bundle.pattern_support_changes?.[target.target_id]
+        }
+        : target.target_type === 'support' ? bundle.support_diff_evidence : null;
+      const haystack = JSON.stringify({payload:target.payload,evidence}).toLowerCase() + ' ' + target.target_id.toLowerCase();
       return !search || haystack.includes(search);
     }).map(target => ({...target, current: current.has(keyOf(target))}));
   }
@@ -483,10 +583,12 @@ def _review_html() -> str:
     const resolved = !target.current;
     const klass = resolved ? 'resolved' : decision.action === 'accept' ? 'accepted' : decision.action === 'reject' ? 'rejected' : '';
     const payload = target.payload;
+    const supportEvidence = bundle.support_diff_evidence || {};
     let detail = '';
     if (target.target_type === 'pattern') {
-      const pattern = payload.pattern;
-      const corpus = payload.accepted_corpus;
+      const card = bundle.stable_patterns?.find(item => item.pattern_id === target.target_id) || {};
+      const pattern = card.pattern || payload.pattern;
+      const corpus = card.accepted_corpus || payload.accepted_corpus;
       detail = `<div class="meta"><div><b>Frame</b>${esc(pattern.frame_type)}</div><div><b>记录数</b>${esc(pattern.record_count)}</div>
         <div><b>主视图</b>${esc(corpus.zh_cn_main)}</div><div><b>默认视图</b>${esc(corpus.zh_cn_default)}</div>
         <div><b>代表事件</b><code>${esc(corpus.raw_event_name)}</code></div><div><b>模式 ID</b><code>${esc(target.target_id)}</code></div>
@@ -494,12 +596,12 @@ def _review_html() -> str:
         <div><b>可选角色</b><code>${compact(pattern.optional_roles)}</code></div><div><b>中文模板</b><code>${compact(pattern.zh_CN_template)}</code></div>
         <div><b>证据策略</b><code>${compact(pattern.provenance_policy)}</code></div><div><b>警告计数</b><code>${compact(pattern.warning_counts)}</code></div>
         <div><b>中文标签变体</b><code>${compact(pattern.zh_cn_label_variants)}</code></div>
-        <div><b>本轮 support change</b><code>${compact(payload.support_change)}</code></div></div>`;
+        <div><b>本轮 support change</b><code>${compact(bundle.pattern_support_changes?.[target.target_id])}</code></div></div>`;
     } else if (target.target_type === 'support') {
-      detail = `<div class="meta"><div><b>Stable patterns</b>${esc(payload.stable.pattern_count)}</div><div><b>Stable records</b>${esc(payload.stable.record_count)}</div>
-        <div><b>基线</b>${esc(payload.baseline)}</div><div><b>范围匹配</b>${esc(payload.scope_contract.matched)}</div>
-        <div><b>Support transitions</b><code>${compact(payload.transition_counts)}</code></div>
-        <div><b>Stable 降级</b><code>${compact({patterns:payload.stable_pattern_downgrades,records:payload.stable_record_downgrades})}</code></div></div>`;
+      detail = `<div class="meta"><div><b>Stable patterns</b>${esc(bundle.stable_summary.pattern_count)}</div><div><b>Stable records</b>${esc(bundle.stable_summary.record_count)}</div>
+        <div><b>基线</b>${esc(supportEvidence.baseline)}</div><div><b>范围合同</b><code>${compact(payload.stable_scope)}</code></div>
+        <div><b>Support transitions</b><code>${compact(supportEvidence.transition_counts)}</code></div>
+        <div><b>Stable 降级</b><code>${compact({patterns:supportEvidence.stable_pattern_downgrades,records:supportEvidence.stable_record_downgrades})}</code></div></div>`;
     } else {
       detail = `<div class="meta"><div><b>Dataset</b>${esc(payload.dataset_id)}</div><div><b>内容摘要</b><code>${esc(payload.content_digest)}</code></div>
         <div><b>Generator</b><code>${esc(payload.generator_commit)}</code></div><div><b>质量状态</b>${esc(payload.quality_status)}</div></div>`;

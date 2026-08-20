@@ -149,6 +149,11 @@ digest 做 CAS。P4 自动门禁 attestation 会明确记录 `automatic_gates_pa
 P5 用户 Review 前始终保持 `eligible=false`，因此不会把技术通过冒充人工批准。人工
 决定以版本化 JSON 导出；Stable 源审阅只在所有目标均接受时原子更新
 `rules/review-decisions.v1.json` 与 accepted corpus，拒绝或需要修改的结果不会部分写入。
+长期 source target 的哈希只覆盖 Stable pattern/corpus/scope 的稳定语义；相对 approved-local
+的 support diff、逐 pattern/label 样例计数和诊断分布仍完整显示，并进入最终 dataset approval，
+但不会因基线指针或非范围统计变化让相同语义决定失效；冻结的 Stable pattern 数、ID digest
+与总记录数仍在 source hash 内。真实目标漂移会回到 source review；决定源、
+corpus 合同或事务摘要损坏则继续阻断。
 最终数据集批准必须由 Review Site 针对重建后的同一 `dataset_id`/`content_digest` 导出，
 promotion 时通过 `--decisions` 显式传入。
 

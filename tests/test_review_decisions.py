@@ -99,6 +99,92 @@ def test_source_review_apply_is_atomic_and_verifiable(tmp_path: Path) -> None:
     assert verify_source_review(bundle, source, corpus)["status"] == "passed"
 
 
+def test_source_review_rebinds_an_accepted_source_and_corpus(tmp_path: Path) -> None:
+    """合同迁移可把旧 accepted source/corpus 原子重绑到新目标。"""
+
+    old_bundle = source_bundle()
+    old_decisions = [decision_for(target) for target in old_bundle["targets"]]
+    old_digest = decision_set_digest(old_decisions)
+    new_targets = copy.deepcopy(old_bundle["source_targets"])
+    new_targets[0] = build_target(
+        "pattern",
+        "pattern-v1-example",
+        {
+            "message": "pattern-v2",
+            "accepted_corpus": {"pattern_id": "pattern-v1-example"},
+        },
+        actions=("accept", "reject"),
+        required=True,
+    )
+    new_bundle = bundle_for(
+        "source_review",
+        new_targets,
+        source_targets=new_targets,
+        approval_targets=[],
+    )
+    new_bundle["source_decision_set_digest"] = old_digest
+    source_path = tmp_path / "review-decisions.v1.json"
+    corpus_path = tmp_path / "accepted-corpus.v1.json"
+    write_json(
+        source_path,
+        {
+            "schema_version": 1,
+            "decision_set_id": "v1-test",
+            "status": "accepted",
+            "decision_set_digest": old_digest,
+            "decisions": old_decisions,
+        },
+    )
+    corpus = pending_corpus()
+    corpus["review_status"] = "accepted"
+    corpus["review_decision_set_digest"] = old_digest
+    corpus["entries"][0]["review_status"] = "accepted"
+    corpus["entries"][0]["review_decision_id"] = old_decisions[0]["decision_id"]
+    write_json(corpus_path, corpus)
+    new_decisions = [decision_for(target) for target in new_targets]
+    new_decisions[0]["decision_id"] = "decision-v1-rebound-pattern"
+
+    result = apply_source_review(
+        new_bundle,
+        decision_document(new_bundle, new_decisions),
+        source_path=source_path,
+        corpus_path=corpus_path,
+    )
+
+    source = read_json(source_path)
+    rebound_corpus = read_json(corpus_path)
+    assert result["decision_set_digest"] != old_digest
+    assert source["decision_set_digest"] == result["decision_set_digest"]
+    assert rebound_corpus["review_decision_set_digest"] == result["decision_set_digest"]
+    assert rebound_corpus["entries"][0]["review_decision_id"] == "decision-v1-rebound-pattern"
+    assert verify_source_review(new_bundle, source, rebound_corpus)["status"] == "passed"
+
+
+def test_source_review_rejects_corpus_root_contract_drift_without_writes(tmp_path: Path) -> None:
+    """bundle 后 corpus 根元数据漂移时，apply 必须在事务写入前停止。"""
+
+    bundle = source_bundle()
+    source_path = tmp_path / "review-decisions.v1.json"
+    corpus_path = tmp_path / "accepted-corpus.v1.json"
+    write_json(source_path, pending_source())
+    corpus = pending_corpus()
+    corpus["selection_policy"] = "changed-policy.v2"
+    write_json(corpus_path, corpus)
+    before_source = source_path.read_bytes()
+    before_corpus = corpus_path.read_bytes()
+
+    with pytest.raises(ReviewDecisionError, match="根合同已漂移"):
+        apply_source_review(
+            bundle,
+            decision_document(bundle, [decision_for(target) for target in bundle["targets"]]),
+            source_path=source_path,
+            corpus_path=corpus_path,
+        )
+
+    assert source_path.read_bytes() == before_source
+    assert corpus_path.read_bytes() == before_corpus
+
+
 def test_source_review_rolls_back_when_second_replace_fails(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -314,9 +400,31 @@ def test_dataset_approval_requires_current_dataset_accept() -> None:
 def source_bundle(*, actions: tuple[str, ...] = ("accept", "reject")) -> dict[str, object]:
     """构造两个必审 source target 的最小合法 bundle。"""
 
+    corpus_payload = {"pattern_id": "pattern-v1-example"}
     targets = [
-        build_target("pattern", "pattern-v1-example", {"message": "pattern"}, actions=actions, required=True),
-        build_target("support", "stable-scope:v1", {"message": "support"}, actions=actions, required=True),
+        build_target(
+            "pattern",
+            "pattern-v1-example",
+            {"message": "pattern", "accepted_corpus": corpus_payload},
+            actions=actions,
+            required=True,
+        ),
+        build_target(
+            "support",
+            "stable-scope:v1",
+            {
+                "message": "support",
+                "accepted_corpus": {
+                    "schema_version": 1,
+                    "corpus_id": "v1-test",
+                    "decision_id": "v1-test",
+                    "selection_policy": "lexicographically-first-record.v1",
+                    "entry_count": 1,
+                },
+            },
+            actions=actions,
+            required=True,
+        ),
     ]
     return bundle_for("source_review", targets, source_targets=targets, approval_targets=[])
 
@@ -407,6 +515,9 @@ def pending_corpus() -> dict[str, object]:
 
     return {
         "schema_version": 1,
+        "corpus_id": "v1-test",
+        "decision_id": "v1-test",
+        "selection_policy": "lexicographically-first-record.v1",
         "review_status": "pending",
         "entries": [{"pattern_id": "pattern-v1-example", "review_status": "pending"}],
     }

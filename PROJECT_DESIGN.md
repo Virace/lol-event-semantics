@@ -25,7 +25,10 @@
   以 completed run + 小型 `approved-local.json` pointer 代替目录覆盖；promotion 在锁内执行
   clean/attestation/report/payload/CAS 门禁与原子替换。`product_review.py` 生成候选绑定的
   Review Site/bundle，`review_decisions.py` 校验版本化决定，以 OS advisory lock + 可恢复 journal 原子应用长期源并为最终数据集
-  approval 提供 fail-closed attestation。默认 lookup 只经 pointer 解析。
+  approval 提供 fail-closed attestation。长期 source target 只哈希 Stable pattern/corpus/scope 的稳定语义合同；
+  baseline-relative support diff、逐 pattern/label 样例计数和诊断分布保留为页面证据并继续绑定最终 dataset approval；
+  冻结的 Stable pattern 数、ID digest 与总记录数仍在 source hash 内。目标集合或哈希变化
+  回到 source review，决定/corpus 结构或事务摘要损坏仍硬失败。默认 lookup 只经 pointer 解析。
 - 模式报告边界：`pattern_catalog.py` 从 semantic frame 汇总 Pattern Catalog inventory，并仅把 exact approved 且结构合格的 pattern 投影为 Stable；它保留 pattern 的全部非实体中文标签变体，供 Product Review 检查语义漂移。`scripts/report_translation_patterns.py` 只是把 JSON/Markdown 写入调用方指定的被忽略报告路径，不反向修改规则源。
 - 入口边界：`full_refresh.py` 提供可注入 runner 的编排逻辑；`scripts/run_full_refresh.py`、下载/导入/构建/查询/模式报告脚本和 `normalized_lookup_cli.py` 负责 CLI 适配。
 
