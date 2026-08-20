@@ -1,5 +1,5 @@
 {
-  "decision_set_digest": "82b9d852bb2f3039bfc96d58030ecf1c4eb02ee3525f40d1b778887b44280957",
+  "decision_set_digest": "a1474ecd33931486f8f8dda27cfd21502fbecea3c4b6e468e4c77e880294b2de",
   "decision_set_id": "v1-initial-vo-review",
   "decisions": [
     {
@@ -1096,19 +1096,20 @@
     },
     {
       "action": "accept",
-      "decision_id": "decision-v1-20260813-3682fe2bb1392d52d1a5",
+      "decision_id": "decision-v1-20260820-718592b872fdf19ff47c",
       "decision_schema_version": 1,
       "payload": {},
-      "rationale": "稳定目标哈希契约迁移复核通过：新旧候选的 normalized records 与 pattern catalog 逐字节一致，Stable 范围仍为 91 个模式、4,387 条记录且无 violation/exception；本决定仅将既有语义接受结果重绑到移除临时 baseline support diff 后的长期目标。",
-      "reviewed_at": "2026-08-13T02:49:04.783086+00:00",
-      "reviewer": "codex-semantic-and-contract-review",
-      "target_content_hash": "bf0788761ccd5c2da5aa6c5d4d267037db6275ed9466a267aae18e94424f2fa4",
+      "rationale": "16.16 稳定范围重绑定复核通过：91 个既有 pattern 均未变化，Stable 记录由 4,387 增至 4,389；新增两条 Annie Q/R 记录均命中既有已接受 pattern、无告警，30 条既有 Jade 记录仅新增经典模式上下文与对应英雄实体，并将候选数从 1 调整为 2；无 Stable 记录移除，raw_event_name、标签、翻译、支持级别和 pattern 归属均未改变。",
+      "reviewed_at": "2026-08-20T14:17:03.240911+00:00",
+      "reviewer": "codex-16.16-release-review",
+      "target_content_hash": "718592b872fdf19ff47c4c1f4702e1f2b7002a5d6c979098e192ab8ecce99a71",
       "target_id": "stable-scope:v1-semantic-fix-2026-08-11",
       "target_type": "support"
     }
   ],
-  "reviewed_at": "2026-08-13T02:49:04.783086+00:00",
+  "reviewed_at": "2026-08-20T14:17:03.240911+00:00",
   "reviewers": [
+    "codex-16.16-release-review",
     "codex-semantic-and-contract-review"
   ],
   "schema_version": 1,
