@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Gangplank
+  champion_id: 60041
+  skin_number: 8
+  skin_token: Skin08
+  id: 60041008
+  alias: Jade_GangplankSkin08
+  names:
+    en_US:
+      - value: Dreadnova Gangplank
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 恐惧新星 普朗克
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 76
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_GangplankSkin08
+  - Jade_GangplankSkin8

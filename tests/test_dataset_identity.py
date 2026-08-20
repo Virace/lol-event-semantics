@@ -12,12 +12,16 @@ from lol_event_semantics.dataset_identity import (
     canonical_json_bytes,
     contract_assets_digest,
     content_digest,
+    load_frozen_profile,
     semantic_document_identity,
     source_manifest_identity,
     tree_digest,
     unmanaged_payload_paths,
     validate_frozen_inputs,
 )
+
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_tree_digest_ignores_root_location_and_file_times(tmp_path: Path) -> None:
@@ -76,6 +80,7 @@ def test_source_and_reference_identity_exclude_run_metadata() -> None:
         "downloaded_at": "2026-01-01T00:00:00Z",
         "game_version": "16.14.1",
         "lcu_version": None,
+        "game_manifest": {"id": "GAME-ABC", "version": "16.14.1", "url": "https://old.test"},
         "lobby_snapshot": {
             "game_version": "16.14",
             "lcu_manifest_id": "ABC",
@@ -87,10 +92,13 @@ def test_source_and_reference_identity_exclude_run_metadata() -> None:
         **left,
         "game_dir": "E:/Another/Machine",
         "downloaded_at": "2099-01-01T00:00:00Z",
+        "game_manifest": {**left["game_manifest"], "url": "https://new.test"},
         "lobby_snapshot": {**left["lobby_snapshot"], "generated_at": "2099-01-01T00:00:00Z"},
     }
 
     assert source_manifest_identity(left) == source_manifest_identity(right)
+    changed_game_manifest = {**right, "game_manifest": {**right["game_manifest"], "id": "GAME-XYZ"}}
+    assert source_manifest_identity(left) != source_manifest_identity(changed_game_manifest)
     assert semantic_document_identity(
         {"schema_version": 2, "updated_at": "old"},
         excluded_keys={"updated_at"},
@@ -98,6 +106,28 @@ def test_source_and_reference_identity_exclude_run_metadata() -> None:
         {"schema_version": 2, "updated_at": "new"},
         excluded_keys={"updated_at"},
     )
+
+
+def test_committed_frozen_source_manifest_is_portable_and_matches_profile() -> None:
+    """fresh runner 使用的来源证明不得依赖本机路径且必须通过冻结预检。"""
+
+    manifest_path = ROOT / "data" / "frozen-sources-manifest.v1.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+    assert "game_dir" not in manifest
+    assert "downloaded_at" not in manifest
+    assert "generated_at" not in manifest["lobby_snapshot"]
+    assert source_manifest_identity(manifest)["digest"] == (
+        "f56e1c57f3be790c0aa6608b83d08aa49f99d87c964361d7f600f345e72a1f7b"
+    )
+    result = validate_frozen_inputs(
+        load_frozen_profile(ROOT / "data" / "frozen-profile.v1.json"),
+        raw_root=ROOT / "raw" / "events",
+        sources_manifest_path=manifest_path,
+        reference_manifest_path=ROOT / "reference" / "manifest.yaml",
+    )
+    assert result["profile_id"] == "v1-frozen-16.16"
+    assert result["raw_unique_count"] == 106926
 
 
 def test_frozen_preflight_accepts_only_documented_lcu_exception(tmp_path: Path) -> None:

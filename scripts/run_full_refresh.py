@@ -398,7 +398,7 @@ def parse_args(argv: list[str] | None = None) -> FullRefreshArgs:
     parser.add_argument(
         "--sources-manifest",
         type=Path,
-        default=Path("dist/sources/manifest.json"),
+        default=Path("data/frozen-sources-manifest.v1.json"),
         help="Frozen source acquisition manifest.",
     )
     parser.add_argument(

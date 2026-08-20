@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Rammus
+  champion_id: 60033
+  skin_number: 26
+  skin_token: Skin26
+  id: 60033026
+  alias: Jade_RammusSkin26
+  names:
+    en_US:
+      - value: Durian Defender Rammus
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 榴莲龙龟 拉莫斯
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 203
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_RammusSkin26

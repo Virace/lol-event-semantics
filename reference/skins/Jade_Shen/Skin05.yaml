@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Shen
+  champion_id: 60098
+  skin_number: 5
+  skin_token: Skin05
+  id: 60098005
+  alias: Jade_ShenSkin05
+  names:
+    en_US:
+      - value: Warlord Shen
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 战国大名 慎
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_ShenSkin05
+  - Jade_ShenSkin5

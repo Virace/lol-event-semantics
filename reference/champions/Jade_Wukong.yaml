@@ -1,0 +1,263 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60062
+  alias: Jade_Wukong
+  names:
+    en_US:
+      - value: Wukong
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 齐天大圣
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_WukongE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Nimbus Strike
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 腾云突击
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:96eb3ef9d48d54efb7a25d6a05f9010efffef8f4637c69a501d31e7dfab06244
+            value: Wukong dashes toward a target enemy and sends out images to
+              attack up to 2 additional enemies near his target, dealing
+              physical damage to each enemy struck.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:bd54a03870273d13ad6159b7b81c39c60f12c4add83e35225cef7da511fe6cd0
+            value: 孙悟空突进至一名目标敌人处，并变出最多2个分身，攻击附近目标。对每个击中的目标造成物理伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_WukongPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Stone Skin
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 金刚不坏
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:5303ae29ccf3e75ecd0c702dd854db90e955b2c670eec664896a5cc729b721b2
+            value: Increases Wukong's armor and magic resistance for each nearby
+              enemy champion.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:db0996e709f28ddc81986d68da06edd9e29898eaf0d23ad49caabb363977f8a6
+            value: 孙悟空的护甲和魔法抗性会根据周围的敌方英雄数量而增加。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_WukongQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Crushing Blow
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 粉碎打击
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:833247294a6f83cdacff1b90e640bfda85e0ff14029504d08a8b8627657dc68c
+            value: Wukong's next attack gains extra range, deals bonus damage,
+              and reduces the enemy's Armor.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:3f1089110ca7dccaa3ad44663089062a5a9ab3951058c1d7207ee9907b5c9834
+            value: 孙悟空的下次攻击提升距离，造成额外伤害，并降低敌人的护甲。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_WukongR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Cyclone
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 大闹天宫
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:abf4ddb140716761074f1a4c52f4e5a2b3f0214f038daf876fbf9187b70ca17f
+            value: Wukong's staff grows outward and he spins it around, dealing
+              damage and knocking up enemies. Wukong gains movement speed over
+              the duration of the spell.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:bf1aefa68248027501549fa292a43fae70db473847b2a3d366368c232c2a4cb3
+            value: 孙悟空展开金箍棒，不停地旋转，对敌人造成伤害并将其击飞。在此期间，孙悟空的移动速度持续增加。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_WukongW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Decoy
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 真假猴王
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:cd625daa59ea36d27cc3a30ff9d2dd6f52fa9630bb0f210ecac551bb265bec43
+            value: Wukong becomes invisible for 1.5 seconds. An uncontrollable
+              decoy is left behind that will deal magic damage to enemies near
+              it after 1.5 seconds.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:9623977a3d3943571403ad1e2db5caef9e6dc618919d8f5fae0808207ed8090a
+            value: 孙悟空进入1.5秒的隐身状态。留下一具无法控制的分身，1.5秒后对其附近的敌人造成魔法伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

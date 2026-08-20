@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_LeeSin
+  champion_id: 60064
+  skin_number: 40
+  skin_token: Skin40
+  id: 60064040
+  alias: Jade_LeeSinSkin40
+  names:
+    en_US:
+      - value: Dragon Fist Lee Sin
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 龙的传人 李青
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 55
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_LeeSinSkin40

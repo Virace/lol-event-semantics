@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Chogath
+  champion_id: 60031
+  skin_number: 6
+  skin_token: Skin06
+  id: 60031006
+  alias: Jade_ChogathSkin06
+  names:
+    en_US:
+      - value: Prehistoric Cho'Gath
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 暴龙 科加斯
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 32
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_ChogathSkin06
+  - Jade_ChogathSkin6

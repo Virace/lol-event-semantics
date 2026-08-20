@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Gangplank
+  champion_id: 60041
+  skin_number: 7
+  skin_token: Skin07
+  id: 60041007
+  alias: Jade_GangplankSkin07
+  names:
+    en_US:
+      - value: Captain Gangplank
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 昔日霸主 普朗克
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 49
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_GangplankSkin07
+  - Jade_GangplankSkin7

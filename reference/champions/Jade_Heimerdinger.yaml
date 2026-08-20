@@ -1,0 +1,263 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60074
+  alias: Jade_Heimerdinger
+  names:
+    en_US:
+      - value: Heimerdinger
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 大发明家
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_HeimerdingerE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: CH-1 Concussion Grenade
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: CH-1震荡手雷
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:84d9d40f87fe74870da17f8e575aa13e0896b5db218dfdc2282c15589ba7a433
+            value: Heimerdinger lobs a grenade at a location, dealing damage to
+              enemy units as well as stunning anyone directly hit and blinding
+              surrounding units.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:03d425127eccafc71fd941b87b9060a22f4f99b1fd26507824ce143e309f2519
+            value: 黑默丁格朝一个位置掷出一颗手雷，对敌方单位造成伤害，并对直接命中的敌人造成晕眩效果，对附近单位造成致盲。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_HeimerdingerPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Techmaturgical Repair Bots
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 科技魔法修复机器人
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:7ec2b89fddca6a027f44052bb651b6fe50970192cdca4ac29a6cfa89bd2b774b
+            value: Heimerdinger gives nearby allied Turrets and Champions
+              increased Health Regeneration.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:0b1973141683fa786e52c30d3969a7749bd584af764e27dcbce5f3c1282b295a
+            value: 黑默丁格为周围的友军炮台、防御塔和英雄提供生命回复加成。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_HeimerdingerQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: H-28G Evolution Turret
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: H-28G进化炮台
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:c9153aa9d4577133c9a17896b328b55422e51f3a4a628675261ace20bb4649e1
+            value: Heimerdinger lays down a machine gun turret. Turrets gain
+              abilities as this skill is increased. (Turrets deal half damage to
+              towers).
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:8ec445bd9a203429f50fb29ffd9e778d2af36ca136c8b2219244dcfc6b468882
+            value: 黑默丁格部署一座机枪炮台。随着该技能等级提升，炮台会获得新的能力。（炮台对防御塔仅造成一半伤害。）
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_HeimerdingerR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: UPGRADE!!!
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 升级！！！
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:04694bfee36d903b88d3a73941cee23c596d7dacfcdf896a2b43b15a8b83ddb5
+            value: 'Passive / Active: Passively increases Cooldown Reduction.  Activate
+              to heal all active Evolution Turrets and cause them to fire frost shots,
+              which reduce Movement Speed, for a short time.'
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:022728d532ac02c1cbba6c3157bd3e03b4795b8049a791d8235b3153fc8b579b
+            value: 被动/主动：被动提升冷却缩减。激活后为所有已激活的进化炮台回复生命值，并让它们在短时间内发射能降低目标移动速度的冰霜射击。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_HeimerdingerW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Hextech Micro-Rockets
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 海克斯科技微型导弹
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:602fe6f466fbe73dc6fa390d6ef252d9ff46317bcd0fbeaf87080bfdc7c412d6
+            value: Heimerdinger fires long-range rockets that hit the enemies
+              closest to Heimerdinger.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:a309ba9757e57fe41696efa71b3b7db42de5255d146b1e1c487b327605e06889
+            value: 黑默丁格发射数枚长程导弹，瞄准离黑默丁格最近的敌人。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

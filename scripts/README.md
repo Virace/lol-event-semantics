@@ -87,10 +87,10 @@ uv run python scripts/build_normalized_outputs.py `
   --output-root .temp\manual-candidate\normalized `
   --repo-root . --raw-root raw\events `
   --reference-root reference --rules-root rules --overrides-root overrides `
-  --reference-version 16.14 `
+  --reference-version 16.16 `
   --pattern-policy rules\translation_patterns.yaml `
   --contract-assets-root data `
-  --sources-manifest dist\sources\manifest.json `
+  --sources-manifest data\frozen-sources-manifest.v1.json `
   --frozen-profile data\frozen-profile.v1.json
 ```
 
@@ -160,7 +160,7 @@ uv run lookup-normalized-event `
 - `build_review_site.py`：从 decomposition JSONL 构建通用维护 review 页面；它不是 P5 产品批准入口。
 - `build_normalized_outputs.py`：从 decomposition JSONL 生成指定 candidate root；先对显式 raw/reference/rules/overrides/source/profile/contract 输入做冻结预检与树摘要，再合并 champions/maps 重叠分片中的等价记录，写出唯一 `record_id`、来源 provenance、pattern/support/render/review 字段、`quality-summary.json` 和确定性 manifest content identity。已核验 qualifier 按结构化 key 渲染，未知 key 保留待审 fallback；皮肤短展示移除重复 owner。V2 首选文件是 `normalized-events.jsonl`、`pattern-catalog.json` 与 `quality-summary.json`，同时复制 schema/examples/accepted corpus/无源码 consumer，并保留兼容视图。
 - `report_translation_patterns.py`：只读 Pattern Catalog 维护报告入口；默认读取 `rules/translation_patterns.yaml`，以 semantic frame 汇总 pattern 并将 JSON/Markdown 写入显式指定的报告路径。只有 exact approved 且结构合格的 pattern 为 Stable；未来同 family 新 ID 仍回到 Experimental/pending。
-- `check_tiered_quality.py`：读取 candidate 内的确定性质量摘要和全局 validation 报告，独立执行冻结 decision、91-pattern 集合摘要与 4,387-record 总数的 Stable absolute gates，并相对当前 approved-local 输出 `quality-diff.json`；带未解析且无显式证据 residual 的单字母技能键启发式会阻断 Stable。所有 support-level 新增、移除、晋级和降级都进入 Review 明细，Stable pattern/record 降级会阻断，Experimental warning 只报告。
+- `check_tiered_quality.py`：读取 candidate 内的确定性质量摘要和全局 validation 报告，独立执行冻结 decision、91-pattern 集合摘要与 4,389-record 总数的 Stable absolute gates，并相对当前 approved-local 输出 `quality-diff.json`；带未解析且无显式证据 residual 的单字母技能键启发式会阻断 Stable。所有 support-level 新增、移除、晋级和降级都进入 Review 明细，Stable pattern/record 降级会阻断，Experimental warning 只报告。
 - `manage_review.py`：构建 candidate-bound 产品 Review Site/bundle，导入并验证版本化决定；全接受 source review 使用 journal 与 OS advisory lock 更新长期 decision source/accepted corpus，硬退出后锁所有权自动释放、下一次 apply 先恢复 journal，其他 action fail-closed。
 - `run_full_refresh.py`：本地一键刷新薄壳，创建隔离 run 后按序串联 decompose→build→validate→quality→review→metrics→ratchet 七个子进程（可选 `--update-first`）；阻断失败固化 failed，成功固化 completed candidate，不自动 promotion。自动门禁只证明技术状态，用户 Review 前 `eligible=false`。步骤串联逻辑在 `src/lol_event_semantics/full_refresh.py`，run/pointer 状态机在 `dataset_runs.py`。
 - `promote_dataset_run.py`：对 completed run 做 clean generator、正式 eligibility、报告/payload 摘要、独占锁与 expected previous digest CAS 门禁；等待人工 Review 的候选还必须验证 `--decisions` 中的 dataset approval，再原子替换 `approved-local.json`。冲突/锁/门禁分别非 0 退出。

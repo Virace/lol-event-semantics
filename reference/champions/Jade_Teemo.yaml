@@ -1,0 +1,267 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60017
+  alias: Jade_Teemo
+  names:
+    en_US:
+      - value: Teemo
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 迅捷斥候
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_TeemoE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Toxic Shot
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 毒性射击
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:db1eb3a050ba96198c6abaab2908169573c7b54585e1d0897d446cf92e8dc19d
+            value: Each of Teemo's attacks will poison the target, dealing
+              damage on impact and each second after for 4 seconds.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:a2289c1c987d9f3085f58df6e2bd00d789f9e512e74273d8e87a2b92a2a5e740
+            value: 提莫每次攻击附带毒液伤害，造成持续性伤害，持续4秒。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_TeemoPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Camouflage
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 伪装
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:d650e7f0f5bcadc41650c6df0fd14b9b5b3365b4199a258d96b8997d70cc033b
+            value: If Teemo stands still and takes no actions for a short
+              duration, he becomes Invisible indefinitely. After leaving
+              Invisibility, Teemo gains the Element of Surprise, increasing his
+              Attack Speed for a few seconds.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:bfa71f57c2230ebadcd48001762e68eecdfb962a310919be4a32feaf0d2758dd
+            value:
+              如果提莫保持静止，并在短时间内未执行任何操作，他将进入无限期的隐形状态。提莫脱离隐形后获得【出奇制胜】效果，提升攻击速度，持续数秒。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_TeemoQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Blinding Dart
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 致盲吹箭
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:bd72aff2d9b9855b2f8fd35667a1787099d3f54a0225e40e195df551bff83b5d
+            value: Obscures an enemy's vision with a powerful venom, dealing
+              damage to the target unit and blinding it for the duration.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:fe3ce4f57b1f022b4547016bb8d3cf5c1eba1b505a5f0fb38ab32a05b86abde9
+            value: 用强效毒液来侵蚀一名敌人的视力，对目标单位造成伤害，并使其致盲一段时间。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_TeemoR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Noxious Trap
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 种蘑菇
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:58983b7c0fe1acc1eb808272f78cdd714cc551af154a6529b14a93c50f576276
+            value: Teemo places an explosive poisonous trap using one of the
+              mushrooms stored in his pack.  If an enemy steps on the trap it
+              will release a poisonous cloud, slowing enemies and damaging them
+              over time.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:16db7f6a5d3cdfadd482f342673327a9289b1385fca04f44b6221d0283727c2e
+            value: 提莫用背包里的蘑菇布置一个可爆炸的毒性陷阱。陷阱会在被敌方踩中时爆炸，释放出一团毒云，对附近的敌人造成减速效果和持续伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_TeemoW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Move Quick
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 小莫快跑
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:928128342fdb5caf42bc197d99e04a526492e5964fed660149f2e6b6e67a108f
+            value: Teemo scampers around, passively increasing his movement
+              speed until he is struck by an enemy champion or turret.  Teemo
+              can sprint to gain bonus movement speed that isn't stopped by
+              being struck for a short time.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:59c808a1509cfbdec7d66fe9de3cb096ea7a641494ac511c7b428b182776bea0
+            value: 提莫动如脱兔，移动速度增加，直到被敌方英雄或防御塔击中为止。提莫可在短时间内疾跑，获得额外移动速度，且不会因被击中而中断。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

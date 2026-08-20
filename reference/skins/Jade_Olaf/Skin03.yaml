@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Olaf
+  champion_id: 60002
+  skin_number: 3
+  skin_token: Skin03
+  id: 60002003
+  alias: Jade_OlafSkin03
+  names:
+    en_US:
+      - value: Brolaf
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 铁哥们儿 奥拉夫
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 100
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_OlafSkin03
+  - Jade_OlafSkin3

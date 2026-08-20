@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Sona
+  champion_id: 60037
+  skin_number: 7
+  skin_token: Skin07
+  id: 60037007
+  alias: Jade_SonaSkin07
+  names:
+    en_US:
+      - value: Sweetheart Sona
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 甜心宝贝 娑娜
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 64
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_SonaSkin07
+  - Jade_SonaSkin7

@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Blitzcrank
+  champion_id: 60053
+  skin_number: 5
+  skin_token: Skin05
+  id: 60053005
+  alias: Jade_BlitzcrankSkin05
+  names:
+    en_US:
+      - value: Definitely Not Blitzcrank
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 戴一个表 布里茨
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 101
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_BlitzcrankSkin05
+  - Jade_BlitzcrankSkin5

@@ -1,0 +1,264 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60080
+  alias: Jade_Pantheon
+  names:
+    en_US:
+      - value: Pantheon
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 战争之王
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_PantheonE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Heartseeker Strike
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 穿心长矛
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:3c08ceb331cfd561453cdb13b744f37dd23ea56c60aa09539a4a4f9df74cb076
+            value: Pantheon focuses and unleashes 3 swift strikes to the area in
+              front of him, dealing double damage to champions. Pantheon also
+              becomes more aware of his enemy's vital spots, allowing him to
+              always crit enemies below 15% health.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:03a49fab71174fa4338a80bea402702dffd85ef4145718598abcb8f0f9e8f6d2
+            value:
+              潘森使用长矛向前方范围发动三连击，对英雄造成的伤害翻倍。同时，潘森也变得更了解敌人的弱点，必定对生命值低于15%的敌人触发暴击。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_PantheonPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Aegis Protection
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 圣盾庇护
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:970e289e7a83af2e208c5634c05f468f7b73042f78514a98d51a81c0df0ee018
+            value: After every 4 attacks or spell casts, Pantheon gains
+              protection from the next attack.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:9e11ed072f219f58e8199bc9e3482fd6c41b761f934976a5bff4875840ccc31f
+            value: 每攻击或施法4次后，潘森可格挡下一次攻击。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_PantheonQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Spear Shot
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 长矛飞掷
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:5331b23b55542c940b14d05d31760fb0fff8e476b1ef4bdad2cc7d7e80fbb473
+            value: Pantheon hurls his spear at an opponent, dealing damage.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:811ce1d4bec52d87268f2f807ab29b75ad0132a79d11e04260f76b783af6ae15
+            value: 潘森向一个敌人猛掷长矛，从而造成伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_PantheonR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Grand Skyfall
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 堕天一击
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:3bad02b3fdce4374b9573dc045f1a07bfa3e349326462df25a31138f5375daa5
+            value: Pantheon composes himself and then leaps into the air to a
+              target, striking all enemy units in an area. Enemies closer to the
+              impact point take more damage.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:d8e7d97b643d703145e83c8a424427f0dae14db194893b71c42d7a209e161f75
+            value: 潘森积蓄力量腾空而起，然后轰击目标区域，落地时对目标区域内的所有敌人造成伤害。离落点越近的敌人，受到的伤害越高。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_PantheonW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Aegis of Zeonia
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 圣盾打击
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:71996c5ab531e378b2a19ee67ff6bfe1a38b4feb932a44d69e3796baa32ecb4f
+            value: Pantheon leaps at an enemy and bashes the enemy with his
+              shield, stunning them.  After finishing the attack, Pantheon
+              readies himself to block the next attack.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:17a10699c399877d4d2d03713350b93ff9f8aab4d9cbe28f73ab1e3f712af716
+            value: 潘森跳向一名敌人并对该敌人进行盾击，从而使其晕眩。盾击结束后刷新圣盾庇护，以格挡下一次攻击。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Ashe
+  champion_id: 60022
+  skin_number: 11
+  skin_token: Skin11
+  id: 60022011
+  alias: Jade_AsheSkin11
+  names:
+    en_US:
+      - value: Cosmic Queen Ashe
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 御星魔矢 艾希
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 43
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_AsheSkin11

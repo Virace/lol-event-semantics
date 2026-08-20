@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Corki
+  champion_id: 60042
+  skin_number: 5
+  skin_token: Skin05
+  id: 60042005
+  alias: Jade_CorkiSkin05
+  names:
+    en_US:
+      - value: Urfrider Corki
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 海牛骑手 库奇
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 168
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_CorkiSkin05
+  - Jade_CorkiSkin5

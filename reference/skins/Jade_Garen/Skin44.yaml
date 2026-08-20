@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Garen
+  champion_id: 60086
+  skin_number: 44
+  skin_token: Skin44
+  id: 60086044
+  alias: Jade_GarenSkin44
+  names:
+    en_US:
+      - value: Fallen God-King Garen
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 堕落神王 盖伦
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 78
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_GarenSkin44

@@ -1,0 +1,264 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60021
+  alias: Jade_MissFortune
+  names:
+    en_US:
+      - value: Miss Fortune
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 赏金猎人
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_MissFortuneE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Make It Rain
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 枪林弹雨
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:5df532141c531ffe17f89e4fd2fcaaa959529ab8f5b8e5655bf97a3e583e083c
+            value: Miss Fortune unleashes a flurry of bullets at a location,
+              dealing waves of damage to opponents and slowing them.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:ba31e36ce9973e50baab14246501dc66905d753e6f436c2142a79dadf5e85644
+            value: 厄运小姐向目标区域释放一阵弹雨，对敌人造成数波伤害并减缓其移动速度。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_MissFortunePassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Strut
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 大步流星
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:e8b0f6527c244b1a7ae11e7bca8af7d564912aea2bae54b2fe12387f11429c2e
+            value: After 5 seconds of not being attacked, Miss Fortune gains an
+              additional <speed>25 Movement Speed</speed>. This bonus increases
+              by 9 each second up to a maximum bonus of 70.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:43410dc9106ba9ffd3f419ee01250166689989b737052bf963e3f5e5e267015c
+            value: 未受到攻击5秒后，厄运小姐额外获得<speed>25移动速度</speed>。该加成每秒提升9，最高可达70。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_MissFortuneQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Double Up
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 一箭双雕
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:011f53fa3d24be786d4b7882e9954a9d50da2d1b799777beca0aece9bbb1e67b
+            value: Miss Fortune fires a bullet at an enemy, damaging them and a
+              target behind them.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:8729b6d810e4fc8c23adbd413b1c7069718b9c7678abac02a57f7cdf0b420362
+            value: 厄运小姐向一名敌人发射一颗子弹，对该敌人及其身后的一个目标造成伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_MissFortuneR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Bullet Time
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 弹幕时间
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:d64ff5dbe6f8ad1ef82f8faf568729985405cb820aac8607286668d527fb0365
+            value: Miss Fortune channels a flurry of bullets into a cone in
+              front of her, dealing large amounts of damage to enemies.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:15c6d2a50ed16bce3564695f1f7ee7cffdb3aa2a86929c046f8d39ed21a0d1a5
+            value: 厄运小姐向面前的锥形范围内引导一阵子弹风暴，对敌人造成大量伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_MissFortuneW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Impure Shots
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 黑枪射击
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:c16dd27fd55bbdd313056df16ba5d9c3aa451b219ee03dbd8484f4e3def18a18
+            value: Miss Fortune passively increases damage dealt to a target
+              with each strike.  This ability can be activated to increase Miss
+              Fortune's Attack Speed and cause her attacks to lower healing
+              received by the target.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:b586bd86cad826628d7e0ce06c63fbb491e30feb9cde0686cac0314492466a9b
+            value:
+              厄运小姐攻击同一目标时，每次命中造成的伤害会被动提升。该技能可激活，提升厄运小姐的攻击速度，并使她的攻击降低目标受到的治疗效果。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

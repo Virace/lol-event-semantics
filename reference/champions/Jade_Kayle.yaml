@@ -1,0 +1,260 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60010
+  alias: Jade_Kayle
+  names:
+    en_US:
+      - value: Kayle
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 审判天使
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_KayleE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Righteous Fury
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 正义之怒
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:264678225f7df05ce234278474af21608abcdcdbd0e9fa881854e9e503d32e50
+            value: Kayle increases her attack range and her basic attacks deals
+              additional damage to her target and nearby enemies.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:38ce856b04e978fe02430ea5a0e7cc44375bd595beac429d1cde417b76de77b3
+            value: 凯尔的攻击距离提升，普通攻击会对目标及其附近的敌人造成额外伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_KaylePassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Holy Fervor
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 神圣狂热
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:d7d69237b435d6eef29c58ca1b754febd7f7f0de88cfc261b89436a1314c51b1
+            value: Kayle gains a percentage of her Ability Power as Attack
+              damage and a percentage of her Attack Damage as Ability Power.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:8330b14ccb0f0d33a0be9be185a0efbb11a50f2951cd0234c0b9424d2271a2ae
+            value: 凯尔获得相当于自身一定百分比法术强度的攻击力，并获得相当于自身一定百分比攻击力的法术强度。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_KayleQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Reckoning
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 清算
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:77578dad54bb8c7517d14e4c5bec9835f2fedfeb2995939c8d1602b3268fbbc5
+            value: Kayle blasts a target, dealing damage, slowing their movement
+              speed, and applying a stack of Holy Fervor.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:ba953684fe40e37ff7737fb2cd9391e521467dfe7afdf718f7c0b99a17f5d4ba
+            value: 凯尔轰击目标，造成伤害，降低其移动速度，并施加一层圣焰。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_KayleR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Intervention
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 神圣庇护
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:383f8cd05b4df71fdce8506242885644adceea041cb23c80c6ccaea4e1fd4745
+            value: Bathes Kayle's target in a holy light, rendering them immune
+              to all damage for a short time.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:83e3ea75723f1d06416faa86fafb82dc959f9ffce378228103d8e750e4ca589a
+            value: 让凯尔的目标沐浴在一道圣光之中，在短时间内免疫所有类型的伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_KayleW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Divine Blessing
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 神圣祝福
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:a0ba24e53b2259ad3bea2a38a38c7c4bed88b1bed36b6aa36c70f7ee81bd2761
+            value: Kayle blesses an allied champion, increasing their movement
+              speed and healing them.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:22fe555840ca2094395d59e0020b5040dc58722ed01eff79cd05a75bdc817ecd
+            value: 凯尔祝福一名友军英雄，提升其移动速度并为其回复生命值。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

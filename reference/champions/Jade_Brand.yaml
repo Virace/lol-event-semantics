@@ -1,0 +1,264 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60063
+  alias: Jade_Brand
+  names:
+    en_US:
+      - value: Brand
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 复仇焰魂
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_BrandE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Conflagration
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 烈火燃烧
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:22f0c219feb8eccec23f8365adaa1849a0dbe8d64cd7cebabc026d51274b27c2
+            value: Brand conjures a powerful blast at his target, dealing magic
+              damage to them. If the target is ablaze, Conflagration spreads to
+              nearby enemies.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:e5af5447700da62239a12337e664e4457893e592848e7801dbb5be5f7cbdf026
+            value: 布兰德在目标身上引发一阵强力爆裂，对其造成魔法伤害。如果目标带有烈焰焚身效果，则烈火燃烧还会扩散至目标附近的敌人。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_BrandPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Blaze
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 炽热之焰
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:68695a3fbd17ac8204c3c3466b44135bd0abac8f714244f674725a1fadf09f88
+            value: Brand's spells light his targets ablaze, dealing 8% of their
+              maximum Health in magic damage over 4 seconds.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:dba5e3cd9d4f38f09306d237a04b62e15353d99d381a9ade25ff83e382848389
+            value: 布兰德的技能会对目标施加烈焰焚身效果，在4秒内持续造成共8%目标最大生命值的魔法伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_BrandQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Sear
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 火焰烙印
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:810b8c3909728b0977d0b90db6ffb216837ecd789e86ebd3a2dd32305a2615ee
+            value: Brand launches a ball of fire forward that deals magic
+              damage. If the target is ablaze, Sear will stun the target.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:efa3c42aaaf08169c08c57d06b3886a067b24e899ad878ed7560b002a7a23222
+            value: 布兰德向前方放出一团可造成魔法伤害的火球。如果目标带有烈焰焚身效果，则火焰烙印将使目标晕眩。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_BrandR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Pyroclasm
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 烈焰风暴
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:af71dd50c13ebebf38cc90ccb004720623169faeb81e67185d4dc5e94fa09824
+            value: Brand unleashes a devastating torrent of fire, dealing magic
+              damage each time it bounces. If a target is ablaze, Pyroclasm will
+              priotize champions for the next bounce.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:6f771b66ade98a53111d15161c256032fc0fe4a286100d2120518391601fcfd9
+            value:
+              布兰德释放一颗破坏力极强的火焰之种，每次弹跳时造成魔法伤害。如果目标带有烈焰焚身效果，则烈焰风暴的下一次弹跳会优先选择该英雄。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_BrandW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Pillar of Flame
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 烈焰之柱
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:4c5dedcefeb443bc44f9b6780a6f1ca68664a01d184045489779bf13ab4c1dd5
+            value: After a short delay, Brand creates a pillar of flame at a
+              target area, dealing magic damage to enemy units with the area.
+              Units that are ablaze take additional damage
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:162fd56025cd07127639b5a1acb8d90e376e9cfd35981fa6568cbca2c7cd54d0
+            value: 在短暂的延迟后，布兰德会在目标区域创造一根烈焰之柱，对范围内的敌方单位造成魔法伤害。带有烈焰焚身效果的单位会受到额外伤害
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

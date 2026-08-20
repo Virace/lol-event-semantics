@@ -1,0 +1,261 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60036
+  alias: Jade_DrMundo
+  names:
+    en_US:
+      - value: Dr. Mundo
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 祖安狂人
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_DrMundoE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Masochism
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 潜能激发
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:a888117d1c4b767ce79f3dfbba6483a5ce62a8d08b81a5ba4f4d622f20746167
+            value: Masochism increases Dr. Mundo's Attack Damage by a flat
+              amount for 5 second. In addition, Dr. Mundo also gains an
+              additional amount of Attack Damage for each percentage of Health
+              he is missing.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:982609929128bf0b55e88b88632876a602c86b614090db0f6716fdcfbb8527ec
+            value: 潜能激发会在5秒内提升蒙多医生的攻击力。此外，蒙多医生每损失一定百分比的生命值，还会获得额外攻击力。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_DrMundoPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Adrenaline Rush
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 肾上腺激素
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:25dc4bbcd786841476286d2436c23f78df380acaa5bbb6814280d34854c8a995
+            value: Dr. Mundo regenerates 0.3% of his maximum Health each second.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:cf684db0cb553db05befd71fac954cbbbb6e6afcf8c14d76dd66f97085067130
+            value: 蒙多医生每秒回复0.3%的最大生命值。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_DrMundoQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Infected Cleaver
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 病毒屠刀
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:eedff04f3793fb93ec9b7e523eb3c6d6e2bd861bf2f155b4abc39670bd7d4d71
+            value: Dr. Mundo hurls his cleaver, dealing damage based on his
+              victims maximum health.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:7d4f2a87b88d8f3b85caf643a8b301803dc970ba92592a5a563c617d80e7ec35
+            value: 蒙多医生掷出他的屠刀，对目标造成基于其最大生命值的伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_DrMundoR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Sadism
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 背水一战
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:6cf2d51d4d260ef9b5429e775504f31e7bea7a25d1958f01c579eb8a5bffc935
+            value: Dr. Mundo sacrifices a portion of his Health for increased
+              Movement Speed and drastically increased Health Regeneration.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:3eef9c21368d15bfeae9ed79cc9904a06477c2210654cf64f476cef3996742e7
+            value: 蒙多医生消耗部分生命值来提升移动速度，并巨幅提升生命回复速度。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_DrMundoW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Burning Agony
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 痛苦燃烧
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:1b5672ae0370ea787ede434d0de60a296524ed6c5c555df7aee05e234db802a7
+            value: Dr. Mundo drains his health to reduce the duration of
+              disables and deal continual damage to nearby enemies.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:0d5aadbe81a8d67aaa8a99c20946087ee38a9c5564a86552c0a320a5b98b0809
+            value: 通过消耗生命值，蒙多医生减少自身受到的控制效果持续时间，并持续对附近敌人造成伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

@@ -1,0 +1,263 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60081
+  alias: Jade_Ezreal
+  names:
+    en_US:
+      - value: Ezreal
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 探险家
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_EzrealE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Arcane Shift
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 奥术跃迁
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:c52b598129fa53e1aa82d1a0fd87d8629c7ab8ae75607101e6e9758a2e593810
+            value: Ezreal teleports to a target nearby location and fires a
+              homing bolt which strikes the nearest enemy unit.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:89a1340dffd4b7bcbeffb03d7ec6540a019245521768176d90d1efaceaeaf931
+            value: 伊泽瑞尔传送到附近的目标区域，并向最近的敌人发射一束自动寻敌的魔法箭。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_EzrealPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Rising Spell Force
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 咒能高涨
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:d36bcc280aa6f20a4134a7e953eaa5ec5378f8ac2819b20009e8ae24a601e272
+            value: Ezreal gains increasing Attack Speed each time he
+              successfully hits a spell, stacking up to 5 times.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:09652f79ff747189c5a41f9798327a95e5887add3b39b267565055570e3b2351
+            value: 伊泽瑞尔的任何技能在击中目标后，都会提升他的攻击速度（最多可叠加5次）。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_EzrealQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Mystic Shot
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 秘术射击
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:9d8d679b523c8838121d682c7506917df9439dd0c8b4a07695be4962469bf855
+            value: Ezreal fires a damaging bolt of energy which reduces all of
+              his cooldowns slightly if it strikes an enemy unit.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:b3252630742b5fa2ea8384182b436d0d0c615cfd5470e4da1793e7a149f5137d
+            value: 伊泽瑞尔发射一枚能量弹，如果它击中一个敌方单位，那么它将略微减少伊泽瑞尔所有技能的冷却时间。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_EzrealR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Trueshot Barrage
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 精准弹幕
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:292410101888b17feddcc8f104e6e5442ff06f0ad9d18fea4ba272d953fc9a7c
+            value: Ezreal channels for 1 second to fire a powerful barrage of
+              energy missiles which do massive damage to each unit they pass
+              through (deals 10% less damage to each unit it passes through).
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:9a50f5de9774cf28f3b2d506bf58e9bf0714096ed517e8edaca6e301b7045463
+            value:
+              伊泽瑞尔引导1秒，发射一个强力的能量弹幕，弹幕将对它途经的每一个敌人造成魔法伤害。（每穿过一个单位，弹幕造成的伤害就会降低10%）。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_EzrealW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Essence Flux
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 精华跃动
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:ab13e5c190d3e6f6c97f6893269375a3653fbdccd26c3bf949dcdb9b07ab6976
+            value: Ezreal fires a fluctuating wave of energy, decreasing the
+              Attack Speed and dealing magic damage to enemy champions, while
+              healing and increasing the Attack Speed of allied champions.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:b40e294b2f90bc1d1cf642f3601958cf6920b4840485393282d714d31a239210
+            value: 伊泽瑞尔发射一道起伏的能量波，降低途经敌方英雄的攻击速度并对其造成魔法伤害，同时为途经友方英雄回复生命值并提升其攻击速度。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

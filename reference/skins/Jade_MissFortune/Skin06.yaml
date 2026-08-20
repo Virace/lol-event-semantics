@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_MissFortune
+  champion_id: 60021
+  skin_number: 6
+  skin_token: Skin06
+  id: 60021006
+  alias: Jade_MissFortuneSkin06
+  names:
+    en_US:
+      - value: Crime City Miss Fortune
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 黑帮狂花 厄运小姐
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 51
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_MissFortuneSkin06
+  - Jade_MissFortuneSkin6

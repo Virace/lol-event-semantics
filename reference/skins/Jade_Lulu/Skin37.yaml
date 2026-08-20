@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Lulu
+  champion_id: 60117
+  skin_number: 37
+  skin_token: Skin37
+  id: 60117037
+  alias: Jade_LuluSkin37
+  names:
+    en_US:
+      - value: Monster Tamer Lulu
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 小怪兽训练师 璐璐
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 162
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_LuluSkin37

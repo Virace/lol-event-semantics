@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Alistar
+  champion_id: 60012
+  skin_number: 19
+  skin_token: Skin19
+  id: 60012019
+  alias: Jade_AlistarSkin19
+  names:
+    en_US:
+      - value: Hextech Alistar
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 海克斯科技 阿利斯塔
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 40
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_AlistarSkin19

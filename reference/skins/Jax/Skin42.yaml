@@ -1,0 +1,36 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jax
+  champion_id: 24
+  skin_number: 42
+  skin_token: Skin42
+  id: 24042
+  alias: JaxSkin42
+  names:
+    en_US:
+      - value: Prestige Magma Chamber Jax
+        sources:
+          - source: data_dragon
+            first_seen: 16.16.1
+            last_seen: 16.16.1
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 至臻 熔岩大厅 贾克斯
+        sources:
+          - source: data_dragon
+            first_seen: 16.16.1
+            last_seen: 16.16.1
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 231
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - JaxSkin42

@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Akali
+  champion_id: 60084
+  skin_number: 5
+  skin_token: Skin05
+  id: 60084005
+  alias: Jade_AkaliSkin05
+  names:
+    en_US:
+      - value: Blood Moon Akali
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 腥红之月 鬼武姬 阿卡丽
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 12
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_AkaliSkin05
+  - Jade_AkaliSkin5

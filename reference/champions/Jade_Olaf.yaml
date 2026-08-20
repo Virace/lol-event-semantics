@@ -1,0 +1,261 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60002
+  alias: Jade_Olaf
+  names:
+    en_US:
+      - value: Olaf
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 狂战士
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_OlafE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Reckless Swing
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 鲁莽挥击
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:ee7df300caf495c3933eb0205204b7b190202a11b7a64dc0998091a720abb96a
+            value: Olaf attacks with such force that it deals true damage to his
+              target and himself.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:7d6630ea76be24774ccba95b83465852c75aacb5364bb2bd80f2c2bdf92a9695
+            value: 奥拉夫以破釜沉舟之势发动进攻，对目标和自身造成真实伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_OlafPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Berserker Rage
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 狂战之怒
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:ddc18942b0e4361483c7890334cacf34a3ee723817d9ab44a5cabb63f656860f
+            value: Olaf's Attack Speed increases as his Health decreases.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:d1a2dad1d90187c04f009be936855d7b42c4dca5523b5e92f638895ca3c890c9
+            value: 奥拉夫的攻击速度会随着他的生命值减少而提升。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_OlafQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Undertow
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 逆流
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:8ecf5a305d9841e153027d76dd7bf49b84b9f2930f79375d31ff4ceb9062240d
+            value: Olaf throws an axe into the ground at a target location,
+              dealing damage to units it passes through and slowing their
+              movement speed. If Olaf picks up the axe, the ability's cooldown
+              is reduced.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:3bb8f75b7ed9367a8fe1cf2174ba6cb6aef54301d5723e90c29aab83c2ec123d
+            value: 奥拉夫将一柄战斧投至目标区域，对它途经的单位们造成伤害，并降低其移动速度。如果奥拉夫捡起该战斧，则该技能冷却时间会缩短。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_OlafR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Ragnarok
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 诸神黄昏
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:0de88c5deb6d77667bfd79f2187a97110da3de262e9446d123cc5f0e403a7d32
+            value: Olaf temporarily becomes immune to disables and gains bonus
+              Armor, Magic Resist, and Lethality.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:3b6a7028b8422422d3728accca0f7e104df41f2b5d231b0b7cf512ad7ea66e96
+            value: 奥拉夫暂时免疫控制技能，且获得额外护甲、魔法抗性和穿甲。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_OlafW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Vicious Strikes
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 残暴打击
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:483bffc86f0eb54b52a222f91c1ed5192afd20496c5fe58864b9256b64d4895b
+            value: Olaf's attack damage is increased, based on his health, and
+              he gains massive lifesteal and spell vamp.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:4b1b859bb679d327f797c5a2c8de31ba64e4ef956eeca93de5ab75a27a02dfc5
+            value: 奥拉夫基于自身的生命值提升攻击力，且生命偷取和法术吸血提升。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

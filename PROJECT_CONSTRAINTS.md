@@ -12,10 +12,10 @@
 
 - `raw_event_name` 是不可变源数据；新版本只增量合并，不因当前版本缺失而删除历史事件。
 - 每轮采集只读取当时的 live 最新版本；项目不提供指定历史版本的下载、重建或回放。累计语料保存已纳入事件名，但不构成历史版本快照服务。
-- `16.14` 是本轮 frozen acceptance profile，仅用于当前验收基线；不得把它编码为长期“最新版本”默认值。
+- `16.16` 是本轮 frozen acceptance profile，仅用于当前验收基线；不得把它编码为长期“最新版本”默认值。
 - GAME 与 LCU 来源必须在同轮内进行主版本一致性校验；不能把不同版本的来源静默混合为同一结果。
-- 当前 16.14 冻结源未暴露 `lcu_version`，只允许版本化 frozen profile 中记录的显式例外：
-  `lobby_snapshot.game_version=16.14` 且 `lcu_manifest_id` 非空；该例外不得扩展到未来 live 采集。
+- 当前 16.16 冻结源未暴露 `lcu_version`，只允许版本化 frozen profile 中记录的显式例外：
+  `lobby_snapshot.game_version=16.16` 且 `lcu_manifest_id` 非空；该例外不得扩展到未来 live 采集。
 - `rules/`、`overrides/` 和累计 `reference/` 是解释层的权威输入。生成文件不得反向成为人工维护源。
 - `dist/runs/approved-local.json` 原子指向的 completed `normalized/` 是唯一默认消费源；
   `.staging`、`failed`、未批准 `completed` 与旧 `dist/normalized/` 都只能显式用于维护诊断。

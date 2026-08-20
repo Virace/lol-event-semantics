@@ -1,0 +1,267 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60067
+  alias: Jade_Vayne
+  names:
+    en_US:
+      - value: Vayne
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 暗夜猎手
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_VayneE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Condemn
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 恶魔审判
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:69bfbbb534dffd53adb8c8beecad566dbdafb2050887b0436ee3e1dc1082e98f
+            value: Vayne draws a heavy crossbow from her back, and fires a huge
+              bolt at her target, dealing damage and knocking them back.  If
+              they collide with terrain, they are impaled, dealing bonus damage
+              and stunning them.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:31b98260b8784e7edf210baf3c4615cdcc1bd1a016b11c33dce523d88a3ede83
+            value:
+              薇恩从背后拿出重弩，朝目标发射巨箭，对目标造成伤害并将其击退。如果在击退过程中撞上了地形，则目标被巨箭刺穿，受到额外伤害和晕眩效果。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_VaynePassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Night Hunter
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 暗夜猎手
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:ad1dc593556c45a5868d402c61b5bd127acbadc71c82f7c7db782612ab733a5f
+            value: Vayne ruthlessly hunts evil-doers. She gains 30 Movement
+              Speed when moving toward nearby enemy champions.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:fb1d1aa326eb6f800eab2c3db1719b914a63fe51e98d642ddc47e0a9c8d48d13
+            value: 薇恩毫不留情地猎杀世间邪恶。向附近敌方英雄移动时获得30移动速度。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_VayneQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Tumble
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 闪避突袭
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:76ef4ff59313ba99f9f533abb765fe80b3049c6f10045c1c2506d19ee64e49bd
+            value: Vayne tumbles, maneuvering to carefully place her next shot.
+              Her next attack deals bonus damage.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:8c456822f9603b4a083b3cbf0e1b8efa429c93e69bf504d7a8858866bd582ccf
+            value: 薇恩翻滚到合适位置，为下次攻击做好准备。她的下次攻击造成额外伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_VayneR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Final Hour
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 终极时刻
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:4096e646a87bfb2d5332db678d42e9e4731e4fef800d2861d0dd931f8d41bf2c
+            value: Readying herself for an epic confrontation, Vayne gains
+              increased Attack Damage, invisibility during Tumble, and triple
+              the bonus Movement Speed from Night Hunter.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:8f6b5c0af089e357fa684f5bfbb41254e18b7f4265d83c657e77533bf5c935c9
+            value: 薇恩准备进行史诗般的对决，她的攻击力得到提高，并能在闪避突袭之后进入隐形状态，且暗夜猎手(被动)生效时加速效果提高至3倍。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_VayneW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Silver Bolts
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 圣银弩箭
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:a3b35fca306bbeabd70218948eb7d2f0b871f08db5163c16ed450da806ee832f
+            value: "Vayne tips her bolts with a rare metal, toxic to evil things.\
+              \  The third consecutive attack or ability against the same target deals
+              a percentage of the target's maximum Health as bonus true damage. (Max:
+              200 damage vs. Monsters)"
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:938ee5c2e843199dbed1d5713b38f17056ae6a3cac007928c54ddb759340ecb5
+            value:
+              薇恩用稀有金属制作弩箭，让邪恶敌人中毒。对单个目标进行第3次连续攻击或技能施放时，就会造成额外真实伤害，伤害值相当于一定百分比的目标最大生命值。(对野怪最多造成200伤害)
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

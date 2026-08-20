@@ -1,0 +1,262 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60041
+  alias: Jade_Gangplank
+  names:
+    en_US:
+      - value: Gangplank
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 海洋之灾
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_GangplankE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Raise Morale
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 鼓舞士气
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:f3f3c3975dd71cae0ad97d0ce279b708f6ec1c2f18734882adb186c65c69554e
+            value: Gangplank fires a shot into the air, increasing nearby allied
+              champions' attack damage and movement speed.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:95a8892f1ea79b2f64a99e8fab81ce2c4b7326bd949c0a1ca2e545c1c1f21650
+            value: 普朗克朝空中鸣枪，为附近友方英雄提升攻击力和移动速度。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_GangplankPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Grog-Soaked Blade
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 浸酒之刃
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:1ea75a7b730ed2e0369ddebfecb034c225e5a1022aa05a9b75a72071c4a11d70
+            value: Gangplank's attacks apply a poison that deals magic damage
+              per second, increasing with level.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:0e2983b0e556d31c860bddf75fa2aa2ccd2b033b5d5d0b4bfb4f1c85bdd6ff5d
+            value: 普朗克的攻击会施加中毒效果，每秒造成魔法伤害，伤害会随等级提升。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_GangplankQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Parrrley
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 枪火谈判
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:d527f55be01eb423bb5320774d4236f74978ec3f5907658b0b6c22e2cbed4b8e
+            value: Gangplank takes aim and shoots an enemy unit with his pistol.
+              If Parrrley deals a killing blow, he gains extra gold and half the
+              mana cost is refunded.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:8a171c1313e0796caa9fcc0827468706300d8da08ec36e56cb0046f5d07f4dcf
+            value: 普朗克用手枪瞄准并射击一个敌方单位。如果枪火谈判击杀了目标，则普朗克获得额外金币，并返还一半法力消耗。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_GangplankR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Cannon Barrage
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 加农炮幕
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:0389748d9187106ec5d00f1a0b362e98584e575377590e99b9bc5b3982e313e2
+            value: Gangplank signals his ship to fire upon an area for 7
+              seconds, slowing enemies and dealing damage in random locations
+              within the area.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:389748381c99ff324b57fd217833a565affd334b57759d64cca9defe7e657daf
+            value: 普朗克命令战舰对目标区域进行持续7秒的炮击，对敌人造成减速，并在区域内随机位置造成伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_GangplankW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Remove Scurvy
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 坏血病疗法
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:4e8914cf99e416fdf6c618c3e513f441d9c2e745bc3d0f7d9c98a25467c5e041
+            value: Consumes a large quantity of citrus fruit which clears any
+              crowd control effects on him and heals him.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:ebded3eef44f04335b33aadcaa9814f47512b04b4d83eb22e692e8c91128de13
+            value: 普朗克吃掉大量柑橘类水果，解除自身所有控制效果并回复生命值。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

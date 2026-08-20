@@ -1,0 +1,266 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60096
+  alias: Jade_KogMaw
+  names:
+    en_US:
+      - value: Kog'Maw
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 深渊巨口
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_KogMawE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Void Ooze
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 虚空淤泥
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:66d020e87537436078bc9ec5cf5128da935c5ee4912a147f632408fc3e449e07
+            value: Kog'Maw launches a peculiar ooze which damages all enemies it
+              passes through and leaves a trail which slows enemies who stand on
+              it.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:c84f47d3da50a2d50bd63a7b899d09b155d275fea87355ba2e355dc9612359ce
+            value: 克格莫抛射出一团特殊的分泌物，对经过或停留在分泌物上的敌人造成伤害和减速效果。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_KogMawPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Icathian Surprise
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 来自艾卡西亚的惊喜
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:7cbbe41486c900aee73ed86c31f78145045e564d53926f2b504beba149ad9bf1
+            value: Upon dying, Kog'Maw starts a chain reaction in his body which
+              causes him to detonate after 4 seconds; dealing magic damage to
+              surrounding enemies.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:626efd827187a3fb0a2663c29aafb186cf908a2b986f2d65f3c812023e1bb76e
+            value: 阵亡后，克格莫的身体将启动连锁反应，并于4秒之后爆炸，对周围的敌人们造成魔法伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_KogMawQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Caustic Spittle
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 腐蚀唾液
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:fea165c07e7ba108fe8240cae0a0e4dc1c85889440c734478dd785835890672b
+            value: "Passive: Increases Kog'Maw's Attack Speed. <br><br>Active: Kog'Maw
+              launches a corrosive projectile which deals magic damage and corrodes
+              the target's Armor and Magic Resist for 4 seconds."
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:4f94218fbd37267f21a2e164dd63dde3f0d42835fab83c0a062da40786bb3bee
+            value:
+              被动：克格莫的攻击速度提升。<br><br>主动：克格莫发射一团腐蚀性物质，对目标造成魔法伤害，并腐蚀目标的护甲和魔法抗性，持续4秒。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_KogMawR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Living Artillery
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 活体大炮
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:6b7ecad731ee14dca9388566550c924311e7cf662ed291552dbda23f033b931e
+            value: Kog'Maw fires a living artillery shell at a great distance
+              dealing damage and revealing targets.  Additionally, multiple
+              Living Artilleries in a short period of time cause them to cost
+              additional mana.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:e9650cbbf2a893741a5f0f738a13caeb699f2b646ab634a1461595ce379a1af1
+            value: 克格莫向远处发射一枚活体炮弹，对命中的目标造成伤害并将其显形。此外，在一段时间内连续施放活体大炮技能会消耗更多的法力值。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_KogMawW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Bio-Arcane Barrage
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 生化弹幕
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:95a6aa62ae9157b51349585d068156234bdc3426f2a7b9c60b7c22d6f246b700
+            value: Kog'Maw's attacks gain range and deal a percent of the
+              target's maximum health as magic damage.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:748ecdaa1e8b63e2ae0f58c75ecdf507188b6a2782450dcb2c37e28ae7130c7b
+            value: 克格莫的攻击距离得到提升，并且能够对目标造成基于目标最大生命值的额外魔法伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

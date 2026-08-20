@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Kennen
+  champion_id: 60085
+  skin_number: 4
+  skin_token: Skin04
+  id: 60085004
+  alias: Jade_KennenSkin04
+  names:
+    en_US:
+      - value: Kennen M.D.
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 医学博士 凯南
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 115
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_KennenSkin04
+  - Jade_KennenSkin4

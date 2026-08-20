@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Taric
+  champion_id: 60044
+  skin_number: 3
+  skin_token: Skin03
+  id: 60044003
+  alias: Jade_TaricSkin03
+  names:
+    en_US:
+      - value: Bloodstone Taric
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 血石诅咒 塔里克
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 126
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_TaricSkin03
+  - Jade_TaricSkin3

@@ -1119,7 +1119,7 @@ class NormalizedOutputCliTests(unittest.TestCase):
                     "--overrides-root",
                     str(repo_root / "overrides"),
                     "--sources-manifest",
-                    str(repo_root / "dist" / "sources" / "manifest.json"),
+                    str(repo_root / "data" / "frozen-sources-manifest.v1.json"),
                     "--frozen-profile",
                     str(repo_root / "data" / "frozen-profile.v1.json"),
                 ],

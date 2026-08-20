@@ -1,0 +1,263 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60090
+  alias: Jade_Malzahar
+  names:
+    en_US:
+      - value: Malzahar
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 虚空先知
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_MalzaharE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Malefic Visions
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 煞星幻象
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:ef7c14ee4d2e4f4f1170b0048f94fbeb2fe789ad5bd79eb6fa4ab3e7e5756fba
+            value: Malzahar infects his target's mind, dealing damage over time.
+              If the target dies during this time, the visions pass to a nearby
+              enemy and Malzahar gains mana.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:5f455f90af8284e91f8f0a85de7209eb8387628a611402156875af30f0032b85
+            value: 玛尔扎哈侵蚀目标的心智，从而造成持续伤害。如果目标在此期间阵亡，则幻象转移到附近的敌人身上，且玛尔扎哈恢复法力值。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_MalzaharPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Summon Voidling
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 召唤虚灵
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:70886c380baaff34d520a74f4ae84606f6ffc10a72478063829159aa79715fd5
+            value: Every few spells, Malzahar summons an uncontrollable Voidling
+              to engage his enemies. Voidlings grow over time, gaining armor,
+              damage, and attack speed.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:b18029983a0fedd918e1cd7b4945f8fb327f5f5684fd47b3127a4ef5f91dc23a
+            value: 每隔几次施法，玛尔扎哈会召唤一只无法控制的虚灵主动攻击敌人。虚灵会随时间成长，获得护甲、伤害和攻击速度。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_MalzaharQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Call of the Void
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 虚空召唤
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:02a89cd03677b8dafef97622ad1f3d0a0bd85046a5a4a19332f7f0bbf0a6c478
+            value: Malzahar opens up two portals to the Void. After a short
+              delay, they fire projectiles that deal Magic Damage and silence
+              enemy champions.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:4847de9e161b00c865d825145595020cdc0b45736f767f35d47c599bbf3eb18b
+            value: 玛尔扎哈开启两扇通向虚空的传送门。短暂延迟后，两扇门之间出现虚空能量对流，造成魔法伤害并沉默敌方英雄。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_MalzaharR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Nether Grasp
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 冥府之握
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:a6aa0c69be38be1f1bb2019ab34096caeee36d2084887760703d6f09e14aa30a
+            value: Malzahar channels the essence of the Void to suppress target
+              champion while dealing magic damage over time.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:e50be22eafba25a3fbf555172b79b37bdfbe07323dbe460e7ff33735818dac2f
+            value: 玛尔扎哈引导虚空之力，以压制目标英雄并持续造成魔法伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_MalzaharW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Null Zone
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 虚无领域
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:edbd8e4b3c7a53f47f26a3a6a5e497363308647b145a758f3362340115a8e3be
+            value: Malzahar creates a zone of negative energy that damages
+              nearby enemies each second.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:ec9e4fe44ca85f78445bc1b5fa3ccf840c6e0227d7243fb88342cd6a6593102c
+            value: 玛尔扎哈制造一片负能量区域，每秒对附近的敌人造成伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

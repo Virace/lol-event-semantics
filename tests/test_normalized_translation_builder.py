@@ -290,6 +290,8 @@ class SelfActionVoiceEventTests(unittest.TestCase):
         """qualifier 特例保留结构化角色；商店相反动作使用不同 action key。"""
 
         cases = [
+            ("Play_sfx_JaxSkin42_DanceIn3D_buffactivate", "dance"),
+            ("Play_vo_AurelionSolSkin31_Ping2DEnemyMissing", "ping"),
             ("Play_vo_AatroxSkin01_Move2DLong", "move"),
             ("Play_vo_Ornn_Recall3DCancel", "recall"),
             ("Play_vo_Azir_UseItem2DWard", "use_item"),
@@ -318,10 +320,22 @@ class SelfActionVoiceEventTests(unittest.TestCase):
         """已核验 qualifier 进动作中文；表外值可见且低置信，不能静默泛化。"""
 
         cases = [
-            ("Play_vo_AatroxSkin33_Ping2DOnMyWay", "正在路上", "high"),
-            ("Play_vo_AsheSkin08_BuyItem2DInfinityEdge", "待审修饰（InfinityEdge）", "low"),
+            ("Play_sfx_JaxSkin42_DanceIn3D_buffactivate", "进入跳舞", "high", "in"),
+            (
+                "Play_vo_AurelionSolSkin31_Ping2DEnemyMissing",
+                "敌人消失",
+                "high",
+                "enemymissing",
+            ),
+            ("Play_vo_AatroxSkin33_Ping2DOnMyWay", "正在路上", "high", "onmyway"),
+            (
+                "Play_vo_AsheSkin08_BuyItem2DInfinityEdge",
+                "待审修饰（InfinityEdge）",
+                "low",
+                "unreviewed",
+            ),
         ]
-        for raw, expected_zh, confidence in cases:
+        for raw, expected_zh, confidence, expected_key in cases:
             with self.subTest(raw=raw):
                 translation = build_translation(enriched_record(raw), TranslationBuildContext())
                 self.assertIsNotNone(translation)
@@ -333,7 +347,7 @@ class SelfActionVoiceEventTests(unittest.TestCase):
                 self.assertIn(expected_zh.removesuffix("购买装备语音"), qualifier["labels"]["zh_CN"])
                 self.assertEqual(qualifier["confidence"], confidence)
                 self.assertEqual(qualifier["fallback"], confidence != "high")
-                self.assertEqual(qualifier["key"], "unreviewed" if confidence == "low" else "onmyway")
+                self.assertEqual(qualifier["key"], expected_key)
                 display = build_compat_display(translation, raw_event_name=raw)
                 self.assertIn(expected_zh, display["zh_cn_detail"])
                 self.assertIn(expected_zh, display["zh_cn_short"])

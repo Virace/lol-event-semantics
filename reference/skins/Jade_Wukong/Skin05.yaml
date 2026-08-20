@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Wukong
+  champion_id: 60062
+  skin_number: 5
+  skin_token: Skin05
+  id: 60062005
+  alias: Jade_WukongSkin05
+  names:
+    en_US:
+      - value: Radiant Wukong
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 美猴王 孙悟空
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 55
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_WukongSkin05
+  - Jade_WukongSkin5

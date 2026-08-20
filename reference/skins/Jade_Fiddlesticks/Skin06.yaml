@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Fiddlesticks
+  champion_id: 60009
+  skin_number: 6
+  skin_token: Skin06
+  id: 60009006
+  alias: Jade_FiddlesticksSkin06
+  names:
+    en_US:
+      - value: Surprise Party Fiddlesticks
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 惊悚派对 费德提克
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 169
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_FiddlesticksSkin06
+  - Jade_FiddlesticksSkin6

@@ -1,0 +1,260 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60019
+  alias: Jade_Warwick
+  names:
+    en_US:
+      - value: Warwick
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 嗜血猎手
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_WarwickE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Blood Scent
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 血迹追踪
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:d6b59b97e248ceeaaeaac7cd709a9d42778227bd6f2bfc42d1ff0e897c0c549a
+            value: Warwick passively senses weakened enemy champions around him.
+              The scent of blood sends him into a fury, causing him to move at
+              incredible speeds.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:6ebb46725dc90a01fb5e4edd9ededb68c9d7f9aa32da3ba87ae74a37254a4142
+            value: 沃里克能够被动感知周围虚弱的敌方英雄。鲜血的气味会使他陷入狂怒，获得惊人的移动速度。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_WarwickPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Eternal Thirst
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 血之饥渴
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:5494bfde39521accd71ce9da198940041380072813f8c59d878a6d8f28e0e1fa
+            value: Each of Warwick's attacks will heal him. Each successive
+              attack against the same target will steal more and more Health.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:7aeb236d287d99c0eb49daf4beb0089fcab6307e0ec9299b0bfd2a09c7256182
+            value: 沃里克的每次攻击都会为他恢复生命值。每次对同一目标连续发起攻击都会提高生命偷取的数值。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_WarwickQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Hungering Strike
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 嗜血攻击
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:a3cbbc718360a10c8a7208c181c5b7cfbfdc2af8fa9cb5b7f97998d216f5a249
+            value: Takes a bite out of an enemy unit and heals Warwick.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:503a606cdef9ded8f0124035e7e22445d0b18d517d3eb6786899c8d4ee489864
+            value: 沃里克撕咬一名敌方单位并恢复生命值。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_WarwickR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Infinite Duress
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 无尽束缚
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:2bfc9c97fddea53788405bbfa8e76228d6597ebd46ed1f409da67b37f9a35226
+            value: Warwick lunges at an enemy champion, suppressing his target
+              and dealing magic damage for a few seconds.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:579ada663f489a4237a18b432efc46106d600139a88d652834179a53c04bdf3d
+            value: 沃里克扑向一名敌方英雄，在数秒内将其压制并造成魔法伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_WarwickW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Hunter's Call
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 猎手怒吼
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:7338a4e4558a424edd7e27bf06b0f4c6916265b409daeb4c21eb95dbf2625856
+            value: Warwick lets out a howl, increasing all friendly champions'
+              Attack Speed for a short time.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:5a6b5b5d7995a2b5c321649db4a2c62ff97594687b08dd7c82534e86ec1b9241
+            value: 沃里克发出一阵咆哮，使所有友方英雄的攻击速度在短时间内提高。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

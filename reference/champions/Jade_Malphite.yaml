@@ -1,0 +1,265 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60054
+  alias: Jade_Malphite
+  names:
+    en_US:
+      - value: Malphite
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 熔岩巨兽
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_MalphiteE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Ground Slam
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 大地震颤
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:af82ac4ffe1991e4e7908b7fd5de54546fc739dfd490d0f913e8a50397c31768
+            value: Malphite slams the ground sending out a shockwave that deals
+              magic damage based on his Armor as damage and reduces the Attack
+              speed of enemies for a short duration.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:14feee666046d97ca0554a4de44f9b216470e9384c65c75b8087fc4765e1c48e
+            value: 墨菲特锤击地面，放射出冲击波对目标造成基础伤害，并根据墨菲特的护甲值附加额外伤害，同时暂时减低目标攻击速度。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_MalphitePassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Granite Shield
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 花岗岩护盾
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:9445e3e917699647b11b0787203bb46fd4f6037a1bce513c4f6cc96de7fb3f22
+            value: Malphite is shielded by a layer of rock which absorbs damage
+              up to 10% of his maximum Health. If Malphite has not been hit for
+              10 seconds, this effect recharges.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:6c7eddff36d440fdd20699424b36005e0aa87949368276001c31e2a485f8f825
+            value: 墨菲特被岩石护盾保护，最多吸收10%最大生命值的伤害。若10秒内未受到攻击，这个护盾将重置。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_MalphiteQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Seismic Shard
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 地震碎片
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:953d440e4dd848410a2f49d987a49b283b1b4c38ecff59fa8283e0adf9f05ccd
+            value: Using his primal elemental magic, Malphite sends a shard of
+              the earth through the ground at his foe, dealing damage upon
+              impact and stealing movement speed for 4 seconds.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:1ee0180ebac8c9d7159b2e90bce586cbf1076a79eb11a60b83370670989bed99
+            value: 墨菲特使用原初元素魔法，发出一块大地碎片穿过敌人处的地面，在碰撞时造成伤害并且偷取移动速度4秒。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_MalphiteR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Unstoppable Force
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 势不可挡
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:40e8be290645470b59901b5eae2e6c1da1c2a710c1ac5476dd56dae6487d8d4a
+            value: Malphite ferociously charges to a location, damaging enemies
+              and knocking them into the air.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:1108d21659665406a11bda4e8a2b3a22643abf71647a503d7c39b9c6d3dffb29
+            value: 墨菲特冲击目标区域，对所有敌人造成伤害和击飞。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_MalphiteW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Brutal Strikes
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 野蛮打击
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:287ce5c7dfb4253890e12a5e804c30bc490f986846b7ded33d084d024727ff45
+            value: Malphite starts to hit with such force that his attacks deal
+              damage to all units in front of him. Activating Brutal Strikes
+              greatly increases his Armor and Attack Damage for a short amount
+              of time.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:2070dd01dfbd3d9b4734404ec37d3f31194b255e3843ded0b9b44fd81ca45026
+            value: 墨菲特开始以巨大力量进行挥击，攻击对前方的所有敌人造成伤害。激活【野蛮打击】会使墨菲特的护甲和攻击力会在短时间内大幅提升。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

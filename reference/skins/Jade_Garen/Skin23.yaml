@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Garen
+  champion_id: 60086
+  skin_number: 23
+  skin_token: Skin23
+  id: 60086023
+  alias: Jade_GarenSkin23
+  names:
+    en_US:
+      - value: Prestige Mecha Kingdoms Garen
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 至臻 机神玄武 盖伦
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 127
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_GarenSkin23

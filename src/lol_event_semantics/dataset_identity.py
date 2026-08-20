@@ -206,7 +206,7 @@ def validate_frozen_inputs(
     sources_manifest_path: Path,
     reference_manifest_path: Path,
 ) -> dict[str, object]:
-    """验证冻结 16.14 输入身份，并返回被显式接受的例外。"""
+    """验证冻结输入身份，并返回被显式接受的例外。"""
 
     base_version = str(profile["base_game_version"])
     expected_series = version_series(base_version)
@@ -415,6 +415,8 @@ def source_manifest_identity(manifest: Mapping[str, Any]) -> dict[str, object]:
 
     lobby = manifest.get("lobby_snapshot")
     lobby = lobby if isinstance(lobby, dict) else {}
+    game_manifest = manifest.get("game_manifest")
+    game_manifest = game_manifest if isinstance(game_manifest, dict) else {}
     semantic = {
         "mode": manifest.get("mode"),
         "region": manifest.get("region"),
@@ -426,6 +428,11 @@ def source_manifest_identity(manifest: Mapping[str, Any]) -> dict[str, object]:
         },
         "sources": manifest.get("sources"),
     }
+    if game_manifest:
+        semantic["game_manifest"] = {
+            "id": game_manifest.get("id"),
+            "version": game_manifest.get("version"),
+        }
     return semantic_document_identity(semantic)
 
 

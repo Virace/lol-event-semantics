@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Fiddlesticks
+  champion_id: 60009
+  skin_number: 46
+  skin_token: Skin46
+  id: 60009046
+  alias: Jade_FiddlesticksSkin46
+  names:
+    en_US:
+      - value: Flora Fatalis Fiddlesticks
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 绝命花妖 费德提克
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 221
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_FiddlesticksSkin46

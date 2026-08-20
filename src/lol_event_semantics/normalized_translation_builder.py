@@ -129,6 +129,8 @@ SELF_ACTION_VOICE_FAMILIES = frozenset(
 )
 # 批次3 qualifier 特例（SPEC 逐字措辞）：(family, qualifier 小写) → (zh, en) 核心词整体替换。
 VOICE_QUALIFIER_PHRASES = {
+    ("dance", "in"): ("进入跳舞", "dance enter"),
+    ("ping", "enemymissing"): ("敌人消失", "enemy missing"),
     ("recall", "cancel"): ("取消回城", "cancel recall"),
     ("use_item", "ward"): ("使用守卫", "use ward"),
     ("use_item", "group2dward"): ("使用守卫", "use ward"),

@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Vayne
+  champion_id: 60067
+  skin_number: 44
+  skin_token: Skin44
+  id: 60067044
+  alias: Jade_VayneSkin44
+  names:
+    en_US:
+      - value: Dawnbringer Vayne
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 黎明使者 薇恩
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 193
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_VayneSkin44

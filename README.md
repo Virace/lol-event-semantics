@@ -71,7 +71,7 @@ uv run python scripts/search_stringtable.py 厄塔汗 "first blood"
 
 版本策略：每轮只跟 live 最新版本，不提供指定历史版本下载、重建或回放；
 GAME 与 LCU manifest 成对校验（major.minor 一致），整轮下载出自同一份
-manifest，数据源之间天然同版本。`16.14` 是本轮 frozen acceptance profile，
+manifest，数据源之间天然同版本。`16.16` 是本轮 frozen acceptance profile，
 不是长期固定的最新版本默认值。
 
 ## 目录契约
@@ -136,8 +136,8 @@ approved run 的 normalized 记录内 `translation` 对象是结构化渲染 con
 `manifest.json` 的 V2 内容身份不含生成时间、本机绝对路径或运行耗时。它记录
 冻结 profile、Git commit/dirty 状态、raw/reference/rules/overrides/契约资产与
 生成器源码的规范化摘要，并列出 manifest 之外每个 payload 文件的 SHA-256；
-`content_digest` 和 `dataset_id` 由这些稳定字段确定。当前 `16.14` profile 对
-缺失的 `lcu_version` 只接受一条例外：lobby snapshot 同为 16.14 且保留非空
+`content_digest` 和 `dataset_id` 由这些稳定字段确定。当前 `16.16` profile 对
+缺失的 `lcu_version` 只接受一条例外：lobby snapshot 同为 16.16 且保留非空
 LCU manifest id。dirty 工作树可以生成候选，但后续 promotion 不得批准它。
 
 `run_full_refresh.py` 的每个步骤都绑定同一个 staging run，并把候选绑定的
@@ -181,10 +181,10 @@ uv run python scripts/promote_dataset_run.py --run-id <new-run-id> `
 
 V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX 保留，目标支持
 状态为 Stable、Experimental 或 Unsupported。语义复核后的 91 个精确批准 canonical pattern
-在 candidate 中晋级为 Stable，共覆盖 4,387 条记录；同 family 的新 ID、全部 SFX 和暂缓
+在 candidate 中晋级为 Stable，共覆盖 4,389 条记录；同 family 的新 ID、全部 SFX 和暂缓
 范围仍保持 Experimental。Stable 使用独立 `quality-summary.json` 绝对门禁，不读取也不受
 `quality-baseline.json` 放宽；accepted corpus 的 91 条代表样本逐条精确复算 `zh_CN`
-default/main。门禁还独立冻结 decision ID、91 个 pattern ID 集合摘要和 4,387 条 Stable
+default/main。门禁还独立冻结 decision ID、91 个 pattern ID 集合摘要和 4,389 条 Stable
 记录总数，不能通过同时缩减 policy 与 corpus 绕过。corpus 与
 `rules/review-decisions.v1.json` 的状态必须一致；首轮 92 项源审阅已全部接受，后续
 clean candidate 进入 dataset approval，仍需候选绑定的最终批准才能晋级。

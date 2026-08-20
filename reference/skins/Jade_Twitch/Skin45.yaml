@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Twitch
+  champion_id: 60029
+  skin_number: 45
+  skin_token: Skin45
+  id: 60029045
+  alias: Jade_TwitchSkin45
+  names:
+    en_US:
+      - value: High Noon Twitch
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 西部魔影 送葬人 图奇
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 39
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_TwitchSkin45
