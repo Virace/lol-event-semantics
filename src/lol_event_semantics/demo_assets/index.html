@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#f7f5f0">
+    <meta name="description" content="按英雄、皮肤和模式浏览英雄联盟音频事件原名与中文语义。">
+    <title>峡谷事件语义图鉴 · Rift Event Atlas</title>
+    <link rel="preconnect" href="https://ddragon.leagueoflegends.com" crossorigin>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#mainContent">跳到事件列表</a>
+    <div class="app-shell" id="appShell" aria-busy="true">
+      <aside class="sidebar" aria-label="英雄导航">
+        <header class="brand">
+          <p class="eyebrow">LOCAL DATA EXPLORER</p>
+          <h1>峡谷事件语义图鉴</h1>
+          <p class="brand-en">Rift Event Atlas</p>
+        </header>
+
+        <label class="field-label" for="championSearch">查找英雄</label>
+        <div class="search-field">
+          <span aria-hidden="true">⌕</span>
+          <input id="championSearch" type="search" autocomplete="off" placeholder="名称、称号或别名">
+        </div>
+
+        <dl class="dataset-stats" aria-label="数据集摘要">
+          <div><dt>版本</dt><dd id="datasetVersion">—</dd></div>
+          <div><dt>英雄</dt><dd id="championCount">—</dd></div>
+          <div><dt>英雄事件</dt><dd id="eventCount">—</dd></div>
+          <div><dt>未归属</dt><dd id="unassignedCount">—</dd></div>
+        </dl>
+
+        <div class="sidebar-heading">
+          <h2>英雄</h2>
+          <span id="championResultCount">—</span>
+        </div>
+        <nav class="champion-list" id="championList" aria-label="选择英雄"></nav>
+
+        <footer class="sidebar-footer">
+          <span id="datasetId" translate="no">等待数据</span>
+          <span>本地静态浏览器</span>
+        </footer>
+      </aside>
+
+      <main class="main-content" id="mainContent" tabindex="-1">
+        <div class="loading-banner" id="loadingBanner" role="status">正在读取演示数据…</div>
+        <section class="champion-header" aria-labelledby="championName">
+          <img class="champion-avatar" id="championPortrait" alt="" width="72" height="72">
+          <div class="champion-identity">
+            <p class="eyebrow" id="championAlias" translate="no">—</p>
+            <h2 id="championName">选择英雄</h2>
+            <p id="championTitle">从左侧列表开始浏览</p>
+          </div>
+          <dl class="champion-stats" aria-label="当前英雄摘要">
+            <div><dt>事件</dt><dd id="championEventCount">—</dd></div>
+            <div><dt>Stable</dt><dd id="championStableCount">—</dd></div>
+            <div><dt>皮肤</dt><dd id="championSkinCount">—</dd></div>
+            <div><dt>中文覆盖</dt><dd id="championRenderedRatio">—</dd></div>
+          </dl>
+        </section>
+
+        <section class="mode-section" aria-labelledby="modeHeading">
+          <div class="section-heading compact-heading">
+            <div>
+              <p class="eyebrow">MODE NAMESPACES</p>
+              <h2 id="modeHeading">模式命名空间</h2>
+            </div>
+            <p>前缀后接实体；点击卡片可筛选当前英雄事件。</p>
+          </div>
+          <div class="mode-cards" id="modeCards"></div>
+        </section>
+
+        <section class="media-panel" aria-labelledby="skinHeading">
+          <figure class="splash-frame">
+            <img id="splashImage" alt="" decoding="async">
+            <figcaption class="splash-caption">
+              <p class="eyebrow" id="skinToken" translate="no">BASE</p>
+              <h2 id="skinHeading">英雄原画</h2>
+              <p id="skinEnglishName">—</p>
+            </figcaption>
+            <button class="image-nav image-nav-prev" id="previousSkin" type="button" aria-label="上一款皮肤">←</button>
+            <button class="image-nav image-nav-next" id="nextSkin" type="button" aria-label="下一款皮肤">→</button>
+            <span class="image-counter" id="skinCounter">— / —</span>
+          </figure>
+          <div class="skin-toolbar">
+            <label for="skinPreviewSelect">预览皮肤</label>
+            <select id="skinPreviewSelect"></select>
+            <p id="imageFallbackNote">若某个炫彩没有独立原画，将回退到基础原画。</p>
+          </div>
+        </section>
+
+        <section class="events-section" aria-labelledby="eventsHeading">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">RAW EVENT → ZH_CN</p>
+              <h2 id="eventsHeading">事件语义</h2>
+            </div>
+            <p id="resultsSummary">等待选择英雄</p>
+          </div>
+
+          <form class="filters" id="eventFilters" role="search">
+            <label class="wide-filter" for="eventSearch">
+              <span>搜索事件</span>
+              <input id="eventSearch" type="search" autocomplete="off" placeholder="原始事件名或中文标签">
+            </label>
+            <label for="assetFilter">
+              <span>事件类型</span>
+              <select id="assetFilter"><option value="all">全部</option></select>
+            </label>
+            <label for="supportFilter">
+              <span>支持度</span>
+              <select id="supportFilter"><option value="all">全部</option></select>
+            </label>
+            <label for="modeFilter">
+              <span>语义模式</span>
+              <select id="modeFilter"><option value="all">全部</option></select>
+            </label>
+            <label for="skinFilter">
+              <span>皮肤事件</span>
+              <select id="skinFilter"><option value="all">全部皮肤</option></select>
+            </label>
+            <button class="secondary-button" id="resetFilters" type="button">重置筛选</button>
+          </form>
+
+          <div class="table-frame" tabindex="0" aria-label="事件结果，可横向滚动">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">原始事件名 / 中文标签</th>
+                  <th scope="col">类型</th>
+                  <th scope="col">支持度</th>
+                  <th scope="col">模式</th>
+                  <th scope="col">皮肤</th>
+                </tr>
+              </thead>
+              <tbody id="eventTableBody"></tbody>
+            </table>
+            <div class="empty-state" id="emptyState" hidden>
+              <strong>没有匹配事件</strong>
+              <span>缩短关键词，或重置模式、皮肤与支持度筛选。</span>
+            </div>
+          </div>
+
+          <nav class="pagination" aria-label="事件分页">
+            <button class="secondary-button" id="previousPage" type="button">上一页</button>
+            <span id="pageStatus">第 — 页</span>
+            <button class="secondary-button" id="nextPage" type="button">下一页</button>
+            <label for="pageSize">每页</label>
+            <select id="pageSize">
+              <option value="50">50</option>
+              <option value="100" selected>100</option>
+              <option value="200">200</option>
+            </select>
+          </nav>
+        </section>
+
+        <footer class="legal-footer">
+          <p>
+            Rift Event Atlas isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or
+            anyone officially involved in producing or managing Riot Games properties. Riot Games, and all associated
+            properties are trademarks or registered trademarks of Riot Games, Inc.
+          </p>
+          <p>
+            英雄与皮肤图片来自
+            <a href="https://developer.riotgames.com/docs/lol#data-dragon" target="_blank" rel="noreferrer">Riot Data Dragon</a>；
+            本站只展示仓库生成的本地数据投影；页面本身不授予发布或批准状态。
+          </p>
+        </footer>
+      </main>
+    </div>
+    <div class="sr-status" id="liveRegion" aria-live="polite" aria-atomic="true"></div>
+  </body>
+</html>

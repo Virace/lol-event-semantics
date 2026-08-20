@@ -55,6 +55,18 @@ uv run lookup-normalized-event --event Play_vo_AatroxSkin01_AatroxE_cast3D --mod
 uv run python scripts/search_stringtable.py 厄塔汗 "first blood"
 ```
 
+### 本地英雄事件演示站
+
+演示站按英雄汇总皮肤、模式前缀、原始事件名与中文语义。默认读取 approved-local；检查 16.16 completed candidate 时应显式传入其 normalized 目录：
+
+```powershell
+uv run python scripts/build_demo_site.py `
+  --normalized-root dist\runs\completed\<run-id>\normalized
+uv run python -m http.server 8765 --directory dist\demo-site
+```
+
+访问 `http://127.0.0.1:8765/`。`Jade_`、`Ruby_`、`Strawberry_` 分别展示为经典模式、末日人机和 PVE 模式；模式实体仍归入基础英雄。详细规则、候选状态边界和图片来源见 [`docs/DEMO_SITE.md`](docs/DEMO_SITE.md)。
+
 ## 数据源体系
 
 词条择词按来源权威度分层，游戏内用词优先（我们翻译的是游戏内事件名，
