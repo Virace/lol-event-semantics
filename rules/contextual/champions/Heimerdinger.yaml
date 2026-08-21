@@ -1,14 +1,6 @@
 scope: champion
 owner: Heimerdinger
 aliases:
-  HeimerdingerRQEngineAudio:
-    kind: champion_spell_component
-    spell: r
-    component: empowered_q_turret
-    label: R强化Q炮台
-    confidence: high
-    source: manual_contextual_alias
-    note: HeimerdingerRQEngineAudio 是 R 强化 Q 炮台的精确内部 cue，仅匹配该完整 token。
   HeimerTurretShutdown:
     kind: champion_spell_component
     spell: q
@@ -17,6 +9,22 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: HeimerTurretShutdown 在 Heimerdinger 炮台事件中对应 Q 炮台关闭状态。
+  HeimerdingerEngineAudio:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: turret_engine_audio
+    label: 炮台引擎运转
+    confidence: high
+    source: manual_contextual_alias
+    note: 普通 EngineAudio 是炮台引擎/对话音频，不等同于精确的 RQEngineAudio 强化技能 cue。
+  HeimerdingerRQEngineAudio:
+    kind: champion_spell_component
+    spell: r
+    component: empowered_q_turret
+    label: R强化Q炮台
+    confidence: high
+    source: manual_contextual_alias
+    note: HeimerdingerRQEngineAudio 是 R 强化 Q 炮台的精确内部 cue，仅匹配该完整 token。
   HeimerdingerTurretBigEnergyBlast:
     kind: champion_spell_component
     spell: q

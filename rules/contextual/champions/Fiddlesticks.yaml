@@ -1,0 +1,51 @@
+scope: champion
+owner: Fiddlesticks
+aliases:
+  Qmissilefear:
+    kind: champion_spell_component
+    spell: q
+    component: terrify_fear_missile
+    label: 恐惧飞弹
+    confidence: high
+    source: manual_contextual_alias
+    note: Qmissilefear 跨基础与多套皮肤稳定出现 OnMissileLaunch/OnHit，表示 Q 触发恐惧的飞弹。
+  Qmissilenofear:
+    kind: champion_spell_component
+    spell: q
+    component: terrify_non_fear_missile
+    label: 未触发恐惧的飞弹
+    confidence: high
+    source: manual_contextual_alias
+    note: Qmissilenofear 与 Qmissilefear 成对，表示 Q 未再次触发恐惧时的飞弹表现。
+  Qpassiveterrify:
+    kind: champion_spell_component
+    spell: q
+    component: terrify_passive
+    label: 恐惧被动效果
+    confidence: high
+    source: manual_contextual_alias
+    note: Qpassiveterrify 的 passive 是 Q 技能内部被动效果，不是英雄 P 槽位。
+  ScarecrowEffigy:
+    kind: champion_spell_component
+    spell: p
+    component: scarecrow_effigy
+    label: 稻草人假身
+    confidence: high
+    source: manual_contextual_alias
+    note: ScarecrowEffigy 跨皮肤 SFX 对应费德提克被动饰品替换出的稻草人假身。
+  Wcosmeticmissilebig:
+    kind: champion_spell_component
+    spell: w
+    component: bountiful_harvest_large_missile
+    label: 五骨丰登大型吸取飞弹
+    confidence: high
+    source: manual_contextual_alias
+    note: Wcosmeticmissilebig 是 W 吸取表现的大型飞弹层；cosmetic 工程词不进入中文展示。
+  Wdrain:
+    kind: champion_spell_component
+    spell: w
+    component: bountiful_harvest_drain
+    label: 五骨丰登吸取
+    confidence: high
+    source: manual_contextual_alias
+    note: Wdrain 跨皮肤稳定以增益启停出现，对应 W 五骨丰登的持续吸取。

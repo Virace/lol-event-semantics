@@ -10,6 +10,33 @@ from .display_labels import DisplayLabels
 
 TRANSLATION_SCHEMA_VERSION = 1
 FRAME_VERSION = 1
+PLAYBACK_CONTROL_KEYS = frozenset({"stop", "mute", "unmute"})
+REDUNDANT_PHASE_KEYS_WITH_PLAYBACK_CONTROL = frozenset(
+    {
+        "audio_start",
+        "audio_end",
+        "cast",
+        "effect_activate",
+        "effect_deactivate",
+        "start",
+        "end",
+        "state_activate",
+        "state_deactivate",
+    }
+)
+
+
+def is_phase_suppressed_by_playback(arguments: Mapping[object, object]) -> bool:
+    """判断 phase 是否应仅在展示层被 playback 控制语义省略。"""
+
+    playback = arguments.get("playback")
+    phase = arguments.get("phase")
+    return (
+        isinstance(playback, dict)
+        and playback.get("key") in PLAYBACK_CONTROL_KEYS
+        and isinstance(phase, dict)
+        and phase.get("key") in REDUNDANT_PHASE_KEYS_WITH_PLAYBACK_CONTROL
+    )
 
 
 @dataclass(frozen=True, slots=True)
@@ -42,8 +69,17 @@ FRAME_REGISTRY: dict[str, FrameSpec] = {
         required_roles=("phase",),
         templates={
             "zh_CN": {
-                "default": ("champion", "skin", "ability_slot", "ability_component", "rank", "phase"),
-                "main": ("ability_slot", "ability_component", "rank", "phase"),
+                "default": (
+                    "context",
+                    "champion",
+                    "skin",
+                    "ability_slot",
+                    "ability_component",
+                    "rank",
+                    "ability_stage",
+                    "phase",
+                ),
+                "main": ("context", "ability_slot", "ability_component", "rank", "ability_stage", "phase"),
             },
         },
     ),
@@ -51,8 +87,8 @@ FRAME_REGISTRY: dict[str, FrameSpec] = {
         required_roles=("champion", "skin", "action", "phase"),
         templates={
             "zh_CN": {
-                "default": ("champion", "skin", "action", "phase"),
-                "main": ("action", "phase"),
+                "default": ("context", "champion", "skin", "action", "phase"),
+                "main": ("context", "action", "phase"),
             },
         },
     ),
@@ -72,8 +108,8 @@ FRAME_REGISTRY: dict[str, FrameSpec] = {
         required_roles=("champion", "action", "phase"),
         templates={
             "zh_CN": {
-                "default": ("champion", "skin", "action", "phase"),
-                "main": ("action", "phase"),
+                "default": ("champion", "skin", "action", "qualifier", "phase"),
+                "main": ("action", "qualifier", "phase"),
             },
         },
     ),
@@ -90,8 +126,8 @@ FRAME_REGISTRY: dict[str, FrameSpec] = {
         required_roles=("action",),
         templates={
             "zh_CN": {
-                "default": ("champion", "skin", "action", "companion"),
-                "main": ("action", "companion"),
+                "default": ("champion", "skin", "action", "companion", "phase"),
+                "main": ("action", "companion", "phase"),
             },
         },
     ),
@@ -99,8 +135,155 @@ FRAME_REGISTRY: dict[str, FrameSpec] = {
         required_roles=("ability_slot", "phase"),
         templates={
             "zh_CN": {
-                "default": ("champion", "skin", "ability_slot", "phase"),
-                "main": ("ability_slot", "phase"),
+                "default": (
+                    "context",
+                    "champion",
+                    "skin",
+                    "ability_slot",
+                    "ability_component",
+                    "rank",
+                    "ability_stage",
+                    "phase",
+                ),
+                "main": ("context", "ability_slot", "ability_component", "rank", "ability_stage", "phase"),
+            },
+        },
+    ),
+    "champion_attack_event": FrameSpec(
+        required_roles=("champion", "attack"),
+        templates={
+            "zh_CN": {
+                "default": ("context", "champion", "skin", "attack", "qualifier", "phase"),
+                "main": ("context", "attack", "qualifier", "phase"),
+            },
+        },
+    ),
+    "champion_ability_sequence_event": FrameSpec(
+        required_roles=("champion", "ability_sequence"),
+        templates={
+            "zh_CN": {
+                "default": (
+                    "context",
+                    "champion",
+                    "skin",
+                    "ability_sequence",
+                    "ability_component",
+                    "ability_stage",
+                    "qualifier",
+                    "phase",
+                ),
+                "main": (
+                    "context",
+                    "ability_sequence",
+                    "ability_component",
+                    "ability_stage",
+                    "qualifier",
+                    "phase",
+                ),
+            },
+        },
+    ),
+    "champion_ability_stage_event": FrameSpec(
+        required_roles=("champion", "ability_slot", "ability_stage"),
+        templates={
+            "zh_CN": {
+                "default": (
+                    "context",
+                    "champion",
+                    "skin",
+                    "ability_slot",
+                    "ability_component",
+                    "ability_stage",
+                ),
+                "main": ("context", "ability_slot", "ability_component", "ability_stage"),
+            },
+        },
+    ),
+    "champion_ability_rank_event": FrameSpec(
+        required_roles=("champion", "ability_slot", "rank"),
+        templates={
+            "zh_CN": {
+                "default": ("context", "champion", "skin", "ability_slot", "rank"),
+                "main": ("context", "ability_slot", "rank"),
+            },
+        },
+    ),
+    "champion_ability_component_event": FrameSpec(
+        required_roles=("champion", "ability_slot", "ability_component"),
+        templates={
+            "zh_CN": {
+                "default": (
+                    "context",
+                    "champion",
+                    "skin",
+                    "ability_slot",
+                    "ability_component",
+                    "ability_stage",
+                    "qualifier",
+                    "phase",
+                ),
+                "main": (
+                    "context",
+                    "ability_slot",
+                    "ability_component",
+                    "ability_stage",
+                    "qualifier",
+                    "phase",
+                ),
+            },
+        },
+    ),
+    "champion_action_event": FrameSpec(
+        required_roles=("champion", "action"),
+        templates={
+            "zh_CN": {
+                "default": ("context", "champion", "skin", "action", "qualifier", "phase"),
+                "main": ("context", "action", "qualifier", "phase"),
+            },
+        },
+    ),
+    "champion_sfx_effect_event": FrameSpec(
+        required_roles=("champion", "effect"),
+        templates={
+            "zh_CN": {
+                "default": ("context", "champion", "skin", "effect", "qualifier", "phase"),
+                "main": ("context", "effect", "qualifier", "phase"),
+            },
+        },
+    ),
+    "mode_system_sfx_event": FrameSpec(
+        required_roles=("context", "effect"),
+        templates={
+            "zh_CN": {
+                "default": ("context", "effect", "phase"),
+                "main": ("context", "effect", "phase"),
+            },
+        },
+    ),
+    "system_sfx_event": FrameSpec(
+        required_roles=("effect",),
+        templates={
+            "zh_CN": {
+                "default": ("context", "effect", "phase"),
+                "main": ("context", "effect", "phase"),
+            },
+        },
+    ),
+    "borrowed_ability_event": FrameSpec(
+        required_roles=("context", "champion", "ability_slot", "phase"),
+        templates={
+            "zh_CN": {
+                "default": ("context", "champion", "ability_slot", "phase"),
+                "main": ("context", "champion", "ability_slot", "phase"),
+            },
+        },
+    ),
+    "mode_unit_attack_event": FrameSpec(
+        required_roles=("context", "entity", "attack"),
+        templates={
+            "zh_CN": {
+                "default": ("context", "entity", "attack", "phase"),
+                "main": ("context", "entity", "attack", "phase"),
             },
         },
     ),
@@ -166,15 +349,15 @@ FRAME_REGISTRY: dict[str, FrameSpec] = {
         },
     ),
     # Arena/ARAM 增益系事件：augment 为词表命中的增益/道具官方双语名（必需）；
-    # mode（斗魂竞技场等模式前缀）走 T3.4 头部词条表，表外标记（ARAM 暂无
-    # 词条）合法缺席；phase 由既有相位映射或无相位 sfx 合成承接，词表外
-    # 相位的记录不建 frame（见 build_mode_augment_event）。
+    # mode（斗魂竞技场/极地大乱斗等模式前缀）走已审词条；借用英雄技能的
+    # 增益可追加 champion / ability_slot / qualifier，避免丢掉 RenataW 与
+    # player/others；phase 由既有相位映射或无相位 sfx 合成承接。
     "mode_augment_event": FrameSpec(
         required_roles=("augment",),
         templates={
             "zh_CN": {
-                "default": ("mode", "augment", "phase"),
-                "main": ("augment", "phase"),
+                "default": ("mode", "augment", "champion", "ability_slot", "qualifier", "phase"),
+                "main": ("augment", "champion", "ability_slot", "qualifier", "phase"),
             },
         },
     ),
@@ -206,6 +389,7 @@ class TranslationBuildContext:
     default_locale: str = "zh_CN"
     fallback_locale: str = "en_US"
     champion_labels: Mapping[str, Mapping[str, str]] = field(default_factory=dict)
+    champion_ids: Mapping[int, str] = field(default_factory=dict)
     skin_labels: Mapping[tuple[str, str], Mapping[str, str]] = field(default_factory=dict)
     display_labels: DisplayLabels | None = None
     reference_map_names: Mapping[int, str] = field(default_factory=dict)
@@ -215,16 +399,35 @@ class TranslationBuildContext:
     # （BelVeth/Belveth、LeBlanc/Leblanc、RekSai/Reksai、Orianna/Oriana…），
     # 两侧各是自身来源的事实，不改数据、由查表兼容。惰性构建后缓存。
     _champion_index: dict[str, Mapping[str, str]] | None = field(default=None, init=False, repr=False)
+    _champion_alias_index: dict[str, str] | None = field(default=None, init=False, repr=False)
     _skin_index: dict[tuple[str, str], Mapping[str, str]] | None = field(default=None, init=False, repr=False)
+
+    def canonical_champion_alias(self, alias: object) -> str | None:
+        """按大小写折叠返回 translation 上下文中的规范英雄 alias。"""
+
+        if not isinstance(alias, str) or not alias:
+            return None
+        if alias in self.champion_labels:
+            return alias
+        if self._champion_alias_index is None:
+            self._champion_alias_index = {key.lower(): key for key in self.champion_labels}
+        return self._champion_alias_index.get(alias.lower())
+
+    def champion_alias_for_id(self, champion_id: object) -> str | None:
+        """按英雄数字 id 返回规范 alias。"""
+
+        if not isinstance(champion_id, int):
+            return None
+        return self.champion_ids.get(champion_id)
 
     def champion_label(self, alias: object) -> Mapping[str, str] | None:
         """按英雄 alias 取 label，精确未命中时折叠大小写重查。"""
 
         if not isinstance(alias, str) or not alias:
             return None
-        exact = self.champion_labels.get(alias)
-        if exact is not None:
-            return exact
+        canonical = self.canonical_champion_alias(alias)
+        if canonical is not None:
+            return self.champion_labels.get(canonical)
         if self._champion_index is None:
             self._champion_index = {key.lower(): value for key, value in self.champion_labels.items()}
         return self._champion_index.get(alias.lower())
@@ -239,8 +442,7 @@ class TranslationBuildContext:
             return exact
         if self._skin_index is None:
             self._skin_index = {
-                (champion.lower(), token.lower()): value
-                for (champion, token), value in self.skin_labels.items()
+                (champion.lower(), token.lower()): value for (champion, token), value in self.skin_labels.items()
             }
         return self._skin_index.get((champion_alias.lower(), skin_token.lower()))
 

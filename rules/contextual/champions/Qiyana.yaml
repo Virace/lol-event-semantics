@@ -1,0 +1,28 @@
+scope: champion
+owner: Qiyana
+aliases:
+  Crit:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: critical_idle
+    label: 暴击待机
+    confidence: high
+    source: manual_contextual_alias
+    note: Crit_idle 跨皮肤稳定表示暴击武器的待机音效，不是技能槽位。
+  Relax:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: relaxed_idle
+    label: 放松待机
+    confidence: high
+    source: manual_contextual_alias
+    note: Relax_idle 跨皮肤稳定表示放松待机音效，不是 R 技能。
+  Rmis:
+    kind: champion_spell_component
+    spell: r
+    asset_kind: sfx
+    component: supreme_display_of_talent_shockwave
+    label: 惊才绝景冲击波
+    confidence: high
+    source: manual_contextual_alias
+    note: Rmis 跨皮肤稳定以 OnMissileCast 出现，对应 R 惊才绝景冲击波。

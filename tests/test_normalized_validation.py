@@ -145,14 +145,14 @@ class NormalizedValidationTests(unittest.TestCase):
         arguments["skin"] = {
             "role": "skin",
             "token": "Skin13",
-            "labels": {"zh_CN": "Skin13"},
+            "labels": {"zh_CN": "未收录皮肤"},
             "confidence": "low",
             "provenance": {"kind": "fallback", "path": "raw_event_name"},
             "fallback": True,
             "fallback_reason": "missing_skin_label",
             "omit_when_context_known": ["skin"],
         }
-        record["display"]["zh_cn_detail"] = "加里奥 Skin13 W技能被动防御状态结束"
+        record["display"]["zh_cn_detail"] = "加里奥 未收录皮肤 W技能被动防御状态结束"
 
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
@@ -484,6 +484,22 @@ class DisplayLosslessnessTests(unittest.TestCase):
         self.assertEqual(len(issues), 1)
         self.assertIn("phase=buff_activate", issues[0].message)
 
+    def test_tier3_phase_is_outside_user_display_losslessness_gate(self) -> None:
+        """Tier3 只保留结构/debug，不因刻意无 translation 而误报展示丢槽。"""
+
+        record = minimal_record("Play_sfx_ElixirOfIron_OnBuffCast", alias="ElixirOfIron")
+        record["semantic"]["primary_family"] = "sfx"
+        record["semantic"]["slots"] = {
+            "trigger_family": "sfx_event",
+            "phase": "on_buff_cast",
+            "sfx_scope": "system_sfx",
+        }
+        record["display"]["tier"] = 3
+        record["display"]["zh_cn_short"] = None
+        record["display"]["zh_cn_detail"] = "ElixirOfIron音效事件"
+
+        self.assertEqual(self.drop_issues(record), [])
+
     def test_phase_with_paren_fallback_detail_is_not_flagged(self) -> None:
         """带括注的兜底 detail 不在保守口径内（宁可漏报）。"""
 
@@ -678,6 +694,697 @@ class DisplayTierValidationTests(unittest.TestCase):
 
         codes = {issue.code for issue in report.issues}
         self.assertIn("display_short_missing", codes)
+
+
+class ChampionSfxSemanticContractValidationTests(unittest.TestCase):
+    """验证本轮 SFX 重整的跨层硬契约。"""
+
+    def validate(self, record: dict[str, object]) -> object:
+        """写出单记录 fixture 并执行产物校验。"""
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            write_normalized_fixture(root, [record])
+            return validate_normalized_root(root)
+
+    def test_attack_without_attack_frame_is_error(self) -> None:
+        """已解析普通攻击不得再以 Tier3/无 translation 形式漏过验收。"""
+
+        record = minimal_record("Play_sfx_AatroxSkin01_AatroxBasicAttack2_OnCast", alias="Aatrox")
+        record["semantic"]["profile"] = "self_action"
+        record["semantic"]["primary_family"] = "basic_attack"
+        record["semantic"]["slots"] = {
+            "trigger_family": "basic_attack",
+            "attack_kind": "basic_attack",
+            "attack_variant": 2,
+            "phase": "cast",
+        }
+        record["display"] = {
+            "tier": 1,
+            "zh_cn_short": "普通攻击出手",
+            "zh_cn_detail": "亚托克斯 普通攻击出手",
+            "debug_label": record["raw_event_name"],
+        }
+
+        report = self.validate(record)
+
+        self.assertIn("champion_attack_translation_missing", {issue.code for issue in report.issues})
+
+    def test_attack_variant_cannot_disappear_from_user_display(self) -> None:
+        """已解析的普攻变体号必须进入 attack 标签与用户展示。"""
+
+        record = minimal_record("Play_sfx_Aatrox_AatroxBasicAttack2_OnCast", alias="Aatrox")
+        record["semantic"]["profile"] = "self_action"
+        record["semantic"]["primary_family"] = "basic_attack"
+        record["semantic"]["slots"] = {
+            "trigger_family": "basic_attack",
+            "attack_kind": "basic_attack",
+            "attack_variant": 2,
+            "phase": "cast",
+        }
+        record["translation"] = {
+            "schema_version": 1,
+            "frame_type": "champion_attack_event",
+            "frame_version": 1,
+            "frame_confidence": "high",
+            "arguments": {
+                "champion": {
+                    "role": "champion",
+                    "alias": "Aatrox",
+                    "labels": {"zh_CN": "亚托克斯", "en_US": "Aatrox"},
+                    "confidence": "high",
+                    "fallback": False,
+                    "provenance": {"source": "test"},
+                },
+                "attack": {
+                    "role": "attack",
+                    "key": "basic_attack",
+                    "variant": 2,
+                    "labels": {"zh_CN": "普通攻击", "en_US": "basic attack"},
+                    "confidence": "high",
+                    "fallback": False,
+                    "provenance": {"source": "test"},
+                },
+                "phase": {
+                    "role": "phase",
+                    "key": "attack_cast",
+                    "labels": {"zh_CN": "出手", "en_US": "attack cast"},
+                    "confidence": "high",
+                    "fallback": False,
+                    "provenance": {"source": "test"},
+                },
+            },
+            "provenance": {"builder": "test"},
+        }
+        record["display"] = {
+            "tier": 1,
+            "zh_cn_short": "普通攻击出手",
+            "zh_cn_detail": "亚托克斯 普通攻击出手",
+            "debug_label": record["raw_event_name"],
+        }
+
+        report = self.validate(record)
+
+        self.assertIn("attack_variant_translation_missing", {issue.code for issue in report.issues})
+
+    def test_action_phase_cannot_disappear_from_action_frame(self) -> None:
+        """已解析的表情/动作生命周期必须进入 phase argument，不能只留在 slots。"""
+
+        record = annie_cast_record()
+        record["raw_event_name"] = "Play_vo_Bard_Dance3D_Loop_buffactivate"
+        record["asset_kind"] = "vo"
+        record["entity"] = {"kind": "champion", "alias": "Bard"}
+        record["semantic"] = {
+            "profile": "self_action",
+            "primary_family": "dance",
+            "requires_context": False,
+            "confidence": "high",
+            "slots": {
+                "trigger_family": "dance",
+                "phase": "loop",
+            },
+        }
+        record["translation"]["frame_type"] = "voice_event"
+        record["translation"]["arguments"] = {
+            "action": {
+                "role": "action",
+                "key": "dance",
+                "labels": {"zh_CN": "跳舞语音", "en_US": "dance voice"},
+                "confidence": "high",
+                "fallback": False,
+                "provenance": {"source": "test"},
+            },
+            "champion": {
+                "role": "champion",
+                "alias": "Bard",
+                "labels": {"zh_CN": "巴德", "en_US": "Bard"},
+                "confidence": "high",
+                "fallback": False,
+                "provenance": {"source": "test"},
+            },
+        }
+        record["display"] = {
+            "tier": 1,
+            "zh_cn_short": "跳舞语音",
+            "zh_cn_detail": "巴德 跳舞语音",
+            "debug_label": record["raw_event_name"],
+        }
+
+        report = self.validate(record)
+
+        self.assertIn("action_phase_translation_missing", {issue.code for issue in report.issues})
+
+    def test_playback_control_may_suppress_redundant_action_phase_display(self) -> None:
+        """控制事件在 frame 保留 phase 后，可有意省略矛盾的 phase 文案。"""
+
+        record = annie_cast_record()
+        record["raw_event_name"] = "Stop_sfx_Bard_Dance3D_buffactivate"
+        record["entity"] = {"kind": "champion", "alias": "Bard"}
+        record["semantic"] = {
+            "profile": "self_action",
+            "primary_family": "dance",
+            "requires_context": False,
+            "confidence": "high",
+            "slots": {
+                "trigger_family": "dance",
+                "phase": "buff_activate",
+            },
+        }
+        record["translation"]["frame_type"] = "champion_action_event"
+        record["translation"]["arguments"] = {
+            "champion": {
+                "role": "champion",
+                "alias": "Bard",
+                "labels": {"zh_CN": "巴德", "en_US": "Bard"},
+                "confidence": "high",
+                "fallback": False,
+                "provenance": {"source": "test"},
+            },
+            "action": {
+                "role": "action",
+                "key": "dance_sfx",
+                "labels": {"zh_CN": "跳舞音效", "en_US": "dance sfx"},
+                "confidence": "high",
+                "fallback": False,
+                "provenance": {"source": "test"},
+            },
+            "phase": {
+                "role": "phase",
+                "key": "state_activate",
+                "labels": {"zh_CN": "状态启动", "en_US": "state active"},
+                "confidence": "high",
+                "fallback": False,
+                "provenance": {"source": "test"},
+            },
+            "playback": {
+                "role": "playback",
+                "key": "stop",
+                "labels": {"zh_CN": "停止", "en_US": "stopped"},
+                "confidence": "high",
+                "fallback": False,
+                "provenance": {"source": "test"},
+            },
+        }
+        record["display"] = {
+            "tier": 1,
+            "zh_cn_short": "跳舞音效停止",
+            "zh_cn_detail": "巴德 跳舞音效停止",
+            "debug_label": record["raw_event_name"],
+        }
+
+        report = self.validate(record)
+        codes = {issue.code for issue in report.issues}
+
+        self.assertNotIn("action_phase_translation_missing", codes)
+        self.assertNotIn("translation_frame_required_role_missing", codes)
+
+    def test_attack_using_spell_slot_is_error(self) -> None:
+        """BasicAttack 即使关联被动，也不能写入 spell_key=P。"""
+
+        record = minimal_record("Play_sfx_Zyra_hellvine_ZyraBasicAttack_OnHit", alias="Zyra")
+        record["semantic"]["profile"] = "self_action"
+        record["semantic"]["primary_family"] = "basic_attack"
+        record["semantic"]["slots"] = {
+            "trigger_family": "basic_attack",
+            "attack_kind": "basic_attack",
+            "spell_key": "p",
+            "phase": "hit",
+        }
+
+        report = self.validate(record)
+
+        self.assertIn("attack_misclassified_as_spell", {issue.code for issue in report.issues})
+
+    def test_map_unit_attack_does_not_require_champion_attack_frame(self) -> None:
+        """地图单位的 BasicAttack 不套用英雄专用 translation 门禁。"""
+
+        record = minimal_record("Play_vo_SLIME_Blue_BlueBasicAttack_Attack3D", alias="Slime")
+        record["asset_kind"] = "vo"
+        record["entity"] = {"kind": "map_or_system", "alias": "Slime"}
+        record["semantic"]["profile"] = "self_action"
+        record["semantic"]["primary_family"] = "attack"
+        record["semantic"]["slots"] = {
+            "trigger_family": "attack",
+            "attack_kind": "basic_attack",
+        }
+
+        report = self.validate(record)
+
+        self.assertNotIn("champion_attack_translation_missing", {issue.code for issue in report.issues})
+
+    def test_numeric_spell_rank_cannot_be_stored_as_stage(self) -> None:
+        """原名显式 RankN 时，数据层必须写 spell_rank，不能伪装成技能段数。"""
+
+        record = annie_cast_record()
+        record["raw_event_name"] = "Play_vo_Kayle_Spell2DPRank2"
+        record["asset_kind"] = "vo"
+        record["entity"] = {"kind": "champion", "alias": "Kayle"}
+        record["semantic"]["slots"] = {
+            "trigger_family": "spell",
+            "spell_key": "p",
+            "spell_stage": 2,
+            "spell_rank": None,
+        }
+
+        report = self.validate(record)
+
+        self.assertIn("spell_rank_misclassified_as_stage", {issue.code for issue in report.issues})
+
+    def test_sfx_spell_stage_without_rendered_stage_is_error(self) -> None:
+        """SFX 的 Q1/Q2/Q3 段数若未进入 ability_stage，验收必须失败。"""
+
+        record = annie_cast_record()
+        record["semantic"]["slots"]["spell_stage"] = 3
+
+        report = self.validate(record)
+
+        self.assertIn("spell_stage_not_rendered", {issue.code for issue in report.issues})
+
+    def test_vo_spell_stage_without_rendered_stage_is_error(self) -> None:
+        """VO 中已解析的技能段数同样不得在最终展示层丢失。"""
+
+        record = annie_cast_record()
+        record["raw_event_name"] = "Play_vo_Annie_AnnieQ3_cast3D"
+        record["asset_kind"] = "vo"
+        record["semantic"]["slots"]["spell_stage"] = 3
+
+        report = self.validate(record)
+
+        self.assertIn("spell_stage_not_rendered", {issue.code for issue in report.issues})
+
+    def test_parsed_spell_component_without_translation_argument_is_error(self) -> None:
+        """已命中的技能组件名不能在 frame 与中文层再次丢失。"""
+
+        record = annie_cast_record()
+        record["semantic"]["slots"]["contextual_alias"] = {
+            "kind": "champion_spell_component",
+            "component": "arcanopulse",
+            "label": "奥能脉冲",
+        }
+
+        report = self.validate(record)
+
+        self.assertIn("spell_component_translation_missing", {issue.code for issue in report.issues})
+
+    def test_normalized_component_label_is_not_false_positive(self) -> None:
+        """Q 回返与 Q技能回返语义等价，门禁按最终 argument 标签检查。"""
+
+        record = annie_cast_record()
+        record["semantic"]["slots"]["contextual_alias"] = {
+            "kind": "champion_spell_component",
+            "component": "q_return",
+            "label": "Q 回返",
+        }
+        record["translation"]["arguments"]["ability_component"] = {
+            "role": "ability_component",
+            "key": "q_return",
+            "labels": {"zh_CN": "回返", "en_US": "Q Return"},
+            "confidence": "high",
+            "fallback": False,
+            "provenance": {"source": "test"},
+        }
+        record["display"]["zh_cn_short"] = "Q技能回返释放"
+        record["display"]["zh_cn_detail"] = "安妮 Q技能回返释放"
+
+        report = self.validate(record)
+
+        self.assertNotIn("spell_component_translation_missing", {issue.code for issue in report.issues})
+
+    def test_known_spell_component_modifier_cannot_be_dropped(self) -> None:
+        """EmpoweredStart 与 loop 等已知尾缀必须进入 qualifier/phase。"""
+
+        record = annie_cast_record()
+        record["raw_event_name"] = "Play_vo_VayneSkin67_VayneInquisition_EmpoweredStart"
+        record["asset_kind"] = "vo"
+        record["semantic"]["slots"]["contextual_alias"] = {
+            "kind": "champion_spell_component",
+            "component": "ultimate_cast",
+            "label": "终极审判",
+        }
+        record["semantic"]["slots"]["unresolved_context"] = ["EmpoweredStart"]
+        record["translation"]["frame_type"] = "champion_ability_component_event"
+        record["translation"]["arguments"]["ability_component"] = {
+            "role": "ability_component",
+            "key": "ultimate_cast",
+            "labels": {"zh_CN": "终极审判", "en_US": "Ultimate Cast"},
+            "confidence": "high",
+            "fallback": False,
+            "provenance": {"source": "test"},
+        }
+        record["display"]["zh_cn_short"] = "R技能终极审判释放"
+        record["display"]["zh_cn_detail"] = "薇恩 R技能终极审判释放"
+
+        report = self.validate(record)
+
+        self.assertIn("spell_component_modifier_translation_missing", {issue.code for issue in report.issues})
+
+    def test_action_component_cannot_be_misclassified_as_spell(self) -> None:
+        """皮肤/角色动作组件不得携带技能槽位或 spell_event profile。"""
+
+        record = annie_cast_record()
+        record["semantic"]["slots"]["contextual_alias"] = {
+            "kind": "champion_action_component",
+            "component": "elementalist_transform",
+            "label": "元素形态切换",
+        }
+
+        report = self.validate(record)
+
+        self.assertIn("action_component_misclassified_as_spell", {issue.code for issue in report.issues})
+
+    def test_parsed_action_component_without_translation_argument_is_error(self) -> None:
+        """已解析的动作组件必须进入 action argument 与中文展示。"""
+
+        record = annie_cast_record()
+        record["semantic"]["profile"] = "self_action"
+        record["semantic"]["primary_family"] = "contextual_action"
+        record["semantic"]["slots"] = {
+            "trigger_family": "contextual_action",
+            "subject": {"kind": "champion", "alias": "Lux"},
+            "contextual_alias": {
+                "kind": "champion_action_component",
+                "component": "elementalist_transform",
+                "label": "元素形态切换",
+            },
+        }
+
+        report = self.validate(record)
+
+        self.assertIn("action_component_translation_missing", {issue.code for issue in report.issues})
+
+    def test_context_namespace_cannot_replace_real_subject_entity(self) -> None:
+        """Ruby/OdysseyAugments 是上下文；实体必须与已解析 subject 一致。"""
+
+        record = annie_cast_record()
+        record["entity"] = {"kind": "champion", "alias": "Ruby"}
+        record["semantic"]["slots"]["context_namespace"] = {
+            "key": "ruby",
+            "kind": "mode",
+            "label": "末日人机",
+        }
+        record["semantic"]["slots"]["subject"] = {"kind": "champion", "alias": "Xerath"}
+
+        report = self.validate(record)
+
+        self.assertIn("context_subject_entity_mismatch", {issue.code for issue in report.issues})
+
+    def test_context_namespace_cannot_be_entity_without_resolved_subject(self) -> None:
+        """即使没有英雄 subject，Ruby/Strawberry 等命名空间本身也不能占用实体。"""
+
+        record = annie_cast_record()
+        record["entity"] = {"kind": "champion", "alias": "Strawberry"}
+        record["semantic"]["slots"].pop("subject", None)
+        record["semantic"]["slots"]["context_namespace"] = {
+            "key": "strawberry",
+            "kind": "mode",
+            "label": "PVE 模式",
+        }
+
+        report = self.validate(record)
+
+        self.assertIn("context_namespace_used_as_entity", {issue.code for issue in report.issues})
+
+    def test_skin_token_in_user_display_is_error(self) -> None:
+        """已有权威皮肤名时，用户文案出现 SkinNN 是硬错误。"""
+
+        record = galio_translation_record()
+        record["display"]["zh_cn_detail"] = "加里奥 Skin13 W技能被动防御状态结束"
+
+        report = self.validate(record)
+
+        self.assertIn("raw_skin_token_in_user_display", {issue.code for issue in report.issues})
+
+    def test_canonical_champion_alias_in_chinese_display_is_error(self) -> None:
+        """translation 已有权威中文英雄名时，英文 alias 不得混入中文展示。"""
+
+        record = galio_translation_record()
+        record["display"]["zh_cn_detail"] = "Galio 地狱火 W技能被动防御状态结束"
+
+        report = self.validate(record)
+
+        self.assertIn("canonical_champion_alias_in_user_display", {issue.code for issue in report.issues})
+
+    def test_canonical_champion_alias_without_translation_is_error(self) -> None:
+        """champion_sfx 即使尚无 frame，也不能绕过英雄英文名泄漏门禁。"""
+
+        record = minimal_record("Play_sfx_ZoeSkin01W_enablebypass", alias="Zoe")
+        record["semantic"]["profile"] = "map_or_system"
+        record["semantic"]["primary_family"] = "sfx"
+        record["semantic"]["slots"] = {
+            "trigger_family": "sfx_event",
+            "sfx_scope": "champion_sfx",
+        }
+        record["display"]["zh_cn_short"] = None
+        record["display"]["zh_cn_detail"] = "Zoe 赛博潮流 W音效事件"
+
+        report = self.validate(record)
+
+        self.assertIn("canonical_champion_alias_in_user_display", {issue.code for issue in report.issues})
+
+    def test_weak_spell_key_hint_cannot_enter_user_display(self) -> None:
+        """PascalCase 普通词首产生的弱 hint 不得伪装成技能槽位。"""
+
+        record = minimal_record("Play_sfx_KaisaSkin14_KaisaEvolveSelf_cast", alias="Kaisa")
+        record["semantic"]["profile"] = "spell_event"
+        record["semantic"]["primary_family"] = "sfx"
+        record["semantic"]["slots"] = {
+            "trigger_family": "sfx_event",
+            "sfx_scope": "champion_sfx",
+            "spell_key_hint": "e",
+            "effect_residual": "volveSelf",
+            "phase": "cast",
+        }
+        record["display"]["zh_cn_short"] = "E技能释放"
+        record["display"]["zh_cn_detail"] = "卡莎 E技能释放"
+
+        report = self.validate(record)
+
+        self.assertIn("weak_spell_key_hint_in_user_display", {issue.code for issue in report.issues})
+
+    def test_curated_champion_sfx_alias_cannot_be_dropped(self) -> None:
+        """已审阅公共 SFX 效果必须进入 effect argument 与中文展示。"""
+
+        record = minimal_record("Play_sfx_ApheliosSkin01_Spawn3D_buffactivate", alias="Aphelios")
+        record["semantic"]["profile"] = "map_or_system"
+        record["semantic"]["primary_family"] = "sfx"
+        record["semantic"]["slots"] = {
+            "trigger_family": "sfx_event",
+            "sfx_scope": "champion_sfx",
+            "phase": "buff_activate",
+            "sfx_alias": {
+                "kind": "generic_sfx_effect",
+                "component": "spawn",
+                "label": "出生/生成",
+            },
+        }
+        record["display"] = {
+            "tier": 3,
+            "zh_cn_short": None,
+            "zh_cn_detail": "厄斐琉斯状态启动",
+            "debug_label": record["raw_event_name"],
+        }
+
+        report = self.validate(record)
+
+        self.assertIn("sfx_effect_translation_missing", {issue.code for issue in report.issues})
+
+    def test_curated_champion_sfx_alias_accepts_explicit_audio_noun(self) -> None:
+        """generic_sfx_effect 的用户标签可在规则词后补“音效”，且仍须精确校验。"""
+
+        record = minimal_record("Play_sfx_ApheliosSkin01_Spawn3D_buffactivate", alias="Aphelios")
+        record["semantic"]["profile"] = "map_or_system"
+        record["semantic"]["primary_family"] = "sfx"
+        record["semantic"]["slots"] = {
+            "trigger_family": "sfx_event",
+            "sfx_scope": "champion_sfx",
+            "phase": "buff_activate",
+            "sfx_alias": {
+                "kind": "generic_sfx_effect",
+                "component": "spawn",
+                "label": "出生/生成",
+            },
+        }
+        record["translation"] = {
+            "frame_type": "champion_sfx_effect_event",
+            "arguments": {
+                "effect": {
+                    "key": "spawn",
+                    "labels": {"zh_CN": "出生/生成音效", "en_US": "Spawn SFX"},
+                },
+            },
+        }
+        record["display"] = {
+            "tier": 1,
+            "zh_cn_short": "出生/生成音效开始",
+            "zh_cn_detail": "厄斐琉斯 出生/生成音效开始",
+            "debug_label": record["raw_event_name"],
+        }
+
+        report = self.validate(record)
+
+        self.assertNotIn("sfx_effect_translation_missing", {issue.code for issue in report.issues})
+
+    def test_spell_scoped_sfx_alias_uses_reviewed_component_label_without_forced_noun(self) -> None:
+        """技能组件沿用已审 label，不强制在组件词后再追加“音效”。"""
+
+        record = annie_cast_record()
+        record["semantic"]["slots"].update(
+            {
+                "sfx_scope": "champion_sfx",
+                "sfx_alias": {
+                    "kind": "generic_sfx_effect",
+                    "component": "foley",
+                    "label": "动作拟音",
+                },
+            }
+        )
+        record["translation"]["arguments"]["ability_component"] = {
+            "role": "ability_component",
+            "key": "foley",
+            "labels": {"zh_CN": "动作拟音", "en_US": "foley"},
+            "confidence": "medium",
+            "fallback": False,
+            "provenance": {"source": "test"},
+        }
+        record["display"] = {
+            "tier": 1,
+            "zh_cn_short": "Q技能动作拟音释放",
+            "zh_cn_detail": "Annie Q技能动作拟音释放",
+            "debug_label": record["raw_event_name"],
+        }
+
+        report = self.validate(record)
+
+        self.assertNotIn("sfx_effect_translation_missing", {issue.code for issue in report.issues})
+
+    def test_playback_control_may_suppress_rendered_component_modifier_phase(self) -> None:
+        """组件尾缀 phase 保留在 frame 时，playback 可抑制其矛盾文案。"""
+
+        record = annie_cast_record()
+        record["raw_event_name"] = "Stop_sfx_Annie_AnnieQWeapon_active"
+        record["semantic"]["slots"].update(
+            {
+                "contextual_alias": {
+                    "kind": "champion_spell_component",
+                    "component": "weapon",
+                    "label": "强化武器",
+                },
+                "unresolved_context": ["active"],
+            }
+        )
+        record["translation"]["frame_type"] = "champion_ability_component_event"
+        record["translation"]["arguments"]["ability_component"] = {
+            "role": "ability_component",
+            "key": "weapon",
+            "labels": {"zh_CN": "强化武器", "en_US": "empowered weapon"},
+            "confidence": "high",
+            "fallback": False,
+            "provenance": {"source": "test"},
+        }
+        record["translation"]["arguments"]["phase"] = {
+            "role": "phase",
+            "key": "start",
+            "labels": {"zh_CN": "开始", "en_US": "start"},
+            "confidence": "high",
+            "fallback": False,
+            "provenance": {"source": "test"},
+        }
+        record["translation"]["arguments"]["playback"] = {
+            "role": "playback",
+            "key": "stop",
+            "labels": {"zh_CN": "停止", "en_US": "stopped"},
+            "confidence": "high",
+            "fallback": False,
+            "provenance": {"source": "test"},
+        }
+        record["display"] = {
+            "tier": 1,
+            "zh_cn_short": "Q技能强化武器停止",
+            "zh_cn_detail": "Annie Q技能强化武器停止",
+            "debug_label": record["raw_event_name"],
+        }
+
+        report = self.validate(record)
+
+        self.assertNotIn(
+            "spell_component_modifier_translation_missing",
+            {issue.code for issue in report.issues},
+        )
+
+    def test_spell_sfx_phase_cannot_disappear_from_component_frame(self) -> None:
+        """英雄 spell SFX 的强 phase 不能只留在 semantic slots。"""
+
+        record = annie_cast_record()
+        record["raw_event_name"] = "Play_sfx_Annie_AnnieQRevive_player"
+        record["semantic"]["slots"].update(
+            {
+                "phase": "revive",
+                "contextual_alias": {
+                    "kind": "champion_spell_component",
+                    "component": "revival",
+                    "label": "复活组件",
+                },
+            }
+        )
+        record["translation"]["frame_type"] = "champion_ability_component_event"
+        record["translation"]["arguments"]["ability_component"] = {
+            "role": "ability_component",
+            "key": "revival",
+            "labels": {"zh_CN": "复活组件", "en_US": "revival"},
+            "confidence": "high",
+            "fallback": False,
+            "provenance": {"source": "test"},
+        }
+        record["translation"]["arguments"].pop("phase")
+        record["display"] = {
+            "tier": 1,
+            "zh_cn_short": "Q技能复活组件",
+            "zh_cn_detail": "Annie Q技能复活组件",
+            "debug_label": record["raw_event_name"],
+        }
+
+        report = self.validate(record)
+
+        self.assertIn("spell_phase_translation_missing", {issue.code for issue in report.issues})
+
+    def test_curated_sfx_qualifier_cannot_be_dropped_from_translation_or_display(self) -> None:
+        """规则已识别的 SFX 中间修饰语必须进入结构化 argument 和中文。"""
+
+        record = minimal_record("Play_sfx_MorganaSkin80_MaskSwap3D_mask2", alias="Morgana")
+        record["semantic"]["profile"] = "map_or_system"
+        record["semantic"]["primary_family"] = "sfx"
+        record["semantic"]["slots"] = {
+            "trigger_family": "sfx_event",
+            "sfx_scope": "champion_sfx",
+            "sfx_alias": {
+                "kind": "generic_sfx_effect",
+                "component": "mask_swap",
+                "label": "面具切换",
+                "qualifiers": [{"key": "mask2", "label": "形态2", "raw": "mask2"}],
+            },
+        }
+        record["translation"] = {
+            "frame_type": "champion_sfx_effect_event",
+            "arguments": {
+                "effect": {
+                    "key": "mask_swap",
+                    "labels": {"zh_CN": "面具切换音效", "en_US": "Mask Swap SFX"},
+                },
+            },
+        }
+        record["display"] = {
+            "tier": 1,
+            "zh_cn_short": "面具切换音效",
+            "zh_cn_detail": "莫甘娜 面具切换音效",
+            "debug_label": record["raw_event_name"],
+        }
+
+        report = self.validate(record)
+
+        self.assertIn(
+            "sfx_effect_qualifier_translation_missing",
+            {issue.code for issue in report.issues},
+        )
 
 
 class NormalizedValidationCliTests(unittest.TestCase):

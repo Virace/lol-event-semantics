@@ -90,21 +90,27 @@ aliases:
     source: manual_contextual_alias
     note: ImmolationAura 在 Shyvana 事件中对应 W 技能 Inferno Aegis 的持续灼烧光环。
   ShyvanaBasicAttack:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: dragon_basic_attack
     label: 龙形态普攻
     confidence: medium
     source: manual_contextual_alias
     note: ShyvanaBasicAttack 在 ShyvanaDragon 事件中对应龙形态基础攻击。
   ShyvanaCritAttack:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: dragon_crit_attack
     label: 龙形态暴击
     confidence: medium
     source: manual_contextual_alias
     note: ShyvanaCritAttack 在 ShyvanaDragon 事件中对应龙形态暴击攻击。
+  ShyvanaDragonDance3D:
+    kind: champion_action_component
+    asset_kind: sfx
+    component: dragon_form_dance
+    label: 龙形态舞蹈音效
+    confidence: high
+    source: manual_contextual_alias
+    note: DragonDance3D 是龙形态舞蹈动作；leadin/loop 尾段作为音频生命周期保留，不是 R 技能释放。
   ShyvanaDragonDeath3D:
     kind: champion_spell_component
     spell: r
@@ -112,7 +118,16 @@ aliases:
     label: 龙形态死亡
     confidence: medium
     source: manual_contextual_alias
-    note: ShyvanaDragonDeath3D 在 ShyvanaSkin04 事件中对应龙形态死亡动作音效，龙形态为 R 技能 Dragon's Descent 状态，3D 仅为音频维度信息。
+    note: ShyvanaDragonDeath3D 在 ShyvanaSkin04 事件中对应龙形态死亡动作音效，龙形态为 R 技能 Dragon's
+      Descent 状态，3D 仅为音频维度信息。
+  ShyvanaDragonHomeguard3D:
+    kind: champion_action_component
+    asset_kind: sfx
+    component: dragon_form_homeguard
+    label: 龙形态家园卫士音效
+    confidence: high
+    source: manual_contextual_alias
+    note: DragonHomeguard3D 是龙形态家园卫士移动动作；leadin/loop 尾段作为音频生命周期保留。
   ShyvanaDragonJoke3D:
     kind: champion_spell_component
     spell: r
@@ -120,7 +135,8 @@ aliases:
     label: 龙形态玩笑
     confidence: medium
     source: manual_contextual_alias
-    note: ShyvanaDragonJoke3D 在 ShyvanaSkin04 事件中对应龙形态玩笑动作音效，龙形态为 R 技能 Dragon's Descent 状态，3D 仅为音频维度信息。
+    note: ShyvanaDragonJoke3D 在 ShyvanaSkin04 事件中对应龙形态玩笑动作音效，龙形态为 R 技能 Dragon's
+      Descent 状态，3D 仅为音频维度信息。
   ShyvanaDragonLaugh3D:
     kind: champion_spell_component
     spell: r
@@ -128,7 +144,8 @@ aliases:
     label: 龙形态大笑
     confidence: medium
     source: manual_contextual_alias
-    note: ShyvanaDragonLaugh3D 在 ShyvanaSkin04 事件中对应龙形态大笑动作音效，龙形态为 R 技能 Dragon's Descent 状态，3D 仅为音频维度信息。
+    note: ShyvanaDragonLaugh3D 在 ShyvanaSkin04 事件中对应龙形态大笑动作音效，龙形态为 R 技能 Dragon's
+      Descent 状态，3D 仅为音频维度信息。
   ShyvanaDragonQ1:
     kind: champion_spell_component
     spell: q
@@ -136,7 +153,8 @@ aliases:
     label: 龙形态Q一段
     confidence: medium
     source: manual_contextual_alias
-    note: ShyvanaDragonQ1 在 ShyvanaSkin04 事件中对应龙形态 Q 技能 Emberstrike 的一段打击；16.14 描述该技能可再次施放且魔龙形态额外提供一次再施放，共三段。
+    note: ShyvanaDragonQ1 在 ShyvanaSkin04 事件中对应龙形态 Q 技能 Emberstrike 的一段打击；16.14
+      描述该技能可再次施放且魔龙形态额外提供一次再施放，共三段。
   ShyvanaDragonQ2:
     kind: champion_spell_component
     spell: q
@@ -152,7 +170,8 @@ aliases:
     label: 龙形态Q三段
     confidence: medium
     source: manual_contextual_alias
-    note: ShyvanaDragonQ3 在 ShyvanaSkin04 事件中对应龙形态 Q 技能 Emberstrike 的三段再施放，即魔龙形态额外提供的对单体巨额伤害一击。
+    note: ShyvanaDragonQ3 在 ShyvanaSkin04 事件中对应龙形态 Q 技能 Emberstrike
+      的三段再施放，即魔龙形态额外提供的对单体巨额伤害一击。
   ShyvanaDragonRTransform:
     kind: champion_spell_component
     spell: r
@@ -160,7 +179,8 @@ aliases:
     label: 龙形态变身
     confidence: medium
     source: manual_contextual_alias
-    note: ShyvanaDragonRTransform 在 ShyvanaSkin04 事件中对应 R 技能 Dragon's Descent 的变身状态，与 Transform 同义。
+    note: ShyvanaDragonRTransform 在 ShyvanaSkin04 事件中对应 R 技能 Dragon's Descent
+      的变身状态，与 Transform 同义。
   ShyvanaDragonRecall3D:
     kind: champion_spell_component
     spell: r
@@ -168,7 +188,8 @@ aliases:
     label: 龙形态回城
     confidence: medium
     source: manual_contextual_alias
-    note: ShyvanaDragonRecall3D 在 ShyvanaSkin04 事件中对应龙形态回城动作音效，龙形态为 R 技能 Dragon's Descent 状态，3D 仅为音频维度信息。
+    note: ShyvanaDragonRecall3D 在 ShyvanaSkin04 事件中对应龙形态回城动作音效，龙形态为 R 技能
+      Dragon's Descent 状态，3D 仅为音频维度信息。
   ShyvanaDragonRespawn3D:
     kind: champion_spell_component
     spell: r
@@ -176,7 +197,8 @@ aliases:
     label: 龙形态重生
     confidence: medium
     source: manual_contextual_alias
-    note: ShyvanaDragonRespawn3D 在 ShyvanaSkin04 事件中对应龙形态重生动作音效，龙形态为 R 技能 Dragon's Descent 状态，3D 仅为音频维度信息。
+    note: ShyvanaDragonRespawn3D 在 ShyvanaSkin04 事件中对应龙形态重生动作音效，龙形态为 R 技能
+      Dragon's Descent 状态，3D 仅为音频维度信息。
   ShyvanaDragonTaunt3D:
     kind: champion_spell_component
     spell: r
@@ -184,10 +206,11 @@ aliases:
     label: 龙形态嘲讽
     confidence: medium
     source: manual_contextual_alias
-    note: ShyvanaDragonTaunt3D 在 ShyvanaSkin04 事件中对应龙形态嘲讽动作音效，龙形态为 R 技能 Dragon's Descent 状态，3D 仅为音频维度信息。
+    note: ShyvanaDragonTaunt3D 在 ShyvanaSkin04 事件中对应龙形态嘲讽动作音效，龙形态为 R 技能 Dragon's
+      Descent 状态，3D 仅为音频维度信息。
   ShyvanaIDDamage:
-    kind: champion_spell_component
-    spell: p
+    kind: generic_sfx_effect
+    asset_kind: sfx
     component: id_damage
     label: 额外伤害
     confidence: medium

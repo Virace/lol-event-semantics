@@ -9,3 +9,20 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: TandemRecall 在 Xayah 事件中对应与 Rakan 的双人回城。
+  WithRakan:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: duo_dance_with_rakan
+    label: 与洛双人舞
+    confidence: high
+    source: manual_contextual_alias
+    note: WithRakan_Dance 是霞与洛的联动舞蹈音频；into/loop 尾段保留为音频阶段，不属于被动技能。
+  XayahEfeather:
+    kind: champion_spell_component
+    spell: e
+    asset_kind: sfx
+    component: bladecaller_feather_pullout
+    label: 倒钩羽毛拔出
+    confidence: high
+    source: manual_contextual_alias
+    note: XayahEfeather_pullout 是 E 倒钩拔出并召回羽毛的音效组件。

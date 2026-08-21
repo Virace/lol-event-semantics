@@ -1,6 +1,14 @@
 scope: champion
 owner: Ziggs
 aliases:
+  Beam:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: snow_day_beam
+    label: 冰雪节光束
+    confidence: high
+    source: manual_contextual_alias
+    note: ZiggsSnowDay_Beam_loop/windup 是冰雪节皮肤光束音效，生命周期继续由阶段承载。
   SatchelJump:
     kind: champion_spell_component
     spell: w
@@ -10,16 +18,14 @@ aliases:
     source: manual_contextual_alias
     note: SatchelJump 在 Ziggs 事件中对应 W 技能 Satchel Charge 的跳跃/位移表现。
   ZiggsBasicAttack:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: basic_attack
     label: 普攻
     confidence: medium
     source: manual_contextual_alias
     note: ZiggsBasicAttack 在 Ziggs 皮肤别名事件中对应基础攻击。
   ZiggsCritAttack:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: crit_attack
     label: 暴击攻击
     confidence: medium

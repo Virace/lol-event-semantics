@@ -10,13 +10,23 @@ aliases:
     source: manual_contextual_alias
     note: TentacleActive 在 Illaoi 事件中对应被动触手激活/存在状态。
   TentacleAttack:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: tentacle_attack
     label: 触手攻击
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      Ground: 地面
+      champ: 英雄目标
+      minion: 小兵目标
+    note: TentacleAttack 是被动生成触手自身的攻击事件；来源可关联被动，但主动作不能写成 P 技能。
+  TentacleDance:
+    kind: champion_action_component
+    component: tentacle_dance
+    label: 触手跳舞
     confidence: medium
     source: manual_contextual_alias
-    note: TentacleAttack 在 Illaoi 事件中对应被动 Prophet of an Elder God 生成的触手攻击表现。
+    note: TentacleDance 在 Illaoi 事件中对应触手单位跳舞动作音效。
   TentacleSpawn:
     kind: champion_spell_component
     spell: p
@@ -33,11 +43,3 @@ aliases:
     confidence: high
     source: manual_contextual_alias
     note: TentacleSpawnTrail 在 Illaoi SFX 中对应被动触手生成时的轨迹音效。
-  TentacleDance:
-    kind: champion_spell_component
-    spell: p
-    component: tentacle_dance
-    label: 触手跳舞
-    confidence: medium
-    source: manual_contextual_alias
-    note: TentacleDance 在 Illaoi 事件中对应触手单位跳舞动作音效。

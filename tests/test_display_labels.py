@@ -36,6 +36,13 @@ class LoadDisplayLabelsFromDictTests(unittest.TestCase):
                 "action": {"recall": {"zh_CN": "回城", "en_US": "recall"}},
                 "ability_component": {"passive_defense": "被动防御"},
                 "gameplay_event": {"first_blood": {"zh_CN": "第一滴血", "en_US": "first blood"}},
+                "system_sfx": {
+                    "exact": {"pings/areaiswarded": "该区域已有视野标记"},
+                    "context": {"cherry": "斗魂竞技场"},
+                    "item_action": {
+                        "3053/shield": {"zh_CN": "护盾", "en_US": "shield"}
+                    },
+                },
                 "maps": {11: "召唤师峡谷"},
             }
         )
@@ -43,6 +50,9 @@ class LoadDisplayLabelsFromDictTests(unittest.TestCase):
         self.assertEqual(labels.action["recall"], ("回城", "recall"))
         self.assertEqual(labels.ability_component["passive_defense"], "被动防御")
         self.assertEqual(labels.gameplay_event["first_blood"], ("第一滴血", "first blood"))
+        self.assertEqual(labels.system_sfx_exact["pings/areaiswarded"], "该区域已有视野标记")
+        self.assertEqual(labels.system_sfx_context["cherry"], "斗魂竞技场")
+        self.assertEqual(labels.system_sfx_item_action["3053/shield"], ("护盾", "shield"))
         self.assertEqual(labels.maps[11], "召唤师峡谷")
 
     def test_string_map_keys_are_coerced_to_int(self) -> None:
@@ -74,6 +84,9 @@ class LoadDisplayLabelsFromDictTests(unittest.TestCase):
         self.assertEqual(labels.maps, {})
         self.assertEqual(labels.announcer_event, {})
         self.assertEqual(labels.announcer_team, {})
+        self.assertEqual(labels.system_sfx_exact, {})
+        self.assertEqual(labels.system_sfx_context, {})
+        self.assertEqual(labels.system_sfx_item_action, {})
 
     def test_parses_nested_announcer_section(self) -> None:
         """announcer 嵌套段（event/team 子表）应解析到独立字段。"""
@@ -122,7 +135,13 @@ class DefaultDisplayLabelsTests(unittest.TestCase):
         labels = load_display_labels(REPO_ROOT / DEFAULT_DISPLAY_LABELS_PATH)
 
         # 双语分节：值为 (zh, en) 二元组且两侧非空。
-        for section in (labels.phase, labels.action, labels.gameplay_event, labels.shop_action):
+        for section in (
+            labels.phase,
+            labels.action,
+            labels.gameplay_event,
+            labels.shop_action,
+            labels.system_sfx_item_action,
+        ):
             self.assertTrue(section)
             for zh, en in section.values():
                 self.assertTrue(zh)
@@ -136,6 +155,8 @@ class DefaultDisplayLabelsTests(unittest.TestCase):
             labels.announcer_team,
             labels.announcer_subject,
             labels.announcer_mode,
+            labels.system_sfx_exact,
+            labels.system_sfx_context,
         ):
             self.assertTrue(section)
             for value in section.values():

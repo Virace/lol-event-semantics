@@ -1,0 +1,128 @@
+scope: champion
+owner: Aatrox
+aliases:
+  ChainPillar:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: strawberry
+    component: chain_pillar
+    label: 锁链石柱
+    confidence: high
+    source: manual_contextual_alias
+    note: Strawberry_Boss_Aatrox 的 ChainPillar 是锁链机制的石柱循环音效。
+  ChainPlayer:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: strawberry
+    component: chain_player
+    label: 锁链牵引
+    confidence: high
+    source: manual_contextual_alias
+    note: Strawberry_Boss_Aatrox 的 ChainPlayer 表示锁链玩家并牵引的首领机制。
+  FallingSword:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: strawberry
+    component: falling_sword
+    label: 坠落之剑
+    confidence: high
+    source: manual_contextual_alias
+    note: Strawberry_Boss_Aatrox 的 FallingSword 是 PVE 首领专属坠落之剑效果。
+  Landing:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: strawberry
+    component: boss_landing
+    label: 首领落地冲击
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      AoE: 范围效果
+    note: Strawberry_Boss_Aatrox 的 Landing_AoE 是首领落地范围冲击，AoE 修饰不得丢弃。
+  LightningStrike:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: strawberry
+    component: lightning_strike
+    label: 雷电打击
+    confidence: high
+    source: manual_contextual_alias
+    note: Strawberry_Boss_Aatrox 的 LightningStrike 表示雷电打击首领机制。
+  LineRift:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: strawberry
+    component: line_rift
+    label: 直线裂地
+    confidence: high
+    source: manual_contextual_alias
+    note: Strawberry_Boss_Aatrox 的 LineRift 表示直线裂地冲击。
+  MissileGrid:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: strawberry
+    component: missile_grid
+    label: 飞剑矩阵
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      sword: 剑刃
+    note: Strawberry_Boss_Aatrox 的 MissileGrid 是 PVE 首领飞剑矩阵；sword 命中变体必须保留。
+  NamiWave:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: strawberry
+    component: tidal_wave
+    label: 潮汐巨浪
+    confidence: high
+    source: manual_contextual_alias
+    note: Strawberry_Boss_Aatrox 的 NamiWave 是 PVE 首领借用的潮汐巨浪效果。
+  RRevive:
+    kind: champion_spell_component
+    spell: r
+    asset_kind: sfx
+    component: world_ender_revival
+    label: 大灭
+    confidence: high
+    source: manual_contextual_alias
+    note: RRevive 跨皮肤稳定表示 R 大灭的复活阶段，尾段 player/all 是受众而非技能槽位。
+  Revive:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: strawberry
+    component: boss_revive
+    label: 首领复活
+    confidence: high
+    source: manual_contextual_alias
+    note: Strawberry_Boss_Aatrox 的 Revive 是首领复活机制，不等同于常规 RRevive 技能组件。
+  Taunt3D:
+    kind: champion_action_component
+    asset_kind: sfx
+    mode: strawberry
+    component: boss_taunt
+    label: 首领嘲讽音效
+    confidence: high
+    source: manual_contextual_alias
+    note: Strawberry_Boss_Aatrox 的 Taunt3D 是首领嘲讽动作；into/loop 由动作阶段继续承载。
+  VictoryBanner:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: strawberry
+    component: boss_victory_banner
+    label: 首领胜利横幅
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      fakeout: 假胜利
+    note: Strawberry_Gameplay_HUD_Boss_Aatrox_VictoryBanner_fakeout
+      是首领战假胜利横幅提示；fakeout 语义不得丢失。
+  announcement:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: strawberry
+    component: boss_announcement
+    label: 首领登场播报
+    confidence: high
+    source: manual_contextual_alias
+    note: Strawberry_Gameplay_HUD_Boss_Aatrox_announcement 是 PVE
+      首领亚托克斯的界面登场播报；Gameplay/HUD/Boss 都只是路径角色。

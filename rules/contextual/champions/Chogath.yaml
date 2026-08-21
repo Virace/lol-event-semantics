@@ -1,6 +1,15 @@
 scope: champion
 owner: Chogath
 aliases:
+  ChogathEAttack:
+    kind: champion_spell_component
+    spell: e
+    asset_kind: sfx
+    component: vorpal_spikes_attack
+    label: 恐惧之刺强化攻击
+    confidence: high
+    source: manual_contextual_alias
+    note: ChogathEAttack 是科加斯 E 恐惧之刺强化普攻的音频 bank；完整名称可能被 lexer 吞进 owner。
   Feast:
     kind: champion_spell_component
     spell: r

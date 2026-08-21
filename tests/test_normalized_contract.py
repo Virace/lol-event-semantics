@@ -179,7 +179,7 @@ class NormalizedContractTests(unittest.TestCase):
         self.assertEqual(pattern["pattern_id"], row["pattern_id"])
         self.assertEqual(pattern["asset_kind"], "vo")
         self.assertEqual(pattern["required_roles"], ["action"])
-        self.assertEqual(pattern["optional_roles"], ["champion", "companion", "skin"])
+        self.assertEqual(pattern["optional_roles"], ["champion", "companion", "phase", "skin"])
         self.assertEqual(pattern["support_level"], "experimental")
         self.assertIn("{action}", pattern["zh_CN_template"]["main"])
         self.assertEqual(pattern["record_count"], 1)

@@ -2,8 +2,7 @@ scope: champion
 owner: Nasus
 aliases:
   NasusCritAttack:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: crit_attack
     label: 暴击攻击
     confidence: medium
@@ -25,3 +24,15 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: laughult 在 NasusSkin05 事件中对应大招形态下的笑声表现。
+  ultformvox:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: ultimate_form_vocalization
+    label: 终极形态拟声
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      idle1: 待机变体1
+      run: 奔跑
+      runin: 起跑
+    note: NasusSkin05 的 ultformvox_* 是终极形态的待机/奔跑拟声层，动作后缀必须保留。

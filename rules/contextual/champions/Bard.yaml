@@ -1,11 +1,27 @@
 scope: champion
 owner: Bard
 aliases:
+  MeepSpawn:
+    kind: champion_spell_component
+    spell: p
+    component: meep_spawn
+    label: 木灵生成
+    confidence: high
+    source: manual_contextual_alias
+    note: MeepSpawn 与 meepspawn 大小写变体均表示被动木灵生成，owner-scoped 规则按大小写无关键匹配。
+  P:
+    kind: champion_spell_component
+    spell: p
+    component: meep_drone
+    label: 木灵
+    confidence: high
+    source: manual_contextual_alias
+    note: Bard 皮肤 SFX 的 P_Drone_N 全集表示被动木灵音效；P 是明确被动槽位，Drone 与数字是资源变体。
   meep:
     kind: champion_spell_component
     spell: p
     component: meep
-    label: 友谊礼物
+    label: 木灵
     confidence: medium
     source: manual_contextual_alias
-    note: meep 在 Bard 事件中对应被动 Meeps 的小写内部命名。
+    note: meep 在 Bard 事件中对应被动 Meeps（木灵）的小写内部命名。

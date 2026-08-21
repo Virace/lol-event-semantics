@@ -5,6 +5,7 @@
 ## 当前文件
 
 - `normalization.yaml`：token 清理规则和共享词标签。
+- `display_labels.yaml`：translation renderer 使用的受审展示词表；`system_sfx.item_action` 只按“reference 装备 ID/动作词干”精确承接装备音效余段，不提供跨装备 suffix fallback。
 - `phases.yaml`：阶段 key 和展示标签。
 - `map_actions.yaml`：地图动作标签和 token 级地图标签。
 - `action_aliases.yaml`：已 review 的全局与英雄特定动作别名。
@@ -13,7 +14,7 @@
 - `residual_modifiers.yaml`：可信技能/实体 stem 命中后解析的结构化修饰符。
 - `external_entities.yaml`：区域、物种、阵营、结构物和中立生物等手工 fallback 实体。
 - `low_trust_events.yaml`：已审阅的整句 exact fallback。命中后可把低置信噪声提升为 `medium`，但会在 `semantic_slots.low_trust_rule` 保留 `trust: low`。
-- `spell_match_constraints.yaml`：普攻类通用关键词（BasicAttack/CritAttack）允许推断为英雄技能的白名单，以及经 reference/raw 证据确认的 `owner + 单字母槽位 + residual` 精确白名单；未列入的弱匹配或 residual 不提升为技能槽位。
+- `spell_match_constraints.yaml`：经 reference/raw 证据确认的 `owner + 单字母槽位 + residual` 精确白名单；未列入的弱匹配或 residual 不提升为技能槽位。`BasicAttack/CritAttack` 始终属于攻击动作，技能来源只允许写入 contextual alias 的 `related_spell`，不得写成 `spell`。
 
 ## 上下文别名布局
 
@@ -46,6 +47,6 @@ aliases:
     confidence: high
 ```
 
-规则不是展示翻译。展示文本由下游生成器根据语义槽生成，可以比规则 label 更自然。
+规则不是展示翻译。展示文本由下游生成器根据语义槽与 `display_labels.yaml` 生成，可以比 contextual rule label 更自然。`contextual/sfx/map_system_entities.yaml` 的模式代号只有在外部解释与本地 raw/reference 共现复核一致后才能进入用户可见 fallback；社区解释本身不直接生成 translation frame。
 
 `low_trust_events.yaml` 只用于已经人工审阅过、暂时不适合抽成通用模式的 exact 事件名，不应作为通用模式库使用。若某类低信任规则后续能被官方参考数据或更明确的上下文规则解释，应迁移到对应高信任规则源；已确认的技能别名、内部技能 stem 和皮肤/技能 owner 上下文应优先放入 `contextual/**/*.yaml`。皮肤回城资源状态已由 `skin_recall_state` profile 统一处理，皮肤待机编号和武器/技能片段由 `skin_idle_state` profile 处理，非标准 shell 下的皮肤动作词尾 `2D/3D` 由 `skin_action_state` profile 处理，DJ Sona 音乐风格过渡由 `skin_audio_transition` profile 处理，Jinx/Jhin 皮肤命名状态由 `skin_named_state` profile 处理，Sion/Corki/Kled 等英雄状态由 `champion_status_state` profile 处理，Map FirstBlood 阶段选择由 `gameplay_phase_control` profile 处理，不再维护为低信任 exact fallback。

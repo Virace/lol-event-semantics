@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from .decomposition_model import EventDecompositionRecord, SemanticProfile
+from .display_tier import is_akshan_revive_sfx
 from .display_labels import DisplayLabels, get_display_labels, get_reference_map_names, use_display_sources
 from .normalized_translation_model import (
     FRAME_VERSION,
@@ -83,6 +84,7 @@ class ChampionLabelEntry(dict[str, str]):
 
 STATE_ACTIVATE_PHASES = {"on_buff_activate", "buff_activate", "buffactivate", "activate"}
 STATE_DEACTIVATE_PHASES = {"on_buff_deactivate", "buff_deactivate", "buffdeactivate", "deactivate"}
+BUFF_CAST_PHASES = {"on_buff_cast", "buff_cast", "buffcast"}
 VOICE_EVENT_FAMILIES = {
     "attack": "攻击",
     "taunt": "嘲讽",
@@ -130,6 +132,23 @@ SELF_ACTION_VOICE_FAMILIES = frozenset(
 # 批次3 qualifier 特例（SPEC 逐字措辞）：(family, qualifier 小写) → (zh, en) 核心词整体替换。
 VOICE_QUALIFIER_PHRASES = {
     ("dance", "in"): ("进入跳舞", "dance enter"),
+    # P4 self-action 残差：这些 token 都直接限定已解析动作段，不是新的动作族。
+    # 措辞复用 phase/action 既有语义；原 token 仍保存在 qualifier argument。
+    ("dance", "intro"): ("舞蹈引入", "dance intro"),
+    ("dance", "leadin"): ("舞蹈引入", "dance lead in"),
+    ("dance", "slower"): ("慢速舞蹈", "slower dance"),
+    ("dance", "spam"): ("连续舞蹈", "repeated dance"),
+    ("dance", "struggle"): ("挣扎舞蹈", "struggle dance"),
+    ("joke", "a"): ("玩笑A段", "joke segment A"),
+    ("joke", "b"): ("玩笑B段", "joke segment B"),
+    ("joke", "in"): ("玩笑进入", "joke enter"),
+    ("joke", "intro"): ("玩笑引入", "joke intro"),
+    ("joke", "main"): ("玩笑主体段", "joke main segment"),
+    ("recall", "improved"): ("强化回城", "improved recall"),
+    ("recall", "leadin"): ("回城引入", "recall lead in"),
+    ("recall", "leadout"): ("回城引出", "recall lead out"),
+    ("recall", "old"): ("旧版回城", "old recall"),
+    ("recall", "winddown"): ("回城收尾", "recall wind down"),
     ("ping", "enemymissing"): ("敌人消失", "enemy missing"),
     ("recall", "cancel"): ("取消回城", "cancel recall"),
     ("use_item", "ward"): ("使用守卫", "use ward"),
@@ -149,8 +168,9 @@ VOICE_QUALIFIER_CANONICAL_KEYS = {
 }
 # move 距离特例：semantic_slots.distance=long → 远距离移动（SPEC 措辞表）。
 VOICE_MOVE_LONG_PHRASE = ("远距离移动", "long distance move")
-# 无信息增量的通用 qualifier（General/Standard 等），不产生 qualifier argument。
-GENERIC_ACTION_QUALIFIERS = frozenset({"general", "generic", "loop", "standard"})
+# 无信息增量的通用 qualifier（General/Standard 等）以及已由 asset_kind /
+# dimension_token 表达的纯技术后缀，不产生 qualifier argument。
+GENERIC_ACTION_QUALIFIERS = frozenset({"3d", "general", "generic", "loop", "sfx", "standard"})
 # 壳动词只有偏离默认播放语义的才需要出现在文案里（信息无损：stop/mute/unmute
 # 都不可反转为播放）。本表是壳动词中文措辞的单一来源：playback argument 与
 # normalized_output.playback_verb_suffix（legacy 短文案后缀）共用，两条路径措辞
@@ -225,6 +245,7 @@ ANNOUNCER_EVENT_FAMILIES = frozenset({"announcer", "audio_scope", "announcer_per
 ANNOUNCER_ON_PREFIX_PATTERN = re.compile(r"On(?=[A-Z])")
 # partner raw 尾缀 SkinNN 时按 (champion, SkinNN) 查皮肤 zh 全名。
 PARTNER_SKIN_ALIAS_PATTERN = re.compile(r"(?P<champion>[A-Za-z][A-Za-z0-9]*?)(?P<skin>Skin[0-9]+)", re.IGNORECASE)
+CHAMPION_BANK_SOURCE_PATTERN = re.compile(r"(?:^|[\\/])champions[\\/](?P<id>[0-9]+)\.txt$", re.IGNORECASE)
 # partner raw 尾缀 Near/Far 是距离触发条件（同 2D/3D 的技术 token，Xayah/Rakan
 # 对话链 690/812 条带此形态），不是对话对象名的一部分：剥离后按 champion 重查，
 # 限定词存 provenance.proximity，原 token 无损保留在 argument.token。
@@ -236,16 +257,68 @@ TECHNICAL_CHAMPION_LABEL_MARKERS = ("3D", "2D", "_", "Play")
 # （decomposition_profiles.parse_terminal_dimension_action：仅整词尾，避免误伤
 # 词中/词首的 3D）；无词尾维度的小写形态（Base_death）原样通过。
 MEDIA_BASE_ACTION_DIMENSION_PATTERN = re.compile(r"(?P<action>[A-Za-z]+)(?P<dimension>[23]D)", re.IGNORECASE)
+# skin_named_state 中只有逐项审阅过的命名状态才能进入用户文案。Jhin 的
+# passive_idle 由 owner-scoped P 技能规则承接；这里处理无标准 sfx 壳、但
+# 已由专用 profile 确认主体与皮肤的 JinxSkin60 slotmachine 资源。
+SKIN_NAMED_SFX_EFFECTS = {
+    "slotmachine": ("slot_machine", "皮肤老虎机", "skin slot machine"),
+}
+SKIN_NAMED_SFX_QUALIFIERS = {
+    "anomaly": "异常",
+    "chemtech": "炼金科技",
+    "hextech": "海克斯科技",
+}
+SYSTEM_SFX_LIFECYCLE_TOKENS = frozenset({"buffactivate", "buffdeactivate", "loop"})
+ABILITY_SEQUENCE_QUALIFIER_WORDS = {
+    "aoe": "范围效果",
+    "beam": "光束",
+    "clone": "分身",
+}
+ABILITY_SEQUENCE_RICH_PHASES = frozenset({"leadin", "leadout", "loop", "winddown", "windup"})
 # Arena/ARAM 增益系事件：reference_entity.kind 三家族与 cue 家族标记段双条件
 # 分派（防未来单边漂移）。cue_path 首段标记之后一段是增益/道具 Code；标记
 # 同时归一出 provenance 的对象类别（Item→道具，ARAM/Augment→增益）。
 MODE_AUGMENT_REFERENCE_KINDS = frozenset({"augment_system", "game_mode", "item_system"})
 MODE_AUGMENT_CUE_MARKERS = {"aram": "augment", "augment": "augment", "item": "item"}
+MODE_AUGMENT_MODE_LABELS = {"aram": ("极地大乱斗", "ARAM")}
+MODE_AUGMENT_TARGET_QUALIFIERS = {
+    "player": ("自身", "self"),
+    "others": ("其他玩家", "other players"),
+}
+MODE_AUGMENT_ABILITY_SEGMENT_PATTERN = re.compile(r"(?P<owner>[A-Z][A-Za-z0-9]*?)(?P<spell_key>[QWERP])$")
 MODE_AUGMENT_BORROWED_SPELL_PATTERN = re.compile(
     r"(?P<owner>[A-Z][A-Za-z0-9]*?)(?P<spell_key>[QWERP])(?P<residual>[A-Z][A-Za-z0-9]+)"
 )
 # 系统/道具域标记不是模式名，模式前缀候选跳过不查 T3.4 词条表。
 MODE_AUGMENT_NON_MODE_MARKERS = frozenset({"augment", "item"})
+COMPONENT_CONTEXT_MODIFIER_PATTERN = re.compile(
+    r"^(?:(?P<qualifier>Empowered)(?P<phase>Start|End)|"
+    r"(?P<context_phase>Detonate|Loop|CloudHit|HitDirect|HitBig|Active|Inactive)(?:[0-9]+)?)$",
+    re.IGNORECASE,
+)
+COMPONENT_CONTEXT_PHASE_ALIASES = {
+    "active": "start",
+    "cloudhit": "hit",
+    "hitbig": "hit",
+    "hitdirect": "hit",
+    "inactive": "end",
+}
+COMPONENT_QUALIFIER_WORDS = {"empowered": ("强化", "empowered")}
+CHAMPION_ACTION_SFX_FAMILIES = frozenset(
+    {
+        "attack",
+        "dance",
+        "death",
+        "homeguard",
+        "idle",
+        "joke",
+        "laugh",
+        "recall",
+        "respawn",
+        "taunt",
+        "winddown",
+    }
+)
 
 
 def build_translation(
@@ -273,6 +346,7 @@ def build_translation(
     if translation is None:
         return None
 
+    attach_context_argument(translation, record)
     attach_playback_argument(translation, record)
     return translation
 
@@ -318,10 +392,31 @@ def build_translation_frame(
         # 与 interaction 的 move 共用同一措辞(「首次移动语音」)。
         return build_champion_interaction_cue(record, context)
 
+    mode_system_sfx = build_mode_system_sfx_event(record, context)
+    if mode_system_sfx is not None:
+        return mode_system_sfx
+
+    system_sfx = build_reviewed_system_sfx_event(record, context)
+    if system_sfx is not None:
+        return system_sfx
+
+    item_sfx = build_reviewed_item_sfx_event(record, context)
+    if item_sfx is not None:
+        return item_sfx
+
+    borrowed_ability = build_borrowed_ability_event(record, context)
+    if borrowed_ability is not None:
+        return borrowed_ability
+
+    mode_unit_attack = build_mode_unit_attack_event(record)
+    if mode_unit_attack is not None:
+        return mode_unit_attack
+
     builders = {
         "skin_recall_state": build_skin_recall_state,
         "skin_idle_state": build_skin_idle_state,
         "skin_action_state": build_skin_action_state,
+        "skin_named_state": build_skin_named_sfx_effect,
         # 批次5b：media_base 兜底桶里的英雄动作状态（Base_Dance3D_buffactivate 等）
         # 复用 skin_action_state frame；表外动作词/系统 UI 音由 builder 返回 None
         # 维持 legacy 展示。
@@ -335,11 +430,39 @@ def build_translation_frame(
     if builder is not None:
         return builder(record, context)
 
+    attack_kind = record.semantic_slots.get("attack_kind")
+    if record_has_champion_subject(record) and (
+        record.profile.primary_family in {"basic_attack", "crit_attack"}
+        or attack_kind in {"basic_attack", "crit_attack"}
+    ):
+        attack = build_champion_attack_event(record, context)
+        if attack is not None:
+            return attack
+
+    if record.profile.primary_family == "execute_action":
+        return build_champion_action_event(record, context)
+
+    if record.profile.primary_family == "contextual_action":
+        return build_champion_action_event(record, context)
+
+    ability_sequence = build_champion_ability_sequence_event(record, context)
+    if ability_sequence is not None:
+        return ability_sequence
+
+    ability_stage = build_champion_ability_stage_event(record, context)
+    if ability_stage is not None:
+        return ability_stage
+
+    ability_rank = build_champion_ability_rank_event(record, context)
+    if ability_rank is not None:
+        return ability_rank
+
     # 既有 5 个情绪动作家族维持原分派位置；批次3 家族不在此处接，
     # 让 ability builder 先接走带技能槽位的同名记录（见 SELF_ACTION_VOICE_FAMILIES）。
     if (
         record.profile.primary_family in VOICE_EVENT_FAMILIES
         and record.profile.primary_family not in SELF_ACTION_VOICE_FAMILIES
+        and record.shell.asset_kind != "sfx"
     ):
         return build_voice_event(record, context)
 
@@ -351,13 +474,49 @@ def build_translation_frame(
     if ability_cast is not None:
         return ability_cast
 
+    ability_component = build_champion_ability_component_event(record, context)
+    if ability_component is not None:
+        return ability_component
+
+    sfx_effect = build_champion_sfx_effect_event(record, context)
+    if sfx_effect is not None:
+        return sfx_effect
+
     # 增益系分派必须在 ability builder 之后：借用英雄技能的增益记录
     # （Oathsworn_KalistaRMis 等）由 ability frame 承接，不被增益 frame 抢占。
     mode_augment = build_mode_augment_event(record, context)
     if mode_augment is not None:
         return mode_augment
 
+    if (
+        record.shell.asset_kind == "sfx"
+        and record.profile.semantic_profile is SemanticProfile.SELF_ACTION
+        and record.profile.primary_family in CHAMPION_ACTION_SFX_FAMILIES
+    ):
+        action_event = build_champion_action_event(record, context)
+        if action_event is not None:
+            return action_event
+
     return build_self_action_voice_event(record, context)
+
+
+def record_has_champion_subject(record: EventDecompositionRecord) -> bool:
+    """判断事件是否确实以英雄为主体，避免地图单位套用英雄 frame。"""
+
+    if record.owner.kind == "champion":
+        namespace = record.semantic_slots.get("context_namespace") or record.semantic_slots.get("mode_context")
+        namespace_key = string_or_none(namespace.get("key")) if isinstance(namespace, dict) else None
+        owner_alias = record.owner.alias or record.owner.raw_owner_token
+        namespace_owner_keys = {rule_key(namespace_key), "gamemode"} if namespace_key is not None else set()
+        if owner_alias is None or rule_key(owner_alias) not in namespace_owner_keys:
+            return True
+
+    for key in ("subject", "mode_actor"):
+        value = record.semantic_slots.get(key)
+        if isinstance(value, dict) and value.get("kind") == "champion":
+            return True
+
+    return False
 
 
 def attach_playback_argument(translation: dict[str, object], record: EventDecompositionRecord) -> None:
@@ -375,6 +534,19 @@ def attach_playback_argument(translation: dict[str, object], record: EventDecomp
     arguments = translation.get("arguments")
     if isinstance(arguments, dict):
         arguments["playback"] = playback
+
+
+def attach_context_argument(translation: dict[str, object], record: EventDecompositionRecord) -> None:
+    """把已声明的模式/机制命名空间统一附加到所有 translation frame。"""
+
+    if not isinstance(record.semantic_slots.get("context_namespace"), dict):
+        return
+    context = context_namespace_argument(record)
+    if context is None:
+        return
+    arguments = translation.get("arguments")
+    if isinstance(arguments, dict):
+        arguments.setdefault("context", context)
 
 
 def playback_argument(verb: object) -> dict[str, object] | None:
@@ -432,16 +604,19 @@ def build_ability_state_change(
         return None
 
     rank = spell_rank_argument(slots)
+    stage = ability_stage_argument(slots.get("spell_stage"))
     if rank is not None and component is not None:
         strip_component_rank_suffix(component)
 
     arguments: dict[str, dict[str, object]] = {}
     for item in [
+        context_namespace_argument(record),
         champion_argument(record, context),
         skin_argument(record, context),
         slot,
         component,
         rank,
+        stage,
         phase,
     ]:
         if item is not None:
@@ -465,41 +640,41 @@ SPELL_RANK_ALIAS_PATTERN = re.compile(r"Rank(\d+)$")
 
 
 def spell_rank_argument(slots: dict[str, object]) -> dict[str, object] | None:
-    """构建技能等级 argument（rank 门禁修法）。
+    """构建技能等级 argument，并把显式 Rank 与普通数字变体隔离。"""
 
-    门禁：仅当 contextual_alias.raw 以 Rank\\d+ 结尾且尾号与 slots.spell_rank
-    一致时消费——spell_rank 同时承载非等级变体号（Tibbers 普攻2 等），全量
-    接入会把变体号误标技能等级（见 20_DECISIONS 2026-07-18 批次5b 条）。
+    raw: str | None = None
+    rank_value = slots.get("spell_rank")
+    if slots.get("variant_kind") == "spell_rank" and isinstance(rank_value, int) and rank_value > 0:
+        rank = rank_value
+        source = "semantic_slots.spell_rank_explicit"
+    else:
+        contextual_alias = slots.get("contextual_alias")
+        if not isinstance(contextual_alias, dict):
+            return None
 
-    Args:
-        slots: 拆解记录 semantic slots。
+        raw = string_or_none(contextual_alias.get("raw"))
+        if raw is None:
+            return None
 
-    Returns:
-        rank 参数；门禁不满足时返回 None。
-    """
+        match = SPELL_RANK_ALIAS_PATTERN.search(raw)
+        if match is None:
+            return None
 
-    contextual_alias = slots.get("contextual_alias")
-    if not isinstance(contextual_alias, dict):
-        return None
+        rank = int(match.group(1))
+        if rank_value != rank:
+            return None
+        source = "semantic_slots.spell_rank"
 
-    raw = string_or_none(contextual_alias.get("raw"))
-    if raw is None:
-        return None
-
-    match = SPELL_RANK_ALIAS_PATTERN.search(raw)
-    if match is None:
-        return None
-
-    rank = int(match.group(1))
-    if slots.get("spell_rank") != rank:
-        return None
+    provenance: dict[str, object] = {"source": source}
+    if raw is not None:
+        provenance["alias_raw"] = raw
 
     return argument_to_dict(
         TranslationArgument(
             role="rank",
             labels={"zh_CN": f"{rank}级", "en_US": f"rank {rank}"},
             confidence="high",
-            provenance={"source": "semantic_slots.spell_rank", "alias_raw": raw},
+            provenance=provenance,
             key=str(rank),
             value=str(rank),
         )
@@ -537,6 +712,17 @@ def is_ability_state_change_candidate(record: EventDecompositionRecord) -> bool:
     """
 
     slots = record.semantic_slots
+    # generic_sfx_effect 描述的是一段已审阅的音效/模式机制效果，而不是英雄
+    # 技能组件。即使原始事件使用 buffactivate/deactivate 作为生命周期尾段，
+    # 也必须交给 champion_sfx_effect_event 渲染为“音效开始/结束”；否则
+    # ability_component_argument 会把同一个别名误装成技能组件，重新产生
+    # “状态生效/结束”这类丢失音效语义的文案。
+    if any(
+        isinstance(alias, dict) and alias.get("kind") == "generic_sfx_effect"
+        for alias in (slots.get("contextual_alias"), slots.get("sfx_alias"))
+    ):
+        return False
+
     phase = slots.get("phase") or phase_from_cue_path(slots)
     if state_phase_key(phase) is not None:
         return True
@@ -544,8 +730,10 @@ def is_ability_state_change_candidate(record: EventDecompositionRecord) -> bool:
     if record.profile.primary_family == "champion_status_state":
         return True
 
-    contextual_alias = slots.get("contextual_alias")
-    return isinstance(contextual_alias, dict) and contextual_alias.get("component") is not None
+    # 技能组件只说明“哪个技能部分”，不能改变事件阶段。cast/hit/launch
+    # 应继续由 ability_cast_event 承接；无标准阶段的组件则由
+    # champion_ability_component_event 承接。仅显式状态相位可以进入本 frame。
+    return False
 
 
 def build_skin_recall_state(
@@ -564,7 +752,7 @@ def build_skin_recall_state(
 
     slots = record.semantic_slots
     phase = phase_argument(slots.get("phase"), "skin_recall_state")
-    action = action_argument("recall", "skin_recall_state")
+    action = apply_action_form(action_argument("recall_sfx", "skin_recall_state"), slots)
     if phase is None or action is None:
         return None
 
@@ -572,6 +760,7 @@ def build_skin_recall_state(
         record,
         "skin_recall_state",
         [
+            context_namespace_argument(record),
             champion_argument(record, context),
             skin_argument(record, context),
             action,
@@ -632,7 +821,10 @@ def build_skin_action_state(
     """
 
     slots = record.semantic_slots
-    action = action_argument(slots.get("action"), "skin_action_state")
+    raw_action = slots.get("action")
+    action_key = f"{raw_action}_sfx" if isinstance(raw_action, str) and record.shell.asset_kind == "sfx" else raw_action
+    action = apply_action_form(action_argument(action_key, "skin_action_state"), slots)
+    qualifier = champion_action_qualifier_argument(slots)
     phase = phase_argument(slots.get("phase"), "skin_action_state")
 
     if action is None or phase is None:
@@ -642,9 +834,607 @@ def build_skin_action_state(
         record,
         "skin_action_state",
         [
+            context_namespace_argument(record),
             champion_argument(record, context),
             skin_argument(record, context),
             action,
+            qualifier,
+            phase,
+        ],
+    )
+
+
+def build_champion_attack_event(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+) -> dict[str, object] | None:
+    """构建英雄普通攻击/暴击 frame，技能关联不参与主文案。"""
+
+    slots = record.semantic_slots
+    champion = champion_argument(record, context)
+    attack = attack_argument(slots, fallback_kind=record.profile.primary_family)
+    qualifier = reviewed_alias_qualifier_argument(slots, ("attack_component", "contextual_alias"))
+    phase = phase_argument(slots.get("phase") or phase_from_cue_path(slots), "champion_attack_event")
+    if champion is None or attack is None:
+        return None
+
+    return build_frame(
+        record,
+        "champion_attack_event",
+        [
+            context_namespace_argument(record),
+            champion,
+            skin_argument(record, context),
+            attack,
+            qualifier,
+            phase,
+        ],
+    )
+
+
+def build_champion_ability_sequence_event(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+) -> dict[str, object] | None:
+    """构建 Q+E、R+Q 等紧凑技能组合 frame，并保留数字分段。"""
+
+    slots = record.semantic_slots
+    sequence = ability_sequence_argument(slots.get("spell_sequence"))
+    champion = champion_argument(record, context)
+    if sequence is None or champion is None:
+        return None
+
+    stage = ability_stage_argument(
+        slots.get("spell_sequence_stage"),
+        source="semantic_slots.spell_sequence_stage",
+    )
+    component = ability_component_argument(slots)
+    qualifier = ability_sequence_qualifier_argument(slots)
+    phase = phase_argument(
+        ability_sequence_phase(slots),
+        "champion_ability_sequence_event",
+    )
+    return build_frame(
+        record,
+        "champion_ability_sequence_event",
+        [
+            context_namespace_argument(record),
+            champion,
+            skin_argument(record, context),
+            sequence,
+            component,
+            stage,
+            qualifier,
+            phase,
+        ],
+    )
+
+
+def ability_sequence_qualifier_argument(slots: dict[str, object]) -> dict[str, object] | None:
+    """从组合技 cue 中提取已审阅的范围、分身与光束修饰语。"""
+
+    cue_path = slots.get("cue_path")
+    if not isinstance(cue_path, list):
+        return None
+    rows = []
+    seen: set[str] = set()
+    for token in cue_path:
+        if not isinstance(token, str):
+            continue
+        key = rule_key(token)
+        label = ABILITY_SEQUENCE_QUALIFIER_WORDS.get(key)
+        if label is None or key in seen:
+            continue
+        rows.append({"key": key, "label": label, "raw": token})
+        seen.add(key)
+    return structured_qualifier_argument(
+        rows,
+        confidence="high",
+        source="semantic_slots.cue_path",
+    )
+
+
+def ability_sequence_phase(slots: dict[str, object]) -> object:
+    """组合技优先保留 loop/leadin 等信息量更高的尾部生命周期。"""
+
+    cue_phase = phase_from_cue_path(slots)
+    if isinstance(cue_phase, str) and cue_phase.lower() in ABILITY_SEQUENCE_RICH_PHASES:
+        return cue_phase
+    return slots.get("phase") or cue_phase
+
+
+def build_champion_ability_stage_event(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+) -> dict[str, object] | None:
+    """构建只有技能键与段数、没有已知触发相位的英雄音频 frame。"""
+
+    slots = record.semantic_slots
+    if slots.get("phase") is not None or phase_from_cue_path(slots) is not None:
+        return None
+
+    champion = champion_argument(record, context)
+    slot = ability_slot_argument(resolved_spell_key_for_translation(record))
+    component = ability_component_argument(slots)
+    stage = ability_stage_argument(slots.get("spell_stage"))
+    if champion is None or slot is None or stage is None:
+        return None
+
+    return build_frame(
+        record,
+        "champion_ability_stage_event",
+        [
+            context_namespace_argument(record),
+            champion,
+            skin_argument(record, context),
+            slot,
+            component,
+            stage,
+        ],
+    )
+
+
+def build_champion_ability_rank_event(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+) -> dict[str, object] | None:
+    """构建只有技能等级、没有动作相位的英雄音频 frame。"""
+
+    slots = record.semantic_slots
+    if slots.get("variant_kind") != "spell_rank":
+        return None
+    if slots.get("phase") is not None or phase_from_cue_path(slots) is not None:
+        return None
+
+    champion = champion_argument(record, context)
+    slot = ability_slot_argument(resolved_spell_key_for_translation(record))
+    rank = spell_rank_argument(slots)
+    if champion is None or slot is None or rank is None:
+        return None
+
+    return build_frame(
+        record,
+        "champion_ability_rank_event",
+        [
+            context_namespace_argument(record),
+            champion,
+            skin_argument(record, context),
+            slot,
+            rank,
+        ],
+    )
+
+
+def build_champion_ability_component_event(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+) -> dict[str, object] | None:
+    """构建只有技能槽位与已知组件、没有标准相位的英雄音频 frame。"""
+
+    if record.profile.semantic_profile is not SemanticProfile.SPELL_EVENT:
+        return None
+
+    slots = record.semantic_slots
+    contextual_alias = slots.get("contextual_alias")
+    sfx_alias = slots.get("sfx_alias")
+    if not any(
+        isinstance(alias, dict) and alias.get("kind") == "champion_spell_component"
+        for alias in (contextual_alias, sfx_alias)
+    ):
+        return None
+
+    champion = champion_argument(record, context)
+    slot = ability_slot_argument(resolved_spell_key_for_translation(record))
+    component = ability_component_argument(slots)
+    stage = ability_stage_argument(slots.get("spell_stage"))
+    raw_phase = slots.get("phase") or phase_from_cue_path(slots)
+    phase = phase_argument(raw_phase, "champion_ability_component_event")
+    if phase is None:
+        phase = phase_argument(component_context_phase(slots), "champion_ability_component_event")
+    qualifier = reviewed_alias_qualifier_argument(slots, ("contextual_alias", "sfx_alias"))
+    if qualifier is None:
+        qualifier = component_context_qualifier_argument(slots)
+    if champion is None or slot is None or component is None:
+        return None
+
+    return build_frame(
+        record,
+        "champion_ability_component_event",
+        [
+            context_namespace_argument(record),
+            champion,
+            skin_argument(record, context),
+            slot,
+            component,
+            stage,
+            qualifier,
+            phase,
+        ],
+    )
+
+
+def build_champion_action_event(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+) -> dict[str, object] | None:
+    """构建英雄动作 frame，用具体动作而非“状态启动”描述。"""
+
+    slots = record.semantic_slots
+    champion = champion_argument(record, context)
+    slot_action = slots.get("action")
+    action_key = slot_action if isinstance(slot_action, str) else f"{record.profile.primary_family}_sfx"
+    sfx_action = (
+        sfx_self_action_argument(record.profile.primary_family, slots)
+        if record.shell.asset_kind == "sfx" and record.profile.primary_family in VOICE_EVENT_FAMILIES
+        else None
+    )
+    action = apply_action_form(
+        action_component_argument(slots) or sfx_action or action_argument(action_key, "champion_action_event"),
+        slots,
+    )
+    qualifier = champion_action_qualifier_argument(slots)
+    phase = phase_argument(slots.get("phase") or phase_from_cue_path(slots), "champion_action_event")
+    if champion is None or action is None:
+        return None
+
+    return build_frame(
+        record,
+        "champion_action_event",
+        [
+            context_namespace_argument(record),
+            champion,
+            skin_argument(record, context),
+            action,
+            qualifier or (voice_qualifier_argument(record) if sfx_action is not None else None),
+            phase,
+        ],
+    )
+
+
+def build_champion_sfx_effect_event(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+) -> dict[str, object] | None:
+    """构建已人工审阅的英雄公共 SFX 效果 frame。"""
+
+    slots = record.semantic_slots
+    if (
+        record.shell.asset_kind != "sfx"
+        or slots.get("sfx_scope") not in {"champion_sfx", "mode_sfx"}
+        or not record_has_champion_subject(record)
+    ):
+        return None
+
+    champion = champion_argument(record, context)
+    effect = sfx_effect_argument(slots)
+    qualifier = sfx_effect_qualifier_argument(slots)
+    phase = phase_argument(slots.get("phase") or phase_from_cue_path(slots), "champion_sfx_effect_event")
+    if champion is None or effect is None:
+        return None
+
+    return build_frame(
+        record,
+        "champion_sfx_effect_event",
+        [
+            context_namespace_argument(record),
+            champion,
+            skin_argument(record, context),
+            effect,
+            qualifier,
+            phase,
+        ],
+    )
+
+
+def build_mode_system_sfx_event(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+) -> dict[str, object] | None:
+    """构建已审阅模式系统实体的 SFX frame，拒绝表外 cue 猜译。"""
+
+    slots = record.semantic_slots
+    mode_entity = slots.get("mode_entity")
+    if (
+        record.shell.asset_kind != "sfx"
+        or slots.get("sfx_scope") != "mode_sfx"
+        or record_has_champion_subject(record)
+        or not isinstance(slots.get("mode_context"), dict)
+        or not isinstance(mode_entity, dict)
+    ):
+        return None
+
+    effect = mode_system_sfx_effect_argument(mode_entity, context.map_system_entity_labels)
+    if effect is None:
+        return None
+
+    phase = phase_argument(
+        slots.get("phase") or phase_from_cue_path(slots),
+        "mode_system_sfx_event",
+    )
+    return build_frame(
+        record,
+        "mode_system_sfx_event",
+        [
+            context_namespace_argument(record),
+            effect,
+            phase,
+        ],
+    )
+
+
+def build_reviewed_system_sfx_event(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+) -> dict[str, object] | None:
+    """构建已审阅 HUD/Base、HUD 技能提示与 Gameplay 系统音效 frame。
+
+    只接受 ``display_labels.system_sfx.exact`` 中的完整相对路径；Base、Gameplay
+    是资源分组壳，末尾 buffactivate/buffdeactivate/loop 是生命周期。表外路径
+    返回 ``None``，避免把任意工程 token 逐词硬译成看似稳定的中文。无 Base
+    壳的 HUD 路径只承接已被 spell profile 识别的技能提示，不借此推广普通
+    Tier3 HUD 工程音。
+    """
+
+    if (
+        record.shell.asset_kind != "sfx"
+        or any(
+            isinstance(record.semantic_slots.get(slot_name), dict)
+            and record.semantic_slots[slot_name].get("kind") == "champion"
+            for slot_name in ("subject", "mode_actor")
+        )
+    ):
+        return None
+
+    raw_segments = reviewed_system_sfx_segments(record)
+    if raw_segments is None:
+        return None
+    normalized_segments = [rule_key(token) for token in raw_segments]
+    if any(not segment for segment in normalized_segments):
+        return None
+
+    active_labels = context.display_labels or get_display_labels()
+    raw_phase = None
+    core_segments = normalized_segments
+    exact_key = "/".join(core_segments)
+    zh_label = active_labels.system_sfx_exact.get(exact_key)
+    if zh_label is None and normalized_segments[-1] in SYSTEM_SFX_LIFECYCLE_TOKENS:
+        candidate_segments = normalized_segments[:-1]
+        candidate_key = "/".join(candidate_segments)
+        candidate_label = active_labels.system_sfx_exact.get(candidate_key)
+        if candidate_label is not None:
+            core_segments = candidate_segments
+            exact_key = candidate_key
+            zh_label = candidate_label
+            raw_phase = normalized_segments[-1]
+    if zh_label is None:
+        return None
+
+    display_label = zh_label if zh_label.endswith(("音效", "提示音", "音乐")) else f"{zh_label}音效"
+    effect = argument_to_dict(
+        TranslationArgument(
+            role="effect",
+            labels={
+                "zh_CN": display_label,
+                "en_US": f"{' '.join(core_segments).title()} SFX",
+            },
+            confidence="high",
+            provenance={
+                "source": "display_labels.system_sfx.exact",
+                "cue_path": exact_key,
+            },
+            key="_".join(core_segments),
+            token="/".join(raw_segments),
+        )
+    )
+    context_argument = system_sfx_context_argument(record, active_labels)
+    phase = phase_argument(raw_phase, "system_sfx_event")
+    return build_frame(
+        record,
+        "system_sfx_event",
+        [context_argument, effect, phase],
+    )
+
+
+def reviewed_system_sfx_segments(record: EventDecompositionRecord) -> list[str] | None:
+    """返回可进入精确系统音效词表的相对路径段。"""
+
+    family = record.profile.primary_family
+    if family in {"media_base", "gameplay_system"}:
+        cue_path = record.semantic_slots.get("cue_path")
+        if not isinstance(cue_path, list):
+            return None
+
+        marker = "base" if family == "media_base" else "gameplay"
+        marker_index = next(
+            (index for index, token in enumerate(cue_path) if isinstance(token, str) and rule_key(token) == marker),
+            None,
+        )
+        if marker_index is None:
+            return None
+
+        relative_path = cue_path[marker_index + 1 :]
+        raw_segments = [token for token in relative_path if isinstance(token, str)]
+        return raw_segments if raw_segments and len(raw_segments) == len(relative_path) else None
+
+    raw_owner = record.owner.raw_owner_token or record.owner.alias
+    if family != "spell" or rule_key(raw_owner or "") != "hud":
+        return None
+
+    body_segments = record.shell.body.split("_")
+    if len(body_segments) < 2 or rule_key(body_segments[0]) != "hud":
+        return None
+    return body_segments[1:]
+
+
+def build_reviewed_item_sfx_event(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+) -> dict[str, object] | None:
+    """用 reference 装备名与精确动作白名单承接装备音效生命周期。
+
+    纯数字 owner 继续承接单一生命周期及同形态的装备 Spell/OnCast。owner
+    后缀或生命周期后的余段只有命中 ``装备 ID/动作`` 精确白名单时才进入
+    effect；未知组合返回 ``None``，避免用装备总名掩盖尚未审阅的信息。
+    """
+
+    if (
+        record.shell.asset_kind != "sfx"
+        or record.profile.primary_family not in {"phase_event", "spell"}
+        or record_has_champion_subject(record)
+    ):
+        return None
+
+    raw_owner = record.owner.raw_owner_token or record.owner.alias
+    if raw_owner is None:
+        return None
+
+    owner_match = re.fullmatch(r"(?P<item_id>\d+)(?P<action>[A-Za-z][A-Za-z0-9]*)?", raw_owner)
+    if owner_match is None:
+        return None
+
+    item_id = int(owner_match.group("item_id"))
+    action_token = owner_match.group("action")
+
+    cue_path = record.semantic_slots.get("cue_path")
+    if cue_path is None:
+        if action_token is not None:
+            return None
+    else:
+        if not isinstance(cue_path, list) or not all(isinstance(token, str) for token in cue_path):
+            return None
+        if action_token is not None:
+            if len(cue_path) != 1:
+                return None
+        elif len(cue_path) == 2:
+            action_token = cue_path[1]
+        elif len(cue_path) != 1:
+            return None
+
+    names = context.reference_item_names.get(item_id)
+    if not isinstance(names, Mapping):
+        return None
+    zh_label = string_or_none(names.get("zh_CN"))
+    en_label = string_or_none(names.get("en_US"))
+    if zh_label is None or en_label is None:
+        return None
+
+    phase = phase_argument(record.semantic_slots.get("phase"), "system_sfx_event")
+    if phase is None:
+        return None
+
+    action_key: str | None = None
+    action_labels: tuple[str, str] | None = None
+    if action_token is not None:
+        action_key = rule_key(action_token)
+        active_labels = context.display_labels or get_display_labels()
+        action_labels = active_labels.system_sfx_item_action.get(f"{item_id}/{action_key}")
+        if action_labels is None:
+            return None
+
+    effect_key = f"item_{item_id}_sfx"
+    effect_zh = f"{zh_label}音效"
+    effect_en = f"{en_label} SFX"
+    provenance: dict[str, object] = {"source": "reference/items", "item_id": item_id}
+    if action_key is not None and action_labels is not None:
+        action_zh, action_en = action_labels
+        effect_key = f"item_{item_id}_{action_key}_sfx"
+        effect_zh = f"{zh_label}{action_zh}音效"
+        effect_en = f"{en_label} {action_en} SFX"
+        provenance.update(
+            {
+                "action_key": action_key,
+                "action_source": "display_labels.system_sfx.item_action",
+            }
+        )
+
+    effect = argument_to_dict(
+        TranslationArgument(
+            role="effect",
+            labels={"zh_CN": effect_zh, "en_US": effect_en},
+            confidence="high",
+            provenance=provenance,
+            key=effect_key,
+            token=action_token or raw_owner,
+        )
+    )
+    return build_frame(record, "system_sfx_event", [effect, phase])
+
+
+def system_sfx_context_argument(
+    record: EventDecompositionRecord,
+    labels: DisplayLabels,
+) -> dict[str, object] | None:
+    """从封闭 owner 词表构建系统音效上下文，表外工程名合法缺席。"""
+
+    raw_owner = record.owner.alias or record.owner.raw_owner_token
+    if raw_owner is None:
+        return None
+    owner_key = rule_key(raw_owner)
+    zh_label = labels.system_sfx_context.get(owner_key)
+    if zh_label is None:
+        return None
+    return argument_to_dict(
+        TranslationArgument(
+            role="context",
+            labels={"zh_CN": zh_label, "en_US": raw_owner},
+            confidence="high",
+            provenance={"source": "display_labels.system_sfx.context"},
+            key=owner_key,
+            token=raw_owner,
+        )
+    )
+
+
+def build_borrowed_ability_event(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+) -> dict[str, object] | None:
+    """构建终极魔典借用英雄大招 frame，保留模式与被借用英雄。"""
+
+    slots = record.semantic_slots
+    mode_context = slots.get("mode_context")
+    if not isinstance(mode_context, dict) or mode_context.get("key") != "ultimate_spellbook":
+        return None
+
+    champion = champion_argument(record, context)
+    slot = ability_slot_argument(resolved_spell_key_for_translation(record))
+    phase = phase_argument(slots.get("phase") or phase_from_cue_path(slots), "borrowed_ability_event")
+    if champion is None or slot is None or phase is None:
+        return None
+
+    return build_frame(
+        record,
+        "borrowed_ability_event",
+        [
+            context_namespace_argument(record),
+            champion,
+            slot,
+            phase,
+        ],
+    )
+
+
+def build_mode_unit_attack_event(record: EventDecompositionRecord) -> dict[str, object] | None:
+    """构建模式单位攻击 frame，实体与 BasicAttack/CritAttack 分角色保存。"""
+
+    slots = record.semantic_slots
+    mode_entity = slots.get("mode_entity")
+    if not isinstance(mode_entity, dict) or mode_entity.get("kind") != "mode_unit":
+        return None
+
+    entity = mode_unit_argument(mode_entity)
+    attack = attack_argument(slots)
+    phase = phase_argument(slots.get("phase") or phase_from_cue_path(slots), "mode_unit_attack_event")
+    if entity is None or attack is None:
+        return None
+
+    return build_frame(
+        record,
+        "mode_unit_attack_event",
+        [
+            context_namespace_argument(record),
+            entity,
+            attack,
             phase,
         ],
     )
@@ -663,8 +1453,9 @@ def build_media_base_action_state(
     动作 token 取 cue_path 中 Base 段（大小写两态）之后一段，剥词尾 2D/3D
     后按 skin_action_state 既有动作词表（display_labels.action，单一来源）
     解析；相位依次取 slots.phase、cue 尾段相位门禁（MEDIA_BASE_TAIL_PHASES）、
-    无尾段整段音效（overall），非相位尾段（音层/姿势/变体号/多段链）与表外
-    动作词不建 frame 维持 legacy——防错优先，严禁英文 fallback 进文案。
+    已审修饰尾段下的整段音效（overall）。姿势、音层、段位和编号变体必须先
+    由拆解层写入 action_qualifiers；仍含表外尾段或表外动作词时不建 frame——
+    防错优先，严禁英文 fallback 进文案。
     ``Base`` 分组词不进文案，cue_path 无损留在 semantic.slots。
 
     Args:
@@ -699,10 +1490,15 @@ def build_media_base_action_state(
     words = active_labels.action.get(action_key)
     if words is None:
         return None
+    if not media_base_tail_is_reviewed(tail, slots):
+        return None
 
+    qualifier = champion_action_qualifier_argument(slots)
     phase = phase_argument(slots.get("phase"), "skin_action_state", labels=labels)
     if phase is None:
         phase = media_base_tail_phase(tail, labels=active_labels)
+    if phase is None and qualifier is not None:
+        phase = media_base_tail_phase((), labels=active_labels)
     champion = champion_argument(record, context)
     if phase is None or champion is None or has_technical_champion_label(champion):
         return None
@@ -730,12 +1526,97 @@ def build_media_base_action_state(
             champion,
             skin_argument(record, context),
             action,
+            qualifier,
+            phase,
+        ],
+    )
+
+
+def build_skin_named_sfx_effect(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+) -> dict[str, object] | None:
+    """把已审阅皮肤命名音频状态接入具体效果 frame。
+
+    这类旧资源可能使用 ``Play_jinx_...`` 而没有 ``sfx`` 壳，因此只依赖
+    ``skin_named_state`` 专用 profile 的封闭 state/variant 词表，不以
+    ``shell.asset_kind`` 为门禁，也绝不把表外状态或变体直译进中文。
+    """
+
+    slots = record.semantic_slots
+    state_key = string_or_none(slots.get("state_key"))
+    words = SKIN_NAMED_SFX_EFFECTS.get(state_key or "")
+    if words is None:
+        return None
+
+    component_key, zh_label, en_label = words
+    champion = champion_argument(record, context)
+    if champion is None or has_technical_champion_label(champion):
+        return None
+
+    effect = argument_to_dict(
+        TranslationArgument(
+            role="effect",
+            labels={"zh_CN": f"{zh_label}音效", "en_US": f"{en_label} sfx"},
+            confidence="high",
+            provenance={"source": "semantic_slots.state_key"},
+            key=component_key,
+            token=state_key,
+        )
+    )
+
+    qualifier = None
+    raw_variant = string_or_none(slots.get("state_variant"))
+    if raw_variant is not None:
+        variant_key = raw_variant.lower()
+        variant_label = SKIN_NAMED_SFX_QUALIFIERS.get(variant_key)
+        if variant_label is None:
+            return None
+        qualifier = structured_qualifier_argument(
+            [{"key": variant_key, "label": variant_label, "raw": raw_variant}],
+            confidence="high",
+            source="semantic_slots.state_variant",
+        )
+
+    phase = phase_argument(slots.get("phase"), "champion_sfx_effect_event")
+    return build_frame(
+        record,
+        "champion_sfx_effect_event",
+        [
+            champion,
+            skin_argument(record, context),
+            effect,
+            qualifier,
             phase,
         ],
     )
 
 
 MEDIA_BASE_TAIL_PHASES = frozenset({"leadin", "leadout", "windup", "winddown", "loop"})
+
+
+def media_base_tail_is_reviewed(
+    tail: tuple[object, ...],
+    slots: Mapping[str, Any],
+) -> bool:
+    """确认动作尾段均为可渲染阶段或已结构化修饰语。"""
+
+    qualifier_rows = slots.get("action_qualifiers")
+    reviewed = (
+        {str(row.get("raw") or "").lower() for row in qualifier_rows if isinstance(row, dict) and row.get("raw")}
+        if isinstance(qualifier_rows, list)
+        else set()
+    )
+    for token in tail:
+        if not isinstance(token, str):
+            return False
+        lowered = token.lower()
+        if lowered in reviewed or lowered in MEDIA_BASE_TAIL_PHASES:
+            continue
+        if phase_key(token, "skin_action_state") is not None:
+            continue
+        return False
+    return True
 
 
 def media_base_action_cue(slots: Mapping[str, Any]) -> tuple[str, tuple[object, ...]] | None:
@@ -770,8 +1651,8 @@ def media_base_tail_phase(
 ) -> dict[str, object] | None:
     """把动作 token 后的 cue 尾段解析为 phase argument（批次6a）。
 
-    单段相位词按 MEDIA_BASE_TAIL_PHASES 门禁；无尾段合成 key=overall 的
-    整段音效相位；其余尾段（音层/姿势/变体号/多段链）返回 None 维持 legacy。
+    尾段中的相位词按 MEDIA_BASE_TAIL_PHASES 门禁；无尾段合成 key=overall
+    的整段音效相位。其余片段是否已被结构化由调用方先行校验。
 
     Args:
         tail: 动作 token 之后的 cue_path 尾段。
@@ -785,11 +1666,12 @@ def media_base_tail_phase(
     if not tail:
         key = "overall"
         token = None
-    elif len(tail) == 1 and isinstance(tail[0], str) and tail[0].lower() in MEDIA_BASE_TAIL_PHASES:
-        token = tail[0]
-        key = token.lower()
     else:
-        return None
+        phase_tokens = [item for item in tail if isinstance(item, str) and item.lower() in MEDIA_BASE_TAIL_PHASES]
+        if not phase_tokens:
+            return None
+        token = phase_tokens[-1]
+        key = token.lower()
 
     zh_label, en_label = labels.phase.get(key, (key, key))
     return argument_to_dict(
@@ -1051,7 +1933,10 @@ def build_voice_event(
         voice_event frame；无法识别动作家族时返回 None。
     """
 
-    action = voice_action_argument(record.profile.primary_family, record.shell.asset_kind, record.semantic_slots)
+    action = apply_action_form(
+        voice_action_argument(record.profile.primary_family, record.shell.asset_kind, record.semantic_slots),
+        record.semantic_slots,
+    )
     if action is None:
         return None
 
@@ -1060,6 +1945,10 @@ def build_voice_event(
         skin_argument(record, context),
         action,
         companion_argument(record, context),
+        phase_argument(
+            record.semantic_slots.get("phase") or phase_from_cue_path(record.semantic_slots),
+            "voice_event",
+        ),
     ]
     # qualifier 始终保留为结构化角色：已核验值参与 pattern signature，
     # 未核验值统一归入低置信待审组。动作标签负责用户可见表达，qualifier
@@ -2184,6 +3073,13 @@ def counterpart_argument(
         zh = counterpart_skin_zh_label(counterpart, context)
         if zh is not None:
             zh_source, confidence = "skin_labels", "high"
+        else:
+            champion_zh = counterpart_skin_champion_zh_label(counterpart, context)
+            if champion_zh is not None:
+                zh = f"{champion_zh}（未收录皮肤）"
+                zh_source, confidence = "champion_labels_missing_skin", "medium"
+                fallback = True
+                fallback_reason = "missing_counterpart_skin_label"
     else:
         zh = counterpart_vocab_zh(key, english, labels=labels)
         if zh is not None:
@@ -2238,6 +3134,22 @@ def counterpart_skin_zh_label(counterpart: dict[str, object], context: Translati
         return None
 
     return string_or_none(labels.get("zh_CN"))
+
+
+def counterpart_skin_champion_zh_label(
+    counterpart: dict[str, object],
+    context: TranslationBuildContext,
+) -> str | None:
+    """皮肤词条缺失时返回其基础英雄中文名，不暴露 SkinNN。"""
+
+    metadata = counterpart.get("metadata")
+    if not isinstance(metadata, dict):
+        return None
+    champion_alias = string_or_none(metadata.get("champion_alias"))
+    entry = context.champion_label(champion_alias)
+    if not isinstance(entry, Mapping):
+        return None
+    return string_or_none(entry.get("zh_CN"))
 
 
 def counterpart_vocab_zh(
@@ -2538,6 +3450,43 @@ def voice_action_argument(
     )
 
 
+def sfx_self_action_argument(
+    primary_family: str,
+    slots: Mapping[str, Any],
+) -> dict[str, object] | None:
+    """构建 SFX 自身动作，并把已审 qualifier 无损并入 canonical action。"""
+
+    base = action_argument(f"{primary_family}_sfx", "champion_action_event")
+    if base is None:
+        return None
+
+    qualifier = resolve_voice_qualifier(primary_family, slots)
+    if qualifier is None:
+        return base
+
+    labels = base.get("labels")
+    if not isinstance(labels, dict):
+        return base
+
+    if qualifier.action_mode == "replace":
+        zh_word, en_word = asset_kind_words("sfx")
+        labels["zh_CN"] = f"{qualifier.zh_cn}{zh_word}"
+        labels["en_US"] = f"{qualifier.en_us} {en_word}"
+    else:
+        labels["zh_CN"] = f"{qualifier.zh_cn}{string_or_none(labels.get('zh_CN')) or ''}"
+        labels["en_US"] = f"{qualifier.en_us} {string_or_none(labels.get('en_US')) or ''}".strip()
+
+    base["key"] = f"{primary_family}_{qualifier.key}_sfx"
+    base["confidence"] = qualifier.confidence
+    base["fallback"] = qualifier.fallback
+    if qualifier.fallback:
+        base["fallback_reason"] = "unreviewed_voice_qualifier"
+    provenance = base.get("provenance")
+    if isinstance(provenance, dict):
+        provenance["qualifier"] = qualifier.token or qualifier.key
+    return base
+
+
 def asset_kind_words(asset_kind: object) -> tuple[str, str]:
     """返回音频类型对应的中英文措辞。
 
@@ -2570,16 +3519,30 @@ def build_ability_cast_event(
         ability_cast_event frame；缺技能槽位或阶段、或属于借用大招时返回 None。
     """
 
-    if record.owner.alias == "UltBook":
+    if record.owner.alias == "UltBook" or is_akshan_revive_sfx(record):
         return None
 
     slots = record.semantic_slots
+    raw_phase = slots.get("phase") or phase_from_cue_path(slots)
+    if (
+        isinstance(raw_phase, str)
+        and raw_phase.lower() in BUFF_CAST_PHASES
+        and record.profile.semantic_profile is SemanticProfile.MAP_OR_SYSTEM
+    ):
+        # 模式增益借用英雄技能名不等于英雄本人施法；buff_cast 在该域仍需
+        # 专门词条核验，不能因 champion SFX 的分段修复被泛化成“技能释放”。
+        return None
     slot = ability_slot_argument(resolved_spell_key_for_translation(record))
-    phase = phase_argument(slots.get("phase") or phase_from_cue_path(slots), "ability_cast_event")
+    component = ability_component_argument(slots)
+    rank = spell_rank_argument(slots)
+    stage = ability_stage_argument(slots.get("spell_stage"))
+    phase = phase_argument(raw_phase, "ability_cast_event")
+    if rank is not None and component is not None:
+        strip_component_rank_suffix(component)
 
     # 仅真无相位（slots.phase 为空）时合成；词表外相位（missile_cast/stun 等）
     # 有明确时机但措辞未核验，标「整段音效」语义失准，维持 legacy 待考证。
-    if phase is None and slots.get("phase") is None:
+    if phase is None and slots.get("phase") is None and not prefer_reviewed_component_frame(slots):
         phase = sfx_spell_phase_argument(record)
 
     if slot is None or phase is None:
@@ -2589,9 +3552,13 @@ def build_ability_cast_event(
         record,
         "ability_cast_event",
         [
+            context_namespace_argument(record),
             champion_argument(record, context),
             skin_argument(record, context),
             slot,
+            component,
+            rank,
+            stage,
             phase,
         ],
     )
@@ -2610,12 +3577,14 @@ def build_mode_augment_event(
     ``[家族标记, Code, …]`` 形态（ARAM/Augment/Item 标记之后一段是
     增益/道具 Code）。augment 角色取外置词表（display_labels.augments）
     的客户端官方双语名，词表外 Code 不建 frame 维持 legacy——宁缺毋错，
-    严禁英文 fallback 进文案。mode 角色把 owner/cue 的模式标记经 T3.4
-    头部词条表解析为中文（Cherry→斗魂竞技场），表外标记合法缺席。相位
+    严禁英文 fallback 进文案。mode 角色把 owner/cue 的模式标记经已审
+    词条解析为中文（Cherry→斗魂竞技场、ARAM→极地大乱斗），表外标记
+    合法缺席。相位
     依次取既有 phase 映射、无相位 sfx 合成（cue 尾段相位词或整段音效）；
-    词表外相位（missile_cast/buff_cast 等）有明确时机但措辞未核验，维持
-    legacy 待考证。借用英雄技能的同域记录已由 ability builder 先接走，
-    本 builder 不回收。
+    已审 ``buff_cast`` 映射为释放，其他词表外相位维持 legacy 待考证。
+    借用英雄技能的同域记录通常由 ability builder 先接走；当增益名本身也
+    必须保留时，本 frame 追加 champion / ability_slot / qualifier 角色，
+    不再只显示英雄槽位而丢掉增益与听者目标。
 
     Args:
         record: 拆解记录。
@@ -2666,15 +3635,71 @@ def build_mode_augment_event(
             token=code,
         )
     )
+    champion, ability_slot, qualifier = mode_augment_borrowed_ability_arguments(record, context)
     return build_frame(
         record,
         "mode_augment_event",
         [
             mode_augment_mode_argument(record, labels=context.map_system_entity_labels or None),
             augment,
+            champion,
+            ability_slot,
+            qualifier,
             phase,
         ],
     )
+
+
+def mode_augment_borrowed_ability_arguments(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+) -> tuple[dict[str, object] | None, dict[str, object] | None, dict[str, object] | None]:
+    """解析增益 cue 中完整的借用英雄技能与听者目标。
+
+    只接受 ``Champion{QWERP}`` 精确段和 ``player|others`` 封闭目标词表；
+    普通增益的阶段段不会误命中。目标不存在时允许 qualifier 缺席，原始
+    cue_path 仍完整保留。
+    """
+
+    cue_path = record.semantic_slots.get("cue_path")
+    if not isinstance(cue_path, list) or len(cue_path) < 3:
+        return None, None, None
+    spell_segment = cue_path[2]
+    if not isinstance(spell_segment, str):
+        return None, None, None
+    match = MODE_AUGMENT_ABILITY_SEGMENT_PATTERN.fullmatch(spell_segment)
+    if match is None:
+        return None, None, None
+
+    champion = champion_argument(record, context)
+    slot = ability_slot_argument(record.semantic_slots.get("spell_key"))
+    if champion is None or slot is None:
+        return None, None, None
+    if str(champion.get("alias") or "").lower() != match.group("owner").lower():
+        return None, None, None
+    if str(slot.get("key") or "").lower() != match.group("spell_key").lower():
+        return None, None, None
+
+    qualifier = None
+    for token in cue_path[3:]:
+        if not isinstance(token, str):
+            continue
+        words = MODE_AUGMENT_TARGET_QUALIFIERS.get(token.lower())
+        if words is None:
+            continue
+        zh_label, en_label = words
+        qualifier = argument_to_dict(
+            TranslationArgument(
+                role="qualifier",
+                labels={"zh_CN": zh_label, "en_US": en_label},
+                confidence="high",
+                provenance={"source": "semantic_slots.cue_path", "kind": "listener_target"},
+                key=token.lower(),
+                token=token,
+            )
+        )
+        break
+    return champion, slot, qualifier
 
 
 def mode_augment_cue(slots: Mapping[str, Any]) -> tuple[str, str] | None:
@@ -2712,9 +3737,8 @@ def mode_augment_mode_argument(
     """构建增益系事件的模式前缀 argument（T3.4 头部词条表）。
 
     候选依次为 owner alias 与 cue 首段家族标记；Augment/Item 是系统/道具
-    域标记而非模式名，跳过不查。表外标记（ARAM 暂无 T3.4 词条）不出
-    argument，模式合法缺席，模式信息无损留在 owner/cue_path——宁可缺席，
-    不硬造中文模式名。
+    域标记而非模式名，跳过不查。ARAM 使用同仓库商店语音契约已核验的
+    “极地大乱斗”，其他表外标记合法缺席，模式信息无损留在 cue_path。
 
     Args:
         record: 拆解记录。
@@ -2735,6 +3759,21 @@ def mode_augment_mode_argument(
             continue
         if candidate.lower() in MODE_AUGMENT_NON_MODE_MARKERS:
             continue
+
+        reviewed_words = MODE_AUGMENT_MODE_LABELS.get(candidate.lower())
+        if reviewed_words is not None:
+            zh, en = reviewed_words
+            return argument_to_dict(
+                TranslationArgument(
+                    role="mode",
+                    labels={"zh_CN": zh, "en_US": en},
+                    confidence="high",
+                    provenance={"source": "mode_augment.reviewed_mode_labels"},
+                    key=candidate,
+                    token=candidate,
+                    omit_when_context_known=("mode",),
+                )
+            )
 
         zh = map_system_entity_label(candidate, labels)
         if zh is None:
@@ -2787,6 +3826,35 @@ def build_frame(
     }
 
 
+def context_namespace_argument(record: EventDecompositionRecord) -> dict[str, object] | None:
+    """构建模式/机制上下文 argument；上下文永不替代 champion 主体。"""
+
+    namespace = record.semantic_slots.get("context_namespace")
+    if not isinstance(namespace, dict):
+        namespace = record.semantic_slots.get("mode_context")
+    if not isinstance(namespace, dict):
+        return None
+
+    key = string_or_none(namespace.get("key"))
+    label = string_or_none(namespace.get("label"))
+    if key is None or label is None:
+        return None
+
+    return argument_to_dict(
+        TranslationArgument(
+            role="context",
+            labels={"zh_CN": label, "en_US": key.replace("_", " ")},
+            confidence="high",
+            provenance={
+                "source": string_or_none(namespace.get("source")) or "semantic_slots.context_namespace",
+                "kind": string_or_none(namespace.get("kind")) or "mode",
+            },
+            key=key,
+            token=key,
+        )
+    )
+
+
 def champion_argument(
     record: EventDecompositionRecord,
     context: TranslationBuildContext | None = None,
@@ -2825,7 +3893,14 @@ def champion_argument(
             label = cleaned_alias
         alias = cleaned_alias
 
-    entry = (context or TranslationBuildContext()).champion_label(alias)
+    active_context = context or TranslationBuildContext()
+    canonical_alias = canonical_champion_alias_for_record(record, active_context, alias)
+    if canonical_alias is not None and canonical_alias != alias:
+        alias = canonical_alias
+        label = canonical_alias
+        source = "translation_context.champion_identity"
+
+    entry = active_context.champion_label(alias)
     labels = locale_labels(entry, label or alias)
     provenance: dict[str, object] = {"source": source}
     fallback = False
@@ -2890,7 +3965,7 @@ def skin_argument(
         skin 参数；没有皮肤 token 时返回 None。
     """
 
-    champion_alias = champion_alias_for_skin(record)
+    champion_alias = champion_alias_for_skin(record, context)
     token = skin_token_for_record(record)
 
     if champion_alias is None or token is None:
@@ -2898,10 +3973,11 @@ def skin_argument(
 
     labels = context.skin_label(champion_alias, token)
     fallback = labels is None
+    display_labels = locale_labels(labels, token) if labels is not None else {"zh_CN": "未收录皮肤", "en_US": token}
     return argument_to_dict(
         TranslationArgument(
             role="skin",
-            labels=locale_labels(labels, token),
+            labels=display_labels,
             confidence="high" if not fallback else "low",
             provenance={"source": "translation_context" if not fallback else "skin_token"},
             token=token,
@@ -2927,17 +4003,64 @@ def ability_slot_argument(spell_key: object) -> dict[str, object] | None:
         return None
 
     value = spell_key.lower()
-    label = value.upper()
+    zh_cn = "被动技能" if value == "p" else f"{value.upper()}技能"
+    en_us = "passive ability" if value == "p" else f"{value.upper()} ability"
     return argument_to_dict(
         TranslationArgument(
             role="ability_slot",
-            labels={"zh_CN": f"{label}技能", "en_US": f"{label} ability"},
+            labels={"zh_CN": zh_cn, "en_US": en_us},
             confidence="high",
             provenance={"source": "semantic_slots.spell_key"},
             key=value,
             value=value,
         )
     )
+
+
+def ability_stage_argument(
+    stage: object,
+    *,
+    source: str = "semantic_slots.spell_stage",
+) -> dict[str, object] | None:
+    """构建技能分段 argument；与技能等级 rank 严格分离。"""
+
+    if not isinstance(stage, int) or stage <= 0:
+        return None
+
+    return argument_to_dict(
+        TranslationArgument(
+            role="ability_stage",
+            labels={"zh_CN": f"第{stage}段", "en_US": f"stage {stage}"},
+            confidence="high",
+            provenance={"source": source},
+            key=str(stage),
+            value=str(stage),
+        )
+    )
+
+
+def ability_sequence_argument(sequence: object) -> dict[str, object] | None:
+    """构建技能组合 argument；顺序与重复槽位均按原解析结果保留。"""
+
+    if not isinstance(sequence, list) or len(sequence) < 2:
+        return None
+    normalized = [str(item).lower() for item in sequence]
+    if any(item not in {"q", "w", "e", "r", "p"} for item in normalized):
+        return None
+
+    label = "+".join(item.upper() for item in normalized)
+    argument = argument_to_dict(
+        TranslationArgument(
+            role="ability_sequence",
+            labels={"zh_CN": f"{label}组合技", "en_US": f"{label} ability combo"},
+            confidence="medium",
+            provenance={"source": "semantic_slots.spell_sequence"},
+            key="_".join(normalized),
+            value="+".join(normalized),
+        )
+    )
+    argument["sequence"] = normalized
+    return argument
 
 
 def resolved_spell_key_for_translation(record: EventDecompositionRecord) -> object:
@@ -3024,6 +4147,18 @@ def ability_component_argument(
         source = string_or_none(contextual_alias.get("source")) or source
         confidence = string_or_none(contextual_alias.get("confidence")) or confidence
 
+    sfx_alias = slots.get("sfx_alias")
+    if (
+        component_key is None
+        and isinstance(sfx_alias, dict)
+        and sfx_alias.get("kind") in {"generic_sfx_effect", "champion_spell_component"}
+        and string_or_none(slots.get("spell_key")) in {"p", "q", "w", "e", "r"}
+    ):
+        component_key = string_or_none(sfx_alias.get("component"))
+        raw_label = string_or_none(sfx_alias.get("label"))
+        source = string_or_none(sfx_alias.get("source")) or "semantic_slots.sfx_alias"
+        confidence = string_or_none(sfx_alias.get("confidence")) or confidence
+
     idle_component = slots.get("idle_component")
     if component_key is None and isinstance(idle_component, dict):
         kind = string_or_none(idle_component.get("kind"))
@@ -3057,6 +4192,290 @@ def ability_component_argument(
             key=component_key,
         )
     )
+
+
+def has_reviewed_spell_component(slots: dict[str, object]) -> bool:
+    """判断 slots 是否包含人工审阅的英雄技能组件。"""
+
+    return any(
+        isinstance(alias, dict) and alias.get("kind") == "champion_spell_component"
+        for alias in (slots.get("contextual_alias"), slots.get("sfx_alias"))
+    )
+
+
+def prefer_reviewed_component_frame(slots: dict[str, object]) -> bool:
+    """判断无标准相位时是否应保留组件 frame，而非合成“整段音效”。"""
+
+    if not has_reviewed_spell_component(slots):
+        return False
+    if component_context_phase(slots) is not None or component_context_qualifier_argument(slots) is not None:
+        return True
+
+    for alias in (slots.get("contextual_alias"), slots.get("sfx_alias")):
+        if (
+            isinstance(alias, dict)
+            and alias.get("kind") == "champion_spell_component"
+            and alias.get("confidence") == "high"
+        ):
+            return True
+    return False
+
+
+def action_component_argument(slots: dict[str, object]) -> dict[str, object] | None:
+    """构建 owner-scoped 皮肤/角色动作组件 argument。"""
+
+    component = slots.get("action_component")
+    if not isinstance(component, dict):
+        contextual_alias = slots.get("contextual_alias")
+        if isinstance(contextual_alias, dict) and contextual_alias.get("kind") == "champion_action_component":
+            component = contextual_alias
+        else:
+            return None
+
+    component_key = string_or_none(component.get("component"))
+    zh_label = string_or_none(component.get("label"))
+    if component_key is None or zh_label is None:
+        return None
+
+    return argument_to_dict(
+        TranslationArgument(
+            role="action",
+            labels={"zh_CN": zh_label, "en_US": component_key.replace("_", " ").title()},
+            confidence=string_or_none(component.get("confidence")) or "medium",
+            provenance={"source": string_or_none(component.get("source")) or "semantic_slots.action_component"},
+            key=component_key,
+            token=string_or_none(component.get("raw")),
+        )
+    )
+
+
+def sfx_effect_argument(slots: dict[str, object]) -> dict[str, object] | None:
+    """把已审阅 ``generic_sfx_effect`` 别名转换为效果 argument。"""
+
+    alias = slots.get("sfx_alias")
+    if not isinstance(alias, dict) or alias.get("kind") != "generic_sfx_effect":
+        return None
+
+    component_key = string_or_none(alias.get("component"))
+    zh_label = string_or_none(alias.get("label"))
+    if component_key is None or zh_label is None:
+        return None
+
+    display_label = zh_label if zh_label.endswith(("音效", "音乐")) else f"{zh_label}音效"
+    return argument_to_dict(
+        TranslationArgument(
+            role="effect",
+            labels={"zh_CN": display_label, "en_US": f"{component_key.replace('_', ' ').title()} SFX"},
+            confidence=string_or_none(alias.get("confidence")) or "medium",
+            provenance={"source": string_or_none(alias.get("source")) or "semantic_slots.sfx_alias"},
+            key=component_key,
+            token=string_or_none(alias.get("raw")),
+        )
+    )
+
+
+def sfx_effect_qualifier_argument(slots: dict[str, object]) -> dict[str, object] | None:
+    """把规则白名单中的 SFX 中间修饰语建成可渲染 argument。"""
+
+    return reviewed_alias_qualifier_argument(slots, ("sfx_alias",))
+
+
+def champion_action_qualifier_argument(slots: dict[str, object]) -> dict[str, object] | None:
+    """构建英雄动作中的已审别名或分组 cue 修饰语。"""
+
+    alias_qualifier = reviewed_alias_qualifier_argument(
+        slots,
+        ("action_component", "contextual_alias"),
+    )
+    if alias_qualifier is not None:
+        return alias_qualifier
+
+    qualifier_rows = slots.get("action_qualifiers")
+    if not isinstance(qualifier_rows, list) or not qualifier_rows:
+        return None
+    return structured_qualifier_argument(
+        qualifier_rows,
+        confidence="high",
+        source="semantic_slots.action_qualifiers",
+    )
+
+
+def reviewed_alias_qualifier_argument(
+    slots: dict[str, object],
+    alias_slot_names: tuple[str, ...],
+) -> dict[str, object] | None:
+    """把 contextual alias 白名单修饰语建成结构化 qualifier。"""
+
+    alias = None
+    qualifier_rows = None
+    for slot_name in alias_slot_names:
+        candidate = slots.get(slot_name)
+        candidate_rows = candidate.get("qualifiers") if isinstance(candidate, dict) else None
+        if isinstance(candidate_rows, list) and candidate_rows:
+            alias = candidate
+            qualifier_rows = candidate_rows
+            break
+    if not isinstance(alias, dict) or not isinstance(qualifier_rows, list):
+        return None
+
+    return structured_qualifier_argument(
+        qualifier_rows,
+        confidence=string_or_none(alias.get("confidence")) or "medium",
+        source=string_or_none(alias.get("source")) or "semantic_slots.sfx_alias",
+    )
+
+
+def structured_qualifier_argument(
+    qualifier_rows: list[object],
+    *,
+    confidence: str,
+    source: str,
+) -> dict[str, object] | None:
+    """把已结构化的 qualifier 行合并为单个可渲染参数。"""
+
+    keys: list[str] = []
+    labels: list[str] = []
+    tokens: list[str] = []
+    for row in qualifier_rows:
+        if not isinstance(row, dict):
+            continue
+        key = string_or_none(row.get("key"))
+        label = string_or_none(row.get("label"))
+        if key is None or label is None:
+            continue
+        keys.append(key)
+        labels.append(label)
+        token = string_or_none(row.get("raw"))
+        if token is not None:
+            tokens.append(token)
+
+    if not keys:
+        return None
+
+    return argument_to_dict(
+        TranslationArgument(
+            role="qualifier",
+            labels={
+                "zh_CN": f"（{'、'.join(labels)}）",
+                "en_US": f" ({', '.join(labels)})",
+            },
+            confidence=confidence,
+            provenance={"source": source},
+            key="+".join(keys),
+            token="+".join(tokens) if tokens else None,
+        )
+    )
+
+
+def mode_system_sfx_effect_argument(
+    mode_entity: Mapping[str, object],
+    labels: Mapping[str, str],
+) -> dict[str, object] | None:
+    """把人工审阅的模式实体名转换为“实体音效” argument。"""
+
+    raw = string_or_none(mode_entity.get("alias")) or string_or_none(mode_entity.get("raw"))
+    if raw is None:
+        return None
+
+    entity_kind = string_or_none(mode_entity.get("kind"))
+    if entity_kind == "mode_boss":
+        zh_label = string_or_none(mode_entity.get("label"))
+        source = string_or_none(mode_entity.get("source")) or "semantic_slots.mode_entity"
+    elif entity_kind == "mode_system":
+        zh_label = labels.get(rule_key(raw))
+        source = "map_system_entity_labels"
+    else:
+        return None
+
+    if zh_label is None:
+        return None
+
+    return argument_to_dict(
+        TranslationArgument(
+            role="effect",
+            labels={"zh_CN": f"{zh_label}音效", "en_US": f"{raw} SFX"},
+            confidence=string_or_none(mode_entity.get("confidence")) or "medium",
+            provenance={"source": source, "entity_kind": entity_kind},
+            key=f"{rule_key(raw)}_sfx",
+            token=raw,
+        )
+    )
+
+
+def mode_unit_argument(mode_entity: Mapping[str, object]) -> dict[str, object] | None:
+    """构建人工审阅模式单位实体 argument。"""
+
+    alias = string_or_none(mode_entity.get("alias")) or string_or_none(mode_entity.get("raw"))
+    zh_label = string_or_none(mode_entity.get("label"))
+    if alias is None or zh_label is None:
+        return None
+
+    return argument_to_dict(
+        TranslationArgument(
+            role="entity",
+            labels={"zh_CN": zh_label, "en_US": alias},
+            confidence=string_or_none(mode_entity.get("confidence")) or "medium",
+            provenance={"source": string_or_none(mode_entity.get("source")) or "semantic_slots.mode_entity"},
+            alias=alias,
+            token=string_or_none(mode_entity.get("raw")),
+            key=string_or_none(mode_entity.get("component")) or rule_key(alias),
+        )
+    )
+
+
+def component_context_tokens(slots: dict[str, object]) -> list[str]:
+    """返回技能组件别名之后仍有用户语义的上下文 token。"""
+
+    tokens: list[str] = []
+    unresolved = slots.get("unresolved_context")
+    if isinstance(unresolved, list):
+        tokens.extend(item for item in unresolved if isinstance(item, str))
+    cue_path = slots.get("cue_path")
+    if isinstance(cue_path, list):
+        tokens.extend(item for item in cue_path if isinstance(item, str))
+    return list(dict.fromkeys(tokens))
+
+
+def component_context_qualifier_argument(slots: dict[str, object]) -> dict[str, object] | None:
+    """把 EmpoweredStart/End 一类复合尾缀中的强化语义建成 qualifier。"""
+
+    for token in component_context_tokens(slots):
+        match = COMPONENT_CONTEXT_MODIFIER_PATTERN.fullmatch(token)
+        if match is None:
+            continue
+        qualifier = match.group("qualifier")
+        if qualifier is None:
+            continue
+        key = qualifier.lower()
+        words = COMPONENT_QUALIFIER_WORDS.get(key)
+        if words is None:
+            continue
+        return argument_to_dict(
+            TranslationArgument(
+                role="qualifier",
+                labels={"zh_CN": words[0], "en_US": words[1]},
+                confidence="high",
+                provenance={"source": "semantic_slots.unresolved_context"},
+                key=key,
+                token=token,
+            )
+        )
+    return None
+
+
+def component_context_phase(slots: dict[str, object]) -> str | None:
+    """从已知组件上下文中恢复开始、结束或循环阶段。"""
+
+    for token in component_context_tokens(slots):
+        match = COMPONENT_CONTEXT_MODIFIER_PATTERN.fullmatch(token)
+        if match is not None:
+            phase = match.group("phase") or match.group("context_phase")
+            assert phase is not None
+            normalized = phase.lower()
+            return COMPONENT_CONTEXT_PHASE_ALIASES.get(normalized, normalized)
+        if token.lower() == "loop":
+            return "loop"
+    return None
 
 
 def phase_argument(
@@ -3095,6 +4514,81 @@ def phase_argument(
     )
 
 
+def attack_argument(
+    slots: Mapping[str, Any],
+    *,
+    fallback_kind: str | None = None,
+    labels: DisplayLabels | None = None,
+) -> dict[str, object] | None:
+    """构建普通攻击/暴击 argument，优先展示实体组件与攻击形态。"""
+
+    attack = slots.get("attack_kind")
+    if not isinstance(attack, str) and fallback_kind in {"basic_attack", "crit_attack"}:
+        attack = fallback_kind
+    if not isinstance(attack, str) or not attack:
+        return None
+
+    key = attack.lower()
+    active_labels = labels if labels is not None else get_display_labels()
+    contextual_alias = slots.get("contextual_alias")
+    if isinstance(contextual_alias, dict) and contextual_alias.get("kind") == "champion_attack_component":
+        component_key = string_or_none(contextual_alias.get("component"))
+        component_label = string_or_none(contextual_alias.get("label"))
+        if component_key is not None and component_label is not None:
+            argument = argument_to_dict(
+                TranslationArgument(
+                    role="attack",
+                    labels={"zh_CN": component_label, "en_US": component_key.replace("_", " ")},
+                    confidence=string_or_none(contextual_alias.get("confidence")) or "medium",
+                    provenance={"source": contextual_alias.get("source") or "semantic_slots.contextual_alias"},
+                    key=component_key,
+                )
+            )
+            add_attack_metadata(argument, slots)
+            return argument
+
+    attack_form = string_or_none(slots.get("attack_form"))
+    display_key = f"{attack_form}_{key}" if attack_form is not None else key
+    words = active_labels.attack.get(display_key) or active_labels.attack.get(key)
+    if words is None:
+        return None
+    zh, en = words
+    argument = argument_to_dict(
+        TranslationArgument(
+            role="attack",
+            labels={"zh_CN": zh, "en_US": en},
+            confidence="high",
+            provenance={"source": "semantic_slots.attack_kind"},
+            key=display_key if display_key in active_labels.attack else key,
+        )
+    )
+    add_attack_metadata(argument, slots)
+    return argument
+
+
+def add_attack_metadata(argument: dict[str, object], slots: Mapping[str, Any]) -> None:
+    """保留攻击形态/变体元数据，并让变体号进入可见标签。"""
+
+    attack_form = string_or_none(slots.get("attack_form"))
+    attack_variant = slots.get("attack_variant")
+    related_spell = string_or_none(slots.get("related_spell_key"))
+    if attack_form is not None:
+        argument["form"] = attack_form
+    if isinstance(attack_variant, int) and not isinstance(attack_variant, bool) and attack_variant > 0:
+        argument["variant"] = attack_variant
+        labels = argument.get("labels")
+        if isinstance(labels, dict):
+            variant_pattern = rf"(?<!\d){attack_variant}(?!\d)"
+            for locale in ("zh_CN", "en_US"):
+                label = labels.get(locale)
+                if not isinstance(label, str) or re.search(variant_pattern, label):
+                    continue
+                separator = "" if locale == "zh_CN" else " "
+                labels[locale] = f"{label}{separator}{attack_variant}"
+    if related_spell is not None:
+        argument["related_spell"] = related_spell
+
+
 def action_argument(
     action: object,
     frame_type: str,
@@ -3126,6 +4620,39 @@ def action_argument(
             key=action.lower(),
         )
     )
+
+
+def apply_action_form(
+    argument: dict[str, object] | None,
+    slots: dict[str, object],
+) -> dict[str, object] | None:
+    """把已审阅形态修饰并入动作 canonical key 与中英文标签。"""
+
+    if argument is None:
+        return None
+
+    action_form = slots.get("action_form")
+    if not isinstance(action_form, dict):
+        return argument
+
+    component = string_or_none(action_form.get("component"))
+    zh_prefix = string_or_none(action_form.get("label"))
+    key = string_or_none(argument.get("key"))
+    labels = argument.get("labels")
+    if component is None or zh_prefix is None or key is None or not isinstance(labels, dict):
+        return argument
+
+    zh_label = string_or_none(labels.get("zh_CN")) or key
+    en_label = string_or_none(labels.get("en_US")) or key.replace("_", " ")
+    en_prefix = component.replace("_", " ").title()
+    labels["zh_CN"] = f"{zh_prefix}{zh_label}"
+    labels["en_US"] = f"{en_prefix} {en_label}"
+    argument["key"] = f"{component}_{key}"
+    argument["form"] = component
+    provenance = argument.get("provenance")
+    if isinstance(provenance, dict):
+        provenance["form_source"] = action_form.get("source") or "semantic_slots.action_form"
+    return argument
 
 
 def variant_argument(slots: dict[str, object], frame_type: str) -> dict[str, object] | None:
@@ -3264,7 +4791,10 @@ def gameplay_event_argument(
     )
 
 
-def champion_alias_for_skin(record: EventDecompositionRecord) -> str | None:
+def champion_alias_for_skin(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext | None = None,
+) -> str | None:
     """返回用于查皮肤 label 的英雄 alias。
 
     Args:
@@ -3278,13 +4808,45 @@ def champion_alias_for_skin(record: EventDecompositionRecord) -> str | None:
     if isinstance(subject, dict):
         alias = string_or_none(subject.get("alias"))
         if alias is not None:
-            return strip_embedded_skin_token(alias)
+            cleaned = strip_embedded_skin_token(alias)
+            if context is not None:
+                canonical = canonical_champion_alias_for_record(record, context, cleaned)
+                if canonical is not None:
+                    return canonical
+            return cleaned
 
     alias = string_or_none(record.semantic_slots.get("subject_hint")) or record.owner.alias
     if alias is None:
         return None
 
-    return strip_embedded_skin_token(alias)
+    cleaned = strip_embedded_skin_token(alias)
+    if context is not None:
+        canonical = canonical_champion_alias_for_record(record, context, cleaned)
+        if canonical is not None:
+            return canonical
+    return cleaned
+
+
+def canonical_champion_alias_for_record(
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+    candidate_alias: str,
+) -> str | None:
+    """用精确 alias 或唯一英雄 bank id 还原形态/召唤物 owner 的基础英雄。"""
+
+    exact = context.canonical_champion_alias(candidate_alias)
+    if exact is not None:
+        return exact
+
+    bank_ids = {
+        int(match.group("id"))
+        for path in record.source_paths
+        if (match := CHAMPION_BANK_SOURCE_PATTERN.search(str(path))) is not None
+    }
+    aliases = {alias for champion_id in bank_ids if (alias := context.champion_alias_for_id(champion_id)) is not None}
+    if len(aliases) == 1:
+        return aliases.pop()
+    return None
 
 
 def strip_embedded_skin_token(alias: str) -> str:
@@ -3416,10 +4978,83 @@ def phase_key(phase: object, frame_type: str) -> str | None:
         return None
 
     normalized = str(phase).lower()
+    if normalized in {"explode", "explosion"}:
+        normalized = "detonate"
+    if normalized in BUFF_CAST_PHASES:
+        if frame_type in {"champion_attack_event", "mode_unit_attack_event"}:
+            return "attack_cast"
+        if frame_type in {
+            "champion_sfx_effect_event",
+            "skin_recall_state",
+            "skin_action_state",
+            "champion_action_event",
+            "voice_event",
+            "mode_system_sfx_event",
+            "system_sfx_event",
+        }:
+            return "audio_start"
+        if frame_type in {"ability_state_change", "ability_cast_event", "champion_ability_sequence_event"}:
+            return "cast"
+        if frame_type == "mode_augment_event":
+            return "cast"
+        return None
     if normalized in STATE_ACTIVATE_PHASES:
+        if frame_type in {"ability_state_change", "champion_ability_sequence_event"}:
+            return "effect_activate"
+        if frame_type in {
+            "champion_sfx_effect_event",
+            "skin_recall_state",
+            "skin_action_state",
+            "champion_action_event",
+            "voice_event",
+            "mode_system_sfx_event",
+            "system_sfx_event",
+        }:
+            return "audio_start"
+        if frame_type in {"champion_attack_event", "mode_unit_attack_event"}:
+            return "audio_start"
         return "state_activate"
     if normalized in STATE_DEACTIVATE_PHASES:
+        if frame_type in {"ability_state_change", "champion_ability_sequence_event"}:
+            return "effect_deactivate"
+        if frame_type in {
+            "champion_sfx_effect_event",
+            "skin_recall_state",
+            "skin_action_state",
+            "champion_action_event",
+            "voice_event",
+            "mode_system_sfx_event",
+            "system_sfx_event",
+        }:
+            return "audio_end"
+        if frame_type in {"champion_attack_event", "mode_unit_attack_event"}:
+            return "audio_end"
         return "state_deactivate"
+    if frame_type == "champion_ability_sequence_event" and normalized in ABILITY_SEQUENCE_RICH_PHASES:
+        return normalized
+    if frame_type in {"champion_attack_event", "mode_unit_attack_event"} and normalized == "cast":
+        return "attack_cast"
+    if frame_type in {
+        "champion_sfx_effect_event",
+        "skin_recall_state",
+        "skin_action_state",
+        "champion_action_event",
+        "voice_event",
+        "mode_system_sfx_event",
+        "system_sfx_event",
+    }:
+        if normalized in {"cast", "start", "on"}:
+            return "audio_start"
+        if normalized in {"end", "stop", "off"}:
+            return "audio_end"
+        if normalized in {"leadin", "leadout", "loop", "winddown", "windup"}:
+            # 明确的资源尾段比泛化“开始/结束”信息更丰富，直接保留；
+            # buffactivate/deactivate 仍走上方 audio_start/audio_end。
+            return normalized
+    if normalized in {"missile_cast", "missilecast"}:
+        return "missile_cast"
+    if frame_type == "champion_ability_component_event" and normalized in {"loop", "revive"}:
+        return normalized
     if normalized in {
         "cast",
         "in",
@@ -3497,7 +5132,24 @@ def phase_from_cue_path(slots: dict[str, object]) -> str | None:
             continue
 
         normalized = item.lower()
-        if normalized in {"buffactivate", "buffdeactivate", "onbuffactivate", "onbuffdeactivate", "cast"}:
+        if normalized == "into":
+            return "leadin"
+        if normalized in {"explode", "explosion"}:
+            return "detonate"
+        if normalized in {
+            "buffactivate",
+            "buffdeactivate",
+            "onbuffactivate",
+            "onbuffdeactivate",
+            "cast",
+            "leadin",
+            "leadout",
+            "loop",
+            "winddown",
+            "windup",
+            "on",
+            "off",
+        }:
             return normalized
 
     return None

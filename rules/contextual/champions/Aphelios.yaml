@@ -78,10 +78,10 @@ aliases:
     source: manual_contextual_alias
     note: InfernumQCastBurst 在 Aphelios 事件中对应 Infernum Q 释放时的爆发音效。
   Lunari:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_action_component
     component: lunari_thrust
-    label: 皎月教派动作
+    label: 皎月教突刺
     confidence: medium
     source: manual_contextual_alias
-    note: Lunari 在 Aphelios 事件中对应皮肤/角色专属的 Lunari 动作表现。
+    note: Lunari 在 Aphelios 的 Lunari_Thrust 事件中对应角色突刺动作，不是英雄被动技能；交互事件中的 Lunari
+      仍是皎月教阵营对象。

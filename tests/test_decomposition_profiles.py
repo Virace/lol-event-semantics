@@ -98,6 +98,7 @@ class ProfileClassifierSlotTests(unittest.TestCase):
 
         self.assertEqual(record.profile.semantic_profile, SemanticProfile.SPELL_EVENT)
         self.assertEqual(record.semantic_slots["spell_key"], "q")
+        self.assertEqual(record.semantic_slots["spell_stage"], 3)
         self.assertEqual(record.semantic_slots["spell_variant"], 3)
         self.assertEqual(record.semantic_slots["variant_kind"], "numbered_spell_variant")
         self.assertFalse(record.semantic_slots["requires_champion_mechanic_context"])
@@ -108,10 +109,62 @@ class ProfileClassifierSlotTests(unittest.TestCase):
 
         self.assertEqual(record.profile.semantic_profile, SemanticProfile.SPELL_EVENT)
         self.assertEqual(record.semantic_slots["spell_key"], "w")
+        self.assertEqual(record.semantic_slots["spell_stage"], 1)
         self.assertEqual(record.semantic_slots["spell_variant"], 1)
         self.assertEqual(record.semantic_slots["phase"], "cast")
         self.assertEqual(record.semantic_slots["line_variant"], 1)
         self.assertFalse(record.unknowns)
+
+    def test_champion_sfx_basic_attack_preserves_actor_skin_variant_and_phase(self) -> None:
+        """SFX 普攻必须保留可展示语义，不能退成只有 trigger 的技术桶。"""
+
+        record = self.normalize("Play_sfx_TryndamereSkin10_TryndamereBasicAttack2_OnCast")
+
+        self.assertEqual(record.profile.semantic_profile, SemanticProfile.SELF_ACTION)
+        self.assertEqual(record.profile.primary_family, "basic_attack")
+        self.assertEqual(record.semantic_slots["attack_kind"], "basic_attack")
+        self.assertEqual(record.semantic_slots["attack_variant"], 2)
+        self.assertEqual(record.semantic_slots["phase"], "cast")
+        self.assertEqual(record.semantic_slots["subject_hint"], "Tryndamere")
+        self.assertEqual(record.semantic_slots["skin_token"], "Skin10")
+        self.assertEqual(record.semantic_slots["cue_path"], ["TryndamereBasicAttack2", "OnCast"])
+
+    def test_generic_sfx_phase_prefers_explicit_tail_over_embedded_effect_state(self) -> None:
+        """事件尾部 OnBuffActivate 是生命周期；技能词干里的 Root 不是事件 phase。"""
+
+        record = self.normalize("Play_sfx_Leblanc_LeblancERoot_OnBuffActivate")
+
+        self.assertEqual(record.semantic_slots["phase"], "on_buff_activate")
+
+    def test_generic_sfx_recognizes_onhit_tail_as_hit_phase(self) -> None:
+        """全小写 onhit 仍是明确命中阶段，不能在通用 SFX 路径里静默丢失。"""
+
+        record = self.normalize("Play_sfx_odysseyaugments_yasuoqe1_onhit")
+
+        self.assertEqual(record.semantic_slots["phase"], "hit")
+
+    def test_action_lifecycle_prefers_loop_over_buff_transport_phase(self) -> None:
+        """动作分段 Loop 比承载层 buffactivate 更具体，VO/SFX 都必须保留。"""
+
+        for asset_kind in ("vo", "sfx"):
+            raw = f"Play_{asset_kind}_Bard_Dance3D_Loop_buffactivate"
+            with self.subTest(raw=raw):
+                record = self.normalize(raw)
+
+                self.assertEqual(record.profile.primary_family, "dance")
+                self.assertEqual(record.semantic_slots["phase"], "loop")
+                self.assertEqual(
+                    record.semantic_slots["cue_path"],
+                    ["Dance3D", "Loop", "buffactivate"],
+                )
+
+    def test_action_buff_lifecycle_is_preserved_without_segment(self) -> None:
+        """没有更具体分段时，表情动作的 buffactivate 仍作为音频开始语义保留。"""
+
+        record = self.normalize("Play_vo_GnarBig_dance_buffactivate")
+
+        self.assertEqual(record.profile.primary_family, "dance")
+        self.assertEqual(record.semantic_slots["phase"], "buff_activate")
 
     def test_move_first_ally_has_relation_target(self) -> None:
         record = self.normalize("Play_vo_Milio_Move2DFirstAllyQiyana")
@@ -372,9 +425,9 @@ class ProfileClassifierSlotTests(unittest.TestCase):
         record = self.normalize("Play_vo_ShyvanaDragonSkin08_ShyvanaBasicAttack2_cast3D")
 
         self.assertEqual(record.profile.semantic_profile, SemanticProfile.SELF_ACTION)
-        self.assertEqual(record.semantic_slots["trigger_family"], "attack")
+        self.assertEqual(record.semantic_slots["trigger_family"], "basic_attack")
         self.assertEqual(record.semantic_slots["attack_kind"], "basic_attack")
-        self.assertEqual(record.semantic_slots["attack_rank"], 2)
+        self.assertEqual(record.semantic_slots["attack_variant"], 2)
         self.assertEqual(record.semantic_slots["dimension_token"], "3D")
         self.assertFalse(record.unknowns)
 
@@ -382,10 +435,10 @@ class ProfileClassifierSlotTests(unittest.TestCase):
         record = self.normalize("Play_vo_SingedSkin10_SingedSkin10BasicAttack2_cast3D")
 
         self.assertEqual(record.profile.semantic_profile, SemanticProfile.SELF_ACTION)
-        self.assertEqual(record.semantic_slots["trigger_family"], "attack")
+        self.assertEqual(record.semantic_slots["trigger_family"], "basic_attack")
         self.assertEqual(record.semantic_slots["attack_kind"], "basic_attack")
         self.assertEqual(record.semantic_slots["attack_context"], "Skin10")
-        self.assertEqual(record.semantic_slots["attack_rank"], 2)
+        self.assertEqual(record.semantic_slots["attack_variant"], 2)
         self.assertFalse(record.unknowns)
 
     def test_owner_prefixed_long_basic_is_attack_event(self) -> None:
@@ -398,11 +451,24 @@ class ProfileClassifierSlotTests(unittest.TestCase):
         self.assertEqual(record.semantic_slots["dimension_token"], "3D")
         self.assertFalse(record.unknowns)
 
+    def test_numeric_spell_rank_is_not_a_spell_stage_or_variant(self) -> None:
+        """Spell2DPRank2 的 Rank2 是技能等级，不是第 2 段。"""
+
+        record = self.normalize("Play_vo_Kayle_Spell2DPRank2")
+
+        self.assertEqual(record.profile.semantic_profile, SemanticProfile.SPELL_EVENT)
+        self.assertEqual(record.semantic_slots["spell_key"], "p")
+        self.assertEqual(record.semantic_slots["spell_rank"], 2)
+        self.assertIsNone(record.semantic_slots["spell_stage"])
+        self.assertIsNone(record.semantic_slots["spell_variant"])
+        self.assertEqual(record.semantic_slots["variant_kind"], "spell_rank")
+        self.assertFalse(record.unknowns)
+
     def test_contextual_basic_attack_before_attack_trigger_is_attack_event(self) -> None:
         record = self.normalize("Play_vo_SLIME_Blue_BlueBasicAttack_Attack3D")
 
         self.assertEqual(record.profile.semantic_profile, SemanticProfile.SELF_ACTION)
-        self.assertEqual(record.semantic_slots["trigger_family"], "attack")
+        self.assertEqual(record.semantic_slots["trigger_family"], "basic_attack")
         self.assertEqual(record.semantic_slots["attack_kind"], "basic_attack")
         self.assertEqual(record.semantic_slots["actor"], "Blue")
         self.assertEqual(record.semantic_slots["dimension_token"], "3D")

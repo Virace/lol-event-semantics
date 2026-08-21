@@ -66,7 +66,7 @@ class NormalizedTranslationBuilderGalioTests(unittest.TestCase):
         self.assertFalse(args["skin"]["fallback"])
         self.assertEqual(args["ability_slot"]["value"], "w")
         self.assertEqual(args["ability_component"]["key"], "passive_defense")
-        self.assertEqual(args["phase"]["key"], "state_deactivate")
+        self.assertEqual(args["phase"]["key"], "effect_deactivate")
 
 
 class NormalizedTranslationBuilderHeimerTests(unittest.TestCase):
@@ -87,7 +87,223 @@ class NormalizedTranslationBuilderHeimerTests(unittest.TestCase):
         self.assertEqual(args["ability_slot"]["key"], "r")
         self.assertEqual(args["ability_component"]["key"], "empowered_q_turret")
         self.assertEqual(args["ability_component"]["labels"]["zh_CN"], "强化Q炮台")
-        self.assertEqual(args["phase"]["key"], "state_activate")
+        self.assertEqual(args["phase"]["key"], "effect_activate")
+
+
+class NormalizedTranslationBuilderChampionSfxEffectTests(unittest.TestCase):
+    """验证已审阅公共 SFX 效果不会在翻译层丢失。"""
+
+    def test_curated_champion_sfx_alias_builds_effect_frame(self) -> None:
+        """Spawn/Run/Channel 应输出具体音效，而不是退化成“状态启动”。"""
+
+        cases = [
+            ("Play_sfx_ApheliosSkin01_Spawn3D_buffactivate", "spawn", "出生/生成"),
+            ("Play_sfx_YuumiSkin01_Run3D_buffactivate_slow", "run", "奔跑"),
+            ("Play_sfx_ZedSkin13_Channel_buffactivate", "channel", "引导"),
+        ]
+
+        for raw, expected_key, expected_label in cases:
+            with self.subTest(raw=raw):
+                translation = build_translation(enriched_record(raw), reference_translation_context())
+
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], "champion_sfx_effect_event")
+                self.assertEqual(translation["arguments"]["effect"]["key"], expected_key)
+                self.assertEqual(
+                    translation["arguments"]["effect"]["labels"]["zh_CN"],
+                    f"{expected_label}音效",
+                )
+                self.assertEqual(translation["arguments"]["phase"]["key"], "audio_start")
+
+    def test_curated_champion_sfx_alias_renders_meaningful_chinese(self) -> None:
+        """专用效果 frame 的短文案必须包含已审阅中文效果词。"""
+
+        from lol_event_semantics.normalized_output import build_normalized_record
+
+        normalized = build_normalized_record(
+            enriched_record("Play_sfx_ApheliosSkin01_Spawn3D_buffactivate"),
+            translation_context=reference_translation_context(),
+        )
+
+        self.assertEqual(normalized["display"]["tier"], 1)
+        self.assertEqual(normalized["display"]["zh_cn_short"], "出生/生成音效开始")
+        self.assertIn("厄斐琉斯", normalized["display"]["zh_cn_detail"])
+        self.assertIn("出生/生成音效开始", normalized["display"]["zh_cn_detail"])
+        self.assertNotIn("状态启动", normalized["display"]["zh_cn_detail"])
+
+    def test_mode_sfx_buff_lifecycle_is_audio_not_ability_state(self) -> None:
+        """模式特效的 buff 生命周期不得把 effect 别名误装成技能组件。"""
+
+        from lol_event_semantics.normalized_output import build_normalized_record
+
+        cases = [
+            (
+                "Play_sfx_Strawberry_Boss_Aatrox_ChainPlayer_buffactivate",
+                "audio_start",
+                "PVE 模式 锁链牵引音效开始",
+            ),
+            (
+                "Play_sfx_Strawberry_Boss_Aatrox_ChainPlayer_buffdeactivate",
+                "audio_end",
+                "PVE 模式 锁链牵引音效结束",
+            ),
+        ]
+        for raw, expected_phase, expected_short in cases:
+            with self.subTest(raw=raw):
+                normalized = build_normalized_record(
+                    enriched_record(raw),
+                    translation_context=reference_translation_context(),
+                )
+
+                translation = normalized["translation"]
+                self.assertEqual(translation["frame_type"], "champion_sfx_effect_event")
+                self.assertEqual(translation["arguments"]["effect"]["key"], "chain_player")
+                self.assertEqual(translation["arguments"]["phase"]["key"], expected_phase)
+                self.assertNotIn("ability_component", translation["arguments"])
+                self.assertEqual(normalized["display"]["zh_cn_short"], expected_short)
+                self.assertNotRegex(
+                    normalized["display"]["zh_cn_detail"],
+                    r"状态启动|状态结束|尚无中文短标签",
+                )
+
+    def test_map_sfx_alias_does_not_build_champion_effect_frame(self) -> None:
+        """地图单位的 SFX 别名不得套用英雄专用效果 frame。"""
+
+        translation = build_translation(
+            enriched_record("Play_sfx_SRU_ChaosMinionRanged_OnBuffActivate"),
+            reference_translation_context(),
+        )
+
+        self.assertTrue(translation is None or translation["frame_type"] != "champion_sfx_effect_event")
+
+    def test_champion_spell_component_takes_priority_over_generic_sfx_alias(self) -> None:
+        """英雄专属技能名应进入 ability component，不降级成公共 SFX 效果。"""
+
+        cases = [
+            (
+                "Play_sfx_BlitzcrankSkin07_Overdrive_OnBuffActivate",
+                "w",
+                "overdrive",
+                "过载运转",
+                "manual_sfx_alias",
+            ),
+            (
+                "Play_sfx_Gnar_GnarTransform_OnBuffActivate",
+                "p",
+                "rage_gene_transform",
+                "狂怒基因变身",
+                "manual_contextual_alias",
+            ),
+        ]
+
+        for raw, spell_key, component_key, expected_label, expected_source in cases:
+            with self.subTest(raw=raw):
+                translation = build_translation(enriched_record(raw), reference_translation_context())
+
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], "ability_state_change")
+                self.assertEqual(translation["arguments"]["ability_slot"]["key"], spell_key)
+                self.assertEqual(translation["arguments"]["ability_component"]["key"], component_key)
+                self.assertEqual(
+                    translation["arguments"]["ability_component"]["labels"]["zh_CN"],
+                    expected_label,
+                )
+                self.assertEqual(
+                    translation["arguments"]["ability_component"]["provenance"]["source"],
+                    expected_source,
+                )
+
+    def test_sfx_specific_spell_component_without_phase_keeps_component_frame(self) -> None:
+        """SFX 专属技能组件即使没有标准相位，也不能退化成空翻译。"""
+
+        translation = build_translation(
+            enriched_record("Play_sfx_BlitzcrankSkin07_Overdrive"),
+            reference_translation_context(),
+        )
+
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        self.assertEqual(translation["frame_type"], "champion_ability_component_event")
+        self.assertEqual(translation["arguments"]["ability_slot"]["key"], "w")
+        self.assertEqual(translation["arguments"]["ability_component"]["key"], "overdrive")
+        self.assertEqual(
+            translation["arguments"]["ability_component"]["labels"]["zh_CN"],
+            "过载运转",
+        )
+
+    def test_spell_component_revival_phase_is_preserved(self) -> None:
+        """RRevive 已解析出的复活阶段必须进入 component frame 与展示。"""
+
+        translation = build_translation(
+            enriched_record("Play_sfx_AatroxSkin07_AatroxRRevive_player"),
+            reference_translation_context(),
+        )
+
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        self.assertEqual(translation["frame_type"], "champion_ability_component_event")
+        self.assertEqual(translation["arguments"]["ability_component"]["key"], "world_ender_revival")
+        self.assertEqual(translation["arguments"]["phase"]["key"], "revive")
+        display = build_compat_display(translation)
+        self.assertIn(translation["arguments"]["phase"]["labels"]["zh_CN"], display["zh_cn_short"])
+
+    def test_spell_component_cast_is_not_misrouted_as_state_change(self) -> None:
+        """技能组件的 cast 相位仍是施放事件，不能仅因组件存在变成状态变化。"""
+
+        cases = [
+            (
+                "Play_sfx_FizzSkin04_FizzPiercingStrike_OnCast",
+                "q",
+                "urchin_strike",
+                "淘气打击",
+            ),
+        ]
+
+        for raw, spell_key, component_key, expected_label in cases:
+            with self.subTest(raw=raw):
+                translation = build_translation(enriched_record(raw), reference_translation_context())
+
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], "ability_cast_event")
+                self.assertEqual(translation["arguments"]["ability_slot"]["key"], spell_key)
+                self.assertEqual(translation["arguments"]["ability_component"]["key"], component_key)
+                self.assertEqual(
+                    translation["arguments"]["ability_component"]["labels"]["zh_CN"],
+                    expected_label,
+                )
+                self.assertEqual(translation["arguments"]["phase"]["key"], "cast")
+
+    def test_sfx_specific_alias_does_not_change_vo_stable_pattern(self) -> None:
+        """SFX 专名规则不得给同名 VO 记录新增组件角色。"""
+
+        translation = build_translation(
+            enriched_record("Play_vo_BlitzcrankSkin29_Overdrive_cast3D"),
+            reference_translation_context(),
+        )
+
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        self.assertEqual(translation["frame_type"], "ability_cast_event")
+        self.assertEqual(translation["arguments"]["ability_slot"]["key"], "w")
+        self.assertNotIn("ability_component", translation["arguments"])
+
+    def test_legacy_iblitz_sfx_uses_base_champion_and_official_component(self) -> None:
+        """iBlitz SFX 应恢复布里茨实体、W 槽位与过载运转专名。"""
+
+        from lol_event_semantics.normalized_output import build_normalized_record
+
+        normalized = build_normalized_record(
+            enriched_record("Play_sfx_iBlitz_Overdrive_OnBuffActivate"),
+            translation_context=reference_translation_context(),
+        )
+
+        self.assertEqual(normalized["entity"], {"kind": "champion", "alias": "Blitzcrank"})
+        self.assertEqual(normalized["display"]["zh_cn_short"], "W技能过载运转生效")
+        self.assertIn("布里茨", normalized["display"]["zh_cn_detail"])
+        self.assertNotIn("iBlitz", normalized["display"]["zh_cn_detail"])
 
 
 class NormalizedTranslationBuilderFixtureTests(unittest.TestCase):
@@ -139,16 +355,17 @@ def enriched_record(raw_event_name: str):
 class NormalizedTranslationBuilderAnnieTibbersTests(unittest.TestCase):
     """验证 Annie 提伯斯普攻 OnHit(phase=hit) frame 构建。"""
 
-    def test_tibbers_basic_attack_on_hit_builds_ability_frame(self) -> None:
-        """OnHit(phase=hit)的提伯斯普攻应能建 ability_state_change frame，皮肤/相位/组件角色齐备。"""
+    def test_tibbers_basic_attack_on_hit_builds_attack_frame(self) -> None:
+        """提伯斯普攻可关联 R 召唤物，但用户 frame 仍必须是普通攻击。"""
         record = enriched_record("Play_sfx_AnnieSkin08Tibbers_AnnieTibbersBasicAttack_OnHit")
         frame = build_translation(record, TranslationBuildContext())
         self.assertIsNotNone(frame)
-        self.assertEqual(frame["frame_type"], "ability_state_change")
+        self.assertEqual(frame["frame_type"], "champion_attack_event")
         args = frame["arguments"]
         self.assertIn("phase", args)
-        self.assertIn("ability_component", args)
-        self.assertIn("skin", args)
+        self.assertEqual(args["attack"]["key"], "tibbers_basic_attack")
+        self.assertEqual(args["attack"]["labels"]["zh_CN"], "提伯斯普攻")
+        self.assertNotIn("ability_slot", args)
 
 
 class NormalizedTranslationBuilderShellVerbTests(unittest.TestCase):
@@ -198,6 +415,21 @@ class NormalizedTranslationBuilderShellVerbTests(unittest.TestCase):
         self.assertEqual(argument["key"], "mute")
         self.assertTrue(argument["labels"]["zh_CN"])
 
+    def test_playback_control_suppresses_redundant_activation_phase(self) -> None:
+        """Stop/Mute/UnMute 保留 phase 结构，但不得渲染成矛盾文案。"""
+
+        translation = build_translation(
+            enriched_record("Stop_sfx_IreliaSkin45_Emote_Joke_buffactivate"),
+            reference_translation_context(),
+        )
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        self.assertEqual(translation["arguments"]["phase"]["key"], "audio_start")
+        self.assertEqual(translation["arguments"]["playback"]["key"], "stop")
+        display = build_compat_display(translation)
+        self.assertEqual(display["zh_cn_short"], "玩笑音效停止")
+        self.assertNotRegex(display["zh_cn_detail"], r"开始停止|状态启动")
+
 
 class NormalizedTranslationBuilderVoiceEventTests(unittest.TestCase):
     """验证 voice_event frame。"""
@@ -225,22 +457,108 @@ class NormalizedTranslationBuilderVoiceEventTests(unittest.TestCase):
 
 
 class NormalizedTranslationBuilderVoiceAssetKindTests(unittest.TestCase):
-    """验证 voice_event 对 sfx 资产的承接与 asset_kind 选词回落逻辑。"""
+    """验证 VO/SFX 动作使用各自 frame，并按 asset_kind 选词。"""
 
-    def test_sfx_voice_families_use_sound_effect_word(self) -> None:
-        """sfx 记录同样进入 voice_event frame，action key 保持家族键。"""
+    def test_sfx_action_families_use_action_frame_and_preserve_phase(self) -> None:
+        """SFX 不是语音；情绪动作必须进入 action frame 并保留生命周期。"""
 
         cases = [
-            "Stop_sfx_AuroraSkin11_Dance3D_leadin",
-            "Play_sfx_JayceSkin05_Dance3D_buffactivate_loop",
+            ("Stop_sfx_AuroraSkin11_Dance3D_leadin", "leadin"),
+            ("Play_sfx_JayceSkin05_Dance3D_buffactivate_loop", "loop"),
         ]
-        for raw in cases:
+        for raw, phase_key in cases:
             with self.subTest(raw=raw):
                 translation = build_translation(enriched_record(raw), TranslationBuildContext())
                 self.assertIsNotNone(translation)
                 assert translation is not None
-                self.assertEqual(translation["frame_type"], "voice_event")
-                self.assertEqual(translation["arguments"]["action"]["key"], "dance")
+                self.assertEqual(translation["frame_type"], "champion_action_event")
+                self.assertEqual(translation["arguments"]["action"]["key"], "dance_sfx")
+                self.assertEqual(translation["arguments"]["phase"]["key"], phase_key)
+
+    def test_voice_action_lifecycle_is_a_structured_phase(self) -> None:
+        """VO 动作仍使用 voice_event，但 Loop 不能从 frame 和中文层消失。"""
+
+        translation = build_translation(
+            enriched_record("Play_vo_Bard_Dance3D_Loop_buffactivate"),
+            TranslationBuildContext(),
+        )
+
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        self.assertEqual(translation["frame_type"], "voice_event")
+        self.assertEqual(translation["arguments"]["action"]["key"], "dance")
+        self.assertEqual(translation["arguments"]["phase"]["key"], "loop")
+
+    def test_recall_effort_is_a_take_variant_not_a_lifecycle_phase(self) -> None:
+        """Effort01 只保留为可审计录音变体，不能伪造“努力声阶段”。"""
+
+        raw = "Play_vo_MalzaharSkin06_Recall_Effort01"
+        record = enriched_record(raw)
+        translation = build_translation(record, reference_translation_context())
+
+        self.assertEqual(record.semantic_slots["recall_variant"]["kind"], "efforts")
+        self.assertEqual(record.semantic_slots["recall_variant"]["index"], "01")
+        self.assertNotIn("phase", record.semantic_slots)
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        self.assertEqual(translation["frame_type"], "voice_event")
+        self.assertNotIn("phase", translation["arguments"])
+        display = build_compat_display(translation, raw_event_name=raw)
+        self.assertEqual(display["zh_cn_short"], "回城语音")
+        self.assertNotIn("努力声", display["zh_cn_detail"])
+
+    def test_sfx_action_qualifier_remains_structured_and_visible(self) -> None:
+        """DanceIn 的 In 不能因 SFX 改用 action frame 而丢失。"""
+
+        translation = build_translation(
+            enriched_record("Play_sfx_JaxSkin42_DanceIn3D_buffactivate"),
+            TranslationBuildContext(),
+        )
+
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        self.assertEqual(translation["frame_type"], "champion_action_event")
+        self.assertEqual(translation["arguments"]["action"]["key"], "dance_in_sfx")
+        self.assertIn("进入跳舞", translation["arguments"]["action"]["labels"]["zh_CN"])
+        self.assertEqual(translation["arguments"]["qualifier"]["key"], "in")
+        display = build_compat_display(
+            translation,
+            raw_event_name="Play_sfx_JaxSkin42_DanceIn3D_buffactivate",
+        )
+        self.assertEqual(display["zh_cn_short"], "进入跳舞音效开始")
+
+    def test_reviewed_sfx_action_qualifiers_do_not_fall_back_or_repeat(self) -> None:
+        """已分桶的动作段名使用稳定措辞；纯技术后缀不进入用户文案。"""
+
+        cases = [
+            ("Play_sfx_Yorick_YorickDanceSfx_OnBuffActivate", None, "舞蹈音效开始"),
+            ("Play_sfx_Zac_death3d_cast", None, "死亡音效开始"),
+            ("Play_sfx_Nunu_DanceIntro3D_cast", "intro", "舞蹈引入音效开始"),
+            ("Play_sfx_Sett_DanceSpam3D_buffactivate", "spam", "连续舞蹈音效开始"),
+            ("Play_sfx_Urgot_RecallWindDown_cast", "winddown", "回城收尾音效开始"),
+            ("Play_sfx_AurelionSolSkin38_JokeA3D_buffactivate", "a", "玩笑A段音效开始"),
+            ("Play_sfx_ClericSoraka_RecallImproved_OnBuffActivate", "improved", "强化回城音效开始"),
+        ]
+
+        for raw, qualifier_key, expected in cases:
+            with self.subTest(raw=raw):
+                translation = build_translation(enriched_record(raw), TranslationBuildContext())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                arguments = translation["arguments"]
+                action = arguments["action"]
+                self.assertEqual(action["confidence"], "high")
+                self.assertFalse(action["fallback"])
+                if qualifier_key is None:
+                    self.assertNotIn("qualifier", arguments)
+                else:
+                    qualifier = arguments["qualifier"]
+                    self.assertEqual(qualifier["key"], qualifier_key)
+                    self.assertEqual(qualifier["confidence"], "high")
+                    self.assertEqual(qualifier["provenance"]["rendered_via"], "action")
+                display = build_compat_display(translation, raw_event_name=raw)
+                self.assertEqual(display["zh_cn_short"], expected)
+                self.assertNotIn("待审", display["zh_cn_short"])
 
     def test_asset_kind_words_cover_audio_types(self) -> None:
         """vo/sfx/mus 各有非空且互不相同的措辞，未识别类型保守回落 vo 措辞。"""
@@ -290,7 +608,6 @@ class SelfActionVoiceEventTests(unittest.TestCase):
         """qualifier 特例保留结构化角色；商店相反动作使用不同 action key。"""
 
         cases = [
-            ("Play_sfx_JaxSkin42_DanceIn3D_buffactivate", "dance"),
             ("Play_vo_AurelionSolSkin31_Ping2DEnemyMissing", "ping"),
             ("Play_vo_AatroxSkin01_Move2DLong", "move"),
             ("Play_vo_Ornn_Recall3DCancel", "recall"),
@@ -320,7 +637,6 @@ class SelfActionVoiceEventTests(unittest.TestCase):
         """已核验 qualifier 进动作中文；表外值可见且低置信，不能静默泛化。"""
 
         cases = [
-            ("Play_sfx_JaxSkin42_DanceIn3D_buffactivate", "进入跳舞", "high", "in"),
             (
                 "Play_vo_AurelionSolSkin31_Ping2DEnemyMissing",
                 "敌人消失",
@@ -432,20 +748,22 @@ class SelfActionVoiceEventTests(unittest.TestCase):
                 self.assertEqual(first["arguments"]["qualifier"]["key"], expected_key)
                 self.assertEqual(second["arguments"]["qualifier"]["key"], expected_key)
 
-    def test_non_vo_records_build_no_frame_and_keep_legacy_display(self) -> None:
-        """非 vo 记录不建 frame（维持 Tier3 兜底），legacy display 保持 Tier3 结构。"""
+    def test_non_vo_champion_action_builds_meaningful_frame(self) -> None:
+        """可确定动作的英雄 SFX 不再因非 VO 统一降为 Tier3。"""
 
         from lol_event_semantics.normalized_output import build_normalized_record
 
         record = enriched_record("Play_sfx_AatroxSkin07_Death3D_cast")
-        self.assertIsNone(build_translation(record, TranslationBuildContext()))
+        translation = build_translation(record, reference_translation_context())
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        self.assertEqual(translation["frame_type"], "champion_action_event")
 
-        normalized = build_normalized_record(record)
+        normalized = build_normalized_record(record, translation_context=reference_translation_context())
         display = normalized["display"]
         assert isinstance(display, dict)
-        self.assertEqual(display["tier"], 3)
-        self.assertIsNone(display["zh_cn_short"])
-        self.assertTrue(display["zh_cn_detail"])
+        self.assertEqual(display["tier"], 1)
+        self.assertEqual(display["zh_cn_short"], "死亡音效开始")
 
     def test_spell_slot_records_keep_ability_frames(self) -> None:
         """（回归）带技能槽位的同族记录仍走 ability builder，不被 voice_event 抢占。"""
@@ -513,12 +831,16 @@ class SpellSfxNoPhaseTests(unittest.TestCase):
         record = enriched_record("Play_vo_AkaliSkin14_AkaliW_voProcessing_OFF")
         self.assertIsNone(build_translation(record, TranslationBuildContext()))
 
-    def test_out_of_vocab_phase_stays_legacy(self) -> None:
-        """词表外相位（missile_cast 等）有明确时机但措辞未核验，不合成整段相位。"""
+    def test_reviewed_missile_cast_phase_builds_translation(self) -> None:
+        """已纳入词表的 missile_cast 应保留为“飞弹施放”，不退回 legacy。"""
 
         record = enriched_record("Play_sfx_AurelionSolSkin01_AurelionSolQ_missilecast")
         self.assertEqual(record.semantic_slots.get("phase"), "missile_cast")
-        self.assertIsNone(build_translation(record, TranslationBuildContext()))
+        translation = build_translation(record, TranslationBuildContext())
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        self.assertEqual(translation["arguments"]["phase"]["key"], "missile_cast")
+        self.assertEqual(translation["arguments"]["phase"]["labels"]["zh_CN"], "飞弹施放")
 
 
 class NormalizedTranslationBuilderAbilityCastTests(unittest.TestCase):
@@ -553,17 +875,33 @@ class NormalizedTranslationBuilderAbilityCastTests(unittest.TestCase):
         self.assertEqual(args["ability_slot"]["value"], "r")
         self.assertIn("phase", args)
 
-    def test_vo_untrusted_owner_prefix_hint_does_not_build_ability_frame(self) -> None:
-        """普通词首字母产生的 VO hint 不得升级为高置信技能槽位。"""
+    def test_vo_non_spell_owner_prefix_builds_action_or_attack_frame(self) -> None:
+        """VO 的 Execute/RangedAttack 保留动作语义且不得升级为技能槽位。"""
 
-        for raw in [
-            "Play_vo_Renekton_RenektonExecute_cast3D",
-            "Play_vo_JayceSkin35_JayceRangedAttack_cast3D",
-        ]:
+        cases = [
+            (
+                "Play_vo_Renekton_RenektonExecute_cast3D",
+                "champion_action_event",
+                "action",
+                "execute_action",
+            ),
+            (
+                "Play_vo_JayceSkin35_JayceRangedAttack_cast3D",
+                "champion_attack_event",
+                "attack",
+                "ranged_basic_attack",
+            ),
+        ]
+        for raw, frame_type, role, key in cases:
             with self.subTest(raw=raw):
                 record = enriched_record(raw)
+                translation = build_translation(record, TranslationBuildContext())
+
                 self.assertNotIn("spell_key", record.semantic_slots)
-                self.assertIsNone(build_translation(record, TranslationBuildContext()))
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], frame_type)
+                self.assertEqual(translation["arguments"][role]["key"], key)
 
     def test_vo_reference_spell_id_still_builds_high_confidence_slot(self) -> None:
         """精确 reference spell id 仍可建立 VO ability frame。"""
@@ -598,14 +936,19 @@ class NormalizedTranslationBuilderAbilityCastTests(unittest.TestCase):
                 assert translation is not None
                 self.assertEqual(translation["arguments"]["ability_slot"]["key"], expected_slot)
 
-    def test_ultimate_spellbook_not_claimed_by_ability_cast(self) -> None:
-        """终极魔典借用大招不应被 ability_cast_event 抢占（留给 borrowed frame）。"""
+    def test_ultimate_spellbook_builds_borrowed_ability_frame(self) -> None:
+        """终极魔典借用大招由独立 frame 保留模式、英雄、槽位与阶段。"""
 
         record = enriched_record("Play_vo_UltBook_AhriR_OnCast")
         translation = build_translation(record, TranslationBuildContext())
 
-        if translation is not None:
-            self.assertNotEqual(translation["frame_type"], "ability_cast_event")
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        self.assertEqual(translation["frame_type"], "borrowed_ability_event")
+        self.assertEqual(translation["arguments"]["context"]["key"], "ultimate_spellbook")
+        self.assertEqual(translation["arguments"]["champion"]["alias"], "Ahri")
+        self.assertEqual(translation["arguments"]["ability_slot"]["key"], "r")
+        self.assertEqual(translation["arguments"]["phase"]["key"], "cast")
 
 
 class NormalizedTranslationBuilderSpellPhaseBackfillTests(unittest.TestCase):
@@ -687,6 +1030,7 @@ class NormalizedTranslationBuilderPhaseAllowlistRenderTests(unittest.TestCase):
         from lol_event_semantics.normalized_translation_builder import phase_key
 
         expected = {
+            "missile_cast": "missile_cast",
             "missile_launch": "missile_launch",
             "launch": "launch",
             "end": "end",
@@ -1299,12 +1643,19 @@ class MediaBaseActionStateTests(unittest.TestCase):
         record.semantic_slots["cue_path"] = ["Base", "Backflip3D", "buffactivate"]
         self.assertIsNone(build_translation(record, TranslationBuildContext()))
 
-    def test_system_scope_hud_base_builds_no_frame(self) -> None:
-        """hud_base 系统 UI 音（system_sfx，owner 带伪 champion alias）被门禁排除。"""
+    def test_reviewed_hud_skin_cue_recovers_champion_frame(self) -> None:
+        """HUD 只是外壳；相邻 Champion/SkinNN 与已审规则可恢复皮肤界面语义。"""
 
         record = enriched_record("Play_sfx_hud_base_MissFortune_Skin16_GearUI_Available")
-        self.assertEqual(record.semantic_slots.get("sfx_scope"), "system_sfx")
-        self.assertIsNone(build_translation(record, TranslationBuildContext()))
+        self.assertEqual(record.semantic_slots.get("sfx_scope"), "champion_sfx")
+        self.assertEqual(record.semantic_slots["subject"]["alias"], "MissFortune")
+        self.assertEqual(record.semantic_slots.get("skin_token"), "Skin16")
+        translation = build_translation(record, reference_translation_context())
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        self.assertEqual(translation["frame_type"], "champion_sfx_effect_event")
+        self.assertEqual(translation["arguments"]["effect"]["key"], "gear_ui")
+        self.assertEqual(translation["arguments"]["qualifier"]["key"], "available")
 
     def test_tail_phase_words_build_frame(self) -> None:
         """批次6a：cue 尾段相位词（leadin/loop/windup/winddown/leadout）经门禁进 phase。"""
@@ -1346,26 +1697,51 @@ class MediaBaseActionStateTests(unittest.TestCase):
                 self.assertEqual(args["phase"]["key"], "overall")
                 self.assertIsNone(args["phase"].get("token"))
 
-    def test_non_phase_tails_build_no_frame(self) -> None:
-        """批次6a legacy 锁：非相位尾段（音层/姿势/变体号/多段链）不建 frame。"""
+    def test_reviewed_non_phase_tails_are_structured_qualifiers(self) -> None:
+        """动作后的音层、姿势、段位与激活变体必须保留，不能因非相位尾段丢整条。"""
 
-        for raw in [
-            "Play_sfx_TristanaSkin33_Base_Death3D_body",
-            "Play_sfx_TristanaSkin33_Base_Death3D_gun",
-            "Play_sfx_TaricSkin18_Base_Joke3D_pose1",
-            "Play_sfx_TaricSkin18_Base_Joke3D_open",
-            "Play_sfx_TristanaSkin51_Base_Recall_A",
-            "Play_sfx_TaricSkin18_Base_Dance3D_crystal_loop_buffactivate2",
-        ]:
+        cases = [
+            ("Play_sfx_TristanaSkin33_Base_Death3D_body", "body", "overall"),
+            ("Play_sfx_TristanaSkin33_Base_Death3D_gun", "gun", "overall"),
+            ("Play_sfx_TaricSkin18_Base_Joke3D_pose1", "pose1", "overall"),
+            ("Play_sfx_TaricSkin18_Base_Joke3D_open", "open", "overall"),
+            ("Play_sfx_TristanaSkin51_Base_Recall_A", "a", "overall"),
+            (
+                "Play_sfx_TaricSkin18_Base_Dance3D_crystal_loop_buffactivate2",
+                "crystal+buffactivate2",
+                "loop",
+            ),
+        ]
+        for raw, qualifier_key, phase_key in cases:
             with self.subTest(raw=raw):
-                self.assertIsNone(build_translation(enriched_record(raw), TranslationBuildContext()))
+                translation = build_translation(enriched_record(raw), reference_translation_context())
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], "skin_action_state")
+                self.assertEqual(translation["arguments"]["qualifier"]["key"], qualifier_key)
+                self.assertEqual(translation["arguments"]["phase"]["key"], phase_key)
 
-    def test_out_of_vocab_action_with_no_tail_builds_no_frame(self) -> None:
-        """批次6a legacy 锁：表外动作词（idle/meow 等）即便无尾段也不建 frame。"""
+    def test_idle_action_and_reviewed_owner_effect_do_not_fall_back_to_generic_event(self) -> None:
+        """标准待机动作与悠米已审叫声都应有具体 frame。"""
 
-        for raw in ["Play_sfx_YorickSkin12_Base_idle", "Play_sfx_YuumiSkin39_Base_meow_01"]:
-            with self.subTest(raw=raw):
-                self.assertIsNone(build_translation(enriched_record(raw), TranslationBuildContext()))
+        idle = build_translation(
+            enriched_record("Play_sfx_YorickSkin12_Base_idle"),
+            reference_translation_context(),
+        )
+        self.assertIsNotNone(idle)
+        assert idle is not None
+        self.assertEqual(idle["frame_type"], "skin_action_state")
+        self.assertEqual(idle["arguments"]["action"]["key"], "idle")
+
+        meow = build_translation(
+            enriched_record("Play_sfx_YuumiSkin39_Base_meow_01"),
+            reference_translation_context(),
+        )
+        self.assertIsNotNone(meow)
+        assert meow is not None
+        self.assertEqual(meow["frame_type"], "champion_sfx_effect_event")
+        self.assertEqual(meow["arguments"]["effect"]["key"], "meow")
+        self.assertEqual(meow["arguments"]["qualifier"]["key"], "01")
 
 
 class Batch6dShopVoiceTests(unittest.TestCase):
@@ -1523,7 +1899,7 @@ class SpellRankArgumentTests(unittest.TestCase):
                 translation = build_translation(enriched_record(raw), TranslationBuildContext())
                 self.assertIsNotNone(translation)
                 assert translation is not None
-                self.assertEqual(translation["frame_type"], "ability_state_change")
+                self.assertEqual(translation["frame_type"], "ability_cast_event")
                 args = translation["arguments"]
                 self.assertEqual(args["rank"]["key"], key)
                 self.assertEqual(args["rank"]["provenance"]["source"], "semantic_slots.spell_rank")
@@ -1540,14 +1916,1548 @@ class SpellRankArgumentTests(unittest.TestCase):
         self.assertNotIn("rank", translation["arguments"])
 
     def test_variant_number_alias_builds_no_rank_argument(self) -> None:
-        """spell_rank 承载变体号（Tibbers 普攻2 等）且 alias 非 Rank 结尾时不得误标技能等级。"""
+        """Tibbers 普攻2 是攻击变体，不得写入 spell_rank 或 rank argument。"""
 
         record = enriched_record("Play_sfx_AnnieSkin08Tibbers_AnnieTibbersBasicAttack2_OnCast")
-        self.assertEqual(record.semantic_slots.get("spell_rank"), 2)
+        self.assertEqual(record.semantic_slots.get("attack_variant"), 2)
+        self.assertIsNone(record.semantic_slots.get("spell_rank"))
         translation = build_translation(record, TranslationBuildContext())
         self.assertIsNotNone(translation)
         assert translation is not None
         self.assertNotIn("rank", translation["arguments"])
+
+
+class ChampionSfxSemanticRenderingTests(unittest.TestCase):
+    """用户可见 SFX 文案必须使用权威名称和动作语义，不泄漏工程 token。"""
+
+    def render(
+        self,
+        raw: str,
+        *,
+        source_path: str | None = None,
+    ) -> tuple[dict[str, object], dict[str, str]]:
+        """按真实 reference 构建 frame 与兼容 display。"""
+
+        record = enriched_record(raw)
+        if source_path is not None:
+            record.source_paths = [source_path]
+        translation = build_translation(record, reference_translation_context())
+        self.assertIsNotNone(translation)
+        assert translation is not None
+        display = build_compat_display(translation, raw_event_name=raw)
+        return translation, display
+
+    def test_tryndamere_basic_attack_uses_chinese_skin_and_attack_phase(self) -> None:
+        translation, display = self.render("Play_sfx_TryndamereSkin10_TryndamereBasicAttack2_OnCast")
+
+        self.assertEqual(translation["frame_type"], "champion_attack_event")
+        self.assertEqual(translation["arguments"]["attack"]["variant"], 2)
+        self.assertEqual(translation["arguments"]["attack"]["labels"]["zh_CN"], "普通攻击2")
+        self.assertEqual(translation["arguments"]["phase"]["key"], "attack_cast")
+        self.assertEqual(display["zh_cn_short"], "普通攻击2出手")
+        self.assertEqual(display["zh_cn_detail"], "泰达米尔 腥红之月 普通攻击2出手")
+        self.assertNotRegex(display["zh_cn_detail"], r"Tryndamere|Skin10|状态启动")
+
+    def test_reviewed_attack_variant_does_not_repeat_visible_number(self) -> None:
+        """人工 attack alias 已带变体号时不得重复追加。"""
+
+        translation, display = self.render("Play_vo_Skarner_SkarnerBasicAttack2_cast5D")
+
+        attack = translation["arguments"]["attack"]
+        self.assertEqual(attack["variant"], 2)
+        self.assertEqual(attack["labels"]["zh_CN"], "普攻变体 2")
+        self.assertEqual(display["zh_cn_short"], "普攻变体 2出手")
+        self.assertEqual(display["zh_cn_short"].count("2"), 1)
+
+    def test_tryndamere_recall_uses_audio_lifecycle_wording(self) -> None:
+        _translation, display = self.render("Play_sfx_TryndamereSkin10_Recall3D_buffactivate")
+
+        self.assertEqual(display["zh_cn_short"], "回城音效开始")
+        self.assertEqual(display["zh_cn_detail"], "泰达米尔 腥红之月 回城音效开始")
+        self.assertNotIn("状态启动", display["zh_cn_detail"])
+
+    def test_tryndamere_bloodlust_hides_particle_token_and_uses_effect_phase(self) -> None:
+        translation, display = self.render("Play_sfx_TryndamereSkin10_BloodlustParticle_OnBuffActivate")
+
+        self.assertEqual(translation["arguments"]["ability_slot"]["key"], "q")
+        self.assertEqual(translation["arguments"]["phase"]["key"], "effect_activate")
+        self.assertIn("Q技能嗜血杀戮效果生效", display["zh_cn_detail"])
+        self.assertNotRegex(display["zh_cn_detail"], r"粒子|Particle|状态启动")
+
+    def test_reviewed_sfx_components_keep_owner_slot_component_and_tail_semantics(self) -> None:
+        """高频 SFX 组件应纠正词首误判，并保留命中、发射、引爆等尾段语义。"""
+
+        cases = [
+            (
+                "Play_sfx_Brand_P_detonate2",
+                "p",
+                "被动技能灼烧标记引爆",
+            ),
+            (
+                "Play_sfx_Fiddlesticks_FiddlesticksQmissilefear_OnHit",
+                "q",
+                "Q技能恐惧飞弹命中",
+            ),
+            (
+                "Play_sfx_Shen_ShenRshield_OnBuffActivate",
+                "r",
+                "R技能慈悲度魂落护盾生效",
+            ),
+            (
+                "Play_sfx_Kled_KledRiderQMissile_OnMissileLaunch",
+                "q",
+                "Q技能骑乘飞索捕熊器飞弹弹道发射",
+            ),
+        ]
+        for raw, spell_key, expected_short in cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["arguments"]["ability_slot"]["key"], spell_key)
+                self.assertEqual(display["zh_cn_short"], expected_short)
+                self.assertNotRegex(display["zh_cn_detail"], r"状态启动|音效事件|尚无中文短标签")
+
+    def test_reviewed_non_spell_sfx_clears_false_skill_hint_and_uses_audio_wording(self) -> None:
+        """Evolve 等英文词首不是技能槽位，角色拟声音效也不得伪装成技能。"""
+
+        cases = [
+            (
+                "Play_sfx_Kaisa_KaisaEvolveSelf_cast",
+                "自身进化音效开始",
+            ),
+            (
+                "Play_sfx_Yuumi_meow_01",
+                "喵叫音效（1号变体）",
+            ),
+            (
+                "Play_sfx_KledRiderSkin09_movement_saddle",
+                "坐骑移动音效",
+            ),
+        ]
+        for raw, expected_short in cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["frame_type"], "champion_sfx_effect_event")
+                self.assertNotIn("ability_slot", translation["arguments"])
+                self.assertEqual(display["zh_cn_short"], expected_short)
+                self.assertNotRegex(display["zh_cn_detail"], r"状态启动|音效事件|尚无中文短标签")
+
+    def test_high_frequency_generic_sfx_families_keep_meaning_and_lifecycle(self) -> None:
+        """资源开关、双人舞和角色状态不得退回“音效事件/状态启动”。"""
+
+        cases = [
+            (
+                "Play_sfx_EvelynnSkin01_RealTimeProcessing_ON",
+                "real_time_processing",
+                "audio_start",
+                "实时音频处理音效开始",
+            ),
+            (
+                "Play_sfx_EvelynnSkin42_RealTimeProcessing_OFF",
+                "real_time_processing",
+                "audio_end",
+                "实时音频处理音效结束",
+            ),
+            (
+                "Play_sfx_RakanSkin04_WithXayah_Dance_into",
+                "duo_dance_with_xayah",
+                "leadin",
+                "与霞双人舞音效引入",
+            ),
+            (
+                "Play_sfx_XayahSkin02_WithRakan_Dance_loop",
+                "duo_dance_with_rakan",
+                "loop",
+                "与洛双人舞音效循环",
+            ),
+            (
+                "Play_sfx_GarenSkin13_GarenRecouperate1_OnBuffActivate",
+                "perseverance_recovery",
+                "audio_start",
+                "被动·坚韧恢复音效开始",
+            ),
+            (
+                "Play_sfx_HeimerTYellowSkin06_HeimerdingerEngineAudio_turrettalk_buffactivate",
+                "turret_engine_audio",
+                "audio_start",
+                "炮台引擎运转音效开始",
+            ),
+            (
+                "Play_sfx_ZyraSkin02_ZyraPlantEnrage_OnBuffDeactivate",
+                "plant_enrage",
+                "audio_end",
+                "植物狂暴音效结束",
+            ),
+            (
+                "Play_sfx_RenektonSkin17_RenektonRageReady_OnBuffActivate",
+                "rage_ready",
+                "audio_start",
+                "怒气就绪音效开始",
+            ),
+        ]
+        for raw, effect_key, phase_key, expected_short in cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["frame_type"], "champion_sfx_effect_event")
+                self.assertEqual(translation["arguments"]["effect"]["key"], effect_key)
+                self.assertEqual(translation["arguments"]["phase"]["key"], phase_key)
+                self.assertEqual(display["zh_cn_short"], expected_short)
+                self.assertNotRegex(display["zh_cn_detail"], r"状态启动|音效事件|尚无中文短标签")
+
+    def test_reviewed_sfx_qualifiers_preserve_middle_cue_semantics(self) -> None:
+        """主效果与阶段之间的模式、形态和资源修饰语不得在中文中消失。"""
+
+        cases = [
+            (
+                "Play_sfx_KaynSkin20_Music_Mute",
+                "skin_music",
+                "mute",
+                "皮肤音乐（静音）",
+            ),
+            (
+                "Play_sfx_MorganaSkin80_MaskSwap3D_mask2",
+                "mask_swap",
+                "mask2",
+                "面具切换音效（形态2）",
+            ),
+            (
+                "Play_sfx_AhriSkin86_Evolve_Burst_Gear_buffactivate",
+                "skin_evolve",
+                "burst+gear",
+                "皮肤进化音效（爆发、装备）开始",
+            ),
+        ]
+        for raw, effect_key, qualifier_key, expected_short in cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["frame_type"], "champion_sfx_effect_event")
+                self.assertEqual(translation["arguments"]["effect"]["key"], effect_key)
+                self.assertEqual(translation["arguments"]["qualifier"]["key"], qualifier_key)
+                self.assertEqual(display["zh_cn_short"], expected_short)
+                self.assertNotRegex(display["zh_cn_detail"], r"状态启动|音效事件|尚无中文短标签")
+
+    def test_generic_sfx_aliases_restore_scope_and_keep_action_context(self) -> None:
+        """动作 profile 后命中的公共 SFX 仍须产出英雄音效 frame，并保留动作上下文。"""
+
+        cases = [
+            (
+                "Play_sfx_KaynSkin20_Dance3D_music_loop",
+                "skin_music",
+                "dance3d",
+                "皮肤音乐（舞蹈）循环",
+            ),
+            (
+                "Play_sfx_AsheSkin08_Recall3D_windup_hologram",
+                "skin_action",
+                "recall3d+hologram",
+                "皮肤动作音效（回城、全息影像）起手",
+            ),
+        ]
+        for raw, effect_key, qualifier_key, expected_short in cases:
+            with self.subTest(raw=raw):
+                record = enriched_record(raw)
+                translation, display = self.render(raw)
+
+                self.assertEqual(record.semantic_slots["sfx_scope"], "champion_sfx")
+                self.assertEqual(translation["frame_type"], "champion_sfx_effect_event")
+                self.assertEqual(translation["arguments"]["effect"]["key"], effect_key)
+                self.assertEqual(translation["arguments"]["qualifier"]["key"], qualifier_key)
+                self.assertEqual(display["zh_cn_short"], expected_short)
+                self.assertNotRegex(display["zh_cn_detail"], r"状态启动|音效事件|尚无中文短标签")
+
+    def test_dimension_only_tail_does_not_block_engineering_owner_alias(self) -> None:
+        """Loop_2D/3D 中的维度不能阻止工程 owner 回归真实英雄技能。"""
+
+        for raw in (
+            "Play_sfx_LilliaRSleep_Loop_2D",
+            "Stop_sfx_LilliaRSleep_Loop_3D",
+        ):
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["arguments"]["champion"]["alias"], "Lillia")
+                self.assertEqual(translation["arguments"]["ability_slot"]["key"], "r")
+                self.assertEqual(
+                    translation["arguments"]["ability_component"]["key"],
+                    "lullaby_sleep",
+                )
+                self.assertIn("夜阑谣昏睡", display["zh_cn_short"])
+                self.assertNotRegex(display["zh_cn_detail"], r"LilliaRSleep|音效事件|尚无中文短标签")
+
+    def test_last_reviewed_pve_boss_and_form_sfx_families_are_specific(self) -> None:
+        """PVE 首领机制与伊莉丝蜘蛛形态动作必须保留具体效果，不能只显示 Boss/状态。"""
+
+        action_cases = [
+            ("Play_sfx_Strawberry_Boss_Aatrox_Taunt3D_buffactivate_into", "boss_taunt"),
+            ("Play_sfx_Strawberry_Boss_Belveth_Laugh3D_buffactivate", "boss_laugh"),
+        ]
+        for raw, action_key in action_cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["frame_type"], "champion_action_event")
+                self.assertEqual(translation["arguments"]["action"]["key"], action_key)
+                self.assertEqual(translation["arguments"]["context"]["key"], "strawberry")
+                self.assertNotRegex(display["zh_cn_detail"], r"状态启动|音效事件|尚无中文短标签")
+
+        boss_cases = [
+            ("Play_sfx_Strawberry_Boss_Belveth_fallingdebris_explode", "falling_debris"),
+            ("Play_sfx_Strawberry_Boss_Briar_player_targeted_buffactivate", "player_targeted"),
+            ("Play_sfx_Strawberry_Boss_Briar_spawn_buffactivate", "boss_spawn"),
+            ("Play_sfx_Strawberry_Boss_Reksai_fallingdebris_explode", "falling_debris"),
+            ("Play_sfx_Strawberry_Boss_Reksai_mini_spawn", "mini_spawn"),
+            ("Play_sfx_Strawberry_Boss_Reksai_spawn_buffactivate", "boss_spawn"),
+        ]
+        for raw, effect_key in boss_cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["frame_type"], "champion_sfx_effect_event")
+                self.assertEqual(translation["arguments"]["effect"]["key"], effect_key)
+                self.assertEqual(translation["arguments"]["context"]["key"], "strawberry")
+                self.assertNotRegex(display["zh_cn_detail"], r"状态启动|音效事件|尚无中文短标签")
+
+        elise, elise_display = self.render("Play_sfx_Elise_Skin05_Spider_Emote_Dance_oba_loop")
+        self.assertEqual(elise["frame_type"], "skin_action_state")
+        self.assertEqual(elise["arguments"]["action"]["key"], "spider_form_dance_sfx")
+        self.assertIn("蜘蛛形态", elise_display["zh_cn_detail"])
+        self.assertNotRegex(elise_display["zh_cn_detail"], r"音效事件|尚无中文短标签")
+
+    def test_system_hud_shell_recovers_reviewed_skin_champion(self) -> None:
+        """HUD 只是外壳；cue 中已核验的 LuxSkin07 必须恢复拉克丝与皮肤界面点击语义。"""
+
+        raw = "Play_sfx_hud_LuxSkin07_Generic_Click_UI"
+        record = enriched_record(raw)
+        translation, display = self.render(raw)
+
+        self.assertEqual(record.semantic_slots["subject"]["alias"], "Lux")
+        self.assertEqual(record.semantic_slots["skin_token"], "Skin07")
+        self.assertEqual(record.semantic_slots["sfx_scope"], "champion_sfx")
+        self.assertEqual(translation["frame_type"], "champion_sfx_effect_event")
+        self.assertEqual(translation["arguments"]["effect"]["key"], "elementalist_ui_click")
+        self.assertEqual(display["zh_cn_short"], "元素使界面点击音效")
+        self.assertNotRegex(display["zh_cn_detail"], r"hud|LuxSkin07|Generic|音效事件")
+
+    def test_emote_system_recovers_standard_champion_actions_and_lifecycle(self) -> None:
+        """Emote/Base 是分组壳；其后的标准动作、维度和生命周期必须进入英雄动作 frame。"""
+
+        cases = [
+            (
+                "Play_sfx_IreliaSkin45_Emote_Joke_buffactivate",
+                "joke_sfx",
+                "audio_start",
+                "玩笑音效开始",
+            ),
+            (
+                "Play_sfx_kayle_skin06_emote_joke_loop_buffactivate",
+                "joke_sfx",
+                "loop",
+                "玩笑音效循环",
+            ),
+            (
+                "Play_sfx_ChogathSkin07_emote_recallin",
+                "recall_sfx",
+                "in",
+                "回城音效进入",
+            ),
+            (
+                "Play_sfx_yasuo_skin87_emote_winddown_buffactivate_01",
+                "winddown_sfx",
+                "audio_start",
+                "收招音效（1号变体）开始",
+            ),
+        ]
+        for raw, action_key, phase_key, expected_short in cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["frame_type"], "champion_action_event")
+                self.assertEqual(translation["arguments"]["action"]["key"], action_key)
+                self.assertEqual(translation["arguments"]["phase"]["key"], phase_key)
+                self.assertEqual(display["zh_cn_short"], expected_short)
+                self.assertNotRegex(display["zh_cn_detail"], r"emote|Emote|音效事件|状态启动")
+
+    def test_emote_specific_effects_keep_inner_qualifiers(self) -> None:
+        """非标准表情效果也必须保留等级、按键、枪声、低通层等内层语义。"""
+
+        cases = [
+            (
+                "Play_sfx_SamiraSkin30_emote_jumbotron_lv2",
+                "soul_fighter_jumbotron",
+                "lv2",
+                "斗魂大屏幕音效（2级）",
+            ),
+            (
+                "Play_sfx_SamiraSkin30_emote_dance_gunshot",
+                "dance_emote",
+                "gunshot",
+                "舞蹈音效（枪声）",
+            ),
+            (
+                "Stop_sfx_samira_skin30_emote_homeguard_lp",
+                "homeguard_emote",
+                "lp",
+                "家园卫士音效（低通音频层）停止",
+            ),
+            (
+                "Play_sfx_AhriSkin86_Emote_Faker_buffactivate",
+                "faker_emote",
+                None,
+                "李相赫主题表情音效开始",
+            ),
+        ]
+        for raw, effect_key, qualifier_key, expected_short in cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["frame_type"], "champion_sfx_effect_event")
+                self.assertEqual(translation["arguments"]["effect"]["key"], effect_key)
+                if qualifier_key is None:
+                    self.assertNotIn("qualifier", translation["arguments"])
+                else:
+                    self.assertEqual(translation["arguments"]["qualifier"]["key"], qualifier_key)
+                self.assertEqual(display["zh_cn_short"], expected_short)
+                self.assertNotRegex(display["zh_cn_detail"], r"emote|Emote|音效事件|状态启动")
+
+    def test_plain_basic_attacks_do_not_carry_false_passive_relation(self) -> None:
+        """普通攻击与暴击攻击不因通用规则被挂到 P；真正被动来源须另有明确证据。"""
+
+        for raw in (
+            "Play_sfx_MissFortune_MissFortuneBasicAttack_OnHit",
+            "Play_sfx_Zyra_hellvine_ZyraBasicAttack_OnHit",
+        ):
+            with self.subTest(raw=raw):
+                record = enriched_record(raw)
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["frame_type"], "champion_attack_event")
+                self.assertIsNone(record.semantic_slots.get("related_spell_key"))
+                self.assertNotIn("related_spell", translation["arguments"]["attack"])
+                self.assertNotIn("P技能", display["zh_cn_detail"])
+
+    def test_obvious_non_passive_p_rules_render_as_attack_effect_or_real_slot(self) -> None:
+        """内部字母 P 或旧错误规则不得压过 Attack、Voidling 等真实语义。"""
+
+        attack_cases = [
+            ("Play_sfx_DravenSkin68_DravenAttackP_LQC_OnHit", "draven_axe_attack"),
+            ("Play_sfx_NunuSkin04_NunuStructureAttack_OnCast", "structure_attack"),
+            ("Play_sfx_IllaoiSkin10_IllaoiTentacleAttack_champ_hit", "tentacle_attack"),
+        ]
+        for raw, attack_key in attack_cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+                self.assertEqual(translation["frame_type"], "champion_attack_event")
+                self.assertEqual(translation["arguments"]["attack"]["key"], attack_key)
+                self.assertNotIn("P技能", display["zh_cn_detail"])
+
+        voidling, voidling_display = self.render("Play_sfx_Malzahar_Voidling_buffactivate")
+        self.assertEqual(voidling["arguments"]["ability_slot"]["key"], "w")
+        self.assertNotIn("P技能", voidling_display["zh_cn_detail"])
+
+        empty, empty_display = self.render("Play_sfx_MissFortune_MissFortuneBulletEMPTY_OnMissileLaunch")
+        self.assertEqual(empty["frame_type"], "champion_sfx_effect_event")
+        self.assertEqual(empty["arguments"]["effect"]["key"], "empty_bullet")
+        self.assertNotIn("P技能", empty_display["zh_cn_detail"])
+
+    def test_ruby_final_boss_veigar_keeps_actor_spell_and_mechanic_semantics(self) -> None:
+        """Ruby/Boss/FN 只是模式与工程前缀；维迦、技能槽位和首领机制都必须保留。"""
+
+        record = enriched_record("Play_sfx_Ruby_Boss_FNVeigar_DelayedDarkMatter_warning_small")
+        self.assertEqual(record.semantic_slots["mode_actor"]["alias"], "Veigar")
+        self.assertEqual(record.semantic_slots["mode_actor_role"], "boss")
+
+        spell_cases = [
+            (
+                "Play_sfx_Ruby_Boss_FNVeigar_DelayedDarkMatter_warning_small",
+                "w",
+                "delayed_dark_matter",
+                "warning+small",
+            ),
+            (
+                "Play_sfx_Ruby_Boss_FNVeigarEventHorizon_loop",
+                "e",
+                "event_horizon",
+                None,
+            ),
+            (
+                "Play_sfx_Ruby_Boss_FNVeigarR_OnCast",
+                "r",
+                "primordial_burst",
+                None,
+            ),
+        ]
+        for raw, slot, component, qualifier in spell_cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+                self.assertEqual(translation["arguments"]["champion"]["alias"], "Veigar")
+                self.assertEqual(translation["arguments"]["ability_slot"]["key"], slot)
+                self.assertEqual(translation["arguments"]["ability_component"]["key"], component)
+                self.assertEqual(translation["arguments"]["context"]["key"], "ruby")
+                if qualifier is not None:
+                    self.assertEqual(translation["arguments"]["qualifier"]["key"], qualifier)
+                self.assertNotRegex(display["zh_cn_detail"], r"Ruby|FNVeigar|音效事件|维迦事件")
+
+        mechanic_cases = [
+            ("Play_sfx_Ruby_Boss_FNVeigar_Imprison_Player_shield_loop", "boss_imprison"),
+            ("Play_sfx_Ruby_Boss_FNVeigar_MordeE_warning", "borrowed_deaths_grasp"),
+            ("Play_sfx_Ruby_Boss_FNVeigar_SafeZone_shrink", "safe_zone"),
+            ("Play_sfx_Ruby_Boss_FNVeigar_InstaKill_OnHit", "instant_kill"),
+        ]
+        for raw, effect in mechanic_cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+                self.assertEqual(translation["frame_type"], "champion_sfx_effect_event")
+                self.assertEqual(translation["arguments"]["effect"]["key"], effect)
+                self.assertEqual(translation["arguments"]["context"]["key"], "ruby")
+                self.assertNotRegex(display["zh_cn_detail"], r"Ruby|FNVeigar|音效事件|维迦事件")
+
+    def test_strawberry_boss_hud_keeps_actor_and_announcement_semantics(self) -> None:
+        """Gameplay/HUD/Boss 是界面路径，不得把具体 Boss 压成“英雄事件”。"""
+
+        cases = [
+            (
+                "Play_sfx_Strawberry_Gameplay_HUD_Boss_Aatrox_VictoryBanner_fakeout",
+                "Aatrox",
+                "boss_victory_banner",
+                "fakeout",
+            ),
+            (
+                "Play_sfx_Strawberry_Gameplay_HUD_Boss_Aatrox_announcement",
+                "Aatrox",
+                "boss_announcement",
+                None,
+            ),
+            (
+                "Play_sfx_Strawberry_Gameplay_HUD_Boss_Briar_announcement",
+                "Briar",
+                "boss_announcement",
+                None,
+            ),
+            (
+                "Play_sfx_Strawberry_Gameplay_HUD_Boss_Belveth_announcement",
+                "Belveth",
+                "boss_announcement",
+                None,
+            ),
+            (
+                "Play_sfx_Strawberry_Gameplay_HUD_Boss_RekSai_announcement",
+                "RekSai",
+                "boss_announcement",
+                None,
+            ),
+        ]
+        for raw, champion, effect, qualifier in cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["frame_type"], "champion_sfx_effect_event")
+                self.assertEqual(translation["arguments"]["champion"]["alias"], champion)
+                self.assertEqual(translation["arguments"]["effect"]["key"], effect)
+                self.assertEqual(translation["arguments"]["context"]["key"], "strawberry")
+                if qualifier is None:
+                    self.assertNotIn("qualifier", translation["arguments"])
+                else:
+                    self.assertEqual(translation["arguments"]["qualifier"]["key"], qualifier)
+                self.assertNotRegex(
+                    display["zh_cn_detail"],
+                    r"Gameplay|HUD|Boss|英雄事件|音效事件|状态启动",
+                )
+
+    def test_named_skin_audio_states_have_specific_effects_and_clean_playback(self) -> None:
+        """烬被动待机音轨与金克丝老虎机必须说明对象，停止/静音不能再拼“状态启动”。"""
+
+        cases = [
+            (
+                "Play_sfx_JhinSkin04_Idle_Passive_buffactivate",
+                "ability_state_change",
+                "passive_idle_audio",
+                None,
+            ),
+            (
+                "Mute_sfx_JhinSkin23_Idle_Passive_buffactivate",
+                "ability_state_change",
+                "passive_idle_audio",
+                None,
+            ),
+            (
+                "Play_jinx_skin60_slotmachine_buffactivate_chemtech",
+                "champion_sfx_effect_event",
+                "slot_machine",
+                "chemtech",
+            ),
+            (
+                "Stop_jinx_skin60_slotmachine_buffactivate",
+                "champion_sfx_effect_event",
+                "slot_machine",
+                None,
+            ),
+        ]
+        for raw, frame_type, component, qualifier in cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["frame_type"], frame_type)
+                role = "ability_component" if component == "passive_idle_audio" else "effect"
+                self.assertEqual(translation["arguments"][role]["key"], component)
+                if qualifier is not None:
+                    self.assertEqual(translation["arguments"]["qualifier"]["key"], qualifier)
+                self.assertNotRegex(
+                    display["zh_cn_detail"],
+                    r"状态启动|开始停止|启动静音|启动取消静音|音效事件",
+                )
+
+    def test_summoned_bank_owner_and_true_passive_keep_skill_semantics(self) -> None:
+        """魔盒是萨科 W 召唤物，派克 Passive 才是真实 P；两者都要保留具体组件。"""
+
+        shaco, shaco_display = self.render("Play_sfx_ShacoBoxSkin64_ShacoBoxSpell_OnMissileLaunch")
+        self.assertEqual(shaco["arguments"]["champion"]["alias"], "Shaco")
+        self.assertEqual(shaco["arguments"]["ability_slot"]["key"], "w")
+        self.assertEqual(
+            shaco["arguments"]["ability_component"]["key"],
+            "jack_in_the_box_attack",
+        )
+        self.assertEqual(shaco["arguments"]["phase"]["key"], "missile_launch")
+        self.assertNotRegex(shaco_display["zh_cn_detail"], r"ShacoBox|未收录皮肤|音效事件")
+
+        pyke_stop, pyke_stop_display = self.render("Stop_sfx_PykeSkin75_PykePassive_heal_start")
+        self.assertEqual(pyke_stop["arguments"]["ability_slot"]["key"], "p")
+        self.assertEqual(
+            pyke_stop["arguments"]["ability_component"]["key"],
+            "gift_of_the_drowned_ones_heal",
+        )
+        self.assertEqual(pyke_stop["arguments"]["playback"]["key"], "stop")
+        self.assertEqual(pyke_stop["arguments"]["phase"]["key"], "start")
+        self.assertNotIn(
+            pyke_stop["arguments"]["phase"]["labels"]["zh_CN"],
+            pyke_stop_display["zh_cn_detail"],
+        )
+        self.assertNotRegex(pyke_stop_display["zh_cn_detail"], r"开始停止|被动技能停止$")
+
+        pyke_vfx, pyke_vfx_display = self.render("Play_sfx_PykeSkin75_PykePassiveVFX_buffactivate")
+        self.assertEqual(pyke_vfx["arguments"]["ability_slot"]["key"], "p")
+        self.assertEqual(
+            pyke_vfx["arguments"]["ability_component"]["key"],
+            "gift_of_the_drowned_ones_vfx",
+        )
+        self.assertEqual(pyke_vfx["arguments"]["phase"]["key"], "effect_activate")
+        self.assertIn("溺水之幸", pyke_vfx_display["zh_cn_detail"])
+
+    def test_ownerless_spell_banks_resolve_champion_slot_and_component(self) -> None:
+        """技能全名被吞进 owner 的旧 bank 仍须恢复英雄、槽位和官方技能组件。"""
+
+        cases = [
+            ("Play_sfx_LilliaE_OnCast", "Lillia", "e", "swirlseed_cast", "cast"),
+            ("Play_sfx_LilliaR_OnCast", "Lillia", "r", "lilting_lullaby_cast", "cast"),
+            (
+                "Play_sfx_NocturneParanoiaDash_OnBuffActivate",
+                "Nocturne",
+                "r",
+                "paranoia_dash",
+                "effect_activate",
+            ),
+            (
+                "Play_sfx_OrianaIzunaCommand_OnCast",
+                "Orianna",
+                "q",
+                "attack_command",
+                "cast",
+            ),
+            (
+                "Play_sfx_OrianaRedactShield_OnBuffActivate",
+                "Orianna",
+                "e",
+                "protect_shield",
+                "effect_activate",
+            ),
+            (
+                "Play_sfx_SkarnerE_OnCast",
+                "Skarner",
+                "e",
+                "ixtal_impact_cast",
+                "cast",
+            ),
+            (
+                "Play_sfx_SkarnerQ_OnCast",
+                "Skarner",
+                "q",
+                "uproot_cast",
+                "cast",
+            ),
+            (
+                "Play_sfx_SkarnerQRockThrow_OnCast",
+                "Skarner",
+                "q",
+                "q_rock_throw",
+                "cast",
+            ),
+            (
+                "Play_sfx_ChogathEAttack_OnCast",
+                "Chogath",
+                "e",
+                "vorpal_spikes_attack",
+                "cast",
+            ),
+        ]
+        for raw, champion, slot, component, phase in cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["arguments"]["champion"]["alias"], champion)
+                self.assertEqual(translation["arguments"]["ability_slot"]["key"], slot)
+                self.assertEqual(
+                    translation["arguments"]["ability_component"]["key"],
+                    component,
+                )
+                self.assertEqual(translation["arguments"]["phase"]["key"], phase)
+                self.assertNotRegex(
+                    display["zh_cn_detail"],
+                    r"Lillia|Nocturne|Oriana|Skarner|Chogath|状态启动|音效事件",
+                )
+
+    def test_residual_skin_actions_and_legacy_owner_typos_render_specific_chinese(self) -> None:
+        """基础动作尾层、皮肤动画转场与英雄拼写 typo 不得再退化成泛化状态。"""
+
+        taric, taric_display = self.render("Stop_sfx_TaricSkin18_Base_Joke3D_camera_flash_buffactivate")
+        self.assertEqual(taric["frame_type"], "skin_action_state")
+        self.assertEqual(taric["arguments"]["action"]["key"], "joke")
+        self.assertEqual(taric["arguments"]["qualifier"]["key"], "camera+flash")
+        self.assertEqual(taric["arguments"]["playback"]["key"], "stop")
+        self.assertEqual(taric["arguments"]["phase"]["key"], "audio_start")
+        self.assertNotIn(
+            taric["arguments"]["phase"]["labels"]["zh_CN"],
+            taric_display["zh_cn_detail"],
+        )
+        self.assertNotRegex(taric_display["zh_cn_detail"], r"状态启动|开始停止")
+
+        transitions = [
+            (
+                "Play_sfx_KatarinaSkin29_Spell4ToIdle_buffactivate",
+                "ultimate_to_idle",
+                "大招动作转待机",
+            ),
+            (
+                "Play_sfx_KatarinaSkin29_Spell4ToRun_buffactivate",
+                "ultimate_to_run",
+                "大招动作转奔跑",
+            ),
+            (
+                "Play_sfx_KaynSkin20_SpellToIdle_mus_buffactivate",
+                "spell_to_idle",
+                "技能动作转待机",
+            ),
+        ]
+        for raw, effect, label in transitions:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+                self.assertEqual(translation["frame_type"], "champion_sfx_effect_event")
+                self.assertEqual(translation["arguments"]["effect"]["key"], effect)
+                self.assertIn(label, display["zh_cn_detail"])
+                self.assertNotIn("状态启动", display["zh_cn_detail"])
+
+        reload_cases = [
+            (
+                "Play_sfx_Corki_RapidReload_helibuffactivate",
+                "helibuffactivate",
+                "直升机主题",
+            ),
+            ("Play_sfx_CorkiSkin08_RapidReload_Boom", "boom", "爆炸"),
+        ]
+        for raw, qualifier, label in reload_cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+                self.assertEqual(translation["frame_type"], "champion_sfx_effect_event")
+                self.assertEqual(translation["arguments"]["effect"]["key"], "rapid_reload")
+                self.assertEqual(translation["arguments"]["qualifier"]["key"], qualifier)
+                self.assertIn("快速装填", display["zh_cn_detail"])
+                self.assertIn(label, display["zh_cn_detail"])
+
+        ziggs, ziggs_display = self.render("Play_sfx_ZiggssSkin07_Emote_Joke_oba")
+        self.assertEqual(ziggs["arguments"]["champion"]["alias"], "Ziggs")
+        self.assertIn("吉格斯", ziggs_display["zh_cn_detail"])
+        self.assertNotRegex(ziggs_display["zh_cn_detail"], r"Ziggss|未收录皮肤|音效事件")
+
+    def test_padded_bard_stop_keeps_r_skill_and_stop_control(self) -> None:
+        """__Stop_ 导出填充不改变巴德 R 技能或停止控制语义。"""
+
+        translation, display = self.render("__Stop_sfx_Bard_BardR_mis")
+
+        self.assertEqual(translation["arguments"]["champion"]["alias"], "Bard")
+        self.assertEqual(translation["arguments"]["ability_slot"]["key"], "r")
+        self.assertEqual(translation["arguments"]["playback"]["key"], "stop")
+        self.assertIn("巴德", display["zh_cn_detail"])
+        self.assertNotRegex(display["zh_cn_detail"], r"__Stop|音效事件|尚无中文短标签")
+
+    def test_reviewed_system_sfx_paths_render_ui_and_gameplay_meaning(self) -> None:
+        """HUD/Base 与 Gameplay 是路径壳；完整已审路径必须生成具体系统音效。"""
+
+        cases = [
+            (
+                "Play_sfx_hud_base_Pings_AreaIsWarded",
+                "pings_areaiswarded",
+                "该区域已有视野标记音效",
+            ),
+            (
+                "Play_sfx_hud_base_SpellFail_Cooldown",
+                "spellfail_cooldown",
+                "技能尚未冷却提示音",
+            ),
+            (
+                "Play_sfx_hud_base_store_item_buy_legendary",
+                "store_item_buy_legendary",
+                "商店购买传说级装备音效",
+            ),
+            (
+                "Play_sfx_hud_base_Map_Close",
+                "map_close",
+                "地图关闭音效",
+            ),
+            (
+                "Play_sfx_Cherry_Gameplay_Revive_ring_ready_buffactivate",
+                "revive_ring_ready",
+                "斗魂竞技场 复活圈就绪提示音开始",
+            ),
+            (
+                "Play_sfx_Cherry_Gameplay_DestructiblePillar_respawning_loop",
+                "destructiblepillar_respawning",
+                "斗魂竞技场 可破坏石柱重生音效循环",
+            ),
+            (
+                "Stop_sfx_Cherry_Gameplay_Revive_progress_buffactivate",
+                "revive_progress",
+                "斗魂竞技场 复活进度音效停止",
+            ),
+            (
+                "Play_sfx_Map35_Gameplay_champion_kill_order",
+                "champion_kill_order",
+                "秩序方英雄击杀音效",
+            ),
+            (
+                "Play_sfx_DoomBots_Gameplay_HUD_timer_countdown",
+                "hud_timer_countdown",
+                "末日人机 倒计时音效",
+            ),
+        ]
+        for raw, effect_key, expected_detail in cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["frame_type"], "system_sfx_event")
+                self.assertEqual(translation["arguments"]["effect"]["key"], effect_key)
+                self.assertEqual(display["zh_cn_detail"], expected_detail)
+                self.assertNotRegex(
+                    display["zh_cn_detail"],
+                    r"\bhud\b|Gameplay|Cherry|DoomBots|Map35|状态启动|音效事件|事件$",
+                )
+
+        unknown = build_translation(
+            enriched_record("Play_sfx_hud_base_UnreviewedWidget_Click"),
+            reference_translation_context(),
+        )
+        self.assertIsNone(unknown)
+
+    def test_plain_item_sfx_lifecycle_uses_reference_name(self) -> None:
+        """纯装备 ID + 生命周期可复用系统音效 frame，不把状态写成技能。"""
+
+        cases = [
+            (
+                "Play_sfx_1035_buffactivate",
+                "item_1035_sfx",
+                "灰烬小刀音效开始",
+            ),
+            (
+                "Stop_sfx_3050_buffactivate",
+                "item_3050_sfx",
+                "基克的聚合音效停止",
+            ),
+            (
+                "Play_sfx_6035_Spell_OnCast",
+                "item_6035_sfx",
+                "密银黎明音效开始",
+            ),
+        ]
+        for raw, effect_key, expected_detail in cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["frame_type"], "system_sfx_event")
+                self.assertEqual(translation["arguments"]["effect"]["key"], effect_key)
+                self.assertEqual(translation["arguments"]["phase"]["key"], "audio_start")
+                self.assertEqual(display["zh_cn_detail"], expected_detail)
+
+    def test_reviewed_item_sfx_actions_keep_item_action_and_playback_semantics(self) -> None:
+        """装备 ID 与精确动作对命中时，effect 同时保留装备身份和动作。"""
+
+        cases = [
+            (
+                "Play_sfx_3053Shield_OnBuffActivate",
+                "item_3053_shield_sfx",
+                "斯特拉克的挑战护手护盾音效开始",
+            ),
+            (
+                "Stop_sfx_3748Projectile_OnBuffActivate",
+                "item_3748_projectile_sfx",
+                "巨型九头蛇投射物音效停止",
+            ),
+            (
+                "Play_sfx_6697_buffactivate_bronze",
+                "item_6697_bronze_sfx",
+                "狂妄青铜段位音效开始",
+            ),
+        ]
+        for raw, expected_key, expected_detail in cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["frame_type"], "system_sfx_event")
+                effect = translation["arguments"]["effect"]
+                self.assertEqual(effect["key"], expected_key)
+                self.assertEqual(effect["provenance"]["source"], "reference/items")
+                self.assertEqual(
+                    effect["provenance"]["action_source"],
+                    "display_labels.system_sfx.item_action",
+                )
+                self.assertEqual(display["zh_cn_detail"], expected_detail)
+
+    def test_unknown_or_mismatched_item_sfx_actions_stay_unframed(self) -> None:
+        """动作白名单按装备 ID 精确绑定，未知动作、错配动作和额外余段不得穿透。"""
+
+        cases = [
+            "Play_sfx_3053Mystery_OnBuffActivate",
+            "Play_sfx_1035Shield_OnBuffActivate",
+            "Play_sfx_999999Shield_OnBuffActivate",
+            "Play_sfx_6697_buffactivate_bronze_extra",
+        ]
+        for raw in cases:
+            with self.subTest(raw=raw):
+                self.assertIsNone(build_translation(enriched_record(raw), reference_translation_context()))
+
+    def test_reviewed_direct_hud_spell_paths_use_exact_system_labels(self) -> None:
+        """无 Base 壳的 HUD 技能提示仍只按完整已审路径建系统音效 frame。"""
+
+        cases = [
+            ("Play_sfx_hud_SpellFail_NoMana", "spellfail_nomana", "法力不足提示音"),
+            ("Play_sfx_hud_SpellFail_Silence", "spellfail_silence", "沉默状态无法施法提示音"),
+            ("Play_sfx_hud_Spell_Upgrade", "spell_upgrade", "技能加点音效"),
+            ("Play_sfx_hud_Spell_Use", "spell_use", "技能使用音效"),
+        ]
+        for raw, effect_key, expected_detail in cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["frame_type"], "system_sfx_event")
+                self.assertEqual(translation["arguments"]["effect"]["key"], effect_key)
+                self.assertEqual(display["zh_cn_detail"], expected_detail)
+
+        unknown = build_translation(
+            enriched_record("Play_sfx_hud_Spell_Unreviewed"),
+            reference_translation_context(),
+        )
+        self.assertIsNone(unknown)
+
+    def test_compact_spell_sequences_use_effect_phases_and_keep_inner_semantics(self) -> None:
+        """组合技的范围/分身/循环和 Q3 段数必须保留，不得统一写“状态启动”。"""
+
+        cases = [
+            (
+                "Play_sfx_YasuoSkin55_YasuoQ3W_OnBuffActivate",
+                "q+w",
+                "3",
+                None,
+                "effect_activate",
+                "Q+W组合技第3段生效",
+            ),
+            (
+                "Play_sfx_LeblancSkin35_LeblancRW_clone_buffactivate",
+                "r+w",
+                None,
+                "clone",
+                "effect_activate",
+                "R+W组合技（分身）生效",
+            ),
+            (
+                "Play_sfx_HweiSkin21_HweiWQ_AoE_buffactivate_loop",
+                "w+q",
+                None,
+                "aoe",
+                "loop",
+                "W+Q组合技（范围效果）循环",
+            ),
+        ]
+        for raw, sequence, stage, qualifier, phase, expected_short in cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["frame_type"], "champion_ability_sequence_event")
+                self.assertEqual(translation["arguments"]["ability_sequence"]["value"], sequence)
+                if stage is None:
+                    self.assertNotIn("ability_stage", translation["arguments"])
+                else:
+                    self.assertEqual(translation["arguments"]["ability_stage"]["value"], stage)
+                if qualifier is None:
+                    self.assertNotIn("qualifier", translation["arguments"])
+                else:
+                    self.assertEqual(translation["arguments"]["qualifier"]["key"], qualifier)
+                self.assertEqual(translation["arguments"]["phase"]["key"], phase)
+                self.assertEqual(display["zh_cn_short"], expected_short)
+                self.assertNotIn("状态启动", display["zh_cn_detail"])
+
+    def test_reviewed_residual_sfx_families_use_specific_action_or_skill_semantics(self) -> None:
+        """高频残余族应归入具体技能、动作或角色音效，而不是通用事件。"""
+
+        spell_cases = [
+            (
+                "Play_sfx_GalioSkin28_W_SelfShield",
+                "w",
+                "shield_of_durand_self_shield",
+            ),
+            (
+                "Play_sfx_MordekaiserSkin06_W_foley_end",
+                "w",
+                "indestructible_foley",
+            ),
+        ]
+        for raw, slot, component in spell_cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["arguments"]["ability_slot"]["key"], slot)
+                self.assertEqual(translation["arguments"]["ability_component"]["key"], component)
+                self.assertNotRegex(display["zh_cn_detail"], r"状态启动|音效事件|尚无中文短标签")
+
+        generic_cases = [
+            ("Play_sfx_LuluSkin05_LuluFaerieOverride_blink", "faerie_blink"),
+            ("Play_sfx_KSanteSkin01_effect_wall_travel", "wall_travel"),
+            ("Play_sfx_CorkiSkin08_DangerZoneLoaded_loop", "danger_zone_loaded"),
+        ]
+        for raw, effect_key in generic_cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["frame_type"], "champion_sfx_effect_event")
+                self.assertEqual(translation["arguments"]["effect"]["key"], effect_key)
+                self.assertNotRegex(display["zh_cn_detail"], r"状态启动|音效事件|尚无中文短标签")
+
+        elise, elise_display = self.render("Play_sfx_Elise_Skin05_Human_Emote_Joke_oba")
+        self.assertEqual(elise["frame_type"], "champion_action_event")
+        self.assertEqual(elise["arguments"]["action"]["key"], "human_form_joke")
+        self.assertIn("人形态", elise_display["zh_cn_short"])
+
+    def test_strawberry_npc_actor_role_and_ultimate_are_preserved(self) -> None:
+        """Strawberry_NPC_英雄 是 PVE NPC 演员，不得误标为 Boss 或丢掉大招。"""
+
+        record = enriched_record("Play_sfx_Strawberry_NPC_MissFortune_Ultimate_cast")
+        translation, display = self.render("Play_sfx_Strawberry_NPC_MissFortune_Ultimate_cast")
+
+        self.assertEqual(record.semantic_slots["mode_actor"]["alias"], "MissFortune")
+        self.assertEqual(record.semantic_slots["mode_actor_role"], "npc")
+        self.assertEqual(translation["arguments"]["context"]["key"], "strawberry")
+        self.assertEqual(translation["arguments"]["ability_slot"]["key"], "r")
+        self.assertIn("PVE 模式", display["zh_cn_detail"])
+        self.assertNotIn("NPC", display["zh_cn_detail"])
+
+        enemy_record = enriched_record("Play_sfx_Strawberry_Enemy_ShacoClone_Death")
+        enemy_translation, enemy_display = self.render("Play_sfx_Strawberry_Enemy_ShacoClone_Death")
+        self.assertEqual(enemy_record.semantic_slots["mode_actor"]["alias"], "Shaco")
+        self.assertEqual(enemy_record.semantic_slots["mode_actor_role"], "enemy")
+        self.assertEqual(enemy_translation["arguments"]["ability_slot"]["key"], "r")
+        self.assertIn("分身", enemy_display["zh_cn_detail"])
+
+    def test_engineering_spell_owners_and_reviewed_component_qualifiers_are_preserved(self) -> None:
+        """技能 bank owner 必须回归真实英雄，已审阅光束段位必须进入 qualifier。"""
+
+        spell_cases = [
+            (
+                "Play_sfx_LilliaERollingMissile_OnMissileLaunch",
+                "Lillia",
+                "e",
+                "swirlseed_rolling_missile",
+            ),
+            (
+                "Play_sfx_OrianaRedact_OnMissileLaunch",
+                "Orianna",
+                "e",
+                "protect_command",
+            ),
+            (
+                "Play_sfx_OrianaSkin06_OrianaRedactCommand_OnCast",
+                "Orianna",
+                "e",
+                "protect_command",
+            ),
+        ]
+        for raw, champion, slot, component in spell_cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["arguments"]["champion"]["alias"], champion)
+                self.assertEqual(translation["arguments"]["ability_slot"]["key"], slot)
+                self.assertEqual(translation["arguments"]["ability_component"]["key"], component)
+                self.assertNotRegex(display["zh_cn_detail"], r"LilliaE|Oriana|音效事件|尚无中文短标签")
+
+        lux, lux_display = self.render("Play_sfx_LuxSkin19_LuxMaliceCannonBeam_beammiddle")
+        self.assertEqual(lux["arguments"]["ability_slot"]["key"], "r")
+        self.assertEqual(lux["arguments"]["qualifier"]["key"], "beammiddle")
+        self.assertIn("光束中段", lux_display["zh_cn_short"])
+
+    def test_contextual_alias_required_tokens_prevent_neighbor_cue_hijacking(self) -> None:
+        """局部主题/墙体 token 不得覆盖同 owner 下的其它技能 cue。"""
+
+        cases = [
+            (
+                "Play_sfx_Darius_NorseKing_DariusCleave_OnCast",
+                "q",
+                "cleave",
+            ),
+            (
+                "Play_sfx_KSanteSkin01_KSanteR_wall_exit_groundslam_windup_cast",
+                "r",
+                None,
+            ),
+            (
+                "Play_sfx_Ruby_Curse_AniviaEgg_Rebirth_cast",
+                "p",
+                None,
+            ),
+        ]
+        forbidden_components = {"norse_king_recall", "wall_travel", "curse_egg_timer"}
+        for raw, expected_slot, expected_component in cases:
+            with self.subTest(raw=raw):
+                record = enriched_record(raw)
+                aliases = [record.semantic_slots.get("contextual_alias"), record.semantic_slots.get("sfx_alias")]
+                components = {alias.get("component") for alias in aliases if isinstance(alias, dict)}
+
+                self.assertEqual(record.semantic_slots.get("spell_key"), expected_slot)
+                self.assertTrue(components.isdisjoint(forbidden_components))
+                if expected_component is not None:
+                    self.assertIn(expected_component, components)
+
+    def test_reviewed_action_and_spell_sfx_keep_tail_without_fake_stage(self) -> None:
+        """动作/技能尾段应结构化；资源尾号不得一律解释成技能段数。"""
+
+        shyvana, shyvana_display = self.render("Play_sfx_ShyvanaSkin04_ShyvanaDragonDance3D_leadin")
+        self.assertEqual(shyvana["frame_type"], "champion_action_event")
+        self.assertEqual(shyvana["arguments"]["action"]["key"], "dragon_form_dance")
+        self.assertEqual(shyvana["arguments"]["phase"]["key"], "leadin")
+        self.assertEqual(shyvana_display["zh_cn_short"], "龙形态舞蹈音效引入")
+
+        spell_cases = [
+            (
+                "Play_sfx_TeemoSkin04_TeemoRBounce_missilecast",
+                "r",
+                "noxious_trap_bounce",
+                "missile_cast",
+            ),
+            (
+                "Stop_sfx_PantheonSkin06_PantheonRmissile3_OnMissileLaunch",
+                "r",
+                "grand_starfall_missile",
+                "missile_launch",
+            ),
+            (
+                "Play_sfx_AniviaSkin05_FlashFrostSpell_explode",
+                "q",
+                "flash_frost",
+                "detonate",
+            ),
+            (
+                "Play_sfx_TaliyahSkin01_TaliyahQMisBig_missilecast",
+                "q",
+                "threaded_volley_empowered_missile",
+                "missile_cast",
+            ),
+            (
+                "Play_sfx_AkshanSkin01_AkshanWRevive_buffcast",
+                "w",
+                "going_rogue_revive",
+                "cast",
+            ),
+        ]
+        for raw, slot, component, phase in spell_cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["arguments"]["ability_slot"]["key"], slot)
+                self.assertEqual(translation["arguments"]["ability_component"]["key"], component)
+                self.assertEqual(translation["arguments"]["phase"]["key"], phase)
+                self.assertNotRegex(display["zh_cn_detail"], r"音效事件|尚无中文短标签")
+
+        pantheon = enriched_record("Stop_sfx_PantheonSkin06_PantheonRmissile3_OnMissileLaunch")
+        self.assertNotIn("spell_stage", pantheon.semantic_slots)
+
+    def test_engineering_owners_and_ruby_actor_resolve_to_real_champions(self) -> None:
+        """召唤物/技能 bank owner 与 Ruby 前缀不得泄漏成英雄名。"""
+
+        azir, azir_display = self.render("Play_sfx_AzirSoldierSkin01_AzirSoldierMissile_OnMissileLaunch")
+        self.assertEqual(azir["arguments"]["champion"]["alias"], "Azir")
+        self.assertEqual(azir["arguments"]["ability_slot"]["key"], "w")
+        self.assertNotIn("AzirSoldier", azir_display["zh_cn_detail"])
+
+        zoe, zoe_display = self.render("Play_sfx_ZoeW_disablebypass")
+        self.assertEqual(zoe["arguments"]["champion"]["alias"], "Zoe")
+        self.assertEqual(zoe["arguments"]["effect"]["key"], "w_audio_bypass_disabled")
+        self.assertNotIn("ZoeW", zoe_display["zh_cn_detail"])
+
+        wukong, wukong_display = self.render("Play_sfx_Ruby_WukongSpinToWin_OnBuffActivate")
+        self.assertEqual(wukong["arguments"]["context"]["key"], "ruby")
+        self.assertEqual(wukong["arguments"]["champion"]["alias"], "MonkeyKing")
+        self.assertEqual(wukong["arguments"]["ability_slot"]["key"], "r")
+        self.assertIn("末日人机", wukong_display["zh_cn_detail"])
+        self.assertNotIn("Ruby", wukong_display["zh_cn_detail"])
+
+    def test_gnar_big_cues_render_specific_spell_attack_and_action_meaning(self) -> None:
+        """纳尔巨型形态事件必须展示 Q/被动、普通攻击或具体动作，不得只剩阶段词。"""
+
+        cases = [
+            (
+                "Play_sfx_GnarSkin15_GnarBigQMissile_OnMissileLaunch",
+                "ability_cast_event",
+                "Q技能投掷顽石飞弹弹道发射",
+            ),
+            (
+                "Play_sfx_GnarSkin15_GnarTransformSoon_OnBuffActivate",
+                "ability_state_change",
+                "被动技能狂怒基因即将变身生效",
+            ),
+            (
+                "Play_sfx_GnarSkin15_GnarBigAttackTower_OnCast",
+                "champion_attack_event",
+                "巨型形态对防御塔的普通攻击出手",
+            ),
+            (
+                "Play_sfx_GnarSkin15_GnarBig_Dance3D_buffactivate",
+                "skin_action_state",
+                "巨型形态舞蹈音效开始",
+            ),
+            (
+                "Play_sfx_GnarSkin22_GnarBig_Recall3D_buffactivate",
+                "skin_recall_state",
+                "巨型形态回城音效开始",
+            ),
+            (
+                "Play_sfx_GnarSkin15_GnarBig_Dance3D_loop",
+                "skin_action_state",
+                "巨型形态舞蹈音效循环",
+            ),
+            (
+                "Play_sfx_GnarSkin15_GnarBig_Recall_leadin",
+                "skin_recall_state",
+                "巨型形态回城音效引入",
+            ),
+            (
+                "Play_sfx_GnarBig_Dance3D_buffactivate",
+                "skin_action_state",
+                "巨型形态舞蹈音效开始",
+            ),
+            (
+                "Play_sfx_GnarBig_Recall_leadin",
+                "champion_action_event",
+                "巨型形态回城音效引入",
+            ),
+            (
+                "Play_sfx_GnarSkin13_GnarLittle_Recall_leadin",
+                "skin_recall_state",
+                "小型形态回城音效引入",
+            ),
+            (
+                "Play_vo_GnarBigSkin13_dance_buffactivate",
+                "voice_event",
+                "巨型形态跳舞语音开始",
+            ),
+        ]
+        for raw, frame_type, expected_short in cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["frame_type"], frame_type)
+                self.assertEqual(display["zh_cn_short"], expected_short)
+                self.assertNotRegex(display["zh_cn_detail"], r"Gnar|Skin\d+|尚无中文短标签")
+
+        attack, attack_display = self.render("Play_sfx_GnarSkin15_GnarBigAttackTower_OnCast")
+        self.assertNotIn("ability_slot", attack["arguments"])
+        self.assertNotIn("被动技能", attack_display["zh_cn_detail"])
+
+    def test_composite_action_tails_render_as_actions_with_lifecycle(self) -> None:
+        """音效层缩写与 Ruby 主体解析都不能把动作误写成组合技或丢掉分段。"""
+
+        cases = [
+            (
+                "Play_sfx_NamiSkin51_Dance3D_ee_loop_buffactivate",
+                "champion_action_event",
+                "舞蹈音效循环",
+            ),
+            (
+                "Play_sfx_Ruby_Lux_Dance3D_loop",
+                "champion_action_event",
+                "末日人机 舞蹈音效循环",
+            ),
+            (
+                "Play_sfx_Ruby_Boss_FNVeigar_Joke3D_loop",
+                "champion_action_event",
+                "末日人机 玩笑音效循环",
+            ),
+        ]
+        for raw, frame_type, expected_short in cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["frame_type"], frame_type)
+                self.assertEqual(translation["arguments"]["phase"]["key"], "loop")
+                self.assertEqual(display["zh_cn_short"], expected_short)
+                self.assertNotIn("组合技", display["zh_cn_detail"])
+
+    def test_aatrox_q3_renders_stage(self) -> None:
+        translation, display = self.render("Play_sfx_Aatrox_AatroxQ3_OnCast_all")
+
+        self.assertEqual(translation["arguments"]["ability_stage"]["value"], "3")
+        self.assertIn("Q技能第3段释放", display["zh_cn_detail"])
+
+    def test_stage_only_voice_event_renders_stage_without_fabricated_phase(self) -> None:
+        translation, display = self.render("Play_vo_WarwickSkin16_WarwickE2")
+
+        self.assertEqual(translation["frame_type"], "champion_ability_stage_event")
+        self.assertEqual(translation["arguments"]["ability_slot"]["key"], "e")
+        self.assertEqual(translation["arguments"]["ability_stage"]["value"], "2")
+        self.assertNotIn("phase", translation["arguments"])
+        self.assertEqual(display["zh_cn_short"], "E技能第2段")
+        self.assertEqual(display["zh_cn_detail"], "沃里克 源计划：末日 E技能第2段")
+
+    def test_numeric_spell_rank_voice_uses_rank_frame_not_stage_frame(self) -> None:
+        translation, display = self.render("Play_vo_Kayle_Spell2DPRank2")
+
+        self.assertEqual(translation["frame_type"], "champion_ability_rank_event")
+        self.assertEqual(translation["arguments"]["ability_slot"]["key"], "p")
+        self.assertEqual(translation["arguments"]["ability_slot"]["labels"]["zh_CN"], "被动技能")
+        self.assertEqual(translation["arguments"]["rank"]["value"], "2")
+        self.assertNotIn("ability_stage", translation["arguments"])
+        self.assertEqual(display["zh_cn_short"], "被动技能2级")
+        self.assertEqual(display["zh_cn_detail"], "凯尔 被动技能2级")
+
+    def test_owner_prefixed_long_basic_uses_long_range_attack_frame(self) -> None:
+        translation, display = self.render("Play_vo_SennaSkin56_Senna3DLongBasic")
+
+        self.assertEqual(translation["frame_type"], "champion_attack_event")
+        self.assertEqual(translation["arguments"]["attack"]["key"], "ranged_basic_attack")
+        self.assertEqual(display["zh_cn_short"], "远程普通攻击")
+        self.assertEqual(display["zh_cn_detail"], "赛娜 北极星神 远程普通攻击")
+
+    def test_contextual_word_stage_is_visible_with_component_name(self) -> None:
+        translation, display = self.render("Play_vo_LeeSinSkin31_BlindMonkQOne_cast3D")
+
+        self.assertEqual(translation["arguments"]["ability_stage"]["value"], "1")
+        self.assertIn("Q技能天音波第1段释放", display["zh_cn_detail"])
+
+    def test_ruby_separated_spell_key_stage_is_visible(self) -> None:
+        translation, display = self.render("Play_sfx_Ruby_Ziggs_E2_OnBuffActivate")
+
+        self.assertEqual(translation["arguments"]["context"]["key"], "ruby")
+        self.assertEqual(translation["arguments"]["ability_stage"]["value"], "2")
+        self.assertEqual(display["zh_cn_short"], "末日人机 E技能第2段生效")
+        self.assertEqual(display["zh_cn_detail"], "末日人机 吉格斯 E技能第2段生效")
+
+    def test_stage_only_spell_keeps_parsed_component_name(self) -> None:
+        translation, display = self.render("Play_sfx_Ruby_XerathArcanoPulse2_missilelaunchextended")
+
+        self.assertEqual(translation["frame_type"], "champion_ability_stage_event")
+        self.assertEqual(translation["arguments"]["ability_component"]["key"], "arcanopulse")
+        self.assertEqual(translation["arguments"]["ability_stage"]["value"], "2")
+        self.assertEqual(display["zh_cn_short"], "末日人机 Q技能奥能脉冲第2段")
+        self.assertEqual(display["zh_cn_detail"], "末日人机 泽拉斯 Q技能奥能脉冲第2段")
+
+    def test_whole_spell_audio_keeps_parsed_component_name(self) -> None:
+        translation, display = self.render("Play_sfx_TwistedFateSkin25_Gate_marker")
+
+        self.assertEqual(translation["frame_type"], "ability_cast_event")
+        self.assertEqual(translation["arguments"]["ability_component"]["key"], "portal")
+        self.assertIn("R技能传送门整段音效", display["zh_cn_detail"])
+
+    def test_contextual_skin_actions_are_not_rendered_as_passive_skills(self) -> None:
+        """形态切换与皮肤状态动作应直译动作含义，不得显示为被动技能。"""
+
+        cases = [
+            ("Play_vo_LuxSkin07_Air_Unique2DTransform", "elementalist_transform", "元素形态切换"),
+            ("Play_vo_KatarinaSkin29_Toggle3D", "toggle_state", "切换状态"),
+            ("Play_sfx_ApheliosSkin09_Lunari_Thrust3D_buffactivate", "lunari_thrust", "皎月教突刺开始"),
+        ]
+        for raw, component, expected in cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["frame_type"], "champion_action_event")
+                self.assertEqual(translation["arguments"]["action"]["key"], component)
+                self.assertIn(expected, display["zh_cn_detail"])
+                self.assertNotIn("被动技能", display["zh_cn_detail"])
+
+    def test_lunari_first_encounter_keeps_interaction_meaning(self) -> None:
+        """同名动作别名不得吞掉首次遭遇皎月教这一交互语义。"""
+
+        translation, display = self.render("Play_vo_Aphelios_FirstEncounter2DLunari")
+
+        self.assertEqual(translation["frame_type"], "champion_interaction_cue")
+        self.assertEqual(translation["arguments"]["counterpart"]["labels"]["zh_CN"], "皎月教")
+        self.assertIn("初遇", display["zh_cn_detail"])
+        self.assertIn("皎月教", display["zh_cn_detail"])
+        self.assertNotIn("被动技能", display["zh_cn_detail"])
+
+    def test_component_only_spell_events_keep_skill_and_component_meaning(self) -> None:
+        """无标准相位的真技能组件仍须保留槽位与组件中文。"""
+
+        cases = [
+            (
+                "Play_sfx_DariusSkin04_DariusHemoMax_loop",
+                "p",
+                "hemorrhage_max_stack",
+                "被动技能出血最大层数循环",
+            ),
+            (
+                "Play_vo_VayneSkin67_VayneInquisition_EmpoweredStart",
+                "r",
+                "ultimate_cast",
+                "R技能终极审判强化开始",
+            ),
+        ]
+        for raw, spell_key, component, expected in cases:
+            with self.subTest(raw=raw):
+                translation, display = self.render(raw)
+
+                self.assertEqual(translation["frame_type"], "champion_ability_component_event")
+                self.assertEqual(translation["arguments"]["ability_slot"]["key"], spell_key)
+                self.assertEqual(translation["arguments"]["ability_component"]["key"], component)
+                self.assertIn(expected, display["zh_cn_detail"])
+
+        darius, _display = self.render("Play_sfx_DariusSkin04_DariusHemoMax_loop")
+        self.assertEqual(darius["arguments"]["phase"]["key"], "loop")
+
+        vayne, _display = self.render("Play_vo_VayneSkin67_VayneInquisition_EmpoweredStart")
+        self.assertEqual(vayne["arguments"]["qualifier"]["key"], "empowered")
+        self.assertEqual(vayne["arguments"]["phase"]["key"], "start")
+
+    def test_draven_attack_qualifier_is_not_misread_as_spell_sequence(self) -> None:
+        translation, display = self.render("Play_sfx_Draven_DravenAttackP_RQ_OnHit")
+
+        self.assertEqual(translation["frame_type"], "champion_attack_event")
+        self.assertEqual(translation["arguments"]["attack"]["key"], "draven_axe_attack")
+        self.assertNotIn("ability_sequence", translation["arguments"])
+        self.assertEqual(display["zh_cn_short"], "投斧普攻（右手旋转飞斧）命中")
+        self.assertNotIn("P技能", display["zh_cn_detail"])
+
+    def test_ruby_xerath_keeps_mode_actor_spell_and_stage(self) -> None:
+        translation, display = self.render("Play_sfx_Ruby_XerathArcanopulse2_OnCast")
+
+        self.assertEqual(translation["arguments"]["context"]["key"], "ruby")
+        self.assertEqual(translation["arguments"]["champion"]["alias"], "Xerath")
+        self.assertEqual(translation["arguments"]["ability_slot"]["key"], "q")
+        self.assertEqual(translation["arguments"]["ability_stage"]["value"], "2")
+        self.assertEqual(display["zh_cn_short"], "末日人机 Q技能奥能脉冲第2段释放")
+        self.assertIn("末日人机 泽拉斯 Q技能奥能脉冲第2段释放", display["zh_cn_detail"])
+
+    def test_ruby_action_frame_keeps_mode_context_even_when_frame_did_not_declare_it(self) -> None:
+        translation, display = self.render("Play_sfx_Ruby_Blitzcrank_Dance3D_buffactivate")
+
+        self.assertEqual(translation["arguments"]["context"]["key"], "ruby")
+        self.assertIn("末日人机", display["zh_cn_short"])
+        self.assertIn("末日人机", display["zh_cn_detail"])
+        self.assertNotIn("Ruby", display["zh_cn_detail"])
+
+    def test_ruby_separated_actor_attack_uses_family_as_attack_fallback(self) -> None:
+        translation, display = self.render("Play_sfx_Ruby_Ziggs_BasicAttack2_OnCast")
+
+        self.assertEqual(translation["frame_type"], "champion_attack_event")
+        self.assertEqual(translation["arguments"]["context"]["key"], "ruby")
+        self.assertEqual(translation["arguments"]["champion"]["alias"], "Ziggs")
+        self.assertEqual(translation["arguments"]["attack"]["key"], "basic_attack")
+        self.assertEqual(translation["arguments"]["attack"]["variant"], 2)
+        self.assertEqual(display["zh_cn_short"], "末日人机 普通攻击2出手")
+        self.assertIn("末日人机 吉格斯 普通攻击2出手", display["zh_cn_detail"])
+
+    def test_ruby_boss_engineering_prefix_resolves_veigar_as_actor(self) -> None:
+        translation, display = self.render("Play_sfx_Ruby_Boss_FNVeigar_AttackInhib_missilelaunch")
+
+        self.assertEqual(translation["arguments"]["context"]["key"], "ruby")
+        self.assertEqual(translation["arguments"]["champion"]["alias"], "Veigar")
+        self.assertIn("末日人机 维迦", display["zh_cn_detail"])
+        self.assertNotRegex(display["zh_cn_detail"], r"Ruby|FNVeigar")
+
+    def test_champion_bank_identity_normalizes_companion_form_owner_and_skin(self) -> None:
+        _translation, display = self.render(
+            "Play_sfx_AnnieTibbersSkin10_AnnieTibbersBasicAttack2_OnCast",
+            source_path="raw/events/champions/1.txt",
+        )
+
+        self.assertIn("安妮", display["zh_cn_detail"])
+        self.assertNotRegex(display["zh_cn_detail"], r"AnnieTibbers|Skin10")
+
+    def test_missing_counterpart_skin_uses_champion_name_and_explicit_placeholder(self) -> None:
+        translation, display = self.render("Play_vo_AmbessaSkin01_FirstEncounter3DKatarinaSkin58")
+
+        self.assertTrue(translation["arguments"]["counterpart"]["fallback"])
+        self.assertIn("卡特琳娜（未收录皮肤）", display["zh_cn_detail"])
+        self.assertNotRegex(display["zh_cn_detail"], r"Katarina|Skin58")
+
+    def test_curated_archetype_context_does_not_leak_champion_alias(self) -> None:
+        _translation, display = self.render("Play_vo_Ambessa_FirstEncounter3DAmbessasType")
+
+        self.assertIn("安蓓萨偏好的类型", display["zh_cn_detail"])
+        self.assertNotIn("Ambessa's Type", display["zh_cn_detail"])
+
+    def test_buff_cast_spell_stage_is_rendered_as_cast_stage(self) -> None:
+        translation, display = self.render("Play_sfx_IllaoiSkin01_IllaoiR2_OnBuffCast")
+
+        self.assertEqual(translation["arguments"]["ability_slot"]["key"], "r")
+        self.assertEqual(translation["arguments"]["ability_stage"]["value"], "2")
+        self.assertEqual(translation["arguments"]["phase"]["key"], "cast")
+        self.assertIn("R技能第2段释放", display["zh_cn_detail"])
+        self.assertNotRegex(display["zh_cn_detail"], r"Illaoi|Skin01")
+
+    def test_odyssey_augments_keeps_mechanism_and_canonical_yasuo_name(self) -> None:
+        translation, display = self.render("Play_sfx_odysseyaugments_yasuorknockup_onbuffactivate")
+
+        self.assertEqual(translation["arguments"]["context"]["key"], "odyssey_augments")
+        self.assertEqual(translation["arguments"]["champion"]["alias"], "Yasuo")
+        self.assertIn("奥德赛增幅芯片 亚索", display["zh_cn_detail"])
+        self.assertNotRegex(display["zh_cn_detail"], r"\b[Yy]asuo\b|odysseyaugments")
+
+    def test_odyssey_yasuo_combo_keeps_sequence_stage_context_and_hit_phase(self) -> None:
+        """奥德赛增幅的 QE1/2/3 必须保留英雄、组合、段数与命中语义。"""
+
+        for stage in (1, 2, 3):
+            raw = f"Play_sfx_odysseyaugments_yasuoqe{stage}_onhit"
+            with self.subTest(stage=stage):
+                translation, display = self.render(raw)
+                self.assertEqual(translation["frame_type"], "champion_ability_sequence_event")
+                self.assertEqual(translation["arguments"]["context"]["key"], "odyssey_augments")
+                self.assertEqual(translation["arguments"]["champion"]["alias"], "Yasuo")
+                self.assertEqual(translation["arguments"]["ability_sequence"]["value"], "q+e")
+                self.assertEqual(translation["arguments"]["ability_sequence"]["sequence"], ["q", "e"])
+                self.assertEqual(translation["arguments"]["ability_stage"]["value"], str(stage))
+                self.assertEqual(translation["arguments"]["phase"]["key"], "hit")
+                self.assertEqual(
+                    display["zh_cn_short"],
+                    f"奥德赛增幅芯片 Q+E组合技第{stage}段命中",
+                )
+                self.assertEqual(
+                    display["zh_cn_detail"],
+                    f"奥德赛增幅芯片 亚索 Q+E组合技第{stage}段命中",
+                )
+                self.assertNotRegex(display["zh_cn_detail"], r"[Yy]asuo|odysseyaugments")
+
+    def test_zyra_attack_component_is_visible_without_becoming_passive_skill(self) -> None:
+        translation, display = self.render("Play_sfx_Zyra_hellvine_ZyraBasicAttack_OnHit")
+
+        self.assertEqual(translation["frame_type"], "champion_attack_event")
+        self.assertEqual(translation["arguments"]["attack"]["key"], "hellvine_basic_attack")
+        self.assertEqual(display["zh_cn_short"], "地狱藤蔓普攻命中")
+        self.assertNotIn("P技能", display["zh_cn_detail"])
+
+    def test_ranged_attack_form_is_visible_without_false_r_skill(self) -> None:
+        translation, display = self.render("Play_sfx_JayceSkin03_JayceRangedAttack2_OnCast")
+
+        self.assertEqual(translation["arguments"]["attack"]["key"], "ranged_basic_attack")
+        self.assertEqual(translation["arguments"]["attack"]["variant"], 2)
+        self.assertEqual(display["zh_cn_short"], "远程普通攻击2出手")
+        self.assertNotIn("R技能", display["zh_cn_detail"])
 
 
 class MapArgumentDisplayLabelsTests(unittest.TestCase):
@@ -1623,3 +3533,13 @@ class SkinLabelAliasCaseTest(unittest.TestCase):
         context = TranslationBuildContext(champion_labels={"Leblanc": {"zh_CN": "乐芙兰"}})
         self.assertEqual(context.champion_label("LeBlanc"), {"zh_CN": "乐芙兰"})
         self.assertIsNone(context.champion_label("Ahri"))
+
+    def test_champion_identity_resolves_alias_case_and_numeric_id(self) -> None:
+        context = TranslationBuildContext(
+            champion_labels={"LeBlanc": {"zh_CN": "乐芙兰"}},
+            champion_ids={7: "LeBlanc"},
+        )
+
+        self.assertEqual(context.canonical_champion_alias("leblanc"), "LeBlanc")
+        self.assertEqual(context.champion_alias_for_id(7), "LeBlanc")
+        self.assertIsNone(context.champion_alias_for_id(999))

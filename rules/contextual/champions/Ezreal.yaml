@@ -2,16 +2,16 @@ scope: champion
 owner: Ezreal
 aliases:
   ChampDeath:
-    kind: champion_spell_component
-    spell: p
+    kind: generic_sfx_effect
+    asset_kind: sfx
     component: champion_death
     label: 英雄死亡
     confidence: medium
     source: manual_contextual_alias
     note: ChampDeath 在 EzrealSkin05 事件中对应击杀英雄/敌方死亡主题音效。
   MinionDeath:
-    kind: champion_spell_component
-    spell: p
+    kind: generic_sfx_effect
+    asset_kind: sfx
     component: minion_death
     label: 小兵死亡
     confidence: medium

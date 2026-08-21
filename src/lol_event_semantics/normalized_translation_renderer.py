@@ -5,9 +5,14 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from .normalized_translation_model import FRAME_REGISTRY, RenderOptions, RenderResult
+from .normalized_translation_model import (
+    FRAME_REGISTRY,
+    RenderOptions,
+    RenderResult,
+    is_phase_suppressed_by_playback,
+)
 
-CONTEXT_ROLES = {"champion", "skin", "map", "mode"}
+CONTEXT_ROLES = {"champion", "skin", "map", "mode", "context"}
 TECHNICAL_USER_TOKENS = ("Play_", "OnBuffDeactivate", "buffactivate", "3D", "2D")
 # counterpart frame 短语的亚词后缀（builder ASSET_KIND_WORDS 的 zh 侧），
 # 定制 join 用它把 counterpart 中缀进「击杀 {cp} 语音」类措辞。
@@ -46,14 +51,24 @@ def render_translation(
     # playback（停止/静音）是全 frame 通用的壳层语义，模板未声明时统一追加在末尾，任何模式都不得丢弃。
     if "playback" in arguments and "playback" not in template_roles:
         template_roles = (*template_roles, "playback")
+    # 已声明的特殊模式/机制上下文是全 frame 语义；旧 frame 模板未列出时
+    # 统一置于句首，避免 Ruby/OdysseyAugments 等前缀在渲染阶段再次丢失。
+    if "context" in arguments and "context" not in template_roles:
+        template_roles = ("context", *template_roles)
 
     role_texts: list[tuple[str, str]] = []
     used_roles: list[str] = []
     diagnostics: list[str] = []
     for role in template_roles:
+        if role == "phase" and is_phase_suppressed_by_playback(arguments):
+            continue
+
         argument = arguments.get(role)
         if not isinstance(argument, dict):
             diagnostics.append(f"missing_role:{role}")
+            continue
+
+        if argument_rendered_via_other_role(argument, arguments):
             continue
 
         # 上下文省略只看 argument 自带标记（T4.1 机制统一），对所有模式生效。
@@ -75,7 +90,7 @@ def render_translation(
         frame_type=frame_type,
         confidence=confidence,
         used_roles=tuple(used_roles),
-        omitted_roles=omitted_roles_for_context(
+        omitted_roles=omitted_roles_for_rendering(
             frame_type, active_options.locale, active_options.known_context, arguments
         ),
         diagnostics=tuple(dict.fromkeys(diagnostics)),
@@ -122,6 +137,9 @@ def render_role_texts(
 
     if frame_type == "announcer_event":
         return join_announcer_event_zh_cn(role_texts)
+
+    if frame_type == "mode_unit_attack_event":
+        return join_mode_unit_attack_zh_cn(role_texts)
 
     return join_zh_cn(role_texts)
 
@@ -207,6 +225,28 @@ def argument_omitted_for_context(argument: dict[str, Any], known_context: frozen
     return bool(known_context.intersection(str(item) for item in omit_when_known))
 
 
+def argument_rendered_via_other_role(
+    argument: dict[str, Any],
+    arguments: dict[str, Any],
+) -> bool:
+    """判断结构化 argument 是否已被另一个渲染 role 消费。
+
+    Args:
+        argument: 当前 translation argument。
+        arguments: 同一 frame 的完整 arguments。
+
+    Returns:
+        provenance.rendered_via 指向现存 role 时返回 True。
+    """
+
+    provenance = argument.get("provenance")
+    if not isinstance(provenance, dict):
+        return False
+
+    rendered_via = string_or_none(provenance.get("rendered_via"))
+    return rendered_via is not None and isinstance(arguments.get(rendered_via), dict)
+
+
 def join_zh_cn(role_texts: list[tuple[str, str]]) -> str:
     """按中文显示规则合并 role 文案。
 
@@ -235,6 +275,18 @@ def join_zh_cn(role_texts: list[tuple[str, str]]) -> str:
         previous_text = current_text
 
     return output
+
+
+def join_mode_unit_attack_zh_cn(role_texts: list[tuple[str, str]]) -> str:
+    """合并模式单位攻击文案，显式分隔上下文、单位与攻击动作。"""
+
+    role_values = {role: text for role, text in role_texts}
+    context = role_values.get("context")
+    entity = role_values.get("entity")
+    attack = role_values.get("attack", "")
+    phase = role_values.get("phase", "")
+    core = f"{attack}{phase}".strip()
+    return " ".join(part for part in (context, entity, core) if part)
 
 
 def join_skin_idle_zh_cn(role_texts: list[tuple[str, str]]) -> str:
@@ -638,13 +690,13 @@ def build_compat_display(
     }
 
 
-def omitted_roles_for_context(
+def omitted_roles_for_rendering(
     frame_type: str,
     locale: str,
     known_context: frozenset[str],
     arguments: dict[object, object],
 ) -> tuple[str, ...]:
-    """返回因上下文省略的角色。
+    """返回因上下文或 playback 控制语义省略的角色。
 
     始终按 default 模板的完整 role 集合报告（而非当前模式模板），调用方
     因此能在 main 等短模板下仍看到 champion/skin 被省略的事实。
@@ -660,11 +712,18 @@ def omitted_roles_for_context(
     """
 
     default_roles = roles_for_template(frame_type, locale, "default")
-    return tuple(
-        role
-        for role in default_roles
-        if isinstance(arguments.get(role), dict) and argument_omitted_for_context(arguments[role], known_context)
-    )
+    omitted = []
+    for role in default_roles:
+        argument = arguments.get(role)
+        if not isinstance(argument, dict):
+            continue
+        if argument_omitted_for_context(argument, known_context) or argument_rendered_via_other_role(
+            argument, arguments
+        ):
+            omitted.append(role)
+    if "phase" in default_roles and is_phase_suppressed_by_playback(arguments):
+        omitted.append("phase")
+    return tuple(omitted)
 
 
 def fallback_argument_text(argument: dict[str, object], fallback: str) -> str:

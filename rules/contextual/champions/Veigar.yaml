@@ -1,0 +1,218 @@
+scope: champion
+owner: Veigar
+aliases:
+  Bark:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: ruby
+    component: hud_bark
+    label: 界面语音提示
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      Left: 左侧
+    note: Ruby_HUD_FNVeigar_Bark_Left 是末日人机维迦的左侧界面语音提示，不是 HUD 或 Ruby 实体。
+  DelayedDarkMatter:
+    kind: champion_spell_component
+    spell: w
+    asset_kind: sfx
+    mode: ruby
+    component: delayed_dark_matter
+    label: 延迟黑暗物质
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      warning: 预警
+      small: 小型
+      big: 大型
+    note: Ruby_Boss_FNVeigar 的 DelayedDarkMatter 是最终首领维迦的延迟 W 黑暗物质，预警与大小必须保留。
+  FNVeigarBalefulStrike:
+    kind: champion_spell_component
+    spell: q
+    asset_kind: sfx
+    mode: ruby
+    component: baleful_strike
+    label: 黑暗祭祀
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      powerup: 强化
+    note: FN 是工程前缀；BalefulStrike 是维迦 Q 黑暗祭祀，powerup 表示强化阶段。
+  FNVeigarEventHorizon:
+    kind: champion_spell_component
+    spell: e
+    asset_kind: sfx
+    mode: ruby
+    component: event_horizon
+    label: 扭曲空间
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      warning: 预警
+    note: FN 是工程前缀；EventHorizon 是维迦 E 扭曲空间，warning/loop 分别保留预警与循环阶段。
+  FNVeigarR:
+    kind: champion_spell_component
+    spell: r
+    asset_kind: sfx
+    mode: ruby
+    component: primordial_burst
+    label: 能量爆裂
+    confidence: high
+    source: manual_contextual_alias
+    note: FN 是工程前缀；FNVeigarR 是最终首领维迦 R 能量爆裂，OnCast/OnHit/弹道阶段不得丢弃。
+  FNVeigarTeleport:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: ruby
+    component: boss_teleport
+    label: 首领传送
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      arrive: 抵达
+    note: FNVeigarTeleport 是最终首领维迦的传送流程；start 与 arrive 分别表示启动和抵达。
+  Imprison:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: ruby
+    component: boss_imprison
+    label: 首领禁锢
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      Player: 玩家
+      shield: 护盾
+      beam: 光束
+      doghouse: 囚笼
+    note: Imprison 是最终首领维迦的玩家禁锢机制；护盾、光束与囚笼层必须保留。
+  InstaKill:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: ruby
+    component: instant_kill
+    label: 即死机制
+    confidence: high
+    source: manual_contextual_alias
+    note: InstaKill 是最终首领的即死命中机制，FNVeigarr 只是历史拼写变体。
+  Knockaway:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: ruby
+    component: knockaway
+    label: 击退机制
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      warning: 预警
+      impact: 冲击
+    note: Knockaway 是最终首领的击退机制，warning/impact 分别为预警与冲击层。
+  MordeE:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: ruby
+    component: borrowed_deaths_grasp
+    label: 借用断魂一扼
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      warning: 预警
+    note: MordeE 是首领借用莫德凯撒 E 断魂一扼的机制，不得误写成维迦 E。
+  MordeEMissile:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: ruby
+    component: borrowed_deaths_grasp_missile
+    label: 借用断魂一扼飞弹
+    confidence: high
+    source: manual_contextual_alias
+    note: MordeEMissile 是首领借用断魂一扼的飞弹层，OnMissileCast 保留飞弹施放阶段。
+  MordeR:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: ruby
+    component: borrowed_realm_of_death
+    label: 借用轮回绝境
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      self: 自身
+      target: 目标
+    note: MordeR 是首领借用莫德凯撒 R 轮回绝境的机制，不得误写成维迦 R。
+  PreFightPhase:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: ruby
+    component: pre_fight_phase
+    label: 战前阶段
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      OrbitalLaser: 轨道激光
+      aoe: 范围效果
+      claw: 利爪
+      transition: 过渡
+    note: PreFightPhase 是最终首领出现前的战前流程；轨道激光与利爪过渡层必须保留。
+  SafeZone:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: ruby
+    component: safe_zone
+    label: 安全区机制
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      OrbitalLaser: 轨道激光
+      aoe: 范围效果
+      red: 红色
+      runes: 符文
+      shrink: 收缩
+    note: SafeZone 是最终首领战的安全区机制；轨道激光、范围、颜色、符文与收缩语义不得丢失。
+  SoulTether:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: ruby
+    component: soul_tether
+    label: 灵魂系链
+    confidence: high
+    source: manual_contextual_alias
+    note: SoulTether 是最终首领维迦的灵魂系链机制。
+  WideQ:
+    kind: champion_spell_component
+    spell: q
+    asset_kind: sfx
+    mode: ruby
+    component: wide_baleful_strike
+    label: 广域黑暗祭祀
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      warning: 预警
+    note: WideQ 是最终首领维迦的广域 Q 黑暗祭祀，warning 是预警层。
+  buttonclick:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: skin_button_click
+    label: 皮肤按钮点击
+    confidence: high
+    source: manual_contextual_alias
+    note: VeigarSkin09_buttonclick_01 是皮肤按钮点击音效；尾号是资源变体，不是技能段数。
+  footstep:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: ruby
+    component: boss_footstep
+    label: 首领脚步
+    confidence: high
+    source: manual_contextual_alias
+    note: Ruby_Boss_FNVeigar_footstep 是最终首领维迦的脚步音效。
+  portal:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: ruby
+    component: boss_portal
+    label: 首领传送门
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      spawn: 生成
+    note: Ruby_Boss_FNVeigar_portal_spawn 是最终首领传送门生成音效。

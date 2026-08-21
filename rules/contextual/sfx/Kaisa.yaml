@@ -1,0 +1,24 @@
+scope: sfx
+owner: Kaisa
+aliases:
+  EvolveOthers:
+    kind: generic_sfx_effect
+    component: evolve_others
+    label: 他人进化
+    confidence: high
+    source: manual_sfx_alias
+    note: EvolveOthers 表示其他玩家可听见的进化音效；E 是英文词首，不是 E 技能槽位。
+  EvolveSelf:
+    kind: generic_sfx_effect
+    component: evolve_self
+    label: 自身进化
+    confidence: high
+    source: manual_sfx_alias
+    note: EvolveSelf 表示卡莎自身进化音效；E 是英文 Evolve 的词首，不能据此写成 E 技能。
+  Helmet:
+    kind: generic_sfx_effect
+    component: helmet
+    label: 头盔
+    confidence: high
+    source: manual_sfx_alias
+    note: Helmet 跨基础与多套 Kaisa 皮肤表示头盔开关音效，不属于技能槽位。

@@ -52,7 +52,7 @@ class StableScope:
 V1_STABLE_SCOPE = StableScope(
     decision_id="v1-semantic-fix-2026-08-11",
     pattern_count=91,
-    record_count=4389,
+    record_count=4127,
     pattern_ids_digest="978aa170afcdfab84833a88fc14efcc32bab63f0de85cba6e2851d886971e9e7",
 )
 

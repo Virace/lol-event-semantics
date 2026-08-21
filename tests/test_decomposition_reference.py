@@ -911,6 +911,24 @@ class ReferenceEnrichmentTests(unittest.TestCase):
         record = normalize_semantics(decompose_event_name(raw, game_version="16.5"))
         return enrich_with_reference(record, self.index)
 
+    def enrich_from_repository(self, raw: str):
+        """用仓库完整 reference/rules 验证生产解析路径。"""
+
+        record = normalize_semantics(decompose_event_name(raw, game_version="16.16"))
+        return enrich_with_reference(record, shared_reference_index())
+
+    def enrich_mode_asset(self, raw: str):
+        """模拟模式事件来自 map 资产时的生产解析路径。"""
+
+        record = normalize_semantics(
+            decompose_event_name(
+                raw,
+                game_version="16.16",
+                source_path="raw/events/maps/11.txt",
+            )
+        )
+        return enrich_with_reference(record, shared_reference_index())
+
     def test_map12_becomes_map_or_system_profile(self) -> None:
         record = self.enrich("Play_sfx_Env_Map12_Ambience")
 
@@ -1155,7 +1173,8 @@ class ReferenceEnrichmentTests(unittest.TestCase):
         self.assertEqual(candidate["match_source"], "spell_key")
         self.assertEqual(candidate["residual"], "recastmissile")
         self.assertGreaterEqual(candidate["score"], 70)
-        self.assertIn("embedded_subject", candidate["components"])
+        self.assertIn("owner_context", candidate["components"])
+        self.assertEqual(record.semantic_slots["context_namespace"]["key"], "ruby")
 
     def test_ruby_urgot_recast_missile_launch_keeps_phase_context(self) -> None:
         record = self.enrich("Play_sfx_Ruby_UrgotRRecastMissile_OnMissileLaunch")
@@ -1171,6 +1190,7 @@ class ReferenceEnrichmentTests(unittest.TestCase):
         self.assertEqual(record.profile.semantic_profile, SemanticProfile.SPELL_EVENT)
         self.assertEqual(record.semantic_slots["subject"]["alias"], "LeeSin")
         self.assertEqual(record.semantic_slots["spell_key"], "q")
+        self.assertEqual(record.semantic_slots["spell_stage"], 1)
         candidate = next(candidate for candidate in record.candidates if candidate["kind"] == "inferred_champion_spell")
         self.assertEqual(candidate["match_source"], "spell_key_stage")
         self.assertEqual(candidate["stage"], 1)
@@ -1182,10 +1202,12 @@ class ReferenceEnrichmentTests(unittest.TestCase):
         self.assertEqual(record.profile.semantic_profile, SemanticProfile.SPELL_EVENT)
         self.assertEqual(record.semantic_slots["subject"]["alias"], "LeeSin")
         self.assertEqual(record.semantic_slots["spell_key"], "q")
+        self.assertEqual(record.semantic_slots["spell_stage"], 1)
         candidate = next(candidate for candidate in record.candidates if candidate["kind"] == "inferred_champion_spell")
         self.assertEqual(candidate["match_source"], "spell_key_stage")
         self.assertEqual(candidate["stage"], 1)
-        self.assertIn("embedded_subject", candidate["components"])
+        self.assertIn("owner_context", candidate["components"])
+        self.assertEqual(record.semantic_slots["context_namespace"]["key"], "ruby")
 
     def test_champion_title_alias_matches_spell_key_stage_variant(self) -> None:
         record = self.enrich("Play_vo_LeeSinSkin31_BlindMonkQOne_cast3D")
@@ -1193,6 +1215,7 @@ class ReferenceEnrichmentTests(unittest.TestCase):
         self.assertEqual(record.profile.semantic_profile, SemanticProfile.SPELL_EVENT)
         self.assertEqual(record.semantic_slots["subject"]["alias"], "LeeSin")
         self.assertEqual(record.semantic_slots["spell_key"], "q")
+        self.assertEqual(record.semantic_slots["spell_stage"], 1)
         candidate = next(candidate for candidate in record.candidates if candidate["kind"] == "inferred_champion_spell")
         self.assertEqual(candidate["match_source"], "spell_key_stage")
         self.assertEqual(candidate["stage"], 1)
@@ -1225,19 +1248,18 @@ class ReferenceEnrichmentTests(unittest.TestCase):
         self.assertFalse(any(candidate["kind"] == "inferred_champion_spell" for candidate in record.candidates))
         self.assertIsNone(record.semantic_slots.get("spell_key"))
 
-    def test_aatrox_basic_attack_keeps_whitelisted_passive_inference(self) -> None:
-        """白名单内英雄的普攻类关键词命中保持原有技能推断。"""
+    def test_aatrox_basic_attack_is_not_promoted_to_passive_spell(self) -> None:
+        """即使被动会强化普攻，通用 BasicAttack 事件仍然是普通攻击。"""
 
         record = self.enrich("Play_sfx_AatroxSkin01_AatroxBasicAttack_OnCast")
 
-        candidate = next(candidate for candidate in record.candidates if candidate["kind"] == "inferred_champion_spell")
-        self.assertEqual(candidate["subject"]["alias"], "Aatrox")
-        self.assertEqual(candidate["spell_key"], "p")
-        self.assertEqual(candidate["match_source"], "description_keywords")
-        self.assertEqual(record.semantic_slots["spell_key"], "p")
+        self.assertEqual(record.profile.primary_family, "basic_attack")
+        self.assertEqual(record.semantic_slots["attack_kind"], "basic_attack")
+        self.assertIsNone(record.semantic_slots.get("spell_key"))
+        self.assertFalse(any(candidate["kind"] == "inferred_champion_spell" for candidate in record.candidates))
 
-    def test_aatrox_whitelisted_basic_attack_records_spell_constraint_audit(self) -> None:
-        """白名单放行普攻类关键词推断时应记录 manual_spell_constraint 审计事件。"""
+    def test_basic_attack_does_not_record_spell_promotion_audit(self) -> None:
+        """普攻不得再依赖“强化普攻技能白名单”升级为技能事件。"""
 
         recorder = MatchAuditRecorder()
 
@@ -1245,10 +1267,7 @@ class ReferenceEnrichmentTests(unittest.TestCase):
             self.enrich("Play_sfx_AatroxSkin01_AatroxBasicAttack_OnCast")
 
         hits = [event for event in recorder.events if event.matcher_kind == "manual_spell_constraint"]
-        self.assertTrue(hits)
-        self.assertEqual(hits[0].rule_id, "spell_constraint:attack_modifier:Aatrox:p")
-        self.assertEqual(hits[0].source_path, "rules/spell_match_constraints.yaml")
-        self.assertEqual(hits[0].raw_event_name, "Play_sfx_AatroxSkin01_AatroxBasicAttack_OnCast")
+        self.assertFalse(hits)
 
     def test_ashe_volley_rank_matches_spell_name_with_rank_residual(self) -> None:
         record = self.enrich("Play_vo_AsheSkin08_VolleyRank2_cast3D")
@@ -1274,28 +1293,29 @@ class ReferenceEnrichmentTests(unittest.TestCase):
         self.assertGreaterEqual(candidate["score"], 75)
         self.assertIn("description_keywords", candidate["components"])
 
-    def test_jhin_idle_passive_state_is_not_inferred_as_passive_spell(self) -> None:
-        """皮肤命名状态事件里的裸 Passive 是动画状态命名，不得推断为 P 技能。"""
+    def test_jhin_idle_passive_uses_reviewed_passive_audio_alias(self) -> None:
+        """烬的 Idle_Passive 是已审阅的真实被动待机音轨，不走裸词推断。"""
 
         record = self.enrich("Play_sfx_JhinSkin05_Idle_Passive_buffactivate")
 
-        self.assertEqual(record.profile.primary_family, "skin_named_state")
-        self.assertEqual(record.semantic_slots["state_key"], "passive_idle")
-        self.assertIsNone(record.semantic_slots.get("spell_key"))
+        self.assertEqual(record.profile.primary_family, "spell")
+        self.assertEqual(record.profile.semantic_profile, SemanticProfile.SPELL_EVENT)
+        self.assertEqual(record.semantic_slots["spell_key"], "p")
+        self.assertEqual(record.semantic_slots["contextual_alias"]["component"], "passive_idle_audio")
         self.assertFalse(any(candidate["kind"] == "inferred_champion_spell" for candidate in record.candidates))
 
-    def test_jhin_idle_passive_gate_drop_records_audit_reason(self) -> None:
-        """裸 Passive 门丢弃候选时应留下可审计的丢弃原因。"""
+    def test_unreviewed_idle_passive_gate_drop_records_audit_reason(self) -> None:
+        """没有 owner 规则的裸 Passive 状态仍应留下可审计的丢弃原因。"""
 
         recorder = MatchAuditRecorder()
 
         with audit_context(recorder):
-            self.enrich("Play_sfx_JhinSkin05_Idle_Passive_buffactivate")
+            self.enrich_from_repository("Play_sfx_YasuoSkin05_Idle_Passive_buffactivate")
 
         drops = [event for event in recorder.events if event.matcher_kind == "inference_gate"]
         self.assertTrue(drops)
         self.assertEqual(drops[0].rule_id, "spell_gate:bare_passive_state_token")
-        self.assertEqual(drops[0].owner, "Jhin")
+        self.assertEqual(drops[0].owner, "Yasuo")
 
     def test_singed_bare_passive_buff_keeps_passive_key_inference(self) -> None:
         """非动画状态事件的裸 Passive 命中仍保持 passive_key 推断。"""
@@ -1336,6 +1356,276 @@ class ReferenceEnrichmentTests(unittest.TestCase):
         self.assertIn("owner_context", candidate["components"])
         self.assertFalse(any(unknown.raw == "Gate" for unknown in record.unknowns))
 
+    def test_asset_scoped_contextual_alias_ignores_record_without_asset_kind(self) -> None:
+        """声明 asset_kind=sfx 的规则遇到无资产类型记录时应安全跳过。"""
+
+        record = normalize_semantics(decompose_event_name("Play_sfx_KaynSkin20_Music_Mute", game_version="16.5"))
+        record.shell.asset_kind = None
+        record = enrich_with_reference(record, self.index)
+
+        self.assertIsNone(record.shell.asset_kind)
+        self.assertNotIn("sfx_alias", record.semantic_slots)
+
+    def test_skin_action_components_do_not_become_passive_skills(self) -> None:
+        """皮肤形态、状态切换与角色动作不是 P 技能，必须进入独立动作语义。"""
+
+        cases = [
+            ("Play_vo_LuxSkin07_Air_Unique2DTransform", "elementalist_transform"),
+            ("Play_vo_KatarinaSkin29_Toggle3D", "toggle_state"),
+            ("Play_sfx_ApheliosSkin09_Lunari_Thrust3D_buffactivate", "lunari_thrust"),
+        ]
+        for raw, component in cases:
+            with self.subTest(raw=raw):
+                record = self.enrich(raw)
+
+                self.assertEqual(record.profile.semantic_profile, SemanticProfile.SELF_ACTION)
+                self.assertEqual(record.profile.primary_family, "contextual_action")
+                self.assertEqual(record.semantic_slots["action_component"]["component"], component)
+                self.assertIsNone(record.semantic_slots.get("spell_key"))
+
+    def test_interaction_counterpart_is_not_hijacked_by_action_alias(self) -> None:
+        """FirstEncounter2DLunari 的 Lunari 是遭遇对象，不得被同名动作规则覆盖。"""
+
+        record = self.enrich("Play_vo_Aphelios_FirstEncounter2DLunari")
+
+        self.assertEqual(record.profile.semantic_profile, SemanticProfile.INTERACTION)
+        self.assertEqual(record.semantic_slots["counterpart"]["kind"], "faction")
+        self.assertEqual(record.semantic_slots["counterpart"]["label"], "Lunari")
+        self.assertIsNone(record.semantic_slots.get("spell_key"))
+        self.assertNotIn("action_component", record.semantic_slots)
+
+    def test_true_spell_components_keep_their_skill_slots(self) -> None:
+        """动作边界收紧不能误伤真正的被动层数与终极技能组件。"""
+
+        cases = [
+            ("Play_sfx_DariusSkin04_DariusHemoMax_loop", "p", "hemorrhage_max_stack"),
+            ("Play_vo_VayneSkin67_VayneInquisition_EmpoweredStart", "r", "ultimate_cast"),
+        ]
+        for raw, spell_key, component in cases:
+            with self.subTest(raw=raw):
+                record = self.enrich(raw)
+
+                self.assertEqual(record.profile.semantic_profile, SemanticProfile.SPELL_EVENT)
+                self.assertEqual(record.semantic_slots["spell_key"], spell_key)
+                self.assertEqual(record.semantic_slots["contextual_alias"]["component"], component)
+
+    def test_fizz_piercing_strike_is_q_not_passive(self) -> None:
+        """PiercingStrike 的 P 是英文词首，不是被动槽位；该内部名对应菲兹 Q。"""
+
+        record = self.enrich("Play_sfx_FizzSkin04_FizzPiercingStrike_OnCast")
+
+        self.assertEqual(record.profile.semantic_profile, SemanticProfile.SPELL_EVENT)
+        self.assertEqual(record.semantic_slots["spell_key"], "q")
+        self.assertEqual(record.semantic_slots["contextual_alias"]["component"], "urchin_strike")
+        self.assertNotEqual(record.semantic_slots.get("spell_key_hint"), "p")
+
+    def test_blitzcrank_overdrive_keeps_official_w_component(self) -> None:
+        """公共 Overdrive 词不能覆盖布里茨 W 的官方技能语义。"""
+
+        record = self.enrich_from_repository("Play_sfx_BlitzcrankSkin07_Overdrive_OnBuffActivate")
+
+        self.assertEqual(record.profile.semantic_profile, SemanticProfile.SPELL_EVENT)
+        self.assertEqual(record.semantic_slots["spell_key"], "w")
+        self.assertEqual(record.semantic_slots["sfx_alias"]["component"], "overdrive")
+        self.assertEqual(record.semantic_slots["sfx_alias"]["label"], "过载运转")
+        self.assertNotIn("contextual_alias", record.semantic_slots)
+
+    def test_reviewed_sfx_components_override_misleading_initials(self) -> None:
+        """Rider/Evolve 等词首不能覆盖 owner-scoped 的真实技能或非技能语义。"""
+
+        spell_cases = [
+            ("Play_sfx_Kled_KledRiderQMissile_OnMissileLaunch", "q", "mounted_beartrap_missile"),
+            ("Play_sfx_Kled_KledRemountDash_OnBuffCast", "p", "remount_dash"),
+            ("Play_sfx_Shen_ShenRshield_OnBuffActivate", "r", "stand_united_shield"),
+            ("Play_sfx_Yuumi_YuumiQskillshot_OnMissileLaunch", "q", "prowling_projectile"),
+        ]
+        for raw, spell_key, component in spell_cases:
+            with self.subTest(raw=raw):
+                record = self.enrich_from_repository(raw)
+
+                self.assertEqual(record.profile.semantic_profile, SemanticProfile.SPELL_EVENT)
+                self.assertEqual(record.semantic_slots["spell_key"], spell_key)
+                self.assertEqual(record.semantic_slots["contextual_alias"]["component"], component)
+                self.assertNotIn("spell_key_hint", record.semantic_slots)
+
+        evolve = self.enrich_from_repository("Play_sfx_Kaisa_KaisaEvolveSelf_cast")
+        self.assertEqual(evolve.profile.primary_family, "sfx")
+        self.assertEqual(evolve.profile.semantic_profile, SemanticProfile.MAP_OR_SYSTEM)
+        self.assertEqual(evolve.semantic_slots["sfx_alias"]["component"], "evolve_self")
+        self.assertNotIn("spell_key", evolve.semantic_slots)
+        self.assertNotIn("spell_key_hint", evolve.semantic_slots)
+        self.assertNotIn("effect_residual", evolve.semantic_slots)
+
+    def test_kaisa_foley_attack_is_attack_not_passive_skill(self) -> None:
+        """FoleyAttack 是普通攻击音效组件，Attack 不能继续被写成 P 技能。"""
+
+        record = self.enrich_from_repository("Play_sfx_Kaisa_KaisaFoleyAttack_OnCast")
+
+        self.assertEqual(record.profile.primary_family, "basic_attack")
+        self.assertEqual(record.profile.semantic_profile, SemanticProfile.SELF_ACTION)
+        self.assertEqual(record.semantic_slots["attack_kind"], "basic_attack")
+        self.assertEqual(record.semantic_slots["attack_component"]["component"], "foley_attack")
+        self.assertIsNone(record.semantic_slots.get("related_spell_key"))
+        self.assertNotIn("spell_key", record.semantic_slots)
+
+    def test_legacy_iblitz_owner_uses_blitzcrank_sfx_alias(self) -> None:
+        """iBlitz 历史 owner 应回落基础英雄的 SFX 专名规则。"""
+
+        record = self.enrich_from_repository("Play_sfx_iBlitz_Overdrive_OnBuffActivate")
+
+        self.assertEqual(record.semantic_slots["spell_key"], "w")
+        self.assertEqual(record.semantic_slots["sfx_alias"]["component"], "overdrive")
+        self.assertEqual(record.semantic_slots["sfx_alias"]["label"], "过载运转")
+
+    def test_gnar_transform_is_passive_component_not_ultimate(self) -> None:
+        """GnarTransform 是被动变身，不得因 R 英文名 GNAR! 误判为 R。"""
+
+        record = self.enrich_from_repository("Play_sfx_Gnar_GnarTransform_OnBuffActivate")
+
+        self.assertEqual(record.profile.semantic_profile, SemanticProfile.SPELL_EVENT)
+        self.assertEqual(record.semantic_slots["spell_key"], "p")
+        self.assertEqual(record.semantic_slots["contextual_alias"]["component"], "rage_gene_transform")
+        self.assertEqual(record.semantic_slots["contextual_alias"]["label"], "狂怒基因变身")
+        self.assertNotIn("sfx_alias", record.semantic_slots)
+
+    def test_champion_alias_cannot_be_reference_spell_name_evidence(self) -> None:
+        """技能名归一化后等于英雄名时，不能匹配任意英雄前缀 cue。"""
+
+        record = self.enrich_from_repository("Play_sfx_Gnar_GnarHelmet_OnBuffActivate")
+
+        self.assertNotEqual(record.semantic_slots.get("spell_key"), "r")
+        spell_match = record.semantic_slots.get("spell_match")
+        self.assertFalse(isinstance(spell_match, dict) and spell_match.get("matched_term") == "gnar")
+
+    def test_gnar_big_cues_keep_spell_attack_and_form_action_boundaries(self) -> None:
+        """纳尔巨型形态前缀不能吞掉 Q、普攻或舞蹈/回城动作语义。"""
+
+        spell_cases = [
+            (
+                "Play_sfx_GnarSkin15_GnarBigQMissile_OnMissileLaunch",
+                "q",
+                "mega_boulder_missile",
+            ),
+            (
+                "Play_sfx_GnarSkin15_GnarBigQRockGround_hit",
+                "q",
+                "mega_boulder_ground_impact",
+            ),
+            (
+                "Play_sfx_GnarSkin15_GnarTransformSoon_OnBuffActivate",
+                "p",
+                "rage_gene_transform_soon",
+            ),
+            (
+                "Play_sfx_GnarSkin15_GnarTransformBack_buffactivate",
+                "p",
+                "rage_gene_transform_back",
+            ),
+        ]
+        for raw, spell_key, component in spell_cases:
+            with self.subTest(raw=raw):
+                record = self.enrich_from_repository(raw)
+
+                self.assertEqual(record.profile.semantic_profile, SemanticProfile.SPELL_EVENT)
+                self.assertEqual(record.semantic_slots["spell_key"], spell_key)
+                self.assertEqual(record.semantic_slots["contextual_alias"]["component"], component)
+                self.assertNotEqual(record.confidence.value, "low")
+
+        attack = self.enrich_from_repository("Play_sfx_GnarSkin15_GnarBigAttackTower_OnCast")
+        self.assertEqual(attack.profile.primary_family, "basic_attack")
+        self.assertEqual(attack.profile.semantic_profile, SemanticProfile.SELF_ACTION)
+        self.assertEqual(attack.semantic_slots["attack_kind"], "basic_attack")
+        self.assertEqual(attack.semantic_slots["attack_component"]["component"], "mega_tower_basic_attack")
+        self.assertIsNone(attack.semantic_slots.get("related_spell_key"))
+        self.assertNotIn("spell_key", attack.semantic_slots)
+
+        action_cases = [
+            (
+                "Play_sfx_GnarSkin15_GnarBig_Dance3D_buffactivate",
+                "skin_action_state",
+                "dance",
+            ),
+            (
+                "Play_sfx_GnarSkin22_GnarBig_Recall3D_buffactivate",
+                "skin_recall_state",
+                "recall",
+            ),
+        ]
+        for raw, family, action_key in action_cases:
+            with self.subTest(raw=raw):
+                record = self.enrich_from_repository(raw)
+
+                self.assertEqual(record.profile.primary_family, family)
+                self.assertEqual(record.profile.semantic_profile, SemanticProfile.SELF_ACTION)
+                self.assertEqual(record.semantic_slots["action"], action_key)
+                self.assertEqual(record.semantic_slots["action_form"]["component"], "mega_form")
+                self.assertEqual(record.semantic_slots["action_form"]["label"], "巨型形态")
+                self.assertNotIn("spell_key", record.semantic_slots)
+
+        lifecycle_cases = [
+            (
+                "Play_sfx_GnarSkin15_GnarBig_Dance3D_loop",
+                "skin_action_state",
+                "dance",
+                "loop",
+            ),
+            (
+                "Play_sfx_GnarSkin15_GnarBig_Recall_leadin",
+                "skin_recall_state",
+                "recall",
+                "leadin",
+            ),
+            (
+                "Play_sfx_GnarSkin13_GnarLittle_Recall_leadin",
+                "skin_recall_state",
+                "recall",
+                "leadin",
+            ),
+        ]
+        for raw, family, action_key, phase in lifecycle_cases:
+            with self.subTest(raw=raw):
+                record = self.enrich_from_repository(raw)
+
+                self.assertEqual(record.profile.primary_family, family)
+                self.assertEqual(record.semantic_slots["action"], action_key)
+                self.assertEqual(record.semantic_slots["phase"], phase)
+                expected_form = "mini_form" if "GnarLittle" in raw else "mega_form"
+                self.assertEqual(record.semantic_slots["action_form"]["component"], expected_form)
+
+        owner_form_sfx_cases = [
+            (
+                "Play_sfx_GnarBig_Dance3D_buffactivate",
+                "skin_action_state",
+                "dance",
+                "buff_activate",
+            ),
+            (
+                "Play_sfx_GnarBig_Recall_leadin",
+                "recall",
+                None,
+                "leadin",
+            ),
+        ]
+        for raw, family, action_key, phase in owner_form_sfx_cases:
+            with self.subTest(raw=raw):
+                record = self.enrich_from_repository(raw)
+
+                self.assertEqual(record.profile.primary_family, family)
+                self.assertEqual(record.profile.semantic_profile, SemanticProfile.SELF_ACTION)
+                if action_key is None:
+                    self.assertNotIn("action", record.semantic_slots)
+                else:
+                    self.assertEqual(record.semantic_slots["action"], action_key)
+                self.assertEqual(record.semantic_slots["phase"], phase)
+                self.assertEqual(record.semantic_slots["action_form"]["component"], "mega_form")
+                self.assertEqual(record.semantic_slots["subject"]["alias"], "Gnar")
+
+        owner_form_voice = self.enrich_from_repository("Play_vo_GnarBigSkin13_dance_buffactivate")
+        self.assertEqual(owner_form_voice.profile.primary_family, "dance")
+        self.assertEqual(owner_form_voice.profile.semantic_profile, SemanticProfile.SELF_ACTION)
+        self.assertEqual(owner_form_voice.semantic_slots["action_form"]["component"], "mega_form")
+        self.assertEqual(owner_form_voice.semantic_slots["subject"]["alias"], "Gnar")
+
     def test_public_sfx_effect_aliases_are_not_low_confidence(self) -> None:
         """公共 sfx 效果别名应命中 sfx_alias 槽位且不落低置信，也不误挂英雄主体（不锁定规则内容值）。"""
 
@@ -1368,30 +1658,67 @@ class ReferenceEnrichmentTests(unittest.TestCase):
         """皮肤回城资源状态应使用通用 profile，而不是 exact low_trust fallback。"""
 
         cases = [
-            ("Play_fizz_skin_04_recall_leadin_01", "Fizz", "Skin04", "leadin", "01"),
-            ("Play_fizz_skin_04_recall_leadout_01", "Fizz", "Skin04", "leadout", "01"),
-            ("Play_lux_skin61_recall3d_buffactivate", "Lux", "Skin61", "buff_activate", None),
-            ("play_sfx_SettSkin01_Recall3D_buffactivate", "Sett", "Skin01", "buff_activate", None),
-            ("Play_sxf_YuumiSkin11_Recall3D_winddown", "Yuumi", "Skin11", "winddown", None),
-            ("Play_UrgotSkin09_Recall_efforts01", "Urgot", "Skin09", "efforts", "01"),
+            (
+                "Play_fizz_skin_04_recall_leadin_01",
+                "skin_recall_state",
+                "Fizz",
+                "Skin04",
+                "leadin",
+                "stage_index",
+                "01",
+            ),
+            (
+                "Play_fizz_skin_04_recall_leadout_01",
+                "skin_recall_state",
+                "Fizz",
+                "Skin04",
+                "leadout",
+                "stage_index",
+                "01",
+            ),
+            (
+                "Play_lux_skin61_recall3d_buffactivate",
+                "skin_recall_state",
+                "Lux",
+                "Skin61",
+                "buff_activate",
+                None,
+                None,
+            ),
+            (
+                "play_sfx_SettSkin01_Recall3D_buffactivate",
+                "skin_recall_state",
+                "Sett",
+                "Skin01",
+                "buff_activate",
+                None,
+                None,
+            ),
+            ("Play_sxf_YuumiSkin11_Recall3D_winddown", "skin_recall_state", "Yuumi", "Skin11", "winddown", None, None),
+            ("Play_UrgotSkin09_Recall_efforts01", "skin_recall_state", "Urgot", "Skin09", None, "efforts", "01"),
+            ("Play_vo_MalzaharSkin06_Recall_Effort01", "recall", "Malzahar", "Skin06", None, "efforts", "01"),
         ]
 
-        for raw, subject, skin_token, phase, variant_index in cases:
+        for raw, family, subject, skin_token, phase, variant_kind, variant_index in cases:
             with self.subTest(raw=raw):
                 record = self.enrich(raw)
 
                 self.assertEqual(record.confidence.value, "medium")
-                self.assertEqual(record.profile.primary_family, "skin_recall_state")
+                self.assertEqual(record.profile.primary_family, family)
                 self.assertEqual(record.profile.semantic_profile, SemanticProfile.SELF_ACTION)
-                self.assertEqual(record.semantic_slots["trigger_family"], "skin_recall_state")
+                self.assertEqual(record.semantic_slots["trigger_family"], family)
                 self.assertEqual(record.semantic_slots["subject_hint"], subject)
                 self.assertEqual(record.semantic_slots["skin_token"], skin_token)
                 self.assertEqual(record.semantic_slots["recall_action"], "recall")
-                self.assertEqual(record.semantic_slots["phase"], phase)
+                if phase is None:
+                    self.assertNotIn("phase", record.semantic_slots)
+                else:
+                    self.assertEqual(record.semantic_slots["phase"], phase)
                 self.assertNotIn("low_trust_rule", record.semantic_slots)
 
                 if variant_index is not None:
                     self.assertEqual(record.semantic_slots["recall_variant"]["index"], variant_index)
+                    self.assertEqual(record.semantic_slots["recall_variant"]["kind"], variant_kind)
 
     def test_skin_idle_weapon_and_spell_state_uses_general_profile(self) -> None:
         """皮肤待机状态中的武器名和技能键应作为可信语义解析。"""
@@ -1476,19 +1803,9 @@ class ReferenceEnrichmentTests(unittest.TestCase):
                 },
             ),
             (
-                "UnMute_sfx_JhinSkin25_Idle_Passive_buffactivate",
-                "skin_named_state",
-                {"subject_hint": "Jhin", "skin_token": "Skin25", "state_key": "passive_idle", "phase": "buff_activate"},
-            ),
-            (
                 "Play_sfx_SionSkin05_SionSlowStun_buffactivate",
                 "champion_status_state",
                 {"subject_hint": "Sion", "skin_token": "Skin05", "status_key": "slow_stun", "phase": "buff_activate"},
-            ),
-            (
-                "Play_sfx_Corki_RapidReload_OnBuffDeactivate",
-                "champion_status_state",
-                {"subject_hint": "Corki", "status_key": "rapid_reload", "phase": "buff_deactivate"},
             ),
             (
                 "Play_vo_Kled_AnimalThreshold",
@@ -1546,19 +1863,27 @@ class ReferenceEnrichmentTests(unittest.TestCase):
         self.assertEqual(candidate["match_source"], "spell_name")
         self.assertGreaterEqual(candidate["score"], 90)
 
-    def test_draven_attack_p_uses_contextual_passive_alias(self) -> None:
-        """contextual 别名携带残留上下文时应解析主体并把未识别 token 无损进 unresolved_context。"""
+    def test_draven_attack_p_uses_contextual_attack_alias(self) -> None:
+        """DravenAttackP 的 P/R/Q/L/C 都只描述投斧攻击资源与形态。"""
 
         record = self.enrich("Play_sfx_Draven_DravenAttackP_LQC_OnHit")
 
-        self.assertEqual(record.profile.semantic_profile, SemanticProfile.SPELL_EVENT)
+        self.assertEqual(record.profile.semantic_profile, SemanticProfile.SELF_ACTION)
         self.assertEqual(record.semantic_slots["subject"]["alias"], "Draven")
-        self.assertTrue(record.semantic_slots["spell_key"])
-        self.assertTrue(record.semantic_slots["contextual_alias"]["component"])
-        self.assertEqual(record.semantic_slots["unresolved_context"], ["LQC"])
+        self.assertEqual(record.semantic_slots["attack_kind"], "basic_attack")
+        self.assertEqual(record.semantic_slots["attack_component"]["component"], "draven_axe_attack")
+        self.assertEqual(record.semantic_slots["contextual_alias"]["qualifiers"][0]["key"], "lqc")
+        self.assertNotIn("spell_key", record.semantic_slots)
+        self.assertIsNone(record.semantic_slots.get("unresolved_context"))
         candidate = next(candidate for candidate in record.candidates if candidate["kind"] == "contextual_alias")
         self.assertEqual(candidate["raw"], "DravenAttackP")
         self.assertFalse(any(unknown.raw == "P" for unknown in record.unknowns))
+
+        compact_qualifier = self.enrich("Play_sfx_Draven_DravenAttackP_RQ_OnHit")
+        self.assertEqual(compact_qualifier.profile.primary_family, "basic_attack")
+        self.assertEqual(compact_qualifier.semantic_slots["trigger_family"], "basic_attack")
+        self.assertNotIn("spell_sequence", compact_qualifier.semantic_slots)
+        self.assertFalse(any(candidate["kind"] == "champion_spell_combo" for candidate in compact_qualifier.candidates))
 
     def test_ruby_boss_uses_mode_contextual_alias(self) -> None:
         record = self.enrich("Play_sfx_Ruby_Boss_FNVeigar_Death")
@@ -1574,15 +1899,126 @@ class ReferenceEnrichmentTests(unittest.TestCase):
         self.assertEqual(candidate["source"], "manual_contextual_alias")
         self.assertFalse(any(unknown.raw == "Boss" for unknown in record.unknowns))
 
+    def test_action_tail_letters_are_not_promoted_to_spell_combo(self) -> None:
+        """Dance3D_ee 中的音效层缩写不能覆盖已经确认的舞蹈动作。"""
+
+        record = self.enrich("Play_sfx_NamiSkin51_Dance3D_ee_loop_buffactivate")
+
+        self.assertEqual(record.profile.primary_family, "dance")
+        self.assertEqual(record.profile.semantic_profile, SemanticProfile.SELF_ACTION)
+        self.assertEqual(record.semantic_slots["trigger_family"], "dance")
+        self.assertEqual(record.semantic_slots["phase"], "loop")
+        self.assertNotIn("spell_sequence", record.semantic_slots)
+
+    def test_ruby_actions_preserve_lifecycle_after_actor_resolution(self) -> None:
+        """Ruby 上下文和 APC 主体解析后，Loop/Windup 仍须留在动作 slots。"""
+
+        cases = [
+            ("Play_sfx_Ruby_Lux_Dance3D_loop", "Lux", "dance", "loop"),
+            ("Play_sfx_Ruby_Tristana_Base_Dance3D_windup", "Tristana", "dance", "windup"),
+            ("Play_sfx_Ruby_Boss_FNVeigar_Joke3D_loop", "Veigar", "joke", "loop"),
+        ]
+        for raw, champion, family, phase in cases:
+            with self.subTest(raw=raw):
+                record = self.enrich_from_repository(raw)
+
+                self.assertEqual(record.semantic_slots["context_namespace"]["key"], "ruby")
+                self.assertEqual(record.semantic_slots["subject"]["alias"], champion)
+                self.assertEqual(record.profile.primary_family, family)
+                self.assertEqual(record.semantic_slots["phase"], phase)
+
     def test_jade_qualifier_gets_classic_mode_context(self) -> None:
-        record = self.enrich("Play_vo_Caitlyn_CaitlynWSnare_Jade_hit3D")
+        record = self.enrich_from_repository("Play_vo_Caitlyn_CaitlynWSnare_Jade_hit3D")
 
         self.assertEqual(record.semantic_slots["mode_context"]["key"], "jade")
         self.assertEqual(record.semantic_slots["mode_context"]["label"], "经典模式")
+        self.assertEqual(record.semantic_slots["spell_key"], "w")
+        self.assertEqual(
+            record.semantic_slots["contextual_alias"]["component"],
+            "yordle_snap_trap_snare",
+        )
         candidate = next(candidate for candidate in record.candidates if candidate["kind"] == "mode_namespace")
         self.assertEqual(candidate["raw"], "Jade")
         self.assertEqual(candidate["position"], "qualifier")
         self.assertEqual(record.raw_event_name, "Play_vo_Caitlyn_CaitlynWSnare_Jade_hit3D")
+
+    def test_jade_scoped_component_does_not_rewrite_base_caitlyn_event(self) -> None:
+        """仅 Jade 审核成立的组件不得改写同名常规模式稳定事件。"""
+
+        record = self.enrich_from_repository("Play_vo_Caitlyn_CaitlynWSnare_hit3D")
+
+        self.assertNotIn("contextual_alias", record.semantic_slots)
+        self.assertEqual(record.semantic_slots.get("spell_key_hint"), "w")
+        self.assertNotIn("spell_key", record.semantic_slots)
+
+    def test_sfx_scoped_components_do_not_rewrite_voice_events(self) -> None:
+        """SFX 证据建立的组件规则不得改变同名 VO 稳定语义。"""
+
+        cases = [
+            (
+                "Play_sfx_Rengar_RengarWEmp_OnCast",
+                "Play_vo_Rengar_RengarWEmp_cast3D",
+                "empowered_battle_roar",
+            ),
+            (
+                "Play_sfx_Yuumi_YuumiQcast_OnCast",
+                "Play_vo_Yuumi_YuumiQCast_cast3D",
+                "prowling_projectile_control",
+            ),
+        ]
+        for sfx_raw, vo_raw, component in cases:
+            with self.subTest(component=component):
+                sfx_record = self.enrich_from_repository(sfx_raw)
+                vo_record = self.enrich_from_repository(vo_raw)
+
+                self.assertEqual(sfx_record.semantic_slots["contextual_alias"]["component"], component)
+                self.assertNotIn("contextual_alias", vo_record.semantic_slots)
+
+    def test_reviewed_generic_sfx_keeps_mode_actor_and_drops_false_spell_hint(self) -> None:
+        """英雄专属效果应保留模式演员，但不得因内部词首臆造技能槽位。"""
+
+        cases = [
+            (
+                "Play_sfx_Strawberry_Boss_Aatrox_FallingSword_missile_land",
+                "Aatrox",
+                "falling_sword",
+                "strawberry",
+            ),
+            ("Play_sfx_Qiyana_Crit_idle_01", "Qiyana", "critical_idle", None),
+        ]
+        for raw, actor, component, mode in cases:
+            with self.subTest(raw=raw):
+                record = self.enrich_from_repository(raw)
+
+                self.assertEqual(record.profile.primary_family, "sfx")
+                self.assertEqual(record.semantic_slots["subject"]["alias"], actor)
+                self.assertEqual(record.semantic_slots["sfx_alias"]["component"], component)
+                self.assertNotIn("spell_key", record.semantic_slots)
+                self.assertNotIn("spell_key_hint", record.semantic_slots)
+                if mode is not None:
+                    self.assertEqual(record.semantic_slots["mode_context"]["key"], mode)
+
+    def test_nautilus_named_attack_variants_are_not_spell_slots(self) -> None:
+        """Wide/Ravage 的首字母不得把明确 Attack 变体误识别成 W/R 技能。"""
+
+        for token in ("WideSwingAttack", "RavageStrikeAttack", "BackSwingAttack"):
+            with self.subTest(token=token):
+                record = self.enrich_from_repository(f"Play_sfx_Nautilus_Nautilus{token}_OnHit")
+
+                self.assertEqual(record.profile.primary_family, "basic_attack")
+                self.assertEqual(record.semantic_slots["attack_kind"], "basic_attack")
+                self.assertNotIn("spell_key", record.semantic_slots)
+
+    def test_reviewed_embedded_stage_and_explicit_slot_are_structural(self) -> None:
+        """规则确认的嵌入数字要进入 stage；显式 Q 不得被后续被动别名覆盖。"""
+
+        zoe = self.enrich_from_repository("Play_sfx_Zoe_ZoeQMis2Warning_missilecast_self")
+        katarina = self.enrich_from_repository("Play_sfx_KatarinSkin12_Q_dagger_land_water")
+
+        self.assertEqual(zoe.semantic_slots["spell_key"], "q")
+        self.assertEqual(zoe.semantic_slots["spell_stage"], 2)
+        self.assertEqual(katarina.semantic_slots["subject"]["alias"], "Katarina")
+        self.assertEqual(katarina.semantic_slots["spell_key"], "q")
 
     def test_strawberry_boss_gets_pve_mode_context_and_actor(self) -> None:
         record = self.enrich("Play_sfx_Strawberry_Boss_Aatrox_AatroxQ1_cast")
@@ -1595,6 +2031,152 @@ class ReferenceEnrichmentTests(unittest.TestCase):
         self.assertEqual(candidate["raw"], "Strawberry")
         self.assertEqual(candidate["position"], "owner")
         self.assertEqual(candidate["actor_role"], "boss")
+
+    def test_mode_only_sfx_uses_first_post_namespace_cue_as_entity(self) -> None:
+        """没有英雄演员时，模式前缀后的首个 cue 才是模式系统实体。"""
+
+        cases = [
+            ("Play_sfx_Ruby_Curse_MirrorImage_clone_buffdeactivate", "ruby", "Curse"),
+            ("Play_sfx_Strawberry_Spire_Quest_idle_appear", "strawberry", "Spire"),
+            ("Play_sfx_GameMode_Ruby_Pumpkin_destroyed", "ruby", "Pumpkin"),
+        ]
+
+        for raw, mode, alias in cases:
+            with self.subTest(raw=raw):
+                record = self.enrich_from_repository(raw)
+
+                self.assertEqual(record.semantic_slots["mode_context"]["key"], mode)
+                self.assertNotIn("mode_actor", record.semantic_slots)
+                self.assertEqual(record.semantic_slots.get("sfx_scope"), "mode_sfx")
+                self.assertEqual(
+                    record.semantic_slots["mode_entity"],
+                    {
+                        "kind": "mode_system",
+                        "raw": alias,
+                        "alias": alias,
+                        "source": "mode_namespace_cue",
+                        "confidence": "medium",
+                    },
+                )
+
+    def test_ruby_xerath_concatenated_actor_keeps_context_spell_and_stage(self) -> None:
+        """Ruby 是末日人机上下文；Xerath 才是主体，Arcanopulse2 是 Q 第2段。"""
+
+        record = self.enrich("Play_sfx_Ruby_XerathArcanopulse2_OnCast")
+
+        self.assertEqual(record.semantic_slots["mode_context"]["key"], "ruby")
+        self.assertEqual(record.semantic_slots["subject"]["alias"], "Xerath")
+        self.assertEqual(record.semantic_slots["mode_actor"]["alias"], "Xerath")
+        self.assertEqual(record.semantic_slots["spell_key"], "q")
+        self.assertEqual(record.semantic_slots["spell_stage"], 2)
+        self.assertNotEqual(record.semantic_slots.get("spell_rank"), 2)
+
+    def test_ruby_xerath_arcane_barrage_is_w_not_arcanopulse_q(self) -> None:
+        """相似内部名必须按本地 reference 区分：ArcaneBarrage 属于 W。"""
+
+        record = self.enrich("Play_sfx_Ruby_XerathArcaneBarrage2_OnCast")
+
+        self.assertEqual(record.semantic_slots["subject"]["alias"], "Xerath")
+        self.assertEqual(record.semantic_slots["spell_key"], "w")
+        self.assertEqual(record.semantic_slots["spell_stage"], 2)
+
+    def test_mode_actor_slot_prefix_restores_spell_semantics_for_map_assets(self) -> None:
+        """模式 map 资产先解析演员，再以独立 Q/W/E/R 前缀恢复技能槽位。"""
+
+        cases = [
+            ("Play_sfx_Ruby_Karthus_RDamageSound_OnBuffActivate", "Karthus", "r"),
+            ("Play_sfx_Ruby_RyzeRChannel_buffdeactivate", "Ryze", "r"),
+        ]
+
+        for raw, actor, spell_key in cases:
+            with self.subTest(raw=raw):
+                record = self.enrich_mode_asset(raw)
+
+                self.assertEqual(record.profile.semantic_profile, SemanticProfile.SPELL_EVENT)
+                self.assertEqual(record.semantic_slots["subject"]["alias"], actor)
+                self.assertEqual(record.semantic_slots["spell_key"], spell_key)
+                self.assertEqual(record.semantic_slots["spell_match"]["match_source"], "mode_actor_slot_prefix")
+
+    def test_mode_actor_slot_prefix_rejects_action_and_rtpc_words(self) -> None:
+        """Recall/RTPC 的首字母 R 不是技能键，模式演员回退不得误收。"""
+
+        for raw in (
+            "Play_sfx_Ruby_Ryze_Recall3D_buffactivate",
+            "Play_sfx_Ruby_Ryze_RTPC_Magic_buffactivate",
+        ):
+            with self.subTest(raw=raw):
+                record = self.enrich_mode_asset(raw)
+
+                self.assertIsNone(record.semantic_slots.get("spell_key"))
+
+    def test_mode_actor_attack_overrides_map_sfx_fallback(self) -> None:
+        """Strawberry_Boss_英雄_BasicAttack 应恢复普通攻击，而非无意义系统 SFX。"""
+
+        record = self.enrich_mode_asset("Play_sfx_Strawberry_Boss_Briar_BasicAttack_cast")
+
+        self.assertEqual(record.profile.primary_family, "basic_attack")
+        self.assertEqual(record.semantic_slots["subject"]["alias"], "Briar")
+        self.assertEqual(record.semantic_slots["attack_kind"], "basic_attack")
+        self.assertIsNone(record.semantic_slots.get("spell_key"))
+        self.assertEqual(record.semantic_slots["phase"], "cast")
+
+    def test_mode_unit_attack_splits_entity_from_attack_action(self) -> None:
+        """Strawberry_tibbersbasicattack 中提伯斯是实体，BasicAttack 是动作。"""
+
+        record = self.enrich_mode_asset("Play_sfx_strawberry_tibbersbasicattack_OnCast")
+
+        self.assertEqual(record.profile.primary_family, "basic_attack")
+        self.assertEqual(record.semantic_slots["attack_kind"], "basic_attack")
+        self.assertEqual(record.semantic_slots["mode_entity"]["kind"], "mode_unit")
+        self.assertEqual(record.semantic_slots["mode_entity"]["alias"], "Tibbers")
+        self.assertNotIn("subject", record.semantic_slots)
+
+    def test_ruby_separated_actor_spell_key_number_is_stage_not_rank(self) -> None:
+        """Ruby_Ziggs_E2 的尾号保留为第 2 段，不降格成无语义 variant。"""
+
+        record = self.enrich("Play_sfx_Ruby_Ziggs_E2_OnBuffActivate")
+
+        self.assertEqual(record.semantic_slots["context_namespace"]["key"], "ruby")
+        self.assertEqual(record.semantic_slots["subject"]["alias"], "Ziggs")
+        self.assertEqual(record.semantic_slots["spell_key"], "e")
+        self.assertEqual(record.semantic_slots["spell_stage"], 2)
+        self.assertNotEqual(record.semantic_slots.get("spell_rank"), 2)
+
+    def test_ruby_lux_concatenated_attack_uses_short_alias_only_with_attack_cue(self) -> None:
+        """Lux 仅在已声明模式命名空间且后缀为攻击 cue 时允许短前缀匹配。"""
+
+        record = self.enrich("Play_sfx_Ruby_LuxBasicAttack2_OnCast")
+
+        self.assertEqual(record.semantic_slots["context_namespace"]["key"], "ruby")
+        self.assertEqual(record.semantic_slots["subject"]["alias"], "Lux")
+        self.assertEqual(record.semantic_slots["mode_actor"]["alias"], "Lux")
+        self.assertEqual(record.semantic_slots["attack_kind"], "basic_attack")
+
+    def test_odyssey_augments_is_context_and_yasuo_is_subject(self) -> None:
+        """OdysseyAugments 是机制上下文，不是英雄实体；后续 Yasuo 仍须解析。"""
+
+        record = self.enrich("Play_sfx_odysseyaugments_yasuoqe1_onhit")
+
+        self.assertEqual(record.semantic_slots["context_namespace"]["key"], "odyssey_augments")
+        self.assertEqual(record.semantic_slots["context_namespace"]["kind"], "mechanism")
+        self.assertEqual(record.semantic_slots["subject"]["alias"], "Yasuo")
+        self.assertEqual(record.semantic_slots["spell_sequence"], ["q", "e"])
+        self.assertEqual(record.profile.primary_family, "spell")
+        self.assertEqual(record.profile.semantic_profile, SemanticProfile.SPELL_EVENT)
+        self.assertEqual(record.semantic_slots["phase"], "hit")
+        self.assertEqual(record.semantic_slots["spell_sequence_stage"], 1)
+        self.assertEqual(record.semantic_slots["spell_sequence_modifiers"][0]["stage"], 1)
+
+    def test_zyra_hellvine_basic_attack_does_not_gain_false_passive_relation(self) -> None:
+        """地狱藤蔓是攻击组件；BasicAttack 不得附会成 P 技能。"""
+
+        record = self.enrich("Play_sfx_Zyra_hellvine_ZyraBasicAttack_OnHit")
+
+        self.assertEqual(record.profile.primary_family, "basic_attack")
+        self.assertEqual(record.semantic_slots["attack_kind"], "basic_attack")
+        self.assertIsNone(record.semantic_slots.get("related_spell_key"))
+        self.assertIsNone(record.semantic_slots.get("spell_key"))
+        self.assertEqual(record.semantic_slots["phase"], "hit")
 
     def test_mode_prefix_does_not_match_ruby_crystal_item_name(self) -> None:
         record = self.enrich("Play_vo_Galio_BuyItem2DRubyCrystal")
@@ -1824,11 +2406,14 @@ class ReferenceSpellResolutionRegressionTests(unittest.TestCase):
         self.assertEqual(record.confidence.value, "high")
 
     def test_renekton_execute_does_not_match_e_slot_prefix(self) -> None:
-        """Execute 不能仅因 RenektonE 前缀被误判为 E。"""
+        """Execute 是独立处决动作，不能仅因 RenektonE 前缀被误判为 E。"""
 
         record = self.enrich("Play_sfx_Renekton_RenektonExecute_OnCast")
 
         self.assertIsNone(record.semantic_slots.get("spell_key"))
+        self.assertEqual(record.profile.primary_family, "execute_action")
+        self.assertEqual(record.semantic_slots.get("action"), "execute_action")
+        self.assertEqual(record.confidence.value, "medium")
         self.assertFalse(any(candidate["kind"] == "inferred_champion_spell" for candidate in record.candidates))
 
     def test_renekton_pre_execute_resolves_w_from_reference_spell_id(self) -> None:
@@ -1840,24 +2425,44 @@ class ReferenceSpellResolutionRegressionTests(unittest.TestCase):
         self.assertEqual(record.semantic_slots["spell_match"]["match_source"], "reference_spell_id")
         self.assertEqual(record.confidence.value, "high")
 
+    def test_darius_execute_keeps_exact_r_reference_evidence(self) -> None:
+        """DariusExecute 有精确 reference id，不能被非技能 Execute 动作规则抢占。"""
+
+        record = self.enrich("Play_vo_Darius_DariusExecute_cast3D")
+
+        self.assertEqual(record.semantic_slots["spell_key"], "r")
+        self.assertEqual(record.semantic_slots["spell_match"]["match_source"], "reference_spell_id")
+        self.assertEqual(record.confidence.value, "high")
+
     def test_jayce_ranged_attack_does_not_match_r_slot_prefix(self) -> None:
         """RangedAttack 不能仅因 JayceR 前缀被误判为 R。"""
 
         record = self.enrich("Play_sfx_Jayce_JayceRangedAttack_OnCast")
 
         self.assertIsNone(record.semantic_slots.get("spell_key"))
+        self.assertIsNone(record.semantic_slots.get("spell_key_hint"))
+        self.assertEqual(record.profile.primary_family, "basic_attack")
+        self.assertEqual(record.semantic_slots.get("attack_form"), "ranged")
         self.assertFalse(any(candidate["kind"] == "inferred_champion_spell" for candidate in record.candidates))
+
+    def test_warwick_quadruped_fast_does_not_match_q_slot_prefix(self) -> None:
+        """Quadruped 的词首 Q 是普通英文词的一部分，不是 Q 技能边界。"""
+
+        record = self.enrich("Play_sfx_Warwick_WarwickQuadrupedFast_OnCast")
+
+        self.assertIsNone(record.semantic_slots.get("spell_key"))
+        self.assertIsNone(record.semantic_slots.get("spell_key_hint"))
 
     def test_owner_prefixed_hint_is_only_promoted_with_reference_evidence(self) -> None:
         """hint 保留匹配线索；普通词首不能仅凭 hint 升级为 spell_key。"""
 
         cases = [
-            ("Play_vo_Renekton_RenektonExecute_cast3D", "e", None),
-            ("Play_vo_JayceSkin35_JayceRangedAttack_cast3D", "r", None),
+            ("Play_vo_Renekton_RenektonExecute_cast3D", None, None),
+            ("Play_vo_JayceSkin35_JayceRangedAttack_cast3D", None, None),
             ("Play_vo_RengarSkin08_RengarQemp_cast3D", "q", "q"),
             ("Play_vo_Maokai_MaokaiRmis_OnHit", "r", "r"),
             ("Play_vo_Kalista_KalistaExpunge_cast3D", "e", "e"),
-            ("Play_vo_Caitlyn_CaitlynWSnare_Jade_hit3D", "w", None),
+            ("Play_vo_Caitlyn_CaitlynWSnare_Jade_hit3D", None, "w"),
             ("Play_sfx_AkaliSkin02_AkaliRb_OnCast", "r", None),
         ]
         for raw, expected_hint, expected_key in cases:
@@ -1884,7 +2489,6 @@ class ReferenceSpellResolutionRegressionTests(unittest.TestCase):
             ("Play_sfx_SyndraJusticar_SyndraWCast_OnCast", "w"),
             ("Play_sfx_TeemoMushroom_TeemoRTrap_OnBuffActivate", "r"),
             ("Play_sfx_VarusAscended_VarusQEmpoweredWChargeSFX_OnBuffActivate", "q"),
-            ("Play_sfx_VarusAscended_VarusWBasicAttack_OnBuffActivate", "w"),
             ("Play_sfx_XmasKatarina_KatarinaQMis_OnMissileLaunch", "q"),
             ("Play_sfx_XmasKatarina_KatarinaRSound_OnBuffActivate", "r"),
             ("Stop_sfx_XmasKatarina_KatarinaRTriggerSound_OnMissileCast", "r"),
@@ -1902,6 +2506,16 @@ class ReferenceSpellResolutionRegressionTests(unittest.TestCase):
                     "trusted_single_key_residual",
                     record.semantic_slots["spell_match"]["components"],
                 )
+
+    def test_varus_w_basic_attack_keeps_attack_primary_and_w_relation(self) -> None:
+        """显式 WBasicAttack 保留 W 关联，但主事件仍是普通攻击。"""
+
+        record = self.enrich("Play_sfx_VarusAscended_VarusWBasicAttack_OnBuffActivate")
+
+        self.assertEqual(record.profile.primary_family, "basic_attack")
+        self.assertEqual(record.semantic_slots["attack_kind"], "basic_attack")
+        self.assertEqual(record.semantic_slots["related_spell_key"], "w")
+        self.assertIsNone(record.semantic_slots.get("spell_key"))
 
     def test_heimer_rq_engine_audio_preserves_empowered_q_turret_context(self) -> None:
         """RQEngineAudio 不只标为 R，还保留 R 强化 Q 炮台组件。"""

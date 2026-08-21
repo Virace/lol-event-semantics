@@ -57,15 +57,16 @@ uv run python scripts/search_stringtable.py 厄塔汗 "first blood"
 
 ### 本地英雄事件演示站
 
-演示站按英雄汇总皮肤、模式前缀、原始事件名与中文语义。默认读取 approved-local；检查 16.16 completed candidate 时应显式传入其 normalized 目录：
+演示站在同一入口提供英雄浏览，以及 validator 残差与未归属 Review 队列。默认读取 approved-local 及其同 run validation 报告；检查尚未批准的 completed candidate 时必须同时显式传入二者：
 
 ```powershell
 uv run python scripts/build_demo_site.py `
-  --normalized-root dist\runs\completed\<run-id>\normalized
+  --normalized-root dist\runs\completed\<run-id>\normalized `
+  --validation-json dist\runs\completed\<run-id>\reports\normalized-validation.json
 uv run python -m http.server 8765 --directory dist\demo-site
 ```
 
-访问 `http://127.0.0.1:8765/`。`Jade_`、`Ruby_`、`Strawberry_` 分别展示为经典模式、末日人机和 PVE 模式；模式实体仍归入基础英雄。详细规则、候选状态边界和图片来源见 [`docs/DEMO_SITE.md`](docs/DEMO_SITE.md)。
+访问 `http://127.0.0.1:8765/`。英雄浏览保留 `Jade_`、`Ruby_`、`Strawberry_` 的经典模式、末日人机和 PVE 模式归属；Review 队列支持按残差层、问题代码、语义族、实体和状态过滤，并用 hash URL 与 `record_id` 恢复定位。详细规则、候选状态边界和图片来源见 [`docs/DEMO_SITE.md`](docs/DEMO_SITE.md)。
 
 ## 数据源体系
 
@@ -115,7 +116,7 @@ manifest，数据源之间天然同版本。`16.16` 是本轮 frozen acceptance 
 
 - `raw_event_name` 在拆解记录中保持原样；unknown / ambiguous 片段必须进报告，不被静默翻译。
 - 上下文别名主要维护在 `rules/contextual/**/*.yaml`；`rules/contextual_aliases.yaml` 保留为迁移和兼容来源。规则运行时全量聚合为一个 RuleBook，不按 owner 局部加载。
-- 展示词表维护在 `rules/display_labels.yaml`（phase/action/counterpart/shop/announcer 等域），扩词条改词表、不改代码。
+- 展示词表维护在 `rules/display_labels.yaml`（phase/action/counterpart/shop/announcer/system SFX 等域），扩词条改词表、不改代码。系统音效只承接完整已审路径；装备 SFX 以 reference 装备 ID 定身份，纯生命周期直接承接，带效果后缀或额外段的记录只有命中“装备 ID/动作词干”精确白名单时才建 frame，未知或错配组合继续待审，不用装备总名掩盖语义缺口。
 - residual modifier 在 `rules/residual_modifiers.yaml`；手工 fallback 实体在 `rules/external_entities.yaml`；已审阅整句 fallback 在 `rules/low_trust_events.yaml`（保留 `trust: low` 标记）。
 - 单字母 `P/Q/W/E/R` 技能键若前缀猜测后仍有未解析 residual，不得进入 Stable；只有受控 modifier 解析或参考技能 ID 的明确匹配才能提高置信度。
 - VO qualifier 使用结构化 key 分组：已核验 key 渲染为对应中文，未知 key 明示为待审并保留 fallback，不能混入 Stable。`ShopOpen/ShopClose` 分别渲染为“进店/离店”，`DanceResponse` 是独立于普通舞蹈的回应语义。
@@ -198,10 +199,10 @@ uv run python scripts/promote_dataset_run.py --run-id <new-run-id> `
 
 V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX 保留，目标支持
 状态为 Stable、Experimental 或 Unsupported。语义复核后的 91 个精确批准 canonical pattern
-在 candidate 中晋级为 Stable，共覆盖 4,389 条记录；同 family 的新 ID、全部 SFX 和暂缓
+在 candidate 中晋级为 Stable，共覆盖 4,127 条记录；同 family 的新 ID、全部 SFX 和暂缓
 范围仍保持 Experimental。Stable 使用独立 `quality-summary.json` 绝对门禁，不读取也不受
 `quality-baseline.json` 放宽；accepted corpus 的 91 条代表样本逐条精确复算 `zh_CN`
-default/main。门禁还独立冻结 decision ID、91 个 pattern ID 集合摘要和 4,389 条 Stable
+default/main。门禁还独立冻结 decision ID、91 个 pattern ID 集合摘要和 4,127 条 Stable
 记录总数，不能通过同时缩减 policy 与 corpus 绕过。corpus 与
 `rules/review-decisions.v1.json` 的状态必须一致；首轮 92 项源审阅已全部接受，后续
 clean candidate 进入 dataset approval，仍需候选绑定的最终批准才能晋级。

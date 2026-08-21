@@ -2,29 +2,21 @@ scope: champion
 owner: Zed
 aliases:
   FastIn:
-    kind: champion_spell_component
-    spell: p
+    kind: generic_sfx_effect
+    asset_kind: sfx
     component: fast_in
     label: 快速进入
     confidence: medium
     source: manual_contextual_alias
     note: FastIn 在 Zed 事件中对应皮肤状态进入音效。
   HasteIn:
-    kind: champion_spell_component
-    spell: p
+    kind: generic_sfx_effect
+    asset_kind: sfx
     component: haste_in
     label: 加速进入
     confidence: medium
     source: manual_contextual_alias
     note: HasteIn 在 Zed 事件中对应皮肤加速状态进入音效。
-  ShadowDash:
-    kind: champion_spell_component
-    spell: w
-    component: shadow_dash
-    label: 影奥义！分身位移
-    confidence: high
-    source: manual_contextual_alias
-    note: ShadowDash 在 Zed SFX 中对应 W 技能 Living Shadow 的分身位移表现。
   KillerCut:
     kind: champion_spell_component
     spell: p
@@ -41,6 +33,14 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: Marker 在 Zed 事件中对应 R 技能 Death Mark 的标记命中表现。
+  ShadowDash:
+    kind: champion_spell_component
+    spell: w
+    component: shadow_dash
+    label: 影奥义！分身位移
+    confidence: high
+    source: manual_contextual_alias
+    note: ShadowDash 在 Zed SFX 中对应 W 技能 Living Shadow 的分身位移表现。
   ShurikenMisOne:
     kind: champion_spell_component
     spell: q
@@ -73,6 +73,24 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: UltExecute 在 Zed 事件中对应 R 技能 Death Mark 的爆发/处决结算状态，不作为全局 execute 规则。
+  ZedShadowDash:
+    kind: champion_spell_component
+    spell: w
+    component: shadow_dash
+    label: 影奥义！分身位移
+    confidence: high
+    source: manual_contextual_alias
+    note: ZedShadowDash 在 ZedStormNinja 或带 owner 前缀的 SFX 中对应 W 技能 Living Shadow
+      的分身位移表现。
+  ZedShadowDashMissile:
+    kind: champion_spell_component
+    spell: w
+    component: shadow_dash_missile
+    label: 影子冲刺飞行物
+    confidence: medium
+    source: manual_contextual_alias
+    note: ZedShadowDashMissile 在带 owner 前缀的 Zed SFX 中对应 W 技能 Living
+      Shadow（影奥义！分身）的影分身突进飞行物，reference 描述「劫的影分身向前突进」。
   ZedShuriken:
     kind: champion_spell_component
     spell: q
@@ -81,19 +99,3 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: ZedShuriken 在 ZedStormNinja 事件中对应 Q 技能 Razor Shuriken 释放。
-  ZedShadowDash:
-    kind: champion_spell_component
-    spell: w
-    component: shadow_dash
-    label: 影奥义！分身位移
-    confidence: high
-    source: manual_contextual_alias
-    note: ZedShadowDash 在 ZedStormNinja 或带 owner 前缀的 SFX 中对应 W 技能 Living Shadow 的分身位移表现。
-  ZedShadowDashMissile:
-    kind: champion_spell_component
-    spell: w
-    component: shadow_dash_missile
-    label: 影子冲刺飞行物
-    confidence: medium
-    source: manual_contextual_alias
-    note: ZedShadowDashMissile 在带 owner 前缀的 Zed SFX 中对应 W 技能 Living Shadow（影奥义！分身）的影分身突进飞行物，reference 描述「劫的影分身向前突进」。

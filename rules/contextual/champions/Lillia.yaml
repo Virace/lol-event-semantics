@@ -8,31 +8,39 @@ aliases:
     label: 困倦状态
     confidence: medium
     source: manual_contextual_alias
-    note: Drowsey 是 Drowsy 的拼写变体；R 技能 Lilting Lullaby（夜阑谣）描述「陷入困倦状态，然后陷入昏睡状态」，对应昏睡前的困倦阶段。
+    note: Drowsey 是 Drowsy 的拼写变体；R 技能 Lilting
+      Lullaby（夜阑谣）描述「陷入困倦状态，然后陷入昏睡状态」，对应昏睡前的困倦阶段。
   Homegaurd:
-    kind: champion_spell_component
-    spell: p
+    kind: generic_sfx_effect
+    asset_kind: sfx
     component: homeguard
     label: 家园卫士
     confidence: medium
     source: manual_contextual_alias
     note: Homegaurd 是 Homeguard 的历史拼写错误，对应家园卫士移动状态。
   LilliaBasicAttack:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: basic_attack
     label: 普攻
     confidence: medium
     source: manual_contextual_alias
     note: LilliaBasicAttack 在 Lillia 事件中对应基础攻击音效。
   LilliaCritAttack:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: crit_attack
     label: 暴击攻击
     confidence: medium
     source: manual_contextual_alias
     note: LilliaCritAttack 在 Lillia 事件中对应暴击基础攻击音效。
+  LilliaE:
+    kind: champion_spell_component
+    spell: e
+    asset_kind: sfx
+    component: swirlseed_cast
+    label: 流涡种
+    confidence: high
+    source: manual_contextual_alias
+    note: LilliaE 是莉莉娅 E 流涡种的完整内部名；整个名称可能被 lexer 吞进 owner。
   LilliaERollingMissile:
     kind: champion_spell_component
     spell: e
@@ -40,7 +48,17 @@ aliases:
     label: 流涡种滚动飞弹
     confidence: medium
     source: manual_contextual_alias
-    note: LilliaERollingMissile 对应 E 技能 Swirlseed（流涡种）描述「种子未能命中任何东西时将继续滚动」的滚动种子飞行物。
+    note: LilliaERollingMissile 对应 E 技能
+      Swirlseed（流涡种）描述「种子未能命中任何东西时将继续滚动」的滚动种子飞行物。
+  LilliaR:
+    kind: champion_spell_component
+    spell: r
+    asset_kind: sfx
+    component: lilting_lullaby_cast
+    label: 夜阑谣
+    confidence: high
+    source: manual_contextual_alias
+    note: LilliaR 是莉莉娅 R 夜阑谣的完整内部名；整个名称可能被 lexer 吞进 owner。
   LilliaRSleep:
     kind: champion_spell_component
     spell: r
@@ -57,3 +75,12 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: LilliaRSleepDealDamage 对应 R 技能夜阑谣描述「这些敌人在被强制唤醒时会受到额外伤害」的昏睡破除伤害段。
+  OnHitLocation:
+    kind: champion_spell_component
+    spell: e
+    asset_kind: sfx
+    component: swirlseed_hit_location
+    label: 流涡种命中位置
+    confidence: high
+    source: manual_contextual_alias
+    note: LilliaE_OnHitLocation 是 E 流涡种记录命中位置的音效组件。

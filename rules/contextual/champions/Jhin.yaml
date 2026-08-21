@@ -1,0 +1,15 @@
+scope: champion
+owner: Jhin
+aliases:
+  Idle:
+    kind: champion_spell_component
+    spell: p
+    asset_kind: sfx
+    required_tokens:
+      - Passive
+    component: passive_idle_audio
+    label: 待机音轨
+    confidence: high
+    source: manual_contextual_alias
+    note: Jhin Idle_Passive_buffactivate 是被动技能待机音轨；Idle 是动作，Passive
+      是真实被动归属，buffactivate 是音轨注册 cue。

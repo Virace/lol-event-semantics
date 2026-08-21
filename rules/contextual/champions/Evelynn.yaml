@@ -1,6 +1,34 @@
 scope: champion
 owner: Evelynn
 aliases:
+  Emotes:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: legacy_emote
+    label: 旧版表情动作
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      recall: 回城
+      01OLD: 旧版01
+      winddownOLD: 旧版收尾
+    note: Evelynn 旧皮肤的 Emotes_recall/winddownOLD 是表情动作音效；旧版标记与动作必须保留。
+  Qlinemissile:
+    kind: champion_spell_component
+    spell: q
+    component: hate_spike_line_missile
+    label: 憎恨之刺飞弹
+    confidence: high
+    source: manual_contextual_alias
+    note: Qlinemissile 在多套 Evelynn 皮肤中稳定以 OnHit 收尾，对应 Q 憎恨之刺飞弹。
+  RealTimeProcessing:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: real_time_processing
+    label: 实时音频处理
+    confidence: high
+    source: manual_contextual_alias
+    note: RealTimeProcessing 是伊芙琳音频的实时处理开关；ON/OFF 和 Stop 外壳由阶段与播放控制槽保留，不是 R 技能。
   Stealth:
     kind: champion_spell_component
     spell: p
@@ -17,3 +45,11 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: StealthRing 在 Evelynn 事件中对应被动潜行/伪装的范围提示圈表现。
+  Wcharmvfx:
+    kind: champion_spell_component
+    spell: w
+    component: allure_charm_effect
+    label: 引诱魅惑效果
+    confidence: high
+    source: manual_contextual_alias
+    note: Wcharmvfx 在多套 Evelynn 皮肤 SFX 中稳定对应 W 引诱的魅惑表现；vfx 仅是工程后缀。

@@ -35,6 +35,8 @@ from .normalized_translation_builder import (
     ChampionLabelEntry,
     asset_kind_words,
     build_translation,
+    champion_alias_for_skin,
+    skin_token_for_record,
 )
 from .normalized_translation_model import TranslationBuildContext
 from .normalized_translation_renderer import build_compat_display
@@ -81,10 +83,21 @@ def build_normalized_record(
         可直接写入 JSONL 的 normalized 记录。
     """
 
-    translation = build_translation(record, translation_context or TranslationBuildContext())
+    active_translation_context = translation_context or TranslationBuildContext()
+    translation = build_translation(record, active_translation_context)
+    legacy_short = canonicalize_legacy_user_display(
+        build_short_display(record, display_context=display_context),
+        record,
+        active_translation_context,
+    )
+    legacy_detail = canonicalize_legacy_user_display(
+        build_detail_display(record, display_context=display_context),
+        record,
+        active_translation_context,
+    )
     legacy_display = {
-        "zh_cn_short": build_short_display(record, display_context=display_context),
-        "zh_cn_detail": build_detail_display(record, display_context=display_context),
+        "zh_cn_short": legacy_short,
+        "zh_cn_detail": legacy_detail,
         "debug_label": build_debug_label(record),
     }
     display: dict[str, object] = dict(
@@ -126,6 +139,117 @@ def build_normalized_record(
         normalized["translation"] = translation
 
     return normalized
+
+
+RAW_SKIN_DISPLAY_PATTERN = re.compile(r"(?P<prefix>皮肤\s*)?Skin[0-9]+", re.IGNORECASE)
+
+
+def canonicalize_legacy_user_display(
+    text: str,
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+) -> str:
+    """用权威中文词条清洗 legacy 用户文案，原始工程名只留在 debug/semantic。
+
+    Args:
+        text: legacy 构建器生成的中文展示文本。
+        record: 当前拆解记录。
+        context: 含英雄与皮肤权威名称的 translation 上下文。
+
+    Returns:
+        不含可替换英雄 alias、模式工程键和 SkinNN 的用户展示文本。
+    """
+
+    rendered = text
+    champion_alias = champion_alias_for_skin(record, context)
+    champion_labels = context.champion_label(champion_alias)
+    champion_zh = localized_zh_label(champion_labels)
+    if champion_alias is not None and champion_zh is not None:
+        rendered = replace_ascii_display_token(rendered, champion_alias, champion_zh)
+
+    namespace = record.semantic_slots.get("context_namespace")
+    if isinstance(namespace, dict):
+        namespace_key = namespace.get("key")
+        namespace_label = namespace.get("label")
+        if isinstance(namespace_key, str) and isinstance(namespace_label, str):
+            rendered = replace_ascii_display_token(rendered, namespace_key, namespace_label)
+            rendered = replace_ascii_display_token(rendered, namespace_key.replace("_", ""), namespace_label)
+
+        raw_namespace = record.owner.raw_owner_token or record.owner.alias
+        if isinstance(raw_namespace, str) and isinstance(namespace_label, str):
+            rendered = replace_ascii_display_token(rendered, raw_namespace, namespace_label)
+
+    skin_token = skin_token_for_record(record)
+    skin_zh = legacy_skin_display_label(context, champion_alias, champion_zh, skin_token)
+    if skin_token is not None:
+        rendered = replace_skin_display_token(rendered, skin_token, skin_zh)
+
+    # ZoeSkin01W / GangplankSkin23Taunt3D 这类无分隔符 owner 在替换 SkinNN
+    # 之前，英雄 alias 右侧仍是 ASCII，第一次边界替换不会命中；皮肤词条替换
+    # 后边界已经清晰，必须再规范化一次英雄名。
+    if champion_alias is not None and champion_zh is not None:
+        rendered = replace_ascii_display_token(rendered, champion_alias, champion_zh)
+
+    # 任意残留 SkinNN 都只能说明 reference 没有对应词条；用户文案必须明确
+    # 标成未收录，而不是暴露工程号。debug_label 与 semantic slots 保持原值。
+    rendered = RAW_SKIN_DISPLAY_PATTERN.sub(
+        lambda match: f"皮肤 未收录皮肤" if match.group("prefix") else "未收录皮肤",
+        rendered,
+    )
+    return compact_display(rendered)
+
+
+def localized_zh_label(labels: Mapping[str, str] | None) -> str | None:
+    """读取可用的简体中文 label。"""
+
+    if labels is None:
+        return None
+    value = labels.get("zh_CN")
+    return value.strip() if isinstance(value, str) and value.strip() else None
+
+
+def legacy_skin_display_label(
+    context: TranslationBuildContext,
+    champion_alias: str | None,
+    champion_zh: str | None,
+    skin_token: str | None,
+) -> str:
+    """返回去掉英雄名后缀的皮肤中文名；缺词条时使用显式占位。"""
+
+    if champion_alias is None or skin_token is None:
+        return "未收录皮肤"
+    labels = context.skin_label(champion_alias, skin_token)
+    skin_zh = localized_zh_label(labels)
+    if skin_zh is None:
+        return "未收录皮肤"
+    if champion_zh is not None:
+        suffix = f" {champion_zh}"
+        if skin_zh.endswith(suffix):
+            skin_zh = skin_zh[: -len(suffix)].rstrip()
+    return skin_zh or "未收录皮肤"
+
+
+def replace_ascii_display_token(text: str, token: str, replacement: str) -> str:
+    """按 ASCII 边界替换中文混排文本中的工程 token。"""
+
+    if not token or token.casefold() == replacement.casefold():
+        return text
+    return re.sub(
+        rf"(?<![A-Za-z0-9]){re.escape(token)}(?![A-Za-z0-9])",
+        replacement,
+        text,
+        flags=re.IGNORECASE,
+    )
+
+
+def replace_skin_display_token(text: str, skin_token: str, replacement: str) -> str:
+    """替换指定 SkinNN，同时保留既有“皮肤”说明词。"""
+
+    pattern = re.compile(rf"(?P<prefix>皮肤\s*)?{re.escape(skin_token)}", re.IGNORECASE)
+    return pattern.sub(
+        lambda match: f"皮肤 {replacement}" if match.group("prefix") else replacement,
+        text,
+    )
 
 
 def entity_key(record: EventDecompositionRecord) -> dict[str, str]:
@@ -222,16 +346,41 @@ def resolved_entity_subject(record: EventDecompositionRecord) -> tuple[str, str]
         `(kind, alias)`；未解析出主体时返回 None。
     """
 
-    subject = record.semantic_slots.get("subject")
-    if isinstance(subject, dict):
+    namespace = record.semantic_slots.get("context_namespace") or record.semantic_slots.get("mode_context")
+    namespace_key = str(namespace.get("key") or "") if isinstance(namespace, dict) else ""
+
+    for slot_name in ("subject", "mode_actor"):
+        subject = record.semantic_slots.get(slot_name)
+        if not isinstance(subject, dict):
+            continue
         kind = str(subject.get("kind") or record.owner.kind or record.scope or "unknown")
         alias = subject.get("alias") or subject.get("name") or subject.get("label")
-        if alias:
+        if alias and str(alias).casefold() != namespace_key.casefold():
             return (kind, str(alias))
 
     subject_hint = record.semantic_slots.get("subject_hint")
-    if subject_hint:
+    if subject_hint and str(subject_hint).casefold() != namespace_key.casefold():
         return ("champion", str(subject_hint))
+
+    if namespace_key:
+        mode_entity = record.semantic_slots.get("mode_entity")
+        if isinstance(mode_entity, dict):
+            kind = str(mode_entity.get("kind") or "mode_system")
+            alias = (
+                mode_entity.get("alias")
+                or mode_entity.get("raw")
+                or mode_entity.get("name")
+                or mode_entity.get("label")
+            )
+            if alias and str(alias).casefold() != namespace_key.casefold():
+                return (kind, str(alias))
+
+        cue_path = record.semantic_slots.get("cue_path")
+        if isinstance(cue_path, list):
+            cue_entity = next((str(token) for token in cue_path if str(token).strip()), None)
+            if cue_entity is not None and cue_entity.casefold() != namespace_key.casefold():
+                return ("mode_system", cue_entity)
+        return ("mode_system", "system")
 
     owner_context = record.semantic_slots.get("owner_context")
     if isinstance(owner_context, dict):
@@ -329,7 +478,7 @@ def build_short_display_core(
 
     slots = record.semantic_slots
     owner = display_owner(record, display_context=display_context)
-    spell_key = slots.get("spell_key") or slots.get("spell_key_hint")
+    spell_key = display_spell_key(slots)
     phase = slots.get("phase")
 
     if mode_key(slots.get("mode_context")) == "ultimate_spellbook" and spell_key == "r":
@@ -591,6 +740,23 @@ def display_subject(slots: dict[str, Any]) -> str | None:
         return str(champion)
 
     return None
+
+
+def display_spell_key(slots: dict[str, Any]) -> object | None:
+    """返回足以进入用户中文的技能键，拒绝普通 PascalCase 词首弱提示。"""
+
+    spell_key = slots.get("spell_key")
+    if spell_key is not None:
+        return spell_key
+
+    hint = slots.get("spell_key_hint")
+    if hint is None:
+        return None
+
+    residual = slots.get("alias_residual") or slots.get("effect_residual")
+    if isinstance(residual, str) and len(residual) > 1 and residual[0].islower():
+        return None
+    return hint
 
 
 def first_spell_modifier(slots: dict[str, Any]) -> dict[str, Any] | None:
@@ -1143,6 +1309,7 @@ def build_translation_context(
     reference_map_names = map_names_from_collection(collection)
     reference_item_names = item_names_from_collection(collection)
     champion_labels: dict[str, ChampionLabelEntry] = {}
+    champion_ids: dict[int, str] = {}
     for row in collection.champions.values():
         entity = row.get("entity")
         if not isinstance(entity, dict) or not entity.get("alias"):
@@ -1155,6 +1322,8 @@ def build_translation_context(
             label_sources={language: LABEL_SOURCE_REFERENCE for language in labels},
             name_forms=reference_name_forms(entity),
         )
+        if isinstance(entity.get("id"), int):
+            champion_ids[entity["id"]] = str(entity["alias"])
     skin_labels: dict[tuple[str, str], dict[str, str]] = {}
     for row in collection.skins.values():
         entity = row.get("entity")
@@ -1171,6 +1340,7 @@ def build_translation_context(
     infer_champion_labels_from_skin_labels(champion_labels, skin_labels)
     return TranslationBuildContext(
         champion_labels=champion_labels,
+        champion_ids=champion_ids,
         skin_labels=skin_labels,
         display_labels=display_labels,
         reference_map_names=reference_map_names,

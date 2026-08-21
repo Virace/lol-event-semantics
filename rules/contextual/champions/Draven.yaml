@@ -1,6 +1,16 @@
 scope: champion
 owner: Draven
 aliases:
+  ChampionSelect:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: champion_select_stinger
+    label: 英雄选择短乐
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      Stinger: 短促乐句
+    note: Draven_ChampionSelect_Stinger 是英雄选择界面的短促音乐提示，不是技能事件。
   DoubleShot:
     kind: champion_spell_component
     spell: e
@@ -11,13 +21,20 @@ aliases:
     note: DoubleShot 在 Draven 事件中对应 E 技能 Stand Aside 的双斧投射表现，不作为全局 DoubleShot 
       词义。
   DravenAttackP:
-    kind: champion_spell_component
-    spell: p
-    component: passive_attack
-    label: 被动攻击
-    confidence: medium
+    kind: champion_attack_component
+    component: draven_axe_attack
+    label: 投斧普攻
+    confidence: high
     source: manual_contextual_alias
-    note: P 在 DravenAttackP 中按被动处理；后续 LQC/RC 等片段仍需保留上下文。
+    qualifiers:
+      L: 左手
+      R: 右手
+      LQ: 左手旋转飞斧
+      RQ: 右手旋转飞斧
+      LQC: 左手旋转飞斧暴击
+      RQC: 右手旋转飞斧暴击
+      RC: 右手暴击
+    note: DravenAttackP 的 P 是内部攻击资源标记；L/R/Q/C 组合分别保留左右手、旋转飞斧与暴击语义，主动作仍是普通攻击。
   NewPassive:
     kind: champion_spell_component
     spell: p

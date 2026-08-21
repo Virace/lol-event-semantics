@@ -17,3 +17,35 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: MountReturn 在 Kled 事件中对应斯嘎尔返回上马状态。
+  RemountDash:
+    kind: champion_spell_component
+    spell: p
+    component: remount_dash
+    label: 重新上马冲刺
+    confidence: high
+    source: manual_contextual_alias
+    note: RemountDash 是克烈被动重新上马过程的冲刺表现，不是 R 技能。
+  RemounttDash:
+    kind: champion_spell_component
+    spell: p
+    component: remount_dash
+    label: 重新上马冲刺
+    confidence: high
+    source: manual_contextual_alias
+    note: RemounttDash 是 RemountDash 的历史双 t 拼写，语义仍为被动重新上马冲刺。
+  RiderQ:
+    kind: champion_spell_component
+    spell: q
+    component: mounted_beartrap
+    label: 骑乘飞索捕熊器
+    confidence: high
+    source: manual_contextual_alias
+    note: RiderQ 表示骑乘形态 Q 飞索捕熊器；不得按 Rider 的 R 词首误判为 R。
+  RiderQMissile:
+    kind: champion_spell_component
+    spell: q
+    component: mounted_beartrap_missile
+    label: 骑乘飞索捕熊器飞弹
+    confidence: high
+    source: manual_contextual_alias
+    note: RiderQMissile 中 Rider 是骑乘形态，Q 才是技能槽位；跨皮肤 cast/launch/hit 证据一致。

@@ -1,0 +1,21 @@
+scope: champion
+owner: Taliyah
+aliases:
+  TaliyahQBigMis:
+    kind: champion_spell_component
+    spell: q
+    asset_kind: sfx
+    component: threaded_volley_empowered_missile
+    label: 石穿强化岩石飞弹
+    confidence: high
+    source: manual_contextual_alias
+    note: QBigMis 是同一 Q 强化岩石飞弹的内部词序变体。
+  TaliyahQMisBig:
+    kind: champion_spell_component
+    spell: q
+    asset_kind: sfx
+    component: threaded_volley_empowered_missile
+    label: 石穿强化岩石飞弹
+    confidence: high
+    source: manual_contextual_alias
+    note: QMisBig 表示 Q“石穿”在掘石场上投出的强化岩石飞弹。

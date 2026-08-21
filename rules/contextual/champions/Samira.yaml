@@ -2,26 +2,78 @@ scope: champion
 owner: Samira
 aliases:
   SheathGun:
-    kind: champion_spell_component
-    spell: p
+    kind: generic_sfx_effect
+    asset_kind: sfx
     component: sheath_gun
     label: 收枪
     confidence: medium
     source: manual_contextual_alias
     note: SheathGun 在 Samira 事件中对应武器收纳/切换到枪的表现。
   SheathSword:
-    kind: champion_spell_component
-    spell: p
+    kind: generic_sfx_effect
+    asset_kind: sfx
     component: sheath_sword
     label: 收剑
     confidence: medium
     source: manual_contextual_alias
     note: SheathSword 在 Samira 事件中对应武器收纳/切换到剑的表现。
   Walkover:
-    kind: champion_spell_component
-    spell: p
+    kind: generic_sfx_effect
+    asset_kind: sfx
     component: walkover
     label: 跨步经过
     confidence: medium
     source: manual_contextual_alias
     note: Walkover 在 Samira 事件中对应角色动作/移动表现。
+  dance:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    required_tokens:
+      - emote
+    component: dance_emote
+    label: 舞蹈
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      buttons: 按键
+      gunshot: 枪声
+    note: SamiraSkin30 的 emote_dance_buttons/gunshot 是舞蹈表情的按键与枪声层，不是技能事件。
+  homeguard:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    required_tokens:
+      - emote
+    component: homeguard_emote
+    label: 家园卫士
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      ignite: 点火
+      lp: 低通音频层
+    note: SamiraSkin30 的 emote_homeguard 是家园卫士表现；ignite/start/lp
+      分别保留点火、开始与低通音频层语义。
+  jumbotron:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    required_tokens:
+      - emote
+    component: soul_fighter_jumbotron
+    label: 斗魂大屏幕
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      lv1: 1级
+      lv2: 2级
+      lv3: 3级
+    note: SamiraSkin30 的 emote_jumbotron_lv1/2/3 是斗魂觉醒皮肤大屏幕等级表现；等级不得丢弃。
+  pentakill:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: pentakill_celebration
+    label: 五杀庆祝
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      self: 自身
+      other: 他人
+    note: SamiraSkin30 的 pentakill_celebration_self/other 是五杀庆祝的听者变体。

@@ -2,16 +2,15 @@ scope: champion
 owner: Jax
 aliases:
   Fish:
-    kind: champion_spell_component
-    spell: p
+    kind: generic_sfx_effect
+    asset_kind: sfx
     component: fish_prop
     label: 鱼道具
     confidence: medium
     source: manual_contextual_alias
     note: Fish 在 Jax/JaxSkin 事件中对应专属鱼道具的 cast/catch/idle 表现。
   TowerAttack:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: tower_attack
     label: 攻击防御塔
     confidence: medium

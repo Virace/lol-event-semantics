@@ -9,25 +9,41 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: Bullets 在 MissFortune 事件中对应 Q 技能 Double Up 的子弹表现。
+  GearUI:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    required_tokens:
+      - MissFortune
+      - Skin16
+    component: gear_ui
+    label: 武器界面
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      Available: 可用
+      Unavailable: 不可用
+      Open: 打开
+      Close: 关闭
+      Hover: 悬停
+      Select: 选择
+    note: hud_base 只是系统外壳；相邻 MissFortune/Skin16 与 GearUI 表示武装战姬皮肤的武器界面反馈。
   MissFortuneBasicAttack:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: basic_attack
     label: 普攻
     confidence: medium
     source: manual_contextual_alias
     note: MissFortuneBasicAttack 在 Miss Fortune 事件中对应基础攻击音效。
   MissFortuneBulletEMPTY:
-    kind: champion_spell_component
-    spell: p
-    component: bullet_empty
-    label: 子弹（空弹）
-    confidence: medium
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: empty_bullet
+    label: 空弹
+    confidence: high
     source: manual_contextual_alias
-    note: MissFortuneBulletEMPTY 在 Miss Fortune 事件中是子弹打空/空弹音效层（OnMissileLaunch 相位）；reference 各技能描述仅泛称子弹、无空弹归属证据，按普攻子弹音效层挂被动 P 处理，不归属具体主动技能。
+    note: MissFortuneBulletEMPTY 是空弹音效层；无证据归属被动或任一主动技能，保留为角色 SFX 效果。
   MissFortuneCritAttack:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: crit_attack
     label: 暴击攻击
     confidence: medium
@@ -41,6 +57,17 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: ScatterShot 在 Miss Fortune 事件中对应 E 技能 Make It Rain 的范围弹幕表现。
+  Ultimate:
+    kind: champion_spell_component
+    spell: r
+    asset_kind: sfx
+    mode: strawberry
+    component: bullet_time
+    label: 弹幕时间
+    confidence: high
+    source: manual_contextual_alias
+    note: Strawberry_NPC_MissFortune_Ultimate 是 PVE NPC 厄运小姐的 R 弹幕时间，NPC
+      是演员角色而非实体名。
   ViciousStrikes:
     kind: champion_spell_component
     spell: w
@@ -49,3 +76,11 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: ViciousStrikes 在 Miss Fortune 事件中对应 W 技能 Strut 的旧/内部攻击强化表现。
+  WeaponSelect:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: weapon_select
+    label: 武器选择
+    confidence: high
+    source: manual_contextual_alias
+    note: MissFortune_Skin16_WeaponSelect 是武装战姬皮肤的武器选择音效，不是技能槽位。

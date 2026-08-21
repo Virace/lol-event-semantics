@@ -1,6 +1,16 @@
 scope: champion
 owner: Elise
 aliases:
+  Human:
+    kind: champion_form_qualifier
+    asset_kind: sfx
+    required_tokens:
+      - Emote
+    component: human_form
+    label: 人形态
+    confidence: high
+    source: manual_contextual_alias
+    note: Human_Emote_Joke/Laugh/Taunt 中 Human 是伊莉丝人形态修饰，后续动作仍是主体语义。
   HumanDance:
     kind: champion_spell_component
     spell: r
@@ -49,6 +59,16 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: HumanTaunt 在 Elise 事件中对应人形态嘲讽动作音效。
+  Spider:
+    kind: champion_form_qualifier
+    asset_kind: sfx
+    required_tokens:
+      - Emote
+    component: spider_form
+    label: 蜘蛛形态
+    confidence: high
+    source: manual_contextual_alias
+    note: Spider_Emote_Dance 中 Spider 是伊莉丝蜘蛛形态修饰，Dance 与 loop 仍分别承载动作和阶段。
   SpiderDance:
     kind: champion_spell_component
     spell: r
@@ -106,8 +126,8 @@ aliases:
     source: manual_contextual_alias
     note: SpiderTaunt 在 Elise 事件中对应蜘蛛形态嘲讽动作音效。
   Spiderling:
-    kind: champion_spell_component
-    spell: p
+    kind: generic_sfx_effect
+    asset_kind: sfx
     component: spiderling_death
     label: 小蜘蛛死亡
     confidence: medium

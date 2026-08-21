@@ -1,11 +1,41 @@
 scope: champion
 owner: Kaisa
 aliases:
-  FoleyAttack:
-    kind: champion_spell_component
-    spell: p
-    component: foley_attack
-    label: 语音攻击
-    confidence: medium
+  Animated:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: animated_emote
+    label: 动画表情
+    confidence: high
     source: manual_contextual_alias
-    note: FoleyAttack 在 Kaisa 事件中对应基础攻击的内部 Foley 音频表现名。
+    qualifiers:
+      Emote: 表情
+    note: KaisaSkin71 的 Animated_Emote 是皮肤动画表情音效，不是状态技能。
+  FoleyAttack:
+    kind: champion_attack_component
+    component: foley_attack
+    label: 普通攻击拟声音效
+    confidence: high
+    source: manual_contextual_alias
+    note: FoleyAttack 在 Kaisa SFX 中是普通攻击的 Foley 拟声音效；Attack 是攻击事件，不能写成 P 技能。
+  Form:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: skin_form_transform
+    label: 皮肤形态
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      Transform: 变换
+    note: KaisaSkin71 的 Form_Transform 是皮肤形态变换音效，不是技能段数。
+  Tower:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: tower_effect
+    label: 防御塔音效
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      Finisher: 终结
+      Signature: 标志变体
+    note: KaisaSkin71 的 Tower_Finisher/Signature 是皮肤防御塔终结表现，不是技能事件；变体词必须保留。

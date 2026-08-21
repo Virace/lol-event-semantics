@@ -2,19 +2,22 @@ from __future__ import annotations
 
 import hashlib
 import json
+from html.parser import HTMLParser
 from pathlib import Path
 
 import pytest
 
 from lol_event_semantics.demo_site import DemoSiteError, build_demo_site
+from scripts.build_demo_site import main as build_demo_main
 
 
 def test_build_demo_site_groups_mode_events_under_base_champions(tmp_path: Path) -> None:
-    normalized_root, reference_root = write_demo_inputs(tmp_path)
+    normalized_root, validation_json, reference_root = write_demo_inputs(tmp_path)
     output_root = tmp_path / "site"
 
     summary = build_demo_site(
         normalized_root=normalized_root,
+        validation_json=validation_json,
         reference_root=reference_root,
         output_root=output_root,
     )
@@ -32,6 +35,11 @@ def test_build_demo_site_groups_mode_events_under_base_champions(tmp_path: Path)
         "source_records": 8,
         "unassigned_records": 3,
     }
+    assert index["review"] == {
+        "data_path": "data/review/index.json",
+        "residual_records": 3,
+        "unassigned_records": 3,
+    }
     assert [champion["alias"] for champion in index["champions"]] == [
         "Aatrox",
         "Annie",
@@ -46,8 +54,10 @@ def test_build_demo_site_groups_mode_events_under_base_champions(tmp_path: Path)
     assert annie_index["portrait_url"].endswith("/16.16.1/img/champion/Annie.png")
 
     annie = read_json(output_root / "data" / "champions" / "Annie.json")
-    assert [skin["number"] for skin in annie["skins"]] == [0, 1]
+    assert [skin["number"] for skin in annie["skins"]] == [0, 1, 2]
     assert annie["skins"][1]["splash_url"].endswith("/Annie_1.jpg")
+    assert annie["skins"][2]["splash_url"].endswith("/Annie_1.jpg")
+    assert annie["skins"][2]["splash_skin_number"] == 1
     assert annie["events"][0]["raw_event_name"] == "Play_vo_Annie_Spell3DQCast"
     assert annie["events"][0]["mode"] == {"key": "jade", "label": "经典模式", "prefix": "Jade"}
     assert annie["events"][0]["skin_number"] == 1
@@ -77,19 +87,71 @@ def test_build_demo_site_groups_mode_events_under_base_champions(tmp_path: Path)
         "prefix": "Strawberry",
     }
 
+    review = read_json(output_root / "data" / "review" / "index.json")
+    assert review["dataset"]["dataset_id"] == "local-v1-test"
+    assert review["counts"] == {
+        "residual_issues": 4,
+        "residual_records": 3,
+        "unassigned_records": 3,
+    }
+    assert [(item["key"], item["record_count"]) for item in review["layers"]] == [
+        ("contract_shape", 0),
+        ("coverage", 1),
+        ("semantic_projection", 1),
+        ("review_evidence", 1),
+    ]
+    assert review["queues"] == [
+        {
+            "data_path": "data/review/residuals.json",
+            "key": "residual",
+            "label": "SFX 残差",
+            "record_count": 3,
+        },
+        {
+            "data_path": "data/review/unassigned.json",
+            "key": "unassigned",
+            "label": "未归属记录",
+            "record_count": 3,
+        },
+    ]
+
+    residuals = read_json(output_root / "data" / "review" / "residuals.json")["records"]
+    residual = next(item for item in residuals if item["record_id"] == "record-unassigned")
+    assert residual["layers"] == ["review_evidence"]
+    assert [issue["code"] for issue in residual["issues"]] == [
+        "translation_argument_low_confidence",
+        "translation_label_fallback",
+    ]
+    assert residual["locator"] == {
+        "raw_event_name": "Play_sfx_Ruby_Boss_UnknownBoss_Charge",
+        "record_id": "record-unassigned",
+    }
+    assert residual["reason_code"] == "validator_issue"
+
+    unassigned = read_json(output_root / "data" / "review" / "unassigned.json")["records"]
+    assert {item["record_id"] for item in unassigned} == {
+        "record-strawberry-dasher",
+        "record-ruby-mission-ziggs",
+        "record-unassigned",
+    }
+    assert "semantic" not in unassigned[0]
+    assert {item["reason_code"] for item in unassigned} == {"no_safe_champion_assignment"}
+
 
 def test_build_demo_site_is_deterministic_and_refuses_unowned_output(tmp_path: Path) -> None:
-    normalized_root, reference_root = write_demo_inputs(tmp_path)
+    normalized_root, validation_json, reference_root = write_demo_inputs(tmp_path)
     output_root = tmp_path / "site"
 
     build_demo_site(
         normalized_root=normalized_root,
+        validation_json=validation_json,
         reference_root=reference_root,
         output_root=output_root,
     )
     first_digest = directory_digest(output_root)
     build_demo_site(
         normalized_root=normalized_root,
+        validation_json=validation_json,
         reference_root=reference_root,
         output_root=output_root,
     )
@@ -102,6 +164,7 @@ def test_build_demo_site_is_deterministic_and_refuses_unowned_output(tmp_path: P
     with pytest.raises(DemoSiteError, match="generated marker"):
         build_demo_site(
             normalized_root=normalized_root,
+            validation_json=validation_json,
             reference_root=reference_root,
             output_root=occupied,
         )
@@ -109,11 +172,73 @@ def test_build_demo_site_is_deterministic_and_refuses_unowned_output(tmp_path: P
     assert (occupied / "user-file.txt").read_text(encoding="utf-8") == "keep"
 
 
+def test_build_demo_site_rejects_validation_from_another_candidate(tmp_path: Path) -> None:
+    normalized_root, validation_json, reference_root = write_demo_inputs(tmp_path)
+    other_report = tmp_path / "other-run" / "reports" / "normalized-validation.json"
+    other_report.parent.mkdir(parents=True)
+    other_report.write_text(validation_json.read_text(encoding="utf-8"), encoding="utf-8")
+
+    with pytest.raises(DemoSiteError, match="same dataset run"):
+        build_demo_site(
+            normalized_root=normalized_root,
+            validation_json=other_report,
+            reference_root=reference_root,
+            output_root=tmp_path / "site",
+        )
+
+
+def test_build_demo_site_rejects_validation_record_count_mismatch(tmp_path: Path) -> None:
+    normalized_root, validation_json, reference_root = write_demo_inputs(tmp_path)
+    validation = read_json(validation_json)
+    validation["summary"]["record_count"] = 7
+    write_json(validation_json, validation)
+
+    with pytest.raises(DemoSiteError, match="record count mismatch"):
+        build_demo_site(
+            normalized_root=normalized_root,
+            validation_json=validation_json,
+            reference_root=reference_root,
+            output_root=tmp_path / "site",
+        )
+
+
+def test_build_demo_site_rejects_validation_claiming_another_run(tmp_path: Path) -> None:
+    normalized_root, validation_json, reference_root = write_demo_inputs(tmp_path)
+    validation = read_json(validation_json)
+    validation["summary"]["normalized_root"] = str(tmp_path / ".staging" / "other-run" / "normalized")
+    write_json(validation_json, validation)
+
+    with pytest.raises(DemoSiteError, match="same dataset run"):
+        build_demo_site(
+            normalized_root=normalized_root,
+            validation_json=validation_json,
+            reference_root=reference_root,
+            output_root=tmp_path / "site",
+        )
+
+
+def test_demo_cli_requires_validation_for_explicit_candidate(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    exit_code = build_demo_main(
+        [
+            "--normalized-root",
+            str(tmp_path / "candidate" / "normalized"),
+            "--output-root",
+            str(tmp_path / "site"),
+        ]
+    )
+
+    assert exit_code == 2
+    assert "--validation-json is required with --normalized-root" in capsys.readouterr().err
+
+
 def test_demo_assets_keep_accessibility_security_and_responsive_contract(tmp_path: Path) -> None:
-    normalized_root, reference_root = write_demo_inputs(tmp_path)
+    normalized_root, validation_json, reference_root = write_demo_inputs(tmp_path)
     output_root = tmp_path / "site"
     build_demo_site(
         normalized_root=normalized_root,
+        validation_json=validation_json,
         reference_root=reference_root,
         output_root=output_root,
     )
@@ -121,6 +246,8 @@ def test_demo_assets_keep_accessibility_security_and_responsive_contract(tmp_pat
     html = (output_root / "index.html").read_text(encoding="utf-8")
     javascript = (output_root / "app.js").read_text(encoding="utf-8")
     stylesheet = (output_root / "styles.css").read_text(encoding="utf-8")
+    dom = DemoDom()
+    dom.feed(html)
 
     assert 'lang="zh-CN"' in html
     assert 'name="theme-color" content="#f7f5f0"' in html
@@ -131,15 +258,49 @@ def test_demo_assets_keep_accessibility_security_and_responsive_contract(tmp_pat
     assert "textContent" in javascript
     assert 'setAttribute("translate", "no")' in javascript
     assert 'eventFilters.addEventListener("submit"' in javascript
+    assert 'reviewFilters.addEventListener("submit"' in javascript
+    assert 'fetchJson("data/review/index.json")' in javascript
+    assert 'params.get("view")' in javascript
+    assert 'params.get("queue")' in javascript
+    assert 'params.get("layer")' in javascript
+    assert 'params.get("code")' in javascript
+    assert 'params.get("family")' in javascript
+    assert 'params.get("entity")' in javascript
+    assert 'params.get("status")' in javascript
+    assert 'params.get("record")' in javascript
+    assert "window.history.replaceState" in javascript
+    assert {
+        "championViewButton",
+        "reviewViewButton",
+        "championView",
+        "reviewView",
+        "reviewLayerCards",
+        "reviewFilters",
+        "reviewQueue",
+        "reviewSearch",
+        "reviewLayer",
+        "reviewCode",
+        "reviewFamily",
+        "reviewEntity",
+        "reviewStatus",
+        "reviewTableBody",
+        "reviewDetail",
+        "reviewDetailLocator",
+    }.issubset(dom.tags_by_id)
+    assert dom.tags_by_id["reviewFilters"] == "form"
+    assert dom.tags_by_id["reviewQueue"] == "select"
+    assert dom.tags_by_id["reviewDetailLocator"] == "code"
+    assert len(dom.ids) == len(set(dom.ids))
     assert "@media (max-width: 600px)" in stylesheet
     assert ":focus-visible" in stylesheet
     assert "min-height: 44px" in stylesheet
     assert "linear-gradient" not in stylesheet
 
 
-def write_demo_inputs(tmp_path: Path) -> tuple[Path, Path]:
-    normalized_root = tmp_path / "normalized"
-    normalized_root.mkdir()
+def write_demo_inputs(tmp_path: Path) -> tuple[Path, Path, Path]:
+    run_root = tmp_path / "test-run"
+    normalized_root = run_root / "normalized"
+    normalized_root.mkdir(parents=True)
     write_json(
         normalized_root / "manifest.json",
         {
@@ -293,6 +454,51 @@ def write_demo_inputs(tmp_path: Path) -> tuple[Path, Path]:
         encoding="utf-8",
     )
 
+    validation_json = run_root / "reports" / "normalized-validation.json"
+    validation_json.parent.mkdir()
+    write_json(
+        validation_json,
+        {
+            "issues": [
+                {
+                    "code": "translation_missing_for_supported_frame",
+                    "message": "supported frame 缺少 translation。",
+                    "path": "by-entity/champions/Ruby.jsonl:1",
+                    "raw_event_name": "Play_sfx_Ruby_Boss_FNVeigar_MordeR_buffdeactivate",
+                    "severity": "warning",
+                },
+                {
+                    "code": "display_drops_parsed_slot",
+                    "message": "展示 detail 丢弃已解析语义槽位。",
+                    "path": "by-entity/maps/Ruby.jsonl:1",
+                    "raw_event_name": "Play_sfx_Strawberry_Miniboss_Dasher_Dash_OnCast",
+                    "severity": "warning",
+                },
+                {
+                    "code": "translation_argument_low_confidence",
+                    "message": "argument confidence=low。",
+                    "path": "by-entity/maps/Ruby.jsonl:2.translation.arguments.action",
+                    "raw_event_name": "Play_sfx_Ruby_Boss_UnknownBoss_Charge",
+                    "severity": "warning",
+                },
+                {
+                    "code": "translation_label_fallback",
+                    "message": "argument 使用 fallback label。",
+                    "path": "by-entity/maps/Ruby.jsonl:2.translation.arguments.action",
+                    "raw_event_name": "Play_sfx_Ruby_Boss_UnknownBoss_Charge",
+                    "severity": "warning",
+                },
+            ],
+            "summary": {
+                "entity_count": 4,
+                "error_count": 0,
+                "normalized_root": str(tmp_path / ".staging" / "test-run" / "normalized"),
+                "record_count": 8,
+                "warning_count": 4,
+            },
+        },
+    )
+
     reference_root = tmp_path / "reference"
     (reference_root / "champions").mkdir(parents=True)
     (reference_root / "skins" / "Annie").mkdir(parents=True)
@@ -356,7 +562,23 @@ entity:
 """,
         encoding="utf-8",
     )
-    return normalized_root, reference_root
+    (reference_root / "skins" / "Annie" / "Skin02.yaml").write_text(
+        """schema_version: 2
+entity:
+  type: skin
+  champion_alias: Annie
+  champion_id: 1
+  skin_number: 2
+  skin_token: Skin02
+  names:
+    en_US:
+      - value: Goth  Annie (Ruby)
+    zh_CN:
+      - value: 哥特萝莉 安妮 红宝石
+""",
+        encoding="utf-8",
+    )
+    return normalized_root, validation_json, reference_root
 
 
 def write_champion(
@@ -405,3 +627,20 @@ def directory_digest(root: Path) -> str:
         digest.update(path.read_bytes())
         digest.update(b"\0")
     return digest.hexdigest()
+
+
+class DemoDom(HTMLParser):
+    """收集 Demo 静态 DOM 的公开元素 ID 合同。"""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.ids: list[str] = []
+        self.tags_by_id: dict[str, str] = {}
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        """记录带 ID 的开始标签。"""
+
+        element_id = dict(attrs).get("id")
+        if element_id is not None:
+            self.ids.append(element_id)
+            self.tags_by_id[element_id] = tag

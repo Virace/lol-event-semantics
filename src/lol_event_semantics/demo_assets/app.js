@@ -2,9 +2,11 @@
 
 const numberFormatter = new Intl.NumberFormat("zh-CN");
 const championCache = new Map();
+const reviewCache = new Map();
 const state = {
   index: null,
   champion: null,
+  view: "champion",
   championQuery: "",
   eventQuery: "",
   assetKind: "all",
@@ -15,6 +17,19 @@ const state = {
   pageSize: 100,
   previewSkinIndex: 0,
   loadSequence: 0,
+  reviewIndex: null,
+  reviewRecords: [],
+  reviewQueue: "residual",
+  reviewQuery: "",
+  reviewLayer: "all",
+  reviewCode: "all",
+  reviewFamily: "all",
+  reviewEntity: "all",
+  reviewStatus: "all",
+  reviewPage: 1,
+  reviewPageSize: 50,
+  selectedReviewId: null,
+  reviewLoadSequence: 0,
 };
 
 const elements = Object.fromEntries(
@@ -27,6 +42,8 @@ const elements = Object.fromEntries(
     "eventCount",
     "unassignedCount",
     "datasetId",
+    "championViewButton",
+    "reviewViewButton",
     "championResultCount",
     "championList",
     "championPortrait",
@@ -60,6 +77,35 @@ const elements = Object.fromEntries(
     "nextPage",
     "pageStatus",
     "pageSize",
+    "championView",
+    "reviewView",
+    "reviewResidualCount",
+    "reviewIssueCount",
+    "reviewUnassignedCount",
+    "reviewLayerCards",
+    "reviewFilters",
+    "reviewQueue",
+    "reviewSearch",
+    "reviewLayer",
+    "reviewCode",
+    "reviewFamily",
+    "reviewEntity",
+    "reviewStatus",
+    "resetReviewFilters",
+    "reviewResultsSummary",
+    "reviewTableBody",
+    "reviewEmptyState",
+    "reviewPreviousPage",
+    "reviewNextPage",
+    "reviewPageStatus",
+    "reviewPageSize",
+    "reviewDetail",
+    "reviewDetailTitle",
+    "reviewDetailLocator",
+    "copyReviewLocator",
+    "reviewDetailLabels",
+    "reviewDetailMeta",
+    "reviewIssueList",
     "liveRegion",
   ].map((id) => [id, document.getElementById(id)]),
 );
@@ -95,14 +141,42 @@ function clearLoading() {
   elements.appShell.setAttribute("aria-busy", "false");
 }
 
-function championHash(alias) {
-  return `#champion=${encodeURIComponent(alias)}`;
+function hashParams() {
+  return new URLSearchParams(window.location.hash.replace(/^#/, ""));
 }
 
-function aliasFromHash() {
-  const raw = window.location.hash.replace(/^#/, "");
-  const params = new URLSearchParams(raw);
-  return params.get("champion");
+function championHash(alias) {
+  const params = new URLSearchParams();
+  params.set("champion", alias);
+  return `#${params.toString()}`;
+}
+
+function reviewHash() {
+  const params = new URLSearchParams();
+  params.set("view", "review");
+  params.set("queue", state.reviewQueue);
+  if (state.reviewQuery) params.set("q", state.reviewQuery);
+  if (state.reviewLayer !== "all") params.set("layer", state.reviewLayer);
+  if (state.reviewCode !== "all") params.set("code", state.reviewCode);
+  if (state.reviewFamily !== "all") params.set("family", state.reviewFamily);
+  if (state.reviewEntity !== "all") params.set("entity", state.reviewEntity);
+  if (state.reviewStatus !== "all") params.set("status", state.reviewStatus);
+  if (state.reviewPage > 1) params.set("page", String(state.reviewPage));
+  if (state.selectedReviewId) params.set("record", state.selectedReviewId);
+  return `#${params.toString()}`;
+}
+
+function replaceReviewHash() {
+  window.history.replaceState(null, "", reviewHash());
+}
+
+function showView(view) {
+  state.view = view;
+  const reviewing = view === "review";
+  elements.championView.hidden = reviewing;
+  elements.reviewView.hidden = !reviewing;
+  elements.championViewButton.setAttribute("aria-pressed", String(!reviewing));
+  elements.reviewViewButton.setAttribute("aria-pressed", String(reviewing));
 }
 
 function updateDatasetSummary() {
@@ -469,7 +543,377 @@ function renderEvents() {
   elements.nextPage.disabled = state.page >= pageCount;
 }
 
+async function ensureReviewIndex() {
+  if (state.reviewIndex) return state.reviewIndex;
+  const index = await fetchJson("data/review/index.json");
+  if (index.dataset?.dataset_id !== state.index.dataset.dataset_id) {
+    throw new Error("Review 索引与当前数据集身份不一致");
+  }
+  state.reviewIndex = index;
+  elements.reviewResidualCount.textContent = formatCount(index.counts.residual_records);
+  elements.reviewIssueCount.textContent = formatCount(index.counts.residual_issues);
+  elements.reviewUnassignedCount.textContent = formatCount(index.counts.unassigned_records);
+  return index;
+}
+
+async function loadReviewQueue(queue) {
+  if (reviewCache.has(queue.key)) return reviewCache.get(queue.key);
+  const payload = await fetchJson(queue.data_path);
+  if (payload.dataset_id !== state.index.dataset.dataset_id || !Array.isArray(payload.records)) {
+    throw new Error(`Review 队列 ${queue.key} 与当前数据集身份不一致`);
+  }
+  reviewCache.set(queue.key, payload.records);
+  return payload.records;
+}
+
+function reviewFacetOptions(records, getter) {
+  const counts = new Map();
+  for (const record of records) {
+    const value = String(getter(record) || "unknown");
+    counts.set(value, (counts.get(value) || 0) + 1);
+  }
+  return [...counts.entries()]
+    .sort((left, right) => left[0].localeCompare(right[0], "zh-CN"))
+    .map(([value, count]) => ({ value, label: `${value} · ${formatCount(count)}` }));
+}
+
+function selectAvailable(select, value, fallback = "all") {
+  const available = [...select.options].some((option) => option.value === value);
+  select.value = available ? value : fallback;
+  return select.value;
+}
+
+function populateReviewFilters() {
+  const index = state.reviewIndex;
+  const records = state.reviewRecords;
+  replaceSelectOptions(
+    elements.reviewQueue,
+    index.queues.map((queue) => ({
+      value: queue.key,
+      label: `${queue.label} · ${formatCount(queue.record_count)}`,
+    })),
+    state.reviewQueue,
+  );
+
+  const layers = state.reviewQueue === "residual" ? index.layers : [];
+  replaceSelectOptions(
+    elements.reviewLayer,
+    [
+      { value: "all", label: "全部层级" },
+      ...layers.map((layer) => ({
+        value: layer.key,
+        label: `${layer.label} · ${formatCount(layer.record_count)}`,
+      })),
+    ],
+    state.reviewLayer,
+  );
+
+  const codes = reviewFacetOptions(
+    records.flatMap((record) => record.issues || []),
+    (issue) => issue.code,
+  );
+  replaceSelectOptions(elements.reviewCode, [{ value: "all", label: "全部代码" }, ...codes], state.reviewCode);
+  replaceSelectOptions(
+    elements.reviewFamily,
+    [{ value: "all", label: "全部语义族" }, ...reviewFacetOptions(records, (record) => record.family)],
+    state.reviewFamily,
+  );
+  replaceSelectOptions(
+    elements.reviewEntity,
+    [{ value: "all", label: "全部实体" }, ...reviewFacetOptions(records, (record) => record.entity.alias)],
+    state.reviewEntity,
+  );
+  replaceSelectOptions(
+    elements.reviewStatus,
+    [{ value: "all", label: "全部状态" }, ...reviewFacetOptions(records, (record) => record.review_status)],
+    state.reviewStatus,
+  );
+
+  state.reviewLayer = selectAvailable(elements.reviewLayer, state.reviewLayer);
+  state.reviewCode = selectAvailable(elements.reviewCode, state.reviewCode);
+  state.reviewFamily = selectAvailable(elements.reviewFamily, state.reviewFamily);
+  state.reviewEntity = selectAvailable(elements.reviewEntity, state.reviewEntity);
+  state.reviewStatus = selectAvailable(elements.reviewStatus, state.reviewStatus);
+  elements.reviewSearch.value = state.reviewQuery;
+}
+
+function renderReviewLayerCards() {
+  const fragment = document.createDocumentFragment();
+  for (const layer of state.reviewIndex.layers) {
+    const button = createElement("button", { className: "review-layer-card", type: "button" });
+    button.dataset.layer = layer.key;
+    const active = state.reviewQueue === "residual" && state.reviewLayer === layer.key;
+    button.setAttribute("aria-pressed", String(active));
+    button.append(
+      createElement("strong", { text: layer.label }),
+      createElement("span", {
+        text: `${formatCount(layer.record_count)} 条记录 · ${formatCount(layer.issue_count)} 个问题`,
+      }),
+    );
+    button.addEventListener("click", () => {
+      state.reviewQueue = "residual";
+      state.reviewLayer = active ? "all" : layer.key;
+      state.reviewCode = "all";
+      state.reviewPage = 1;
+      state.selectedReviewId = null;
+      window.location.hash = reviewHash();
+    });
+    fragment.append(button);
+  }
+  elements.reviewLayerCards.replaceChildren(fragment);
+}
+
+function reviewMatches(record) {
+  if (state.reviewLayer !== "all" && !record.layers.includes(state.reviewLayer)) return false;
+  if (state.reviewCode !== "all" && !record.issues.some((issue) => issue.code === state.reviewCode)) return false;
+  if (state.reviewFamily !== "all" && record.family !== state.reviewFamily) return false;
+  if (state.reviewEntity !== "all" && record.entity.alias !== state.reviewEntity) return false;
+  if (state.reviewStatus !== "all" && record.review_status !== state.reviewStatus) return false;
+  const query = state.reviewQuery.trim().toLocaleLowerCase("zh-CN");
+  if (!query) return true;
+  const issueText = record.issues.flatMap((issue) => [issue.code, issue.message]).join(" ");
+  const haystack = [
+    record.record_id,
+    record.raw_event_name,
+    record.zh_cn_short,
+    record.zh_cn_detail,
+    record.entity.alias,
+    record.entity.kind,
+    record.family,
+    record.profile,
+    record.frame_type,
+    issueText,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLocaleLowerCase("zh-CN");
+  return haystack.includes(query);
+}
+
+function filteredReviewRecords() {
+  return state.reviewRecords.filter(reviewMatches);
+}
+
+function reviewLayerLabel(key) {
+  return state.reviewIndex.layers.find((layer) => layer.key === key)?.label || key;
+}
+
+function renderReviewRow(record) {
+  const row = createElement("tr");
+  row.dataset.recordId = record.record_id;
+  row.dataset.selected = String(record.record_id === state.selectedReviewId);
+
+  const locatorCell = createElement("td");
+  locatorCell.dataset.label = "定位";
+  const rawButton = createElement("button", {
+    className: "event-name-button",
+    text: record.raw_event_name,
+    type: "button",
+  });
+  rawButton.title = "查看 Review 详情";
+  rawButton.setAttribute("translate", "no");
+  rawButton.addEventListener("click", () => selectReviewRecord(record.record_id));
+  locatorCell.append(
+    rawButton,
+    createElement("span", {
+      className: record.zh_cn_short ? "event-short-label" : "event-short-label event-missing-label",
+      text: record.zh_cn_short || "尚无中文短标签",
+    }),
+    createElement("span", { className: "event-detail-label", text: record.zh_cn_detail || "未生成中文详情" }),
+  );
+
+  const issueCell = createElement("td");
+  issueCell.dataset.label = "问题";
+  if (record.layers.length) {
+    for (const layer of record.layers) issueCell.append(badge(reviewLayerLabel(layer), "layer", layer));
+  } else {
+    issueCell.append(badge("未归属", "layer", "unassigned"));
+  }
+  const codeLine = createElement("span", {
+    className: "review-code-line",
+    text: record.issues.map((issue) => issue.code).join(" · ") || "无安全英雄归属证据",
+  });
+  issueCell.append(codeLine);
+
+  const entityCell = createElement("td");
+  entityCell.dataset.label = "实体";
+  entityCell.append(
+    createElement("strong", { text: record.entity.alias }),
+    createElement("span", { className: "event-detail-label", text: `${record.entity.kind} · ${record.family}` }),
+  );
+
+  const statusCell = createElement("td");
+  statusCell.dataset.label = "状态";
+  statusCell.append(
+    badge(record.review_status, "status", record.review_status),
+    badge(record.support_level, "support", record.support_level),
+    createElement("span", { className: "event-detail-label", text: record.render_status }),
+  );
+  row.append(locatorCell, issueCell, entityCell, statusCell);
+  return row;
+}
+
+function renderReviewDetail() {
+  const record = state.reviewRecords.find((item) => item.record_id === state.selectedReviewId);
+  if (!record) {
+    elements.reviewDetail.hidden = true;
+    return;
+  }
+  elements.reviewDetail.hidden = false;
+  elements.reviewDetailTitle.textContent = record.raw_event_name;
+  elements.reviewDetailLocator.textContent = `record_id=${record.record_id}`;
+  elements.reviewDetailLabels.replaceChildren(
+    createElement("strong", { text: record.zh_cn_short || "尚无中文短标签" }),
+    createElement("span", { text: record.zh_cn_detail || "未生成中文详情" }),
+  );
+
+  const meta = [
+    ["实体", `${record.entity.alias} · ${record.entity.kind}`],
+    ["语义族", `${record.family} · ${record.profile}`],
+    ["Frame", record.frame_type],
+    ["状态", `${record.review_status} · ${record.support_level} · ${record.render_status}`],
+  ];
+  const metaFragment = document.createDocumentFragment();
+  for (const [label, value] of meta) {
+    metaFragment.append(createElement("dt", { text: label }), createElement("dd", { text: value }));
+  }
+  elements.reviewDetailMeta.replaceChildren(metaFragment);
+
+  const issueFragment = document.createDocumentFragment();
+  if (record.issues.length) {
+    for (const issue of record.issues) {
+      const item = createElement("li");
+      item.append(
+        createElement("code", { text: issue.code }),
+        createElement("span", { text: issue.message || "validator 未提供额外说明" }),
+      );
+      issueFragment.append(item);
+    }
+  } else {
+    issueFragment.append(
+      createElement("li", { text: "没有足够结构化证据把该记录安全归入某位基础英雄。" }),
+    );
+  }
+  elements.reviewIssueList.replaceChildren(issueFragment);
+}
+
+function renderReviewRecords() {
+  const filtered = filteredReviewRecords();
+  const pageCount = Math.max(1, Math.ceil(filtered.length / state.reviewPageSize));
+  state.reviewPage = Math.min(Math.max(state.reviewPage, 1), pageCount);
+  const start = (state.reviewPage - 1) * state.reviewPageSize;
+  const fragment = document.createDocumentFragment();
+  for (const record of filtered.slice(start, start + state.reviewPageSize)) {
+    fragment.append(renderReviewRow(record));
+  }
+  elements.reviewTableBody.replaceChildren(fragment);
+  elements.reviewEmptyState.hidden = filtered.length !== 0;
+  elements.reviewResultsSummary.textContent = `${formatCount(filtered.length)} / ${formatCount(state.reviewRecords.length)} 条`;
+  elements.reviewPageStatus.textContent = `第 ${state.reviewPage} / ${pageCount} 页`;
+  elements.reviewPreviousPage.disabled = state.reviewPage <= 1;
+  elements.reviewNextPage.disabled = state.reviewPage >= pageCount;
+  renderReviewDetail();
+}
+
+function selectReviewRecord(recordId) {
+  state.selectedReviewId = recordId;
+  const filtered = filteredReviewRecords();
+  const index = filtered.findIndex((record) => record.record_id === recordId);
+  if (index >= 0) state.reviewPage = Math.floor(index / state.reviewPageSize) + 1;
+  replaceReviewHash();
+  renderReviewRecords();
+}
+
+function applyReviewFilters() {
+  state.reviewPage = 1;
+  state.selectedReviewId = null;
+  renderReviewLayerCards();
+  replaceReviewHash();
+  renderReviewRecords();
+}
+
+function resetReviewFilters() {
+  state.reviewQuery = "";
+  state.reviewLayer = "all";
+  state.reviewCode = "all";
+  state.reviewFamily = "all";
+  state.reviewEntity = "all";
+  state.reviewStatus = "all";
+  state.reviewPage = 1;
+  state.selectedReviewId = null;
+  populateReviewFilters();
+  renderReviewLayerCards();
+  replaceReviewHash();
+  renderReviewRecords();
+}
+
+async function loadReviewView(params) {
+  const sequence = ++state.reviewLoadSequence;
+  showView("review");
+  setLoading("正在读取 Review 队列…");
+  try {
+    const index = await ensureReviewIndex();
+    const requestedQueue = params.get("queue") || "residual";
+    const queue = index.queues.find((item) => item.key === requestedQueue) || index.queues[0];
+    if (!queue) throw new Error("Review 索引中没有可用队列");
+    const records = await loadReviewQueue(queue);
+    if (sequence !== state.reviewLoadSequence) return;
+
+    state.reviewQueue = queue.key;
+    state.reviewRecords = records;
+    state.reviewQuery = params.get("q") || "";
+    state.reviewLayer = params.get("layer") || "all";
+    state.reviewCode = params.get("code") || "all";
+    state.reviewFamily = params.get("family") || "all";
+    state.reviewEntity = params.get("entity") || "all";
+    state.reviewStatus = params.get("status") || "all";
+    state.reviewPage = Math.max(1, Number(params.get("page") || 1) || 1);
+    state.selectedReviewId = params.get("record");
+    populateReviewFilters();
+    renderReviewLayerCards();
+    if (!params.has("page") && state.selectedReviewId) {
+      const selectedIndex = filteredReviewRecords().findIndex(
+        (record) => record.record_id === state.selectedReviewId,
+      );
+      if (selectedIndex >= 0) state.reviewPage = Math.floor(selectedIndex / state.reviewPageSize) + 1;
+    }
+    if (!state.reviewRecords.some((record) => record.record_id === state.selectedReviewId)) {
+      state.selectedReviewId = null;
+    }
+    replaceReviewHash();
+    renderReviewRecords();
+    clearLoading();
+    announce(`已载入${queue.label}，共${formatCount(records.length)}条记录`);
+  } catch (error) {
+    if (sequence !== state.reviewLoadSequence) return;
+    setLoading(`无法读取 Review 数据：${error.message}`, true);
+  }
+}
+
+async function copyReviewLocator() {
+  const record = state.reviewRecords.find((item) => item.record_id === state.selectedReviewId);
+  if (!record) return;
+  const locator = `record_id=${record.record_id}\nraw_event_name=${record.raw_event_name}`;
+  if (!navigator.clipboard?.writeText) {
+    announce("当前浏览器不允许自动复制，请手动选择定位信息");
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(locator);
+    announce("已复制稳定 Review 定位");
+  } catch {
+    announce("复制失败，请手动选择定位信息");
+  }
+}
+
 function wireInteractions() {
+  elements.championViewButton.addEventListener("click", () => {
+    const initial = state.champion?.champion.alias || state.index.champions[0]?.alias;
+    if (initial) window.location.hash = championHash(initial);
+  });
+  elements.reviewViewButton.addEventListener("click", () => {
+    window.location.hash = reviewHash();
+  });
   elements.eventFilters.addEventListener("submit", (event) => {
     event.preventDefault();
     applyEventFilters();
@@ -520,10 +964,92 @@ function wireInteractions() {
     state.page = 1;
     renderEvents();
   });
-  window.addEventListener("hashchange", () => {
-    const alias = aliasFromHash();
-    if (alias && alias !== state.champion?.champion.alias) loadChampion(alias);
+  elements.reviewFilters.addEventListener("submit", (event) => {
+    event.preventDefault();
+    applyReviewFilters();
   });
+  elements.reviewQueue.addEventListener("change", (event) => {
+    state.reviewQueue = event.target.value;
+    state.reviewQuery = "";
+    state.reviewLayer = "all";
+    state.reviewCode = "all";
+    state.reviewFamily = "all";
+    state.reviewEntity = "all";
+    state.reviewStatus = "all";
+    state.reviewPage = 1;
+    state.selectedReviewId = null;
+    window.location.hash = reviewHash();
+  });
+  elements.reviewSearch.addEventListener("input", (event) => {
+    state.reviewQuery = event.target.value;
+    applyReviewFilters();
+  });
+  elements.reviewLayer.addEventListener("change", (event) => {
+    state.reviewLayer = event.target.value;
+    applyReviewFilters();
+  });
+  elements.reviewCode.addEventListener("change", (event) => {
+    state.reviewCode = event.target.value;
+    applyReviewFilters();
+  });
+  elements.reviewFamily.addEventListener("change", (event) => {
+    state.reviewFamily = event.target.value;
+    applyReviewFilters();
+  });
+  elements.reviewEntity.addEventListener("change", (event) => {
+    state.reviewEntity = event.target.value;
+    applyReviewFilters();
+  });
+  elements.reviewStatus.addEventListener("change", (event) => {
+    state.reviewStatus = event.target.value;
+    applyReviewFilters();
+  });
+  elements.resetReviewFilters.addEventListener("click", resetReviewFilters);
+  elements.reviewPreviousPage.addEventListener("click", () => {
+    state.reviewPage -= 1;
+    replaceReviewHash();
+    renderReviewRecords();
+  });
+  elements.reviewNextPage.addEventListener("click", () => {
+    state.reviewPage += 1;
+    replaceReviewHash();
+    renderReviewRecords();
+  });
+  elements.reviewPageSize.addEventListener("change", (event) => {
+    state.reviewPageSize = Number(event.target.value);
+    state.reviewPage = 1;
+    replaceReviewHash();
+    renderReviewRecords();
+  });
+  elements.copyReviewLocator.addEventListener("click", copyReviewLocator);
+  window.addEventListener("hashchange", () => {
+    syncRoute();
+  });
+}
+
+async function syncRoute() {
+  const params = hashParams();
+  if (params.get("view") === "review") {
+    await loadReviewView(params);
+    return;
+  }
+
+  showView("champion");
+  const requestedAlias = params.get("champion");
+  const initial =
+    state.index.champions.find((champion) => champion.alias === requestedAlias) ||
+    state.index.champions.find((champion) => champion.event_count > 0) ||
+    state.index.champions[0];
+  if (!initial) throw new Error("索引中没有英雄");
+  if (window.location.hash !== championHash(initial.alias)) {
+    window.history.replaceState(null, "", championHash(initial.alias));
+  }
+  if (state.champion?.champion.alias === initial.alias) {
+    renderChampionList();
+    clearLoading();
+    return;
+  }
+  await loadChampion(initial.alias);
 }
 
 async function initialize() {
@@ -532,16 +1058,7 @@ async function initialize() {
     state.index = await fetchJson("data/index.json");
     updateDatasetSummary();
     renderChampionList();
-    const requestedAlias = aliasFromHash();
-    const initial =
-      state.index.champions.find((champion) => champion.alias === requestedAlias) ||
-      state.index.champions.find((champion) => champion.event_count > 0) ||
-      state.index.champions[0];
-    if (!initial) throw new Error("索引中没有英雄");
-    if (window.location.hash !== championHash(initial.alias)) {
-      window.history.replaceState(null, "", championHash(initial.alias));
-    }
-    await loadChampion(initial.alias);
+    await syncRoute();
   } catch (error) {
     elements.appShell.setAttribute("aria-busy", "false");
     setLoading(`演示站无法启动：${error.message}。请在站点目录运行本地 HTTP 服务，不要直接双击 HTML。`, true);

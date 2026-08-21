@@ -13,7 +13,6 @@ from typing import Iterator
 from .rules import RuleBook
 
 # 普攻改写白名单的规则来源文件；命中留痕与 zero-hit 枚举共用，保证 rule_id/source_path 对得上
-SPELL_MATCH_CONSTRAINTS_SOURCE_PATH = "rules/spell_match_constraints.yaml"
 
 
 @dataclass(slots=True)
@@ -141,23 +140,6 @@ def summarize_zero_hit_rules(
                 "scope": "residual",
                 "owner": "",
                 "token": modifier.token,
-                "reason_hint": "not matched by current input; not a deletion signal",
-            }
-        )
-
-    for entry in rulebook.attack_modifier_spells.values():
-        rule_id = f"spell_constraint:attack_modifier:{entry.champion}:{entry.spell_key}"
-
-        if rule_id in hit_rule_ids:
-            continue
-
-        rows.append(
-            {
-                "rule_id": rule_id,
-                "source_path": SPELL_MATCH_CONSTRAINTS_SOURCE_PATH,
-                "scope": "spell_constraint",
-                "owner": entry.champion,
-                "token": entry.spell_key,
                 "reason_hint": "not matched by current input; not a deletion signal",
             }
         )

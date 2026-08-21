@@ -100,8 +100,8 @@ class ModeAugmentDispatchTests(unittest.TestCase):
         self.assertEqual(translation["frame_type"], "mode_augment_event")
         self.assertEqual(translation["arguments"]["augment"]["provenance"]["reference_kind"], "item")
 
-    def test_aram_augment_mode_absent_is_legal(self) -> None:
-        """ARAM 记录无 T3.4 模式词条：mode 合法缺席，frame 照常成立。"""
+    def test_aram_augment_uses_reviewed_mode_label(self) -> None:
+        """ARAM 复用仓库已核验的“极地大乱斗”模式词条。"""
 
         record = enriched_record("Play_sfx_Augment_ARAM_MadeUpAug_buffactivate")
         with patch(GET_LABELS_TARGET, return_value=INJECTED_LABELS):
@@ -111,7 +111,8 @@ class ModeAugmentDispatchTests(unittest.TestCase):
         assert translation is not None
         self.assertEqual(translation["frame_type"], "mode_augment_event")
         args = translation["arguments"]
-        self.assertNotIn("mode", args)
+        self.assertEqual(args["mode"]["key"], "ARAM")
+        self.assertEqual(args["mode"]["labels"]["zh_CN"], "极地大乱斗")
         for role in FRAME_REGISTRY["mode_augment_event"].required_roles:
             self.assertIn(role, args)
 
@@ -167,13 +168,67 @@ class ModeAugmentGateTests(unittest.TestCase):
         with patch(GET_LABELS_TARGET, return_value=DisplayLabels()):
             self.assertIsNone(build_translation(record, TranslationBuildContext()))
 
-    def test_out_of_vocab_phase_stays_legacy(self) -> None:
-        """有明确相位但相位映射未收录（buff_cast 等）时不建 frame。"""
+    def test_reviewed_buff_cast_borrowed_spell_keeps_augment_and_target(self) -> None:
+        """已审 ARAM 增益须同时保留增益、借用英雄技能、施放阶段和听者目标。"""
 
-        record = enriched_record("Play_sfx_Augment_ARAM_ServeBeyondDeath_RenataW_buffcast_player")
-        self.assertEqual(record.semantic_slots.get("phase"), "buff_cast")
-        with patch(GET_LABELS_TARGET, return_value=INJECTED_LABELS):
-            self.assertIsNone(build_translation(record, TranslationBuildContext()))
+        cases = [
+            (
+                "Play_sfx_Augment_ARAM_ServeBeyondDeath_RenataW_buffcast_player",
+                "player",
+                "自身",
+                False,
+            ),
+            (
+                "Play_sfx_Augment_ARAM_ServeBeyondDeath_RenataW_buffcast_others",
+                "others",
+                "其他玩家",
+                False,
+            ),
+            (
+                "Stop_sfx_Augment_ARAM_ServeBeyondDeath_RenataW_buffcast_others",
+                "others",
+                "其他玩家",
+                True,
+            ),
+        ]
+        context = TranslationBuildContext(
+            champion_labels={"Renata": {"zh_CN": "烈娜塔 · 戈拉斯克", "en_US": "Renata Glasc"}}
+        )
+        for raw, qualifier, qualifier_label, stopped in cases:
+            with self.subTest(raw=raw):
+                record = enriched_record(raw)
+                self.assertEqual(record.semantic_slots.get("phase"), "buff_cast")
+                with patch(GET_LABELS_TARGET, return_value=INJECTED_LABELS):
+                    translation = build_translation(record, context)
+
+                self.assertIsNotNone(translation)
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], "mode_augment_event")
+                args = translation["arguments"]
+                self.assertEqual(args["mode"]["key"], "ARAM")
+                self.assertEqual(args["augment"]["key"], "ServeBeyondDeath")
+                self.assertEqual(args["champion"]["alias"], "Renata")
+                self.assertEqual(args["ability_slot"]["key"], "w")
+                self.assertEqual(args["qualifier"]["key"], qualifier)
+                self.assertEqual(args["phase"]["key"], "cast")
+                if stopped:
+                    self.assertEqual(args["playback"]["key"], "stop")
+
+                rendered = render_translation(
+                    translation,
+                    RenderOptions(locale="zh_CN", mode="default"),
+                ).text
+                self.assertIn("极地大乱斗", rendered)
+                self.assertIn("超越死亡的效劳", rendered)
+                self.assertIn("烈娜塔 · 戈拉斯克", rendered)
+                self.assertIn("W技能", rendered)
+                self.assertIn(qualifier_label, rendered)
+                self.assertNotRegex(rendered, r"ARAM|ServeBeyondDeath|RenataW|状态启动")
+                if stopped:
+                    self.assertNotIn("释放", rendered)
+                    self.assertIn("停止", rendered)
+                else:
+                    self.assertIn("释放", rendered)
 
     def test_non_target_family_is_ignored(self) -> None:
         """reference_entity 不属三家族的记录不进本 builder。"""
@@ -219,8 +274,14 @@ class ModeAugmentRegistryAndRenderTests(unittest.TestCase):
 
         spec = FRAME_REGISTRY["mode_augment_event"]
         self.assertEqual(spec.required_roles, ("augment",))
-        self.assertEqual(spec.templates["zh_CN"]["default"], ("mode", "augment", "phase"))
-        self.assertEqual(spec.templates["zh_CN"]["main"], ("augment", "phase"))
+        self.assertEqual(
+            spec.templates["zh_CN"]["default"],
+            ("mode", "augment", "champion", "ability_slot", "qualifier", "phase"),
+        )
+        self.assertEqual(
+            spec.templates["zh_CN"]["main"],
+            ("augment", "champion", "ability_slot", "qualifier", "phase"),
+        )
 
     def test_render_smoke_zh_default_and_main(self) -> None:
         """zh default/main 渲染非空且不含原始 Code token（注入词表）。"""

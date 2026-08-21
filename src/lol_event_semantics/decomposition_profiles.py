@@ -44,6 +44,15 @@ SIMPLE_ACTION_TRIGGERS = {
     "useitem",
     "winddown",
 }
+ACTION_SEGMENT_PHASES = {
+    "end": "end",
+    "leadin": "leadin",
+    "leadout": "leadout",
+    "loop": "loop",
+    "start": "start",
+    "winddown": "winddown",
+    "windup": "windup",
+}
 SKIN_ACTION_STATE_TRIGGERS = {
     "death",
     "joke",
@@ -121,6 +130,19 @@ TRIGGER_FAMILY_NAMES = {
     "useitem": "use_item",
 }
 
+ATTACK_CUE_PATTERN = re.compile(
+    r"(?P<attack>BasicAttack|CritAttack|RangedAttack|MeleeAttack)(?P<variant>[0-9]*)$",
+    re.IGNORECASE,
+)
+NUMERIC_SPELL_RANK_PATTERN = re.compile(
+    r"(?:Spell)?(?:2D|3D)(?P<spell_key>[QWERP])Rank(?P<rank>[0-9]+)$",
+    re.IGNORECASE,
+)
+NON_SPELL_PREFIX_WORDS = frozenset({"execute", "quadruped", "rangedattack"})
+OWNER_PREFIXED_NON_SPELL_ACTIONS = {
+    ("renekton", "execute"): "execute_action",
+}
+
 
 def normalize_semantics(record: EventDecompositionRecord) -> EventDecompositionRecord:
     """根据词法 atom 填充 profile、slot 和未知项。"""
@@ -147,6 +169,10 @@ def normalize_semantics(record: EventDecompositionRecord) -> EventDecompositionR
     elif fill_system_voice_group(record, first_atom):
         return record
     elif fill_structured_state_event(record):
+        return record
+    elif fill_champion_execute_action_event(record):
+        return record
+    elif fill_champion_attack_event(record):
         return record
     elif (
         trigger is None
@@ -452,6 +478,7 @@ def fill_owner_prefixed_attack_event(record: EventDecompositionRecord, atom: Lex
 
         if attack == "LongBasic":
             slots["attack_range"] = "long"
+            slots["attack_form"] = "ranged"
 
         if context is not None:
             slots["attack_context"] = context
@@ -1321,19 +1348,77 @@ def voice_condition_lookup_tokens(record: EventDecompositionRecord, atom: Lexica
 
 
 def first_full_phase(record: EventDecompositionRecord) -> str | None:
-    """优先读取 OnBuffCast 这类完整 phase alias。"""
+    """优先读取事件尾部 OnBuffCast 这类完整 phase alias。
 
-    for atom in record.lexical_atoms:
-        phase = (
-            phase_alias_from_atom(atom)
-            or first_part_value(atom, "phase_or_state_token")
-            or first_part_value(atom, "phase_token")
-        )
+    技能/效果词干内部也可能以 Root、Stun 等状态词结尾；它们描述组件，
+    不能抢走后续显式 OnBuffActivate/OnCast 的事件生命周期。
+    """
+
+    for atom in reversed(record.lexical_atoms):
+        phase = phase_alias_from_atom(atom)
+
+        if phase is not None:
+            return phase
+
+    for atom in reversed(record.lexical_atoms):
+        phase = first_part_value(atom, "phase_token")
+
+        if phase is not None:
+            return phase
+
+    for atom in reversed(record.lexical_atoms):
+        phase = first_part_value(atom, "phase_or_state_token")
 
         if phase is not None:
             return phase
 
     return None
+
+
+def first_action_lifecycle_phase(
+    record: EventDecompositionRecord,
+    action_atom: LexicalAtom,
+) -> str | None:
+    """返回动作尾段中最具体的生命周期。
+
+    ``Dance3D_Loop_buffactivate`` 同时含音频分段与 Wwise 承载层状态；对
+    用户和下游来说 ``Loop`` 信息更具体，因此先识别动作后的分段词，再
+    回落到 ``buffactivate`` 等完整 phase alias。
+    """
+
+    for atom in record.lexical_atoms[action_atom.chunk_index + 1 :]:
+        compact = re.sub(r"[^a-z0-9]", "", atom.raw.lower())
+        for token, phase in ACTION_SEGMENT_PHASES.items():
+            if re.fullmatch(rf"{re.escape(token)}[0-9]*", compact):
+                return phase
+
+    return first_full_phase(record)
+
+
+def add_self_action_context(
+    record: EventDecompositionRecord,
+    action_atom: LexicalAtom,
+    slots: dict[str, object],
+) -> None:
+    """为 VO/SFX 自身动作补齐生命周期，并为 SFX 保留主体上下文。"""
+
+    phase = first_action_lifecycle_phase(record, action_atom)
+    if phase is not None:
+        slots["phase"] = phase
+        slots["cue_path"] = [tail.raw for tail in record.lexical_atoms]
+
+    if record.shell.asset_kind != "sfx":
+        return
+
+    slots.update(
+        {
+            "owner_context": record.owner.to_dict(),
+            "subject_hint": record.owner.alias,
+            "skin_token": record.owner.skin_token,
+            "cue_path": [tail.raw for tail in record.lexical_atoms],
+            "asset_kind": "sfx",
+        }
+    )
 
 
 def fill_leading_contextual_attack_event(record: EventDecompositionRecord, atom: LexicalAtom) -> bool:
@@ -1417,6 +1502,12 @@ def fill_untrusted_spell_alias_event(record: EventDecompositionRecord, atom: Lex
 def fill_buff_state_event(record: EventDecompositionRecord, atom: LexicalAtom) -> bool:
     """识别 BlessingOfTheLizardElder_OnBuffActivate 这类增益状态语音。"""
 
+    trigger = first_part_value(atom, "trigger_token")
+    if trigger in SIMPLE_ACTION_TRIGGERS:
+        # dance_buffactivate 一类结构的主体仍是动作；buffactivate 只是动作
+        # 资源生命周期，不能把 Dance 反写成匿名 buff 名。
+        return False
+
     phase_atom = next_phase_atom(record, atom.chunk_index + 1)
 
     if phase_atom is None:
@@ -1499,13 +1590,15 @@ def fill_skin_recall_state_event(record: EventDecompositionRecord) -> bool:
         "skin_token": skin_recall["skin_token"],
         "recall_action": "recall",
         "recall_dimension": skin_recall.get("dimension"),
-        "phase": skin_recall["phase"],
         "owner_context": record.owner.to_dict(),
         "asset_kind": record.shell.asset_kind,
         "verb": record.shell.verb,
         "cue_path": skin_recall["cue_path"],
         "source": "skin_recall_event_name",
     }
+
+    if skin_recall.get("phase") is not None:
+        record.semantic_slots["phase"] = skin_recall["phase"]
 
     if skin_recall.get("variant") is not None:
         record.semantic_slots["recall_variant"] = skin_recall["variant"]
@@ -1530,7 +1623,7 @@ def parse_skin_recall_state(raw_event_name: str) -> dict[str, Any] | None:
 
     phase, variant = parse_recall_state_tail(tokens[recall_index + 1 :])
 
-    if phase is None:
+    if phase is None and variant is None:
         return None
 
     recall_token = tokens[recall_index]
@@ -1641,8 +1734,7 @@ def parse_recall_state_tail(tokens: list[str]) -> tuple[str | None, dict[str, st
             continue
 
         effort = re.fullmatch(r"efforts?(?P<index>\d*)", compact)
-        if phase is None and effort is not None:
-            phase = "efforts"
+        if variant is None and effort is not None:
             variant = {"raw": token, "kind": "efforts"}
 
             if effort.group("index"):
@@ -2410,6 +2502,125 @@ def is_untrusted_spell_alias_atom(record: EventDecompositionRecord, atom: Lexica
     )
 
 
+def fill_champion_attack_event(record: EventDecompositionRecord) -> bool:
+    """把英雄音频中的强攻击词尾归一为独立攻击语义。
+
+    ``BasicAttack`` / ``CritAttack`` 以及明确的 ``RangedAttack`` /
+    ``MeleeAttack`` 是攻击动作，不因英雄被动或技能会强化普攻就升级为技能。
+    词尾前的召唤物、形态或效果名保留为工程上下文，交给 reference 层补充
+    ``related_spell_key``，但不会覆盖 ``attack_kind``。
+    """
+
+    if record.owner.kind == "map_or_system":
+        return False
+
+    matched_atom: LexicalAtom | None = None
+    matched_index: int | None = None
+    match: re.Match[str] | None = None
+    for index, atom in enumerate(record.lexical_atoms):
+        candidate = ATTACK_CUE_PATTERN.search(atom.raw)
+        if candidate is not None:
+            matched_atom = atom
+            matched_index = index
+            match = candidate
+            break
+
+    if matched_atom is None or matched_index is None or match is None:
+        return False
+
+    attack_token = match.group("attack").lower()
+    attack_kind = "crit_attack" if attack_token == "critattack" else "basic_attack"
+    attack_form = {
+        "rangedattack": "ranged",
+        "meleeattack": "melee",
+    }.get(attack_token)
+    variant_text = match.group("variant")
+    component_prefix = matched_atom.raw[: match.start()] or None
+    related_spell_match = re.search(r"(?P<spell_key>[QWERP])$", component_prefix or "")
+    attack_context = component_prefix
+    owner_alias = record.owner.alias
+    if attack_context and owner_alias and attack_context.casefold().startswith(owner_alias.casefold()):
+        attack_context = attack_context[len(owner_alias) :] or None
+    actor = next(
+        (
+            atom.raw
+            for atom in record.lexical_atoms[:matched_index]
+            if attack_context and atom.raw.casefold() == attack_context.casefold()
+        ),
+        None,
+    )
+
+    record.profile = EventProfile(
+        primary_family=attack_kind,
+        semantic_profile=SemanticProfile.SELF_ACTION,
+        requires_context=attack_context is not None,
+        reason="matched strong champion attack cue",
+    )
+    record.semantic_slots = {
+        "trigger_family": attack_kind,
+        "attack_kind": attack_kind,
+        "attack_form": attack_form,
+        "attack_variant": int(variant_text) if variant_text else None,
+        "attack_component_raw": component_prefix,
+        "attack_context": attack_context,
+        "actor": actor,
+        "related_spell_key": related_spell_match.group("spell_key").lower() if related_spell_match else None,
+        "attack_raw": matched_atom.raw,
+        "owner_context": record.owner.to_dict(),
+        "subject_hint": record.owner.alias,
+        "skin_token": record.owner.skin_token,
+        "dimension_token": first_dimension(record),
+        "phase": first_full_phase(record),
+        "cue_path": [atom.raw for atom in record.lexical_atoms],
+        "asset_kind": record.shell.asset_kind,
+    }
+    record.confidence = DecompositionConfidence.HIGH
+    return True
+
+
+def fill_champion_execute_action_event(record: EventDecompositionRecord) -> bool:
+    """把 owner 紧邻的 ``Execute`` 识别为处决动作而非 E 技能。
+
+    ``RenektonExecute`` 这类内部动作名的首字母 E 只是英文单词边界；没有
+    reference spell id 时不得据此生成技能槽位。精确的 ``PreExecute``、
+    ``SuperExecute`` 或 ``UltExecute`` 保留给 reference 规则处理。
+    """
+
+    owner_alias = record.owner.alias
+    if record.owner.kind == "map_or_system" or not owner_alias:
+        return False
+
+    action = OWNER_PREFIXED_NON_SPELL_ACTIONS.get((owner_alias.casefold(), "execute"))
+    if action is None:
+        return False
+
+    expected = f"{owner_alias}Execute".casefold()
+    matched_atom = next((atom for atom in record.lexical_atoms if atom.raw.casefold() == expected), None)
+    if matched_atom is None:
+        return False
+
+    record.profile = EventProfile(
+        primary_family=action,
+        semantic_profile=SemanticProfile.SELF_ACTION,
+        requires_context=False,
+        reason="matched exact owner-prefixed execute action",
+    )
+    record.semantic_slots = {
+        "trigger_family": action,
+        "action": action,
+        "action_raw": matched_atom.raw,
+        "owner_context": record.owner.to_dict(),
+        "subject_hint": owner_alias,
+        "skin_token": record.owner.skin_token,
+        "dimension_token": first_dimension(record),
+        "phase": first_full_phase(record),
+        "cue_path": [atom.raw for atom in record.lexical_atoms],
+        "asset_kind": record.shell.asset_kind,
+    }
+    record.confidence = DecompositionConfidence.MEDIUM
+    return True
+
+
 def fill_sfx_event(record: EventDecompositionRecord, atom: LexicalAtom) -> bool:
     """把剩余 SFX 结构化为效果事件，保留 raw 工程路径。"""
 
@@ -2418,7 +2629,7 @@ def fill_sfx_event(record: EventDecompositionRecord, atom: LexicalAtom) -> bool:
 
     scope = sfx_scope(record)
     effect_head, effect_base = sfx_effect_head(record, atom)
-    phase = first_phase(record)
+    phase = first_full_phase(record)
     spell_hint = owner_prefixed_spell_hint(record, effect_head)
     semantic_profile = (
         SemanticProfile.SPELL_EVENT
@@ -2469,6 +2680,11 @@ def owner_prefixed_spell_hint(record: EventDecompositionRecord, raw: str) -> dic
     residue = raw[len(owner_alias) :]
 
     if not residue:
+        return None
+
+    if residue.lower() in NON_SPELL_PREFIX_WORDS or any(
+        residue.lower().startswith(f"{word}") for word in NON_SPELL_PREFIX_WORDS
+    ):
         return None
 
     passive_match = re.fullmatch(r"Passive(?P<residual>[A-Za-z0-9]*)", residue)
@@ -3178,8 +3394,14 @@ def fill_spell(record: EventDecompositionRecord, atom: LexicalAtom) -> None:
     dimension = first_part_raw(atom, "dimension_token") or first_dimension(record)
     spell_key = first_part_value(atom, "spell_key_token")
     number = first_number(atom)
-    phase = first_part_value(atom, "phase_or_state_token") or first_phase(record)
-    variant_kind = "numbered_spell_variant" if number is not None else None
+    phase = first_part_value(atom, "phase_or_state_token") or first_full_phase(record)
+    numeric_rank = NUMERIC_SPELL_RANK_PATTERN.fullmatch(atom.raw)
+    spell_rank = None
+    if numeric_rank is not None:
+        spell_key = numeric_rank.group("spell_key").lower()
+        spell_rank = int(numeric_rank.group("rank"))
+        number = None
+    variant_kind = "spell_rank" if spell_rank is not None else "numbered_spell_variant" if number is not None else None
 
     record.profile = EventProfile(
         primary_family="spell",
@@ -3191,9 +3413,10 @@ def fill_spell(record: EventDecompositionRecord, atom: LexicalAtom) -> None:
         "trigger_family": "spell",
         "dimension_token": dimension,
         "spell_key": spell_key,
+        "spell_stage": number,
         "spell_variant": number,
         "variant_kind": variant_kind,
-        "spell_rank": None,
+        "spell_rank": spell_rank,
         "phase": phase,
         "line_variant": trailing_line_variant(record, atom),
         "requires_champion_mechanic_context": False,
@@ -3363,8 +3586,6 @@ def fill_interaction_or_action(record: EventDecompositionRecord, atom: LexicalAt
             confidence = DecompositionConfidence.HIGH
         elif record.shell.asset_kind == "sfx":
             slots["sfx_variant"] = residue
-            slots["phase"] = first_phase(record)
-            slots["cue_path"] = [tail.raw for tail in record.lexical_atoms]
             profile = SemanticProfile.SELF_ACTION
             confidence = DecompositionConfidence.MEDIUM
         else:
@@ -3380,6 +3601,9 @@ def fill_interaction_or_action(record: EventDecompositionRecord, atom: LexicalAt
         slots["qualifier"] = (residue or "general").lower()
         profile = SemanticProfile.SELF_ACTION
         confidence = DecompositionConfidence.HIGH
+
+    if profile is SemanticProfile.SELF_ACTION:
+        add_self_action_context(record, atom, slots)
 
     record.profile = EventProfile(
         primary_family=trigger_family,
@@ -3406,11 +3630,17 @@ def fill_simple_action(record: EventDecompositionRecord, atom: LexicalAtom, trig
         requires_context=False,
         reason=f"matched {trigger} trigger",
     )
-    record.semantic_slots = {
+    slots: dict[str, object] = {
         "trigger_family": trigger_family,
         "dimension_token": first_part_raw(atom, "dimension_token"),
         "qualifier": qualifier,
     }
+    add_self_action_context(record, atom, slots)
+    if record.shell.asset_kind == "sfx":
+        if trigger_family in {"basic_attack", "crit_attack"}:
+            slots["attack_kind"] = trigger_family
+            slots["attack_variant"] = first_number(atom)
+    record.semantic_slots = slots
     record.confidence = DecompositionConfidence.HIGH
 
 
@@ -4023,6 +4253,7 @@ def phase_alias_from_atom(atom: LexicalAtom) -> str | None:
         "buffcast": "buff_cast",
         "cast": "cast",
         "hit": "hit",
+        "onhit": "hit",
         "missilelaunch": "missile_launch",
         "onmissilelaunch": "missile_launch",
         "oml": "missile_launch",

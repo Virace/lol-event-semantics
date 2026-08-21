@@ -1,10 +1,6 @@
-# BasicAttack/CritAttack 类通用关键词允许推断为英雄技能的白名单。
-# 只作用于 match_source=description_keywords 且关键词命中全部为普攻类通用词
-# (basic/attack/attacks/crit/crits，见 GENERIC_ATTACK_KEYWORDS) 的弱匹配；未列入的英雄槽位会丢弃该候选，
-# 事件回落 basic_attack / crit_attack 家族展示。
-# 裁决标准：技能按时间/冷却周期强化普攻本体，或常驻改写每次普攻的判定；
-# 计数触发(每第N次)、施法后触发、主动开启、目标标记/位置条件类不入选。
-# note 溯源均引用 reference/champions/<英雄>.yaml 的 zh_CN 描述快照。
+# owner + 单字母技能槽 + residual 的人工证据。
+# BasicAttack/CritAttack 永远先归攻击动作；技能关联写入 related_spell_key，
+# 不在此文件提供把通用攻击升级成技能的开关。
 schema_version: 1
 trusted_single_key_residuals:
   Darius:
@@ -131,25 +127,3 @@ trusted_single_key_residuals:
         note: reference/champions/Zyra.yaml 明确 ZyraQ；植物 owner 下 ZyraQPlantMissile cue 稳定属于 Q 植物投射段。
       plantmissileonspawn:
         note: reference/champions/Zyra.yaml 明确 ZyraQ；植物 owner 下 ZyraQPlantMissileOnSpawn cue 稳定属于 Q 植物生成段。
-attack_modifier_spells:
-  Aatrox:
-    p:
-      note: 被动「赐死剑气」：“每过一段时间，亚托克斯的下次普攻会造成额外魔法伤害，并治疗亚托克斯”；时间驱动的周期性普攻强化。
-  Corki:
-    p:
-      note: 被动「海克斯科技军备」：“库奇普通攻击的一部分伤害会转化为真实伤害”；常驻改写每次普攻的伤害构成。
-  Galio:
-    p:
-      note: 被动「巨像重击」：“每过若干秒，加里奥的下次普攻就能在小范围内造成额外魔法伤害”；时间驱动的周期性普攻强化。
-  Kassadin:
-    w:
-      note: W「虚空之刃」：“被动：卡萨丁的普通攻击会造成额外魔法伤害”；常驻附着在每次普攻上的技能被动。
-  Maokai:
-    p:
-      note: 被动「吸元秘术」：“茂凯的普通攻击也会治疗自身并造成额外伤害，此效果拥有一个中等的冷却时间”；冷却驱动的周期性普攻强化。
-  Nocturne:
-    p:
-      note: 被动「暗影之刃」：“每过数秒，魔腾的下次攻击就会对附近敌人造成额外物理伤害，并治疗自己”；时间驱动的周期性普攻强化。
-  Ziggs:
-    p:
-      note: 被动「一触即发」：“每过一段时间，吉格斯的下次普通攻击就会造成额外的魔法伤害”；时间驱动的周期性普攻强化。

@@ -1,0 +1,12 @@
+scope: champion
+owner: Brand
+aliases:
+  P:
+    kind: champion_spell_component
+    spell: p
+    component: blaze_mark
+    label: 灼烧标记
+    confidence: high
+    source: manual_contextual_alias
+    note: Brand 跨皮肤 P_detonateN 与 P_firemarkN_loopN
+      全集均属于被动灼烧标记；尾段由组件相位规则保留引爆或循环。

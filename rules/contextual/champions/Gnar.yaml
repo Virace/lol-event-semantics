@@ -1,0 +1,64 @@
+scope: champion
+owner: Gnar
+aliases:
+  GnarBig:
+    kind: champion_form_qualifier
+    component: mega_form
+    label: 巨型形态
+    confidence: high
+    source: manual_contextual_alias
+    note: GnarBig 单独位于动作前时是巨型纳尔形态修饰，后续 Dance/Recall/Taunt 仍是主体动作，不是技能名。
+  GnarBigAttackTower:
+    kind: champion_attack_component
+    component: mega_tower_basic_attack
+    label: 巨型形态对防御塔的普通攻击
+    confidence: high
+    source: manual_contextual_alias
+    note: GnarBigAttackTower 是巨型纳尔对防御塔的基础攻击；巨型形态不把 BasicAttack 改写成 P 技能。
+  GnarBigQMissile:
+    kind: champion_spell_component
+    spell: q
+    component: mega_boulder_missile
+    label: 投掷顽石飞弹
+    confidence: high
+    source: manual_contextual_alias
+    note: GnarBigQMissile 是巨型纳尔 Q 投掷顽石的飞弹阶段。
+  GnarBigQRockGround:
+    kind: champion_spell_component
+    spell: q
+    component: mega_boulder_ground_impact
+    label: 投掷顽石落地
+    confidence: high
+    source: manual_contextual_alias
+    note: GnarBigQRockGround 是巨型纳尔 Q 投掷顽石的落地命中阶段。
+  GnarLittle:
+    kind: champion_form_qualifier
+    component: mini_form
+    label: 小型形态
+    confidence: high
+    source: manual_contextual_alias
+    note: GnarLittle 单独位于动作前时是小型纳尔形态修饰，后续 Recall 仍是主体动作，不是技能名。
+  GnarTransform:
+    kind: champion_spell_component
+    spell: p
+    component: rage_gene_transform
+    label: 狂怒基因变身
+    confidence: high
+    source: manual_contextual_alias
+    note: GnarTransform 是被动技能狂怒基因触发的巨型纳尔变身，不是 R 技能 GNAR!/呐啊！。
+  GnarTransformBack:
+    kind: champion_spell_component
+    spell: p
+    component: rage_gene_transform_back
+    label: 狂怒基因变回小型形态
+    confidence: high
+    source: manual_contextual_alias
+    note: GnarTransformBack 是被动技能狂怒基因从巨型纳尔变回小型纳尔的阶段。
+  GnarTransformSoon:
+    kind: champion_spell_component
+    spell: p
+    component: rage_gene_transform_soon
+    label: 狂怒基因即将变身
+    confidence: high
+    source: manual_contextual_alias
+    note: GnarTransformSoon 是被动技能狂怒基因的变身预警阶段。

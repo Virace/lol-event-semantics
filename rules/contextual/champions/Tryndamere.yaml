@@ -4,8 +4,9 @@ aliases:
   BloodlustParticle:
     kind: champion_spell_component
     spell: q
-    component: bloodlust_particle
-    label: 嗜血杀戮粒子
+    component: bloodlust_effect
+    label: 嗜血杀戮效果
     confidence: high
     source: manual_contextual_alias
-    note: BloodlustParticle 在 Tryndamere SFX 中对应 Q 技能 Bloodlust 的状态粒子启动/结束。
+    note: BloodlustParticle 是 Q 技能 Bloodlust 的内部效果层；Particle 仅保留在
+      raw/provenance，不进入用户文案。

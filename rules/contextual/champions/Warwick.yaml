@@ -1,0 +1,35 @@
+scope: champion
+owner: Warwick
+aliases:
+  Rmiss:
+    kind: champion_spell_component
+    spell: r
+    component: infinite_duress_miss
+    label: 无尽束缚落空
+    confidence: high
+    source: manual_contextual_alias
+    note: Rmiss 跨基础与多套皮肤稳定表示 R 无尽束缚落空。
+  W:
+    kind: champion_spell_component
+    spell: w
+    component: blood_hunt
+    label: 鲜血追猎
+    confidence: high
+    source: manual_contextual_alias
+    note: Warwick 皮肤 SFX 的独立 W_warwick/W_enemy 只出现在鲜血追猎上下文，按 W 组件处理。
+  Wdangerends:
+    kind: champion_spell_component
+    spell: w
+    component: blood_hunt_danger_end
+    label: 鲜血追猎危险感知结束
+    confidence: high
+    source: manual_contextual_alias
+    note: Wdangerends 与 Wdangerstarts 成对，表示 W 鲜血追猎危险感知结束。
+  Wdangerstarts:
+    kind: champion_spell_component
+    spell: w
+    component: blood_hunt_danger_start
+    label: 鲜血追猎危险感知开始
+    confidence: high
+    source: manual_contextual_alias
+    note: Wdangerstarts 跨皮肤区分 warwick/enemy 尾段，表示 W 鲜血追猎危险感知开始。

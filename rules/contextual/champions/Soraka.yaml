@@ -2,16 +2,14 @@ scope: champion
 owner: Soraka
 aliases:
   OdinRecall:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_action_component
     component: odin_recall
     label: 水晶之痕回城
     confidence: medium
     source: manual_contextual_alias
     note: OdinRecall 在 ClericSoraka 事件中对应水晶之痕/Odin 地图旧回城表现。
   OdinRecallImproved:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_action_component
     component: odin_recall_improved
     label: 水晶之痕强化回城
     confidence: medium

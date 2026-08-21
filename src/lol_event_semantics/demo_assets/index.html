@@ -34,6 +34,11 @@
           <div><dt>未归属</dt><dd id="unassignedCount">—</dd></div>
         </dl>
 
+        <div class="view-switch" aria-label="浏览视图">
+          <button class="view-tab" id="championViewButton" type="button" aria-pressed="true">英雄浏览</button>
+          <button class="view-tab" id="reviewViewButton" type="button" aria-pressed="false">Review 队列</button>
+        </div>
+
         <div class="sidebar-heading">
           <h2>英雄</h2>
           <span id="championResultCount">—</span>
@@ -48,7 +53,8 @@
 
       <main class="main-content" id="mainContent" tabindex="-1">
         <div class="loading-banner" id="loadingBanner" role="status">正在读取演示数据…</div>
-        <section class="champion-header" aria-labelledby="championName">
+        <div id="championView">
+          <section class="champion-header" aria-labelledby="championName">
           <img class="champion-avatar" id="championPortrait" alt="" width="72" height="72">
           <div class="champion-identity">
             <p class="eyebrow" id="championAlias" translate="no">—</p>
@@ -61,9 +67,9 @@
             <div><dt>皮肤</dt><dd id="championSkinCount">—</dd></div>
             <div><dt>中文覆盖</dt><dd id="championRenderedRatio">—</dd></div>
           </dl>
-        </section>
+          </section>
 
-        <section class="mode-section" aria-labelledby="modeHeading">
+          <section class="mode-section" aria-labelledby="modeHeading">
           <div class="section-heading compact-heading">
             <div>
               <p class="eyebrow">MODE NAMESPACES</p>
@@ -72,9 +78,9 @@
             <p>前缀后接实体；点击卡片可筛选当前英雄事件。</p>
           </div>
           <div class="mode-cards" id="modeCards"></div>
-        </section>
+          </section>
 
-        <section class="media-panel" aria-labelledby="skinHeading">
+          <section class="media-panel" aria-labelledby="skinHeading">
           <figure class="splash-frame">
             <img id="splashImage" alt="" decoding="async">
             <figcaption class="splash-caption">
@@ -91,9 +97,9 @@
             <select id="skinPreviewSelect"></select>
             <p id="imageFallbackNote">若某个炫彩没有独立原画，将回退到基础原画。</p>
           </div>
-        </section>
+          </section>
 
-        <section class="events-section" aria-labelledby="eventsHeading">
+          <section class="events-section" aria-labelledby="eventsHeading">
           <div class="section-heading">
             <div>
               <p class="eyebrow">RAW EVENT → ZH_CN</p>
@@ -156,7 +162,121 @@
               <option value="200">200</option>
             </select>
           </nav>
-        </section>
+          </section>
+        </div>
+
+        <div class="review-view" id="reviewView" hidden>
+          <section class="review-header" aria-labelledby="reviewHeading">
+            <div>
+              <p class="eyebrow">SFX RESIDUAL REVIEW</p>
+              <h2 id="reviewHeading">残差与未归属队列</h2>
+              <p>同一 candidate 的 validator 分层与未归属投影；点击记录可查看原因并复制稳定定位。</p>
+            </div>
+            <dl class="review-stats" aria-label="Review 摘要">
+              <div><dt>残差记录</dt><dd id="reviewResidualCount">—</dd></div>
+              <div><dt>问题</dt><dd id="reviewIssueCount">—</dd></div>
+              <div><dt>未归属</dt><dd id="reviewUnassignedCount">—</dd></div>
+            </dl>
+          </section>
+
+          <section class="review-layer-section" aria-labelledby="reviewLayerHeading">
+            <div class="section-heading compact-heading">
+              <div>
+                <p class="eyebrow">VALIDATION LAYERS</p>
+                <h2 id="reviewLayerHeading">残差分层</h2>
+              </div>
+              <p>层级只来自 validator 合同；未归属队列独立保留，不据此猜测英雄归属。</p>
+            </div>
+            <div class="review-layer-cards" id="reviewLayerCards"></div>
+          </section>
+
+          <section class="review-queue-section" aria-labelledby="reviewQueueHeading">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">REVIEW WORKLIST</p>
+                <h2 id="reviewQueueHeading">待审清单</h2>
+              </div>
+              <p id="reviewResultsSummary">正在读取 Review 数据…</p>
+            </div>
+
+            <form class="review-filters" id="reviewFilters" role="search">
+              <label for="reviewQueue">
+                <span>队列</span>
+                <select id="reviewQueue"></select>
+              </label>
+              <label class="wide-filter" for="reviewSearch">
+                <span>搜索</span>
+                <input id="reviewSearch" type="search" autocomplete="off" placeholder="事件名、中文或 record ID">
+              </label>
+              <label for="reviewLayer">
+                <span>层级</span>
+                <select id="reviewLayer"><option value="all">全部层级</option></select>
+              </label>
+              <label for="reviewCode">
+                <span>问题代码</span>
+                <select id="reviewCode"><option value="all">全部代码</option></select>
+              </label>
+              <label for="reviewFamily">
+                <span>语义族</span>
+                <select id="reviewFamily"><option value="all">全部语义族</option></select>
+              </label>
+              <label for="reviewEntity">
+                <span>实体</span>
+                <select id="reviewEntity"><option value="all">全部实体</option></select>
+              </label>
+              <label for="reviewStatus">
+                <span>状态</span>
+                <select id="reviewStatus"><option value="all">全部状态</option></select>
+              </label>
+              <button class="secondary-button" id="resetReviewFilters" type="button">重置筛选</button>
+            </form>
+
+            <div class="review-workspace">
+              <div>
+                <div class="table-frame" tabindex="0" aria-label="Review 结果，可横向滚动">
+                  <table class="review-table">
+                    <thead>
+                      <tr>
+                        <th scope="col">定位 / 展示</th>
+                        <th scope="col">层级 / 问题</th>
+                        <th scope="col">实体 / 语义族</th>
+                        <th scope="col">状态</th>
+                      </tr>
+                    </thead>
+                    <tbody id="reviewTableBody"></tbody>
+                  </table>
+                  <div class="empty-state" id="reviewEmptyState" hidden>
+                    <strong>没有匹配的 Review 记录</strong>
+                    <span>调整队列或清除层级、代码、实体与状态筛选。</span>
+                  </div>
+                </div>
+
+                <nav class="pagination" aria-label="Review 分页">
+                  <button class="secondary-button" id="reviewPreviousPage" type="button">上一页</button>
+                  <span id="reviewPageStatus">第 — 页</span>
+                  <button class="secondary-button" id="reviewNextPage" type="button">下一页</button>
+                  <label for="reviewPageSize">每页</label>
+                  <select id="reviewPageSize">
+                    <option value="50" selected>50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                  </select>
+                </nav>
+              </div>
+
+              <aside class="review-detail" id="reviewDetail" aria-labelledby="reviewDetailTitle" hidden>
+                <p class="eyebrow">STABLE LOCATOR</p>
+                <h3 id="reviewDetailTitle">记录详情</h3>
+                <code id="reviewDetailLocator" translate="no">—</code>
+                <button class="secondary-button" id="copyReviewLocator" type="button">复制定位</button>
+                <div class="review-detail-labels" id="reviewDetailLabels"></div>
+                <dl class="review-detail-meta" id="reviewDetailMeta"></dl>
+                <h4>原因与证据</h4>
+                <ul class="review-issue-list" id="reviewIssueList"></ul>
+              </aside>
+            </div>
+          </section>
+        </div>
 
         <footer class="legal-footer">
           <p>

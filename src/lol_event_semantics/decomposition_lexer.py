@@ -40,6 +40,13 @@ SHELL_VERB_PATTERN = re.compile(
     rf"^(?P<verb>{'|'.join(SHELL_VERBS)})_(?P<rest>.+_.+)$",
     re.IGNORECASE,
 )
+# 少量 Wwise 导出名在标准壳前带双下划线填充（例如
+# ``__Stop_sfx_Bard_BardR_mis``）。只在填充后紧跟已知壳动词时剥离，
+# 不影响 ``_RESET_ALL_FX`` 等真实以下划线开头的技术事件。
+PADDED_SHELL_PREFIX_PATTERN = re.compile(
+    rf"^_{{2,}}(?=(?:{'|'.join(SHELL_VERBS)})_)",
+    re.IGNORECASE,
+)
 # 控制类动词的第二段只允许已知资产段或 Wwise 控制组段；
 # Switch_Rakan_*、SetState_EkkoSkin19_* 的第二段属于 body（owner），不能被壳吞掉。
 # Play/Stop/Mute 保留历史通配剥离：下游 profile/reference 语义
@@ -49,6 +56,12 @@ SHELL_CONTROL_GROUPS = {"switch", "state", "champ", "event", "rtpc", "item", "np
 SHELL_WILDCARD_ASSET_VERBS = {"play", "stop", "mute"}
 OWNER_TOKEN_PATTERN = re.compile(r"^(?P<alias>[A-Za-z][A-Za-z0-9]*?)(?P<skin>Skin[0-9]+)?$", re.IGNORECASE)
 BARE_SKIN_OWNER_PATTERN = re.compile(r"^Skin([0-9]+)$", re.IGNORECASE)
+INLINE_OWNER_CUE_PATTERN = re.compile(
+    r"^(?P<owner>[A-Za-z][A-Za-z0-9]*?Skin[0-9]+)"
+    r"(?P<cue>(?:[QWERP](?:[A-Z][A-Za-z0-9]*)?)|"
+    r"(?:(?:Death|Recall|Dance|Joke|Taunt|Laugh|Idle|Respawn|Homeguard)(?:[0-9]+D?)?))$",
+    re.IGNORECASE,
+)
 # 刻意只收 QWERP 五个大写单键：raw 语料中仅 Switch_VO_E_* 出现此类 owner，
 # 扩收其他单字母前需先审语料，避免把未知单字母 owner 误判为技能键。
 SPELL_KEY_OWNER_TOKENS = {"Q", "W", "E", "R", "P"}
@@ -106,7 +119,8 @@ def decompose_event_name(
 def parse_shell(raw_event_name: str) -> EventShell:
     """解析 Play_vo_* 这类外壳；壳动词与资产段匹配大小写不敏感。"""
 
-    verb_match = SHELL_VERB_PATTERN.match(raw_event_name)
+    shell_source = PADDED_SHELL_PREFIX_PATTERN.sub("", raw_event_name, count=1)
+    verb_match = SHELL_VERB_PATTERN.match(shell_source)
 
     if verb_match is not None:
         verb = verb_match.group("verb").lower()
@@ -119,7 +133,7 @@ def parse_shell(raw_event_name: str) -> EventShell:
 
         return EventShell(verb=verb, body=rest)
 
-    implicit_asset_match = re.match(r"^(vo|sfx|mus)_(.+)$", raw_event_name, re.IGNORECASE)
+    implicit_asset_match = re.match(r"^(vo|sfx|mus)_(.+)$", shell_source, re.IGNORECASE)
 
     if implicit_asset_match is not None:
         return EventShell(
@@ -158,7 +172,12 @@ def split_owner_and_chunks(body: str) -> tuple[str, list[str]]:
     if not parts:
         return "", []
 
-    return merge_split_owner_skin(parts[0], parts[1:])
+    owner_token, chunks = merge_split_owner_skin(parts[0], parts[1:])
+    inline_cue = INLINE_OWNER_CUE_PATTERN.fullmatch(owner_token)
+    if inline_cue is not None:
+        owner_token = inline_cue.group("owner")
+        chunks.insert(0, inline_cue.group("cue"))
+    return owner_token, chunks
 
 
 def merge_split_owner_skin(owner_token: str, chunks: list[str]) -> tuple[str, list[str]]:

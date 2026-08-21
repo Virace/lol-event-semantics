@@ -9,3 +9,14 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: Mark 在 Mel 事件中对应被动/技能标记状态。
+  MelExecute:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: execute
+    label: 处决
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      champion: 英雄
+      minion: 小兵
+    note: MelExecute_champion/minion 是处决对象变体；未凭内部名臆测具体技能槽位，对象语义必须保留。

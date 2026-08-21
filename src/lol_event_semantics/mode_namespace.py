@@ -8,17 +8,30 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True, slots=True)
 class ModeNamespace:
-    """模式前缀及其面向展示的语义。"""
+    """事件前缀命名空间及其面向展示的语义。
+
+    历史类名为兼容现有调用保留；``kind`` 明确区分游戏模式与玩法机制，
+    防止 OdysseyAugments 之类机制前缀被当成英雄或模式实体。
+    """
 
     prefix: str
     key: str
     label: str
+    kind: str = "mode"
+    actor_role: str | None = None
 
 
 MODE_NAMESPACES = (
-    ModeNamespace(prefix="Jade", key="jade", label="经典模式"),
-    ModeNamespace(prefix="Ruby", key="ruby", label="末日人机"),
-    ModeNamespace(prefix="Strawberry", key="strawberry", label="PVE 模式"),
+    ModeNamespace(prefix="Jade", key="jade", label="经典模式", actor_role="champion"),
+    ModeNamespace(prefix="Ruby", key="ruby", label="末日人机", actor_role="apc"),
+    ModeNamespace(prefix="Strawberry", key="strawberry", label="PVE 模式", actor_role="boss"),
+    ModeNamespace(
+        prefix="OdysseyAugments",
+        key="odyssey_augments",
+        label="奥德赛增幅芯片",
+        kind="mechanism",
+        actor_role="augmented_champion",
+    ),
 )
 
 _MODE_NAMESPACES_BY_TOKEN = {

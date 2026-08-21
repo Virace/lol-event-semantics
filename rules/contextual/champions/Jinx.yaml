@@ -2,10 +2,32 @@ scope: champion
 owner: Jinx
 aliases:
   ItemHurricaneJinxAttack:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: hurricane_attack
     label: 飓风普攻
     confidence: medium
     source: manual_contextual_alias
     note: ItemHurricaneJinxAttack 在 Jinx 事件中对应卢安娜飓风触发的普攻音效。
+  exalted:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: exalted_form
+    label: 超凡形态
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      spawnin: 登场
+    note: JinxSkin60 的 exalted_spawnin 是皮肤超凡形态登场音效。
+  slotmachine:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: slot_machine
+    label: 皮肤老虎机
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      chemtech: 炼金科技
+      anomaly: 异常
+      hextech: 海克斯科技
+    note: JinxSkin60 slotmachine 是皮肤老虎机表现；炼金科技、异常与海克斯科技结果必须保留，buffactivate 只是音频
+      cue 生命周期。

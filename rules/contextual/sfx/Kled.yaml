@@ -1,0 +1,17 @@
+scope: sfx
+owner: Kled
+aliases:
+  RunMad:
+    kind: generic_sfx_effect
+    component: run_mad
+    label: 狂奔
+    confidence: high
+    source: manual_sfx_alias
+    note: RunMad 在 KledRider 跨皮肤 SFX 中表示骑乘狂奔音效，不属于 R 技能。
+  movement:
+    kind: generic_sfx_effect
+    component: mounted_movement
+    label: 坐骑移动
+    confidence: high
+    source: manual_sfx_alias
+    note: movement 在 Kled/KledRider 跨皮肤资源中与 saddle/leather 等材质尾段连用，表示坐骑移动音效。

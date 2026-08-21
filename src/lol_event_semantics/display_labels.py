@@ -34,6 +34,7 @@ class DisplayLabels:
     Attributes:
         phase: phase 规范键到 ``(zh_CN, en_US)`` 展示词的映射。
         action: action 原值（小写）到 ``(zh_CN, en_US)`` 展示词的映射。
+        attack: attack 规范键到 ``(zh_CN, en_US)`` 展示词的映射。
         ability_component: ability_component 规范键到中文展示词的映射；
             英文由调用方从 key 派生，不在此维护。
         gameplay_event: gameplay_event 原值（小写）到 ``(zh_CN, en_US)`` 展示词的映射。
@@ -59,10 +60,17 @@ class DisplayLabels:
         augments: Arena/ARAM 增益与斗魂竞技场道具 Code 到 ``(zh_CN, en_US)``
             官方名的映射（客户端字符串表命名 key 中英同键对照；宁缺毋错，
             表外 Code 不建 frame）。
+        system_sfx_exact: 已审阅 HUD/Gameplay cue 相对路径到中文效果名的
+            精确映射；路径由 builder 统一小写并移除分组壳及尾部生命周期。
+        system_sfx_context: 系统音效 owner/mode 工程名到用户可见中文上下文；
+            表外 owner 合法缺席，不把工程名带进中文。
+        system_sfx_item_action: ``装备 ID/动作词干`` 到双语动作标签的精确映射；
+            只承接用户审阅过的组合，不把某个装备的动作泛化到其他数字 owner。
     """
 
     phase: Mapping[str, tuple[str, str]] = field(default_factory=dict)
     action: Mapping[str, tuple[str, str]] = field(default_factory=dict)
+    attack: Mapping[str, tuple[str, str]] = field(default_factory=dict)
     ability_component: Mapping[str, str] = field(default_factory=dict)
     gameplay_event: Mapping[str, tuple[str, str]] = field(default_factory=dict)
     maps: Mapping[int, str] = field(default_factory=dict)
@@ -75,6 +83,9 @@ class DisplayLabels:
     shop_subject: Mapping[str, str] = field(default_factory=dict)
     voice_qualifier: Mapping[str, tuple[str, str]] = field(default_factory=dict)
     augments: Mapping[str, tuple[str, str]] = field(default_factory=dict)
+    system_sfx_exact: Mapping[str, str] = field(default_factory=dict)
+    system_sfx_context: Mapping[str, str] = field(default_factory=dict)
+    system_sfx_item_action: Mapping[str, tuple[str, str]] = field(default_factory=dict)
 
 
 _ACTIVE_DISPLAY_LABELS = ContextVar("active_display_labels", default=None)
@@ -112,9 +123,12 @@ def parse_display_labels(data: Mapping[str, Any]) -> DisplayLabels:
     announcer = announcer if isinstance(announcer, Mapping) else {}
     shop = data.get("shop")
     shop = shop if isinstance(shop, Mapping) else {}
+    system_sfx = data.get("system_sfx")
+    system_sfx = system_sfx if isinstance(system_sfx, Mapping) else {}
     return DisplayLabels(
         phase=_parse_pair_section(data.get("phase")),
         action=_parse_pair_section(data.get("action")),
+        attack=_parse_pair_section(data.get("attack")),
         ability_component=_parse_scalar_section(data.get("ability_component")),
         gameplay_event=_parse_pair_section(data.get("gameplay_event")),
         maps=_parse_map_section(data.get("maps")),
@@ -127,6 +141,9 @@ def parse_display_labels(data: Mapping[str, Any]) -> DisplayLabels:
         shop_subject=_parse_scalar_section(shop.get("subject")),
         voice_qualifier=_parse_pair_section(data.get("voice_qualifier")),
         augments=_parse_pair_section(data.get("augments")),
+        system_sfx_exact=_parse_scalar_section(system_sfx.get("exact")),
+        system_sfx_context=_parse_scalar_section(system_sfx.get("context")),
+        system_sfx_item_action=_parse_pair_section(system_sfx.get("item_action")),
     )
 
 

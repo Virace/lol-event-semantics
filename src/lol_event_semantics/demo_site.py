@@ -7,7 +7,7 @@ import os
 import re
 import shutil
 import tempfile
-from collections import Counter
+from collections import Counter, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -29,7 +29,42 @@ CHAMPION_ALIAS_PATTERN = re.compile(r"[A-Za-z][A-Za-z0-9]*\Z")
 DATA_DRAGON_VERSION_PATTERN = re.compile(r"\d+\.\d+\.\d+\Z")
 SKIN_TOKEN_PATTERN = re.compile(r"Skin0*(\d+)\Z", re.IGNORECASE)
 RAW_SKIN_PATTERN = re.compile(r"Skin0*(\d+)", re.IGNORECASE)
+CHROMA_NAME_PATTERN = re.compile(r"(?P<base>.+?)\s+\([^()]+\)\Z")
 MODE_ENTITY_WRAPPERS = frozenset({"boss", "curse", "enemy", "hud", "npc"})
+SFX_EVENT_PATTERN = re.compile(r"^(?:play|stop|mute|unmute)_(?:sfx|sxf)_", re.IGNORECASE)
+REVIEW_LAYERS: tuple[tuple[str, str, frozenset[str]], ...] = (
+    ("contract_shape", "合同结构", frozenset({"translation_frame_required_role_missing"})),
+    ("coverage", "支持覆盖", frozenset({"translation_missing_for_supported_frame"})),
+    (
+        "semantic_projection",
+        "语义投影",
+        frozenset(
+            {
+                "action_phase_translation_missing",
+                "display_drops_parsed_slot",
+                "sfx_effect_translation_missing",
+                "spell_component_modifier_translation_missing",
+                "spell_phase_translation_missing",
+                "spell_sequence_translation_missing",
+            }
+        ),
+    ),
+    (
+        "review_evidence",
+        "低证据审阅",
+        frozenset(
+            {
+                "low_confidence_output",
+                "low_trust_rule_in_output",
+                "translation_argument_low_confidence",
+                "translation_label_fallback",
+                "unknown_count_in_output",
+                "unknown_entity_output",
+            }
+        ),
+    ),
+)
+REVIEW_CODES = frozenset(code for _key, _label, codes in REVIEW_LAYERS for code in codes)
 
 
 class DemoSiteError(ValueError):
@@ -45,6 +80,7 @@ class DemoBuildSummary:
     champion_count: int
     event_count: int
     unassigned_event_count: int
+    review_record_count: int
 
 
 @dataclass(frozen=True, slots=True)
@@ -73,12 +109,14 @@ class SkinReference:
 def build_demo_site(
     *,
     normalized_root: Path,
+    validation_json: Path,
     reference_root: Path,
     output_root: Path,
 ) -> DemoBuildSummary:
-    """生成可由普通静态 HTTP 服务托管的英雄事件浏览站。"""
+    """生成可由普通静态 HTTP 服务托管的英雄事件与残差审阅站。"""
 
     normalized_root = normalized_root.resolve()
+    validation_json = validation_json.resolve()
     reference_root = reference_root.resolve()
     output_root = output_root.resolve()
     _ensure_replaceable_output(output_root)
@@ -88,6 +126,14 @@ def build_demo_site(
     dataset_id = _required_text(manifest, "dataset_id", "normalized manifest")
     content_digest = _required_text(manifest, "content_digest", "normalized manifest")
     expected_record_count = _required_int(manifest, "record_count", "normalized manifest")
+    validation = _read_json_object(validation_json)
+    _validate_validation_source(
+        normalized_root=normalized_root,
+        validation_json=validation_json,
+        validation=validation,
+        expected_record_count=expected_record_count,
+    )
+    issues_by_raw = _review_issues_by_raw(validation)
     data_dragon_version = _data_dragon_version(reference_manifest)
     base_game_version = str(_mapping(manifest.get("content_identity")).get("base_game_version") or "unknown")
 
@@ -100,11 +146,20 @@ def build_demo_site(
 
     source_record_count = 0
     unassigned_record_count = 0
+    residual_records: list[dict[str, Any]] = []
+    unassigned_records: list[dict[str, Any]] = []
+    matched_issue_raws: set[str] = set()
     for _path, _line_number, row in iter_normalized_rows(normalized_root):
         source_record_count += 1
+        raw = _required_text(row, "raw_event_name", "normalized record")
+        review_issues = issues_by_raw.get(raw, ())
+        if review_issues:
+            residual_records.append(_project_review_record(row, issues=review_issues))
+            matched_issue_raws.add(raw)
         champion_alias = _resolve_record_champion(row, champion_by_key, compact_aliases)
         if champion_alias is None:
             unassigned_record_count += 1
+            unassigned_records.append(_project_review_record(row))
             continue
         events_by_alias[champion_alias].append(_project_event(row))
 
@@ -112,6 +167,13 @@ def build_demo_site(
         raise DemoSiteError(
             f"normalized record count mismatch: manifest={expected_record_count} stream={source_record_count}"
         )
+    missing_issue_raws = sorted(set(issues_by_raw).difference(matched_issue_raws), key=str.casefold)
+    if missing_issue_raws:
+        preview = ", ".join(missing_issue_raws[:3])
+        raise DemoSiteError(f"validation issues do not match normalized records: {preview}")
+
+    residual_records.sort(key=_review_record_sort_key)
+    unassigned_records.sort(key=_review_record_sort_key)
 
     skins_by_alias = _load_skin_references(reference_root / "skins", champions)
     champion_documents: list[dict[str, Any]] = []
@@ -155,15 +217,34 @@ def build_demo_site(
             "champions": len(champions),
         },
         "modes": _mode_summaries(global_mode_counts),
+        "review": {
+            "data_path": "data/review/index.json",
+            "residual_records": len(residual_records),
+            "unassigned_records": len(unassigned_records),
+        },
         "champions": champion_index,
     }
-    _write_site_output(output_root, site_index, champion_documents)
+    review_index = _build_review_index(
+        dataset_id=dataset_id,
+        content_digest=content_digest,
+        residual_records=residual_records,
+        unassigned_records=unassigned_records,
+    )
+    _write_site_output(
+        output_root,
+        site_index,
+        champion_documents,
+        review_index=review_index,
+        residual_records=residual_records,
+        unassigned_records=unassigned_records,
+    )
     return DemoBuildSummary(
         output_root=output_root,
         dataset_id=dataset_id,
         champion_count=len(champions),
         event_count=assigned_event_count,
         unassigned_event_count=unassigned_record_count,
+        review_record_count=len(residual_records),
     )
 
 
@@ -373,6 +454,188 @@ def _entity_candidate_values(value: object) -> tuple[str, ...]:
     return tuple(text for key in ("alias", "raw", "label") if isinstance((text := candidate.get(key)), str) and text)
 
 
+def _validate_validation_source(
+    *,
+    normalized_root: Path,
+    validation_json: Path,
+    validation: Mapping[str, Any],
+    expected_record_count: int,
+) -> None:
+    """验证 normalized 与 validator 报告来自同一个标准 dataset run。"""
+
+    if validation_json.parent.parent != normalized_root.parent:
+        raise DemoSiteError("normalized root and validation report must belong to the same dataset run")
+    summary = _mapping(validation.get("summary"))
+    reported_root = Path(_required_text(summary, "normalized_root", "validation summary"))
+    if reported_root.name != normalized_root.name or reported_root.parent.name != normalized_root.parent.name:
+        raise DemoSiteError("validation report does not describe the same dataset run")
+    record_count = _required_int(summary, "record_count", "validation summary")
+    if record_count != expected_record_count:
+        raise DemoSiteError(
+            f"validation record count mismatch: manifest={expected_record_count} validation={record_count}"
+        )
+    if not isinstance(validation.get("issues"), list):
+        raise DemoSiteError("validation report issues must be an array")
+
+
+def _review_issues_by_raw(validation: Mapping[str, Any]) -> dict[str, tuple[dict[str, str], ...]]:
+    """按 raw event 汇总需要进入 SFX 人工审阅队列的 validator 问题。"""
+
+    grouped: dict[str, list[dict[str, str]]] = defaultdict(list)
+    issues = validation.get("issues")
+    assert isinstance(issues, list)
+    for index, value in enumerate(issues):
+        if not isinstance(value, dict):
+            raise DemoSiteError(f"validation issue {index} must be an object")
+        code = str(value.get("code") or "")
+        raw = str(value.get("raw_event_name") or "")
+        if code not in REVIEW_CODES or SFX_EVENT_PATTERN.match(raw) is None:
+            continue
+        grouped[raw].append(
+            {
+                "code": code,
+                "severity": str(value.get("severity") or "warning"),
+                "message": str(value.get("message") or ""),
+                "path": str(value.get("path") or ""),
+            }
+        )
+    return {
+        raw: tuple(sorted(values, key=lambda issue: (issue["code"], issue["path"], issue["message"])))
+        for raw, values in grouped.items()
+    }
+
+
+def _project_review_record(
+    row: Mapping[str, Any],
+    *,
+    issues: Sequence[Mapping[str, str]] = (),
+) -> dict[str, Any]:
+    """投影审阅所需的最小记录，不复制完整 normalized payload。"""
+
+    raw = _required_text(row, "raw_event_name", "normalized record")
+    record_id = _required_text(row, "record_id", f"normalized record {raw}")
+    entity = _mapping(row.get("entity"))
+    semantic = _mapping(row.get("semantic"))
+    display = _mapping(row.get("display"))
+    translation = _mapping(row.get("translation"))
+    semantic_frame = _mapping(row.get("semantic_frame"))
+    projected_issues = [dict(issue) for issue in issues]
+    return {
+        "record_id": record_id,
+        "raw_event_name": raw,
+        "locator": {"record_id": record_id, "raw_event_name": raw},
+        "asset_kind": str(row.get("asset_kind") or "unknown"),
+        "entity": {
+            "kind": str(entity.get("kind") or "unknown"),
+            "alias": str(entity.get("alias") or "unknown"),
+        },
+        "family": str(semantic.get("primary_family") or "unknown"),
+        "profile": str(semantic.get("profile") or "unknown"),
+        "frame_type": str(translation.get("frame_type") or semantic_frame.get("frame_type") or "missing"),
+        "support_level": str(row.get("support_level") or "experimental"),
+        "review_status": str(row.get("review_status") or "pending"),
+        "render_status": str(row.get("render_status") or "missing"),
+        "zh_cn_short": _optional_text(display.get("zh_cn_short")),
+        "zh_cn_detail": _optional_text(display.get("zh_cn_detail")),
+        "reason_code": "validator_issue" if projected_issues else "no_safe_champion_assignment",
+        "layers": _issue_layers(projected_issues),
+        "issues": projected_issues,
+    }
+
+
+def _issue_layers(issues: Sequence[Mapping[str, str]]) -> list[str]:
+    """按固定展示顺序返回一条记录所属的 Review layer。"""
+
+    issue_codes = {str(issue.get("code") or "") for issue in issues}
+    return [key for key, _label, codes in REVIEW_LAYERS if issue_codes.intersection(codes)]
+
+
+def _review_record_sort_key(record: Mapping[str, Any]) -> tuple[str, str]:
+    """返回 Review 分片的确定性排序键。"""
+
+    return (str(record.get("raw_event_name") or "").casefold(), str(record.get("record_id") or ""))
+
+
+def _build_review_index(
+    *,
+    dataset_id: str,
+    content_digest: str,
+    residual_records: Sequence[Mapping[str, Any]],
+    unassigned_records: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """构建残差层、过滤 facet 与队列文件的轻量索引。"""
+
+    issue_counts: Counter[str] = Counter()
+    issue_records: Counter[str] = Counter()
+    for record in residual_records:
+        codes = [str(_mapping(issue).get("code") or "") for issue in record.get("issues", [])]
+        issue_counts.update(codes)
+        issue_records.update(set(codes))
+
+    layers = []
+    for key, label, codes in REVIEW_LAYERS:
+        layers.append(
+            {
+                "key": key,
+                "label": label,
+                "issue_count": sum(issue_counts[code] for code in codes),
+                "record_count": sum(key in record.get("layers", []) for record in residual_records),
+            }
+        )
+    combined_records = [*residual_records, *unassigned_records]
+    return {
+        "schema_version": 1,
+        "dataset": {"dataset_id": dataset_id, "content_digest": content_digest},
+        "counts": {
+            "residual_issues": sum(issue_counts.values()),
+            "residual_records": len(residual_records),
+            "unassigned_records": len(unassigned_records),
+        },
+        "queues": [
+            {
+                "key": "residual",
+                "label": "SFX 残差",
+                "record_count": len(residual_records),
+                "data_path": "data/review/residuals.json",
+            },
+            {
+                "key": "unassigned",
+                "label": "未归属记录",
+                "record_count": len(unassigned_records),
+                "data_path": "data/review/unassigned.json",
+            },
+        ],
+        "layers": layers,
+        "codes": [
+            {"key": code, "issue_count": count, "record_count": issue_records[code]}
+            for code, count in sorted(issue_counts.items(), key=lambda item: (-item[1], item[0]))
+        ],
+        "families": _facet_counts(combined_records, "family"),
+        "entities": _entity_counts(combined_records),
+        "statuses": _facet_counts(combined_records, "review_status"),
+    }
+
+
+def _facet_counts(records: Sequence[Mapping[str, Any]], key: str) -> list[dict[str, Any]]:
+    """汇总一个平坦 Review facet 的记录数。"""
+
+    counts = Counter(str(record.get(key) or "unknown") for record in records)
+    return [
+        {"key": value, "record_count": count}
+        for value, count in sorted(counts.items(), key=lambda item: (-item[1], item[0].casefold()))
+    ]
+
+
+def _entity_counts(records: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    """汇总 Review 记录的实体 alias。"""
+
+    counts = Counter(str(_mapping(record.get("entity")).get("alias") or "unknown") for record in records)
+    return [
+        {"key": value, "record_count": count}
+        for value, count in sorted(counts.items(), key=lambda item: (-item[1], item[0].casefold()))
+    ]
+
+
 def _project_event(row: Mapping[str, Any]) -> dict[str, Any]:
     """把 normalized 记录投影为演示站事件。"""
 
@@ -453,21 +716,38 @@ def _build_skin_payload(
             "en_name": champion.en_name,
             "zh_name": f"基础造型 · {champion.zh_name}",
             "splash_url": base_splash,
+            "splash_skin_number": 0,
             "fallback_url": base_splash,
         }
     ]
+    numbers_by_name: dict[str, list[int]] = {}
     for skin in skins:
+        numbers_by_name.setdefault(_skin_name_key(skin.en_name), []).append(skin.number)
+    for skin in skins:
+        splash_number = skin.number
+        match = CHROMA_NAME_PATTERN.fullmatch(skin.en_name)
+        if match is not None:
+            parent_numbers = numbers_by_name.get(_skin_name_key(match.group("base")), [])
+            if len(parent_numbers) == 1:
+                splash_number = parent_numbers[0]
         payload.append(
             {
                 "number": skin.number,
                 "token": skin.token,
                 "en_name": skin.en_name,
                 "zh_name": skin.zh_name,
-                "splash_url": _splash_url(champion.alias, skin.number),
+                "splash_url": _splash_url(champion.alias, splash_number),
+                "splash_skin_number": splash_number,
                 "fallback_url": base_splash,
             }
         )
     return payload
+
+
+def _skin_name_key(value: str) -> str:
+    """折叠皮肤名空白与大小写，用于色彩变体匹配主皮肤。"""
+
+    return " ".join(value.split()).casefold()
 
 
 def _build_champion_documents(
@@ -548,6 +828,10 @@ def _write_site_output(
     output_root: Path,
     site_index: Mapping[str, Any],
     champion_documents: Sequence[Mapping[str, Any]],
+    *,
+    review_index: Mapping[str, Any],
+    residual_records: Sequence[Mapping[str, Any]],
+    unassigned_records: Sequence[Mapping[str, Any]],
 ) -> None:
     """在临时目录完成站点写入后原子替换输出。"""
 
@@ -563,13 +847,28 @@ def _write_site_output(
 
         data_root = staging_root / "data"
         champion_root = data_root / "champions"
+        review_root = data_root / "review"
         champion_root.mkdir(parents=True)
+        review_root.mkdir(parents=True)
         _write_json(data_root / "index.json", site_index, pretty=True)
         for document in champion_documents:
             alias = _required_text(_mapping(document.get("champion")), "alias", "champion document")
             if CHAMPION_ALIAS_PATTERN.fullmatch(alias) is None:
                 raise DemoSiteError(f"unsafe champion output alias: {alias!r}")
             _write_json(champion_root / f"{alias}.json", document, pretty=False)
+        dataset = _mapping(review_index.get("dataset"))
+        dataset_id = _required_text(dataset, "dataset_id", "review index dataset")
+        _write_json(review_root / "index.json", review_index, pretty=True)
+        _write_json(
+            review_root / "residuals.json",
+            {"schema_version": 1, "dataset_id": dataset_id, "records": residual_records},
+            pretty=False,
+        )
+        _write_json(
+            review_root / "unassigned.json",
+            {"schema_version": 1, "dataset_id": dataset_id, "records": unassigned_records},
+            pretty=False,
+        )
         (staging_root / GENERATED_MARKER_NAME).write_text(GENERATED_MARKER_VALUE, encoding="utf-8")
 
         if output_root.exists():

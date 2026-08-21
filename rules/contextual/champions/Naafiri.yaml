@@ -1,9 +1,18 @@
 scope: champion
 owner: Naafiri
 aliases:
-  PackmateBasicAttack:
+  Packmate:
     kind: champion_spell_component
     spell: p
+    asset_kind: sfx
+    component: we_are_more_packmate
+    label: 狂烈种群狗群伙伴
+    confidence: high
+    source: manual_contextual_alias
+    note: Packmate 表示被动技能狂烈种群的狗群伙伴。
+  PackmateBasicAttack:
+    kind: champion_attack_component
+    related_spell: p
     component: packmate_basic_attack
     label: 狗群伙伴普通攻击
     confidence: high
@@ -17,3 +26,12 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: PackmatePounce 在 Naafiri 事件中对应狼群/伴犬扑击表现。
+  PackmateR:
+    kind: champion_spell_component
+    spell: r
+    asset_kind: sfx
+    component: hounds_pursuit_packmate_empower
+    label: 暗裔血统狗群强化
+    confidence: high
+    source: manual_contextual_alias
+    note: PackmateR 表示 R 暗裔血统期间的狗群伙伴强化，不是 P 槽位。

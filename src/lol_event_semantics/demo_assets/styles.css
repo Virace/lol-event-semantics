@@ -221,6 +221,29 @@ select {
   font-weight: 700;
 }
 
+.view-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.view-tab {
+  min-height: 38px;
+  padding: 7px 9px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xs);
+  background: var(--surface);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.view-tab[aria-pressed="true"] {
+  border-color: var(--jade);
+  background: var(--jade-pale);
+  color: var(--jade-dark);
+}
+
 .sidebar-heading {
   display: flex;
   align-items: center;
@@ -813,6 +836,271 @@ tbody tr:hover {
   margin: 0;
 }
 
+.review-view[hidden],
+#championView[hidden] {
+  display: none;
+}
+
+.review-header {
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) minmax(380px, auto);
+  align-items: end;
+  gap: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.review-header h2 {
+  margin: 0;
+  font-family: Georgia, "Songti SC", "STSong", serif;
+  font-size: clamp(27px, 3vw, 40px);
+  line-height: 1.05;
+}
+
+.review-header > div > p:last-child {
+  max-width: 720px;
+  margin: 9px 0 0;
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+
+.review-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(92px, 1fr));
+  margin: 0;
+  border-top: 1px solid var(--border);
+  border-left: 1px solid var(--border);
+}
+
+.review-stats div {
+  display: grid;
+  gap: 5px;
+  padding: 10px 13px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.review-stats dt {
+  color: var(--ink-soft);
+  font-size: 11px;
+}
+
+.review-stats dd {
+  margin: 0;
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 750;
+}
+
+.review-layer-section,
+.review-queue-section {
+  margin-top: 24px;
+}
+
+.review-layer-cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.review-layer-card {
+  min-height: 76px;
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--border-strong);
+  border-radius: var(--radius-xs);
+  background: var(--surface);
+  text-align: left;
+}
+
+.review-layer-card:hover,
+.review-layer-card[aria-pressed="true"] {
+  border-color: var(--jade);
+  background: var(--jade-pale);
+}
+
+.review-layer-card[data-layer="coverage"] {
+  border-top-color: var(--gold);
+}
+
+.review-layer-card[data-layer="semantic_projection"] {
+  border-top-color: var(--blue);
+}
+
+.review-layer-card[data-layer="review_evidence"] {
+  border-top-color: var(--ruby);
+}
+
+.review-layer-card strong,
+.review-layer-card span {
+  display: block;
+}
+
+.review-layer-card span {
+  margin-top: 5px;
+  color: var(--ink-soft);
+  font-size: 11px;
+}
+
+.review-filters {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.8fr) minmax(240px, 1.8fr) repeat(5, minmax(130px, 1fr)) auto;
+  align-items: end;
+  gap: 9px;
+  margin-bottom: 14px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  background: var(--surface-muted);
+}
+
+.review-filters label {
+  min-width: 0;
+}
+
+.review-filters label > span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.review-filters input,
+.review-filters select {
+  width: 100%;
+}
+
+.review-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 14px;
+}
+
+.review-table {
+  min-width: 940px;
+}
+
+.review-table th:first-child {
+  width: 43%;
+}
+
+.review-table th:nth-child(2) {
+  width: 24%;
+}
+
+.review-table th:nth-child(3) {
+  width: 18%;
+}
+
+.review-table th:nth-child(4) {
+  width: 15%;
+}
+
+.review-table tr[data-selected="true"] {
+  background: var(--jade-pale);
+}
+
+.review-table .badge + .badge,
+.review-table .badge + .event-detail-label {
+  margin-left: 4px;
+}
+
+.review-code-line {
+  display: block;
+  margin-top: 6px;
+  color: var(--ink-soft);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 10px;
+  overflow-wrap: anywhere;
+}
+
+.review-detail {
+  padding: 16px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+}
+
+.review-detail[hidden] {
+  display: none;
+}
+
+.review-detail h3 {
+  margin: 0 0 10px;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 14px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.review-detail > code {
+  display: block;
+  margin-bottom: 10px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface-muted);
+  font-size: 10px;
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+.review-detail-labels {
+  display: grid;
+  gap: 3px;
+  margin: 14px 0;
+  padding: 11px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.review-detail-labels span {
+  color: var(--ink-soft);
+  font-size: 11px;
+}
+
+.review-detail-meta {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 6px 10px;
+  margin: 0;
+  font-size: 11px;
+}
+
+.review-detail-meta dt {
+  color: var(--ink-faint);
+}
+
+.review-detail-meta dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.review-detail h4 {
+  margin: 16px 0 8px;
+  font-size: 12px;
+}
+
+.review-issue-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.review-issue-list li {
+  font-size: 11px;
+}
+
+.review-issue-list code,
+.review-issue-list span {
+  display: block;
+}
+
+.review-issue-list span {
+  margin-top: 2px;
+  color: var(--ink-soft);
+}
+
 .sr-status {
   position: fixed;
   width: 1px;
@@ -845,6 +1133,19 @@ tbody tr:hover {
   .wide-filter {
     grid-column: span 2;
   }
+
+  .review-header {
+    grid-template-columns: 1fr;
+  }
+
+  .review-layer-cards {
+    grid-template-columns: repeat(2, minmax(160px, 1fr));
+  }
+
+  .review-filters {
+    grid-template-columns: repeat(3, minmax(150px, 1fr));
+  }
+
 }
 
 @media (max-width: 900px) {
@@ -999,6 +1300,12 @@ tbody tr:hover {
   .filters {
     grid-template-columns: 1fr;
     padding: 12px;
+  }
+
+  .review-stats,
+  .review-layer-cards,
+  .review-filters {
+    grid-template-columns: 1fr;
   }
 
   .wide-filter {

@@ -9,6 +9,16 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: E 在 SkarnerSkin03 事件中按英雄上下文解析为 E 技能状态音效。
+  Emote:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: rock_emote
+    label: 表情动作
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      rock: 岩石
+    note: Skarner 的 Emote3D_rock 跨基础与多套皮肤稳定表示岩石表情动作音效。
   Q:
     kind: champion_spell_component
     spell: q
@@ -26,29 +36,35 @@ aliases:
     source: manual_contextual_alias
     note: QRockThrow 在 Skarner 事件中对应 Q 技能巨石投掷。
   SkarnerBasicAttack:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: basic_attack
     label: 普攻
     confidence: medium
     source: manual_contextual_alias
     note: SkarnerBasicAttack 在 Skarner 事件中对应基础攻击音效。
   SkarnerBasicAttack2:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: basic_attack_variant_2
     label: 普攻变体 2
     confidence: medium
     source: manual_contextual_alias
     note: SkarnerBasicAttack2 在 Skarner 事件中对应基础攻击第二套音效变体。
   SkarnerCritAttack:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: crit_attack
     label: 暴击攻击
     confidence: medium
     source: manual_contextual_alias
     note: SkarnerCritAttack 在 Skarner 事件中对应暴击基础攻击音效。
+  SkarnerE:
+    kind: champion_spell_component
+    spell: e
+    asset_kind: sfx
+    component: ixtal_impact_cast
+    label: 以绪塔尔冲击
+    confidence: high
+    source: manual_contextual_alias
+    note: SkarnerE 是斯卡纳 E 以绪塔尔冲击的完整内部名；整个名称可能被 lexer 吞进 owner。
   SkarnerPassiveAttack:
     kind: champion_spell_component
     spell: p
@@ -57,6 +73,15 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: SkarnerPassiveAttack 在 Skarner 事件中对应被动强化攻击表现。
+  SkarnerQ:
+    kind: champion_spell_component
+    spell: q
+    asset_kind: sfx
+    component: uproot_cast
+    label: 撼地 / 擎天
+    confidence: high
+    source: manual_contextual_alias
+    note: SkarnerQ 是斯卡纳 Q 撼地 / 擎天的完整内部名；整个名称可能被 lexer 吞进 owner。
   SkarnerQClawAttack:
     kind: champion_spell_component
     spell: q
@@ -73,17 +98,24 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: SkarnerQRockAttack 在 Skarner 事件中对应 Q 技能举石后的攻击表现。
-  SkarnerTurretAttack:
+  SkarnerQRockThrow:
     kind: champion_spell_component
-    spell: p
+    spell: q
+    asset_kind: sfx
+    component: q_rock_throw
+    label: 撼地 / 擎天·巨石投掷
+    confidence: high
+    source: manual_contextual_alias
+    note: SkarnerQRockThrow 是斯卡纳 Q 举石后的巨石投掷段；RockThrow 必须保留，不能只剩 Q 技能。
+  SkarnerTurretAttack:
+    kind: champion_attack_component
     component: turret_attack
     label: 攻击防御塔
     confidence: medium
     source: manual_contextual_alias
     note: SkarnerTurretAttack 在 Skarner 事件中对应攻击防御塔的基础攻击变体。
   TurretAttack:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: turret_attack
     label: 攻击防御塔
     confidence: medium

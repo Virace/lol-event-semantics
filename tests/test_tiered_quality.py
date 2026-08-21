@@ -180,7 +180,7 @@ class TieredQualityTests(unittest.TestCase):
         self.assertIn("accepted_corpus_failure", summary["stable"]["violation_counts"])
 
     def test_v1_scope_rejects_coordinated_policy_and_corpus_shrink(self) -> None:
-        """candidate 必须命中冻结的 91 patterns / 4,389 records。"""
+        """candidate 必须命中冻结的 91 patterns / 4,127 records。"""
 
         rows, report, catalog, corpus = build_contract([ability_record()])
 

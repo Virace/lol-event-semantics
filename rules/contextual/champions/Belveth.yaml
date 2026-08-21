@@ -1,0 +1,44 @@
+scope: champion
+owner: Belveth
+aliases:
+  Laugh3D:
+    kind: champion_action_component
+    asset_kind: sfx
+    mode: strawberry
+    component: boss_laugh
+    label: 首领大笑音效
+    confidence: high
+    source: manual_contextual_alias
+    note: Strawberry_Boss_Belveth 的 Laugh3D 是首领大笑动作音效。
+  Spikes:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: strawberry
+    component: boss_spikes
+    label: 首领尖刺
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      mega: 巨型变体
+    note: Strawberry_Boss_Belveth 的 Spikes 是首领尖刺机制；mega 变体必须进入中文展示。
+  announcement:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: strawberry
+    component: boss_announcement
+    label: 首领登场播报
+    confidence: high
+    source: manual_contextual_alias
+    note: Strawberry_Gameplay_HUD_Boss_Belveth_announcement 是 PVE
+      首领卑尔维斯的界面登场播报；Gameplay/HUD/Boss 都只是路径角色。
+  fallingdebris:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: strawberry
+    component: falling_debris
+    label: 坠落碎石
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      explode: 爆炸
+    note: Strawberry_Boss_Belveth 的 fallingdebris_explode 是首领坠落碎石爆炸机制。

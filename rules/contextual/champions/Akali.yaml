@@ -1,0 +1,35 @@
+scope: champion
+owner: Akali
+aliases:
+  Ebattack:
+    kind: champion_spell_component
+    spell: e
+    component: shuriken_flip_followup
+    label: 隼舞二段攻击
+    confidence: high
+    source: manual_contextual_alias
+    note: Ebattack 在 Akali SFX 中同时出现 cast 与 hit，表示 E 二段突进攻击。
+  Emis:
+    kind: champion_spell_component
+    spell: e
+    component: shuriken_flip_missile
+    label: 隼舞手里剑
+    confidence: high
+    source: manual_contextual_alias
+    note: Emis 在多套 Akali 皮肤 SFX 中稳定与 cloudhit 连用，对应 E 的手里剑飞弹；E 是技能槽位，不是英文词首猜测。
+  Pweapon:
+    kind: champion_spell_component
+    spell: p
+    component: assassins_mark_weapon
+    label: 潜龙印强化武器
+    confidence: high
+    source: manual_contextual_alias
+    note: Pweapon 的 P 是 Akali 被动槽位，active 尾段表示潜龙印强化武器表现。
+  Whaste:
+    kind: champion_spell_component
+    spell: w
+    component: twilight_shroud_haste
+    label: 霞阵加速
+    confidence: high
+    source: manual_contextual_alias
+    note: Whaste 在多套 Akali 皮肤中稳定对应 W 霞阵的加速状态。

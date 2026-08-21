@@ -26,9 +26,11 @@ from .normalized_translation_model import (
     FRAME_REGISTRY,
     TRANSLATION_SCHEMA_VERSION,
     RenderOptions,
+    is_phase_suppressed_by_playback,
 )
 from .normalized_translation_renderer import render_translation
 from .quality_metrics import is_fallback_label
+from .rules import rule_key
 from .tiered_quality import stable_scope_contract_passes
 
 TECHNICAL_DISPLAY_PATTERNS = (
@@ -52,6 +54,8 @@ SUPPORTED_TRANSLATION_PRIMARY_FAMILIES = {
     "skin_action_state",
     "gameplay_phase_control",
     "champion_status_state",
+    "basic_attack",
+    "crit_attack",
     "attack",
     "taunt",
     "joke",
@@ -67,6 +71,9 @@ SUPPORTED_TRANSLATION_PRIMARY_FAMILIES = {
     "buy_item",
     "recall",
     "respawn",
+    "idle",
+    "homeguard",
+    "winddown",
     "taunt_response",
     "ping",
     "joke_response",
@@ -84,6 +91,7 @@ SUPPORTED_TRANSLATION_PRIMARY_FAMILIES = {
     # 批次5b media_base 动作状态路由（skin_action_state frame 承接；系统 UI 音、
     # 表外动作词与无相位记录不建 frame，warning 上涨属已知接受，同 5a 口径）。
     "media_base",
+    "contextual_action",
 }
 # display 无损性校验：detail 必须体现这三个壳动词的中文语义
 # （unmute 的「取消静音」含「静音」，与 mute 共用同一判据）。
@@ -130,6 +138,24 @@ V2_REQUIRED_OUTPUTS = {
     "examples/",
 }
 V2_EVALUATED_OUTPUTS = {"quality-summary.json"}
+CHAMPION_ATTACK_FAMILIES = frozenset({"basic_attack", "crit_attack"})
+RAW_SKIN_TOKEN_PATTERN = re.compile(r"(?<![A-Za-z0-9])Skin\d+(?![A-Za-z0-9])", re.IGNORECASE)
+NUMERIC_SPELL_RANK_PATTERN = re.compile(
+    r"Spell(?:2D|3D)(?P<spell_key>[QWERP])Rank(?P<rank>\d+)(?:_|$)",
+    re.IGNORECASE,
+)
+COMPONENT_CONTEXT_MODIFIER_PATTERN = re.compile(
+    r"^(?:(?P<qualifier>Empowered)(?P<phase>Start|End)|"
+    r"(?P<context_phase>Detonate|Loop|CloudHit|HitDirect|HitBig|Active|Inactive)(?:[0-9]+)?)$",
+    re.IGNORECASE,
+)
+COMPONENT_CONTEXT_PHASE_ALIASES = {
+    "active": "start",
+    "cloudhit": "hit",
+    "hitbig": "hit",
+    "hitdirect": "hit",
+    "inactive": "end",
+}
 
 
 @dataclass(slots=True)
@@ -499,6 +525,8 @@ def validate_record(
         issues.append(
             warning("translation_missing_for_supported_frame", row_path, "supported frame 缺少 translation。", raw)
         )
+
+    validate_champion_sfx_semantic_contract(row, row_path, issues, raw)
 
     if raw is not None:
         if raw in seen_raw_names:
@@ -1084,6 +1112,9 @@ def validate_display_losslessness(
     3. 交互对象：semantic.slots 的 counterpart / chat_partner 为非空 object，
        且 zh_cn_detail 为纯兜底模板时判丢，判据与 2 相同（英文 alias 与中文
        译名之间同样没有可靠映射可查，不做名字包含类启发式）。
+    4. Tier3：纯技术记录按 display contract 刻意不生成 translation/短文案，
+       强槽位保存在 semantic/debug/provenance，而非用户 detail；因此不进入本
+       用户展示无损门禁。Tier1/2 与独立的语义合同校验不受影响。
 
     一条记录只发一条问题，message 列出全部被丢弃的槽位；交互对象槽位附带
     对象名（alias/label/raw 首个非空值）方便人工排查。severity：counterpart
@@ -1098,6 +1129,9 @@ def validate_display_losslessness(
         issues: 问题收集列表。
         raw: 记录的 raw_event_name。
     """
+
+    if is_tier3_record(row):
+        return
 
     display = row.get("display")
     detail = string_or_none(display.get("zh_cn_detail")) if isinstance(display, dict) else None
@@ -1189,6 +1223,620 @@ def validate_record_quality(
     diagnostics = quality.get("diagnostics")
     if isinstance(diagnostics, list) and diagnostics:
         issues.append(warning("diagnostics_in_output", row_path, "记录仍包含 diagnostics。", raw))
+
+
+def validate_champion_sfx_semantic_contract(
+    row: dict[str, Any],
+    row_path: str,
+    issues: list[NormalizedValidationIssue],
+    raw: str | None,
+) -> None:
+    """校验英雄音频从解析槽到中文展示之间的不可丢失契约。"""
+
+    semantic = row.get("semantic")
+    if not isinstance(semantic, dict):
+        return
+    slots = semantic.get("slots")
+    if not isinstance(slots, dict):
+        return
+
+    translation = row.get("translation")
+    translation = translation if isinstance(translation, dict) else None
+    arguments = translation.get("arguments") if translation is not None else None
+    arguments = arguments if isinstance(arguments, dict) else {}
+    frame_type = string_or_none(translation.get("frame_type")) if translation is not None else None
+
+    validate_authoritative_user_display(row, row_path, issues, raw, arguments, slots)
+    validate_context_subject_contract(row, row_path, issues, raw, arguments, slots)
+
+    if raw is None:
+        return
+    shell_asset_kind = parse_shell(raw).asset_kind
+    if shell_asset_kind not in {"sfx", "vo"}:
+        return
+
+    entity = row.get("entity")
+    entity_is_champion = isinstance(entity, dict) and entity.get("kind") == "champion"
+    subject = slots.get("subject")
+    subject_is_champion = isinstance(subject, dict) and subject.get("kind") == "champion"
+    if not entity_is_champion and not subject_is_champion:
+        return
+
+    weak_hint = weak_spell_key_hint(slots)
+    display = row.get("display")
+    display_texts = [
+        value
+        for key in ("zh_cn_short", "zh_cn_detail")
+        if isinstance(display, dict) and isinstance((value := display.get(key)), str)
+    ]
+    if weak_hint is not None and any(
+        re.search(rf"(?<![A-Za-z]){re.escape(weak_hint)}\s*技能", text, re.IGNORECASE) for text in display_texts
+    ):
+        issues.append(
+            error(
+                "weak_spell_key_hint_in_user_display",
+                row_path,
+                f"低置信词首 hint={weak_hint} 不得进入用户技能标签。",
+                raw,
+            )
+        )
+
+    spell_phase = string_or_none(slots.get("phase"))
+    if (
+        shell_asset_kind == "sfx"
+        and semantic.get("profile") == "spell_event"
+        and spell_phase is not None
+        and translation is not None
+    ):
+        phase_argument = arguments.get("phase")
+        phase_labels = phase_argument.get("labels") if isinstance(phase_argument, dict) else None
+        phase_label = string_or_none(phase_labels.get("zh_CN")) if isinstance(phase_labels, dict) else None
+        phase_is_intentionally_suppressed = is_phase_suppressed_by_playback(arguments)
+        if phase_label is None or (
+            not phase_is_intentionally_suppressed and not any(phase_label in text for text in display_texts)
+        ):
+            issues.append(
+                error(
+                    "spell_phase_translation_missing",
+                    row_path,
+                    f"已解析技能 SFX phase={spell_phase} 必须进入 phase argument 与中文展示。",
+                    raw,
+                )
+            )
+
+    action_phase = string_or_none(slots.get("phase"))
+    if (
+        semantic.get("profile") == "self_action"
+        and frame_type
+        in {
+            "champion_action_event",
+            "skin_action_state",
+            "skin_recall_state",
+            "voice_event",
+        }
+        and action_phase is not None
+    ):
+        phase_argument = arguments.get("phase")
+        phase_labels = phase_argument.get("labels") if isinstance(phase_argument, dict) else None
+        phase_label = string_or_none(phase_labels.get("zh_CN")) if isinstance(phase_labels, dict) else None
+        phase_is_intentionally_suppressed = is_phase_suppressed_by_playback(arguments)
+        if phase_label is None or (
+            not phase_is_intentionally_suppressed and not any(phase_label in text for text in display_texts)
+        ):
+            issues.append(
+                error(
+                    "action_phase_translation_missing",
+                    row_path,
+                    f"已解析动作 phase={action_phase} 必须进入 phase argument 与中文展示。",
+                    raw,
+                )
+            )
+
+    numeric_rank = NUMERIC_SPELL_RANK_PATTERN.search(raw)
+    if numeric_rank is not None:
+        expected_rank = int(numeric_rank.group("rank"))
+        expected_key = numeric_rank.group("spell_key").lower()
+        if (
+            slots.get("spell_rank") != expected_rank
+            or slots.get("spell_key") != expected_key
+            or slots.get("spell_stage") is not None
+            or slots.get("spell_variant") is not None
+        ):
+            issues.append(
+                error(
+                    "spell_rank_misclassified_as_stage",
+                    row_path,
+                    "Spell…RankN 必须写入 spell_rank，且不得同时写入 spell_stage/spell_variant。",
+                    raw,
+                )
+            )
+
+    contextual_alias = slots.get("contextual_alias")
+    if semantic.get("profile") == "spell_event" and isinstance(contextual_alias, dict):
+        component_key = string_or_none(contextual_alias.get("component"))
+        if contextual_alias.get("kind") == "champion_spell_component" and component_key is not None:
+            component_argument = arguments.get("ability_component")
+            rendered_component = (
+                string_or_none(component_argument.get("key")) if isinstance(component_argument, dict) else None
+            )
+            component_labels = component_argument.get("labels") if isinstance(component_argument, dict) else None
+            rendered_label = (
+                string_or_none(component_labels.get("zh_CN")) if isinstance(component_labels, dict) else None
+            )
+            display = row.get("display")
+            display_text = " ".join(
+                value
+                for key in ("zh_cn_short", "zh_cn_detail")
+                if isinstance(display, dict) and isinstance((value := display.get(key)), str)
+            )
+            if rendered_component != component_key or rendered_label is None or rendered_label not in display_text:
+                issues.append(
+                    error(
+                        "spell_component_translation_missing",
+                        row_path,
+                        "已解析 champion_spell_component 必须进入 translation 与中文展示。",
+                        raw,
+                    )
+                )
+
+            expected_qualifier, expected_phase = component_modifier_expectation(slots)
+            if frame_type == "champion_ability_component_event" and (
+                expected_qualifier is not None or expected_phase is not None
+            ):
+                qualifier_argument = arguments.get("qualifier")
+                phase_argument = arguments.get("phase")
+                rendered_qualifier = (
+                    string_or_none(qualifier_argument.get("key")) if isinstance(qualifier_argument, dict) else None
+                )
+                rendered_phase = string_or_none(phase_argument.get("key")) if isinstance(phase_argument, dict) else None
+                qualifier_labels = qualifier_argument.get("labels") if isinstance(qualifier_argument, dict) else None
+                phase_labels = phase_argument.get("labels") if isinstance(phase_argument, dict) else None
+                qualifier_label = (
+                    string_or_none(qualifier_labels.get("zh_CN")) if isinstance(qualifier_labels, dict) else None
+                )
+                phase_label = string_or_none(phase_labels.get("zh_CN")) if isinstance(phase_labels, dict) else None
+                phase_is_intentionally_suppressed = is_phase_suppressed_by_playback(arguments)
+                if (
+                    rendered_qualifier != expected_qualifier
+                    or rendered_phase != expected_phase
+                    or (
+                        expected_qualifier is not None
+                        and (qualifier_label is None or qualifier_label not in display_text)
+                    )
+                    or (
+                        expected_phase is not None
+                        and (
+                            phase_label is None
+                            or (not phase_is_intentionally_suppressed and phase_label not in display_text)
+                        )
+                    )
+                ):
+                    issues.append(
+                        error(
+                            "spell_component_modifier_translation_missing",
+                            row_path,
+                            "已知技能组件尾缀必须进入 qualifier/phase 与中文展示。",
+                            raw,
+                        )
+                    )
+
+            validate_reviewed_alias_qualifier(
+                contextual_alias,
+                arguments,
+                display_text,
+                row_path,
+                issues,
+                raw,
+            )
+
+    if isinstance(contextual_alias, dict) and contextual_alias.get("kind") == "champion_action_component":
+        component_key = string_or_none(contextual_alias.get("component"))
+        if semantic.get("profile") == "spell_event" or string_or_none(slots.get("spell_key")) is not None:
+            issues.append(
+                error(
+                    "action_component_misclassified_as_spell",
+                    row_path,
+                    "champion_action_component 属于皮肤/角色动作，不得写入技能槽位或 spell_event。",
+                    raw,
+                )
+            )
+
+        action_argument = arguments.get("action")
+        rendered_component = string_or_none(action_argument.get("key")) if isinstance(action_argument, dict) else None
+        action_labels = action_argument.get("labels") if isinstance(action_argument, dict) else None
+        rendered_label = string_or_none(action_labels.get("zh_CN")) if isinstance(action_labels, dict) else None
+        display = row.get("display")
+        display_text = " ".join(
+            value
+            for key in ("zh_cn_short", "zh_cn_detail")
+            if isinstance(display, dict) and isinstance((value := display.get(key)), str)
+        )
+        if (
+            component_key is None
+            or rendered_component != component_key
+            or rendered_label is None
+            or rendered_label not in display_text
+        ):
+            issues.append(
+                error(
+                    "action_component_translation_missing",
+                    row_path,
+                    "已解析 champion_action_component 必须进入 action argument 与中文展示。",
+                    raw,
+                )
+            )
+
+    sfx_alias = slots.get("sfx_alias")
+    if (
+        slots.get("sfx_scope") in {"champion_sfx", "mode_sfx"}
+        and isinstance(sfx_alias, dict)
+        and sfx_alias.get("kind") in {"generic_sfx_effect", "champion_spell_component"}
+    ):
+        component_key = string_or_none(sfx_alias.get("component"))
+        expected_label = string_or_none(sfx_alias.get("label"))
+        spell_scoped_effect = semantic.get("profile") == "spell_event" and string_or_none(slots.get("spell_key")) in {
+            "p",
+            "q",
+            "w",
+            "e",
+            "r",
+        }
+        expected_rendered_label = (
+            f"{expected_label}音效"
+            if sfx_alias.get("kind") == "generic_sfx_effect"
+            and not spell_scoped_effect
+            and expected_label is not None
+            and not expected_label.endswith(("音效", "音乐"))
+            else expected_label
+        )
+        argument_role = "ability_component" if spell_scoped_effect else "effect"
+        effect_argument = arguments.get(argument_role)
+        rendered_component = string_or_none(effect_argument.get("key")) if isinstance(effect_argument, dict) else None
+        effect_labels = effect_argument.get("labels") if isinstance(effect_argument, dict) else None
+        rendered_label = string_or_none(effect_labels.get("zh_CN")) if isinstance(effect_labels, dict) else None
+        display_text = " ".join(display_texts)
+        if (
+            (not spell_scoped_effect and frame_type != "champion_sfx_effect_event")
+            or component_key is None
+            or rendered_component != component_key
+            or rendered_label is None
+            or expected_rendered_label is None
+            or rendered_label != expected_rendered_label
+            or rendered_label not in display_text
+        ):
+            issues.append(
+                error(
+                    "sfx_effect_translation_missing",
+                    row_path,
+                    "已解析 generic_sfx_effect 必须进入技能组件或专用 effect frame 与中文展示。",
+                    raw,
+                )
+            )
+
+        validate_reviewed_alias_qualifier(
+            sfx_alias,
+            arguments,
+            display_text,
+            row_path,
+            issues,
+            raw,
+        )
+
+    primary_family = string_or_none(semantic.get("primary_family"))
+    attack_kind = string_or_none(slots.get("attack_kind"))
+    if primary_family in CHAMPION_ATTACK_FAMILIES or attack_kind in CHAMPION_ATTACK_FAMILIES:
+        if string_or_none(slots.get("spell_key")) is not None:
+            issues.append(
+                error(
+                    "attack_misclassified_as_spell",
+                    row_path,
+                    "普通/暴击攻击不得占用 spell_key；技能来源只能写 related_spell_key。",
+                    raw,
+                )
+            )
+        if slots.get("spell_rank") is not None:
+            issues.append(
+                error(
+                    "attack_variant_misclassified_as_rank",
+                    row_path,
+                    "攻击变体号不得写入 spell_rank。",
+                    raw,
+                )
+            )
+        if frame_type != "champion_attack_event":
+            issues.append(
+                error(
+                    "champion_attack_translation_missing",
+                    row_path,
+                    "已解析普通/暴击攻击必须生成 champion_attack_event translation。",
+                    raw,
+                )
+            )
+
+        attack_variant = slots.get("attack_variant")
+        if isinstance(attack_variant, int) and not isinstance(attack_variant, bool) and attack_variant > 0:
+            attack_argument = arguments.get("attack")
+            rendered_variant = attack_argument.get("variant") if isinstance(attack_argument, dict) else None
+            attack_labels = attack_argument.get("labels") if isinstance(attack_argument, dict) else None
+            attack_label = string_or_none(attack_labels.get("zh_CN")) if isinstance(attack_labels, dict) else None
+            variant_pattern = rf"(?<!\d){attack_variant}(?!\d)"
+            if (
+                rendered_variant != attack_variant
+                or attack_label is None
+                or re.search(variant_pattern, attack_label) is None
+                or not any(attack_label in text for text in display_texts)
+            ):
+                issues.append(
+                    error(
+                        "attack_variant_translation_missing",
+                        row_path,
+                        f"已解析攻击变体号={attack_variant} 必须进入 attack argument 与中文展示。",
+                        raw,
+                    )
+                )
+
+    spell_stage = slots.get("spell_stage")
+    if isinstance(spell_stage, int) and spell_stage > 0:
+        validate_rendered_stage(
+            spell_stage,
+            arguments,
+            row_path,
+            issues,
+            raw,
+            code="spell_stage_not_rendered",
+            slot_name="spell_stage",
+        )
+
+    spell_rank = slots.get("spell_rank")
+    if slots.get("variant_kind") == "spell_rank" and isinstance(spell_rank, int) and spell_rank > 0:
+        rank_argument = arguments.get("rank")
+        rendered_rank = string_or_none(rank_argument.get("value")) if isinstance(rank_argument, dict) else None
+        if frame_type != "champion_ability_rank_event" or rendered_rank != str(spell_rank):
+            issues.append(
+                error(
+                    "spell_rank_translation_missing",
+                    row_path,
+                    "已解析技能等级必须完整写入 champion_ability_rank_event。",
+                    raw,
+                )
+            )
+
+    sequence = slots.get("spell_sequence")
+    if isinstance(sequence, list) and len(sequence) >= 2:
+        sequence_argument = arguments.get("ability_sequence")
+        rendered_sequence = sequence_argument.get("sequence") if isinstance(sequence_argument, dict) else None
+        expected_sequence = [str(item).lower() for item in sequence]
+        if frame_type != "champion_ability_sequence_event" or rendered_sequence != expected_sequence:
+            issues.append(
+                error(
+                    "spell_sequence_translation_missing",
+                    row_path,
+                    "已解析技能组合必须完整写入 champion_ability_sequence_event。",
+                    raw,
+                )
+            )
+
+    sequence_stage = slots.get("spell_sequence_stage")
+    if isinstance(sequence_stage, int) and sequence_stage > 0:
+        validate_rendered_stage(
+            sequence_stage,
+            arguments,
+            row_path,
+            issues,
+            raw,
+            code="spell_sequence_stage_not_rendered",
+            slot_name="spell_sequence_stage",
+        )
+
+
+def validate_reviewed_alias_qualifier(
+    alias: dict[str, Any],
+    arguments: dict[str, Any],
+    display_text: str,
+    row_path: str,
+    issues: list[NormalizedValidationIssue],
+    raw: str,
+) -> None:
+    """校验规则白名单中的中间修饰语已进入 frame 与中文展示。"""
+
+    qualifier_rows = alias.get("qualifiers")
+    if not isinstance(qualifier_rows, list) or not qualifier_rows:
+        return
+
+    expected_keys: list[str] = []
+    expected_labels: list[str] = []
+    for qualifier_row in qualifier_rows:
+        if not isinstance(qualifier_row, dict):
+            continue
+        qualifier_key = string_or_none(qualifier_row.get("key"))
+        qualifier_label = string_or_none(qualifier_row.get("label"))
+        if qualifier_key is not None and qualifier_label is not None:
+            expected_keys.append(qualifier_key)
+            expected_labels.append(qualifier_label)
+
+    qualifier_argument = arguments.get("qualifier")
+    rendered_key = string_or_none(qualifier_argument.get("key")) if isinstance(qualifier_argument, dict) else None
+    labels = qualifier_argument.get("labels") if isinstance(qualifier_argument, dict) else None
+    rendered_label = string_or_none(labels.get("zh_CN")) if isinstance(labels, dict) else None
+    if (
+        not expected_keys
+        or rendered_key != "+".join(expected_keys)
+        or rendered_label is None
+        or any(label not in rendered_label for label in expected_labels)
+        or any(label not in display_text for label in expected_labels)
+    ):
+        issues.append(
+            error(
+                "sfx_effect_qualifier_translation_missing",
+                row_path,
+                "已审阅 SFX 中间修饰语必须进入 qualifier argument 与中文展示。",
+                raw,
+            )
+        )
+
+
+def validate_rendered_stage(
+    stage: int,
+    arguments: dict[str, Any],
+    row_path: str,
+    issues: list[NormalizedValidationIssue],
+    raw: str | None,
+    *,
+    code: str,
+    slot_name: str,
+) -> None:
+    """校验解析出的技能段数进入 ability_stage argument。"""
+
+    stage_argument = arguments.get("ability_stage")
+    value = string_or_none(stage_argument.get("value")) if isinstance(stage_argument, dict) else None
+    if value != str(stage):
+        issues.append(
+            error(
+                code,
+                row_path,
+                f"semantic.slots.{slot_name}={stage} 未进入 translation.arguments.ability_stage。",
+                raw,
+            )
+        )
+
+
+def validate_context_subject_contract(
+    row: dict[str, Any],
+    row_path: str,
+    issues: list[NormalizedValidationIssue],
+    raw: str | None,
+    arguments: dict[str, Any],
+    slots: dict[str, Any],
+) -> None:
+    """校验模式/机制命名空间没有冒充真实英雄主体。"""
+
+    namespace = slots.get("context_namespace")
+    if not isinstance(namespace, dict):
+        return
+    subject = slots.get("subject")
+    entity = row.get("entity")
+    subject_alias = string_or_none(subject.get("alias")) if isinstance(subject, dict) else None
+    entity_alias = string_or_none(entity.get("alias")) if isinstance(entity, dict) else None
+    expected_key = string_or_none(namespace.get("key"))
+    if expected_key is not None and entity_alias is not None and rule_key(expected_key) == rule_key(entity_alias):
+        issues.append(
+            error(
+                "context_namespace_used_as_entity",
+                row_path,
+                f"上下文命名空间 {expected_key} 不能占用 normalized entity。",
+                raw,
+            )
+        )
+
+    if subject_alias is not None and entity_alias is not None and subject_alias.casefold() != entity_alias.casefold():
+        issues.append(
+            error(
+                "context_subject_entity_mismatch",
+                row_path,
+                f"上下文记录实体应为 subject={subject_alias}，不能归到 {entity_alias}。",
+                raw,
+            )
+        )
+
+    if not arguments:
+        return
+    context_argument = arguments.get("context")
+    actual_key = string_or_none(context_argument.get("key")) if isinstance(context_argument, dict) else None
+    if expected_key is not None and actual_key != expected_key:
+        issues.append(
+            error(
+                "context_namespace_not_rendered",
+                row_path,
+                f"context_namespace={expected_key} 未进入 translation.arguments.context。",
+                raw,
+            )
+        )
+
+
+def validate_authoritative_user_display(
+    row: dict[str, Any],
+    row_path: str,
+    issues: list[NormalizedValidationIssue],
+    raw: str | None,
+    arguments: dict[str, Any],
+    slots: dict[str, Any],
+) -> None:
+    """权威中文存在时，禁止用户文案泄漏 SkinNN 或英文规范 alias。"""
+
+    display = row.get("display")
+    if not isinstance(display, dict):
+        return
+    texts = [value for key in ("zh_cn_short", "zh_cn_detail") if isinstance((value := display.get(key)), str)]
+    if any(RAW_SKIN_TOKEN_PATTERN.search(text) is not None for text in texts):
+        issues.append(
+            error(
+                "raw_skin_token_in_user_display",
+                row_path,
+                "用户中文展示不得包含 SkinNN 工程皮肤号。",
+                raw,
+            )
+        )
+
+    champion = arguments.get("champion")
+    alias = None
+    zh_label = None
+    if isinstance(champion, dict):
+        alias = string_or_none(champion.get("alias"))
+        labels = champion.get("labels")
+        zh_label = string_or_none(labels.get("zh_CN")) if isinstance(labels, dict) else None
+    elif slots.get("sfx_scope") == "champion_sfx":
+        entity = row.get("entity")
+        if isinstance(entity, dict) and entity.get("kind") == "champion":
+            alias = string_or_none(entity.get("alias"))
+
+    if (
+        alias is not None
+        and (zh_label is None or alias.casefold() != zh_label.casefold())
+        and any(contains_ascii_alias(text, alias) for text in texts)
+    ):
+        label_context = f"已有权威中文名 {zh_label}，" if zh_label is not None else "英雄 SFX 中文展示"
+        issues.append(
+            error(
+                "canonical_champion_alias_in_user_display",
+                row_path,
+                f"{label_context}不得混入英文 alias {alias}。",
+                raw,
+            )
+        )
+
+    namespace = slots.get("context_namespace")
+    context = arguments.get("context")
+    if isinstance(namespace, dict) and isinstance(context, dict):
+        key = string_or_none(namespace.get("key"))
+        labels = context.get("labels")
+        zh_label = string_or_none(labels.get("zh_CN")) if isinstance(labels, dict) else None
+        if (
+            key is not None
+            and zh_label is not None
+            and key.casefold() != zh_label.casefold()
+            and any(contains_ascii_alias(text, key) for text in texts)
+        ):
+            issues.append(
+                error(
+                    "context_namespace_key_in_user_display",
+                    row_path,
+                    f"已有上下文中文名 {zh_label}，用户展示不得泄漏 {key}。",
+                    raw,
+                )
+            )
+
+
+def contains_ascii_alias(text: str, alias: str) -> bool:
+    """按 ASCII 单词边界判断英文 alias 是否出现在中文混排文案中。"""
+
+    return (
+        re.search(
+            rf"(?<![A-Za-z0-9]){re.escape(alias)}(?![A-Za-z0-9])",
+            text,
+            flags=re.IGNORECASE,
+        )
+        is not None
+    )
 
 
 def validate_record_translation(
@@ -1507,6 +2155,47 @@ def has_technical_display_token(text: str) -> bool:
         return True
 
     return "_" in text
+
+
+def component_modifier_expectation(slots: dict[str, Any]) -> tuple[str | None, str | None]:
+    """返回已知技能组件上下文应呈现的 qualifier 与 phase。"""
+
+    tokens: list[str] = []
+    unresolved = slots.get("unresolved_context")
+    if isinstance(unresolved, list):
+        tokens.extend(item for item in unresolved if isinstance(item, str))
+    cue_path = slots.get("cue_path")
+    if isinstance(cue_path, list):
+        tokens.extend(item for item in cue_path if isinstance(item, str))
+
+    for token in dict.fromkeys(tokens):
+        match = COMPONENT_CONTEXT_MODIFIER_PATTERN.fullmatch(token)
+        if match is not None:
+            qualifier = match.group("qualifier")
+            phase = match.group("phase") or match.group("context_phase")
+            assert phase is not None
+            normalized_phase = phase.lower()
+            return (
+                qualifier.lower() if qualifier is not None else None,
+                COMPONENT_CONTEXT_PHASE_ALIASES.get(normalized_phase, normalized_phase),
+            )
+        if token.lower() == "loop":
+            return None, "loop"
+    return None, None
+
+
+def weak_spell_key_hint(slots: dict[str, Any]) -> str | None:
+    """返回由普通 PascalCase 词首产生、不能进入用户展示的技能键提示。"""
+
+    if slots.get("spell_key") is not None:
+        return None
+    hint = string_or_none(slots.get("spell_key_hint"))
+    residual = slots.get("alias_residual") or slots.get("effect_residual")
+    if hint is None or not isinstance(residual, str):
+        return None
+    if len(residual) > 1 and residual[0].islower():
+        return hint
+    return None
 
 
 def string_or_none(value: Any) -> str | None:

@@ -9,9 +9,18 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: E_AggroSound 在 Maokai 事件中对应 E 技能树苗仇恨音效。
-  MaokaiDrain:
+  Emissilebrush:
     kind: champion_spell_component
-    spell: p
+    spell: e
+    asset_kind: sfx
+    component: sapling_toss_brush_missile
+    label: 树苗投掷草丛飞弹
+    confidence: high
+    source: manual_contextual_alias
+    note: Emissilebrush 跨皮肤稳定表示 E 树苗投掷进入草丛的飞弹。
+  MaokaiDrain:
+    kind: generic_sfx_effect
+    asset_kind: sfx
     component: drain
     label: 吸取
     confidence: medium
@@ -24,7 +33,25 @@ aliases:
     label: 荆棘重击冲击波
     confidence: medium
     source: manual_contextual_alias
-    note: MaokaiTrunkLineMissile（树干直线飞行物）出现在 GraveDiggerMaokai 历史事件中，Q 技能 Bramble Smash（荆棘重击）「用一记冲击波击退附近的敌人」是茂凯唯一的直线冲击波，OnMissileLaunch 相位与之吻合。
+    note: MaokaiTrunkLineMissile（树干直线飞行物）出现在 GraveDiggerMaokai 历史事件中，Q 技能
+      Bramble Smash（荆棘重击）「用一记冲击波击退附近的敌人」是茂凯唯一的直线冲击波，OnMissileLaunch 相位与之吻合。
+  Qknockback:
+    kind: champion_spell_component
+    spell: q
+    asset_kind: sfx
+    component: bramble_smash_knockback
+    label: 荆棘重击击退
+    confidence: high
+    source: manual_contextual_alias
+    note: Qknockback 跨皮肤稳定表示 Q 荆棘重击的击退生效。
+  Sapling:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: sapling_footsteps
+    label: 树苗脚步
+    confidence: high
+    source: manual_contextual_alias
+    note: MaokaiSapling2_footsteps 表示树苗移动脚步；数字 2 是内部变体，不是技能段次。
   SaplingRun:
     kind: champion_spell_component
     spell: e
@@ -33,3 +60,12 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: SaplingRun 在 Maokai 事件中对应 E 技能 Sapling Toss 的树苗奔跑状态。
+  Wroot:
+    kind: champion_spell_component
+    spell: w
+    asset_kind: sfx
+    component: twisted_advance_root
+    label: 扭曲突刺禁锢
+    confidence: high
+    source: manual_contextual_alias
+    note: Wroot 跨皮肤稳定表示 W 扭曲突刺的禁锢阶段。

@@ -1,6 +1,15 @@
 scope: champion
 owner: Blitzcrank
 aliases:
+  LaserEyes:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: ruby
+    component: laser_eyes
+    label: 激光眼
+    confidence: high
+    source: manual_contextual_alias
+    note: Ruby_Blitzcrank_LaserEyes 是末日人机布里茨 APC 的特殊激光眼效果，不映射常规技能槽位。
   RocketGrab:
     kind: champion_spell_component
     spell: q

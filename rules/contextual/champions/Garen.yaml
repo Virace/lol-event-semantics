@@ -1,6 +1,14 @@
 scope: champion
 owner: Garen
 aliases:
+  GarenRecouperate:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: perseverance_recovery
+    label: 被动·坚韧恢复
+    confidence: high
+    source: manual_contextual_alias
+    note: Recouperate1 是盖伦被动“坚韧”的恢复音效；数字 1 是资产变体，不是技能第1段。
   GarenSlash:
     kind: champion_spell_component
     spell: q

@@ -33,6 +33,15 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: GalioWPassiveDefense 在 Galio 事件中对应 W/护盾防御状态音效。
+  SelfShield:
+    kind: champion_spell_component
+    spell: w
+    asset_kind: sfx
+    component: shield_of_durand_self_shield
+    label: 杜朗护盾·自身护盾
+    confidence: high
+    source: manual_contextual_alias
+    note: W_SelfShield 在加里奥皮肤 SFX 中明确表示 W 杜朗护盾施加给自身的护盾组件。
   WPassiveDefense:
     kind: champion_spell_component
     spell: w
