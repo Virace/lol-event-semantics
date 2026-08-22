@@ -3,6 +3,8 @@
 ## 技术栈与版本边界
 
 - 项目运行于 Python 3.12 及以上；本地解释器版本由 `.python-version` 管理。
+- GitHub Actions 的全新锁定安装固定使用 Python 3.13，避免当前传递依赖在 Python 3.14
+  无缓存环境中的构建兼容问题；这不改变项目的 Python 3.12 最低运行边界。
 - 依赖、虚拟环境和命令统一使用 uv；提交依赖变更时同步提交 `pyproject.toml` 与 `uv.lock`。
 - 共享模块采用 `src/lol_event_semantics/` 布局，console script 由 `pyproject.toml` 注册；Hatchling 只服务项目安装，不建立 Python 包发布或构建验收要求。
 - `zstd` 是 league-tools/riotmanifest 的传递依赖，固定为 `1.5.7.2`，避免解析到已被上游撤回的 `1.5.7.3`；league-tools 的最低版本相应为兼容该约束的 `1.2.0`。
@@ -14,6 +16,7 @@
 - 每轮采集只读取当时的 live 最新版本；项目不提供指定历史版本的下载、重建或回放。累计语料保存已纳入事件名，但不构成历史版本快照服务。
 - `16.16` 是本轮 frozen acceptance profile，仅用于当前验收基线；不得把它编码为长期“最新版本”默认值。
 - GAME 与 LCU 来源必须在同轮内进行主版本一致性校验；不能把不同版本的来源静默混合为同一结果。
+- 远端 raw artifact 必须和可移植来源清单绑定同一 workflow run；manifest 采集必须生成本轮来源清单并提供非空 LCU version，不能借用本地冻结源的 null 例外。online 更新入口在任何网络准备前必须验证该清单、frozen profile 及 GAME/Data Dragon 请求版本属于同一系列；更新器在替换累计 raw/reference/state/report 前还要对 staging 输入做 fail-closed 预检。
 - 当前 16.16 冻结源未暴露 `lcu_version`，只允许版本化 frozen profile 中记录的显式例外：
   `lobby_snapshot.game_version=16.16` 且 `lcu_manifest_id` 非空；该例外不得扩展到未来 live 采集。
 - `rules/`、`overrides/` 和累计 `reference/` 是解释层的权威输入。生成文件不得反向成为人工维护源。
@@ -43,7 +46,7 @@
 ## 运行与部署环境
 
 - 项目是脚本、CLI 和离线数据流水线，不部署常驻应用服务或数据库；可部署由仓库生成、无后端且不写回数据的只读静态 Demo。
-- GitHub Actions 提供默认 CI 和手动 raw/reference 更新；生成数据通过 workflow artifact 交付，`dist/` 不入 Git。
+- GitHub Actions 只保留手动 raw/reference 更新与静态 Demo 部署，不为每次 push/PR 运行重复 test job；提交或交付门禁仍须在本地执行。当前更新 workflow 只接受 frozen V1 16.16，未来 live 版本须先增加版本化 profile/来源合同。成功结果以 `candidate-dataset` artifact 交付，失败结果只能以 `failed-run-diagnostics` 交付；二者都保留本轮来源清单、隔离 run 身份与 Review 报告，不得自动视为 approved 或远端稳定发布。`dist/` 不入 Git。
 - 真实 GAME manifest/CDN、本地游戏安装和在线数据源属于可选集成环境，不得成为默认离线测试前提。
 
 ## 禁止事项
@@ -57,4 +60,4 @@
 
 ## 项目级例外
 
-累计 `raw/`、`reference/`、`rules/` 和 `overrides/` 是项目知识资产，允许以文本形式入库；这不构成提交完整游戏数据或任意生成缓存的许可。Windows PowerShell 是主要维护命令示例环境，但共享模块和默认 CI 不应依赖 Windows 专属路径语义。
+累计 `raw/`、`reference/`、`rules/` 和 `overrides/` 是项目知识资产，允许以文本形式入库；这不构成提交完整游戏数据或任意生成缓存的许可。Windows PowerShell 是主要维护命令示例环境，但共享模块和手动 Actions workflow 不应依赖 Windows 专属路径语义。

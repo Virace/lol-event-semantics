@@ -16,7 +16,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
 
     if args.mode == "local":
-        result = run_local_update_pipeline(
+        pipeline_result = run_local_update_pipeline(
             reference_root=args.reference_root,
             raw_root=args.raw_root,
             state_file=args.state_file,
@@ -27,12 +27,14 @@ def main(argv: list[str] | None = None) -> int:
             data_dragon_version=args.data_dragon_version,
             report_root=args.report_root,
             languages=tuple(args.languages),
+            sources_manifest_path=args.sources_manifest,
+            frozen_profile_path=args.frozen_profile,
         )
-        print(json.dumps(result.to_dict(), ensure_ascii=False, indent=2))
+        print(json.dumps(pipeline_result.to_dict(), ensure_ascii=False, indent=2))
         return 0
 
     if args.mode == "online":
-        result = run_online_update_pipeline(
+        pipeline_result = run_online_update_pipeline(
             reference_root=args.reference_root,
             raw_root=args.raw_root,
             state_file=args.state_file,
@@ -44,8 +46,10 @@ def main(argv: list[str] | None = None) -> int:
             languages=tuple(args.languages),
             game_data_base_url=args.game_data_base_url,
             data_dragon_base_url=args.data_dragon_base_url,
+            sources_manifest_path=args.sources_manifest,
+            frozen_profile_path=args.frozen_profile,
         )
-        print(json.dumps(result.to_dict(), ensure_ascii=False, indent=2))
+        print(json.dumps(pipeline_result.to_dict(), ensure_ascii=False, indent=2))
         return 0
 
     metadata = RawUpdateMetadata(
@@ -57,13 +61,13 @@ def main(argv: list[str] | None = None) -> int:
         game_data_snapshot_metadata_sha256=args.game_data_snapshot_metadata_sha256,
         data_dragon_champion_summary_sha256=args.data_dragon_champion_summary_sha256,
     )
-    result = update_raw_events(
+    raw_result = update_raw_events(
         args.raw_root,
         args.raw_input_root or args.input_root,
         state_file=args.state_file,
         metadata=metadata,
     )
-    print(json.dumps(result.to_dict(), ensure_ascii=False, indent=2))
+    print(json.dumps(raw_result.to_dict(), ensure_ascii=False, indent=2))
     return 0
 
 
@@ -84,6 +88,16 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--game-data-root", type=Path, help="Local GAME data root for local mode.")
     parser.add_argument("--data-dragon-root", type=Path, help="Local Data Dragon root for local mode.")
     parser.add_argument("--report-root", type=Path, help="Update report root for local/online mode.")
+    parser.add_argument(
+        "--sources-manifest",
+        type=Path,
+        help="Frozen source manifest; required for online, optional with profile for local preflight.",
+    )
+    parser.add_argument(
+        "--frozen-profile",
+        type=Path,
+        help="Frozen acceptance profile; required for online, optional with manifest for local preflight.",
+    )
     parser.add_argument(
         "--cache-root",
         type=Path,
@@ -130,6 +144,11 @@ def validate_args(parser: argparse.ArgumentParser, args: argparse.Namespace) -> 
 
     if args.mode == "raw":
         return
+
+    if (args.sources_manifest is None) != (args.frozen_profile is None):
+        parser.error("--sources-manifest and --frozen-profile must be provided together")
+    if args.mode == "online" and args.sources_manifest is None:
+        parser.error("--sources-manifest and --frozen-profile required when --mode online")
 
     required = {
         "--reference-root": args.reference_root,

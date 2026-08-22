@@ -99,12 +99,12 @@ V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX
 
 ## 自动更新边界
 
-自动 raw 更新入口和手动 GitHub Actions workflow 已纳入仓库。GAME manifest/WAD/BIN 抽取是可选更新来源，不是对外数据契约。每轮只采集当时的 live 输入；累计语料保留已合并事件，但不支持指定历史版本下载、重建或回放。`16.14` 仅是本轮 frozen acceptance profile，而非固定的最新版本默认值。
+自动 raw 更新入口和手动 GitHub Actions workflow 已纳入仓库；普通 push/PR 不再重复启动 test job，提交或交付门禁由本地命令负责。GAME manifest/WAD/BIN 抽取是可选更新来源，不是对外数据契约。每轮只采集当时的 live 输入；累计语料保留已合并事件，但不支持指定历史版本下载、重建或回放。`16.16` 仅是本轮 frozen acceptance profile，而非固定的最新版本默认值。
 
 自动更新的关键边界：
 
 - `lol-game-data-snapshot` 可提供英雄列表、皮肤列表和 LCU snapshot 状态。
-- 事件名来源必须是 GAME manifest 中的 WAD/BIN，例如 `DATA/FINAL/Champions/Aatrox.wad.client`。本地获取已脚本化：`scripts/download_sources.py --sources raw-bins --emit-raw-round <dir>` 按 manifest 局部提取皮肤 bin 并产出轮次 txt（league-tools 结构化提取，与既有语料生产方式同源），供 `update_raw_events --raw-input-root` 消费；不再需要手动解包提供事件名。
+- 事件名来源必须是 GAME manifest 中的 WAD/BIN，例如 `DATA/FINAL/Champions/Aatrox.wad.client`。本地获取已脚本化：`scripts/download_sources.py --sources raw-bins --emit-raw-round <dir>` 按 manifest 局部提取皮肤 bin 并产出轮次 txt（league-tools 结构化提取，与既有语料生产方式同源），同时写出带 schema 版本的 producer 游标，供 `prepare_source_manifest.py` 投影来源身份并由 `update_raw_events --raw-input-root` 消费；不再需要手动解包提供事件名。
 - 整轮下载出自同一份 manifest，各数据源天然同版本；GAME/LCU manifest 成对校验（major.minor 一致）。
 - `raw/update-state.json` 只作为最后成功处理游标。
 - GAME/LCU 无变化时 workflow 不应生成空报告。

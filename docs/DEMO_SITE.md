@@ -34,7 +34,7 @@ uv run python -m http.server 8765 --directory dist\demo-site
 
 ### GitHub Pages
 
-`.github/workflows/deploy-demo-pages.yml` 只允许手动触发。它从仓库内冻结输入执行完整 refresh，构建同一 candidate 的静态 Demo，再通过官方 Pages artifact 部署；不会复用开发机上的 `dist/` 或 approved-local pointer，也不会修改数据源。首次使用前，在仓库 Settings → Pages 中把 Source 设为 GitHub Actions；随后手动运行 `Deploy Demo to GitHub Pages` workflow。
+`.github/workflows/deploy-demo-pages.yml` 只允许手动触发。它在 Python 3.13 的全新锁定环境中从仓库内冻结输入执行完整 refresh，构建同一 candidate 的静态 Demo，再通过官方 Pages artifact 部署；不会复用开发机上的 `dist/` 或 approved-local pointer，也不会修改数据源。首次使用前，在仓库 Settings → Pages 中把 Source 设为 GitHub Actions；随后手动运行 `Deploy Demo to GitHub Pages` workflow。
 
 ### Cloudflare Pages
 

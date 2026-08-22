@@ -17,7 +17,7 @@
 ## 关键模块边界
 
 - 来源边界：`http_fetch.py`、`online_sources.py`、`game_manifest*.py`、`game_wad_events.py`、`data_dragon_source.py`、`tencent_hero_list_source.py` 负责获取并校验外部数据，不解释事件语义。
-- 累积更新边界：`reference_ingestion.py`、`reference_collection.py`、`raw_update.py`、`source_sync.py`、`update_pipeline.py` 把外部输入转换为仓库内 reference/raw，并负责差集、游标和失败恢复。
+- 累积更新边界：`reference_ingestion.py`、`reference_collection.py`、`raw_update.py`、`source_sync.py`、`source_manifest.py`、`update_pipeline.py` 把外部输入转换为仓库内 reference/raw，并负责可移植来源身份、差集、游标、staging frozen preflight 和失败恢复；online 入口必须在网络准备前验证同轮 portable remote manifest 与 frozen profile。
 - 语义边界：`decomposition_*.py`、`rules.py`、`model.py`、`match_audit.py` 读取 raw/reference/rules/overrides，输出保留来源、置信度和未知项的结构化拆解。
 - 消费者输出边界：`normalized_contract.py` 负责版本化 record identity、来源身份与 additive support/render/review 视图；`normalized_translation_*.py`、`normalized_output.py`、`normalized_validation.py`、`tiered_quality.py`、`quality_metrics.py`、`display_labels.py` 把拆解记录转换为稳定 normalized contract。`tiered_quality.py` 拥有 Stable absolute gates、accepted corpus 和 support diff，并对带未解析 residual 的单字母技能键启发式 fail-closed；旧 `quality_metrics.py` 只保留全局趋势棘轮。champions/maps 分片中的等价拆解记录先合并 provenance；若最终 canonical identity 仍冲突则 fail-closed。
 - 数据集身份边界：`dataset_identity.py` 对冻结 profile 做版本/计数预检，对来源模式、GAME/LCU 版本、同轮 LCU 证据以及可用的 manifest 身份连同 raw、reference、rules、overrides、契约资产和生成器源码计算规范化摘要，并从有序 payload 文件摘要派生 `content_digest`/`dataset_id`；运行时间与路径只属于后续 run metadata。
@@ -75,9 +75,8 @@ explicit candidate or approved-local normalized + same-run validation + referenc
 - `uv run lookup-normalized-event`：按事件名查询生成的 normalized 记录并渲染指定上下文。
 - `uv run python scripts/build_demo_site.py`：从 approved-local 或显式 normalized candidate 生成被忽略的平台中立静态 Demo；显式 candidate 必须配对同 run `--validation-json`，页面用“已确定 / Review × 英雄 / 地图”两级导航组织实体浏览和残差/未归属队列。
 - `uv run python scripts/report_translation_patterns.py`：只读生成 Pattern Catalog JSON/Markdown 报告；默认规则输入为 `rules/translation_patterns.yaml`，输出路径必须由 `--output-json` 与 `--output-md` 显式指定。
-- `.github/workflows/ci.yml`：锁定环境中的静态检查、类型检查与离线测试。
-- `.github/workflows/deploy-demo-pages.yml`：仅手动触发；从冻结输入完成完整 refresh 和静态 Demo 构建后，通过官方 Pages artifact 部署，不复用或提升本地 candidate。
-- `.github/workflows/update-raw-events.yml`：手动更新数据、构建并上传 normalized artifact。
+- `.github/workflows/deploy-demo-pages.yml`：仅手动触发；以 Python 3.13 的全新锁定环境从冻结输入完成完整 refresh 和静态 Demo 构建后，通过官方 Pages artifact 部署，不复用或提升本地 candidate。
+- `.github/workflows/update-raw-events.yml`：以 Python 3.13 的全新锁定环境手动更新 frozen V1 数据；artifact raw 与来源清单绑定同一 producer run，manifest 模式生成同轮可移植来源清单。runner 在累计源写入前做 staging preflight，随后运行正式隔离 full refresh；只有门禁通过后才 push。成功上传 `candidate-dataset`，失败只上传 `failed-run-diagnostics`，两者均携带来源身份与可用的 run/Review 证据。workflow 不自动 promotion，也不接纳未建立新 profile 的 live 版本。
 
 ## 错误模型
 
@@ -95,6 +94,6 @@ explicit candidate or approved-local normalized + same-run validation + referenc
 - `TRANSLATION_SCHEMA_VERSION`、`FRAME_VERSION`、frame registry 和 required roles 共同约束 renderer/validator；变更时必须同步 builder、validator、测试和文档。`Stop/Mute/UnMute` 等 playback control 是附加结构角色，已解析 phase 仍保留在 frame；renderer 只用共享谓词抑制与 playback 冲突的冗余 phase 展示，validator 仅对同一谓词证明的有意省略放行。`system_sfx_event` 只接收完整已审路径，或 reference 能证明装备身份的生命周期；装备余段必须命中 `display_labels.system_sfx.item_action` 的“装备 ID/动作词干”精确组合，并合入既有 effect，不新增 frame role。其他地图、模式与装备工程 cue 保持 Experimental/Review。
 - 英雄攻击事件的正整数 `attack_variant` 同时保留在 semantic slot 与 `translation.arguments.attack.variant`，并必须出现在中文 attack label 和最终 display；展示使用原始变体后缀（如“普通攻击2”），不得在没有额外证据时解释为攻击次序。人工别名已含同号时不得重复追加。
 - `zh_CN` 是当前正式渲染 locale；VO 优先支持，SFX 不删除但按 Stable、Experimental、Unsupported 区分能力边界。
-- `16.16` 是本轮 frozen acceptance profile，不参与未来 live 版本的默认选择。正式消费者 Pattern Catalog schema、本地 promotion 机制、分层绝对门禁 attestation 与全接受 source review importer 已实现；非 accept 决定的产品修复、首个 approved 数据集与远端发布仍是后续工作。当前 inventory 仍使用独立的报告 schema。
+- `16.16` 是本轮 frozen acceptance profile，不参与未来 live 版本的默认选择。正式消费者 Pattern Catalog schema、本地 promotion 机制、分层绝对门禁 attestation、全接受 source review importer 与首个 approved-local 数据集已实现；非 accept 决定的产品修复和远端稳定发布仍是后续工作。当前 inventory 仍使用独立的报告 schema。
 
 当前没有在线服务、数据库或跨进程消息协议。若未来引入这些边界，必须先明确数据所有权、版本兼容、失败恢复和部署环境，再更新本设计与项目约束。

@@ -210,6 +210,10 @@ def build_steps(args: FullRefreshArgs, paths: RefreshPaths) -> list[RefreshStep]
                     str(args.game_data_base_url),
                     "--report-root",
                     str(paths.report_root / "update-report"),
+                    "--sources-manifest",
+                    str(args.sources_manifest),
+                    "--frozen-profile",
+                    str(args.frozen_profile),
                 ),
             )
         )
