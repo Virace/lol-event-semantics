@@ -191,13 +191,43 @@ select {
   padding: 7px 30px 7px 10px;
 }
 
-.dataset-stats {
-  display: grid;
-  gap: 8px;
-  margin: 20px 0;
-  padding: 15px 0;
+.dataset-disclosure {
+  margin: 14px 0;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
+}
+
+.dataset-disclosure > summary {
+  min-height: 38px;
+  padding: 9px 2px 8px;
+  color: var(--ink-soft);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.7;
+  cursor: pointer;
+}
+
+.dataset-disclosure > summary::marker {
+  color: var(--jade-dark);
+}
+
+.dataset-summary-inline {
+  float: right;
+  max-width: calc(100% - 72px);
+  overflow: hidden;
+  color: var(--ink-faint);
+  font-size: 10px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dataset-stats {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 11px 2px 12px 15px;
+  border-top: 1px solid var(--border);
 }
 
 .dataset-stats div,
@@ -225,7 +255,39 @@ select {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 6px;
-  margin-bottom: 18px;
+}
+
+.navigation-axis {
+  display: grid;
+  gap: 10px;
+}
+
+.navigation-axis-row {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+}
+
+.axis-label {
+  color: var(--ink-soft);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+#browseNavigation {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+#browseNavigation[hidden] {
+  display: none;
+}
+
+#browseNavigation .sidebar-heading {
+  margin-top: 14px;
 }
 
 .view-tab {
@@ -262,6 +324,7 @@ select {
 }
 
 .champion-list {
+  flex: 1;
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -310,6 +373,19 @@ select {
   color: var(--jade-dark);
   font-family: Georgia, "Songti SC", serif;
   font-weight: 700;
+}
+
+.map-link-mark {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid var(--border);
+  background: var(--blue-pale);
+  color: var(--blue);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 10px;
+  font-weight: 750;
 }
 
 .champion-link-copy {
@@ -387,6 +463,19 @@ select {
   gap: 18px;
   padding-bottom: 20px;
   border-bottom: 1px solid var(--border);
+}
+
+.map-identifier {
+  display: grid;
+  width: 72px;
+  height: 72px;
+  place-items: center;
+  border: 1px solid var(--border-strong);
+  background: var(--blue-pale);
+  color: var(--blue);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 13px;
+  font-weight: 750;
 }
 
 .champion-avatar {
@@ -607,13 +696,17 @@ select {
 
 .filters {
   display: grid;
-  grid-template-columns: minmax(220px, 2fr) repeat(4, minmax(128px, 1fr)) auto;
+  grid-template-columns: minmax(220px, 2fr) repeat(5, minmax(120px, 1fr)) auto;
   align-items: end;
   gap: 10px;
   margin-bottom: 14px;
   padding: 14px;
   border: 1px solid var(--border);
   background: var(--surface-muted);
+}
+
+.map-filters {
+  grid-template-columns: minmax(220px, 2fr) repeat(4, minmax(120px, 1fr)) auto;
 }
 
 .filters label {
@@ -766,6 +859,18 @@ tbody tr:hover {
   color: #7b5007;
 }
 
+.context-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.badge[data-map]:not([data-map="base"]) {
+  border-color: #9dbce2;
+  background: var(--blue-pale);
+  color: var(--blue);
+}
+
 .badge[data-mode="jade"] {
   border-color: #8fc9bc;
   background: var(--jade-pale);
@@ -836,8 +941,36 @@ tbody tr:hover {
   margin: 0;
 }
 
+.site-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+
+.text-button {
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--jade-dark);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.text-button:hover {
+  color: var(--ink);
+}
+
+.site-links a {
+  color: var(--jade-dark);
+  text-underline-offset: 3px;
+}
+
 .review-view[hidden],
-#championView[hidden] {
+#championView[hidden],
+#mapView[hidden] {
   display: none;
 }
 
@@ -944,13 +1077,17 @@ tbody tr:hover {
 
 .review-filters {
   display: grid;
-  grid-template-columns: minmax(150px, 0.8fr) minmax(240px, 1.8fr) repeat(5, minmax(130px, 1fr)) auto;
+  grid-template-columns: repeat(5, minmax(130px, 1fr));
   align-items: end;
   gap: 9px;
   margin-bottom: 14px;
   padding: 14px;
   border: 1px solid var(--border);
   background: var(--surface-muted);
+}
+
+.review-filters .wide-filter {
+  grid-column: span 2;
 }
 
 .review-filters label {
@@ -1004,6 +1141,10 @@ tbody tr:hover {
 .review-table .badge + .badge,
 .review-table .badge + .event-detail-label {
   margin-left: 4px;
+}
+
+.review-table .context-badges {
+  margin-top: 6px;
 }
 
 .review-code-line {
@@ -1120,6 +1261,11 @@ tbody tr:hover {
     height: 64px;
   }
 
+  .map-identifier {
+    width: 56px;
+    height: 56px;
+  }
+
   .champion-stats {
     grid-column: 1 / -1;
     border-top: 1px solid var(--border);
@@ -1146,6 +1292,70 @@ tbody tr:hover {
     grid-template-columns: repeat(3, minmax(150px, 1fr));
   }
 
+}
+
+@media (max-height: 900px) and (min-width: 901px) {
+  .sidebar {
+    min-height: 540px;
+    padding: 18px 16px 12px;
+  }
+
+  .brand {
+    padding-bottom: 14px;
+  }
+
+  .brand h1 {
+    font-size: 22px;
+  }
+
+  .brand-en {
+    margin-top: 2px;
+    font-size: 14px;
+  }
+
+  .eyebrow {
+    margin-bottom: 4px;
+    font-size: 10px;
+  }
+
+  .navigation-axis {
+    gap: 7px;
+  }
+
+  .view-tab {
+    min-height: 34px;
+    padding: 5px 7px;
+  }
+
+  .dataset-disclosure {
+    margin: 10px 0 12px;
+  }
+
+  .dataset-disclosure > summary {
+    min-height: 34px;
+    padding-top: 6px;
+    padding-bottom: 5px;
+  }
+
+  .field-label {
+    margin-bottom: 4px;
+  }
+
+  .search-field {
+    min-height: 36px;
+  }
+
+  #browseNavigation .sidebar-heading {
+    margin-top: 10px;
+  }
+
+  .champion-link {
+    min-height: 48px;
+  }
+
+  .sidebar-footer {
+    padding-top: 10px;
+  }
 }
 
 @media (max-width: 900px) {
@@ -1177,6 +1387,7 @@ tbody tr:hover {
 
   .champion-list {
     display: grid;
+    flex: none;
     grid-auto-columns: minmax(160px, 1fr);
     grid-auto-flow: column;
     max-height: none;
@@ -1229,6 +1440,11 @@ tbody tr:hover {
   .main-content {
     padding-right: 14px;
     padding-left: 14px;
+  }
+
+  .navigation-axis-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
   }
 
   .dataset-stats {
@@ -1309,6 +1525,10 @@ tbody tr:hover {
   }
 
   .wide-filter {
+    grid-column: auto;
+  }
+
+  .review-filters .wide-filter {
     grid-column: auto;
   }
 

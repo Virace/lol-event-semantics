@@ -1,0 +1,73 @@
+name: Deploy Demo to GitHub Pages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-demo
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install
+
+      - name: Sync dependencies
+        run: uv sync --dev --locked
+
+      - name: Build validated dataset candidate
+        run: uv run python scripts/run_full_refresh.py --runs-root .temp/pages-runs
+
+      - name: Resolve completed candidate
+        id: candidate
+        shell: bash
+        run: |
+          mapfile -t runs < <(find .temp/pages-runs/completed -mindepth 1 -maxdepth 1 -type d | sort)
+          if [[ "${#runs[@]}" -ne 1 ]]; then
+            echo "Expected one completed candidate, found ${#runs[@]}" >&2
+            exit 1
+          fi
+          echo "root=${runs[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: Build static Demo
+        run: >-
+          uv run python scripts/build_demo_site.py
+          --normalized-root "${{ steps.candidate.outputs.root }}/normalized"
+          --validation-json "${{ steps.candidate.outputs.root }}/reports/normalized-validation.json"
+          --output-root .temp/demo-site
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: .temp/demo-site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

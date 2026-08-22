@@ -1,4 +1,4 @@
-"""从 normalized contract 生成按英雄浏览的静态演示站。"""
+"""从 normalized contract 生成英雄、地图与 Review 静态演示站。"""
 
 from __future__ import annotations
 
@@ -20,12 +20,20 @@ from .normalized_lookup import iter_normalized_rows
 
 __all__ = ["DemoBuildSummary", "DemoSiteError", "build_demo_site"]
 
-DEMO_SCHEMA_VERSION = 1
+DEMO_SCHEMA_VERSION = 2
 GENERATED_MARKER_NAME = ".rift-event-atlas-generated"
 GENERATED_MARKER_VALUE = "rift-event-atlas-static-site.v1\n"
-ASSET_FILENAMES = ("index.html", "styles.css", "app.js")
+ASSET_FILENAMES = ("index.html", "styles.css", "app.js", "_headers", "site.webmanifest")
 BASE_MODE = {"key": "base", "label": "通用 / 未指定", "prefix": None}
+BASE_MAP = {
+    "key": "base",
+    "id": None,
+    "alias": None,
+    "label": "通用 / 未指定",
+    "en_name": None,
+}
 CHAMPION_ALIAS_PATTERN = re.compile(r"[A-Za-z][A-Za-z0-9]*\Z")
+MAP_KEY_PATTERN = re.compile(r"[a-z0-9][a-z0-9_-]*\Z")
 DATA_DRAGON_VERSION_PATTERN = re.compile(r"\d+\.\d+\.\d+\Z")
 SKIN_TOKEN_PATTERN = re.compile(r"Skin0*(\d+)\Z", re.IGNORECASE)
 RAW_SKIN_PATTERN = re.compile(r"Skin0*(\d+)", re.IGNORECASE)
@@ -79,6 +87,8 @@ class DemoBuildSummary:
     dataset_id: str
     champion_count: int
     event_count: int
+    map_count: int
+    map_event_count: int
     unassigned_event_count: int
     review_record_count: int
 
@@ -104,6 +114,24 @@ class SkinReference:
     token: str
     en_name: str
     zh_name: str
+
+
+@dataclass(frozen=True, slots=True)
+class MapReference:
+    """演示站所需的地图参考。"""
+
+    map_id: int
+    alias: str
+    en_name: str
+    zh_name: str
+
+
+@dataclass(frozen=True, slots=True)
+class MapReferenceCatalog:
+    """按地图 ID 与别名索引的只读参考集合。"""
+
+    by_id: Mapping[int, MapReference]
+    by_alias: Mapping[str, MapReference]
 
 
 def build_demo_site(
@@ -142,7 +170,10 @@ def build_demo_site(
         raise DemoSiteError(f"no base champion references found: {reference_root / 'champions'}")
     champion_by_key = {champion.alias.casefold(): champion for champion in champions}
     compact_aliases = _compact_champion_aliases(champions)
+    map_catalog = _load_map_references(reference_root / "maps")
     events_by_alias: dict[str, list[dict[str, Any]]] = {champion.alias: [] for champion in champions}
+    map_events_by_key: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    map_profiles: dict[str, dict[str, Any]] = {}
 
     source_record_count = 0
     unassigned_record_count = 0
@@ -152,16 +183,27 @@ def build_demo_site(
     for _path, _line_number, row in iter_normalized_rows(normalized_root):
         source_record_count += 1
         raw = _required_text(row, "raw_event_name", "normalized record")
+        projected_event = _project_event(row, map_catalog=map_catalog)
+        projected_map = _mapping(projected_event.get("map"))
+        map_key = str(projected_map.get("key") or "base")
+        if map_key != "base":
+            if MAP_KEY_PATTERN.fullmatch(map_key) is None:
+                raise DemoSiteError(f"unsafe projected map key: {map_key!r}")
+            map_events_by_key[map_key].append(projected_event)
+            existing_profile = map_profiles.get(map_key)
+            if existing_profile is not None and existing_profile != projected_map:
+                raise DemoSiteError(f"conflicting projected map profile: {map_key}")
+            map_profiles[map_key] = dict(projected_map)
         review_issues = issues_by_raw.get(raw, ())
         if review_issues:
-            residual_records.append(_project_review_record(row, issues=review_issues))
+            residual_records.append(_project_review_record(row, map_catalog=map_catalog, issues=review_issues))
             matched_issue_raws.add(raw)
         champion_alias = _resolve_record_champion(row, champion_by_key, compact_aliases)
         if champion_alias is None:
             unassigned_record_count += 1
-            unassigned_records.append(_project_review_record(row))
+            unassigned_records.append(_project_review_record(row, map_catalog=map_catalog))
             continue
-        events_by_alias[champion_alias].append(_project_event(row))
+        events_by_alias[champion_alias].append(projected_event)
 
     if source_record_count != expected_record_count:
         raise DemoSiteError(
@@ -178,6 +220,8 @@ def build_demo_site(
     skins_by_alias = _load_skin_references(reference_root / "skins", champions)
     champion_documents: list[dict[str, Any]] = []
     champion_index: list[dict[str, Any]] = []
+    map_documents: list[dict[str, Any]] = []
+    map_index: list[dict[str, Any]] = []
     global_mode_counts: Counter[str] = Counter()
 
     for champion in sorted(champions, key=lambda item: (item.en_name.casefold(), item.alias.casefold())):
@@ -190,19 +234,36 @@ def build_demo_site(
             champion,
             skins,
             events,
+            dataset_id=dataset_id,
+            content_digest=content_digest,
             data_dragon_version=data_dragon_version,
         )
         champion_documents.append(document)
         champion_index.append(index_entry)
         global_mode_counts.update(str(event["mode"]["key"]) for event in events)
 
+    for map_key in sorted(map_profiles, key=lambda key: _map_sort_key(map_profiles[key])):
+        events = sorted(
+            map_events_by_key[map_key],
+            key=lambda event: (str(event["raw_event_name"]).casefold(), str(event["record_id"])),
+        )
+        document, index_entry = _build_map_documents(
+            map_profiles[map_key],
+            events,
+            dataset_id=dataset_id,
+            content_digest=content_digest,
+        )
+        map_documents.append(document)
+        map_index.append(index_entry)
+
     assigned_event_count = source_record_count - unassigned_record_count
+    map_event_count = sum(len(events) for events in map_events_by_key.values())
     site_index = {
         "schema_version": DEMO_SCHEMA_VERSION,
         "product": {
             "name": "峡谷事件语义图鉴",
             "name_en": "Rift Event Atlas",
-            "description": "按英雄、皮肤与模式浏览音频事件原名和中文语义。",
+            "description": "按英雄、皮肤、模式与显式地图浏览音频事件原名和中文语义。",
         },
         "dataset": {
             "dataset_id": dataset_id,
@@ -213,8 +274,10 @@ def build_demo_site(
         "counts": {
             "source_records": source_record_count,
             "champion_events": assigned_event_count,
+            "map_events": map_event_count,
             "unassigned_records": unassigned_record_count,
             "champions": len(champions),
+            "maps": len(map_documents),
         },
         "modes": _mode_summaries(global_mode_counts),
         "review": {
@@ -223,6 +286,7 @@ def build_demo_site(
             "unassigned_records": len(unassigned_records),
         },
         "champions": champion_index,
+        "maps": map_index,
     }
     review_index = _build_review_index(
         dataset_id=dataset_id,
@@ -234,6 +298,7 @@ def build_demo_site(
         output_root,
         site_index,
         champion_documents,
+        map_documents,
         review_index=review_index,
         residual_records=residual_records,
         unassigned_records=unassigned_records,
@@ -243,6 +308,8 @@ def build_demo_site(
         dataset_id=dataset_id,
         champion_count=len(champions),
         event_count=assigned_event_count,
+        map_count=len(map_documents),
+        map_event_count=map_event_count,
         unassigned_event_count=unassigned_record_count,
         review_record_count=len(residual_records),
     )
@@ -331,6 +398,56 @@ def _load_skin_references(
                 skins[number] = skin
         result[champion.alias] = tuple(skins[number] for number in sorted(skins))
     return result
+
+
+def _load_map_references(root: Path) -> MapReferenceCatalog:
+    """读取地图参考，并构建 ID 与别名索引。
+
+    Args:
+        root: `reference/maps` 目录。
+
+    Returns:
+        已验证且可按 ID、别名查询的地图参考。
+
+    Raises:
+        DemoSiteError: 目录缺失，或地图 ID/别名重复、无效。
+    """
+
+    if not root.is_dir():
+        raise DemoSiteError(f"map reference root not found: {root}")
+
+    by_id: dict[int, MapReference] = {}
+    by_alias: dict[str, MapReference] = {}
+    for path in sorted(root.glob("*.yaml"), key=lambda item: item.name.casefold()):
+        document = _read_yaml_object(path)
+        entity = _mapping(document.get("entity"))
+        if entity.get("type") != "map":
+            continue
+        map_id = _required_int(entity, "id", str(path))
+        alias = _required_text(entity, "alias", str(path))
+        if map_id < 0:
+            raise DemoSiteError(f"invalid map id in {path}: {map_id}")
+        if CHAMPION_ALIAS_PATTERN.fullmatch(alias) is None:
+            raise DemoSiteError(f"unsafe map alias in {path}: {alias!r}")
+        names = _mapping(entity.get("names"))
+        en_names = _localized_values(names, "en_US")
+        zh_names = _localized_values(names, "zh_CN")
+        if not en_names or not zh_names:
+            raise DemoSiteError(f"map is missing en_US/zh_CN names: {path}")
+        reference = MapReference(
+            map_id=map_id,
+            alias=alias,
+            en_name=en_names[0],
+            zh_name=zh_names[0],
+        )
+        alias_key = alias.casefold()
+        if map_id in by_id:
+            raise DemoSiteError(f"duplicate map id: {map_id}")
+        if alias_key in by_alias:
+            raise DemoSiteError(f"duplicate map alias: {alias}")
+        by_id[map_id] = reference
+        by_alias[alias_key] = reference
+    return MapReferenceCatalog(by_id=by_id, by_alias=by_alias)
 
 
 def _compact_champion_aliases(champions: Sequence[ChampionReference]) -> dict[str, str]:
@@ -508,18 +625,30 @@ def _review_issues_by_raw(validation: Mapping[str, Any]) -> dict[str, tuple[dict
 def _project_review_record(
     row: Mapping[str, Any],
     *,
+    map_catalog: MapReferenceCatalog,
     issues: Sequence[Mapping[str, str]] = (),
 ) -> dict[str, Any]:
-    """投影审阅所需的最小记录，不复制完整 normalized payload。"""
+    """投影审阅所需的最小记录，不复制完整 normalized payload。
+
+    Args:
+        row: normalized 记录。
+        map_catalog: 用于本地化显式地图槽位的参考索引。
+        issues: 与记录匹配的 validator 问题。
+
+    Returns:
+        可由 Review 页面直接消费的轻量记录。
+    """
 
     raw = _required_text(row, "raw_event_name", "normalized record")
     record_id = _required_text(row, "record_id", f"normalized record {raw}")
     entity = _mapping(row.get("entity"))
     semantic = _mapping(row.get("semantic"))
+    slots = _mapping(semantic.get("slots"))
     display = _mapping(row.get("display"))
     translation = _mapping(row.get("translation"))
     semantic_frame = _mapping(row.get("semantic_frame"))
     projected_issues = [dict(issue) for issue in issues]
+    projected_map = _project_map(slots.get("map"), map_catalog)
     return {
         "record_id": record_id,
         "raw_event_name": raw,
@@ -529,6 +658,8 @@ def _project_review_record(
             "kind": str(entity.get("kind") or "unknown"),
             "alias": str(entity.get("alias") or "unknown"),
         },
+        "map": projected_map,
+        "review_scope": _review_scope(projected_map),
         "family": str(semantic.get("primary_family") or "unknown"),
         "profile": str(semantic.get("profile") or "unknown"),
         "frame_type": str(translation.get("frame_type") or semantic_frame.get("frame_type") or "missing"),
@@ -556,6 +687,12 @@ def _review_record_sort_key(record: Mapping[str, Any]) -> tuple[str, str]:
     return (str(record.get("raw_event_name") or "").casefold(), str(record.get("record_id") or ""))
 
 
+def _review_scope(map_value: Mapping[str, Any]) -> str:
+    """按显式地图槽位把 Review 记录划入英雄或地图入口。"""
+
+    return "map" if str(map_value.get("key") or "base") != "base" else "champion"
+
+
 def _build_review_index(
     *,
     dataset_id: str,
@@ -574,34 +711,63 @@ def _build_review_index(
 
     layers = []
     for key, label, codes in REVIEW_LAYERS:
+        scope_record_counts = {
+            scope: sum(
+                key in record.get("layers", []) and record.get("review_scope") == scope for record in residual_records
+            )
+            for scope in ("champion", "map")
+        }
+        scope_issue_counts = {
+            scope: sum(
+                str(_mapping(issue).get("code") or "") in codes
+                for record in residual_records
+                if record.get("review_scope") == scope
+                for issue in record.get("issues", [])
+            )
+            for scope in ("champion", "map")
+        }
         layers.append(
             {
                 "key": key,
                 "label": label,
                 "issue_count": sum(issue_counts[code] for code in codes),
                 "record_count": sum(key in record.get("layers", []) for record in residual_records),
+                "scope_issue_counts": scope_issue_counts,
+                "scope_record_counts": scope_record_counts,
             }
         )
     combined_records = [*residual_records, *unassigned_records]
+    scopes = [
+        {
+            "key": scope,
+            "label": label,
+            "residual_records": sum(record.get("review_scope") == scope for record in residual_records),
+            "unassigned_records": sum(record.get("review_scope") == scope for record in unassigned_records),
+        }
+        for scope, label in (("champion", "英雄"), ("map", "地图"))
+    ]
     return {
-        "schema_version": 1,
+        "schema_version": DEMO_SCHEMA_VERSION,
         "dataset": {"dataset_id": dataset_id, "content_digest": content_digest},
         "counts": {
             "residual_issues": sum(issue_counts.values()),
             "residual_records": len(residual_records),
             "unassigned_records": len(unassigned_records),
         },
+        "scopes": scopes,
         "queues": [
             {
                 "key": "residual",
                 "label": "SFX 残差",
                 "record_count": len(residual_records),
+                "scope_counts": _review_scope_counts(residual_records),
                 "data_path": "data/review/residuals.json",
             },
             {
                 "key": "unassigned",
                 "label": "未归属记录",
                 "record_count": len(unassigned_records),
+                "scope_counts": _review_scope_counts(unassigned_records),
                 "data_path": "data/review/unassigned.json",
             },
         ],
@@ -614,6 +780,13 @@ def _build_review_index(
         "entities": _entity_counts(combined_records),
         "statuses": _facet_counts(combined_records, "review_status"),
     }
+
+
+def _review_scope_counts(records: Sequence[Mapping[str, Any]]) -> dict[str, int]:
+    """返回 Review 队列在英雄与地图入口中的互斥记录数。"""
+
+    counts = Counter(str(record.get("review_scope") or "champion") for record in records)
+    return {scope: counts.get(scope, 0) for scope in ("champion", "map")}
 
 
 def _facet_counts(records: Sequence[Mapping[str, Any]], key: str) -> list[dict[str, Any]]:
@@ -636,10 +809,23 @@ def _entity_counts(records: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]
     ]
 
 
-def _project_event(row: Mapping[str, Any]) -> dict[str, Any]:
-    """把 normalized 记录投影为演示站事件。"""
+def _project_event(
+    row: Mapping[str, Any],
+    *,
+    map_catalog: MapReferenceCatalog,
+) -> dict[str, Any]:
+    """把 normalized 记录投影为演示站事件。
+
+    Args:
+        row: normalized 记录。
+        map_catalog: 用于本地化显式地图槽位的参考索引。
+
+    Returns:
+        英雄事件表消费的稳定投影。
+    """
 
     display = _mapping(row.get("display"))
+    entity = _mapping(row.get("entity"))
     semantic = _mapping(row.get("semantic"))
     slots = _mapping(semantic.get("slots"))
     semantic_frame = _mapping(row.get("semantic_frame"))
@@ -651,12 +837,17 @@ def _project_event(row: Mapping[str, Any]) -> dict[str, Any]:
         "zh_cn_detail": _optional_text(display.get("zh_cn_detail")),
         "display_tier": display.get("tier"),
         "asset_kind": str(row.get("asset_kind") or "unknown"),
+        "entity": {
+            "kind": str(entity.get("kind") or "unknown"),
+            "alias": str(entity.get("alias") or "unknown"),
+        },
         "frame_type": _optional_text(semantic_frame.get("frame_type")),
         "primary_family": _optional_text(semantic.get("primary_family")),
         "support_level": str(row.get("support_level") or "experimental"),
         "review_status": str(row.get("review_status") or "pending"),
         "render_status": str(row.get("render_status") or "missing"),
         "mode": _project_mode(slots.get("mode_context")),
+        "map": _project_map(slots.get("map"), map_catalog),
         "skin_number": _record_skin_number(row, slots, semantic_frame),
         "warning_count": len(warnings) if isinstance(warnings, list) else 0,
     }
@@ -676,6 +867,54 @@ def _project_mode(value: object) -> dict[str, str | None]:
         "key": key,
         "label": str(mode.get("label") or key),
         "prefix": None,
+    }
+
+
+def _project_map(value: object, catalog: MapReferenceCatalog) -> dict[str, Any]:
+    """只投影显式结构化地图槽位，并优先采用参考中文名。
+
+    Args:
+        value: normalized `semantic.slots.map` 值。
+        catalog: 可按 ID 或别名查询的地图参考。
+
+    Returns:
+        稳定地图元数据；没有显式地图槽位时返回通用占位。
+    """
+
+    map_value = _mapping(value)
+    if map_value.get("kind") != "map":
+        return dict(BASE_MAP)
+
+    raw_id = map_value.get("id")
+    map_id = raw_id if isinstance(raw_id, int) and not isinstance(raw_id, bool) else None
+    raw_alias = map_value.get("alias")
+    alias = raw_alias if isinstance(raw_alias, str) and raw_alias else None
+    raw_key = map_value.get("key")
+    key = raw_key.casefold() if isinstance(raw_key, str) and raw_key else None
+    if key is None and map_id is not None:
+        key = f"map{map_id}"
+    if key is None and alias is not None:
+        key = alias.casefold()
+    if key is None:
+        return dict(BASE_MAP)
+
+    reference_by_id = catalog.by_id.get(map_id) if map_id is not None else None
+    reference_by_alias = catalog.by_alias.get(alias.casefold()) if alias is not None else None
+    if reference_by_id is not None and reference_by_alias is not None and reference_by_id != reference_by_alias:
+        raise DemoSiteError(f"conflicting map id and alias: id={map_id} alias={alias}")
+    reference = reference_by_id or reference_by_alias
+    if reference is not None:
+        canonical_key = f"map{reference.map_id}"
+        if re.fullmatch(r"map\d+", key) is not None and key != canonical_key:
+            raise DemoSiteError(f"conflicting map key and reference: key={key} expected={canonical_key}")
+        key = canonical_key
+    normalized_label = _optional_text(map_value.get("label"))
+    return {
+        "key": key,
+        "id": reference.map_id if reference is not None else map_id,
+        "alias": reference.alias if reference is not None else alias,
+        "label": reference.zh_name if reference is not None else normalized_label or alias or key,
+        "en_name": reference.en_name if reference is not None else normalized_label,
     }
 
 
@@ -755,6 +994,8 @@ def _build_champion_documents(
     skins: list[dict[str, Any]],
     events: list[dict[str, Any]],
     *,
+    dataset_id: str,
+    content_digest: str,
     data_dragon_version: str,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     """构建单英雄数据分片及其轻量索引项。"""
@@ -784,6 +1025,7 @@ def _build_champion_documents(
     }
     document = {
         "schema_version": DEMO_SCHEMA_VERSION,
+        "dataset": {"dataset_id": dataset_id, "content_digest": content_digest},
         "champion": profile,
         "stats": stats,
         "modes": _mode_summaries(mode_counts),
@@ -800,6 +1042,63 @@ def _build_champion_documents(
         "data_path": f"data/champions/{champion.alias}.json",
     }
     return document, index_entry
+
+
+def _build_map_documents(
+    map_profile: Mapping[str, Any],
+    events: list[dict[str, Any]],
+    *,
+    dataset_id: str,
+    content_digest: str,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """构建单地图数据分片及其轻量索引项。"""
+
+    key = _required_text(map_profile, "key", "map profile")
+    if key == "base" or MAP_KEY_PATTERN.fullmatch(key) is None:
+        raise DemoSiteError(f"unsafe map output key: {key!r}")
+    support_counts = Counter(str(event["support_level"]) for event in events)
+    asset_counts = Counter(str(event["asset_kind"]) for event in events)
+    mode_counts = Counter(str(event["mode"]["key"]) for event in events)
+    rendered_count = sum(event["render_status"] == "rendered" for event in events)
+    profile = dict(map_profile)
+    stats = {
+        "events": len(events),
+        "rendered": rendered_count,
+        "missing_labels": len(events) - rendered_count,
+        "support": dict(sorted(support_counts.items())),
+        "asset_kinds": dict(sorted(asset_counts.items())),
+        "modes": dict(sorted(mode_counts.items())),
+    }
+    document = {
+        "schema_version": DEMO_SCHEMA_VERSION,
+        "dataset": {"dataset_id": dataset_id, "content_digest": content_digest},
+        "map": profile,
+        "stats": stats,
+        "modes": _mode_summaries(mode_counts),
+        "events": events,
+    }
+    index_entry = {
+        **profile,
+        "event_count": len(events),
+        "stable_count": support_counts.get("stable", 0),
+        "experimental_count": support_counts.get("experimental", 0),
+        "mode_counts": dict(sorted(mode_counts.items())),
+        "data_path": f"data/maps/{key}.json",
+    }
+    return document, index_entry
+
+
+def _map_sort_key(map_profile: Mapping[str, Any]) -> tuple[bool, int, str, str]:
+    """优先按显式 Map ID，再按本地化名称与 key 排序。"""
+
+    raw_id = map_profile.get("id")
+    map_id = raw_id if isinstance(raw_id, int) and not isinstance(raw_id, bool) else 0
+    return (
+        raw_id is None,
+        map_id,
+        str(map_profile.get("label") or "").casefold(),
+        str(map_profile.get("key") or "").casefold(),
+    )
 
 
 def _mode_summaries(counts: Mapping[str, int]) -> list[dict[str, Any]]:
@@ -828,6 +1127,7 @@ def _write_site_output(
     output_root: Path,
     site_index: Mapping[str, Any],
     champion_documents: Sequence[Mapping[str, Any]],
+    map_documents: Sequence[Mapping[str, Any]],
     *,
     review_index: Mapping[str, Any],
     residual_records: Sequence[Mapping[str, Any]],
@@ -844,11 +1144,14 @@ def _write_site_output(
             if not source.is_file():
                 raise DemoSiteError(f"demo asset is missing: {source}")
             shutil.copyfile(source, staging_root / filename)
+        (staging_root / ".nojekyll").write_text("", encoding="utf-8")
 
         data_root = staging_root / "data"
         champion_root = data_root / "champions"
+        map_root = data_root / "maps"
         review_root = data_root / "review"
         champion_root.mkdir(parents=True)
+        map_root.mkdir(parents=True)
         review_root.mkdir(parents=True)
         _write_json(data_root / "index.json", site_index, pretty=True)
         for document in champion_documents:
@@ -856,17 +1159,22 @@ def _write_site_output(
             if CHAMPION_ALIAS_PATTERN.fullmatch(alias) is None:
                 raise DemoSiteError(f"unsafe champion output alias: {alias!r}")
             _write_json(champion_root / f"{alias}.json", document, pretty=False)
+        for document in map_documents:
+            key = _required_text(_mapping(document.get("map")), "key", "map document")
+            if key == "base" or MAP_KEY_PATTERN.fullmatch(key) is None:
+                raise DemoSiteError(f"unsafe map output key: {key!r}")
+            _write_json(map_root / f"{key}.json", document, pretty=False)
         dataset = _mapping(review_index.get("dataset"))
         dataset_id = _required_text(dataset, "dataset_id", "review index dataset")
         _write_json(review_root / "index.json", review_index, pretty=True)
         _write_json(
             review_root / "residuals.json",
-            {"schema_version": 1, "dataset_id": dataset_id, "records": residual_records},
+            {"schema_version": DEMO_SCHEMA_VERSION, "dataset_id": dataset_id, "records": residual_records},
             pretty=False,
         )
         _write_json(
             review_root / "unassigned.json",
-            {"schema_version": 1, "dataset_id": dataset_id, "records": unassigned_records},
+            {"schema_version": DEMO_SCHEMA_VERSION, "dataset_id": dataset_id, "records": unassigned_records},
             pretty=False,
         )
         (staging_root / GENERATED_MARKER_NAME).write_text(GENERATED_MARKER_VALUE, encoding="utf-8")

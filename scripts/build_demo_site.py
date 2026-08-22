@@ -1,4 +1,4 @@
-"""构建按英雄浏览的本地静态演示站。"""
+"""构建英雄、地图事件与 Review 队列静态演示站。"""
 
 from __future__ import annotations
 
@@ -34,7 +34,8 @@ def main(argv: list[str] | None = None) -> int:
     print(
         "demo site built: "
         f"dataset={summary.dataset_id} champions={summary.champion_count} "
-        f"events={summary.event_count} residual={summary.review_record_count} "
+        f"events={summary.event_count} maps={summary.map_count} "
+        f"map_events={summary.map_event_count} residual={summary.review_record_count} "
         f"unassigned={summary.unassigned_event_count} "
         f"output={summary.output_root}"
     )
@@ -44,7 +45,7 @@ def main(argv: list[str] | None = None) -> int:
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     """解析演示站构建参数。"""
 
-    parser = argparse.ArgumentParser(description="Build the champion-centric static event semantics demo site.")
+    parser = argparse.ArgumentParser(description="Build the champion/map static event semantics demo site.")
     parser.add_argument(
         "--normalized-root",
         type=Path,
@@ -65,7 +66,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         "--reference-root",
         type=Path,
         default=Path("reference"),
-        help="Champion and skin reference root.",
+        help="Champion, skin, and map reference root.",
     )
     parser.add_argument(
         "--output-root",

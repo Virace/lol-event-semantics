@@ -42,7 +42,7 @@
 
 ## 运行与部署环境
 
-- 项目是脚本、CLI 和离线数据流水线，不部署常驻服务或数据库。
+- 项目是脚本、CLI 和离线数据流水线，不部署常驻应用服务或数据库；可部署由仓库生成、无后端且不写回数据的只读静态 Demo。
 - GitHub Actions 提供默认 CI 和手动 raw/reference 更新；生成数据通过 workflow artifact 交付，`dist/` 不入 Git。
 - 真实 GAME manifest/CDN、本地游戏安装和在线数据源属于可选集成环境，不得成为默认离线测试前提。
 

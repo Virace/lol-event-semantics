@@ -1,22 +1,35 @@
 "use strict";
 
+const supportedDemoSchemaVersion = 2;
 const numberFormatter = new Intl.NumberFormat("zh-CN");
 const championCache = new Map();
+const mapCache = new Map();
 const reviewCache = new Map();
 const state = {
   index: null,
   champion: null,
-  view: "champion",
-  championQuery: "",
+  map: null,
+  status: "confirmed",
+  entityType: "champion",
+  browseQuery: "",
   eventQuery: "",
   assetKind: "all",
   supportLevel: "all",
   modeKey: "all",
+  mapKey: "all",
   skinNumber: "all",
   page: 1,
   pageSize: 100,
   previewSkinIndex: 0,
   loadSequence: 0,
+  mapEventQuery: "",
+  mapAssetKind: "all",
+  mapSupportLevel: "all",
+  mapModeKey: "all",
+  mapEntity: "all",
+  mapPage: 1,
+  mapPageSize: 100,
+  mapLoadSequence: 0,
   reviewIndex: null,
   reviewRecords: [],
   reviewQueue: "residual",
@@ -25,6 +38,7 @@ const state = {
   reviewCode: "all",
   reviewFamily: "all",
   reviewEntity: "all",
+  reviewMap: "all",
   reviewStatus: "all",
   reviewPage: 1,
   reviewPageSize: 50,
@@ -36,16 +50,24 @@ const elements = Object.fromEntries(
   [
     "appShell",
     "loadingBanner",
-    "championSearch",
+    "browseSearch",
+    "browseSearchLabel",
+    "browseNavigation",
+    "browseListHeading",
+    "datasetSummaryInline",
     "datasetVersion",
     "championCount",
+    "mapCount",
     "eventCount",
+    "mapEventCount",
     "unassignedCount",
     "datasetId",
-    "championViewButton",
-    "reviewViewButton",
-    "championResultCount",
-    "championList",
+    "confirmedStatusButton",
+    "reviewStatusButton",
+    "championEntityButton",
+    "mapEntityButton",
+    "browseResultCount",
+    "browseList",
     "championPortrait",
     "championAlias",
     "championName",
@@ -68,6 +90,7 @@ const elements = Object.fromEntries(
     "assetFilter",
     "supportFilter",
     "modeFilter",
+    "mapFilter",
     "skinFilter",
     "resetFilters",
     "resultsSummary",
@@ -78,7 +101,32 @@ const elements = Object.fromEntries(
     "pageStatus",
     "pageSize",
     "championView",
+    "mapView",
+    "mapIdentifier",
+    "mapAlias",
+    "mapName",
+    "mapIdentity",
+    "mapCurrentEventCount",
+    "mapStableCount",
+    "mapModeCount",
+    "mapRenderedRatio",
+    "mapEventFilters",
+    "mapEventSearch",
+    "mapAssetFilter",
+    "mapSupportFilter",
+    "mapModeFilter",
+    "mapEntityFilter",
+    "resetMapFilters",
+    "mapResultsSummary",
+    "mapEventTableBody",
+    "mapEmptyState",
+    "mapPreviousPage",
+    "mapNextPage",
+    "mapPageStatus",
+    "mapPageSize",
     "reviewView",
+    "reviewHeading",
+    "reviewDescription",
     "reviewResidualCount",
     "reviewIssueCount",
     "reviewUnassignedCount",
@@ -90,6 +138,8 @@ const elements = Object.fromEntries(
     "reviewCode",
     "reviewFamily",
     "reviewEntity",
+    "reviewMapField",
+    "reviewMap",
     "reviewStatus",
     "resetReviewFilters",
     "reviewResultsSummary",
@@ -103,6 +153,7 @@ const elements = Object.fromEntries(
     "reviewDetailTitle",
     "reviewDetailLocator",
     "copyReviewLocator",
+    "copyPageLink",
     "reviewDetailLabels",
     "reviewDetailMeta",
     "reviewIssueList",
@@ -147,19 +198,31 @@ function hashParams() {
 
 function championHash(alias) {
   const params = new URLSearchParams();
+  params.set("status", "confirmed");
+  params.set("type", "champion");
   params.set("champion", alias);
+  return `#${params.toString()}`;
+}
+
+function mapHash(key) {
+  const params = new URLSearchParams();
+  params.set("status", "confirmed");
+  params.set("type", "map");
+  params.set("map", key);
   return `#${params.toString()}`;
 }
 
 function reviewHash() {
   const params = new URLSearchParams();
-  params.set("view", "review");
+  params.set("status", "review");
+  params.set("type", state.entityType);
   params.set("queue", state.reviewQueue);
   if (state.reviewQuery) params.set("q", state.reviewQuery);
   if (state.reviewLayer !== "all") params.set("layer", state.reviewLayer);
   if (state.reviewCode !== "all") params.set("code", state.reviewCode);
   if (state.reviewFamily !== "all") params.set("family", state.reviewFamily);
   if (state.reviewEntity !== "all") params.set("entity", state.reviewEntity);
+  if (state.reviewMap !== "all") params.set("map", state.reviewMap);
   if (state.reviewStatus !== "all") params.set("status", state.reviewStatus);
   if (state.reviewPage > 1) params.set("page", String(state.reviewPage));
   if (state.selectedReviewId) params.set("record", state.selectedReviewId);
@@ -170,20 +233,40 @@ function replaceReviewHash() {
   window.history.replaceState(null, "", reviewHash());
 }
 
-function showView(view) {
-  state.view = view;
-  const reviewing = view === "review";
-  elements.championView.hidden = reviewing;
+function showView(status, entityType) {
+  state.status = status;
+  state.entityType = entityType;
+  const reviewing = status === "review";
+  const championBrowsing = !reviewing && entityType === "champion";
+  const mapBrowsing = !reviewing && entityType === "map";
+  elements.championView.hidden = !championBrowsing;
+  elements.mapView.hidden = !mapBrowsing;
   elements.reviewView.hidden = !reviewing;
-  elements.championViewButton.setAttribute("aria-pressed", String(!reviewing));
-  elements.reviewViewButton.setAttribute("aria-pressed", String(reviewing));
+  elements.browseNavigation.hidden = reviewing;
+  elements.confirmedStatusButton.setAttribute("aria-pressed", String(!reviewing));
+  elements.reviewStatusButton.setAttribute("aria-pressed", String(reviewing));
+  elements.championEntityButton.setAttribute("aria-pressed", String(entityType === "champion"));
+  elements.mapEntityButton.setAttribute("aria-pressed", String(entityType === "map"));
+  updateBrowseNavigationCopy();
+}
+
+function updateBrowseNavigationCopy() {
+  const browsingMaps = state.entityType === "map";
+  elements.browseSearchLabel.textContent = browsingMaps ? "查找地图" : "查找英雄";
+  elements.browseListHeading.textContent = browsingMaps ? "地图" : "英雄";
+  elements.browseSearch.placeholder = browsingMaps ? "名称、别名或 Map ID" : "名称、称号或别名";
+  elements.browseList.setAttribute("aria-label", browsingMaps ? "选择地图" : "选择英雄");
+  elements.browseSearch.value = state.browseQuery;
 }
 
 function updateDatasetSummary() {
   const index = state.index;
+  elements.datasetSummaryInline.textContent = `${index.dataset.base_game_version} · ${formatCount(index.counts.champions)} 英雄 · ${formatCount(index.counts.maps)} 地图`;
   elements.datasetVersion.textContent = index.dataset.base_game_version;
   elements.championCount.textContent = formatCount(index.counts.champions);
+  elements.mapCount.textContent = formatCount(index.counts.maps);
   elements.eventCount.textContent = formatCount(index.counts.champion_events);
+  elements.mapEventCount.textContent = formatCount(index.counts.map_events);
   elements.unassignedCount.textContent = formatCount(index.counts.unassigned_records);
   elements.datasetId.textContent = index.dataset.dataset_id;
   elements.datasetId.title = index.dataset.content_digest;
@@ -206,7 +289,7 @@ function portraitFallback(champion) {
 
 function renderChampionList() {
   const champions = state.index.champions.filter((champion) =>
-    matchesChampionSearch(champion, state.championQuery.trim()),
+    matchesChampionSearch(champion, state.browseQuery.trim()),
   );
   const fragment = document.createDocumentFragment();
   for (const champion of champions) {
@@ -241,14 +324,89 @@ function renderChampionList() {
     });
     fragment.append(button);
   }
-  elements.championList.replaceChildren(fragment);
-  elements.championResultCount.textContent = `${formatCount(champions.length)} 位`;
+  elements.browseList.replaceChildren(fragment);
+  elements.browseResultCount.textContent = `${formatCount(champions.length)} 位`;
+}
+
+function matchesMapSearch(map, query) {
+  if (!query) return true;
+  const haystack = [map.key, map.alias, map.label, map.en_name, Number.isInteger(map.id) ? `Map ${map.id}` : null]
+    .filter(Boolean)
+    .join(" ")
+    .toLocaleLowerCase("zh-CN");
+  return haystack.includes(query.toLocaleLowerCase("zh-CN"));
+}
+
+function renderMapList() {
+  const maps = state.index.maps.filter((map) => matchesMapSearch(map, state.browseQuery.trim()));
+  const fragment = document.createDocumentFragment();
+  for (const map of maps) {
+    const button = createElement("button", { className: "champion-link", type: "button" });
+    button.dataset.mapKey = map.key;
+    button.setAttribute("aria-current", String(state.map?.map.key === map.key));
+    button.append(
+      createElement("span", {
+        className: "map-link-mark",
+        text: Number.isInteger(map.id) ? `M${map.id}` : "MAP",
+      }),
+    );
+    const copy = createElement("span", { className: "champion-link-copy" });
+    copy.append(
+      createElement("strong", { text: map.label }),
+      createElement("span", { text: [map.alias, map.en_name].filter(Boolean).join(" · ") || map.key }),
+    );
+    button.append(
+      copy,
+      createElement("span", { className: "champion-link-count", text: formatCount(map.event_count) }),
+    );
+    button.addEventListener("click", () => {
+      if (window.location.hash === mapHash(map.key)) {
+        loadMap(map.key);
+      } else {
+        window.location.hash = mapHash(map.key);
+      }
+    });
+    fragment.append(button);
+  }
+  elements.browseList.replaceChildren(fragment);
+  elements.browseResultCount.textContent = `${formatCount(maps.length)} 张`;
+}
+
+function renderBrowseList() {
+  if (state.entityType === "map") {
+    renderMapList();
+  } else {
+    renderChampionList();
+  }
+}
+
+function assertDatasetIdentity(payload, path) {
+  if (!state.index || path === "data/index.json") return;
+  const expected = state.index.dataset.dataset_id;
+  const actual = payload.dataset?.dataset_id || payload.dataset_id;
+  if (!actual) throw new Error(`数据分片缺少 dataset identity：${path}`);
+  if (actual !== expected) throw new Error(`数据分片版本不一致：预期 ${expected}，实际 ${actual}`);
+  if (payload.schema_version !== state.index.schema_version) {
+    throw new Error(`数据分片 schema 不一致：${path}`);
+  }
 }
 
 async function fetchJson(path) {
-  const response = await fetch(path, { cache: "no-store" });
+  const isEntryPoint = path === "data/index.json";
+  const datasetId = isEntryPoint ? null : state.index?.dataset?.dataset_id;
+  const url = new URL(path, document.baseURI);
+  if (datasetId) {
+    const cacheVersion = `${datasetId}-s${state.index.schema_version}`;
+    url.searchParams.set("v", cacheVersion);
+  }
+  const response = await fetch(url, {
+    cache: isEntryPoint ? "no-cache" : "default",
+    headers: { Accept: "application/json" },
+  });
   if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-  return response.json();
+  const payload = await response.json();
+  assertDatasetIdentity(payload, path);
+  return payload;
 }
 
 async function loadChampion(alias) {
@@ -272,7 +430,7 @@ async function loadChampion(alias) {
     announce(`已载入${document.champion.zh_name}，共${formatCount(document.stats.events)}条事件`);
   } catch (error) {
     if (sequence !== state.loadSequence) return;
-    setLoading(`无法读取英雄数据：${error.message}。请使用本地 HTTP 服务打开本站。`, true);
+    setLoading(`无法读取英雄数据：${error.message}。请检查静态站点文件是否完整或稍后重试。`, true);
   }
 }
 
@@ -294,6 +452,7 @@ function renderChampion() {
   elements.championSkinCount.textContent = formatCount(document.skins.length);
   const renderedRatio = stats.events ? Math.round((stats.rendered / stats.events) * 100) : 0;
   elements.championRenderedRatio.textContent = `${renderedRatio}%`;
+  window.document.title = `${champion.zh_name} · 峡谷事件语义图鉴`;
 
   renderModeCards();
   populateFilterOptions();
@@ -343,10 +502,50 @@ function replaceSelectOptions(select, options, selected = "all") {
   select.value = selected;
 }
 
+function mapIdentityText(map) {
+  if (!map || map.key === "base") return map?.label || "通用 / 未指定";
+  const values = [map.label || map.key];
+  if (map.alias) values.push(map.alias);
+  if (Number.isInteger(map.id)) values.push(`Map ${map.id}`);
+  return [...new Set(values)].join(" · ");
+}
+
+function mapHeaderIdentityText(map) {
+  const values = [map.en_name];
+  if (Number.isInteger(map.id)) values.push(`Map ${map.id}`);
+  return [...new Set(values.filter(Boolean))].join(" · ") || map.key;
+}
+
+function mapFacetOptions(records) {
+  const facets = new Map();
+  for (const record of records) {
+    const map = record.map || { key: "base", label: "通用 / 未指定" };
+    const key = String(map.key || "base");
+    const current = facets.get(key) || { map, count: 0 };
+    current.count += 1;
+    facets.set(key, current);
+  }
+  return [...facets.entries()]
+    .sort((left, right) => {
+      if (left[0] === "base") return -1;
+      if (right[0] === "base") return 1;
+      return String(left[1].map.label || left[0]).localeCompare(
+        String(right[1].map.label || right[0]),
+        "zh-CN",
+      );
+    })
+    .map(([key, facet]) => ({
+      value: key,
+      label: `${mapIdentityText(facet.map)} · ${formatCount(facet.count)}`,
+    }));
+}
+
 function populateFilterOptions() {
   const events = state.champion.events;
   const assetKinds = [...new Set(events.map((event) => event.asset_kind))].sort();
   const supportLevels = [...new Set(events.map((event) => event.support_level))].sort();
+  const mapOptions = mapFacetOptions(events);
+  const hasExplicitMaps = mapOptions.some((option) => option.value !== "base");
   const assetLabels = { vo: "语音 VO", sfx: "音效 SFX", vfx: "视觉 VFX" };
   const supportLabels = { stable: "Stable", experimental: "Experimental", unsupported: "Unsupported" };
   replaceSelectOptions(
@@ -370,6 +569,14 @@ function populateFilterOptions() {
     ],
     state.modeKey,
   );
+  replaceSelectOptions(
+    elements.mapFilter,
+    hasExplicitMaps
+      ? [{ value: "all", label: "全部地图" }, ...mapOptions]
+      : [{ value: "all", label: "当前英雄无显式地图" }],
+    state.mapKey,
+  );
+  elements.mapFilter.disabled = !hasExplicitMaps;
   replaceSelectOptions(
     elements.skinFilter,
     [
@@ -425,6 +632,7 @@ function resetEventFilters(render = true) {
   state.assetKind = "all";
   state.supportLevel = "all";
   state.modeKey = "all";
+  state.mapKey = "all";
   state.skinNumber = "all";
   state.page = 1;
   elements.eventSearch.value = "";
@@ -439,6 +647,7 @@ function eventMatches(event) {
   if (state.assetKind !== "all" && event.asset_kind !== state.assetKind) return false;
   if (state.supportLevel !== "all" && event.support_level !== state.supportLevel) return false;
   if (state.modeKey !== "all" && event.mode.key !== state.modeKey) return false;
+  if (state.mapKey !== "all" && (event.map?.key || "base") !== state.mapKey) return false;
   if (state.skinNumber !== "all" && String(event.skin_number) !== state.skinNumber) return false;
   const query = state.eventQuery.trim().toLocaleLowerCase("zh-CN");
   if (!query) return true;
@@ -448,6 +657,9 @@ function eventMatches(event) {
     event.zh_cn_detail,
     event.frame_type,
     event.primary_family,
+    event.map?.label,
+    event.map?.en_name,
+    event.map?.alias,
   ]
     .filter(Boolean)
     .join(" ")
@@ -518,8 +730,13 @@ function renderEventRow(event) {
   supportCell.dataset.label = "支持度";
   supportCell.append(badge(event.support_level, "support", event.support_level));
   const modeCell = createElement("td");
-  modeCell.dataset.label = "模式";
-  modeCell.append(badge(event.mode.label, "mode", event.mode.key));
+  modeCell.dataset.label = "模式 / 地图";
+  const contextBadges = createElement("div", { className: "context-badges" });
+  contextBadges.append(badge(event.mode.label, "mode", event.mode.key));
+  if (event.map?.key && event.map.key !== "base") {
+    contextBadges.append(badge(`地图 · ${event.map.label}`, "map", event.map.key));
+  }
+  modeCell.append(contextBadges);
   const skinCell = createElement("td", { text: skinNameForEvent(event) });
   skinCell.dataset.label = "皮肤";
   row.append(identityCell, typeCell, supportCell, modeCell, skinCell);
@@ -543,6 +760,187 @@ function renderEvents() {
   elements.nextPage.disabled = state.page >= pageCount;
 }
 
+async function loadMap(key) {
+  const mapIndex = state.index.maps.find((map) => map.key === key);
+  if (!mapIndex) return;
+  const sequence = ++state.mapLoadSequence;
+  setLoading(`正在读取 ${mapIndex.label} 的事件…`);
+  try {
+    let document = mapCache.get(key);
+    if (!document) {
+      document = await fetchJson(mapIndex.data_path);
+      mapCache.set(key, document);
+    }
+    if (sequence !== state.mapLoadSequence) return;
+    state.map = document;
+    resetMapFilters(false);
+    renderMapList();
+    renderMap();
+    clearLoading();
+    announce(`已载入${document.map.label}，共${formatCount(document.stats.events)}条事件`);
+  } catch (error) {
+    if (sequence !== state.mapLoadSequence) return;
+    setLoading(`无法读取地图数据：${error.message}。请检查静态站点文件是否完整或稍后重试。`, true);
+  }
+}
+
+function renderMap() {
+  const document = state.map;
+  const map = document.map;
+  const stats = document.stats;
+  elements.mapIdentifier.textContent = Number.isInteger(map.id) ? `M${map.id}` : "MAP";
+  elements.mapAlias.textContent = map.alias || map.key;
+  elements.mapName.textContent = map.label;
+  elements.mapIdentity.textContent = mapHeaderIdentityText(map);
+  elements.mapCurrentEventCount.textContent = formatCount(stats.events);
+  elements.mapStableCount.textContent = formatCount(stats.support.stable || 0);
+  elements.mapModeCount.textContent = formatCount(document.modes.length);
+  const renderedRatio = stats.events ? Math.round((stats.rendered / stats.events) * 100) : 0;
+  elements.mapRenderedRatio.textContent = `${renderedRatio}%`;
+  window.document.title = `${map.label} · 峡谷事件语义图鉴`;
+  populateMapFilterOptions();
+  renderMapEvents();
+}
+
+function populateMapFilterOptions() {
+  const events = state.map.events;
+  const assetKinds = [...new Set(events.map((event) => event.asset_kind))].sort();
+  const supportLevels = [...new Set(events.map((event) => event.support_level))].sort();
+  const entities = [...new Set(events.map((event) => event.entity.alias))].sort((left, right) =>
+    left.localeCompare(right, "zh-CN"),
+  );
+  const assetLabels = { vo: "语音 VO", sfx: "音效 SFX", vfx: "视觉 VFX" };
+  const supportLabels = { stable: "Stable", experimental: "Experimental", unsupported: "Unsupported" };
+  replaceSelectOptions(
+    elements.mapAssetFilter,
+    [{ value: "all", label: "全部类型" }, ...assetKinds.map((value) => ({ value, label: assetLabels[value] || value }))],
+    state.mapAssetKind,
+  );
+  replaceSelectOptions(
+    elements.mapSupportFilter,
+    [
+      { value: "all", label: "全部支持度" },
+      ...supportLevels.map((value) => ({ value, label: supportLabels[value] || value })),
+    ],
+    state.mapSupportLevel,
+  );
+  replaceSelectOptions(
+    elements.mapModeFilter,
+    [
+      { value: "all", label: "全部模式" },
+      ...state.map.modes.map((mode) => ({ value: mode.key, label: mode.label })),
+    ],
+    state.mapModeKey,
+  );
+  replaceSelectOptions(
+    elements.mapEntityFilter,
+    [{ value: "all", label: "全部实体" }, ...entities.map((value) => ({ value, label: value }))],
+    state.mapEntity,
+  );
+  elements.mapEventSearch.value = state.mapEventQuery;
+}
+
+function resetMapFilters(render = true) {
+  state.mapEventQuery = "";
+  state.mapAssetKind = "all";
+  state.mapSupportLevel = "all";
+  state.mapModeKey = "all";
+  state.mapEntity = "all";
+  state.mapPage = 1;
+  elements.mapEventSearch.value = "";
+  if (render && state.map) {
+    populateMapFilterOptions();
+    renderMapEvents();
+  }
+}
+
+function mapEventMatches(event) {
+  if (state.mapAssetKind !== "all" && event.asset_kind !== state.mapAssetKind) return false;
+  if (state.mapSupportLevel !== "all" && event.support_level !== state.mapSupportLevel) return false;
+  if (state.mapModeKey !== "all" && event.mode.key !== state.mapModeKey) return false;
+  if (state.mapEntity !== "all" && event.entity.alias !== state.mapEntity) return false;
+  const query = state.mapEventQuery.trim().toLocaleLowerCase("zh-CN");
+  if (!query) return true;
+  const haystack = [
+    event.raw_event_name,
+    event.zh_cn_short,
+    event.zh_cn_detail,
+    event.frame_type,
+    event.primary_family,
+    event.entity.alias,
+    event.entity.kind,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLocaleLowerCase("zh-CN");
+  return haystack.includes(query);
+}
+
+function applyMapFilters() {
+  state.mapPage = 1;
+  renderMapEvents();
+}
+
+function renderMapEventRow(event) {
+  const row = createElement("tr");
+  const identityCell = createElement("td");
+  identityCell.dataset.label = "事件";
+  const rawButton = createElement("button", {
+    className: "event-name-button",
+    text: event.raw_event_name,
+    type: "button",
+  });
+  rawButton.title = "复制原始事件名";
+  rawButton.setAttribute("translate", "no");
+  rawButton.addEventListener("click", () => copyRawEventName(event.raw_event_name));
+  identityCell.append(
+    rawButton,
+    createElement("span", {
+      className: event.zh_cn_short ? "event-short-label" : "event-short-label event-missing-label",
+      text: event.zh_cn_short || "尚无中文短标签",
+    }),
+    createElement("span", { className: "event-detail-label", text: event.zh_cn_detail || "未生成中文详情" }),
+  );
+  const typeCell = createElement("td");
+  typeCell.dataset.label = "类型";
+  typeCell.append(badge(eventTypeLabel(event.asset_kind), "kind", event.asset_kind));
+  const supportCell = createElement("td");
+  supportCell.dataset.label = "支持度";
+  supportCell.append(badge(event.support_level, "support", event.support_level));
+  const modeCell = createElement("td");
+  modeCell.dataset.label = "模式";
+  modeCell.append(badge(event.mode.label, "mode", event.mode.key));
+  const entityCell = createElement("td");
+  entityCell.dataset.label = "实体";
+  entityCell.append(
+    createElement("strong", { text: event.entity.alias }),
+    createElement("span", {
+      className: "event-detail-label",
+      text: `${event.entity.kind} · ${event.primary_family || "unknown"}`,
+    }),
+  );
+  row.append(identityCell, typeCell, supportCell, modeCell, entityCell);
+  return row;
+}
+
+function renderMapEvents() {
+  if (!state.map) return;
+  const filtered = state.map.events.filter(mapEventMatches);
+  const pageCount = Math.max(1, Math.ceil(filtered.length / state.mapPageSize));
+  state.mapPage = Math.min(Math.max(state.mapPage, 1), pageCount);
+  const start = (state.mapPage - 1) * state.mapPageSize;
+  const fragment = document.createDocumentFragment();
+  for (const event of filtered.slice(start, start + state.mapPageSize)) {
+    fragment.append(renderMapEventRow(event));
+  }
+  elements.mapEventTableBody.replaceChildren(fragment);
+  elements.mapEmptyState.hidden = filtered.length !== 0;
+  elements.mapResultsSummary.textContent = `${formatCount(filtered.length)} / ${formatCount(state.map.events.length)} 条`;
+  elements.mapPageStatus.textContent = `第 ${state.mapPage} / ${pageCount} 页`;
+  elements.mapPreviousPage.disabled = state.mapPage <= 1;
+  elements.mapNextPage.disabled = state.mapPage >= pageCount;
+}
+
 async function ensureReviewIndex() {
   if (state.reviewIndex) return state.reviewIndex;
   const index = await fetchJson("data/review/index.json");
@@ -550,10 +948,24 @@ async function ensureReviewIndex() {
     throw new Error("Review 索引与当前数据集身份不一致");
   }
   state.reviewIndex = index;
-  elements.reviewResidualCount.textContent = formatCount(index.counts.residual_records);
-  elements.reviewIssueCount.textContent = formatCount(index.counts.residual_issues);
-  elements.reviewUnassignedCount.textContent = formatCount(index.counts.unassigned_records);
   return index;
+}
+
+function updateReviewScopeSummary() {
+  const scope = state.reviewIndex.scopes.find((item) => item.key === state.entityType);
+  const mapReview = state.entityType === "map";
+  elements.reviewHeading.textContent = mapReview ? "地图 Review" : "英雄 Review";
+  elements.reviewDescription.textContent = mapReview
+    ? "同一 candidate 中带显式地图槽位的残差与未归属记录；地图身份已知，待审的是其余语义与归属问题。"
+    : "同一 candidate 中无显式地图槽位的残差与未归属记录；主要审阅英雄归属、动作与翻译问题。";
+  elements.reviewResidualCount.textContent = formatCount(scope?.residual_records || 0);
+  const issueCount = state.reviewIndex.layers.reduce(
+    (total, layer) => total + Number(layer.scope_issue_counts?.[state.entityType] || 0),
+    0,
+  );
+  elements.reviewIssueCount.textContent = formatCount(issueCount);
+  elements.reviewUnassignedCount.textContent = formatCount(scope?.unassigned_records || 0);
+  elements.reviewMapField.hidden = !mapReview;
 }
 
 async function loadReviewQueue(queue) {
@@ -585,12 +997,12 @@ function selectAvailable(select, value, fallback = "all") {
 
 function populateReviewFilters() {
   const index = state.reviewIndex;
-  const records = state.reviewRecords;
+  const records = state.reviewRecords.filter((record) => record.review_scope === state.entityType);
   replaceSelectOptions(
     elements.reviewQueue,
     index.queues.map((queue) => ({
       value: queue.key,
-      label: `${queue.label} · ${formatCount(queue.record_count)}`,
+      label: `${queue.label} · ${formatCount(queue.scope_counts?.[state.entityType] || 0)}`,
     })),
     state.reviewQueue,
   );
@@ -624,6 +1036,11 @@ function populateReviewFilters() {
     state.reviewEntity,
   );
   replaceSelectOptions(
+    elements.reviewMap,
+    [{ value: "all", label: "全部地图" }, ...mapFacetOptions(records)],
+    state.reviewMap,
+  );
+  replaceSelectOptions(
     elements.reviewStatus,
     [{ value: "all", label: "全部状态" }, ...reviewFacetOptions(records, (record) => record.review_status)],
     state.reviewStatus,
@@ -633,6 +1050,7 @@ function populateReviewFilters() {
   state.reviewCode = selectAvailable(elements.reviewCode, state.reviewCode);
   state.reviewFamily = selectAvailable(elements.reviewFamily, state.reviewFamily);
   state.reviewEntity = selectAvailable(elements.reviewEntity, state.reviewEntity);
+  state.reviewMap = selectAvailable(elements.reviewMap, state.reviewMap);
   state.reviewStatus = selectAvailable(elements.reviewStatus, state.reviewStatus);
   elements.reviewSearch.value = state.reviewQuery;
 }
@@ -643,11 +1061,13 @@ function renderReviewLayerCards() {
     const button = createElement("button", { className: "review-layer-card", type: "button" });
     button.dataset.layer = layer.key;
     const active = state.reviewQueue === "residual" && state.reviewLayer === layer.key;
+    const recordCount = layer.scope_record_counts?.[state.entityType] || 0;
+    const issueCount = layer.scope_issue_counts?.[state.entityType] || 0;
     button.setAttribute("aria-pressed", String(active));
     button.append(
       createElement("strong", { text: layer.label }),
       createElement("span", {
-        text: `${formatCount(layer.record_count)} 条记录 · ${formatCount(layer.issue_count)} 个问题`,
+        text: `${formatCount(recordCount)} 条记录 · ${formatCount(issueCount)} 个问题`,
       }),
     );
     button.addEventListener("click", () => {
@@ -664,10 +1084,12 @@ function renderReviewLayerCards() {
 }
 
 function reviewMatches(record) {
+  if (record.review_scope !== state.entityType) return false;
   if (state.reviewLayer !== "all" && !record.layers.includes(state.reviewLayer)) return false;
   if (state.reviewCode !== "all" && !record.issues.some((issue) => issue.code === state.reviewCode)) return false;
   if (state.reviewFamily !== "all" && record.family !== state.reviewFamily) return false;
   if (state.reviewEntity !== "all" && record.entity.alias !== state.reviewEntity) return false;
+  if (state.reviewMap !== "all" && (record.map?.key || "base") !== state.reviewMap) return false;
   if (state.reviewStatus !== "all" && record.review_status !== state.reviewStatus) return false;
   const query = state.reviewQuery.trim().toLocaleLowerCase("zh-CN");
   if (!query) return true;
@@ -682,6 +1104,9 @@ function reviewMatches(record) {
     record.family,
     record.profile,
     record.frame_type,
+    record.map?.label,
+    record.map?.en_name,
+    record.map?.alias,
     issueText,
   ]
     .filter(Boolean)
@@ -692,6 +1117,10 @@ function reviewMatches(record) {
 
 function filteredReviewRecords() {
   return state.reviewRecords.filter(reviewMatches);
+}
+
+function scopedReviewRecordCount() {
+  return state.reviewRecords.filter((record) => record.review_scope === state.entityType).length;
 }
 
 function reviewLayerLabel(key) {
@@ -741,6 +1170,11 @@ function renderReviewRow(record) {
     createElement("strong", { text: record.entity.alias }),
     createElement("span", { className: "event-detail-label", text: `${record.entity.kind} · ${record.family}` }),
   );
+  if (record.map?.key && record.map.key !== "base") {
+    const mapBadges = createElement("div", { className: "context-badges" });
+    mapBadges.append(badge(`地图 · ${record.map.label}`, "map", record.map.key));
+    entityCell.append(mapBadges);
+  }
 
   const statusCell = createElement("td");
   statusCell.dataset.label = "状态";
@@ -769,6 +1203,10 @@ function renderReviewDetail() {
 
   const meta = [
     ["实体", `${record.entity.alias} · ${record.entity.kind}`],
+    [
+      "地图",
+      mapIdentityText(record.map),
+    ],
     ["语义族", `${record.family} · ${record.profile}`],
     ["Frame", record.frame_type],
     ["状态", `${record.review_status} · ${record.support_level} · ${record.render_status}`],
@@ -808,7 +1246,7 @@ function renderReviewRecords() {
   }
   elements.reviewTableBody.replaceChildren(fragment);
   elements.reviewEmptyState.hidden = filtered.length !== 0;
-  elements.reviewResultsSummary.textContent = `${formatCount(filtered.length)} / ${formatCount(state.reviewRecords.length)} 条`;
+  elements.reviewResultsSummary.textContent = `${formatCount(filtered.length)} / ${formatCount(scopedReviewRecordCount())} 条`;
   elements.reviewPageStatus.textContent = `第 ${state.reviewPage} / ${pageCount} 页`;
   elements.reviewPreviousPage.disabled = state.reviewPage <= 1;
   elements.reviewNextPage.disabled = state.reviewPage >= pageCount;
@@ -833,23 +1271,28 @@ function applyReviewFilters() {
 }
 
 function resetReviewFilters() {
-  state.reviewQuery = "";
-  state.reviewLayer = "all";
-  state.reviewCode = "all";
-  state.reviewFamily = "all";
-  state.reviewEntity = "all";
-  state.reviewStatus = "all";
-  state.reviewPage = 1;
-  state.selectedReviewId = null;
+  clearReviewFilterState();
   populateReviewFilters();
   renderReviewLayerCards();
   replaceReviewHash();
   renderReviewRecords();
 }
 
+function clearReviewFilterState() {
+  state.reviewQuery = "";
+  state.reviewLayer = "all";
+  state.reviewCode = "all";
+  state.reviewFamily = "all";
+  state.reviewEntity = "all";
+  state.reviewMap = "all";
+  state.reviewStatus = "all";
+  state.reviewPage = 1;
+  state.selectedReviewId = null;
+}
+
 async function loadReviewView(params) {
   const sequence = ++state.reviewLoadSequence;
-  showView("review");
+  showView("review", state.entityType);
   setLoading("正在读取 Review 队列…");
   try {
     const index = await ensureReviewIndex();
@@ -866,9 +1309,11 @@ async function loadReviewView(params) {
     state.reviewCode = params.get("code") || "all";
     state.reviewFamily = params.get("family") || "all";
     state.reviewEntity = params.get("entity") || "all";
+    state.reviewMap = state.entityType === "map" ? params.get("map") || "all" : "all";
     state.reviewStatus = params.get("status") || "all";
     state.reviewPage = Math.max(1, Number(params.get("page") || 1) || 1);
     state.selectedReviewId = params.get("record");
+    updateReviewScopeSummary();
     populateReviewFilters();
     renderReviewLayerCards();
     if (!params.has("page") && state.selectedReviewId) {
@@ -877,13 +1322,13 @@ async function loadReviewView(params) {
       );
       if (selectedIndex >= 0) state.reviewPage = Math.floor(selectedIndex / state.reviewPageSize) + 1;
     }
-    if (!state.reviewRecords.some((record) => record.record_id === state.selectedReviewId)) {
+    if (!filteredReviewRecords().some((record) => record.record_id === state.selectedReviewId)) {
       state.selectedReviewId = null;
     }
     replaceReviewHash();
     renderReviewRecords();
     clearLoading();
-    announce(`已载入${queue.label}，共${formatCount(records.length)}条记录`);
+    announce(`已载入${state.entityType === "map" ? "地图" : "英雄"}${queue.label}，共${formatCount(scopedReviewRecordCount())}条记录`);
   } catch (error) {
     if (sequence !== state.reviewLoadSequence) return;
     setLoading(`无法读取 Review 数据：${error.message}`, true);
@@ -906,21 +1351,64 @@ async function copyReviewLocator() {
   }
 }
 
+async function copyPageLink() {
+  if (!navigator.clipboard?.writeText) {
+    announce("当前浏览器不允许自动复制，请手动复制地址栏链接");
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(window.location.href);
+    announce("已复制当前页面链接");
+  } catch {
+    announce("复制失败，请手动复制地址栏链接");
+  }
+}
+
 function wireInteractions() {
-  elements.championViewButton.addEventListener("click", () => {
+  elements.confirmedStatusButton.addEventListener("click", () => {
+    if (state.entityType === "map") {
+      const initial =
+        (state.status === "review" && state.reviewMap !== "all" ? state.reviewMap : null) ||
+        state.map?.map.key ||
+        state.index.maps[0]?.key;
+      if (initial) window.location.hash = mapHash(initial);
+      return;
+    }
     const initial = state.champion?.champion.alias || state.index.champions[0]?.alias;
     if (initial) window.location.hash = championHash(initial);
   });
-  elements.reviewViewButton.addEventListener("click", () => {
+  elements.reviewStatusButton.addEventListener("click", () => {
     window.location.hash = reviewHash();
+  });
+  elements.championEntityButton.addEventListener("click", () => {
+    state.browseQuery = "";
+    if (state.status === "review") {
+      state.entityType = "champion";
+      clearReviewFilterState();
+      window.location.hash = reviewHash();
+      return;
+    }
+    const initial = state.champion?.champion.alias || state.index.champions[0]?.alias;
+    if (initial) window.location.hash = championHash(initial);
+  });
+  elements.mapEntityButton.addEventListener("click", () => {
+    state.browseQuery = "";
+    if (state.status === "review") {
+      state.entityType = "map";
+      clearReviewFilterState();
+      window.location.hash = reviewHash();
+      return;
+    }
+    const initial = state.map?.map.key || state.index.maps[0]?.key;
+    if (initial) window.location.hash = mapHash(initial);
   });
   elements.eventFilters.addEventListener("submit", (event) => {
     event.preventDefault();
     applyEventFilters();
   });
-  elements.championSearch.addEventListener("input", (event) => {
-    state.championQuery = event.target.value;
-    renderChampionList();
+  elements.browseSearch.addEventListener("input", (event) => {
+    state.browseQuery = event.target.value;
+    renderBrowseList();
   });
   elements.splashImage.addEventListener("error", handleSplashError);
   elements.previousSkin.addEventListener("click", () => showPreviewSkin(state.previewSkinIndex - 1));
@@ -946,6 +1434,10 @@ function wireInteractions() {
     state.modeKey = event.target.value;
     applyEventFilters();
   });
+  elements.mapFilter.addEventListener("change", (event) => {
+    state.mapKey = event.target.value;
+    applyEventFilters();
+  });
   elements.skinFilter.addEventListener("change", (event) => {
     state.skinNumber = event.target.value;
     applyEventFilters();
@@ -964,6 +1456,44 @@ function wireInteractions() {
     state.page = 1;
     renderEvents();
   });
+  elements.mapEventFilters.addEventListener("submit", (event) => {
+    event.preventDefault();
+    applyMapFilters();
+  });
+  elements.mapEventSearch.addEventListener("input", (event) => {
+    state.mapEventQuery = event.target.value;
+    applyMapFilters();
+  });
+  elements.mapAssetFilter.addEventListener("change", (event) => {
+    state.mapAssetKind = event.target.value;
+    applyMapFilters();
+  });
+  elements.mapSupportFilter.addEventListener("change", (event) => {
+    state.mapSupportLevel = event.target.value;
+    applyMapFilters();
+  });
+  elements.mapModeFilter.addEventListener("change", (event) => {
+    state.mapModeKey = event.target.value;
+    applyMapFilters();
+  });
+  elements.mapEntityFilter.addEventListener("change", (event) => {
+    state.mapEntity = event.target.value;
+    applyMapFilters();
+  });
+  elements.resetMapFilters.addEventListener("click", () => resetMapFilters(true));
+  elements.mapPreviousPage.addEventListener("click", () => {
+    state.mapPage -= 1;
+    renderMapEvents();
+  });
+  elements.mapNextPage.addEventListener("click", () => {
+    state.mapPage += 1;
+    renderMapEvents();
+  });
+  elements.mapPageSize.addEventListener("change", (event) => {
+    state.mapPageSize = Number(event.target.value);
+    state.mapPage = 1;
+    renderMapEvents();
+  });
   elements.reviewFilters.addEventListener("submit", (event) => {
     event.preventDefault();
     applyReviewFilters();
@@ -975,6 +1505,7 @@ function wireInteractions() {
     state.reviewCode = "all";
     state.reviewFamily = "all";
     state.reviewEntity = "all";
+    state.reviewMap = "all";
     state.reviewStatus = "all";
     state.reviewPage = 1;
     state.selectedReviewId = null;
@@ -1000,6 +1531,10 @@ function wireInteractions() {
     state.reviewEntity = event.target.value;
     applyReviewFilters();
   });
+  elements.reviewMap.addEventListener("change", (event) => {
+    state.reviewMap = event.target.value;
+    applyReviewFilters();
+  });
   elements.reviewStatus.addEventListener("change", (event) => {
     state.reviewStatus = event.target.value;
     applyReviewFilters();
@@ -1022,6 +1557,7 @@ function wireInteractions() {
     renderReviewRecords();
   });
   elements.copyReviewLocator.addEventListener("click", copyReviewLocator);
+  elements.copyPageLink.addEventListener("click", copyPageLink);
   window.addEventListener("hashchange", () => {
     syncRoute();
   });
@@ -1029,12 +1565,36 @@ function wireInteractions() {
 
 async function syncRoute() {
   const params = hashParams();
-  if (params.get("view") === "review") {
+  const legacyReview = params.get("view") === "review";
+  const status = legacyReview || params.get("status") === "review" ? "review" : "confirmed";
+  const requestedType = params.get("type");
+  const inferredLegacyType = legacyReview && params.get("map") && params.get("map") !== "all" ? "map" : "champion";
+  const entityType = requestedType === "map" || requestedType === "champion" ? requestedType : inferredLegacyType;
+  if (state.entityType !== entityType) state.browseQuery = "";
+  showView(status, entityType);
+
+  if (status === "review") {
+    document.title = `${entityType === "map" ? "地图" : "英雄"} Review · 峡谷事件语义图鉴`;
     await loadReviewView(params);
     return;
   }
 
-  showView("champion");
+  if (entityType === "map") {
+    const requestedMap = params.get("map");
+    const initial = state.index.maps.find((map) => map.key === requestedMap) || state.index.maps[0];
+    if (!initial) throw new Error("索引中没有显式地图事件");
+    if (window.location.hash !== mapHash(initial.key)) {
+      window.history.replaceState(null, "", mapHash(initial.key));
+    }
+    if (state.map?.map.key === initial.key) {
+      renderMapList();
+      clearLoading();
+      return;
+    }
+    await loadMap(initial.key);
+    return;
+  }
+
   const requestedAlias = params.get("champion");
   const initial =
     state.index.champions.find((champion) => champion.alias === requestedAlias) ||
@@ -1056,12 +1616,17 @@ async function initialize() {
   wireInteractions();
   try {
     state.index = await fetchJson("data/index.json");
+    if (state.index.schema_version !== supportedDemoSchemaVersion) {
+      throw new Error(
+        `不支持的 Demo schema：${state.index.schema_version}，需要 ${supportedDemoSchemaVersion}`,
+      );
+    }
     updateDatasetSummary();
-    renderChampionList();
+    renderBrowseList();
     await syncRoute();
   } catch (error) {
     elements.appShell.setAttribute("aria-busy", "false");
-    setLoading(`演示站无法启动：${error.message}。请在站点目录运行本地 HTTP 服务，不要直接双击 HTML。`, true);
+    setLoading(`演示站无法启动：${error.message}。请通过 HTTP(S) 地址访问，并确认站点数据完整。`, true);
   }
 }
 

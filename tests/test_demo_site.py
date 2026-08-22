@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -24,14 +25,19 @@ def test_build_demo_site_groups_mode_events_under_base_champions(tmp_path: Path)
 
     assert summary.champion_count == 7
     assert summary.event_count == 5
+    assert summary.map_count == 2
+    assert summary.map_event_count == 2
     assert summary.unassigned_event_count == 3
 
     index = read_json(output_root / "data" / "index.json")
+    assert index["schema_version"] == 2
     assert index["dataset"]["dataset_id"] == "local-v1-test"
     assert index["dataset"]["data_dragon_version"] == "16.16.1"
     assert index["counts"] == {
         "champion_events": 5,
         "champions": 7,
+        "map_events": 2,
+        "maps": 2,
         "source_records": 8,
         "unassigned_records": 3,
     }
@@ -49,6 +55,10 @@ def test_build_demo_site_groups_mode_events_under_base_champions(tmp_path: Path)
         "MonkeyKing",
         "Ziggs",
     ]
+    assert [(item["key"], item["event_count"]) for item in index["maps"]] == [
+        ("map11", 1),
+        ("map12", 1),
+    ]
     annie_index = next(item for item in index["champions"] if item["alias"] == "Annie")
     assert "火女" in annie_index["search_terms"]
     assert annie_index["portrait_url"].endswith("/16.16.1/img/champion/Annie.png")
@@ -60,11 +70,25 @@ def test_build_demo_site_groups_mode_events_under_base_champions(tmp_path: Path)
     assert annie["skins"][2]["splash_skin_number"] == 1
     assert annie["events"][0]["raw_event_name"] == "Play_vo_Annie_Spell3DQCast"
     assert annie["events"][0]["mode"] == {"key": "jade", "label": "经典模式", "prefix": "Jade"}
+    assert annie["events"][0]["map"] == {
+        "alias": "SR",
+        "en_name": "Summoner's Rift",
+        "id": 11,
+        "key": "map11",
+        "label": "召唤师峡谷",
+    }
     assert annie["events"][0]["skin_number"] == 1
 
     veigar = read_json(output_root / "data" / "champions" / "Veigar.json")
     assert veigar["events"][0]["raw_event_name"] == "Play_sfx_Ruby_Boss_FNVeigar_MordeR_buffdeactivate"
     assert veigar["events"][0]["mode"]["key"] == "ruby"
+    assert veigar["events"][0]["map"] == {
+        "alias": None,
+        "en_name": None,
+        "id": None,
+        "key": "base",
+        "label": "通用 / 未指定",
+    }
     assert veigar["events"][0]["zh_cn_short"] is None
 
     malzahar = read_json(output_root / "data" / "champions" / "Malzahar.json")
@@ -87,6 +111,22 @@ def test_build_demo_site_groups_mode_events_under_base_champions(tmp_path: Path)
         "prefix": "Strawberry",
     }
 
+    summoners_rift = read_json(output_root / "data" / "maps" / "map11.json")
+    assert summoners_rift["schema_version"] == 2
+    assert summoners_rift["map"] == {
+        "alias": "SR",
+        "en_name": "Summoner's Rift",
+        "id": 11,
+        "key": "map11",
+        "label": "召唤师峡谷",
+    }
+    assert [event["record_id"] for event in summoners_rift["events"]] == ["record-annie"]
+    assert summoners_rift["events"][0]["entity"] == {"alias": "Annie", "kind": "champion"}
+
+    random_map = read_json(output_root / "data" / "maps" / "map12.json")
+    assert [event["record_id"] for event in random_map["events"]] == ["record-unassigned"]
+    assert random_map["events"][0]["entity"] == {"alias": "Ruby", "kind": "map_or_system"}
+
     review = read_json(output_root / "data" / "review" / "index.json")
     assert review["dataset"]["dataset_id"] == "local-v1-test"
     assert review["counts"] == {
@@ -94,6 +134,20 @@ def test_build_demo_site_groups_mode_events_under_base_champions(tmp_path: Path)
         "residual_records": 3,
         "unassigned_records": 3,
     }
+    assert review["scopes"] == [
+        {
+            "key": "champion",
+            "label": "英雄",
+            "residual_records": 2,
+            "unassigned_records": 2,
+        },
+        {
+            "key": "map",
+            "label": "地图",
+            "residual_records": 1,
+            "unassigned_records": 1,
+        },
+    ]
     assert [(item["key"], item["record_count"]) for item in review["layers"]] == [
         ("contract_shape", 0),
         ("coverage", 1),
@@ -106,14 +160,19 @@ def test_build_demo_site_groups_mode_events_under_base_champions(tmp_path: Path)
             "key": "residual",
             "label": "SFX 残差",
             "record_count": 3,
+            "scope_counts": {"champion": 2, "map": 1},
         },
         {
             "data_path": "data/review/unassigned.json",
             "key": "unassigned",
             "label": "未归属记录",
             "record_count": 3,
+            "scope_counts": {"champion": 2, "map": 1},
         },
     ]
+    layer_by_key = {item["key"]: item for item in review["layers"]}
+    assert layer_by_key["review_evidence"]["scope_record_counts"] == {"champion": 0, "map": 1}
+    assert layer_by_key["review_evidence"]["scope_issue_counts"] == {"champion": 0, "map": 2}
 
     residuals = read_json(output_root / "data" / "review" / "residuals.json")["records"]
     residual = next(item for item in residuals if item["record_id"] == "record-unassigned")
@@ -127,6 +186,7 @@ def test_build_demo_site_groups_mode_events_under_base_champions(tmp_path: Path)
         "record_id": "record-unassigned",
     }
     assert residual["reason_code"] == "validator_issue"
+    assert residual["review_scope"] == "map"
 
     unassigned = read_json(output_root / "data" / "review" / "unassigned.json")["records"]
     assert {item["record_id"] for item in unassigned} == {
@@ -134,6 +194,16 @@ def test_build_demo_site_groups_mode_events_under_base_champions(tmp_path: Path)
         "record-ruby-mission-ziggs",
         "record-unassigned",
     }
+    unassigned_by_id = {item["record_id"]: item for item in unassigned}
+    assert unassigned_by_id["record-unassigned"]["map"] == {
+        "alias": "HA",
+        "en_name": "Random Map",
+        "id": 12,
+        "key": "map12",
+        "label": "随机地图",
+    }
+    assert unassigned_by_id["record-ruby-mission-ziggs"]["map"]["key"] == "base"
+    assert unassigned_by_id["record-ruby-mission-ziggs"]["review_scope"] == "champion"
     assert "semantic" not in unassigned[0]
     assert {item["reason_code"] for item in unassigned} == {"no_safe_champion_assignment"}
 
@@ -217,6 +287,25 @@ def test_build_demo_site_rejects_validation_claiming_another_run(tmp_path: Path)
         )
 
 
+def test_build_demo_site_rejects_conflicting_explicit_map_identity(tmp_path: Path) -> None:
+    normalized_root, validation_json, reference_root = write_demo_inputs(tmp_path)
+    events_path = normalized_root / "normalized-events.jsonl"
+    records = [json.loads(line) for line in events_path.read_text(encoding="utf-8").splitlines()]
+    records[0]["semantic"]["slots"]["map"]["key"] = "map12"
+    events_path.write_text(
+        "".join(json.dumps(record, ensure_ascii=False, sort_keys=True) + "\n" for record in records),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(DemoSiteError, match="conflicting map key and reference"):
+        build_demo_site(
+            normalized_root=normalized_root,
+            validation_json=validation_json,
+            reference_root=reference_root,
+            output_root=tmp_path / "site",
+        )
+
+
 def test_demo_cli_requires_validation_for_explicit_candidate(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -248,6 +337,14 @@ def test_demo_assets_keep_accessibility_security_and_responsive_contract(tmp_pat
     stylesheet = (output_root / "styles.css").read_text(encoding="utf-8")
     dom = DemoDom()
     dom.feed(html)
+    element_block = re.search(
+        r"const elements = Object\.fromEntries\(\s*\[(.*?)\]\.map",
+        javascript,
+        re.DOTALL,
+    )
+    assert element_block is not None
+    referenced_element_ids = set(re.findall(r'"([A-Za-z][A-Za-z0-9]+)"', element_block.group(1)))
+    assert referenced_element_ids.issubset(dom.tags_by_id)
 
     assert 'lang="zh-CN"' in html
     assert 'name="theme-color" content="#f7f5f0"' in html
@@ -260,6 +357,8 @@ def test_demo_assets_keep_accessibility_security_and_responsive_contract(tmp_pat
     assert 'eventFilters.addEventListener("submit"' in javascript
     assert 'reviewFilters.addEventListener("submit"' in javascript
     assert 'fetchJson("data/review/index.json")' in javascript
+    assert 'params.get("status")' in javascript
+    assert 'params.get("type")' in javascript
     assert 'params.get("view")' in javascript
     assert 'params.get("queue")' in javascript
     assert 'params.get("layer")' in javascript
@@ -270,9 +369,19 @@ def test_demo_assets_keep_accessibility_security_and_responsive_contract(tmp_pat
     assert 'params.get("record")' in javascript
     assert "window.history.replaceState" in javascript
     assert {
-        "championViewButton",
-        "reviewViewButton",
+        "confirmedStatusButton",
+        "reviewStatusButton",
+        "championEntityButton",
+        "mapEntityButton",
+        "datasetDisclosure",
+        "datasetSummaryInline",
+        "browseNavigation",
+        "browseSearch",
+        "browseList",
         "championView",
+        "mapView",
+        "mapEventFilters",
+        "mapEventTableBody",
         "reviewView",
         "reviewLayerCards",
         "reviewFilters",
@@ -282,19 +391,74 @@ def test_demo_assets_keep_accessibility_security_and_responsive_contract(tmp_pat
         "reviewCode",
         "reviewFamily",
         "reviewEntity",
+        "reviewMap",
         "reviewStatus",
         "reviewTableBody",
         "reviewDetail",
         "reviewDetailLocator",
     }.issubset(dom.tags_by_id)
     assert dom.tags_by_id["reviewFilters"] == "form"
+    assert dom.tags_by_id["mapEventFilters"] == "form"
+    assert dom.tags_by_id["datasetDisclosure"] == "details"
     assert dom.tags_by_id["reviewQueue"] == "select"
+    assert dom.tags_by_id["mapFilter"] == "select"
+    assert dom.tags_by_id["reviewMap"] == "select"
     assert dom.tags_by_id["reviewDetailLocator"] == "code"
     assert len(dom.ids) == len(set(dom.ids))
+    assert "@media (max-height: 900px) and (min-width: 901px)" in stylesheet
     assert "@media (max-width: 600px)" in stylesheet
     assert ":focus-visible" in stylesheet
     assert "min-height: 44px" in stylesheet
     assert "linear-gradient" not in stylesheet
+
+
+def test_demo_assets_are_ready_for_public_static_hosting(tmp_path: Path) -> None:
+    normalized_root, validation_json, reference_root = write_demo_inputs(tmp_path)
+    output_root = tmp_path / "site"
+    build_demo_site(
+        normalized_root=normalized_root,
+        validation_json=validation_json,
+        reference_root=reference_root,
+        output_root=output_root,
+    )
+
+    html = (output_root / "index.html").read_text(encoding="utf-8")
+    javascript = (output_root / "app.js").read_text(encoding="utf-8")
+    cloudflare_headers = (output_root / "_headers").read_text(encoding="utf-8")
+    manifest = read_json(output_root / "site.webmanifest")
+    champion = read_json(output_root / "data" / "champions" / "Annie.json")
+    dom = DemoDom()
+    dom.feed(html)
+
+    assert (output_root / ".nojekyll").read_text(encoding="utf-8") == ""
+    assert manifest["start_url"] == "."
+    assert manifest["scope"] == "."
+    assert manifest["lang"] == "zh-CN"
+    assert champion["dataset"] == {
+        "content_digest": "a" * 64,
+        "dataset_id": "local-v1-test",
+    }
+
+    assert 'http-equiv="Content-Security-Policy"' in html
+    assert 'name="referrer" content="no-referrer"' in html
+    assert 'rel="manifest" href="site.webmanifest"' in html
+    assert 'href="/"' not in html
+    assert 'src="/"' not in html
+    assert "PUBLIC DATA EXPLORER" in html
+    assert "本地静态浏览器" not in html
+    assert "本地数据投影" not in html
+    assert dom.tags_by_id["copyPageLink"] == "button"
+
+    assert 'url.searchParams.set("v", cacheVersion)' in javascript
+    assert 'cache: isEntryPoint ? "no-cache" : "default"' in javascript
+    assert "function assertDatasetIdentity" in javascript
+    assert 'cache: "no-store"' not in javascript
+    assert "请使用本地 HTTP 服务" not in javascript
+    assert "请在站点目录运行本地 HTTP 服务" not in javascript
+
+    assert "X-Content-Type-Options: nosniff" in cloudflare_headers
+    assert "Content-Security-Policy:" in cloudflare_headers
+    assert "/data/*" in cloudflare_headers
 
 
 def write_demo_inputs(tmp_path: Path) -> tuple[Path, Path, Path]:
@@ -322,7 +486,18 @@ def write_demo_inputs(tmp_path: Path) -> tuple[Path, Path, Path]:
             "render_status": "rendered",
             "semantic": {
                 "primary_family": "spell",
-                "slots": {"mode_context": {"key": "jade", "label": "经典模式"}},
+                "slots": {
+                    "map": {
+                        "alias": "SR",
+                        "id": 11,
+                        "key": "map11",
+                        "kind": "map",
+                        "label": "Summoner's Rift",
+                        "metadata": {"reference_alias": "SR"},
+                        "source": "reference/maps",
+                    },
+                    "mode_context": {"key": "jade", "label": "经典模式"},
+                },
             },
             "semantic_frame": {
                 "frame_type": "ability_cast_event",
@@ -441,6 +616,15 @@ def write_demo_inputs(tmp_path: Path) -> tuple[Path, Path, Path]:
             "semantic": {
                 "primary_family": "mode_entity",
                 "slots": {
+                    "map": {
+                        "alias": "HA",
+                        "id": 12,
+                        "key": "map12",
+                        "kind": "map",
+                        "label": "Random Map",
+                        "metadata": {"reference_alias": "HA"},
+                        "source": "reference/maps",
+                    },
                     "mode_context": {"key": "ruby", "label": "末日人机"},
                     "mode_actor": {"raw": "UnknownBoss"},
                 },
@@ -501,6 +685,7 @@ def write_demo_inputs(tmp_path: Path) -> tuple[Path, Path, Path]:
 
     reference_root = tmp_path / "reference"
     (reference_root / "champions").mkdir(parents=True)
+    (reference_root / "maps").mkdir(parents=True)
     (reference_root / "skins" / "Annie").mkdir(parents=True)
     (reference_root / "manifest.yaml").write_text(
         "schema_version: 2\nsource_versions:\n  data_dragon:\n    version: 16.16.1\n",
@@ -545,6 +730,20 @@ entity:
       - value: None
 """,
         encoding="utf-8",
+    )
+    write_map(
+        reference_root,
+        alias="SR",
+        map_id=11,
+        en_name="Summoner's Rift",
+        zh_name="召唤师峡谷",
+    )
+    write_map(
+        reference_root,
+        alias="HA",
+        map_id=12,
+        en_name="Random Map",
+        zh_name="随机地图",
     )
     (reference_root / "skins" / "Annie" / "Skin01.yaml").write_text(
         """schema_version: 2
@@ -605,6 +804,30 @@ entity:
     zh_CN:
       - value: {zh_name}
 {title_block}{nickname_block}""",
+        encoding="utf-8",
+    )
+
+
+def write_map(
+    reference_root: Path,
+    *,
+    alias: str,
+    map_id: int,
+    en_name: str,
+    zh_name: str,
+) -> None:
+    (reference_root / "maps" / f"{alias}.yaml").write_text(
+        f"""schema_version: 2
+entity:
+  type: map
+  id: {map_id}
+  alias: {alias}
+  names:
+    en_US:
+      - value: {en_name}
+    zh_CN:
+      - value: {zh_name}
+""",
         encoding="utf-8",
     )
 

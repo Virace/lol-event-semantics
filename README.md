@@ -55,9 +55,9 @@ uv run lookup-normalized-event --event Play_vo_AatroxSkin01_AatroxE_cast3D --mod
 uv run python scripts/search_stringtable.py 厄塔汗 "first blood"
 ```
 
-### 本地英雄事件演示站
+### 事件语义静态演示站
 
-演示站在同一入口提供英雄浏览，以及 validator 残差与未归属 Review 队列。默认读取 approved-local 及其同 run validation 报告；检查尚未批准的 completed candidate 时必须同时显式传入二者：
+演示站用两级导航组织同一 candidate：先选“已确定数据 / 需要 Review”，再选“英雄 / 地图”。默认读取 approved-local 及其同 run validation 报告；检查尚未批准的 completed candidate 时必须同时显式传入二者：
 
 ```powershell
 uv run python scripts/build_demo_site.py `
@@ -66,7 +66,7 @@ uv run python scripts/build_demo_site.py `
 uv run python -m http.server 8765 --directory dist\demo-site
 ```
 
-访问 `http://127.0.0.1:8765/`。英雄浏览保留 `Jade_`、`Ruby_`、`Strawberry_` 的经典模式、末日人机和 PVE 模式归属；Review 队列支持按残差层、问题代码、语义族、实体和状态过滤，并用 hash URL 与 `record_id` 恢复定位。详细规则、候选状态边界和图片来源见 [`docs/DEMO_SITE.md`](docs/DEMO_SITE.md)。
+访问 `http://127.0.0.1:8765/`。生成结果是平台中立的纯静态站，可原样托管到 GitHub Pages 或 Cloudflare Pages；仓库提供只允许手动触发的 Pages workflow，不会在 push 时自动部署。英雄浏览保留 `Jade_`、`Ruby_`、`Strawberry_` 的经典模式、末日人机和 PVE 模式归属；地图浏览只接受显式结构化地图槽位，并按 `reference/maps` 使用中文名，不从事件名猜测。Review 队列在英雄与地图入口内分别支持残差层、问题代码、语义族、实体和状态过滤，并用 hash URL 与 `record_id` 恢复定位。“已确定数据”只表示当前实体浏览轴有结构化归属，不等于把 candidate 提升为 approved-local。详细构建、托管、安全头、候选状态边界和图片来源见 [`docs/DEMO_SITE.md`](docs/DEMO_SITE.md)。
 
 ## 数据源体系
 
