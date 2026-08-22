@@ -58,13 +58,31 @@ aliases:
     source: manual_contextual_alias
     note: 'IzunaCommand 在 Orianna 事件中对应 Q 技能 Command: Attack 的内部名。'
   NoBall:
-    kind: champion_spell_component
-    spell: p
+    kind: generic_sfx_effect
+    asset_kind: sfx
     component: ball_detached_state
     label: 无球状态
     confidence: medium
     source: manual_contextual_alias
     note: NoBall 在 Orianna 事件中表示魔偶未附着在本体的状态，用于区分带球/无球动作与音效。
+  OrianaDetonateCommand:
+    kind: champion_spell_component
+    spell: r
+    asset_kind: sfx
+    component: shockwave_command
+    label: 指令：冲击波
+    confidence: high
+    source: manual_contextual_alias
+    note: OrianaDetonateCommand 是旧拼写的 R“指令：冲击波”完整内部名；整个名称可能被 lexer 吞进 owner。
+  OrianaDissonanceCommand:
+    kind: champion_spell_component
+    spell: w
+    asset_kind: sfx
+    component: dissonance_command
+    label: 指令：杂音
+    confidence: high
+    source: manual_contextual_alias
+    note: OrianaDissonanceCommand 是旧拼写的 W“指令：杂音”完整内部名；整个名称可能被 lexer 吞进 owner。
   OrianaGhostSelf:
     kind: champion_spell_component
     spell: e
@@ -80,7 +98,17 @@ aliases:
     label: 指令：攻击魔偶命中
     confidence: medium
     source: manual_contextual_alias
-    note: "OrianaIzuna 使用旧拼写 Oriana，语义同 Orianna Izuna；reference Q 技能内部 id 为 OrianaIzunaCommand，对应 Q 技能 Command: Attack 的魔偶移动/命中表现。"
+    note: 'OrianaIzuna 使用旧拼写 Oriana，语义同 Orianna Izuna；reference Q 技能内部 id 为 OrianaIzunaCommand，对应
+      Q 技能 Command: Attack 的魔偶移动/命中表现。'
+  OrianaIzunaCommand:
+    kind: champion_spell_component
+    spell: q
+    asset_kind: sfx
+    component: attack_command
+    label: 指令：攻击
+    confidence: high
+    source: manual_contextual_alias
+    note: OrianaIzunaCommand 是旧拼写的 Q“指令：攻击”完整内部名；整个名称可能被 lexer 吞进 owner。
   OrianaRedact:
     kind: champion_spell_component
     spell: e
@@ -88,7 +116,17 @@ aliases:
     label: 指令：防卫
     confidence: medium
     source: manual_contextual_alias
-    note: "OrianaRedact 使用旧拼写 Oriana，对应 E 技能 Command: Protect 的内部名（reference E 技能 id 为 OrianaRedactCommand），OnMissileLaunch 相位为魔偶飞向友军途中的表现。"
+    note: 'OrianaRedact 使用旧拼写 Oriana，对应 E 技能 Command: Protect 的内部名（reference E 技能
+      id 为 OrianaRedactCommand），OnMissileLaunch 相位为魔偶飞向友军途中的表现。'
+  OrianaRedactCommand:
+    kind: champion_spell_component
+    spell: e
+    asset_kind: sfx
+    component: protect_command
+    label: 指令：防卫
+    confidence: high
+    source: manual_contextual_alias
+    note: OrianaRedactCommand 是旧拼写的 E“指令：防卫”完整内部名，OnCast 表示施放阶段。
   OrianaRedactShield:
     kind: champion_spell_component
     spell: e
@@ -99,16 +137,14 @@ aliases:
     note: 'OrianaRedactShield 使用旧拼写 Oriana，语义同 Orianna RedactShield，对应 E 技能 Command:
       Protect 的护盾表现。'
   OriannaBasicAttack:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: basic_attack
     label: 普攻
     confidence: medium
     source: manual_contextual_alias
     note: OriannaBasicAttack 在 Orianna 事件中对应基础攻击音效。
   OriannaCritAttack:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: crit_attack
     label: 暴击攻击
     confidence: medium

@@ -9,6 +9,16 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: FaerieBurn 在 Lulu 事件中对应 W 技能 Whimsy 的变形/控制效果旧命名。
+  FaerieOverride:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: faerie_blink
+    label: 仙灵皮克斯
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      blink: 闪现
+    note: LuluFaerieOverride_blink 跨皮肤稳定表示仙灵皮克斯闪现音效，不是技能槽位。
   FaerieShield:
     kind: champion_spell_component
     spell: e

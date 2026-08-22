@@ -1,0 +1,13 @@
+scope: champion
+owner: Pantheon
+aliases:
+  PantheonRmissile:
+    kind: champion_spell_component
+    spell: r
+    asset_kind: sfx
+    infer_stage: false
+    component: grand_starfall_missile
+    label: 大荒星陨飞弹
+    confidence: high
+    source: manual_contextual_alias
+    note: Rmissile3 是 R“大荒星陨”的飞弹资产；尾号 3 是资源变体，不表示第三段施法。

@@ -32,8 +32,13 @@ class RuleFragmentTests(unittest.TestCase):
                         "  GangplankRUpgradeOne:",
                         "    kind: champion_spell_modifier",
                         "    spell: r",
+                        "    asset_kind: sfx",
+                        "    infer_stage: false",
                         "    component: cannon_barrage_upgrade_1",
                         "    label: 大招升级一阶",
+                        "    required_tokens: [Empowered]",
+                        "    qualifiers:",
+                        "      Empowered: 强化",
                         "",
                     ]
                 ),
@@ -46,7 +51,62 @@ class RuleFragmentTests(unittest.TestCase):
             self.assertIsNotNone(alias)
             self.assertEqual(alias.label, "大招升级一阶")
             self.assertEqual(alias.spell, "r")
+            self.assertEqual(alias.asset_kind, "sfx")
+            self.assertFalse(alias.infer_stage)
+            self.assertEqual(alias.required_tokens, ("empowered",))
+            self.assertEqual(alias.qualifiers, {"empowered": "强化"})
             self.assertEqual(alias.source_path, "rules/contextual/champions/Gangplank.yaml")
+
+    def test_attack_aliases_use_attack_kind_without_forced_passive_relation(self) -> None:
+        """Basic/CritAttack 规则源不得用 spell=P 或默认 related_spell=P 冒充被动技能。"""
+
+        book = RuleBook.load(Path("rules"), Path("overrides"))
+        checked = 0
+        for alias in book.contextual_aliases.values():
+            if alias.scope != "champion":
+                continue
+            marker = f"{alias.token}{alias.component or ''}".lower()
+            if not any(
+                cue in marker
+                for cue in ("basicattack", "basic_attack", "critattack", "crit_attack")
+            ):
+                continue
+            checked += 1
+            self.assertEqual(alias.kind, "champion_attack_component", alias.token)
+            self.assertIsNone(alias.spell, alias.token)
+            if alias.token in {"MissFortuneBasicAttack", "MissFortuneCritAttack"}:
+                self.assertIsNone(alias.related_spell, alias.token)
+
+        self.assertGreater(checked, 40)
+
+    def test_obvious_non_passive_sfx_rules_are_not_assigned_to_p(self) -> None:
+        """攻击建筑、回城、皮肤拟音等明确非被动事件必须离开 P 槽位。"""
+
+        book = RuleBook.load(Path("rules"), Path("overrides"))
+        expected = {
+            ("Draven", "DravenAttackP"): ("champion_attack_component", None),
+            ("Nunu", "StructureAttack"): ("champion_attack_component", None),
+            ("Graves", "AutoAttackRecoilCastEDummy"): ("champion_attack_component", None),
+            ("Illaoi", "TentacleAttack"): ("champion_attack_component", None),
+            ("Malzahar", "Voidling"): ("champion_spell_component", "w"),
+            ("MissFortune", "MissFortuneBulletEMPTY"): ("generic_sfx_effect", None),
+            ("Samira", "SheathGun"): ("generic_sfx_effect", None),
+            ("Sett", "Recallin"): ("champion_action_component", None),
+        }
+        for (owner, token), (kind, spell) in expected.items():
+            with self.subTest(owner=owner, token=token):
+                alias = book.contextual_alias_for("champion", owner, token)
+                self.assertIsNotNone(alias)
+                assert alias is not None
+                self.assertEqual(alias.kind, kind)
+                self.assertEqual(alias.spell, spell)
+
+        passive_attack_rules = {
+            alias.token
+            for alias in book.contextual_aliases.values()
+            if alias.kind == "champion_attack_component" and alias.related_spell == "p"
+        }
+        self.assertEqual(passive_attack_rules, {"PackmateBasicAttack"})
 
     def test_duplicate_fragment_key_raises(self) -> None:
         """不同分片定义同一 key 应报错。"""
@@ -214,10 +274,10 @@ class RuleFragmentTests(unittest.TestCase):
 
 
 class SpellMatchConstraintRuleTests(unittest.TestCase):
-    """验证普攻改写技能白名单加载。"""
+    """验证可信技能 residual 约束加载。"""
 
-    def test_attack_modifier_spells_load_and_query(self) -> None:
-        """白名单条目可按英雄和技能槽命中。"""
+    def test_trusted_spell_residuals_load_and_query(self) -> None:
+        """可信 residual 必须按英雄、槽位和完整 residual 精确命中。"""
 
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
@@ -227,44 +287,17 @@ class SpellMatchConstraintRuleTests(unittest.TestCase):
             overrides.mkdir()
             RuleFragmentTests().write_minimal_rule_files(rules, overrides)
             (rules / "spell_match_constraints.yaml").write_text(
-                "\n".join(
-                    [
-                        "attack_modifier_spells:",
-                        "  Aatrox:",
-                        "    p:",
-                        "      note: 被动周期性强化下次普攻。",
-                        "",
-                    ]
-                ),
+                "trusted_single_key_residuals:\n  Rengar:\n    q:\n      emp:\n        note: 强化 Q。\n",
                 encoding="utf-8",
             )
 
             book = RuleBook.load(rules, overrides)
 
-            entry = book.attack_modifier_spell_for("Aatrox", "p")
+            entry = book.trusted_spell_residual_for("Rengar", "q", "Emp")
             self.assertIsNotNone(entry)
-            self.assertEqual(entry.note, "被动周期性强化下次普攻。")
-            self.assertIsNone(book.attack_modifier_spell_for("Aatrox", "q"))
-            self.assertIsNone(book.attack_modifier_spell_for("MasterYi", "p"))
-            self.assertIsNone(book.attack_modifier_spell_for(None, "p"))
-
-    def test_invalid_attack_modifier_slot_raises(self) -> None:
-        """非法技能槽应 fail-fast。"""
-
-        with tempfile.TemporaryDirectory() as temp:
-            root = Path(temp)
-            rules = root / "rules"
-            overrides = root / "overrides"
-            rules.mkdir()
-            overrides.mkdir()
-            RuleFragmentTests().write_minimal_rule_files(rules, overrides)
-            (rules / "spell_match_constraints.yaml").write_text(
-                "attack_modifier_spells:\n  Aatrox:\n    x:\n      note: 非法槽位。\n",
-                encoding="utf-8",
-            )
-
-            with self.assertRaises(ValueError):
-                RuleBook.load(rules, overrides)
+            self.assertEqual(entry.note, "强化 Q。")
+            self.assertIsNone(book.trusted_spell_residual_for("Rengar", "q", "Execute"))
+            self.assertIsNone(book.trusted_spell_residual_for("Renekton", "e", "xecute"))
 
 
 if __name__ == "__main__":

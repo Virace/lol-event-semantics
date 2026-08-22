@@ -16,7 +16,8 @@ aliases:
     label: 卡牌骗术层数粒子
     confidence: high
     source: manual_contextual_alias
-    note: CardmasterStackParticle 在 TwistedFate SFX 中对应 E 技能 Stacked Deck/CardmasterStack 的层数粒子状态。
+    note: CardmasterStackParticle 在 TwistedFate SFX 中对应 E 技能 Stacked
+      Deck/CardmasterStack 的层数粒子状态。
   Gate:
     kind: champion_spell_component
     spell: r
@@ -25,6 +26,15 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: Gate 在卡牌大师事件中指向 R 技能传送门组件，不作为全局 Gate 词义。
+  Instagate:
+    kind: champion_spell_component
+    spell: r
+    asset_kind: sfx
+    component: destiny_gate_marker
+    label: 命运传送标记
+    confidence: high
+    source: manual_contextual_alias
+    note: TwistedFateSkin*_Instagate_marker 是 R 命运传送门的落点标记音效。
   SealFateMissile:
     kind: champion_spell_component
     spell: q

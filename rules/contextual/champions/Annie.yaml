@@ -1,9 +1,20 @@
 scope: champion
 owner: Annie
 aliases:
+  AnnieTibbers:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: ruby
+    component: tibbers
+    label: 提伯斯
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      death: 阵亡
+    note: Ruby_AnnieTibbers_death 是末日人机安妮 APC 的提伯斯阵亡音效，不把召唤物名当英雄名。
   AnnieTibbersBasicAttack:
-    kind: champion_spell_component
-    spell: r
+    kind: champion_attack_component
+    related_spell: r
     component: tibbers_basic_attack
     label: 提伯斯普攻
     confidence: medium

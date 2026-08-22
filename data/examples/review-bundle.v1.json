@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "review_bundle_id": "review-bundle-v1-example",
+  "lifecycle_state": "awaiting_manual_review",
+  "phase": "source_review",
+  "dataset_id": "local-v1-example",
+  "content_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+  "source_decision_set_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "source_targets": [
+    {
+      "target_type": "pattern",
+      "target_id": "pattern-v1-example",
+      "target_content_hash": "15615d20fbbc792865e076a474c6dc75278c52c77817e55077225467c43b09bb",
+      "allowed_actions": ["accept", "reject"],
+      "required": true,
+      "payload": {
+        "target_contract_version": "stable-source-target.v1",
+        "pattern": {
+          "signature": { "frame_type": "voice_event" },
+          "required_roles": ["action"],
+          "optional_roles": [],
+          "zh_CN_template": { "main": "移动" },
+          "en_US_template": null,
+          "provenance_policy": {},
+          "zh_cn_labels": { "action": ["移动"] }
+        },
+        "accepted_corpus": {
+          "pattern_id": "pattern-v1-example",
+          "frame_type": "voice_event",
+          "signature": { "frame_type": "voice_event" },
+          "required_roles": ["action"],
+          "expected_arguments": {},
+          "raw_event_name": "Play_vo_Example_Move",
+          "zh_cn_default": "示例移动",
+          "zh_cn_main": "移动",
+          "scope_status": "approved",
+          "decision_id": "v1-example"
+        }
+      }
+    },
+    {
+      "target_type": "support",
+      "target_id": "stable-scope:v1-example",
+      "target_content_hash": "dd89aefc303419f96f3dbdb899c4e30ade978d8c62e63318938278e3d12e74a0",
+      "allowed_actions": ["accept", "reject"],
+      "required": true,
+      "payload": {
+        "target_contract_version": "stable-source-target.v1",
+        "decision_id": "v1-example",
+        "stable_scope": {
+          "pattern_count": 1,
+          "pattern_ids_digest": "2222222222222222222222222222222222222222222222222222222222222222",
+          "record_count": 1
+        },
+        "accepted_corpus": {
+          "schema_version": 1,
+          "corpus_id": "v1-example",
+          "decision_id": "v1-example",
+          "selection_policy": "lexicographically-first-record.v1",
+          "entry_count": 1
+        }
+      }
+    }
+  ],
+  "approval_targets": [
+    {
+      "target_type": "dataset",
+      "target_id": "local-v1-example",
+      "target_content_hash": "e3403e52751621bb3c87aca5e22a41d82781065268e60910dca138229fcfdd8d",
+      "allowed_actions": ["accept", "reject"],
+      "required": true,
+      "payload": {
+        "dataset_id": "local-v1-example",
+        "content_digest": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ],
+  "targets": [
+    {
+      "target_type": "pattern",
+      "target_id": "pattern-v1-example",
+      "target_content_hash": "15615d20fbbc792865e076a474c6dc75278c52c77817e55077225467c43b09bb",
+      "allowed_actions": ["accept", "reject"],
+      "required": true,
+      "payload": {
+        "target_contract_version": "stable-source-target.v1",
+        "pattern": {
+          "signature": { "frame_type": "voice_event" },
+          "required_roles": ["action"],
+          "optional_roles": [],
+          "zh_CN_template": { "main": "移动" },
+          "en_US_template": null,
+          "provenance_policy": {},
+          "zh_cn_labels": { "action": ["移动"] }
+        },
+        "accepted_corpus": {
+          "pattern_id": "pattern-v1-example",
+          "frame_type": "voice_event",
+          "signature": { "frame_type": "voice_event" },
+          "required_roles": ["action"],
+          "expected_arguments": {},
+          "raw_event_name": "Play_vo_Example_Move",
+          "zh_cn_default": "示例移动",
+          "zh_cn_main": "移动",
+          "scope_status": "approved",
+          "decision_id": "v1-example"
+        }
+      }
+    },
+    {
+      "target_type": "support",
+      "target_id": "stable-scope:v1-example",
+      "target_content_hash": "dd89aefc303419f96f3dbdb899c4e30ade978d8c62e63318938278e3d12e74a0",
+      "allowed_actions": ["accept", "reject"],
+      "required": true,
+      "payload": {
+        "target_contract_version": "stable-source-target.v1",
+        "decision_id": "v1-example",
+        "stable_scope": {
+          "pattern_count": 1,
+          "pattern_ids_digest": "2222222222222222222222222222222222222222222222222222222222222222",
+          "record_count": 1
+        },
+        "accepted_corpus": {
+          "schema_version": 1,
+          "corpus_id": "v1-example",
+          "decision_id": "v1-example",
+          "selection_policy": "lexicographically-first-record.v1",
+          "entry_count": 1
+        }
+      }
+    }
+  ],
+  "required_target_count": 2
+}

@@ -9,54 +9,54 @@ entity:
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
     zh_CN:
       - value: 奥拉夫
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
   title:
     zh_CN:
       - value: 狂战士
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: game_data
             first_seen: '16.14'
-            last_seen: '16.14'
+            last_seen: '16.16'
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
   search_alias:
     zh_CN:
       - value: alf
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: aolafu
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: kuangzhanshi
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: kzs
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
 spells:
   - slot: E
     ids:
@@ -64,31 +64,31 @@ spells:
         sources:
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: OlafRecklessStrike
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
     names:
       en_US:
         - value: Reckless Swing
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 鲁莽挥击
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -98,16 +98,16 @@ spells:
               target and himself, refunding the Health cost if he destroys the 
               target.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
@@ -115,45 +115,45 @@ spells:
             value: 
               奥拉夫以破釜沉舟之势发动进攻，对目标造成真实伤害（不受护甲与魔抗减免），同时，自身也会根据敌方所受的伤害而受到真实伤害的反噬。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'
   - slot: P
     ids:
       - value: OlafPassive
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
     names:
       en_US:
         - value: Berserker Rage
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 狂战之怒
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -162,63 +162,63 @@ spells:
             value: Olaf gains Attack Speed and Life Steal based on his missing 
               Health.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
               sha256:7f81fdea8e1512ec3ef1cc726b5f1dce194f35d3171c7188b8fd6540d6ec3aa1
             value: 奥拉夫基于已损失生命值获得攻击速度和生命偷取。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'
   - slot: Q
     ids:
       - value: OlafAxeThrowCast
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
       - value: OlafQ
         sources:
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
     names:
       en_US:
         - value: Undertow
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 逆流投掷
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -229,16 +229,16 @@ spells:
               Armor and Move Speed. If Olaf picks up the axe, the ability's 
               cooldown is reset.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
@@ -246,47 +246,47 @@ spells:
             value: 
               奥拉夫将战斧投至目标区域，对所有被战斧穿过的敌人造成伤害并削减他们的护甲和移动速度。如果奥拉夫捡起斧头，那么该技能冷却时间就会重置。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'
   - slot: R
     ids:
       - value: OlafR
         sources:
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: OlafRagnarok
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
     names:
       en_US:
         - value: Ragnarok
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 诸神黄昏
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -296,63 +296,63 @@ spells:
               activate this ability to become immune to disables for as long as 
               he keeps attacking.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
               sha256:5df00e869279a53aa557fd9d476e25ad283b699bd81d271b36491931c2fc7858
             value: 奥拉夫被动获得护甲和魔法抗性提升。他可以激活这个技能来变得免疫控制效果，并且会在他保持攻击时一直持续。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'
   - slot: W
     ids:
       - value: OlafFrenziedStrikes
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
       - value: OlafW
         sources:
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
     names:
       en_US:
         - value: Tough It Out
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 挺过去
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -360,29 +360,29 @@ spells:
               sha256:4f0f1f8fc6195e5d0079c03ce9d7aceaa56714bbe3fcde4d5614e8597f254662
             value: Olaf's Attack Speed is increased and he gains a Shield.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
               sha256:4cb388b2fd28d16b0ac07bc2d0ec9fd4e2f18ca4802937fa3e15b7dac1bb8457
             value: 奥拉夫的攻击速度得到提升，并获得一层护盾。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'

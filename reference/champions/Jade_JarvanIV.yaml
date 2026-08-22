@@ -1,0 +1,268 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60059
+  alias: Jade_JarvanIV
+  names:
+    en_US:
+      - value: Jarvan IV
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 德玛西亚皇子
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_JarvanIVE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Demacian Standard
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 德邦军旗
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:66f07f4ca1df3a90a2bf8a83fe4b5976d7dc16f9ea7ef0ad6a93dd29779a19cc
+            value: Jarvan IV carries the pride of Demacia, passively granting
+              him bonus Attack Speed and Armor. Activating Demacian Standard
+              allows Jarvan IV to place a Demacian flag that deals magic damage
+              on impact and grants Attack Speed to nearby allied champions.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:dbdc4ab42d81224e84dfe91340c09ed893df08c0d1abbf1aeaee08a9b8086fd7
+            value:
+              嘉文四世携带着德玛西亚的骄傲，能被动地给予他额外的攻击速度和护甲。激活德邦军旗会使嘉文四世放置一面德玛西亚军旗，在军旗的着陆点造成魔法伤害，并强化军旗附近的队友们的攻击速度。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_JarvanIVPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Martial Cadence
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 战争律动
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:d5028cb4a78a4da06b52e2b45d2e5dbbe0354b3f2653c0d35743fd79872dfaac
+            value: Jarvan's first basic attack on an enemy deals bonus physical
+              damage based on their current Health. This effect cannot occur
+              again on the same enemy for a few seconds.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:bae611e143cb858eb6f76dde48ca6f25d1e4a56b9833c5f8bbfc730a0203c4e9
+            value: 嘉文四世对一名敌人发起的第一次普攻会造成基于目标当前生命值的额外物理伤害。这个效果在数秒内无法重复作用于同一目标。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_JarvanIVQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Dragon Strike
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 巨龙撞击
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:6edb7c13b00945e2ee55c55aa9b1a43fda32ae9681eedac311901222fb0e4305
+            value: Jarvan IV extends his lance, dealing physical damage and
+              lowering the Armor of all enemies in its path. Additionally, this
+              will pull Jarvan to his Demacian Standard, knocking up enemies in
+              his path.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:27b3bfe2837d3e31105a26b9766e30760649e5b0c4e632f5a29dd9b888f00c18
+            value:
+              嘉文四世的长矛穿透敌人，对它途经的所有敌人造成物理伤害和护甲击碎效果。此外，该技能还会将嘉文四世引向德邦军旗，并击飞他途经的所有敌人。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_JarvanIVR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Cataclysm
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 天崩地裂
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:fac2808c9e192cbd235b8bcab99aca7b1cc10067350a6ba9d0db0ca1ee5c1b0c
+            value: Jarvan IV heroically leaps into battle at a target with such
+              force that he terraforms the surrounding area to create an arena
+              around them.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:f1f2d764fcd6b141e4210bb186a855e17aaa54b37aacfa7a2be111b4baec5fa6
+            value: 嘉文四世勇猛地跃向目标敌方英雄，对其造成物理伤害，并在敌人周围形成环形障碍，持续数秒。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_JarvanIVW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Golden Aegis
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 黄金圣盾
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:e9f207c38bc348aa4ab083c34499bcc53406c5e34812c3b5b24fbc7d272c834d
+            value: Jarvan IV calls upon the ancient kings of Demacia to shield
+              him from harm and slow surrounding enemies.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:cae751301131a0d787f6b92b2a1f61c2fb4a96d76ef707762159e590bc3f3e8f
+            value: 嘉文四世召唤古德玛西亚列王保护自己，提供护盾吸收伤害并减速附近敌人。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

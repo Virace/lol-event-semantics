@@ -69,8 +69,7 @@ uv run mypy
 # 2. 全量重建 + 校验 + 棘轮（任一步失败即停）
 uv run python scripts/run_full_refresh.py `
   --raw-root raw\events --reference-root reference `
-  --output-root dist\normalized --work-root dist\work\event-decomposition `
-  --report-root dist\reports\runs\latest --baseline data\quality-baseline.json
+  --runs-root dist\runs --baseline data\quality-baseline.json
 
 # 3. 全量测试
 uv run python -m pytest

@@ -2,8 +2,8 @@ scope: champion
 owner: Mordekaiser
 aliases:
   Macetransform:
-    kind: champion_spell_component
-    spell: p
+    kind: generic_sfx_effect
+    asset_kind: sfx
     component: mace_transform
     label: 钉锤变形
     confidence: medium
@@ -16,4 +16,22 @@ aliases:
     label: 断魂一扼灵魂飞弹
     confidence: medium
     source: manual_contextual_alias
-    note: MordekaiserSoulMissile 仅出现在 OnMissileLaunch 相位，对应 E 技能 Death's Grasp（断魂一扼）「拉拽一个区域内的所有敌人」的拉拽弹道；Soul 与中文名「断魂」相扣，全套技能中仅 E 具备弹道表现。
+    note: MordekaiserSoulMissile 仅出现在 OnMissileLaunch 相位，对应 E 技能 Death's
+      Grasp（断魂一扼）「拉拽一个区域内的所有敌人」的拉拽弹道；Soul 与中文名「断魂」相扣，全套技能中仅 E 具备弹道表现。
+  foley:
+    kind: champion_spell_component
+    spell: w
+    asset_kind: sfx
+    component: indestructible_foley
+    label: 不坏之身动作音效
+    confidence: high
+    source: manual_contextual_alias
+    note: W_foley_end 跨皮肤稳定表示 W 不坏之身动作拟音的结束阶段，foley 不是英雄或技能槽位。
+  walk:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: walk
+    label: 行走
+    confidence: high
+    source: manual_contextual_alias
+    note: walk 是角色/皮肤行走音效，不是 W 技能提示。

@@ -1,9 +1,26 @@
 scope: champion
 owner: Caitlyn
 aliases:
-  WalkVar:
+  GunTeleport:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: gun_teleport
+    label: 武器传送
+    confidence: high
+    source: manual_contextual_alias
+    note: CaitlynSkin22_GunTeleport 是皮肤武器传送音效，不是技能槽位。
+  WSnare:
     kind: champion_spell_component
-    spell: p
+    spell: w
+    mode: jade
+    component: yordle_snap_trap_snare
+    label: 约德尔诱捕器禁锢
+    confidence: high
+    source: manual_contextual_alias
+    note: CaitlynWSnare 在 Jade/经典模式 VO 中以 hit3D 收尾，明确表示 W 约德尔诱捕器的禁锢命中。
+  WalkVar:
+    kind: generic_sfx_effect
+    asset_kind: sfx
     component: walk_variant
     label: 行走变体
     confidence: medium

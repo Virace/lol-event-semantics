@@ -1,0 +1,54 @@
+scope: champion
+owner: Zac
+aliases:
+  Bloblet:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: bloblet_death
+    label: 细胞组织阵亡
+    confidence: high
+    source: manual_contextual_alias
+    note: Bloblet_Death 表示扎克细胞组织阵亡音效，不是英雄死亡事件。
+  Qyank:
+    kind: champion_spell_component
+    spell: q
+    asset_kind: sfx
+    component: stretching_strikes_yank_root
+    label: 延伸打击牵引禁锢
+    confidence: high
+    source: manual_contextual_alias
+    note: QyankRoot 跨皮肤表示 Q 延伸打击的牵引禁锢阶段。
+  Recallleadin:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: recall_leadin
+    label: 回城前奏
+    confidence: high
+    source: manual_contextual_alias
+    note: Recallleadin 表示回城前奏音效。
+  blastcone:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: blastcone_fly
+    label: 爆炸球果弹射飞行
+    confidence: high
+    source: manual_contextual_alias
+    note: Zac_blastcone_fly 跨基础与多套皮肤稳定表示被爆炸球果弹射后的飞行动作音效。
+  rebirthblob:
+    kind: champion_spell_component
+    spell: p
+    asset_kind: sfx
+    component: cell_division_blob
+    label: 细胞分裂组织
+    confidence: high
+    source: manual_contextual_alias
+    note: rebirthblob 表示被动技能细胞分裂的组织失效阶段。
+  rebirthstart:
+    kind: champion_spell_component
+    spell: p
+    asset_kind: sfx
+    component: cell_division_revival
+    label: 细胞分裂复活
+    confidence: high
+    source: manual_contextual_alias
+    note: rebirthstart 表示被动技能细胞分裂的复活启动阶段。

@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Ezreal
+  champion_id: 60081
+  skin_number: 43
+  skin_token: Skin43
+  id: 60081043
+  alias: Jade_EzrealSkin43
+  names:
+    en_US:
+      - value: HEARTSTEEL Ezreal
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 心之钢 伊泽瑞尔
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 199
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_EzrealSkin43

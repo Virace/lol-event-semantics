@@ -1,0 +1,260 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60033
+  alias: Jade_Rammus
+  names:
+    en_US:
+      - value: Rammus
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 披甲龙龟
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_RammusE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Puncturing Taunt
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 破甲嘲讽
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:90d45dd39486401628325f9554c111597f8a5746ac2eeb6f8b78e3e12457ffa9
+            value: Rammus taunts an enemy champion or monster into a reckless
+              assault against Rammus' hard shell, reducing Armor temporarily.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:898ccbb7dd702800fab00825f1ac2e40aa32d6c5b63acea777eccaa2fadcc7cd
+            value: 拉莫斯嘲讽一名敌方英雄或野怪，强制目标鲁莽地攻击自己，并暂时降低其护甲。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_RammusPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Spiked Shell
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 锥刺甲壳
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:27db65550b9cd6c5bf6d21221ea20e66449412e1a03a9d0f8ae4ec2bd0c73c11
+            value: Rammus gains additional damage as his shell becomes
+              reinforced, converting 25% of his armor into Attack Damage.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:904f75c2f7d254923f2c2c2a988b0f5a5c177ac84e6486088e75ae63389cbad3
+            value: 拉莫斯外壳强化后获得额外伤害，将自身25%护甲转化为攻击力。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_RammusQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Powerball
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 动力冲刺
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:02144f9f5750780c90c665200006609ca1f82fcd48ef729696bdaf4ce3924e78
+            value: Rammus accelerates in a ball towards his enemies, dealing
+              damage and slowing targets affected by the impact.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:9fdff2fdbbaf3306feeb70d588c4d00fc231015502ebfe1d90aac442409b7982
+            value: 拉莫斯缩成球状，加速冲向敌人，对冲击的目标造成伤害和减速。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_RammusR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Tremors
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 地动山摇
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:e396323c41ed24fc159ea1ec035ceb1b7cf56d6c62ba32edf83ce71253ba679d
+            value: Rammus creates waves of destruction pulsing through the
+              ground, causing damage to units and structures near him.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:f5f38d43b3de01b16bc332c3877220754e77255cbf8df2c6b5eb06c413930a1e
+            value: 拉莫斯施放毁灭性的脉冲震荡波，对附近单位和建筑造成伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_RammusW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Defensive Ball Curl
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 尖刺防御
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:be43fa1c96ed63e4509f91fad5715df4fdcf09090999d361f99090ca349b3974
+            value: Rammus goes into a defensive formation, vastly increasing his
+              armor and magic resistance, while returning damage to attacks.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:1764c0175943451315a5aa75330e8c99f2397b36b6a09390207dff4ec801b40b
+            value: 拉莫斯进入防御状态，大幅提升护甲和魔法抗性，并反弹攻击者造成的伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

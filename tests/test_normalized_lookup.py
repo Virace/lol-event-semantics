@@ -27,7 +27,9 @@ class NormalizedLookupTests(unittest.TestCase):
             results = lookup_normalized_events(
                 root,
                 [raw],
-                render_options=RenderOptions(locale="zh_CN", mode="main", known_context=frozenset({"champion", "skin"})),
+                render_options=RenderOptions(
+                    locale="zh_CN", mode="main", known_context=frozenset({"champion", "skin"})
+                ),
             )
 
         self.assertEqual(len(results), 1)
@@ -48,6 +50,38 @@ class NormalizedLookupTests(unittest.TestCase):
             results = lookup_normalized_events(root, ["Missing_Event"])
 
         self.assertEqual(results, [{"raw_event_name": "Missing_Event", "matched": False, "matches": []}])
+
+    def test_lookup_prefers_v2_stream_over_legacy_shards(self) -> None:
+        """存在 normalized-events 时不再重复扫描 by-entity。"""
+
+        raw = "Play_sfx_GalioSkin13WPassiveDefense_OnBuffDeactivate"
+        stream_row = galio_record()
+        stream_row.update(
+            {
+                "record_id": "record-v1-" + "1" * 64,
+                "source_scope": "champions",
+                "asset_kind": "sfx",
+                "pattern_id": "pattern-v1-" + "2" * 64,
+                "support_level": "experimental",
+                "render_status": "rendered",
+                "review_status": "pending",
+            }
+        )
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            write_lookup_fixture(root, [galio_record()])
+            (root / "normalized-events.jsonl").write_text(
+                json.dumps(stream_row, ensure_ascii=False, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+
+            results = lookup_normalized_events(root, [raw])
+
+        match = results[0]["matches"][0]
+        self.assertEqual(len(results[0]["matches"]), 1)
+        self.assertEqual(match["path"], "normalized-events.jsonl")
+        self.assertEqual(match["record_id"], stream_row["record_id"])
+        self.assertEqual(match["support_level"], "experimental")
 
 
 class NormalizedLookupCliTests(unittest.TestCase):
@@ -87,6 +121,32 @@ class NormalizedLookupCliTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(payload["query_count"], 1)
         self.assertEqual(payload["results"][0]["matches"][0]["render"]["text"], "W技能被动防御状态结束")
+
+    def test_cli_default_does_not_consume_unapproved_candidate(self) -> None:
+        """未传显式 root 时只读 approved pointer，不扫描 candidate/legacy 目录。"""
+
+        raw = "Play_sfx_GalioSkin13WPassiveDefense_OnBuffDeactivate"
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            write_lookup_fixture(root / "normalized-candidate", [galio_record()])
+            result = subprocess.run(
+                [
+                    "uv",
+                    "run",
+                    "lookup-normalized-event",
+                    "--runs-root",
+                    str(root / "runs"),
+                    "--event",
+                    raw,
+                ],
+                cwd=Path(__file__).resolve().parents[1],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("approved normalized dataset not available", result.stderr)
 
 
 def galio_record() -> dict[str, object]:

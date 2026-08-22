@@ -1,0 +1,71 @@
+{
+  "decision_id": "v1-initial-vo-2026-08-07",
+  "pattern_count": 1,
+  "pattern_signature_version": "pattern-signature.v1",
+  "patterns": [
+    {
+      "asset_kind": "vo",
+      "en_US_template": null,
+      "example_event_names": [
+        "Play_vo_Annie_Move"
+      ],
+      "frame_type": "voice_event",
+      "frame_version": 1,
+      "introduced_in": "pattern-signature.v1",
+      "optional_roles": [
+        "champion",
+        "companion",
+        "skin"
+      ],
+      "pattern_id": "pattern-v1-c48acd3a2bfc47996cb4695e82bf467742ee804525e3ca3d82f7c6117c012926",
+      "provenance_policy": {
+        "formal_locale": "zh_CN",
+        "required_role_min_confidence": "medium",
+        "stable_requires_no_fallback": true
+      },
+      "record_count": 1,
+      "required_roles": [
+        "action"
+      ],
+      "review_status": "pending",
+      "signature": {
+        "argument_keys": {
+          "action": "move",
+          "qualifier": null
+        },
+        "asset_kind": "vo",
+        "frame_type": "voice_event",
+        "frame_version": 1,
+        "primary_family": "voice",
+        "roles": [
+          "action"
+        ],
+        "schema_version": "pattern-signature.v1",
+        "semantic_profile": "self_action",
+        "trigger_family": "movement"
+      },
+      "superseded_by": null,
+      "support_level": "experimental",
+      "warning_counts": {},
+      "zh_CN_template": {
+        "default": "{champion} {skin} {action} {companion}",
+        "main": "{action} {companion}"
+      },
+      "zh_cn_label_variants": {
+        "action": {
+          "distinct_label_count": 1,
+          "variants": [
+            {
+              "label": "移动",
+              "record_count": 1,
+              "sample_raw_event_names": [
+                "Play_vo_Annie_Move"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "schema_version": 1
+}

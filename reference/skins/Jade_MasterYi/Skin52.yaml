@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_MasterYi
+  champion_id: 60011
+  skin_number: 52
+  skin_token: Skin52
+  id: 60011052
+  alias: Jade_MasterYiSkin52
+  names:
+    en_US:
+      - value: Spirit Blossom Master Yi
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 灵魂莲华 易
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 171
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_MasterYiSkin52

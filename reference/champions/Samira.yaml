@@ -9,54 +9,54 @@ entity:
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
     zh_CN:
       - value: 莎弥拉
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
   title:
     zh_CN:
       - value: 沙漠玫瑰
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: game_data
             first_seen: '16.14'
-            last_seen: '16.14'
+            last_seen: '16.16'
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
   search_alias:
     zh_CN:
       - value: shamila
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: shamomeigui
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: sml
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: smmg
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
 spells:
   - slot: E
     ids:
@@ -64,29 +64,29 @@ spells:
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
     names:
       en_US:
         - value: Wild Rush
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 狂飙
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -96,61 +96,61 @@ spells:
               slashing enemies she passes through and gaining Attack Speed. 
               Killing an enemy champion refreshes this ability's cooldown.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
               sha256:f21b3c2d266a22e8605d2fc91a52466a1739bbae03a68aac074e665b767b8881
             value: 莎弥拉冲刺并越过一名敌人（包含建筑物），斩击沿途的敌人并获得攻击速度。击杀一名敌方英雄会刷新这个技能的冷却时间。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'
   - slot: P
     ids:
       - value: SamiraPassive
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
     names:
       en_US:
         - value: Daredevil Impulse
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 悍勇本色
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -163,16 +163,16 @@ spells:
               attack range. If the enemy is <status>Knocked Up</status>, she 
               also keeps them <status>Knocked Up</status> briefly.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
@@ -180,45 +180,45 @@ spells:
             value: 
               莎弥拉可通过用不同的技能或攻击命中敌人来构建一次连招。莎弥拉在近战距离的攻击会造成额外的魔法伤害。莎弥拉在对被<status>定身</status>的敌人进行攻击时，将冲刺到她的最大攻击距离处。如果该敌人已被<status>击飞</status>，她还会使其短暂保持<status>击飞</status>状态。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'
   - slot: Q
     ids:
       - value: SamiraQ
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
     names:
       en_US:
         - value: Flair
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 交火
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -228,61 +228,61 @@ spells:
               cast during Wild Rush, strike all enemies in her path upon 
               completion.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
               sha256:580d65f44e97491e611b16eade3ba96cafef568b619dc6931d0fa85de9c00743
             value: 莎弥拉进行一次射击或斩击，造成伤害。如果在【狂飙】期间施放，那么会在完成时打击沿途的所有敌人。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'
   - slot: R
     ids:
       - value: SamiraR
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
     names:
       en_US:
         - value: Inferno Trigger
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 炼狱扳机
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -291,61 +291,61 @@ spells:
             value: Samira unleashes a torrent of shots from her weapons, wildly 
               shooting all enemies surrounding her.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
               sha256:199b974b4840218006ea90eeb63114eaf9e09ef6a813cd7bbe22160c7edb8076
             value: 莎弥拉的武器倾泻出大量的子弹，狂野地射击她周围的所有敌人。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'
   - slot: W
     ids:
       - value: SamiraW
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
     names:
       en_US:
         - value: Blade Whirl
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 锋旋
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -354,29 +354,29 @@ spells:
             value: Samira slashes around her, damaging enemies and destroying 
               enemy missiles.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
               sha256:b5157342bef0a20d56cf7ffed44efe8affc46fec16803c0557f2079dbedc15e8
             value: 莎弥拉斩击她的周围，对敌人造成伤害并摧毁敌人的飞行道具。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'

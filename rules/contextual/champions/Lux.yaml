@@ -1,6 +1,19 @@
 scope: champion
 owner: Lux
 aliases:
+  Click:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    required_tokens:
+      - LuxSkin07
+      - Generic
+      - UI
+    component: elementalist_ui_click
+    label: 元素使界面点击
+    confidence: high
+    source: manual_contextual_alias
+    note: hud_LuxSkin07_Generic_Click_UI 的 hud 只是系统外壳；LuxSkin07 与 Click/UI
+      共同确认元素使皮肤界面点击音效。
   LightstrikeToggle:
     kind: champion_spell_component
     spell: e
@@ -9,6 +22,19 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: LightstrikeToggle 在 Lux 事件中沿用 E 技能资源名 LightStrike，不作为全局 Toggle 规则。
+  LuxMaliceCannonBeam:
+    kind: champion_spell_component
+    spell: r
+    asset_kind: sfx
+    component: malice_cannon_beam
+    label: 恶意火炮光束
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      beammiddle: 光束中段
+      beamend: 光束结束
+    note: LuxSkin19 的 LuxMaliceCannonBeam_beammiddle/beamend 是 R
+      主题化光束的中段与结束层，段位必须保留。
   MaliceCannon:
     kind: champion_spell_component
     spell: r
@@ -18,10 +44,9 @@ aliases:
     source: manual_contextual_alias
     note: MaliceCannon 在 LuxSkin19 事件中对应终极技能主题化炮击表现。
   Transform:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_action_component
     component: elementalist_transform
     label: 元素形态切换
     confidence: medium
     source: manual_contextual_alias
-    note: Transform 在 LuxSkin07 事件中对应元素使皮肤形态切换。
+    note: Transform 在 LuxSkin07 事件中对应元素使皮肤形态切换，不是英雄被动技能。

@@ -1,0 +1,43 @@
+scope: champion
+owner: Kayle
+aliases:
+  Enrage:
+    kind: champion_spell_component
+    spell: e
+    component: starfire_spellblade
+    label: 星火符刃
+    confidence: high
+    source: manual_contextual_alias
+    note: Enrage 是 Kayle E 沿用的历史内部名，在跨皮肤 SFX 中稳定对应星火符刃。
+  EnrageConeMis:
+    kind: champion_spell_component
+    spell: e
+    component: starfire_cone_missile
+    label: 星火符刃锥形弹道
+    confidence: high
+    source: manual_contextual_alias
+    note: EnrageConeMis 跨皮肤稳定以 cast/hit 出现，对应 E 强化攻击的锥形弹道。
+  EnrageConeMisUpgrade:
+    kind: champion_spell_component
+    spell: e
+    component: upgraded_starfire_cone_missile
+    label: 升级星火符刃锥形弹道
+    confidence: high
+    source: manual_contextual_alias
+    note: EnrageConeMisUpgrade 是 E 锥形弹道的升级形态，Upgrade 不能丢失。
+  EnrageReady:
+    kind: champion_spell_component
+    spell: e
+    component: starfire_spellblade_ready
+    label: 星火符刃就绪
+    confidence: high
+    source: manual_contextual_alias
+    note: EnrageReady 是 E 星火符刃的就绪状态；需优先于 Enrage residue 匹配以保留 Ready 语义。
+  EnrageSwing:
+    kind: champion_spell_component
+    spell: e
+    component: starfire_spellblade_swing
+    label: 星火符刃挥击
+    confidence: high
+    source: manual_contextual_alias
+    note: EnrageSwing 表示 E 星火符刃的挥击表现。

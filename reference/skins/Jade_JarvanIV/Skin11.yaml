@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_JarvanIV
+  champion_id: 60059
+  skin_number: 11
+  skin_token: Skin11
+  id: 60059011
+  alias: Jade_JarvanIVSkin11
+  names:
+    en_US:
+      - value: Pool Party Jarvan IV
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 泳池派对 嘉文四世
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 15
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_JarvanIVSkin11

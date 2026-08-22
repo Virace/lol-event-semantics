@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Gragas
+  champion_id: 60079
+  skin_number: 2
+  skin_token: Skin02
+  id: 60079002
+  alias: Jade_GragasSkin02
+  names:
+    en_US:
+      - value: Hillbilly Gragas
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 乡村农夫 古拉加斯
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_GragasSkin02
+  - Jade_GragasSkin2

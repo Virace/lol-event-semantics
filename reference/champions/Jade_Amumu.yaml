@@ -1,0 +1,264 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60032
+  alias: Jade_Amumu
+  names:
+    en_US:
+      - value: Amumu
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 殇之木乃伊
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_AmumuE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Tantrum
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 阿木木的愤怒
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:c0b043aa2ef198d6bb04824b7bc73a4f918e110d0e11c86e40a81dcff80383ab
+            value: Permanently reduces the physical damage Amumu would take.
+              Amumu can unleash his rage, dealing damage to surrounding enemies.
+              Each time Amumu is hit, the cooldown on Tantrum is reduced.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:94e44377c7c85ce9e7d6fd78d169cf82bcf0ba42d183f8a8136d7173c11e54d4
+            value:
+              永久减少阿木木所受的物理伤害。主动施放时，阿木木可以发泄他的怒火，对周围的敌人造成伤害。阿木木每被攻击一次，该技能的冷却时间就会缩短。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_AmumuPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Cursed Touch
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 诅咒之触
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:10a89bf13329c845879c1d2e9202e63857566c9b4ecd00852f47478ce260e370
+            value: Amumu's attacks reduce his target's Magic Resist for 3
+              seconds.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:df570430f3d5bf6714bab8b0352914520dc6c694b6cd10fb6c9d961e7fb0fdcb
+            value: 阿木木的攻击会削弱目标的魔法抗性，持续3秒。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_AmumuQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Bandage Toss
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 绷带牵引
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:0212e343f2f61c40e6cc53848e062080cefb9f911e72e84f49a1bdd341aa2e93
+            value: Amumu tosses a sticky bandage at a target, stunning and
+              damaging the target while he pulls himself to them.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:62b5eb0e341a536c2161272fa7f91d0e1ae9a3e806e6f17e62a32ee58d662e9d
+            value: 阿木木向目标投掷粘稠的绷带，将自己拉向目标，并对目标造成伤害和眩晕效果。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_AmumuR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Curse of the Sad Mummy
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 木乃伊之咒
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:80c24f7396d8c113c626bdfeae7e58b3569caf92e90e896abe58a1a804eed2c7
+            value: Amumu entangles surrounding enemy units in bandages, applying
+              his <keywordMajor>Curse</keywordMajor>, damaging and stunning
+              them.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:db6dfe84d5239f2a5a4d4c65f9fdd257c701a5d4537ebd5e5a429613136a5a32
+            value:
+              阿木木用绷带将附近敌方单位通通缠住，对他们施加<keywordMajor>诅咒</keywordMajor>效果，并造成伤害和晕眩效果。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_AmumuW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Despair
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 绝望光环
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:6bc9ad140c42bba63d5f2eb4699ec80e1ca588b724ec9f8aa0668cefd79ca863
+            value: Overcome by anguish, nearby enemies lose a percentage of
+              their maximum health each second.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:9f366f71d7b8e829134f07e444f4b27b47047952a724a6650c7eddc13697912c
+            value: 附近的敌人陷入绝望，每秒损失一定百分比的最大生命值。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

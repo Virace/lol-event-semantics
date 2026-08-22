@@ -67,6 +67,20 @@ aliases:
     confidence: high
     source: manual_sfx_alias
     note: Arena 模式内部代号，主代理裁决词条（T3.4 头部词条表）。
+  Kiwi:
+    kind: map_system_entity
+    component: kiwi
+    label: 海克斯大乱斗
+    confidence: medium
+    source: manual_sfx_alias
+    note: ARAM Mayhem 内部代号；2026-08-22 社区解释与 Riot 模式说明、本地 Kiwi 增益命名键及事件共现复核一致。中文采用社区通称，不宣称国服官方标题。
+  Slime:
+    kind: map_system_entity
+    component: slime
+    label: 极限闪击
+    confidence: high
+    source: manual_sfx_alias
+    note: Nexus Blitz 的 Project SLIME 开发代号；2026-08-22 社区资料与本地 Slime2018/NexusBlitz 事件共现、reference/maps/NB 官方中文名复核一致。
   NexusBlitz:
     kind: map_system_entity
     component: nexus_blitz
@@ -81,6 +95,118 @@ aliases:
     confidence: high
     source: manual_sfx_alias
     note: HUD/界面反馈音，主代理裁决词条（T3.4 头部词条表）。
+  Boss:
+    kind: map_system_entity
+    component: boss
+    label: 首领
+    confidence: high
+    source: manual_sfx_alias
+    note: 末日人机/PVE 模式中的首领分组；仅供没有已解析英雄演员的模式系统事件。
+  MiniBoss:
+    kind: map_system_entity
+    component: mini_boss
+    label: 小型首领
+    confidence: high
+    source: manual_sfx_alias
+    note: PVE 模式中的小型首领分组；rule_key 同时覆盖 Miniboss 大小写变体。
+  Curse:
+    kind: map_system_entity
+    component: curse
+    label: 诅咒
+    confidence: high
+    source: manual_sfx_alias
+    note: 末日人机模式的诅咒机制分组。
+  Spire:
+    kind: map_system_entity
+    component: spire
+    label: 尖塔
+    confidence: high
+    source: manual_sfx_alias
+    note: PVE 模式的尖塔目标分组。
+  Gameplay:
+    kind: map_system_entity
+    component: gameplay
+    label: 玩法
+    confidence: high
+    source: manual_sfx_alias
+    note: 特殊模式的玩法系统分组。
+  Enemy:
+    kind: map_system_entity
+    component: enemy
+    label: 敌方单位
+    confidence: high
+    source: manual_sfx_alias
+    note: PVE 模式的敌方单位分组。
+  POI:
+    kind: map_system_entity
+    component: point_of_interest
+    label: 地图目标
+    confidence: high
+    source: manual_sfx_alias
+    note: PVE 模式内部 POI（Point of Interest）目标分组。
+  Fountain:
+    kind: map_system_entity
+    component: fountain
+    label: 泉水
+    confidence: high
+    source: manual_sfx_alias
+    note: PVE 模式的泉水系统分组。
+  Drop:
+    kind: map_system_entity
+    component: drop
+    label: 掉落物
+    confidence: high
+    source: manual_sfx_alias
+    note: PVE 模式的掉落物分组。
+  SpicyPortal:
+    kind: map_system_entity
+    component: special_portal
+    label: 特殊传送门
+    confidence: high
+    source: manual_sfx_alias
+    note: 末日人机模式的特殊传送门工程分组，不按字面硬译 Spicy。
+  KingOfTheHill:
+    kind: map_system_entity
+    component: king_of_the_hill
+    label: 据点争夺
+    confidence: high
+    source: manual_sfx_alias
+    note: 末日人机模式的据点争夺机制分组。
+  Pumpkin:
+    kind: map_system_entity
+    component: pumpkin
+    label: 南瓜
+    confidence: high
+    source: manual_sfx_alias
+    note: 末日人机模式的南瓜场景实体。
+  player:
+    kind: map_system_entity
+    component: player
+    label: 玩家
+    confidence: high
+    source: manual_sfx_alias
+    note: PVE 模式中的玩家实体分组。
+  Destructible:
+    kind: map_system_entity
+    component: destructible
+    label: 可破坏物
+    confidence: high
+    source: manual_sfx_alias
+    note: PVE 模式的可破坏场景物分组。
+  Rebuild:
+    kind: map_system_entity
+    component: rebuild
+    label: 重建
+    confidence: high
+    source: manual_sfx_alias
+    note: PVE 模式的重建机制分组。
+  Tibbers:
+    kind: map_system_entity
+    component: tibbers
+    label: 提伯斯
+    confidence: high
+    source: manual_sfx_alias
+    note: PVE 模式事件中的安妮召唤物实体；BasicAttack 等尾段必须另存为动作。
   Perks:
     kind: map_system_entity
     component: perks

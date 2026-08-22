@@ -1,0 +1,268 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60089
+  alias: Jade_Leona
+  names:
+    en_US:
+      - value: Leona
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 曙光女神
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_LeonaE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Zenith Blade
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 天顶之刃
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:80025bddcb2950fab701532dc176eb3c8a22a7e832604340aff2c0c5a40e8817
+            value: Leona projects a solar image of her sword, dealing magic
+              damage to all enemies in a line. When the image fades, the last
+              enemy champion struck will be briefly immobilized and Leona will
+              dash to them.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:699e13c76663b9f3b477a68e48614d9f3fe719611cef472ffc17986635533d5d
+            value:
+              蕾欧娜投掷一束日光，对直线上的所有敌人造成魔法伤害。当效果消失时，最后一个被命中的敌方英雄将被短暂定身，同时蕾欧娜会冲向该英雄。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_LeonaPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Sunlight
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 日光
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:11d8fa0e656eb269044aafbb2c38bd7cee09f8f9183418989bdbf337b71d8a17
+            value: Damaging spells afflict enemies with Sunlight for 3.5
+              seconds. When allied Champions deal damage to those targets, they
+              consume the Sunlight debuff to deal additional magic damage.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:a01341711328f79c9d16b1db5bec7c850a61f94eb95b0a14963b2ac35d3fa019
+            value:
+              伤害类技能会在敌人身上施加持续3.5秒的日光效果。在此期间，当友方英雄对被标记的敌人造成伤害时，会消耗日光减益来使目标受到额外的魔法伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_LeonaQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Shield of Daybreak
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 破晓之盾
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:31370d7f0aa1c8f9e0e3dc9f2bdc863e35043c6873b744cbf033a98db2271a34
+            value: Leona uses her shield to perform her next basic attack,
+              dealing bonus magic damage and stunning the target.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:7130f85d52c801825140e1e7ffa6f47e913bab6290da621ed321ec123edccca4
+            value: 蕾欧娜用盾进行下次普通攻击，造成额外魔法伤害并晕眩目标。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_LeonaR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Solar Flare
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 日炎耀斑
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:fcb367902d0ebf0f347b8b7ce0e905b768833db445b54ea74924259c4ca09e63
+            value: Leona calls down a beam of solar energy, dealing damage to
+              enemies in an area.  Enemies in the center of the area are
+              stunned, while enemies on the outside are slowed.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:892acf41fbd77eb6a280c22215efe9721b158ebf378f7f617cc2c2cce696b008
+            value: 蕾欧娜召唤一道太阳光束，对区域内的敌人造成伤害。区域中心的敌人会被晕眩，外围的敌人会被减速。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_LeonaW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Eclipse
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 日蚀
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:fa6ad42cbfca12c2bacc9da0c8133803294b4d08a8b80ed57fc6ba1772326ea1
+            value: Leona raises her shield to gain Armor and Magic Resistance.
+              When the duration first ends, if there are nearby enemies she will
+              deal magic damage to them and prolong the duration of the effect.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:e49dbec826d58b0a6291578adb4f881a78db4e9c62ba02576d678abf02c7c7c8
+            value:
+              蕾欧娜举起盾牌，获得护甲和魔法抗性。第一段持续时间结束时，如果附近有敌人，则蕾欧娜对其造成魔法伤害，并延长此效果的持续时间。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

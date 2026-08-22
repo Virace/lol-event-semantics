@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Nidalee
+  champion_id: 60076
+  skin_number: 39
+  skin_token: Skin39
+  id: 60076039
+  alias: Jade_NidaleeSkin39
+  names:
+    en_US:
+      - value: Kittalee
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 喵大力
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 98
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_NidaleeSkin39

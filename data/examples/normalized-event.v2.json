@@ -1,0 +1,98 @@
+{
+  "asset_kind": "vo",
+  "display": {
+    "debug_label": "Play_vo_Annie_Move",
+    "tier": 1,
+    "zh_cn_detail": "移动",
+    "zh_cn_short": "移动"
+  },
+  "entity": {
+    "alias": "Annie",
+    "kind": "champion"
+  },
+  "game_version": "16.16",
+  "pattern_id": "pattern-v1-c48acd3a2bfc47996cb4695e82bf467742ee804525e3ca3d82f7c6117c012926",
+  "provenance": {
+    "canonical_assets": [
+      "champions:1"
+    ],
+    "source_domains": [
+      "champions"
+    ],
+    "source_paths": [
+      "raw/events/champions/1.txt"
+    ]
+  },
+  "quality": {
+    "candidate_count": 0,
+    "diagnostics": [],
+    "unknown_count": 0
+  },
+  "raw_event_name": "Play_vo_Annie_Move",
+  "record_id": "record-v1-b893e0771190fc0523cf9a46be31cb384ccb513939f555dc73576dcb3efbb3e0",
+  "record_id_algorithm": "lol-event-semantics.record-id.v1",
+  "render_status": "rendered",
+  "rendered_labels": {
+    "zh_CN": {
+      "default": "移动",
+      "main": "移动"
+    }
+  },
+  "review_status": "pending",
+  "schema_version": 2,
+  "semantic": {
+    "confidence": "high",
+    "primary_family": "voice",
+    "profile": "self_action",
+    "requires_context": false,
+    "slots": {
+      "trigger_family": "movement"
+    }
+  },
+  "semantic_frame": {
+    "arguments": {
+      "action": {
+        "confidence": "high",
+        "fallback": false,
+        "key": "move",
+        "labels": {
+          "en_US": "move",
+          "zh_CN": "移动"
+        },
+        "provenance": {
+          "source": "example"
+        },
+        "role": "action"
+      }
+    },
+    "frame_type": "voice_event",
+    "frame_version": 1
+  },
+  "source_paths": [
+    "raw/events/champions/1.txt"
+  ],
+  "source_scope": "champions",
+  "support_level": "experimental",
+  "translation": {
+    "arguments": {
+      "action": {
+        "confidence": "high",
+        "fallback": false,
+        "key": "move",
+        "labels": {
+          "en_US": "move",
+          "zh_CN": "移动"
+        },
+        "provenance": {
+          "source": "example"
+        },
+        "role": "action"
+      }
+    },
+    "frame_confidence": "high",
+    "frame_type": "voice_event",
+    "frame_version": 1,
+    "schema_version": 1
+  },
+  "warnings": []
+}

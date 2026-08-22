@@ -1,0 +1,263 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60075
+  alias: Jade_Nasus
+  names:
+    en_US:
+      - value: Nasus
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 沙漠死神
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_NasusE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Spirit Fire
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 灵魂烈焰
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:6a812015f851d43c179dca37d356e7ee617f18c211672a7ccb4c1dfb0fc27a13
+            value: Nasus unleashes a spirit flame at a location, dealing damage
+              and reducing the Armor of enemies who stand on it.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:adb2c6f4c6168fc2ef82c5c24b78b638871dcc5260ef9af378aaf28043d4cde1
+            value: 内瑟斯在目标区域施放灵魂烈焰，对范围内敌人造成伤害并削弱其护甲。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_NasusPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Soul Eater
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 吞噬灵魂
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:58b82108d4c24f78523c561cdc786169f59a65a8933cda4f81d244c02414751d
+            value: Nasus drains his foe's spiritual energy, giving him bonus
+              Lifesteal.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:f1dcb4ae2c5aeab5a8f3271d223ad6f7e675822c9168647ca5e0c7358e9b1973
+            value: 内瑟会从敌人身上吸取灵魂能量，从而获得额外生命偷取。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_NasusQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Siphoning Strike
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 汲魂痛击
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:c993226916b1409992726b34a37400d80634f822e8f1e4e25e1dd83ec0b8d8e0
+            value: Nasus strikes his foe, dealing damage and increasing the
+              power of his future Siphoning Strikes if he slays his target.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:ae20907f3b98b0927591292cc00ef053d06c7448128a1abc65e60c507901bd7b
+            value: 内瑟斯打击他的敌人以造成伤害，并且如果敌人死于【汲魂痛击】，则永久增加下次【汲魂痛击】的伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_NasusR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Fury of the Sands
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 死神降临
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:5c2fe02e467ff3c1da822086da4262e62e1dee84ea109ffbaf5f4061062ee708
+            value: Nasus unleashes a mighty sandstorm that batters nearby
+              enemies. While the storm rages, he gains increased Health, Attack
+              Range, cast ranges, and drains nearby enemies' max Health
+              converting into bonus damage for the duration.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:d8696b7da2767ee0e8d0458108ed0bf5bd270307ad63287b5ff04fd591f1c048
+            value:
+              内瑟斯释放出强力的沙尘暴，席卷附近的敌人。风暴肆虐时，他会获得更高的生命值、攻击距离、施法距离，并汲取附近敌人的最大生命值，转化为持续时间内的额外伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_NasusW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Wither
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 枯萎
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:ff5a14a96e6fa03e19892e0ca0f08dd3e8fcac22a0411cca87e42f99721c9e7f
+            value: Nasus ages his target, decelerating their Movement and Attack
+              Speeds over time.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:15873f9bf999ec7c3b9cace1335bbe0e3d941ba95e78936ff419621b12abc595
+            value: 内瑟斯使目标陷入衰老，持续减少其移动速度和攻击速度。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

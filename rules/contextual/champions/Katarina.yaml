@@ -1,6 +1,14 @@
 scope: champion
 owner: Katarina
 aliases:
+  BladeSwap:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: blade_form_swap
+    label: 匕首形态切换
+    confidence: high
+    source: manual_contextual_alias
+    note: Skin29 BladeSwap 的颜色尾段表示女帝皮肤匕首形态切换。
   Dagger:
     kind: champion_spell_component
     spell: p
@@ -17,14 +25,47 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: Katarina_Q_OnHit 这类事件中单独的 Katarina 片段对应 Q 技能弹射匕首命中音效。
-  Toggle:
+  Q:
     kind: champion_spell_component
-    spell: p
+    spell: q
+    asset_kind: sfx
+    component: bouncing_blade_dagger
+    label: 弹射之刃飞刀
+    confidence: high
+    source: manual_contextual_alias
+    note: 独立 Q 后接 dagger/land 的事件表示 Q 弹射之刃飞刀落地；显式 Q 必须优先于后续 Dagger 被动规则。
+  Qdaggerarc:
+    kind: champion_spell_component
+    spell: q
+    asset_kind: sfx
+    component: bouncing_blade_dagger_arc
+    label: 弹射之刃飞刀
+    confidence: high
+    source: manual_contextual_alias
+    note: Qdaggerarc1/2/3 表示 Q 弹射之刃连续弹射的飞刀段次。
+  Spell4ToIdle:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: ultimate_to_idle
+    label: 大招动作转待机
+    confidence: high
+    source: manual_contextual_alias
+    note: KatarinaSkin29 的 Spell4ToIdle 是第四技能（R）动作结束后转入待机，不是无对象的“状态启动”。
+  Spell4ToRun:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: ultimate_to_run
+    label: 大招动作转奔跑
+    confidence: high
+    source: manual_contextual_alias
+    note: KatarinaSkin29 的 Spell4ToRun 是第四技能（R）动作结束后转入奔跑，不是无对象的“状态启动”。
+  Toggle:
+    kind: champion_action_component
     component: toggle_state
     label: 切换状态
     confidence: medium
     source: manual_contextual_alias
-    note: Toggle 在 KatarinaSkin29 事件中对应皮肤/角色状态切换语音条件。
+    note: Toggle 在 KatarinaSkin29 事件中对应皮肤/角色状态切换语音条件，不是英雄被动技能。
   W:
     kind: champion_spell_component
     spell: w

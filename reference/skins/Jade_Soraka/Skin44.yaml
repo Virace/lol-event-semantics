@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Soraka
+  champion_id: 60016
+  skin_number: 44
+  skin_token: Skin44
+  id: 60016044
+  alias: Jade_SorakaSkin44
+  names:
+    en_US:
+      - value: Faerie Court Soraka
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 花仙子 索拉卡
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 191
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_SorakaSkin44

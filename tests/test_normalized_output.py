@@ -36,6 +36,7 @@ from lol_event_semantics.normalized_output import (
     playback_verb_suffix,
     resolve_champion_entity,
 )
+from lol_event_semantics.normalized_validation import validate_normalized_root
 
 
 class ItemEntityResolutionTests(unittest.TestCase):
@@ -151,8 +152,8 @@ class NormalizedOutputTests(unittest.TestCase):
             with self.subTest(raw=raw):
                 self.assert_readable_short(raw)
 
-    def test_write_outputs_entity_shards_without_full_index(self) -> None:
-        """输出只保留按实体拆分的数据，不生成完整 raw 索引。"""
+    def test_write_outputs_v2_stream_catalog_and_compatibility_shards(self) -> None:
+        """输出 V2 单流/catalog/schema，同时保留按实体兼容分片。"""
 
         record = normalize_semantics(decompose_event_name("Play_vo_Annie_AnnieQ_OnCast", game_version="16.5"))
         with tempfile.TemporaryDirectory() as temp:
@@ -160,15 +161,46 @@ class NormalizedOutputTests(unittest.TestCase):
             write_outputs([record], root, reference_version="16.5")
 
             self.assertTrue((root / "manifest.json").is_file())
+            self.assertTrue((root / "normalized-events.jsonl").is_file())
+            self.assertTrue((root / "pattern-catalog.json").is_file())
             self.assertTrue((root / "entity-summary.json").is_file())
             self.assertTrue((root / "by-entity" / "champions" / "Annie.jsonl").is_file())
+            self.assertTrue((root / "schema" / "normalized-event.schema.json").is_file())
+            self.assertTrue((root / "examples" / "normalized-event.v2.json").is_file())
             self.assertFalse((root / "raw-event-index.json").exists())
 
-            first_line = (root / "by-entity" / "champions" / "Annie.jsonl").read_text(
-                encoding="utf-8"
-            ).splitlines()[0]
+            first_line = (root / "by-entity" / "champions" / "Annie.jsonl").read_text(encoding="utf-8").splitlines()[0]
             payload = json.loads(first_line)
+            manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
             self.assertEqual(payload["raw_event_name"], "Play_vo_Annie_AnnieQ_OnCast")
+            self.assertEqual(payload["schema_version"], 2)
+            self.assertTrue(payload["record_id"].startswith("record-v1-"))
+            self.assertTrue(manifest["contains_full_raw_event_index"])
+            self.assertEqual(manifest["normalized_record_schema_version"], 2)
+            self.assertNotIn("generated_at", manifest)
+            self.assertTrue(manifest["dataset_id"].startswith("local-v1-"))
+            self.assertEqual(len(manifest["content_digest"]), 64)
+            self.assertEqual(validate_normalized_root(root).error_count, 0)
+
+            with tempfile.TemporaryDirectory() as second_temp:
+                second_root = Path(second_temp)
+                write_outputs([record], second_root, reference_version="16.5")
+                self.assertEqual(
+                    (root / "manifest.json").read_bytes(),
+                    (second_root / "manifest.json").read_bytes(),
+                )
+                self.assertEqual(
+                    (root / "normalized-events.jsonl").read_bytes(),
+                    (second_root / "normalized-events.jsonl").read_bytes(),
+                )
+
+            catalog_path = root / "pattern-catalog.json"
+            catalog_path.write_text(catalog_path.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+            (root / "debug.tmp").write_text("not managed\n", encoding="utf-8")
+            tampered = validate_normalized_root(root)
+            tamper_codes = {issue.code for issue in tampered.issues}
+            self.assertIn("manifest_files_mismatch", tamper_codes)
+            self.assertIn("unmanaged_payload_file", tamper_codes)
 
     def test_entity_shard_prefers_resolved_subject_hint(self) -> None:
         """内部 owner 形如 AnnieQ 时，分片仍归到真实英雄 Annie。"""
@@ -194,15 +226,12 @@ class NormalizedOutputTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             stale = root / "by-entity" / "champions" / "OldChampion.jsonl"
-            note = root / "by-entity" / "README.md"
             stale.parent.mkdir(parents=True)
             stale.write_text("{}\n", encoding="utf-8")
-            note.write_text("manual note\n", encoding="utf-8")
 
             write_outputs([record], root, reference_version="16.5")
 
             self.assertFalse(stale.exists())
-            self.assertTrue(note.exists())
             self.assertTrue((root / "by-entity" / "champions" / "Annie.jsonl").is_file())
 
     def test_writer_merges_case_variants_into_canonical_entity(self) -> None:
@@ -221,7 +250,17 @@ class NormalizedOutputTests(unittest.TestCase):
             shard = root / "by-entity" / "champions" / "Belveth.jsonl"
             rows = [json.loads(line) for line in shard.read_text(encoding="utf-8").splitlines()]
 
-            self.assertEqual(summary, [{"alias": "Belveth", "kind": "champion", "path": "by-entity/champions/Belveth.jsonl", "record_count": 2}])
+            self.assertEqual(
+                summary,
+                [
+                    {
+                        "alias": "Belveth",
+                        "kind": "champion",
+                        "path": "by-entity/champions/Belveth.jsonl",
+                        "record_count": 2,
+                    }
+                ],
+            )
             self.assertFalse((root / "by-entity" / "champions" / "Belveth__2.jsonl").exists())
             self.assertEqual([row["entity"]["alias"] for row in rows], ["Belveth", "Belveth"])
             self.assertEqual(
@@ -261,6 +300,31 @@ class MapSystemEntityDisplayTests(unittest.TestCase):
 
         self.assertIn("Ruby", build_short_display(record))
 
+    def test_reviewed_community_mode_codenames_render_as_modes(self) -> None:
+        """Kiwi/SLIME 经外部解释与本地共现复核后，不再作为用户可见实体名。"""
+
+        cases = [
+            (
+                "Play_sfx_Kiwi_Augment_CrackOpenThatEgg_buffactivate",
+                "海克斯大乱斗",
+                "Kiwi",
+            ),
+            (
+                "Play_sfx_SLIME_Blue_aggro1",
+                "极限闪击",
+                "SLIME",
+            ),
+        ]
+        for raw, expected, internal_name in cases:
+            with self.subTest(raw=raw):
+                record = normalize_semantics(
+                    decompose_event_name(raw, game_version="16.5", source_path="raw/events/maps/12.txt")
+                )
+
+                short = build_short_display(record)
+                self.assertIn(expected, short)
+                self.assertNotIn(internal_name.lower(), short.lower())
+
     def test_loop_suffix_consumed_without_raw_token_leak(self) -> None:
         """已解析的 loop 通用后缀参与渲染，原始 token 不泄漏进短文案。"""
 
@@ -275,6 +339,31 @@ class MapSystemEntityDisplayTests(unittest.TestCase):
         self.assertTrue(short)
         self.assertNotIn("loop", short.lower())
 
+    def test_map_system_end_phase_is_not_dropped(self) -> None:
+        """map/system 兜底仍必须展示已解析的 end 阶段。"""
+
+        record = normalize_semantics(
+            decompose_event_name(
+                "Play_sfx_Ruby_RyzeRChannel_end",
+                game_version="16.5",
+            )
+        )
+
+        self.assertEqual(build_short_display(record), "Ruby结束")
+
+    def test_unresolved_spell_still_renders_known_phase(self) -> None:
+        """技能归属 fail-closed 时不能同时丢弃已解析的状态阶段。"""
+
+        record = normalize_semantics(
+            decompose_event_name(
+                "Play_sfx_Zac_zacrebirthstart_OnBuffActivate",
+                game_version="16.5",
+            )
+        )
+
+        self.assertEqual(record.profile.semantic_profile, SemanticProfile.SPELL_EVENT)
+        self.assertEqual(build_short_display(record), "Zac状态启动")
+
 
 class ChampionEntityAttributionTests(unittest.TestCase):
     """验证 champion 实体归一：碎片 alias 归属真实英雄且信息无损。"""
@@ -283,9 +372,7 @@ class ChampionEntityAttributionTests(unittest.TestCase):
     def build_record(raw_event_name: str, source_path: str) -> EventDecompositionRecord:
         """按生产链路构造带来源路径的拆解记录。"""
 
-        return normalize_semantics(
-            decompose_event_name(raw_event_name, game_version="16.5", source_path=source_path)
-        )
+        return normalize_semantics(decompose_event_name(raw_event_name, game_version="16.5", source_path=source_path))
 
     def write_single(self, raw_event_name: str, source_path: str, root: Path) -> None:
         """写出单条记录的 normalized 输出。"""
@@ -399,17 +486,26 @@ class ChampionEntityAttributionTests(unittest.TestCase):
             self.assertEqual(entity["alias"], "Sona")
             self.assertEqual(entity["raw_alias"], "Skin06")
 
-    def test_ruby_stays_standalone_champion(self) -> None:
-        """Ruby 教程 bot 保留独立实体，不被文件 id 回退归并。"""
+    def test_ruby_mode_context_attaches_to_real_actor(self) -> None:
+        """Ruby 是末日人机上下文；实体分片必须归到后续真实英雄。"""
 
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
-            self.write_single("Play_sfx_Ruby_AmumuBasicAttack_OnCast", "raw/events/champions/66604.txt", root)
+            record = enrich_with_reference(
+                self.build_record(
+                    "Play_sfx_Ruby_AmumuBasicAttack_OnCast",
+                    "raw/events/champions/66604.txt",
+                ),
+                reference_index(),
+            )
+            write_outputs([record], root, reference_version="16.5")
 
-            shard = root / "by-entity" / "champions" / "Ruby.jsonl"
+            shard = root / "by-entity" / "champions" / "Amumu.jsonl"
             self.assertTrue(shard.is_file())
-            self.assertFalse((root / "by-entity" / "champions" / "Ruby_Amumu.jsonl").exists())
-            self.assertNotIn("raw_alias", self.first_payload(shard)["entity"])
+            self.assertFalse((root / "by-entity" / "champions" / "Ruby.jsonl").exists())
+            payload = self.first_payload(shard)
+            self.assertEqual(payload["entity"], {"kind": "champion", "alias": "Amumu"})
+            self.assertEqual(payload["semantic"]["slots"]["context_namespace"]["key"], "ruby")
 
     def test_regular_champion_alias_has_no_raw_alias(self) -> None:
         """未发生归一的真实英雄记录不写 raw_alias。"""
@@ -701,8 +797,7 @@ class EntityAttributionOverridesValidationTests(unittest.TestCase):
         """alias 大小写不敏感重复时报错。"""
 
         body = (
-            "  - alias: FooPet\n    decision: keep\n    note: x\n"
-            "  - alias: foopet\n    decision: keep\n    note: y\n"
+            "  - alias: FooPet\n    decision: keep\n    note: x\n  - alias: foopet\n    decision: keep\n    note: y\n"
         )
 
         with tempfile.TemporaryDirectory() as temp:
@@ -756,9 +851,7 @@ class NormalizedShellVerbDisplayTests(unittest.TestCase):
     def test_stop_event_legacy_short_display_marks_stop(self) -> None:
         """Stop_ 事件 legacy 短文案以壳动词词表的停止后缀收尾，不得渲染成播放语义。"""
 
-        record = normalize_semantics(
-            decompose_event_name("Stop_sfx_AuroraSkin11_Dance3D_leadin", game_version="16.5")
-        )
+        record = normalize_semantics(decompose_event_name("Stop_sfx_AuroraSkin11_Dance3D_leadin", game_version="16.5"))
         short = build_short_display(record)
         suffix = playback_verb_suffix("stop")
 
@@ -804,7 +897,7 @@ class NormalizedTranslationOutputTests(unittest.TestCase):
         self.assertEqual(translation["frame_type"], "ability_state_change")
         self.assertEqual(translation["arguments"]["ability_slot"]["value"], "w")
         self.assertEqual(translation["arguments"]["ability_component"]["key"], "passive_defense")
-        self.assertEqual(translation["arguments"]["phase"]["key"], "state_deactivate")
+        self.assertEqual(translation["arguments"]["phase"]["key"], "effect_deactivate")
         self.assertTrue(normalized["display"]["zh_cn_short"])
 
     def test_writer_persists_translation_in_entity_shard(self) -> None:
@@ -887,9 +980,7 @@ class TranslationContextNameSystemTests(unittest.TestCase):
         """
 
         context = shared_translation_context()
-        entries_with_forms = [
-            entry for entry in context.champion_labels.values() if getattr(entry, "name_forms")
-        ]
+        entries_with_forms = [entry for entry in context.champion_labels.values() if getattr(entry, "name_forms")]
 
         self.assertTrue(entries_with_forms)
         for entry in entries_with_forms:
@@ -981,14 +1072,30 @@ class NormalizedDisplayEndToEndTests(unittest.TestCase):
     def build_display(self, raw_event_name: str) -> dict[str, str]:
         """按生产链路渲染 display。"""
 
-        record = enrich_with_reference(
-            normalize_semantics(decompose_event_name(raw_event_name, game_version="16.5")),
-            self.reference,
-        )
-        normalized = build_normalized_record(record, translation_context=self.context)
+        normalized = self.build_normalized(raw_event_name)
         display = normalized["display"]
         assert isinstance(display, dict)
         return display
+
+    def build_normalized(
+        self,
+        raw_event_name: str,
+        *,
+        source_path: str | None = None,
+    ) -> dict[str, object]:
+        """按生产链路构建 normalized 记录。"""
+
+        record = enrich_with_reference(
+            normalize_semantics(
+                decompose_event_name(
+                    raw_event_name,
+                    game_version="16.5",
+                    source_path=source_path,
+                )
+            ),
+            self.reference,
+        )
+        return build_normalized_record(record, translation_context=self.context)
 
     def test_galio_skin_typo_detail_resolves_champion_and_skin(self) -> None:
         """owner alias 大小写 typo（GalioSKin04）不得把原始 alias 或皮肤 token 泄漏进 detail。"""
@@ -1017,11 +1124,242 @@ class NormalizedDisplayEndToEndTests(unittest.TestCase):
     def test_stop_dance_sfx_display_marks_stop(self) -> None:
         """Stop_ sfx 事件经完整链路后短文案仍以壳动词词表的停止后缀收尾。"""
 
-        display = self.build_display("Stop_sfx_AuroraSkin11_Dance3D_leadin")
+        normalized = self.build_normalized("Stop_sfx_AuroraSkin11_Dance3D_leadin")
+        display = normalized["display"]
+        translation = normalized["translation"]
+        assert isinstance(display, dict)
+        assert isinstance(translation, dict)
         suffix = playback_verb_suffix("stop")
 
         self.assertTrue(suffix)
+        self.assertEqual(translation["frame_type"], "champion_action_event")
+        self.assertEqual(display["zh_cn_short"], f"舞蹈音效引入{suffix}")
         self.assertTrue(display["zh_cn_short"].endswith(suffix))
+
+    def test_action_lifecycle_has_meaningful_chinese_for_voice_and_sfx(self) -> None:
+        """相同动作的 VO/SFX 中文都保留 Loop，且资产类型不能混写。"""
+
+        cases = [
+            ("Play_vo_Bard_Dance3D_Loop_buffactivate", "voice_event", "跳舞语音循环"),
+            ("Play_sfx_Bard_Dance3D_Loop_buffactivate", "champion_action_event", "舞蹈音效循环"),
+        ]
+        for raw, frame_type, expected_short in cases:
+            with self.subTest(raw=raw):
+                normalized = self.build_normalized(raw)
+                translation = normalized["translation"]
+                display = normalized["display"]
+                assert isinstance(translation, dict)
+                assert isinstance(display, dict)
+
+                self.assertEqual(translation["frame_type"], frame_type)
+                self.assertEqual(translation["arguments"]["phase"]["key"], "loop")
+                self.assertEqual(display["zh_cn_short"], expected_short)
+
+    def test_legacy_fallback_uses_authoritative_champion_and_skin_labels(self) -> None:
+        """没有 translation frame 的 legacy detail 也不得泄漏英雄 alias 或 SkinNN。"""
+
+        display = self.build_display("Play_sfx_AatroxSkin01_AatroxRRevive_all")
+        detail = display["zh_cn_detail"]
+        champion = self.context.champion_labels["Aatrox"]["zh_CN"]
+        full_skin = self.context.skin_labels[("Aatrox", "Skin01")]["zh_CN"]
+        skin = full_skin.removesuffix(f" {champion}")
+
+        self.assertIn(champion, detail)
+        self.assertIn(skin, detail)
+        self.assertNotRegex(detail, r"\bAatrox\b|Skin01")
+
+    def test_glued_skin_skill_owner_uses_authoritative_champion_name(self) -> None:
+        """ZoeSkin01W 这类粘连 owner 不得把 Zoe/Skin01 泄漏进中文展示。"""
+
+        display = self.build_display("Play_sfx_ZoeSkin01W_enablebypass")
+        detail = display["zh_cn_detail"]
+
+        self.assertIn(self.context.champion_labels["Zoe"]["zh_CN"], detail)
+        self.assertNotRegex(detail, r"(?i)Zoe|Skin01")
+
+    def test_glued_skin_action_owner_builds_meaningful_action(self) -> None:
+        """GangplankSkin23Taunt3D 要还原为普朗克的嘲讽动作。"""
+
+        display = self.build_display("Play_sfx_GangplankSkin23Taunt3D_buffactivate")
+        detail = display["zh_cn_detail"]
+
+        self.assertIn(self.context.champion_labels["Gangplank"]["zh_CN"], detail)
+        self.assertIn("嘲讽", detail)
+        self.assertNotRegex(detail, r"(?i)Gangplank|Skin23|Taunt")
+
+    def test_weak_pascal_prefix_does_not_render_as_skill_key(self) -> None:
+        """EvolveSelf 的 E 只是英文词首，低置信 hint 不得进入用户中文。"""
+
+        display = self.build_display("Play_sfx_KaisaSkin14_KaisaEvolveSelf_cast")
+        detail = display["zh_cn_detail"]
+
+        self.assertNotRegex(detail, r"E\s*技能")
+
+    def test_fizz_piercing_strike_renders_q_not_passive(self) -> None:
+        """有 owner 级证据的 PiercingStrike 应显示为淘气打击 Q，而不是 P。"""
+
+        display = self.build_display("Play_sfx_FizzSkin04_FizzPiercingStrike_OnCast")
+        detail = display["zh_cn_detail"]
+
+        self.assertIn("Q技能", detail)
+        self.assertIn("淘气打击", detail)
+        self.assertNotRegex(detail, r"P\s*技能")
+
+    def test_ruby_boss_normalized_entity_is_actor_not_mode_namespace(self) -> None:
+        """Ruby 是模式上下文，FNVeigar 还原出的维迦才是稳定实体。"""
+
+        raw = "Play_sfx_Ruby_Boss_FNVeigar_AttackInhib_missilelaunch"
+        record = enrich_with_reference(
+            normalize_semantics(decompose_event_name(raw, game_version="16.5")),
+            self.reference,
+        )
+        normalized = build_normalized_record(record, translation_context=self.context)
+
+        self.assertEqual(normalized["entity"], {"kind": "champion", "alias": "Veigar"})
+        self.assertNotIn("Ruby", normalized["display"]["zh_cn_detail"])
+
+    def test_mode_only_event_uses_post_prefix_system_entity(self) -> None:
+        """没有英雄 actor 时，Ruby/Strawberry 后首段才是系统实体，模式前缀不能占用 entity。"""
+
+        cases = [
+            ("Play_sfx_Ruby_Curse_MirrorImage_clone_buffdeactivate", "Curse"),
+            ("Play_sfx_Strawberry_Spire_Quest_idle_appear", "Spire"),
+        ]
+
+        for raw, alias in cases:
+            with self.subTest(raw=raw):
+                record = enrich_with_reference(
+                    normalize_semantics(decompose_event_name(raw, game_version="16.5")),
+                    self.reference,
+                )
+                normalized = build_normalized_record(record, translation_context=self.context)
+
+                self.assertEqual(normalized["entity"], {"kind": "mode_system", "alias": alias})
+                self.assertEqual(normalized["semantic"]["slots"]["mode_entity"]["alias"], alias)
+                self.assertNotIn(normalized["entity"]["alias"].casefold(), {"ruby", "strawberry"})
+
+    def test_reviewed_mode_system_sfx_has_meaningful_chinese_frame(self) -> None:
+        """已审阅的模式系统实体应显示业务名与音效阶段，不再退化成“状态启动”。"""
+
+        cases = [
+            (
+                "Play_sfx_Ruby_Curse_MirrorImage_clone_buffdeactivate",
+                "Curse",
+                "诅咒音效",
+                "audio_end",
+                "末日人机 诅咒音效结束",
+            ),
+            (
+                "Play_sfx_Strawberry_Spire_Quest_idle_appear",
+                "Spire",
+                "尖塔音效",
+                None,
+                "PVE 模式 尖塔音效",
+            ),
+            (
+                "Stop_sfx_Strawberry_Gameplay_HUD_Boon_appear",
+                "Gameplay",
+                "玩法音效",
+                None,
+                "PVE 模式 玩法音效停止",
+            ),
+            (
+                "Play_sfx_GameMode_Ruby_Pumpkin_destroyed",
+                "Pumpkin",
+                "南瓜音效",
+                None,
+                "末日人机 南瓜音效",
+            ),
+        ]
+
+        for raw, entity_alias, effect_label, phase_key, expected_short in cases:
+            with self.subTest(raw=raw):
+                normalized = self.build_normalized(raw)
+                translation = normalized["translation"]
+
+                self.assertEqual(normalized["entity"]["alias"], entity_alias)
+                self.assertEqual(translation["frame_type"], "mode_system_sfx_event")
+                self.assertEqual(translation["arguments"]["effect"]["labels"]["zh_CN"], effect_label)
+                if phase_key is None:
+                    self.assertNotIn("phase", translation["arguments"])
+                else:
+                    self.assertEqual(translation["arguments"]["phase"]["key"], phase_key)
+                self.assertEqual(normalized["display"]["zh_cn_short"], expected_short)
+                self.assertNotRegex(expected_short, r"状态启动|状态结束")
+
+    def test_reviewed_ruby_ryze_channel_keeps_actor_spell_component_and_phase(self) -> None:
+        """Ruby_RyzeRChannel 应保留末日人机演员、R 引导组件与结束相位。"""
+
+        normalized = self.build_normalized("Play_sfx_Ruby_RyzeRChannel_end")
+
+        translation = normalized["translation"]
+        self.assertEqual(translation["frame_type"], "ability_cast_event")
+        self.assertEqual(translation["arguments"]["context"]["key"], "ruby")
+        self.assertEqual(translation["arguments"]["champion"]["alias"], "Ryze")
+        self.assertEqual(translation["arguments"]["ability_slot"]["key"], "r")
+        self.assertEqual(
+            translation["arguments"]["ability_component"]["key"],
+            "realm_warp_channel",
+        )
+        self.assertEqual(translation["arguments"]["phase"]["key"], "end")
+        self.assertEqual(normalized["display"]["zh_cn_detail"], "末日人机 瑞兹 R技能曲境折跃引导结束")
+
+    def test_mode_actor_generic_sfx_renders_reviewed_effect_in_chinese(self) -> None:
+        """PVE 首领专属效果必须展示演员、效果与相位，不再退成“音效事件”。"""
+
+        normalized = self.build_normalized("Play_sfx_Strawberry_Boss_Aatrox_FallingSword_missile_land")
+
+        translation = normalized["translation"]
+        self.assertEqual(translation["frame_type"], "champion_sfx_effect_event")
+        self.assertEqual(translation["arguments"]["context"]["key"], "strawberry")
+        self.assertEqual(translation["arguments"]["champion"]["alias"], "Aatrox")
+        self.assertEqual(translation["arguments"]["effect"]["labels"]["zh_CN"], "坠落之剑音效")
+        self.assertIn("坠落之剑音效", normalized["display"]["zh_cn_detail"])
+        self.assertNotIn("音效事件", normalized["display"]["zh_cn_detail"])
+
+    def test_reviewed_embedded_component_stage_is_rendered(self) -> None:
+        """规则声明的嵌入段次必须进入 frame 和中文，不能只留在内部 token。"""
+
+        normalized = self.build_normalized("Play_sfx_Zoe_ZoeQMis2Warning_missilecast_self")
+
+        translation = normalized["translation"]
+        self.assertEqual(translation["arguments"]["ability_stage"]["value"], "2")
+        self.assertIn("第2段", normalized["display"]["zh_cn_detail"])
+
+    def test_mode_actor_map_sfx_recovers_skill_and_attack_chinese(self) -> None:
+        """模式资产即使挂在 map 下，也要以真实演员恢复技能/攻击语义。"""
+
+        cases = [
+            (
+                "Play_sfx_Ruby_Karthus_RDamageSound_OnBuffActivate",
+                "ability_state_change",
+                "末日人机 卡尔萨斯 R技能生效",
+            ),
+            (
+                "Play_sfx_Strawberry_Boss_Briar_BasicAttack_cast",
+                "champion_attack_event",
+                "PVE 模式 贝蕾亚 普通攻击出手",
+            ),
+            (
+                "Play_sfx_strawberry_tibbersbasicattack_OnCast",
+                "mode_unit_attack_event",
+                "PVE 模式 提伯斯 普通攻击出手",
+            ),
+        ]
+
+        for raw, frame_type, expected_detail in cases:
+            with self.subTest(raw=raw):
+                normalized = self.build_normalized(raw, source_path="raw/events/maps/11.txt")
+
+                self.assertEqual(normalized["translation"]["frame_type"], frame_type)
+                self.assertEqual(normalized["display"]["zh_cn_detail"], expected_detail)
+                self.assertNotRegex(normalized["display"]["zh_cn_detail"], r"状态启动|状态结束")
+
+        tibbers = self.build_normalized(
+            "Play_sfx_strawberry_tibbersbasicattack_OnCast",
+            source_path="raw/events/maps/11.txt",
+        )
+        self.assertEqual(tibbers["entity"], {"kind": "mode_unit", "alias": "Tibbers"})
 
 
 class NormalizedOutputCliTests(unittest.TestCase):
@@ -1034,6 +1372,7 @@ class NormalizedOutputCliTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
+            repo_root = Path(__file__).resolve().parents[1]
             decomposition_root = root / "event-decomposition"
             output_root = root / "normalized"
             decomposition_root.mkdir()
@@ -1050,8 +1389,22 @@ class NormalizedOutputCliTests(unittest.TestCase):
                     str(decomposition_root),
                     "--output-root",
                     str(output_root),
+                    "--repo-root",
+                    str(repo_root),
+                    "--raw-root",
+                    str(repo_root / "raw" / "events"),
+                    "--reference-root",
+                    str(repo_root / "reference"),
+                    "--rules-root",
+                    str(repo_root / "rules"),
+                    "--overrides-root",
+                    str(repo_root / "overrides"),
+                    "--sources-manifest",
+                    str(repo_root / "data" / "frozen-sources-manifest.v1.json"),
+                    "--frozen-profile",
+                    str(repo_root / "data" / "frozen-profile.v1.json"),
                 ],
-                cwd=Path(__file__).resolve().parents[1],
+                cwd=repo_root,
                 check=False,
                 capture_output=True,
                 text=True,
@@ -1141,10 +1494,9 @@ class DisplayTierTests(unittest.TestCase):
         self.assertEqual(normalized["display"]["tier"], 1)
 
     def test_tier2_ambiguous_named_sfx(self) -> None:
-        """存疑但保留短文案：spell sfx 与其它命名 sfx 判 Tier2。"""
+        """尚未形成稳定 frame 的命名 SFX 仍判 Tier2。"""
 
         cases = [
-            "Mute_sfx_AkshanSkin01_AkshanWRevive_buffcast",  # spell sfx
             # augment_system sfx（Ceremony 组段不是增益 Code，词表外不建 frame）
             "Play_sfx_Cherry_Augment_Ceremony_MadScientist_buffactivate",
         ]
@@ -1157,6 +1509,45 @@ class DisplayTierTests(unittest.TestCase):
                 self.assertEqual(display["tier"], 2)
                 self.assertIsInstance(display["zh_cn_short"], str)
                 self.assertTrue(display["zh_cn_short"])
+
+    def test_reviewed_spell_sfx_is_tier1(self) -> None:
+        """已确认组件、槽位和阶段的英雄 SFX 应进入稳定 Tier1。"""
+
+        normalized = self.build("Mute_sfx_AkshanSkin01_AkshanWRevive_buffcast")
+
+        self.assertEqual(normalized["display"]["tier"], 1)
+        self.assertEqual(normalized["display"]["zh_cn_short"], "W技能赴险夺人复活静音")
+        arguments = normalized["translation"]["arguments"]
+        self.assertEqual(arguments["ability_slot"]["key"], "w")
+        self.assertEqual(arguments["phase"]["key"], "cast")
+        self.assertEqual(arguments["playback"]["key"], "mute")
+
+    def test_tier1_execute_action_rejects_false_spell_key_hint(self) -> None:
+        """Execute 输出处决动作中文，不得暴露词首误拆出的 E 技能。"""
+
+        normalized = self.build("Play_sfx_RenektonSkin17_RenektonExecute_OnCast")
+        display = normalized["display"]
+        self.assertIsInstance(display, dict)
+        self.assertEqual(display["tier"], 1)
+        self.assertEqual(display["zh_cn_short"], "处决动作开始")
+        self.assertNotIn("E技能", display["zh_cn_detail"])
+        self.assertEqual(normalized["translation"]["frame_type"], "champion_action_event")
+
+    def test_tier1_attack_sfx_keeps_real_action_semantics(self) -> None:
+        """普通、暴击与远程攻击都有玩家语义，不得再退出中文短文案。"""
+
+        cases = [
+            ("Play_sfx_AatroxSkin01_AatroxBasicAttack2_OnCast", "普通攻击2出手"),
+            ("Play_sfx_AatroxSkin01_AatroxCritAttack_OnCast", "暴击攻击出手"),
+            ("Play_sfx_JayceSkin03_JayceRangedAttack2_OnCast", "远程普通攻击2出手"),
+            ("Play_vo_JayceSkin35_JayceRangedAttack_cast3D", "远程普通攻击出手"),
+        ]
+        for raw, expected in cases:
+            with self.subTest(raw=raw):
+                normalized = self.build(raw)
+                self.assertEqual(normalized["display"]["tier"], 1)
+                self.assertEqual(normalized["display"]["zh_cn_short"], expected)
+                self.assertEqual(normalized["translation"]["frame_type"], "champion_attack_event")
 
     def test_tier1_vo_asset_within_technical_families(self) -> None:
         """普攻/暴击/待机/材质开关家族里混入的 vo 语音判 Tier1，不随家族误判 Tier3。
@@ -1200,9 +1591,6 @@ class DisplayTierTests(unittest.TestCase):
         """纯技术家族判 Tier3，zh_cn_short 置 null，detail/debug_label 不丢。"""
 
         cases = [
-            "Play_sfx_AatroxSkin01_AatroxBasicAttack2_OnCast",  # basic_attack
-            "Play_sfx_AatroxSkin01_AatroxCritAttack_OnCast",  # crit_attack
-            "Play_sfx_AhriSkin04_Idle3D_buffactivate",  # idle
             "AkshanSkin01_Switch_AkshanTerrain_Brush",  # 材质开关
             "Set_RTPC_SeraphineSkin43_RHits1",  # 音频总线 RTPC 控制
             "Play_mus_map01_phase_select_base",  # mus 背景音乐控制
@@ -1218,8 +1606,8 @@ class DisplayTierTests(unittest.TestCase):
                 self.assertTrue(display["zh_cn_detail"])
                 self.assertNotIn("translation", normalized)
 
-    def test_tier3_does_not_drop_lexical_atoms_or_slots(self) -> None:
-        """Tier3 退出短文案不得删除已解析 token/slot（无损原则）。"""
+    def test_tier1_attack_does_not_drop_lexical_atoms_or_slots(self) -> None:
+        """攻击升为可展示语义后仍不得删除已解析 token/slot。"""
 
         record = enrich_with_reference(
             normalize_semantics(
@@ -1230,6 +1618,8 @@ class DisplayTierTests(unittest.TestCase):
         normalized = build_normalized_record(record, translation_context=self.context)
 
         self.assertEqual(normalized["semantic"]["slots"], record.semantic_slots)
+        self.assertEqual(normalized["display"]["tier"], 1)
+        self.assertEqual(normalized["translation"]["frame_type"], "champion_attack_event")
         self.assertTrue(normalized["display"]["debug_label"])
 
 

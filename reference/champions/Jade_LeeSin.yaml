@@ -1,0 +1,278 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60064
+  alias: Jade_LeeSin
+  names:
+    en_US:
+      - value: Lee Sin
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 盲僧
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_LeeSinE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Tempest / Cripple
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 天雷破/摧筋断骨
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:c7c172dacdb5042691bfdb555fadf699cc64ffe6ddbcacad5048d8e7fec7b634
+            value: 'Tempest: Lee Sin smashes the ground sending out a shockwave that
+              deals magic damage and reveals enemy units hit. If Tempest hits an enemy,
+              Lee Sin can cast cripple for the next 3 seconds.<br>Cripple: Lee Sin
+              cripples nearby enemies revealed by Tempest, reducing their Movement
+              and Attack Speed for 4 seconds. Movement and Attack Speed recover gradually
+              over the duration.'
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:49ec38a8da8a418b4b9c87b7cd4346c3e6950690a691d935ccce807a7521394d
+            value:
+              天雷破：李青猛击地面，施放冲击波，造成魔法伤害并使命中的敌方单位显形。如果天雷破击中敌人，李青可以在接下来的3秒内施放摧筋断骨。<br>摧筋断骨：李青致残被天雷破显形的敌人们，降低其的移动速度和攻击速度，持续4秒。持续期间内，受影响单位的移动速度和攻击速度会逐渐恢复正常。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_LeeSinPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Flurry
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 疾风骤雨
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:3c3aac9d30ba64d3a1280f0a419e3040c80183d23f6ba955252d2f885330d997
+            value: After Lee Sin uses an ability, his next 2 basic attacks gain
+              40% Attack Speed and return 15 Energy each.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:80a4977becf56942482fb249431d058930d57ea4366a7e0a5ee973f8ac236de3
+            value: 李青使用一次技能后，他接下来的两次普通攻击会获得40%攻击速度，且每次攻击回复15能量。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_LeeSinQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Sonic Wave / Resonating Strike
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 天音波/回音击
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:bbc56a5b4319c9d9fcd1b79b420af4f705b27dd4a57e54324ff7566f53a9eb24
+            value: 'Sonic Wave: Lee Sin projects a discordant wave of sound to locate
+              his enemies, dealing physical damage to the first enemy it encounters.
+              If Sonic Wave hits, Lee Sin can cast Resonating Strike for the next
+              3 seconds.<br>Resonating Strike: Lee Sin dashes to the enemy hit by
+              Sonic Wave, dealing physical damage plus 8% of their missing health.'
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:57b9876ddcd5bb9a6e1ecde15fc31446beb7c87590b98a1c89cc590801766262
+            value:
+              天音波：李青发出刺耳的声波定位敌人，对命中的首个敌人造成物理伤害。如果天音波击中敌人，则李青在接下来3秒可施放回音击。<br>回音击：李青冲向被天音波击中的敌人，造成物理伤害外加目标8%已损失生命值的伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_LeeSinR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Dragon's Rage
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 猛龙摆尾
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:505f58e64ccb1cd530e29f4b827552a406737ee23cfff78e138ca6eb3f678a4d
+            value: Lee Sin performs a powerful roundhouse kick launching his
+              target back, dealing physical damage to the target and any enemies
+              they collide with. Enemies the target collides with are knocked
+              into the air for a short duration. This technique was taught to
+              him by Jesse Perring, although Lee Sin does not kick players off
+              the map.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:2b919abe071d457b3fa35c9d58c23bfdb40d6c5b77e222e2f97d388a15ddcc29
+            value:
+              李青用强力的回旋踢击退敌方英雄，对目标以及被目标撞到的所有敌人造成物理伤害。被目标撞到的敌人会被短暂击飞。这项技艺是春哥教他的，不过李青不能将玩家的英雄踢到地图外面去。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_LeeSinW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Safeguard / Iron Will
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 金钟罩/铁布衫
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:01c6d070eede33142724c0dc4a7ae0130dca74f0e5222529ed7cb9a616e2c0fa
+            value: "Safeguard: Lee Sin rushes towards a target ally, shielding them
+              both from damage. After using Safeguard, Lee Sin can cast Iron Will
+              for the next 3 seconds.<br>Iron Will: Lee Sin's intense training allows
+              him to thrive in battle. For 4 seconds, Lee Sin gains Life Steal, Spell
+              Vamp, and Armor."
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:cdee363ea24ae84533c851a7cb1dfd8e5d2701fcdda4f0041d58cb131ee2547b
+            value:
+              金钟罩：李青冲向目标友军，为目标和自身提供护盾。在使用金钟罩后，李青可以在接下来的3秒内施放铁布衫。<br>铁布衫：李青艰苦卓绝的训练让他能在战斗中激发潜能。4秒内，李青获得生命偷取、法术吸血和护甲。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

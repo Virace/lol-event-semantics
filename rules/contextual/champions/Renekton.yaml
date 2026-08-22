@@ -17,6 +17,14 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: Dice 在 Renekton 事件中对应 E 技能 Slice and Dice 的 Dice 段。
+  RenektonRageReady:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: rage_ready
+    label: 怒气就绪
+    confidence: high
+    source: manual_contextual_alias
+    note: RageReady 是雷克顿资源就绪提示，不把词首 R 误判为 R 技能。
   SuperExecute:
     kind: champion_spell_component
     spell: r
@@ -26,16 +34,16 @@ aliases:
     source: manual_contextual_alias
     note: SuperExecute 在 Renekton 事件中对应 R 技能 Dominus 的处决表现。
   VolcanoGod:
-    kind: champion_spell_component
-    spell: p
+    kind: generic_sfx_effect
+    asset_kind: sfx
     component: volcano_god_theme
     label: 火山神主题
     confidence: medium
     source: manual_contextual_alias
     note: VolcanoGod 在 Renekton 事件中对应皮肤主题化血溅/命中特效。
   helmet:
-    kind: champion_spell_component
-    spell: p
+    kind: generic_sfx_effect
+    asset_kind: sfx
     component: helmet
     label: 头盔
     confidence: medium

@@ -1,0 +1,267 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60053
+  alias: Jade_Blitzcrank
+  names:
+    en_US:
+      - value: Blitzcrank
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 蒸汽机器人
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_BlitzcrankE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Power Fist
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 能量铁拳
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:56376444b2126f508e55a63eca9773abb85c03595097291a7dc7ed6ed7e7b634
+            value: Blitzcrank charges up their fist to make their next attack
+              deal double damage and pop their target up in the air.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:d7563eaa731a347aaf71d0fbfb9121f4c6893d1c65a48f6087fb9ab591e32941
+            value: 布里茨为机械手臂充能，下次攻击造成双倍伤害并击飞目标。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_BlitzcrankPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Mana Barrier
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 法力屏障
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:907e2dc6b23b68646e8b327fe3db38a49b4f1fa86b54bae8874fa575c4fbe043
+            value: When Blitzcrank life is brought below 20% health they
+              activate Mana Barrier. This creates a mana shield equal to 50% of
+              their mana for 10 seconds. Mana Barrier can only occur once every
+              90 seconds.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:a9f79c08669a1ae65ad4df6e3a4097fe29427378777a3ec381d4a29db61e6921
+            value:
+              布里茨的生命值降到20%以下时，法力屏障就会激活，生成一道相当于其50%法力值的护盾，持续10秒。法力屏障每90秒内只能触发一次。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_BlitzcrankQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Rocket Grab
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 机械飞爪
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:902590cce6a0a941d0ec02412839f864e8f012435f2b698bbfdbc973b46de65b
+            value: Blitzcrank fires their right hand to grab an opponent on its
+              path, dealing damage and dragging it back to them.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:dc47a49a530171ab3b8af37e30ea320e3134143830625001265fa7dd819501ba
+            value: 布里茨发射右手，对命中的第一个敌人造成伤害，并将其拉到自己面前。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_BlitzcrankR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Static Field
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 静电力场
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:eefa3cf127df5effc758ee56d1301dec19f353411a09dff522c65db367485d37
+            value: Passively causes lightning bolts to damage a nearby enemy.
+              Additionally, Blitzcrank can activate this ability to damage
+              nearby enemies and silence them for 0.5 seconds, but doing so
+              removes the passive lightning until Static Field becomes available
+              again.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:6254569b0b0df67ad8bd6a4eed3826cd363ca9e60f221c0365e02f28f28a6137
+            value:
+              被动生成电弧，对附近的一名敌人造成伤害。此外，主动施放时对周围的敌人造成伤害和0.5秒沉默，但在施放后会暂时禁用被动电弧效果，直到技能冷却完毕。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_BlitzcrankW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Overdrive
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 过载运转
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:61c8edfd20105a52fc8707895c0e16488722724fcd5623496d0860fc0d64436c
+            value: Blitzcrank supercharges themself to get dramatically
+              increased movement and attack speed.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:d19b17f9928e9014526b68ba2fd0445a09f3ddcfcc31525308cbfc156bab39e5
+            value: 布里茨为自己进行超级充能，以大幅提升移动速度和攻击速度。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

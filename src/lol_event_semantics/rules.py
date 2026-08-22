@@ -25,6 +25,7 @@ class LegacyAlias:
     skin_en: str | None = None
     skin_name: str | None = None
     form_name: str | None = None
+    form_key: str | None = None
     note: str | None = None
 
 
@@ -53,12 +54,18 @@ class ContextualAlias:
     source: str = "manual_contextual_alias"
     source_path: str = "rules/contextual_aliases.yaml"
     spell: str | None = None
+    related_spell: str | None = None
     component: str | None = None
+    asset_kind: str | None = None
+    stage: int | None = None
+    infer_stage: bool = True
     mode: str | None = None
     mode_label: str | None = None
+    required_tokens: tuple[str, ...] = ()
+    qualifiers: dict[str, str] = field(default_factory=dict)
     note: str | None = None
 
-    def to_dict(self) -> dict[str, str | None]:
+    def to_dict(self) -> dict[str, object]:
         """返回 JSON 友好的字典。"""
 
         return {
@@ -71,9 +78,15 @@ class ContextualAlias:
             "source": self.source,
             "source_path": self.source_path,
             "spell": self.spell,
+            "related_spell": self.related_spell,
             "component": self.component,
+            "asset_kind": self.asset_kind,
+            "stage": self.stage,
+            "infer_stage": self.infer_stage,
             "mode": self.mode,
             "mode_label": self.mode_label,
+            "required_tokens": list(self.required_tokens),
+            "qualifiers": dict(self.qualifiers),
             "note": self.note,
         }
 
@@ -129,11 +142,12 @@ class ExternalEntity:
 
 
 @dataclass(slots=True)
-class AttackModifierSpell:
-    """确认会改写普攻的英雄技能槽白名单条目。"""
+class TrustedSpellResidual:
+    """经人工证据确认的 owner + 单字母槽位 residual。"""
 
     champion: str
     spell_key: str
+    residual: str
     note: str | None = None
 
 
@@ -190,7 +204,7 @@ class RuleBook:
     residual_modifiers: dict[str, ResidualModifier] = field(default_factory=dict)
     external_entities: dict[str, ExternalEntity] = field(default_factory=dict)
     low_trust_event_rules: dict[str, LowTrustEventRule] = field(default_factory=dict)
-    attack_modifier_spells: dict[tuple[str, str], AttackModifierSpell] = field(default_factory=dict)
+    trusted_spell_residuals: dict[tuple[str, str, str], TrustedSpellResidual] = field(default_factory=dict)
 
     @classmethod
     def load(cls, rules_root: Path, overrides_root: Path) -> RuleBook:
@@ -210,48 +224,32 @@ class RuleBook:
 
         return cls(
             canonical_tokens={
-                key.lower(): str(value)
-                for key, value in normalization.get("canonical_tokens", {}).items()
+                key.lower(): str(value) for key, value in normalization.get("canonical_tokens", {}).items()
             },
-            word_labels={
-                str(key): str(value)
-                for key, value in normalization.get("word_labels", {}).items()
-            },
+            word_labels={str(key): str(value) for key, value in normalization.get("word_labels", {}).items()},
             phases={
                 str(key).lower(): PhaseRule(key=str(value["key"]), name=str(value["name"]))
                 for key, value in phase_data.get("phases", {}).items()
             },
-            modifiers={
-                str(key).lower(): str(value)
-                for key, value in phase_data.get("modifiers", {}).items()
-            },
-            map_actions={
-                str(key): str(value)
-                for key, value in map_data.get("actions", {}).items()
-            },
-            map_tokens={
-                str(key): str(value)
-                for key, value in map_data.get("token_labels", {}).items()
-            },
+            modifiers={str(key).lower(): str(value) for key, value in phase_data.get("modifiers", {}).items()},
+            map_actions={str(key): str(value) for key, value in map_data.get("actions", {}).items()},
+            map_tokens={str(key): str(value) for key, value in map_data.get("token_labels", {}).items()},
             legacy_aliases={
                 str(key).lower(): LegacyAlias(
                     owner_alias=value.get("owner_alias"),
                     skin_en=value.get("skin_en"),
                     skin_name=value.get("skin_name"),
                     form_name=value.get("form_name"),
+                    form_key=value.get("form_key"),
                     note=value.get("note"),
                 )
                 for key, value in legacy_data.get("aliases", {}).items()
             },
             global_actions={
-                str(key): build_action_alias(value)
-                for key, value in action_data.get("global", {}).items()
+                str(key): build_action_alias(value) for key, value in action_data.get("global", {}).items()
             },
             champion_actions={
-                str(owner): {
-                    str(key): build_action_alias(value)
-                    for key, value in rows.items()
-                }
+                str(owner): {str(key): build_action_alias(value) for key, value in rows.items()}
                 for owner, rows in action_data.get("champions", {}).items()
             },
             contextual_aliases=build_contextual_aliases(contextual_data, contextual_fragments),
@@ -261,7 +259,7 @@ class RuleBook:
                 low_trust_event_data,
                 rules_root / "low_trust_events.yaml",
             ),
-            attack_modifier_spells=build_attack_modifier_spells(spell_constraint_data),
+            trusted_spell_residuals=build_trusted_spell_residuals(spell_constraint_data),
         )
 
     def normalize_token(self, token: str) -> str:
@@ -341,13 +339,18 @@ class RuleBook:
 
         return self.low_trust_event_rules.get(event_rule_key(raw_event_name))
 
-    def attack_modifier_spell_for(self, champion: str | None, spell_key: str) -> AttackModifierSpell | None:
-        """按英雄和技能槽查找普攻改写白名单条目。"""
+    def trusted_spell_residual_for(
+        self,
+        champion: str | None,
+        spell_key: str,
+        residual: str,
+    ) -> TrustedSpellResidual | None:
+        """按英雄、技能槽和完整 residual 查询人工证据。"""
 
         if champion is None:
             return None
 
-        return self.attack_modifier_spells.get((rule_key(champion), str(spell_key).lower()))
+        return self.trusted_spell_residuals.get((rule_key(champion), str(spell_key).lower(), rule_key(residual)))
 
 
 def read_yaml(path: Path) -> dict[str, Any]:
@@ -451,10 +454,7 @@ def read_contextual_fragments(rules_root: Path) -> list[tuple[Path, dict[str, An
     if not contextual_root.is_dir():
         return []
 
-    return [
-        (path, read_yaml(path))
-        for path in sorted(contextual_root.rglob("*.yaml"))
-    ]
+    return [(path, read_yaml(path)) for path in sorted(contextual_root.rglob("*.yaml"))]
 
 
 def build_contextual_alias_fragment(path: Path, data: dict[str, Any]) -> dict[tuple[str, str, str], ContextualAlias]:
@@ -496,19 +496,58 @@ def make_contextual_alias(
 ) -> ContextualAlias:
     """构造 contextual alias 对象。"""
 
+    kind = str(value.get("kind") or "contextual_alias")
+    spell = str(value["spell"]).lower() if value.get("spell") is not None else None
+    related_spell = str(value["related_spell"]).lower() if value.get("related_spell") is not None else None
+    qualifier_rows = value.get("qualifiers")
+    qualifiers = (
+        {
+            rule_key(token): str(label)
+            for token, label in qualifier_rows.items()
+            if str(token).strip() and str(label).strip()
+        }
+        if isinstance(qualifier_rows, dict)
+        else {}
+    )
+    required_token_rows = value.get("required_tokens")
+    required_tokens = (
+        tuple(
+            rule_key(token)
+            for token in required_token_rows
+            if str(token).strip()
+        )
+        if isinstance(required_token_rows, (list, tuple))
+        else ()
+    )
+    attack_marker = f"{rule_key(token)}{rule_key(str(value.get('component') or ''))}"
+    if kind == "champion_spell_component" and (
+        "basicattack" in attack_marker or "critattack" in attack_marker
+    ):
+        # 兼容尚未迁移的旧规则：技能可以解释攻击组件的来源，但不能把
+        # BasicAttack/CritAttack 的主动作改写成技能。
+        kind = "champion_attack_component"
+        related_spell = related_spell or spell
+        spell = None
+
     return ContextualAlias(
         scope=scope,
         owner=owner,
         token=token,
-        kind=str(value.get("kind") or "contextual_alias"),
+        kind=kind,
         label=str(value.get("label") or token),
         confidence=str(value.get("confidence") or "medium"),
         source=str(value.get("source") or "manual_contextual_alias"),
         source_path=source_path,
-        spell=str(value["spell"]).lower() if value.get("spell") is not None else None,
+        spell=spell,
+        related_spell=related_spell,
         component=str(value["component"]) if value.get("component") is not None else None,
+        asset_kind=str(value["asset_kind"]).lower() if value.get("asset_kind") is not None else None,
+        stage=int(value["stage"]) if value.get("stage") is not None else None,
+        infer_stage=bool(value.get("infer_stage", True)),
         mode=str(value["mode"]) if value.get("mode") is not None else None,
         mode_label=str(value["mode_label"]) if value.get("mode_label") is not None else None,
+        required_tokens=required_tokens,
+        qualifiers=qualifiers,
         note=str(value["note"]) if value.get("note") is not None else None,
     )
 
@@ -528,7 +567,7 @@ def add_contextual_alias(
     result[key] = alias
 
 
-def contextual_alias_payload(alias: ContextualAlias) -> dict[str, str | None]:
+def contextual_alias_payload(alias: ContextualAlias) -> dict[str, object]:
     """返回用于比较语义等价的 contextual alias 内容。"""
 
     payload = alias.to_dict()
@@ -646,11 +685,11 @@ def build_low_trust_event_rules(data: dict[str, Any], path: Path) -> dict[str, L
     return result
 
 
-def build_attack_modifier_spells(data: dict[str, Any]) -> dict[tuple[str, str], AttackModifierSpell]:
-    """构造普攻改写技能白名单索引。"""
+def build_trusted_spell_residuals(data: dict[str, Any]) -> dict[tuple[str, str, str], TrustedSpellResidual]:
+    """构造 owner + 单字母槽位 residual 的人工证据索引。"""
 
-    result: dict[tuple[str, str], AttackModifierSpell] = {}
-    rows = data.get("attack_modifier_spells", {})
+    result: dict[tuple[str, str, str], TrustedSpellResidual] = {}
+    rows = data.get("trusted_single_key_residuals", {})
 
     if not isinstance(rows, dict):
         return result
@@ -659,26 +698,28 @@ def build_attack_modifier_spells(data: dict[str, Any]) -> dict[tuple[str, str], 
         if not isinstance(slots, dict):
             continue
 
-        for spell_key, value in slots.items():
+        for spell_key, residuals in slots.items():
             slot = str(spell_key).lower()
-
-            # 白名单直接决定普攻事件能否展示为技能，槽位写错必须立即暴露
             if slot not in {"p", "q", "w", "e", "r"}:
-                raise ValueError(f"非法普攻改写技能槽: champion={champion}, spell_key={spell_key}")
+                raise ValueError(f"非法可信技能 residual 槽: champion={champion}, spell_key={spell_key}")
+            if not isinstance(residuals, dict):
+                continue
 
-            note = value.get("note") if isinstance(value, dict) else None
-            entry = AttackModifierSpell(
-                champion=str(champion),
-                spell_key=slot,
-                note=str(note) if note is not None else None,
-            )
-            key = (rule_key(champion), slot)
-
-            if key in result:
-                existing = result[key]
-                raise ValueError(f"重复普攻改写技能白名单: key={key}, old={existing.champion}, new={entry.champion}")
-
-            result[key] = entry
+            for residual, value in residuals.items():
+                residual_key = rule_key(residual)
+                if not residual_key:
+                    raise ValueError(f"可信技能 residual 不能为空: champion={champion}, spell_key={spell_key}")
+                note = value.get("note") if isinstance(value, dict) else None
+                entry = TrustedSpellResidual(
+                    champion=str(champion),
+                    spell_key=slot,
+                    residual=str(residual),
+                    note=str(note) if note is not None else None,
+                )
+                key = (rule_key(champion), slot, residual_key)
+                if key in result:
+                    raise ValueError(f"重复可信技能 residual: key={key}")
+                result[key] = entry
 
     return result
 

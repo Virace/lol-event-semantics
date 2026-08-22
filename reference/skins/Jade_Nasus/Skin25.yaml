@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Nasus
+  champion_id: 60075
+  skin_number: 25
+  skin_token: Skin25
+  id: 60075025
+  alias: Jade_NasusSkin25
+  names:
+    en_US:
+      - value: Space Groove Nasus
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 太空律动 “狗头” 内瑟斯
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 144
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_NasusSkin25

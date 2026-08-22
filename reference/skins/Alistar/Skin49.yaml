@@ -1,0 +1,36 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Alistar
+  champion_id: 12
+  skin_number: 49
+  skin_token: Skin49
+  id: 12049
+  alias: AlistarSkin49
+  names:
+    en_US:
+      - value: Black Alistar Modern
+        sources:
+          - source: data_dragon
+            first_seen: 16.16.1
+            last_seen: 16.16.1
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 暗黑灵魂 阿利斯塔 现代
+        sources:
+          - source: data_dragon
+            first_seen: 16.16.1
+            last_seen: 16.16.1
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 83
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - AlistarSkin49

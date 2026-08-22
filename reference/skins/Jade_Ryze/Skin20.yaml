@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Ryze
+  champion_id: 60013
+  skin_number: 20
+  skin_token: Skin20
+  id: 60013020
+  alias: Jade_RyzeSkin20
+  names:
+    en_US:
+      - value: Arcana Ryze
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 孤勇之隐 瑞兹
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 146
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_RyzeSkin20

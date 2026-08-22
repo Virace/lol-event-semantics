@@ -1,0 +1,128 @@
+{
+  "contains_full_raw_event_index": true,
+  "content_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+  "content_digest_algorithm": "lol-event-semantics.content-digest.v1",
+  "content_identity": {
+    "base_game_version": "16.16",
+    "corpus_scope": "cumulative",
+    "input_identity": {
+      "generator_state": {
+        "commit": "0123456789abcdef0123456789abcdef01234567",
+        "dirty": false
+      },
+      "inputs": {
+        "contract_assets": {
+          "digest": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "frozen_profile": {
+          "digest": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "generator": {
+          "digest": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "overrides": {
+          "digest": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "raw": {
+          "digest": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "reference": {
+          "digest": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "reference_manifest": {
+          "digest": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "review_decisions": {
+          "algorithm": "lol-event-semantics.review-decision-identity.v1",
+          "decision_set_id": "v1-initial-vo-review",
+          "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "status": "pending"
+        },
+        "rules": {
+          "digest": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "sources_manifest": {
+          "digest": "0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      },
+      "profile": {
+        "accepted_exceptions": [],
+        "base_game_version": "16.16",
+        "corpus_scope": "cumulative",
+        "profile_id": "v1-frozen-16.16",
+        "raw_unique_count": 106926
+      },
+      "schema": "lol-event-semantics.input-identity.v1"
+    },
+    "quality_status": "not_evaluated",
+    "review": {
+      "decision_id": "v1-initial-vo-2026-08-07",
+      "decision_set_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "decision_set_id": "v1-initial-vo-review",
+      "decision_status": "pending",
+      "record_counts": {
+        "accepted": 1
+      }
+    },
+    "support_level_counts": {
+      "experimental": 1
+    }
+  },
+  "dataset_id": "local-v1-0000000000000000",
+  "dataset_schema_version": "normalized-dataset.v2",
+  "entity_count": 1,
+  "files": [
+    {
+      "bytes": 1,
+      "path": "normalized-events.jsonl",
+      "record_count": 1,
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "bytes": 1,
+      "path": "pattern-catalog.json",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "bytes": 1,
+      "path": "entity-summary.json",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "bytes": 1,
+      "path": "by-entity/champions/Example.jsonl",
+      "record_count": 1,
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "bytes": 1,
+      "path": "schema/manifest.schema.json",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "bytes": 1,
+      "path": "schema/normalized-event.schema.json",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "bytes": 1,
+      "path": "schema/pattern-catalog.schema.json",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "normalized_record_schema_version": 2,
+  "outputs": [
+    "manifest.json",
+    "normalized-events.jsonl",
+    "pattern-catalog.json",
+    "entity-summary.json",
+    "by-entity/",
+    "schema/",
+    "examples/"
+  ],
+  "pattern_catalog_schema_version": 1,
+  "pattern_count": 1,
+  "record_count": 1,
+  "reference_version": "16.16",
+  "schema_version": 2
+}

@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Leona
+  champion_id: 60089
+  skin_number: 12
+  skin_token: Skin12
+  id: 60089012
+  alias: Jade_LeonaSkin12
+  names:
+    en_US:
+      - value: Mecha Kingdoms Leona
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 机神朱雀 蕾欧娜
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 127
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_LeonaSkin12

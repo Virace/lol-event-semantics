@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Malphite
+  champion_id: 60054
+  skin_number: 5
+  skin_token: Skin05
+  id: 60054005
+  alias: Jade_MalphiteSkin05
+  names:
+    en_US:
+      - value: Glacial Malphite
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 冰川巨兽 墨菲特
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 112
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_MalphiteSkin05
+  - Jade_MalphiteSkin5

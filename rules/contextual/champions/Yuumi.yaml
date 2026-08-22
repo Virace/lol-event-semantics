@@ -1,0 +1,21 @@
+scope: champion
+owner: Yuumi
+aliases:
+  Qcast:
+    kind: champion_spell_component
+    spell: q
+    asset_kind: sfx
+    component: prowling_projectile_control
+    label: 摸鱼飞弹操控
+    confidence: high
+    source: manual_contextual_alias
+    note: Qcast 跨皮肤同时出现 OnCast 与增益结束，表示 Q 摸鱼飞弹的操控阶段。
+  Qskillshot:
+    kind: champion_spell_component
+    spell: q
+    asset_kind: sfx
+    component: prowling_projectile
+    label: 摸鱼飞弹
+    confidence: high
+    source: manual_contextual_alias
+    note: Qskillshot 跨皮肤稳定以 OnMissileLaunch 出现，对应 Q 摸鱼飞弹。

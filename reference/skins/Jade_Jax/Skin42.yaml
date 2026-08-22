@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Jax
+  champion_id: 60024
+  skin_number: 42
+  skin_token: Skin42
+  id: 60024042
+  alias: Jade_JaxSkin42
+  names:
+    en_US:
+      - value: Magma Chamber Jax
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 熔岩大厅 贾克斯
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 231
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_JaxSkin42

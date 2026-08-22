@@ -1,5 +1,14 @@
 champions:
   TwistedFate:
+    Instagate:
+      kind: champion_spell_component
+      spell: r
+      asset_kind: sfx
+      component: destiny_gate_marker
+      label: 命运传送标记
+      confidence: high
+      source: manual_contextual_alias
+      note: TwistedFateSkin*_Instagate_marker 是 R 命运传送门的落点标记音效。
     Gate:
       kind: champion_spell_component
       spell: r
@@ -33,14 +42,31 @@ champions:
       source: manual_contextual_alias
       note: CardmasterStackParticle 在 TwistedFate SFX 中对应 E 技能 Stacked Deck/CardmasterStack 的层数粒子状态。
   Draven:
-    DravenAttackP:
-      kind: champion_spell_component
-      spell: p
-      component: passive_attack
-      label: 被动攻击
-      confidence: medium
+    ChampionSelect:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: champion_select_stinger
+      label: 英雄选择短乐
+      confidence: high
       source: manual_contextual_alias
-      note: P 在 DravenAttackP 中按被动处理；后续 LQC/RC 等片段仍需保留上下文。
+      qualifiers:
+        Stinger: 短促乐句
+      note: Draven_ChampionSelect_Stinger 是英雄选择界面的短促音乐提示，不是技能事件。
+    DravenAttackP:
+      kind: champion_attack_component
+      component: draven_axe_attack
+      label: 投斧普攻
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        L: 左手
+        R: 右手
+        LQ: 左手旋转飞斧
+        RQ: 右手旋转飞斧
+        LQC: 左手旋转飞斧暴击
+        RQC: 右手旋转飞斧暴击
+        RC: 右手暴击
+      note: DravenAttackP 的 P 是内部攻击资源标记；L/R/Q/C 组合分别保留左右手、旋转飞斧与暴击语义，主动作仍是普通攻击。
     DoubleShot:
       kind: champion_spell_component
       spell: e
@@ -74,6 +100,17 @@ champions:
       source: manual_contextual_alias
       note: NewPassive 在 Draven 事件中对应被动 League of Draven 的旧/内部表现名。
   Darius:
+    NorseKing:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      required_tokens: [Recall]
+      component: norse_king_recall
+      label: 北欧之王回城
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        Recall: 回城
+      note: Darius_NorseKing_Recall_windup 是旧皮肤主题回城起手音效，NorseKing 是主题名而非实体。
     Cleave:
       kind: champion_spell_component
       spell: q
@@ -114,6 +151,14 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: Hemo 在 Darius 事件中对应被动 Hemorrhage 的出血层数/最大层数状态。
+    HemoMax:
+      kind: champion_spell_component
+      spell: p
+      component: hemorrhage_max_stack
+      label: 出血最大层数
+      confidence: high
+      source: manual_contextual_alias
+      note: HemoMax 在 Darius 事件中明确表示被动 Hemorrhage 已达到最大出血层数。
   Azir:
     ObeliskVOAlly:
       kind: champion_spell_component
@@ -146,7 +191,8 @@ champions:
       label: 沙兵飞弹
       confidence: medium
       source: manual_contextual_alias
-      note: SoldierMissile 在 Azir 事件中对应沙兵攻击飞弹，归属与 AzirSoldierMissile 一致——W 技能 Arise! 召唤的沙兵替代普攻发出的攻击飞行物（Q 为指挥沙兵冲刺，不产生攻击飞弹）。
+      note: SoldierMissile 在 Azir 事件中对应沙兵攻击飞弹，归属与 AzirSoldierMissile 一致——W 技能 Arise! 召唤的沙兵替代普攻发出的攻击飞行物（Q
+        为指挥沙兵冲刺，不产生攻击飞弹）。
     IsChannelingPassive:
       kind: champion_spell_component
       spell: p
@@ -230,22 +276,41 @@ champions:
       source: manual_contextual_alias
       note: HasteLoop 在 Nunu 事件中对应 Blood Boil 的循环段。
     Horn:
-      kind: champion_spell_component
-      spell: p
-      component: horn
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: skin_horn
       label: 号角
       confidence: medium
       source: manual_contextual_alias
       note: Horn 在 NunuSkin04 事件中对应皮肤号角释放音效。
     StructureAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: structure_attack
-      label: 建筑攻击
-      confidence: medium
+      label: 对建筑普通攻击
+      confidence: high
       source: manual_contextual_alias
       note: StructureAttack 在 Nunu 事件中对应攻击建筑的基础攻击变体。
   Diana:
+    DianaSolarBarrier:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: ruby
+      component: doom_bot_solar_barrier
+      label: 日光屏障
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        hitwhiff: 擦碰未命中
+      note: Ruby_DianaSolarBarrier 是末日人机黛安娜 APC 的特殊日光屏障效果，不据名称借用关系硬映射到常规技能槽位。
+    DianaSolarFlare:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: ruby
+      component: doom_bot_solar_flare
+      label: 日炎耀斑
+      confidence: high
+      source: manual_contextual_alias
+      note: Ruby_DianaSolarFlare 是末日人机黛安娜 APC 的特殊日炎耀斑效果，不伪装成常规英雄技能。
     Orbs:
       kind: champion_spell_component
       spell: w
@@ -295,6 +360,24 @@ champions:
       source: manual_contextual_alias
       note: DianaVortex 与既有 VortexUlt 同源，对应 R 技能 Moonfall（月之降临）聚拢敌人的旋涡表现。
   Elise:
+    Human:
+      kind: champion_form_qualifier
+      asset_kind: sfx
+      required_tokens: [Emote]
+      component: human_form
+      label: 人形态
+      confidence: high
+      source: manual_contextual_alias
+      note: Human_Emote_Joke/Laugh/Taunt 中 Human 是伊莉丝人形态修饰，后续动作仍是主体语义。
+    Spider:
+      kind: champion_form_qualifier
+      asset_kind: sfx
+      required_tokens: [Emote]
+      component: spider_form
+      label: 蜘蛛形态
+      confidence: high
+      source: manual_contextual_alias
+      note: Spider_Emote_Dance 中 Spider 是伊莉丝蜘蛛形态修饰，Dance 与 loop 仍分别承载动作和阶段。
     SpiderQCast:
       kind: champion_spell_component
       spell: q
@@ -400,8 +483,8 @@ champions:
       source: manual_contextual_alias
       note: SpiderDance 在 Elise 事件中对应蜘蛛形态跳舞动作音效。
     Spiderling:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: spiderling_death
       label: 小蜘蛛死亡
       confidence: medium
@@ -472,6 +555,14 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: FizzMarinerDoom 是 Fizz R 技能 Chum the Waters（巨鲨强袭）的内部名主干，OnCast/pre 相位对应扔出鱼饵的施放段。
+    PiercingStrike:
+      kind: champion_spell_component
+      spell: q
+      component: urchin_strike
+      label: 淘气打击
+      confidence: high
+      source: manual_contextual_alias
+      note: FizzPiercingStrike 是 Q 技能 Urchin Strike（淘气打击）的旧内部名；Piercing 的 P 只是英文词首，不是被动技能键。
     SeastonePassive:
       kind: champion_spell_component
       spell: w
@@ -506,16 +597,14 @@ champions:
       source: manual_contextual_alias
       note: ClusterShot 在 Graves 事件中对应 Q 技能 End of the Line 的旧/内部表现名。
     GravesBasicAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: basic_attack
       label: 普攻
       confidence: medium
       source: manual_contextual_alias
       note: GravesBasicAttack 在 Graves 皮肤别名事件中对应基础攻击。
     GravesCritAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: crit_attack
       label: 暴击攻击
       confidence: medium
@@ -530,14 +619,25 @@ champions:
       source: manual_contextual_alias
       note: ClusterShotAttack 在 Graves 事件中对应霰弹/集束射击攻击表现。
     AutoAttackRecoilCastEDummy:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: auto_attack_recoil_dummy
       label: 普攻后坐力占位
       confidence: medium
       source: manual_contextual_alias
       note: AutoAttackRecoilCastEDummy 在 Graves 事件中对应普攻后坐力 cast 占位音效。
   Evelynn:
+    Emotes:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: legacy_emote
+      label: 旧版表情动作
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        recall: 回城
+        01OLD: 旧版01
+        winddownOLD: 旧版收尾
+      note: Evelynn 旧皮肤的 Emotes_recall/winddownOLD 是表情动作音效；旧版标记与动作必须保留。
     Stealth:
       kind: champion_spell_component
       spell: p
@@ -554,6 +654,30 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: StealthRing 在 Evelynn 事件中对应被动潜行/伪装的范围提示圈表现。
+    Wcharmvfx:
+      kind: champion_spell_component
+      spell: w
+      component: allure_charm_effect
+      label: 引诱魅惑效果
+      confidence: high
+      source: manual_contextual_alias
+      note: Wcharmvfx 在多套 Evelynn 皮肤 SFX 中稳定对应 W 引诱的魅惑表现；vfx 仅是工程后缀。
+    Qlinemissile:
+      kind: champion_spell_component
+      spell: q
+      component: hate_spike_line_missile
+      label: 憎恨之刺飞弹
+      confidence: high
+      source: manual_contextual_alias
+      note: Qlinemissile 在多套 Evelynn 皮肤中稳定以 OnHit 收尾，对应 Q 憎恨之刺飞弹。
+    RealTimeProcessing:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: real_time_processing
+      label: 实时音频处理
+      confidence: high
+      source: manual_contextual_alias
+      note: RealTimeProcessing 是伊芙琳音频的实时处理开关；ON/OFF 和 Stop 外壳由阶段与播放控制槽保留，不是 R 技能。
   Hecarim:
     Ult:
       kind: champion_spell_component
@@ -564,16 +688,14 @@ champions:
       source: manual_contextual_alias
       note: Ult 在 Hecarim 事件中按 R 技能 Onslaught of Shadows 处理，不泛化为全局 Ult 规则。
     HecarimBasicAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: basic_attack
       label: 普攻
       confidence: medium
       source: manual_contextual_alias
       note: HecarimBasicAttack 在 HecarimArcade 事件中对应基础攻击。
     HecarimCritAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: crit_attack
       label: 暴击攻击
       confidence: medium
@@ -723,20 +845,20 @@ champions:
   Kennen:
     DoubleStrikeLive:
       kind: champion_spell_component
-      spell: p
+      spell: w
       component: double_strike_live
       label: 双重打击生效
       confidence: medium
       source: manual_contextual_alias
-      note: DoubleStrikeLive 在 Kennen 事件中对应被动 Electrical Surge 的生效/就绪状态。
+      note: DoubleStrikeLive 对应 W 奥义！电刃的被动攻击计数/就绪状态；这是 W 的被动部分，不是英雄 P 槽位。
     MegaProc:
       kind: champion_spell_component
-      spell: p
+      spell: w
       component: mega_proc
       label: 被动触发
       confidence: medium
       source: manual_contextual_alias
-      note: MegaProc 在 Kennen 事件中对应被动 Electrical Surge 的触发表现。
+      note: MegaProc 对应 W 奥义！电刃的被动强化攻击触发，不是英雄 P 槽位。
     ShurikenHurlMissile:
       kind: champion_spell_component
       spell: q
@@ -763,6 +885,43 @@ champions:
       source: manual_contextual_alias
       note: HuntEnemy 在 Khazix 事件中对应对敌方目标的狩猎/孤立状态。
   Kayn:
+    SpellToIdle:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: spell_to_idle
+      label: 技能动作转待机
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        mus: 音乐层
+      note: KaynSkin20 的 SpellToIdle_mus 是技能动作结束后转入待机的音乐层，不是无对象的“状态启动”。
+    FX:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: skin_glitch_effect
+      label: 皮肤故障效果
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        Glitch: 故障
+      note: KaynSkin20_FX_Glitch 是皮肤故障主题音效；FX 是资源分组词，不是技能槽位。
+    Music:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: skin_music
+      label: 皮肤音乐
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        Mute: 静音
+        UnMute: 取消静音
+        Dance3D: 舞蹈
+        Idle3D: 待机
+        Spell: 技能
+        exit: 退出
+        Recall3D: 回城
+        shared: 共享
+      note: KaynSkin20 的 Music_Mute/UnMute 是皮肤音乐控制；中间操作词必须进入结构化修饰语。
     InfestKill:
       kind: champion_spell_component
       spell: r
@@ -790,12 +949,12 @@ champions:
   Malzahar:
     Voidling:
       kind: champion_spell_component
-      spell: p
+      spell: w
       component: voidling_summon
       label: 虚灵
-      confidence: medium
+      confidence: high
       source: manual_contextual_alias
-      note: Voidling 在 Malzahar 事件中对应被动召唤的虚灵单位表现。
+      note: 16.16 中虚灵由 W 虚空虫群召唤；Voidling 归 W，不再沿用旧版被动分类。
     VoidGateSpawn:
       kind: champion_spell_component
       spell: r
@@ -815,13 +974,16 @@ champions:
       note: SolarBarrier 在 Leona 事件中对应 W 技能 Eclipse 的护盾/屏障表现。
   Illaoi:
     TentacleAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: tentacle_attack
       label: 触手攻击
-      confidence: medium
+      confidence: high
       source: manual_contextual_alias
-      note: TentacleAttack 在 Illaoi 事件中对应被动 Prophet of an Elder God 生成的触手攻击表现。
+      qualifiers:
+        Ground: 地面
+        champ: 英雄目标
+        minion: 小兵目标
+      note: TentacleAttack 是被动生成触手自身的攻击事件；来源可关联被动，但主动作不能写成 P 技能。
     TentacleActive:
       kind: champion_spell_component
       spell: p
@@ -831,8 +993,7 @@ champions:
       source: manual_contextual_alias
       note: TentacleActive 在 Illaoi 事件中对应被动触手激活/存在状态。
     TentacleDance:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_action_component
       component: tentacle_dance
       label: 触手跳舞
       confidence: medium
@@ -905,13 +1066,21 @@ champions:
       source: manual_contextual_alias
       note: LightstrikeToggle 在 Lux 事件中沿用 E 技能资源名 LightStrike，不作为全局 Toggle 规则。
     Transform:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_action_component
       component: elementalist_transform
       label: 元素形态切换
       confidence: medium
       source: manual_contextual_alias
-      note: Transform 在 LuxSkin07 事件中对应元素使皮肤形态切换。
+      note: Transform 在 LuxSkin07 事件中对应元素使皮肤形态切换，不是英雄被动技能。
+    Click:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      required_tokens: [LuxSkin07, Generic, UI]
+      component: elementalist_ui_click
+      label: 元素使界面点击
+      confidence: high
+      source: manual_contextual_alias
+      note: hud_LuxSkin07_Generic_Click_UI 的 hud 只是系统外壳；LuxSkin07 与 Click/UI 共同确认元素使皮肤界面点击音效。
     MaliceCannon:
       kind: champion_spell_component
       spell: r
@@ -920,7 +1089,43 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: MaliceCannon 在 LuxSkin19 事件中对应终极技能主题化炮击表现。
+    LuxMaliceCannonBeam:
+      kind: champion_spell_component
+      spell: r
+      asset_kind: sfx
+      component: malice_cannon_beam
+      label: 恶意火炮光束
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        beammiddle: 光束中段
+        beamend: 光束结束
+      note: LuxSkin19 的 LuxMaliceCannonBeam_beammiddle/beamend 是 R 主题化光束的中段与结束层，段位必须保留。
   MissFortune:
+    GearUI:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      required_tokens: [MissFortune, Skin16]
+      component: gear_ui
+      label: 武器界面
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        Available: 可用
+        Unavailable: 不可用
+        Open: 打开
+        Close: 关闭
+        Hover: 悬停
+        Select: 选择
+      note: hud_base 只是系统外壳；相邻 MissFortune/Skin16 与 GearUI 表示武装战姬皮肤的武器界面反馈。
+    WeaponSelect:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: weapon_select
+      label: 武器选择
+      confidence: high
+      source: manual_contextual_alias
+      note: MissFortune_Skin16_WeaponSelect 是武装战姬皮肤的武器选择音效，不是技能槽位。
     ViciousStrikes:
       kind: champion_spell_component
       spell: w
@@ -946,29 +1151,37 @@ champions:
       source: manual_contextual_alias
       note: Bullets 在 MissFortune 事件中对应 Q 技能 Double Up 的子弹表现。
     MissFortuneBasicAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: basic_attack
       label: 普攻
       confidence: medium
       source: manual_contextual_alias
       note: MissFortuneBasicAttack 在 Miss Fortune 事件中对应基础攻击音效。
     MissFortuneCritAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: crit_attack
       label: 暴击攻击
       confidence: medium
       source: manual_contextual_alias
       note: MissFortuneCritAttack 在 Miss Fortune 事件中对应暴击基础攻击音效。
     MissFortuneBulletEMPTY:
-      kind: champion_spell_component
-      spell: p
-      component: bullet_empty
-      label: 子弹（空弹）
-      confidence: medium
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: empty_bullet
+      label: 空弹
+      confidence: high
       source: manual_contextual_alias
-      note: MissFortuneBulletEMPTY 在 Miss Fortune 事件中是子弹打空/空弹音效层（OnMissileLaunch 相位）；reference 各技能描述仅泛称子弹、无空弹归属证据，按普攻子弹音效层挂被动 P 处理，不归属具体主动技能。
+      note: MissFortuneBulletEMPTY 是空弹音效层；无证据归属被动或任一主动技能，保留为角色 SFX 效果。
+    Ultimate:
+      kind: champion_spell_component
+      spell: r
+      asset_kind: sfx
+      mode: strawberry
+      component: bullet_time
+      label: 弹幕时间
+      confidence: high
+      source: manual_contextual_alias
+      note: Strawberry_NPC_MissFortune_Ultimate 是 PVE NPC 厄运小姐的 R 弹幕时间，NPC 是演员角色而非实体名。
   Sona:
     AmbientQSound:
       kind: champion_spell_component
@@ -995,22 +1208,40 @@ champions:
       source: manual_contextual_alias
       note: AmbientESound 在 Sona 事件中对应 E 技能 Song of Celerity 激活后的光环环境音。
     SonaBasicAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: basic_attack
       label: 普攻
       confidence: medium
       source: manual_contextual_alias
       note: SonaBasicAttack 在 Sona 皮肤别名事件中对应基础攻击。
     SonaCritAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: crit_attack
       label: 暴击攻击
       confidence: medium
       source: manual_contextual_alias
       note: SonaCritAttack 在 Sona 皮肤别名事件中对应暴击攻击。
   MonkeyKing:
+    WukongQAttack:
+      kind: champion_spell_component
+      spell: q
+      asset_kind: sfx
+      mode: ruby
+      component: crushing_blow_attack
+      label: 定海神针强化攻击
+      confidence: high
+      source: manual_contextual_alias
+      note: Ruby_WukongQAttack 是末日人机孙悟空的 Q 定海神针强化攻击，OnCast/OnHit 分别保留出手与命中。
+    WukongW:
+      kind: champion_spell_component
+      spell: w
+      asset_kind: sfx
+      mode: ruby
+      component: warrior_trickster
+      label: 真假猴王
+      confidence: high
+      source: manual_contextual_alias
+      note: Ruby_WukongW 是末日人机孙悟空的 W 真假猴王；cast/deactivate 是生命周期阶段。
     Nimbus:
       kind: champion_spell_component
       spell: e
@@ -1027,6 +1258,16 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: SpinToWin 在 MonkeyKing/Wukong 事件中对应 R 技能 Cyclone 的旋转表现。
+    WukongSpinToWin:
+      kind: champion_spell_component
+      spell: r
+      asset_kind: sfx
+      mode: ruby
+      component: cyclone_spin
+      label: 大闹天宫旋转
+      confidence: high
+      source: manual_contextual_alias
+      note: Ruby_WukongSpinToWin 是末日人机孙悟空演员的 R 大闹天宫旋转表现；Ruby 只表示模式上下文。
   Nautilus:
     SplashZone:
       kind: champion_spell_component
@@ -1037,13 +1278,26 @@ champions:
       source: manual_contextual_alias
       note: SplashZone 在 Nautilus 事件中对应 E 技能 Riptide 的范围溅射表现。
     BackSwingAttack:
-      kind: champion_spell_component
-      spell: q
+      kind: champion_attack_component
       component: backswing_attack
-      label: 回摆攻击
+      label: 回摆普通攻击
       confidence: medium
       source: manual_contextual_alias
       note: BackSwingAttack 在 Nautilus 事件中对应基础攻击回摆阶段的内部命名。
+    WideSwingAttack:
+      kind: champion_attack_component
+      component: wide_swing_attack
+      label: 横扫普通攻击
+      confidence: high
+      source: manual_contextual_alias
+      note: WideSwingAttack 是普通攻击横扫变体；词首 W 不是 W 技能槽位。
+    RavageStrikeAttack:
+      kind: champion_attack_component
+      component: ravage_strike_attack
+      label: 猛击普通攻击
+      confidence: high
+      source: manual_contextual_alias
+      note: RavageStrikeAttack 是普通攻击猛击变体；词首 R 不是 R 技能槽位。
   Olaf:
     AxeThrowCast:
       kind: champion_spell_component
@@ -1087,21 +1341,29 @@ champions:
       source: manual_contextual_alias
       note: SuperExecute 在 Renekton 事件中对应 R 技能 Dominus 的处决表现。
     helmet:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: helmet
       label: 头盔
       confidence: medium
       source: manual_contextual_alias
       note: helmet 在 RenektonSkin26 事件中对应皮肤头盔状态音效。
     VolcanoGod:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: volcano_god_theme
       label: 火山神主题
       confidence: medium
       source: manual_contextual_alias
       note: VolcanoGod 在 Renekton 事件中对应皮肤主题化血溅/命中特效。
+    RenektonRageReady:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: rage_ready
+      label: 怒气就绪
+      confidence: high
+      source: manual_contextual_alias
+      note: RageReady 是雷克顿资源就绪提示，不把词首 R 误判为 R 技能。
   Rumble:
     CarpetBomb:
       kind: champion_spell_component
@@ -1217,6 +1479,27 @@ champions:
       source: manual_contextual_alias
       note: TriCleaveSoundThree 在 Riven 事件中对应 Q 技能 Broken Wings 的分段音效。
   Shaco:
+    ShacoBoxSpell:
+      kind: champion_spell_component
+      spell: w
+      asset_kind: sfx
+      component: jack_in_the_box_attack
+      label: 惊吓魔盒攻击
+      confidence: high
+      source: manual_contextual_alias
+      note: ShacoBox 是萨科 W 召唤物的音频 bank owner；ShacoBoxSpell 是魔盒攻击，不是独立英雄或 P 技能。
+    ShacoClone:
+      kind: champion_spell_component
+      spell: r
+      asset_kind: sfx
+      mode: strawberry
+      component: hallucinate_clone
+      label: 幻像分身
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        Death: 阵亡
+      note: Strawberry_Enemy_ShacoClone_Death 是 PVE 敌方萨科 R 幻像分身阵亡，Enemy 是演员角色。
     HallucinateFull:
       kind: champion_spell_component
       spell: r
@@ -1225,6 +1508,25 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: HallucinateFull 在 Shaco 事件中对应 R 技能 Hallucinate 的完整释放表现。
+  Pyke:
+    PykePassive:
+      kind: champion_spell_component
+      spell: p
+      asset_kind: sfx
+      component: gift_of_the_drowned_ones_heal
+      label: 溺水之幸灰色生命回复
+      confidence: high
+      source: manual_contextual_alias
+      note: PykePassive_heal 是派克真实被动溺水之幸的灰色生命回复音效；heal 与播放生命周期必须保留。
+    PykePassiveVFX:
+      kind: champion_spell_component
+      spell: p
+      asset_kind: sfx
+      component: gift_of_the_drowned_ones_vfx
+      label: 溺水之幸表现
+      confidence: high
+      source: manual_contextual_alias
+      note: PykePassiveVFX 是派克真实被动溺水之幸的视觉/音频表现，不得只翻译成泛化的被动技能状态。
   Senna:
     Soul:
       kind: champion_spell_component
@@ -1340,21 +1642,35 @@ champions:
       source: manual_contextual_alias
       note: TransformLeap 在 Shyvana 事件中对应 R 技能 Dragon's Descent 的跃击/冲刺段。
     ShyvanaBasicAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: dragon_basic_attack
       label: 龙形态普攻
       confidence: medium
       source: manual_contextual_alias
       note: ShyvanaBasicAttack 在 ShyvanaDragon 事件中对应龙形态基础攻击。
     ShyvanaCritAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: dragon_crit_attack
       label: 龙形态暴击
       confidence: medium
       source: manual_contextual_alias
       note: ShyvanaCritAttack 在 ShyvanaDragon 事件中对应龙形态暴击攻击。
+    ShyvanaDragonDance3D:
+      kind: champion_action_component
+      asset_kind: sfx
+      component: dragon_form_dance
+      label: 龙形态舞蹈音效
+      confidence: high
+      source: manual_contextual_alias
+      note: DragonDance3D 是龙形态舞蹈动作；leadin/loop 尾段作为音频生命周期保留，不是 R 技能释放。
+    ShyvanaDragonHomeguard3D:
+      kind: champion_action_component
+      asset_kind: sfx
+      component: dragon_form_homeguard
+      label: 龙形态家园卫士音效
+      confidence: high
+      source: manual_contextual_alias
+      note: DragonHomeguard3D 是龙形态家园卫士移动动作；leadin/loop 尾段作为音频生命周期保留。
     ShyvanaDragonDeath3D:
       kind: champion_spell_component
       spell: r
@@ -1436,8 +1752,8 @@ champions:
       source: manual_contextual_alias
       note: ShyvanaDragonTaunt3D 在 ShyvanaSkin04 事件中对应龙形态嘲讽动作音效，龙形态为 R 技能 Dragon's Descent 状态，3D 仅为音频维度信息。
     ShyvanaIDDamage:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: id_damage
       label: 额外伤害
       confidence: medium
@@ -1453,6 +1769,17 @@ champions:
       source: manual_contextual_alias
       note: TrollSmash 在 Trundle 事件中对应 Q 技能 Chomp 的旧/内部表现名。
   Twitch:
+    Walk:
+      kind: champion_spell_component
+      spell: q
+      asset_kind: sfx
+      component: ambush_stealth_walk
+      label: 埋伏潜行移动
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        Foley: 动作拟音
+      note: Twitch 皮肤的 Q_Walk/Foley 是 Q 埋伏潜行期间的移动与拟音层。
     HideInShadows:
       kind: champion_spell_component
       spell: q
@@ -1478,32 +1805,28 @@ champions:
       source: manual_contextual_alias
       note: TwtichFullAutomatic 是 Twitch FullAutomatic 的历史拼写错误，对应 R 技能 Spray and Pray。
     TwitchBasicAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: basic_attack
       label: 普攻
       confidence: medium
       source: manual_contextual_alias
       note: TwitchBasicAttack 在 Twitch 事件中对应基础攻击音效。
     TwitchCritAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: crit_attack
       label: 暴击攻击
       confidence: medium
       source: manual_contextual_alias
       note: TwitchCritAttack 在 Twitch 事件中对应暴击基础攻击音效。
     TwitchBasicAttack2:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: basic_attack_variant_2
       label: 普攻变体 2
       confidence: medium
       source: manual_contextual_alias
       note: TwitchBasicAttack2 在 Twitch 事件中对应基础攻击第二套音效变体。
     TwitchBasicAttack3:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: basic_attack_variant_3
       label: 普攻变体 3
       confidence: medium
@@ -1617,16 +1940,16 @@ champions:
       source: manual_contextual_alias
       note: UltExecute 在 Zed 事件中对应 R 技能 Death Mark 的爆发/处决结算状态，不作为全局 execute 规则。
     FastIn:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: fast_in
       label: 快速进入
       confidence: medium
       source: manual_contextual_alias
       note: FastIn 在 Zed 事件中对应皮肤状态进入音效。
     HasteIn:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: haste_in
       label: 加速进入
       confidence: medium
@@ -1689,6 +2012,15 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: "DetonateCommand 在 Orianna 事件中对应 R 技能 Command: Shockwave 的内部名。"
+    OrianaDetonateCommand:
+      kind: champion_spell_component
+      spell: r
+      asset_kind: sfx
+      component: shockwave_command
+      label: 指令：冲击波
+      confidence: high
+      source: manual_contextual_alias
+      note: OrianaDetonateCommand 是旧拼写的 R“指令：冲击波”完整内部名；整个名称可能被 lexer 吞进 owner。
     DissonanceCommand:
       kind: champion_spell_component
       spell: w
@@ -1697,6 +2029,15 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: "DissonanceCommand 在 Orianna 事件中对应 W 技能 Command: Dissonance 的内部名。"
+    OrianaDissonanceCommand:
+      kind: champion_spell_component
+      spell: w
+      asset_kind: sfx
+      component: dissonance_command
+      label: 指令：杂音
+      confidence: high
+      source: manual_contextual_alias
+      note: OrianaDissonanceCommand 是旧拼写的 W“指令：杂音”完整内部名；整个名称可能被 lexer 吞进 owner。
     Izuna:
       kind: champion_spell_component
       spell: q
@@ -1713,6 +2054,15 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: "IzunaCommand 在 Orianna 事件中对应 Q 技能 Command: Attack 的内部名。"
+    OrianaIzunaCommand:
+      kind: champion_spell_component
+      spell: q
+      asset_kind: sfx
+      component: attack_command
+      label: 指令：攻击
+      confidence: high
+      source: manual_contextual_alias
+      note: OrianaIzunaCommand 是旧拼写的 Q“指令：攻击”完整内部名；整个名称可能被 lexer 吞进 owner。
     RedactShield:
       kind: champion_spell_component
       spell: e
@@ -1738,24 +2088,22 @@ champions:
       source: manual_contextual_alias
       note: "GhostSelf 在 Orianna 事件中是魔偶/护盾附着自身的表现，按 E 技能 Command: Protect 上下文处理。"
     NoBall:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: ball_detached_state
       label: 无球状态
       confidence: medium
       source: manual_contextual_alias
       note: NoBall 在 Orianna 事件中表示魔偶未附着在本体的状态，用于区分带球/无球动作与音效。
     OriannaBasicAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: basic_attack
       label: 普攻
       confidence: medium
       source: manual_contextual_alias
       note: OriannaBasicAttack 在 Orianna 事件中对应基础攻击音效。
     OriannaCritAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: crit_attack
       label: 暴击攻击
       confidence: medium
@@ -1784,7 +2132,17 @@ champions:
       label: 指令：防卫
       confidence: medium
       source: manual_contextual_alias
-      note: "OrianaRedact 使用旧拼写 Oriana，对应 E 技能 Command: Protect 的内部名（reference E 技能 id 为 OrianaRedactCommand），OnMissileLaunch 相位为魔偶飞向友军途中的表现。"
+      note: "OrianaRedact 使用旧拼写 Oriana，对应 E 技能 Command: Protect 的内部名（reference E 技能 id 为 OrianaRedactCommand），OnMissileLaunch
+        相位为魔偶飞向友军途中的表现。"
+    OrianaRedactCommand:
+      kind: champion_spell_component
+      spell: e
+      asset_kind: sfx
+      component: protect_command
+      label: 指令：防卫
+      confidence: high
+      source: manual_contextual_alias
+      note: OrianaRedactCommand 是旧拼写的 E“指令：防卫”完整内部名，OnCast 表示施放阶段。
   XinZhao:
     QIdle:
       kind: champion_spell_component
@@ -1868,13 +2226,12 @@ champions:
       source: manual_contextual_alias
       note: InfernumQCastBurst 在 Aphelios 事件中对应 Infernum Q 释放时的爆发音效。
     Lunari:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_action_component
       component: lunari_thrust
-      label: 皎月教派动作
+      label: 皎月教突刺
       confidence: medium
       source: manual_contextual_alias
-      note: Lunari 在 Aphelios 事件中对应皮肤/角色专属的 Lunari 动作表现。
+      note: Lunari 在 Aphelios 的 Lunari_Thrust 事件中对应角色突刺动作，不是英雄被动技能；交互事件中的 Lunari 仍是皎月教阵营对象。
   Xerath:
     ManaAttack:
       kind: champion_spell_component
@@ -1891,7 +2248,7 @@ champions:
       label: 奥能脉冲
       confidence: medium
       source: manual_contextual_alias
-      note: Arcanopulse 是 Xerath Q 技能当前名称；数字尾缀作为 spell_rank 保留。
+      note: Arcanopulse 是 Xerath Q 技能当前名称；数字尾缀作为技能阶段保留。
     ArcaneBarrage:
       kind: champion_spell_component
       spell: w
@@ -1899,7 +2256,7 @@ champions:
       label: 奥术弹幕
       confidence: medium
       source: manual_contextual_alias
-      note: ArcaneBarrage 在 Xerath 事件中对应 W 技能 Eye of Destruction 的区域轰击内部名；数字尾缀作为 spell_rank 保留。
+      note: ArcaneBarrage 在 Xerath 事件中对应 W 技能 Eye of Destruction 的区域轰击内部名；数字尾缀作为技能阶段保留。
     LocusOfPower:
       kind: champion_spell_component
       spell: r
@@ -1923,18 +2280,56 @@ champions:
       label: 炮台形态脉冲
       confidence: medium
       source: manual_contextual_alias
-      note: LocusPulse 沿用 R 技能内部 id XerathLocusOfPower2 的 Locus 词干（Rite of the Arcane 奥术仪式），OnMissileLaunch 相位对应炮台形态发射的远程脉冲；与同上下文 LocusOfPower→R 一致。
+      note: LocusPulse 沿用 R 技能内部 id XerathLocusOfPower2 的 Locus 词干（Rite of the Arcane 奥术仪式），OnMissileLaunch
+        相位对应炮台形态发射的远程脉冲；与同上下文 LocusOfPower→R 一致。
 
   Bard:
     meep:
       kind: champion_spell_component
       spell: p
       component: meep
-      label: 友谊礼物
+      label: 木灵
       confidence: medium
       source: manual_contextual_alias
-      note: meep 在 Bard 事件中对应被动 Meeps 的小写内部命名。
+      note: meep 在 Bard 事件中对应被动 Meeps（木灵）的小写内部命名。
+    P:
+      kind: champion_spell_component
+      spell: p
+      component: meep_drone
+      label: 木灵
+      confidence: high
+      source: manual_contextual_alias
+      note: Bard 皮肤 SFX 的 P_Drone_N 全集表示被动木灵音效；P 是明确被动槽位，Drone 与数字是资源变体。
+    MeepSpawn:
+      kind: champion_spell_component
+      spell: p
+      component: meep_spawn
+      label: 木灵生成
+      confidence: high
+      source: manual_contextual_alias
+      note: MeepSpawn 与 meepspawn 大小写变体均表示被动木灵生成，owner-scoped 规则按大小写无关键匹配。
   Corki:
+    RapidReload:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: rapid_reload
+      label: 快速装填
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        helibuffactivate: 直升机主题
+        ufobuffactivate: 飞碟主题
+        redbaronbuffactivate: 红色男爵主题
+        Boom: 爆炸
+      note: RapidReload 是库奇快速装填音效；拼接在尾段中的载具主题与 Boom 必须保留，不能因相位未拆开而只留泛化状态。
+    DangerZoneLoaded:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: danger_zone_loaded
+      label: 危险区装填完成
+      confidence: high
+      source: manual_contextual_alias
+      note: DangerZoneLoaded 跨基础与多套皮肤稳定表示危险区资源装填完成的循环提示，不按技能槽位猜测。
     LoadUp:
       kind: champion_spell_component
       spell: r
@@ -1992,16 +2387,14 @@ champions:
       source: manual_contextual_alias
       note: PhosphorusBomb 在 Corki 事件中对应 Q 技能 Phosphorus Bomb。
     CorkiBasicAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: basic_attack
       label: 普攻
       confidence: medium
       source: manual_contextual_alias
       note: CorkiBasicAttack 在 Corki 事件中对应基础攻击音效。
     CorkiCritAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: crit_attack
       label: 暴击攻击
       confidence: medium
@@ -2032,15 +2425,54 @@ champions:
       source: manual_contextual_alias
       note: ValkyrieSound 在 Corki 事件中对应 W 技能 Valkyrie 的音效表现。
   Kaisa:
-    FoleyAttack:
-      kind: champion_spell_component
-      spell: p
-      component: foley_attack
-      label: 语音攻击
-      confidence: medium
+    Animated:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: animated_emote
+      label: 动画表情
+      confidence: high
       source: manual_contextual_alias
-      note: FoleyAttack 在 Kaisa 事件中对应基础攻击的内部 Foley 音频表现名。
+      qualifiers:
+        Emote: 表情
+      note: KaisaSkin71 的 Animated_Emote 是皮肤动画表情音效，不是状态技能。
+    Form:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: skin_form_transform
+      label: 皮肤形态
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        Transform: 变换
+      note: KaisaSkin71 的 Form_Transform 是皮肤形态变换音效，不是技能段数。
+    FoleyAttack:
+      kind: champion_attack_component
+      component: foley_attack
+      label: 普通攻击拟声音效
+      confidence: high
+      source: manual_contextual_alias
+      note: FoleyAttack 在 Kaisa SFX 中是普通攻击的 Foley 拟声音效；Attack 是攻击事件，不能写成 P 技能。
+    Tower:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: tower_effect
+      label: 防御塔音效
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        Finisher: 终结
+        Signature: 标志变体
+      note: KaisaSkin71 的 Tower_Finisher/Signature 是皮肤防御塔终结表现，不是技能事件；变体词必须保留。
   Karthus:
+    KarthusImmunity:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: ruby
+      component: curse_immunity
+      label: 诅咒免疫
+      confidence: high
+      source: manual_contextual_alias
+      note: Ruby_Curse_KarthusImmunity 是末日人机卡尔萨斯 APC 的诅咒免疫机制，不是技能槽位。
     LayWasteA:
       kind: champion_spell_component
       spell: q
@@ -2066,6 +2498,16 @@ champions:
       confidence: high
       source: manual_contextual_alias
       note: FaerieShield 在 Lulu SFX 中对应 E 技能 Help, Pix! 的护盾/皮克斯转移状态。
+    FaerieOverride:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: faerie_blink
+      label: 仙灵皮克斯
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        blink: 闪现
+      note: LuluFaerieOverride_blink 跨皮肤稳定表示仙灵皮克斯闪现音效，不是技能槽位。
   Naafiri:
     PackmatePounce:
       kind: champion_spell_component
@@ -2076,13 +2518,31 @@ champions:
       source: manual_contextual_alias
       note: PackmatePounce 在 Naafiri 事件中对应狼群/伴犬扑击表现。
     PackmateBasicAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
+      related_spell: p
       component: packmate_basic_attack
       label: 狗群伙伴普通攻击
       confidence: high
       source: manual_contextual_alias
       note: PackmateBasicAttack 在 Naafiri SFX 中对应被动 We Are More 召唤的狗群伙伴普通攻击。
+    PackmateR:
+      kind: champion_spell_component
+      spell: r
+      asset_kind: sfx
+      component: hounds_pursuit_packmate_empower
+      label: 暗裔血统狗群强化
+      confidence: high
+      source: manual_contextual_alias
+      note: PackmateR 表示 R 暗裔血统期间的狗群伙伴强化，不是 P 槽位。
+    Packmate:
+      kind: champion_spell_component
+      spell: p
+      asset_kind: sfx
+      component: we_are_more_packmate
+      label: 狂烈种群狗群伙伴
+      confidence: high
+      source: manual_contextual_alias
+      note: Packmate 表示被动技能狂烈种群的狗群伙伴。
   Ornn:
     VulnerableDebuff:
       kind: champion_spell_component
@@ -2093,31 +2553,73 @@ champions:
       source: manual_contextual_alias
       note: VulnerableDebuff 在 Ornn 事件中对应 Brittle 的易损状态。
   Viego:
+    UI:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: skin_ui
+      label: 皮肤界面
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        ascend: 升华
+        click: 点击
+        progress: 进度
+        ready: 就绪
+      note: ViegoSkin43 的 UI_ascend_* 是皮肤界面交互音；操作与状态词必须保留。
     SwordSwap:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: sword_swap
       label: 剑刃切换
       confidence: medium
       source: manual_contextual_alias
       note: SwordSwap 在 Viego 事件中对应换魂/武器切换的内部命名。
     SwordUnlock:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: sword_unlock
       label: 剑刃解锁
       confidence: medium
       source: manual_contextual_alias
       note: SwordUnlock 在 Viego 事件中对应 Pentakill 皮肤武器/剑刃解锁状态。
     Pentakill:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: pentakill_theme
       label: 五杀摇滚主题
       confidence: medium
       source: manual_contextual_alias
       note: Pentakill 在 ViegoSkin43 事件中对应五杀摇滚皮肤主题命中特效。
   Ashe:
+    windup:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: skin_action
+      label: 皮肤动作
+      confidence: medium
+      source: manual_contextual_alias
+      qualifiers:
+        Recall3D: 回城
+        Joke: 玩笑
+        Taunt: 嘲讽
+        hologram: 全息影像
+      note: windup 是动作阶段；Recall/Joke/Taunt 与 hologram 等 cue 另作已审阅修饰语保留，不猜测具体技能。
+    AsheHUD:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: skin_hud
+      label: 皮肤界面
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        Transform: 变形
+        Bow: 弓
+        Flower: 花朵形态
+        Human: 人形态
+        Spirit: 灵体形态
+        ready: 就绪
+        click: 点击
+      note: AsheSkin76 的 AsheHUD_Transform/click 是皮肤界面与弓形态切换；中间形态路径不得丢弃。
     CritChance:
       kind: champion_spell_component
       spell: p
@@ -2127,13 +2629,13 @@ champions:
       source: manual_contextual_alias
       note: CritChance 在 Ashe 事件中对应被动 Frost Shot 的暴击/强化准备状态。
     Helm:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: helm
       label: 头盔
       confidence: medium
       source: manual_contextual_alias
-      note: Helm 在 AsheSkin08 事件中对应皮肤头盔状态音效。
+      note: Helm 在 AsheSkin08 事件中对应皮肤头盔状态音效，不属于英雄被动槽位。
     FrostArrow:
       kind: champion_spell_component
       spell: p
@@ -2185,20 +2687,20 @@ champions:
   Gangplank:
     SerpentCeremony:
       kind: champion_spell_component
-      spell: p
+      spell: r
       component: serpent_ceremony
       label: 银蛇仪式
       confidence: medium
       source: manual_contextual_alias
-      note: SerpentCeremony 在 Gangplank 事件中对应银蛇币/升级相关的仪式状态。
+      note: SerpentCeremony 是银蛇币升级 R 加农炮幕的仪式状态，归 R 升级系统而非 P。
     BilgewaterToken:
       kind: champion_spell_component
-      spell: p
+      spell: r
       component: bilgewater_token
       label: 比尔吉沃特代币
       confidence: medium
       source: manual_contextual_alias
-      note: BilgewaterToken 在 Gangplank 事件中对应银蛇币/升级资源状态。
+      note: BilgewaterToken 是用于升级 R 加农炮幕的银蛇币资源状态，归 R 升级系统而非 P。
     GangplankR:
       kind: champion_spell
       spell: r
@@ -2297,32 +2799,104 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: SGDuoRecall 在 Rakan 事件中对应星之守护者皮肤的双人回城状态。
+    WithXayah:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: duo_dance_with_xayah
+      label: 与霞双人舞
+      confidence: high
+      source: manual_contextual_alias
+      note: WithXayah_Dance/SGDance 是洛与霞的联动舞蹈音频；into/loop 尾段保留为音频阶段，不属于被动技能。
   Samira:
+    jumbotron:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      required_tokens: [emote]
+      component: soul_fighter_jumbotron
+      label: 斗魂大屏幕
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        lv1: 1级
+        lv2: 2级
+        lv3: 3级
+      note: SamiraSkin30 的 emote_jumbotron_lv1/2/3 是斗魂觉醒皮肤大屏幕等级表现；等级不得丢弃。
+    dance:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      required_tokens: [emote]
+      component: dance_emote
+      label: 舞蹈
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        buttons: 按键
+        gunshot: 枪声
+      note: SamiraSkin30 的 emote_dance_buttons/gunshot 是舞蹈表情的按键与枪声层，不是技能事件。
+    homeguard:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      required_tokens: [emote]
+      component: homeguard_emote
+      label: 家园卫士
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        ignite: 点火
+        lp: 低通音频层
+      note: SamiraSkin30 的 emote_homeguard 是家园卫士表现；ignite/start/lp 分别保留点火、开始与低通音频层语义。
+    pentakill:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: pentakill_celebration
+      label: 五杀庆祝
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        self: 自身
+        other: 他人
+      note: SamiraSkin30 的 pentakill_celebration_self/other 是五杀庆祝的听者变体。
     SheathGun:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: sheath_gun
       label: 收枪
       confidence: medium
       source: manual_contextual_alias
       note: SheathGun 在 Samira 事件中对应武器收纳/切换到枪的表现。
     SheathSword:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: sheath_sword
       label: 收剑
       confidence: medium
       source: manual_contextual_alias
       note: SheathSword 在 Samira 事件中对应武器收纳/切换到剑的表现。
     Walkover:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: walkover
       label: 跨步经过
       confidence: medium
       source: manual_contextual_alias
       note: Walkover 在 Samira 事件中对应角色动作/移动表现。
   Katarina:
+    Spell4ToIdle:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: ultimate_to_idle
+      label: 大招动作转待机
+      confidence: high
+      source: manual_contextual_alias
+      note: KatarinaSkin29 的 Spell4ToIdle 是第四技能（R）动作结束后转入待机，不是无对象的“状态启动”。
+    Spell4ToRun:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: ultimate_to_run
+      label: 大招动作转奔跑
+      confidence: high
+      source: manual_contextual_alias
+      note: KatarinaSkin29 的 Spell4ToRun 是第四技能（R）动作结束后转入奔跑，不是无对象的“状态启动”。
     Dagger:
       kind: champion_spell_component
       spell: p
@@ -2348,14 +2922,55 @@ champions:
       source: manual_contextual_alias
       note: W_hit 在 Katarina 事件中按 W 技能 Preparation 的命中/状态音效处理。
     Toggle:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_action_component
       component: toggle_state
       label: 切换状态
       confidence: medium
       source: manual_contextual_alias
-      note: Toggle 在 KatarinaSkin29 事件中对应皮肤/角色状态切换语音条件。
+      note: Toggle 在 KatarinaSkin29 事件中对应皮肤/角色状态切换语音条件，不是英雄被动技能。
+    Qdaggerarc:
+      kind: champion_spell_component
+      spell: q
+      asset_kind: sfx
+      component: bouncing_blade_dagger_arc
+      label: 弹射之刃飞刀
+      confidence: high
+      source: manual_contextual_alias
+      note: Qdaggerarc1/2/3 表示 Q 弹射之刃连续弹射的飞刀段次。
+    Q:
+      kind: champion_spell_component
+      spell: q
+      asset_kind: sfx
+      component: bouncing_blade_dagger
+      label: 弹射之刃飞刀
+      confidence: high
+      source: manual_contextual_alias
+      note: 独立 Q 后接 dagger/land 的事件表示 Q 弹射之刃飞刀落地；显式 Q 必须优先于后续 Dagger 被动规则。
+    BladeSwap:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: blade_form_swap
+      label: 匕首形态切换
+      confidence: high
+      source: manual_contextual_alias
+      note: Skin29 BladeSwap 的颜色尾段表示女帝皮肤匕首形态切换。
   Heimerdinger:
+    HeimerdingerEngineAudio:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: turret_engine_audio
+      label: 炮台引擎运转
+      confidence: high
+      source: manual_contextual_alias
+      note: 普通 EngineAudio 是炮台引擎/对话音频，不等同于精确的 RQEngineAudio 强化技能 cue。
+    HeimerdingerRQEngineAudio:
+      kind: champion_spell_component
+      spell: r
+      component: empowered_q_turret
+      label: R强化Q炮台
+      confidence: high
+      source: manual_contextual_alias
+      note: HeimerdingerRQEngineAudio 是 R 强化 Q 炮台的精确内部 cue，仅匹配该完整 token。
     HeimerTurretShutdown:
       kind: champion_spell_component
       spell: q
@@ -2390,8 +3005,7 @@ champions:
       note: SuperTurret 在 Heimerdinger 事件中对应 R 强化 Q 炮台。
   Jax:
     TowerAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: tower_attack
       label: 攻击防御塔
       confidence: medium
@@ -2406,8 +3020,8 @@ champions:
       source: manual_contextual_alias
       note: UltTransform 在 Jax 事件中对应 R 技能 Grandmaster-at-Arms 的变身/强化表现。
     Fish:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: fish_prop
       label: 鱼道具
       confidence: medium
@@ -2422,6 +3036,15 @@ champions:
       source: manual_contextual_alias
       note: UltUnlock 在 JaxSkin14 事件中对应大招强化状态解锁提示。
   Xayah:
+    XayahEfeather:
+      kind: champion_spell_component
+      spell: e
+      asset_kind: sfx
+      component: bladecaller_feather_pullout
+      label: 倒钩羽毛拔出
+      confidence: high
+      source: manual_contextual_alias
+      note: XayahEfeather_pullout 是 E 倒钩拔出并召回羽毛的音效组件。
     TandemRecall:
       kind: champion_spell_component
       spell: p
@@ -2430,7 +3053,27 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: TandemRecall 在 Xayah 事件中对应与 Rakan 的双人回城。
+    WithRakan:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: duo_dance_with_rakan
+      label: 与洛双人舞
+      confidence: high
+      source: manual_contextual_alias
+      note: WithRakan_Dance 是霞与洛的联动舞蹈音频；into/loop 尾段保留为音频阶段，不属于被动技能。
   Anivia:
+    AniviaEgg:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: ruby
+      required_tokens: [Timer]
+      component: curse_egg_timer
+      label: 冰晶凤凰蛋诅咒
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        Timer: 计时器
+      note: Ruby_Curse_AniviaEgg_Timer 是末日人机艾尼维亚 APC 的凤凰蛋诅咒计时机制。
     GlobalWallMarker:
       kind: champion_spell_component
       spell: w
@@ -2447,6 +3090,15 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: FrashFrostSpell 是 Anivia Flash Frost 的旧/拼写变体，事件中对应命中眩晕表现。
+    FlashFrostSpell:
+      kind: champion_spell_component
+      spell: q
+      asset_kind: sfx
+      component: flash_frost
+      label: 寒冰闪耀
+      confidence: high
+      source: manual_contextual_alias
+      note: FlashFrostSpell 是 Q 寒冰闪耀的飞行与爆炸音效，尾段 explode/end 由相位保留。
   Soraka:
     QMissile:
       kind: champion_spell_component
@@ -2457,22 +3109,29 @@ champions:
       source: manual_contextual_alias
       note: QMissile 在 Soraka 事件中对应 Q 技能 Starcall 的飞弹。
     OdinRecall:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_action_component
       component: odin_recall
       label: 水晶之痕回城
       confidence: medium
       source: manual_contextual_alias
       note: OdinRecall 在 ClericSoraka 事件中对应水晶之痕/Odin 地图旧回城表现。
     OdinRecallImproved:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_action_component
       component: odin_recall_improved
       label: 水晶之痕强化回城
       confidence: medium
       source: manual_contextual_alias
       note: OdinRecallImproved 在 ClericSoraka 事件中对应水晶之痕/Odin 地图强化回城表现。
   Chogath:
+    ChogathEAttack:
+      kind: champion_spell_component
+      spell: e
+      asset_kind: sfx
+      component: vorpal_spikes_attack
+      label: 恐惧之刺强化攻击
+      confidence: high
+      source: manual_contextual_alias
+      note: ChogathEAttack 是科加斯 E 恐惧之刺强化普攻的音频 bank；完整名称可能被 lexer 吞进 owner。
     VorpalSpikesMissle:
       kind: champion_spell_component
       spell: e
@@ -2539,24 +3198,73 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: DismountDash 在 Kled 事件中对应下马/脱离坐骑后的冲刺表现。
-  Volibear:
-    Roar:
+    RiderQMissile:
+      kind: champion_spell_component
+      spell: q
+      component: mounted_beartrap_missile
+      label: 骑乘飞索捕熊器飞弹
+      confidence: high
+      source: manual_contextual_alias
+      note: RiderQMissile 中 Rider 是骑乘形态，Q 才是技能槽位；跨皮肤 cast/launch/hit 证据一致。
+    RiderQ:
+      kind: champion_spell_component
+      spell: q
+      component: mounted_beartrap
+      label: 骑乘飞索捕熊器
+      confidence: high
+      source: manual_contextual_alias
+      note: RiderQ 表示骑乘形态 Q 飞索捕熊器；不得按 Rider 的 R 词首误判为 R。
+    RemountDash:
       kind: champion_spell_component
       spell: p
+      component: remount_dash
+      label: 重新上马冲刺
+      confidence: high
+      source: manual_contextual_alias
+      note: RemountDash 是克烈被动重新上马过程的冲刺表现，不是 R 技能。
+    RemounttDash:
+      kind: champion_spell_component
+      spell: p
+      component: remount_dash
+      label: 重新上马冲刺
+      confidence: high
+      source: manual_contextual_alias
+      note: RemounttDash 是 RemountDash 的历史双 t 拼写，语义仍为被动重新上马冲刺。
+  Volibear:
+    StartRun:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: start_run
+      label: 起跑
+      confidence: high
+      source: manual_contextual_alias
+      note: StartRun_loop 跨基础与多套皮肤稳定表示开始奔跑后的循环音效，不按技能槽位猜测。
+    Roar:
+      kind: champion_action_component
       component: roar
       label: 咆哮
       confidence: medium
       source: manual_contextual_alias
       note: Roar 在 Volibear 事件中对应角色专属咆哮动作音效。
     Celebrate:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_action_component
       component: celebrate
       label: 庆祝动作
       confidence: medium
       source: manual_contextual_alias
       note: Celebrate 在 Volibear 事件中对应角色专属庆祝动作音效。
   Mel:
+    MelExecute:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: execute
+      label: 处决
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        champion: 英雄
+        minion: 小兵
+      note: MelExecute_champion/minion 是处决对象变体；未凭内部名臆测具体技能槽位，对象语义必须保留。
     Mark:
       kind: champion_spell_component
       spell: p
@@ -2592,33 +3300,66 @@ champions:
       source: manual_contextual_alias
       note: AurelionSoRMissile 是 AurelionSol R Missile 的紧缩资源名，对应 R 技能飞弹。
   Skarner:
-    TurretAttack:
+    SkarnerE:
       kind: champion_spell_component
-      spell: p
+      spell: e
+      asset_kind: sfx
+      component: ixtal_impact_cast
+      label: 以绪塔尔冲击
+      confidence: high
+      source: manual_contextual_alias
+      note: SkarnerE 是斯卡纳 E 以绪塔尔冲击的完整内部名；整个名称可能被 lexer 吞进 owner。
+    SkarnerQ:
+      kind: champion_spell_component
+      spell: q
+      asset_kind: sfx
+      component: uproot_cast
+      label: 撼地 / 擎天
+      confidence: high
+      source: manual_contextual_alias
+      note: SkarnerQ 是斯卡纳 Q 撼地 / 擎天的完整内部名；整个名称可能被 lexer 吞进 owner。
+    SkarnerQRockThrow:
+      kind: champion_spell_component
+      spell: q
+      asset_kind: sfx
+      component: q_rock_throw
+      label: 撼地 / 擎天·巨石投掷
+      confidence: high
+      source: manual_contextual_alias
+      note: SkarnerQRockThrow 是斯卡纳 Q 举石后的巨石投掷段；RockThrow 必须保留，不能只剩 Q 技能。
+    Emote:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: rock_emote
+      label: 表情动作
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        rock: 岩石
+      note: Skarner 的 Emote3D_rock 跨基础与多套皮肤稳定表示岩石表情动作音效。
+    TurretAttack:
+      kind: champion_attack_component
       component: turret_attack
       label: 攻击防御塔
       confidence: medium
       source: manual_contextual_alias
       note: TurretAttack 在 Skarner 事件中对应攻击防御塔的基础攻击变体。
     SkarnerBasicAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: basic_attack
       label: 普攻
       confidence: medium
       source: manual_contextual_alias
       note: SkarnerBasicAttack 在 Skarner 事件中对应基础攻击音效。
     SkarnerBasicAttack2:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: basic_attack_variant_2
       label: 普攻变体 2
       confidence: medium
       source: manual_contextual_alias
       note: SkarnerBasicAttack2 在 Skarner 事件中对应基础攻击第二套音效变体。
     SkarnerCritAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: crit_attack
       label: 暴击攻击
       confidence: medium
@@ -2649,8 +3390,7 @@ champions:
       source: manual_contextual_alias
       note: SkarnerQRockAttack 在 Skarner 事件中对应 Q 技能举石后的攻击表现。
     SkarnerTurretAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: turret_attack
       label: 攻击防御塔
       confidence: medium
@@ -2682,13 +3422,12 @@ champions:
       note: E 在 SkarnerSkin03 事件中按英雄上下文解析为 E 技能状态音效。
   Zyra:
     hellvine:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: hellvine_basic_attack
       label: 地狱藤蔓普攻
       confidence: medium
       source: manual_contextual_alias
-      note: hellvine 在 Zyra 事件中对应植物/藤蔓单位的普攻表现。
+      note: hellvine 在 Zyra 事件中对应植物/藤蔓单位的普攻表现；BasicAttack 是普通攻击，不附会成 P 技能。
     BrambleZoneSplash:
       kind: champion_spell_component
       spell: e
@@ -2697,6 +3436,14 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: BrambleZoneSplash 在 Zyra 事件中对应荆棘/植物区域效果的溅射音效。
+    ZyraPlantEnrage:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: plant_enrage
+      label: 植物狂暴
+      confidence: high
+      source: manual_contextual_alias
+      note: PlantEnrage 是婕拉植物单位的强化状态音效，不能仅凭植物来源写成 P 技能。
   Maokai:
     SaplingRun:
       kind: champion_spell_component
@@ -2715,8 +3462,8 @@ champions:
       source: manual_contextual_alias
       note: E_AggroSound 在 Maokai 事件中对应 E 技能树苗仇恨音效。
     MaokaiDrain:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: drain
       label: 吸取
       confidence: medium
@@ -2729,60 +3476,97 @@ champions:
       label: 荆棘重击冲击波
       confidence: medium
       source: manual_contextual_alias
-      note: MaokaiTrunkLineMissile（树干直线飞行物）出现在 GraveDiggerMaokai 历史事件中，Q 技能 Bramble Smash（荆棘重击）「用一记冲击波击退附近的敌人」是茂凯唯一的直线冲击波，OnMissileLaunch 相位与之吻合。
+      note: MaokaiTrunkLineMissile（树干直线飞行物）出现在 GraveDiggerMaokai 历史事件中，Q 技能 Bramble
+        Smash（荆棘重击）「用一记冲击波击退附近的敌人」是茂凯唯一的直线冲击波，OnMissileLaunch 相位与之吻合。
+    Emissilebrush:
+      kind: champion_spell_component
+      spell: e
+      asset_kind: sfx
+      component: sapling_toss_brush_missile
+      label: 树苗投掷草丛飞弹
+      confidence: high
+      source: manual_contextual_alias
+      note: Emissilebrush 跨皮肤稳定表示 E 树苗投掷进入草丛的飞弹。
+    Qknockback:
+      kind: champion_spell_component
+      spell: q
+      asset_kind: sfx
+      component: bramble_smash_knockback
+      label: 荆棘重击击退
+      confidence: high
+      source: manual_contextual_alias
+      note: Qknockback 跨皮肤稳定表示 Q 荆棘重击的击退生效。
+    Wroot:
+      kind: champion_spell_component
+      spell: w
+      asset_kind: sfx
+      component: twisted_advance_root
+      label: 扭曲突刺禁锢
+      confidence: high
+      source: manual_contextual_alias
+      note: Wroot 跨皮肤稳定表示 W 扭曲突刺的禁锢阶段。
+    Sapling:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: sapling_footsteps
+      label: 树苗脚步
+      confidence: high
+      source: manual_contextual_alias
+      note: MaokaiSapling2_footsteps 表示树苗移动脚步；数字 2 是内部变体，不是技能段次。
   Varus:
     VarusBasicAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: basic_attack
       label: 普攻
       confidence: medium
       source: manual_contextual_alias
       note: VarusBasicAttack 在 VarusAscended 事件中对应基础攻击。
     VarusBasicAttackNoW:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: basic_attack_no_w
       label: 无 W 普攻
       confidence: medium
       source: manual_contextual_alias
       note: VarusBasicAttackNoW 在 VarusAscended 事件中对应未带 W 状态的基础攻击。
     VarusBasicAttacknoW:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: basic_attack_no_w
       label: 无 W 普攻
       confidence: medium
       source: manual_contextual_alias
       note: VarusBasicAttacknoW 是 VarusBasicAttackNoW 的大小写变体。
     VarusCritAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: crit_attack
       label: 暴击攻击
       confidence: medium
       source: manual_contextual_alias
       note: VarusCritAttack 在 VarusAscended 事件中对应暴击攻击。
     VarusCritAttackNoW:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: crit_attack_no_w
       label: 无 W 暴击
       confidence: medium
       source: manual_contextual_alias
       note: VarusCritAttackNoW 在 VarusAscended 事件中对应未带 W 状态的暴击攻击。
   Ziggs:
+    Beam:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: snow_day_beam
+      label: 冰雪节光束
+      confidence: high
+      source: manual_contextual_alias
+      note: ZiggsSnowDay_Beam_loop/windup 是冰雪节皮肤光束音效，生命周期继续由阶段承载。
     ZiggsBasicAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: basic_attack
       label: 普攻
       confidence: medium
       source: manual_contextual_alias
       note: ZiggsBasicAttack 在 Ziggs 皮肤别名事件中对应基础攻击。
     ZiggsCritAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: crit_attack
       label: 暴击攻击
       confidence: medium
@@ -2798,16 +3582,14 @@ champions:
       note: SatchelJump 在 Ziggs 事件中对应 W 技能 Satchel Charge 的跳跃/位移表现。
   Janna:
     JannaBasicAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: basic_attack
       label: 普攻
       confidence: medium
       source: manual_contextual_alias
       note: JannaBasicAttack 在 JannaForecast 事件中对应基础攻击。
     JannaCritAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: crit_attack
       label: 暴击攻击
       confidence: medium
@@ -2823,16 +3605,14 @@ champions:
       note: SowTheWindCastMarker 在 Janna SFX 中对应 W 技能 Zephyr/SowTheWind 的施法标记。
   Lissandra:
     LissandraBasicAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: basic_attack
       label: 普攻
       confidence: medium
       source: manual_contextual_alias
       note: LissandraBasicAttack 在 Lissandra 皮肤别名事件中对应基础攻击。
     LissandraCritAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: crit_attack
       label: 暴击攻击
       confidence: medium
@@ -2849,16 +3629,14 @@ champions:
       note: LockeConsumeAttack 对应 Q 技能 Ritual Nails（伏魔三钉）描述「洛克的攻击可以引爆印记，造成额外伤害」，即引爆（消耗）Q 印记的强化攻击。
   Lucian:
     LucianBasicAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: basic_attack
       label: 普攻
       confidence: medium
       source: manual_contextual_alias
       note: LucianBasicAttack 在 Lucian 皮肤别名事件中对应基础攻击。
     LucianCritAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: crit_attack
       label: 暴击攻击
       confidence: medium
@@ -2866,33 +3644,45 @@ champions:
       note: LucianCritAttack 在 Lucian 皮肤别名事件中对应暴击攻击。
   Shen:
     ShenBasicAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: basic_attack
       label: 普攻
       confidence: medium
       source: manual_contextual_alias
       note: ShenBasicAttack 在 Shen 皮肤别名事件中对应基础攻击。
     ShenCritAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: crit_attack
       label: 暴击攻击
       confidence: medium
       source: manual_contextual_alias
       note: ShenCritAttack 在 Shen 皮肤别名事件中对应暴击攻击。
+    Rshield:
+      kind: champion_spell_component
+      spell: r
+      component: stand_united_shield
+      label: 慈悲度魂落护盾
+      confidence: high
+      source: manual_contextual_alias
+      note: Rshield 跨基础与多套 Shen 皮肤稳定以增益启停出现，对应 R 慈悲度魂落护盾。
+    RtargetTracker:
+      kind: champion_spell_component
+      spell: r
+      component: stand_united_target_tracker
+      label: 慈悲度魂落目标追踪
+      confidence: high
+      source: manual_contextual_alias
+      note: RtargetTracker 跨皮肤稳定表示 R 慈悲度魂落的目标追踪提示。
   Syndra:
     SyndraBasicAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: basic_attack
       label: 普攻
       confidence: medium
       source: manual_contextual_alias
       note: SyndraBasicAttack 在 Syndra 皮肤别名事件中对应基础攻击。
     SyndraCritAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: crit_attack
       label: 暴击攻击
       confidence: medium
@@ -2908,8 +3698,8 @@ champions:
       note: SyndraE 在 SyndraJusticar 事件中对应 E 技能 Scatter the Weak。
   Rell:
     FUTURE:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: future_homeguard
       label: 未来主题家园卫士
       confidence: medium
@@ -2924,25 +3714,50 @@ champions:
       source: manual_contextual_alias
       note: RelW 在 Rell 事件中对应 W 技能强化攻击表现。
   Lillia:
-    Homegaurd:
+    LilliaE:
       kind: champion_spell_component
-      spell: p
+      spell: e
+      asset_kind: sfx
+      component: swirlseed_cast
+      label: 流涡种
+      confidence: high
+      source: manual_contextual_alias
+      note: LilliaE 是莉莉娅 E 流涡种的完整内部名；整个名称可能被 lexer 吞进 owner。
+    LilliaR:
+      kind: champion_spell_component
+      spell: r
+      asset_kind: sfx
+      component: lilting_lullaby_cast
+      label: 夜阑谣
+      confidence: high
+      source: manual_contextual_alias
+      note: LilliaR 是莉莉娅 R 夜阑谣的完整内部名；整个名称可能被 lexer 吞进 owner。
+    OnHitLocation:
+      kind: champion_spell_component
+      spell: e
+      asset_kind: sfx
+      component: swirlseed_hit_location
+      label: 流涡种命中位置
+      confidence: high
+      source: manual_contextual_alias
+      note: LilliaE_OnHitLocation 是 E 流涡种记录命中位置的音效组件。
+    Homegaurd:
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: homeguard
       label: 家园卫士
       confidence: medium
       source: manual_contextual_alias
       note: Homegaurd 是 Homeguard 的历史拼写错误，对应家园卫士移动状态。
     LilliaBasicAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: basic_attack
       label: 普攻
       confidence: medium
       source: manual_contextual_alias
       note: LilliaBasicAttack 在 Lillia 事件中对应基础攻击音效。
     LilliaCritAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: crit_attack
       label: 暴击攻击
       confidence: medium
@@ -2981,9 +3796,20 @@ champions:
       source: manual_contextual_alias
       note: LilliaRSleepDealDamage 对应 R 技能夜阑谣描述「这些敌人在被强制唤醒时会受到额外伤害」的昏睡破除伤害段。
   Annie:
+    AnnieTibbers:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: ruby
+      component: tibbers
+      label: 提伯斯
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        death: 阵亡
+      note: Ruby_AnnieTibbers_death 是末日人机安妮 APC 的提伯斯阵亡音效，不把召唤物名当英雄名。
     AnnieTibbersBasicAttack:
-      kind: champion_spell_component
-      spell: r
+      kind: champion_attack_component
+      related_spell: r
       component: tibbers_basic_attack
       label: 提伯斯普攻
       confidence: medium
@@ -2998,7 +3824,24 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: GarenSlash 在 Garen/SteelLegionGaren 事件中对应 Q 技能 Decisive Strike 的斩击表现。
+    GarenRecouperate:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: perseverance_recovery
+      label: 被动·坚韧恢复
+      confidence: high
+      source: manual_contextual_alias
+      note: Recouperate1 是盖伦被动“坚韧”的恢复音效；数字 1 是资产变体，不是技能第1段。
   Galio:
+    SelfShield:
+      kind: champion_spell_component
+      spell: w
+      asset_kind: sfx
+      component: shield_of_durand_self_shield
+      label: 杜朗护盾·自身护盾
+      confidence: high
+      source: manual_contextual_alias
+      note: W_SelfShield 在加里奥皮肤 SFX 中明确表示 W 杜朗护盾施加给自身的护盾组件。
     WPassiveDefense:
       kind: champion_spell_component
       spell: w
@@ -3040,23 +3883,39 @@ champions:
       source: manual_contextual_alias
       note: GalioSkin13WPassiveDefense 在 Galio 皮肤事件中对应 W/护盾防御状态音效。
   Nocturne:
-    NocturneBasicAttack:
+    NocturneParanoiaDash:
       kind: champion_spell_component
-      spell: p
+      spell: r
+      asset_kind: sfx
+      component: paranoia_dash
+      label: 鬼影重重突进
+      confidence: high
+      source: manual_contextual_alias
+      note: NocturneParanoiaDash 是魔腾 R 鬼影重重的突进段；完整名称可能被 lexer 吞进 owner。
+    NocturneBasicAttack:
+      kind: champion_attack_component
       component: basic_attack
       label: 普攻
       confidence: medium
       source: manual_contextual_alias
       note: NocturneBasicAttack 在 Nocturne 事件中对应基础攻击音效。
     NocturneCritAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: crit_attack
       label: 暴击攻击
       confidence: medium
       source: manual_contextual_alias
       note: NocturneCritAttack 在 Nocturne 事件中对应暴击基础攻击音效。
   Blitzcrank:
+    LaserEyes:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: ruby
+      component: laser_eyes
+      label: 激光眼
+      confidence: high
+      source: manual_contextual_alias
+      note: Ruby_Blitzcrank_LaserEyes 是末日人机布里茨 APC 的特殊激光眼效果，不映射常规技能槽位。
     RocketGrab:
       kind: champion_spell_component
       spell: q
@@ -3073,7 +3932,78 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: RocketGrabMissile 在 Blitzcrank/iBlitz 事件中对应 Q 技能飞爪飞弹。
+  Gnar:
+    GnarBig:
+      kind: champion_form_qualifier
+      component: mega_form
+      label: 巨型形态
+      confidence: high
+      source: manual_contextual_alias
+      note: GnarBig 单独位于动作前时是巨型纳尔形态修饰，后续 Dance/Recall/Taunt 仍是主体动作，不是技能名。
+    GnarBigAttackTower:
+      kind: champion_attack_component
+      component: mega_tower_basic_attack
+      label: 巨型形态对防御塔的普通攻击
+      confidence: high
+      source: manual_contextual_alias
+      note: GnarBigAttackTower 是巨型纳尔对防御塔的基础攻击；巨型形态不把 BasicAttack 改写成 P 技能。
+    GnarBigQMissile:
+      kind: champion_spell_component
+      spell: q
+      component: mega_boulder_missile
+      label: 投掷顽石飞弹
+      confidence: high
+      source: manual_contextual_alias
+      note: GnarBigQMissile 是巨型纳尔 Q 投掷顽石的飞弹阶段。
+    GnarBigQRockGround:
+      kind: champion_spell_component
+      spell: q
+      component: mega_boulder_ground_impact
+      label: 投掷顽石落地
+      confidence: high
+      source: manual_contextual_alias
+      note: GnarBigQRockGround 是巨型纳尔 Q 投掷顽石的落地命中阶段。
+    GnarLittle:
+      kind: champion_form_qualifier
+      component: mini_form
+      label: 小型形态
+      confidence: high
+      source: manual_contextual_alias
+      note: GnarLittle 单独位于动作前时是小型纳尔形态修饰，后续 Recall 仍是主体动作，不是技能名。
+    GnarTransform:
+      kind: champion_spell_component
+      spell: p
+      component: rage_gene_transform
+      label: 狂怒基因变身
+      confidence: high
+      source: manual_contextual_alias
+      note: GnarTransform 是被动技能狂怒基因触发的巨型纳尔变身，不是 R 技能 GNAR!/呐啊！。
+    GnarTransformBack:
+      kind: champion_spell_component
+      spell: p
+      component: rage_gene_transform_back
+      label: 狂怒基因变回小型形态
+      confidence: high
+      source: manual_contextual_alias
+      note: GnarTransformBack 是被动技能狂怒基因从巨型纳尔变回小型纳尔的阶段。
+    GnarTransformSoon:
+      kind: champion_spell_component
+      spell: p
+      component: rage_gene_transform_soon
+      label: 狂怒基因即将变身
+      confidence: high
+      source: manual_contextual_alias
+      note: GnarTransformSoon 是被动技能狂怒基因的变身预警阶段。
   RekSai:
+    fullstacks:
+      kind: champion_spell_component
+      spell: p
+      asset_kind: sfx
+      component: fury_full_stacks
+      label: 艾克塞之怒层数已满
+      confidence: high
+      source: manual_contextual_alias
+      note: RekSaiSkin09_fullstacks 表示被动艾克塞之怒的怒气层数已满。
     TSActive:
       kind: champion_spell_component
       spell: p
@@ -3082,35 +4012,91 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: TSActive 在 RekSai 事件中对应被动 Tremor Sense/地听状态激活。
+    announcement:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: strawberry
+      component: boss_announcement
+      label: 首领登场播报
+      confidence: high
+      source: manual_contextual_alias
+      note: Strawberry_Gameplay_HUD_Boss_RekSai_announcement 是 PVE 首领雷克塞的界面登场播报；Gameplay/HUD/Boss 都只是路径角色。
+    fallingdebris:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: strawberry
+      component: falling_debris
+      label: 坠落碎石
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        explode: 爆炸
+      note: Strawberry_Boss_Reksai 的 fallingdebris_explode 是首领坠落碎石爆炸机制。
+    mini:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: strawberry
+      required_tokens: [spawn]
+      component: mini_spawn
+      label: 小型单位生成
+      confidence: high
+      source: manual_contextual_alias
+      note: Strawberry_Boss_Reksai_mini_spawn 表示首领生成小型单位。
+    spawn:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: strawberry
+      component: boss_spawn
+      label: 首领生成
+      confidence: high
+      source: manual_contextual_alias
+      note: Strawberry_Boss_Reksai_spawn 是 PVE 首领生成音效。
   Urgot:
     UrgotCritAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: crit_attack
       label: 暴击攻击
       confidence: medium
       source: manual_contextual_alias
       note: UrgotCritAttack 在 Urgot 事件中对应暴击基础攻击音效。
     RunHaste:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: run_haste
       label: 加速奔跑
       confidence: medium
       source: manual_contextual_alias
       note: RunHaste 在 Urgot 事件中对应移动加速/奔跑状态音效。
+    R:
+      kind: champion_spell_component
+      spell: r
+      asset_kind: sfx
+      component: fear_beyond_death_execution
+      label: 超越死亡的恐惧处决
+      confidence: high
+      source: manual_contextual_alias
+      note: Urgot_R_GrindersOut/recast 等事件中的独立 R 段属于 R 超越死亡的恐惧处决链路。
+    Tracker:
+      kind: champion_spell_component
+      spell: r
+      asset_kind: sfx
+      component: fear_beyond_death_target_tracker
+      label: 超越死亡的恐惧目标追踪
+      confidence: high
+      source: manual_contextual_alias
+      note: Tracker_target 跨皮肤与 Ruby 事件稳定表示 R 的目标追踪音效。
   MasterYi:
     Foley:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: foley
       label: 动作拟音
       confidence: medium
       source: manual_contextual_alias
       note: Foley 在 MasterYiSkin89 事件中对应舞蹈/动作拟音循环。
     In:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: dance_in
       label: 舞蹈进入
       confidence: medium
@@ -3125,9 +4111,18 @@ champions:
       source: manual_contextual_alias
       note: WujuStyleSuperCharged 在 MasterYi SFX 中对应 E 技能 Wuju Style 的强化状态。
   Mordekaiser:
-    Macetransform:
+    foley:
       kind: champion_spell_component
-      spell: p
+      spell: w
+      asset_kind: sfx
+      component: indestructible_foley
+      label: 不坏之身动作音效
+      confidence: high
+      source: manual_contextual_alias
+      note: W_foley_end 跨皮肤稳定表示 W 不坏之身动作拟音的结束阶段，foley 不是英雄或技能槽位。
+    Macetransform:
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: mace_transform
       label: 钉锤变形
       confidence: medium
@@ -3140,7 +4135,16 @@ champions:
       label: 断魂一扼灵魂飞弹
       confidence: medium
       source: manual_contextual_alias
-      note: MordekaiserSoulMissile 仅出现在 OnMissileLaunch 相位，对应 E 技能 Death's Grasp（断魂一扼）「拉拽一个区域内的所有敌人」的拉拽弹道；Soul 与中文名「断魂」相扣，全套技能中仅 E 具备弹道表现。
+      note: MordekaiserSoulMissile 仅出现在 OnMissileLaunch 相位，对应 E 技能 Death's Grasp（断魂一扼）「拉拽一个区域内的所有敌人」的拉拽弹道；Soul
+        与中文名「断魂」相扣，全套技能中仅 E 具备弹道表现。
+    walk:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: walk
+      label: 行走
+      confidence: high
+      source: manual_contextual_alias
+      note: walk 是角色/皮肤行走音效，不是 W 技能提示。
   Neeko:
     Stun:
       kind: champion_spell_component
@@ -3152,16 +4156,14 @@ champions:
       note: Stun 在 NeekoSkin49 事件中对应技能控制状态音效。
   Yunara:
     ItemHurricaneYunaraAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: hurricane_attack
       label: 飓风普攻
       confidence: medium
       source: manual_contextual_alias
       note: ItemHurricaneYunaraAttack 在 Yunara 事件中对应卢安娜飓风触发的普攻音效。
     ItemHurricaneYunaraAttackCrit:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: hurricane_crit_attack
       label: 飓风暴击普攻
       confidence: medium
@@ -3176,8 +4178,8 @@ champions:
       source: manual_contextual_alias
       note: ItemHurricaneYunaraQAttack 在 Yunara 事件中对应 Q 状态下卢安娜飓风触发的攻击音效。
     ItemHurricaneYunaraQAttackCrit:
-      kind: champion_spell_component
-      spell: q
+      kind: champion_attack_component
+      related_spell: q
       component: hurricane_q_crit_attack
       label: 飓风 Q 暴击普攻
       confidence: medium
@@ -3185,14 +4187,54 @@ champions:
       note: ItemHurricaneYunaraQAttackCrit 在 Yunara 事件中对应 Q 状态下卢安娜飓风触发的暴击攻击音效。
   Milio:
     Generic:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: generic_magic_loop
       label: 通用魔法循环
       confidence: medium
       source: manual_contextual_alias
       note: Generic 在 Milio 事件中对应皮肤/角色通用魔法循环音效，不作为全局 Generic 规则。
   Ahri:
+    Faker:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      required_tokens: [Emote]
+      component: faker_emote
+      label: 李相赫主题表情
+      confidence: high
+      source: manual_contextual_alias
+      note: AhriSkin86 的 Emote_Faker 是李相赫主题表情音效；Faker 是主题名，不是英雄实体或技能槽位。
+    EmoteVFX:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: emote_effect
+      label: 表情特效
+      confidence: high
+      source: manual_contextual_alias
+      note: AhriSkin89_EmoteVFX_loop 是皮肤表情特效循环音效，不是 E 技能。
+    Evolve:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: skin_evolve
+      label: 皮肤进化
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        Burst: 爆发
+        Intro: 入场
+        Gear: 装备
+      note: AhriSkin86 的 Evolve_Burst/Intro_Gear 是皮肤进化表现；所有中间变体词必须进入结构化修饰语。
+    Tower:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: tower_effect
+      label: 防御塔音效
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        Finisher: 终结
+        Signature: 标志变体
+      note: AhriSkin86 的 Tower_Finisher/Signature 是皮肤防御塔终结表现，不是技能事件。
     Transformation:
       kind: champion_spell_component
       spell: r
@@ -3202,26 +4244,43 @@ champions:
       source: manual_contextual_alias
       note: Transformation 在 AhriSkin27 事件中对应皮肤/大招相关形态变化音效。
   Caitlyn:
+    GunTeleport:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: gun_teleport
+      label: 武器传送
+      confidence: high
+      source: manual_contextual_alias
+      note: CaitlynSkin22_GunTeleport 是皮肤武器传送音效，不是技能槽位。
     WalkVar:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: walk_variant
       label: 行走变体
       confidence: medium
       source: manual_contextual_alias
       note: WalkVar 在 CaitlynSkin22 事件中对应皮肤行走状态变体音效。
+    WSnare:
+      kind: champion_spell_component
+      spell: w
+      mode: jade
+      component: yordle_snap_trap_snare
+      label: 约德尔诱捕器禁锢
+      confidence: high
+      source: manual_contextual_alias
+      note: CaitlynWSnare 在 Jade/经典模式 VO 中以 hit3D 收尾，明确表示 W 约德尔诱捕器的禁锢命中。
   Ezreal:
     ChampDeath:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: champion_death
       label: 英雄死亡
       confidence: medium
       source: manual_contextual_alias
       note: ChampDeath 在 EzrealSkin05 事件中对应击杀英雄/敌方死亡主题音效。
     MinionDeath:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: minion_death
       label: 小兵死亡
       confidence: medium
@@ -3237,16 +4296,14 @@ champions:
       note: UpgradeR 在 EzrealSkin05 事件中对应 R 技能升级或皮肤进化状态音效。
   Ekko:
     VOCaitlyn:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_action_component
       component: voice_caitlyn
       label: 凯特琳语音条件
       confidence: medium
       source: manual_contextual_alias
       note: VOCaitlyn 在 Ekko 事件中对应与 Caitlyn 相关的语音条件。
     VOZilean:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_action_component
       component: voice_zilean
       label: 基兰语音条件
       confidence: medium
@@ -3260,10 +4317,42 @@ champions:
       confidence: medium
       source: manual_contextual_alias
       note: QReturn 在 Ekko 事件中对应 Q 技能 Timewinder 回返飞行。
-  Jinx:
-    ItemHurricaneJinxAttack:
+  Jhin:
+    Idle:
       kind: champion_spell_component
       spell: p
+      asset_kind: sfx
+      required_tokens: [Passive]
+      component: passive_idle_audio
+      label: 待机音轨
+      confidence: high
+      source: manual_contextual_alias
+      note: Jhin Idle_Passive_buffactivate 是被动技能待机音轨；Idle 是动作，Passive 是真实被动归属，buffactivate 是音轨注册 cue。
+  Jinx:
+    slotmachine:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: slot_machine
+      label: 皮肤老虎机
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        chemtech: 炼金科技
+        anomaly: 异常
+        hextech: 海克斯科技
+      note: JinxSkin60 slotmachine 是皮肤老虎机表现；炼金科技、异常与海克斯科技结果必须保留，buffactivate 只是音频 cue 生命周期。
+    exalted:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: exalted_form
+      label: 超凡形态
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        spawnin: 登场
+      note: JinxSkin60 的 exalted_spawnin 是皮肤超凡形态登场音效。
+    ItemHurricaneJinxAttack:
+      kind: champion_attack_component
       component: hurricane_attack
       label: 飓风普攻
       confidence: medium
@@ -3271,14 +4360,44 @@ champions:
       note: ItemHurricaneJinxAttack 在 Jinx 事件中对应卢安娜飓风触发的普攻音效。
   Leblanc:
     Special:
-      kind: champion_spell_component
-      spell: p
+      kind: generic_sfx_effect
+      asset_kind: sfx
       component: special_skin_effect
       label: 特殊皮肤效果
       confidence: medium
       source: manual_contextual_alias
       note: Special 在 LeblancSkin55 事件中对应皮肤特殊主题效果。
   Morgana:
+    gear:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: gear_swap
+      label: 装备切换
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        swap: 切换
+      note: MorganaSkin80_gear_swap 是皮肤装备切换音效。
+    MaskSwap:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: mask_swap
+      label: 面具切换
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        mask1: 形态1
+        mask2: 形态2
+        mask3: 形态3
+      note: MorganaSkin80 的 MaskSwap3D_maskN 是皮肤面具形态切换；形态编号是用户语义，不得丢弃。
+    Petals:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: petals
+      label: 花瓣环绕
+      confidence: high
+      source: manual_contextual_alias
+      note: MorganaSkin80 的 Petals3D_loop 是皮肤花瓣环绕循环，不按技能槽位解释。
     Deathpetals:
       kind: champion_spell_component
       spell: r
@@ -3288,9 +4407,20 @@ champions:
       source: manual_contextual_alias
       note: Deathpetals 在 MorganaSkin80 事件中对应皮肤主题死亡花瓣效果。
   Nasus:
+    ultformvox:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: ultimate_form_vocalization
+      label: 终极形态拟声
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        idle1: 待机变体1
+        run: 奔跑
+        runin: 起跑
+      note: NasusSkin05 的 ultformvox_* 是终极形态的待机/奔跑拟声层，动作后缀必须保留。
     NasusCritAttack:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_attack_component
       component: crit_attack
       label: 暴击攻击
       confidence: medium
@@ -3313,17 +4443,42 @@ champions:
       source: manual_contextual_alias
       note: laughult 在 NasusSkin05 事件中对应大招形态下的笑声表现。
   Sett:
+    HUD:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: skin_hud
+      label: 皮肤界面
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        FormChange: 形态切换
+        Click: 点击
+        Gaugemeter: 计量表
+        Full: 已满
+        Gift: 礼物
+        Orbmeter: 能量球计量
+      note: SettSkin66 的 HUD_* 是皮肤界面操作与计量状态；完整路径必须进入中文展示。
+    Gift:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: skin_gift
+      label: 礼物音效
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        Tier1: 等级1
+        Tier2: 等级2
+        Tier3: 等级3
+      note: SettSkin66 的 Gift_TierN 是礼物等级变体，数字是资源等级而非技能段数。
     Recallin:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_action_component
       component: recall_in
       label: 回城进入
       confidence: medium
       source: manual_contextual_alias
       note: Recallin 在 SettSkin19 事件中对应回城进入阶段。
     Recallout:
-      kind: champion_spell_component
-      spell: p
+      kind: champion_action_component
       component: recall_out
       label: 回城离开
       confidence: medium
@@ -3383,11 +4538,912 @@ champions:
     BloodlustParticle:
       kind: champion_spell_component
       spell: q
-      component: bloodlust_particle
-      label: 嗜血杀戮粒子
+      component: bloodlust_effect
+      label: 嗜血杀戮效果
       confidence: high
       source: manual_contextual_alias
-      note: BloodlustParticle 在 Tryndamere SFX 中对应 Q 技能 Bloodlust 的状态粒子启动/结束。
+      note: BloodlustParticle 是 Q 技能 Bloodlust 的内部效果层；Particle 仅保留在 raw/provenance，不进入用户文案。
+  Akali:
+    Emis:
+      kind: champion_spell_component
+      spell: e
+      component: shuriken_flip_missile
+      label: 隼舞手里剑
+      confidence: high
+      source: manual_contextual_alias
+      note: Emis 在多套 Akali 皮肤 SFX 中稳定与 cloudhit 连用，对应 E 的手里剑飞弹；E 是技能槽位，不是英文词首猜测。
+    Ebattack:
+      kind: champion_spell_component
+      spell: e
+      component: shuriken_flip_followup
+      label: 隼舞二段攻击
+      confidence: high
+      source: manual_contextual_alias
+      note: Ebattack 在 Akali SFX 中同时出现 cast 与 hit，表示 E 二段突进攻击。
+    Pweapon:
+      kind: champion_spell_component
+      spell: p
+      component: assassins_mark_weapon
+      label: 潜龙印强化武器
+      confidence: high
+      source: manual_contextual_alias
+      note: Pweapon 的 P 是 Akali 被动槽位，active 尾段表示潜龙印强化武器表现。
+    Whaste:
+      kind: champion_spell_component
+      spell: w
+      component: twilight_shroud_haste
+      label: 霞阵加速
+      confidence: high
+      source: manual_contextual_alias
+      note: Whaste 在多套 Akali 皮肤中稳定对应 W 霞阵的加速状态。
+  Brand:
+    P:
+      kind: champion_spell_component
+      spell: p
+      component: blaze_mark
+      label: 灼烧标记
+      confidence: high
+      source: manual_contextual_alias
+      note: Brand 跨皮肤 P_detonateN 与 P_firemarkN_loopN 全集均属于被动灼烧标记；尾段由组件相位规则保留引爆或循环。
+  Fiddlesticks:
+    Qmissilefear:
+      kind: champion_spell_component
+      spell: q
+      component: terrify_fear_missile
+      label: 恐惧飞弹
+      confidence: high
+      source: manual_contextual_alias
+      note: Qmissilefear 跨基础与多套皮肤稳定出现 OnMissileLaunch/OnHit，表示 Q 触发恐惧的飞弹。
+    Qmissilenofear:
+      kind: champion_spell_component
+      spell: q
+      component: terrify_non_fear_missile
+      label: 未触发恐惧的飞弹
+      confidence: high
+      source: manual_contextual_alias
+      note: Qmissilenofear 与 Qmissilefear 成对，表示 Q 未再次触发恐惧时的飞弹表现。
+    Qpassiveterrify:
+      kind: champion_spell_component
+      spell: q
+      component: terrify_passive
+      label: 恐惧被动效果
+      confidence: high
+      source: manual_contextual_alias
+      note: Qpassiveterrify 的 passive 是 Q 技能内部被动效果，不是英雄 P 槽位。
+    Wdrain:
+      kind: champion_spell_component
+      spell: w
+      component: bountiful_harvest_drain
+      label: 五骨丰登吸取
+      confidence: high
+      source: manual_contextual_alias
+      note: Wdrain 跨皮肤稳定以增益启停出现，对应 W 五骨丰登的持续吸取。
+    Wcosmeticmissilebig:
+      kind: champion_spell_component
+      spell: w
+      component: bountiful_harvest_large_missile
+      label: 五骨丰登大型吸取飞弹
+      confidence: high
+      source: manual_contextual_alias
+      note: Wcosmeticmissilebig 是 W 吸取表现的大型飞弹层；cosmetic 工程词不进入中文展示。
+    ScarecrowEffigy:
+      kind: champion_spell_component
+      spell: p
+      component: scarecrow_effigy
+      label: 稻草人假身
+      confidence: high
+      source: manual_contextual_alias
+      note: ScarecrowEffigy 跨皮肤 SFX 对应费德提克被动饰品替换出的稻草人假身。
+  Kayle:
+    Enrage:
+      kind: champion_spell_component
+      spell: e
+      component: starfire_spellblade
+      label: 星火符刃
+      confidence: high
+      source: manual_contextual_alias
+      note: Enrage 是 Kayle E 沿用的历史内部名，在跨皮肤 SFX 中稳定对应星火符刃。
+    EnrageReady:
+      kind: champion_spell_component
+      spell: e
+      component: starfire_spellblade_ready
+      label: 星火符刃就绪
+      confidence: high
+      source: manual_contextual_alias
+      note: EnrageReady 是 E 星火符刃的就绪状态；需优先于 Enrage residue 匹配以保留 Ready 语义。
+    EnrageConeMis:
+      kind: champion_spell_component
+      spell: e
+      component: starfire_cone_missile
+      label: 星火符刃锥形弹道
+      confidence: high
+      source: manual_contextual_alias
+      note: EnrageConeMis 跨皮肤稳定以 cast/hit 出现，对应 E 强化攻击的锥形弹道。
+    EnrageConeMisUpgrade:
+      kind: champion_spell_component
+      spell: e
+      component: upgraded_starfire_cone_missile
+      label: 升级星火符刃锥形弹道
+      confidence: high
+      source: manual_contextual_alias
+      note: EnrageConeMisUpgrade 是 E 锥形弹道的升级形态，Upgrade 不能丢失。
+    EnrageSwing:
+      kind: champion_spell_component
+      spell: e
+      component: starfire_spellblade_swing
+      label: 星火符刃挥击
+      confidence: high
+      source: manual_contextual_alias
+      note: EnrageSwing 表示 E 星火符刃的挥击表现。
+  Rengar:
+    RengarManager:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: skin_audio_manager
+      label: 皮肤音效管理
+      confidence: high
+      source: manual_contextual_alias
+      note: RengarSkin08_RengarManager 是皮肤音效管理状态，不是 R 技能提示。
+    Rstealth:
+      kind: champion_spell_component
+      spell: r
+      asset_kind: sfx
+      component: thrill_of_the_hunt_stealth
+      label: 狩猎律动潜行
+      confidence: high
+      source: manual_contextual_alias
+      note: Rstealth 跨皮肤稳定以 start/end 出现，对应 R 狩猎律动的潜行阶段。
+    Rpassivebuff:
+      kind: champion_spell_component
+      spell: r
+      asset_kind: sfx
+      component: thrill_of_the_hunt_passive_buff
+      label: 狩猎律动增益
+      confidence: high
+      source: manual_contextual_alias
+      note: Rpassivebuff 的 passive 是 R 内部增益，不是英雄 P 槽位。
+    Eempmis:
+      kind: champion_spell_component
+      spell: e
+      asset_kind: sfx
+      component: empowered_bola_missile
+      label: 强化套索飞弹
+      confidence: high
+      source: manual_contextual_alias
+      note: Eempmis 表示 E 强化套索的飞弹，跨皮肤 launch/hit 证据一致。
+    Wemp:
+      kind: champion_spell_component
+      spell: w
+      asset_kind: sfx
+      component: empowered_battle_roar
+      label: 强化战争咆哮
+      confidence: high
+      source: manual_contextual_alias
+      note: Wemp 表示 W 强化战争咆哮。
+    Eemp:
+      kind: champion_spell_component
+      spell: e
+      asset_kind: sfx
+      component: empowered_bola_strike
+      label: 强化套索打击
+      confidence: high
+      source: manual_contextual_alias
+      note: Eemp 表示 E 强化套索打击。
+  Warwick:
+    Wdangerstarts:
+      kind: champion_spell_component
+      spell: w
+      component: blood_hunt_danger_start
+      label: 鲜血追猎危险感知开始
+      confidence: high
+      source: manual_contextual_alias
+      note: Wdangerstarts 跨皮肤区分 warwick/enemy 尾段，表示 W 鲜血追猎危险感知开始。
+    Wdangerends:
+      kind: champion_spell_component
+      spell: w
+      component: blood_hunt_danger_end
+      label: 鲜血追猎危险感知结束
+      confidence: high
+      source: manual_contextual_alias
+      note: Wdangerends 与 Wdangerstarts 成对，表示 W 鲜血追猎危险感知结束。
+    Rmiss:
+      kind: champion_spell_component
+      spell: r
+      component: infinite_duress_miss
+      label: 无尽束缚落空
+      confidence: high
+      source: manual_contextual_alias
+      note: Rmiss 跨基础与多套皮肤稳定表示 R 无尽束缚落空。
+    W:
+      kind: champion_spell_component
+      spell: w
+      component: blood_hunt
+      label: 鲜血追猎
+      confidence: high
+      source: manual_contextual_alias
+      note: Warwick 皮肤 SFX 的独立 W_warwick/W_enemy 只出现在鲜血追猎上下文，按 W 组件处理。
+  Yuumi:
+    Qcast:
+      kind: champion_spell_component
+      spell: q
+      asset_kind: sfx
+      component: prowling_projectile_control
+      label: 摸鱼飞弹操控
+      confidence: high
+      source: manual_contextual_alias
+      note: Qcast 跨皮肤同时出现 OnCast 与增益结束，表示 Q 摸鱼飞弹的操控阶段。
+    Qskillshot:
+      kind: champion_spell_component
+      spell: q
+      asset_kind: sfx
+      component: prowling_projectile
+      label: 摸鱼飞弹
+      confidence: high
+      source: manual_contextual_alias
+      note: Qskillshot 跨皮肤稳定以 OnMissileLaunch 出现，对应 Q 摸鱼飞弹。
+  Aatrox:
+    RRevive:
+      kind: champion_spell_component
+      spell: r
+      asset_kind: sfx
+      component: world_ender_revival
+      label: 大灭
+      confidence: high
+      source: manual_contextual_alias
+      note: RRevive 跨皮肤稳定表示 R 大灭的复活阶段，尾段 player/all 是受众而非技能槽位。
+    announcement:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: strawberry
+      component: boss_announcement
+      label: 首领登场播报
+      confidence: high
+      source: manual_contextual_alias
+      note: Strawberry_Gameplay_HUD_Boss_Aatrox_announcement 是 PVE 首领亚托克斯的界面登场播报；Gameplay/HUD/Boss 都只是路径角色。
+    VictoryBanner:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: strawberry
+      component: boss_victory_banner
+      label: 首领胜利横幅
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        fakeout: 假胜利
+      note: Strawberry_Gameplay_HUD_Boss_Aatrox_VictoryBanner_fakeout 是首领战假胜利横幅提示；fakeout 语义不得丢失。
+    FallingSword:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: strawberry
+      component: falling_sword
+      label: 坠落之剑
+      confidence: high
+      source: manual_contextual_alias
+      note: Strawberry_Boss_Aatrox 的 FallingSword 是 PVE 首领专属坠落之剑效果。
+    NamiWave:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: strawberry
+      component: tidal_wave
+      label: 潮汐巨浪
+      confidence: high
+      source: manual_contextual_alias
+      note: Strawberry_Boss_Aatrox 的 NamiWave 是 PVE 首领借用的潮汐巨浪效果。
+    ChainPlayer:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: strawberry
+      component: chain_player
+      label: 锁链牵引
+      confidence: high
+      source: manual_contextual_alias
+      note: Strawberry_Boss_Aatrox 的 ChainPlayer 表示锁链玩家并牵引的首领机制。
+    ChainPillar:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: strawberry
+      component: chain_pillar
+      label: 锁链石柱
+      confidence: high
+      source: manual_contextual_alias
+      note: Strawberry_Boss_Aatrox 的 ChainPillar 是锁链机制的石柱循环音效。
+    Landing:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: strawberry
+      component: boss_landing
+      label: 首领落地冲击
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        AoE: 范围效果
+      note: Strawberry_Boss_Aatrox 的 Landing_AoE 是首领落地范围冲击，AoE 修饰不得丢弃。
+    MissileGrid:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: strawberry
+      component: missile_grid
+      label: 飞剑矩阵
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        sword: 剑刃
+      note: Strawberry_Boss_Aatrox 的 MissileGrid 是 PVE 首领飞剑矩阵；sword 命中变体必须保留。
+    Revive:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: strawberry
+      component: boss_revive
+      label: 首领复活
+      confidence: high
+      source: manual_contextual_alias
+      note: Strawberry_Boss_Aatrox 的 Revive 是首领复活机制，不等同于常规 RRevive 技能组件。
+    Taunt3D:
+      kind: champion_action_component
+      asset_kind: sfx
+      mode: strawberry
+      component: boss_taunt
+      label: 首领嘲讽音效
+      confidence: high
+      source: manual_contextual_alias
+      note: Strawberry_Boss_Aatrox 的 Taunt3D 是首领嘲讽动作；into/loop 由动作阶段继续承载。
+    LightningStrike:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: strawberry
+      component: lightning_strike
+      label: 雷电打击
+      confidence: high
+      source: manual_contextual_alias
+      note: Strawberry_Boss_Aatrox 的 LightningStrike 表示雷电打击首领机制。
+    LineRift:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: strawberry
+      component: line_rift
+      label: 直线裂地
+      confidence: high
+      source: manual_contextual_alias
+      note: Strawberry_Boss_Aatrox 的 LineRift 表示直线裂地冲击。
+  Briar:
+    EMis:
+      kind: champion_spell_component
+      spell: e
+      asset_kind: sfx
+      component: chilling_scream_shockwave
+      label: 惊吼冲击波
+      confidence: high
+      source: manual_contextual_alias
+      note: EMis 跨皮肤以 missilecast 和大小/受众尾段出现，对应 E 惊吼释放的冲击波。
+    announcement:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: strawberry
+      component: boss_announcement
+      label: 首领登场播报
+      confidence: high
+      source: manual_contextual_alias
+      note: Strawberry_Gameplay_HUD_Boss_Briar_announcement 是 PVE 首领贝蕾亚的界面登场播报；Gameplay/HUD/Boss 都只是路径角色。
+    MissileGrid:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: strawberry
+      component: missile_grid
+      label: 飞弹阵列
+      confidence: high
+      source: manual_contextual_alias
+      note: Strawberry_Boss_Briar 的 MissileGrid 是 PVE 首领专属飞弹阵列。
+    player:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: strawberry
+      required_tokens: [targeted]
+      component: player_targeted
+      label: 玩家被锁定提示
+      confidence: high
+      source: manual_contextual_alias
+      note: Strawberry_Boss_Briar_player_targeted 表示玩家成为首领机制目标的提示音。
+    spawn:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: strawberry
+      component: boss_spawn
+      label: 首领生成
+      confidence: high
+      source: manual_contextual_alias
+      note: Strawberry_Boss_Briar_spawn 是 PVE 首领生成音效。
+    push:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: strawberry
+      component: push
+      label: 击退冲击
+      confidence: high
+      source: manual_contextual_alias
+      note: Strawberry_Boss_Briar 的 push 是 PVE 首领击退冲击效果。
+  Qiyana:
+    Crit:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: critical_idle
+      label: 暴击待机
+      confidence: high
+      source: manual_contextual_alias
+      note: Crit_idle 跨皮肤稳定表示暴击武器的待机音效，不是技能槽位。
+    Relax:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: relaxed_idle
+      label: 放松待机
+      confidence: high
+      source: manual_contextual_alias
+      note: Relax_idle 跨皮肤稳定表示放松待机音效，不是 R 技能。
+    Rmis:
+      kind: champion_spell_component
+      spell: r
+      asset_kind: sfx
+      component: supreme_display_of_talent_shockwave
+      label: 惊才绝景冲击波
+      confidence: high
+      source: manual_contextual_alias
+      note: Rmis 跨皮肤稳定以 OnMissileCast 出现，对应 R 惊才绝景冲击波。
+  Zac:
+    blastcone:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: blastcone_fly
+      label: 爆炸球果弹射飞行
+      confidence: high
+      source: manual_contextual_alias
+      note: Zac_blastcone_fly 跨基础与多套皮肤稳定表示被爆炸球果弹射后的飞行动作音效。
+    rebirthstart:
+      kind: champion_spell_component
+      spell: p
+      asset_kind: sfx
+      component: cell_division_revival
+      label: 细胞分裂复活
+      confidence: high
+      source: manual_contextual_alias
+      note: rebirthstart 表示被动技能细胞分裂的复活启动阶段。
+    rebirthblob:
+      kind: champion_spell_component
+      spell: p
+      asset_kind: sfx
+      component: cell_division_blob
+      label: 细胞分裂组织
+      confidence: high
+      source: manual_contextual_alias
+      note: rebirthblob 表示被动技能细胞分裂的组织失效阶段。
+    Qyank:
+      kind: champion_spell_component
+      spell: q
+      asset_kind: sfx
+      component: stretching_strikes_yank_root
+      label: 延伸打击牵引禁锢
+      confidence: high
+      source: manual_contextual_alias
+      note: QyankRoot 跨皮肤表示 Q 延伸打击的牵引禁锢阶段。
+    Bloblet:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: bloblet_death
+      label: 细胞组织阵亡
+      confidence: high
+      source: manual_contextual_alias
+      note: Bloblet_Death 表示扎克细胞组织阵亡音效，不是英雄死亡事件。
+    Recallleadin:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: recall_leadin
+      label: 回城前奏
+      confidence: high
+      source: manual_contextual_alias
+      note: Recallleadin 表示回城前奏音效。
+  Zoe:
+    QMis2WarningSleepCombo:
+      kind: champion_spell_component
+      spell: q
+      stage: 2
+      asset_kind: sfx
+      component: paddle_star_second_flight_sleep_warning
+      label: 飞星乱入催眠预警
+      confidence: high
+      source: manual_contextual_alias
+      note: QMis2WarningSleepCombo 表示 Q 二段飞行与催眠气泡组合时的预警。
+    QMis2Warning:
+      kind: champion_spell_component
+      spell: q
+      stage: 2
+      asset_kind: sfx
+      component: paddle_star_second_flight_warning
+      label: 飞星乱入预警
+      confidence: high
+      source: manual_contextual_alias
+      note: QMis2Warning 表示 Q 飞星乱入二段飞行的预警。
+    disablebypass:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: w_audio_bypass_disabled
+      label: W音频旁路关闭
+      confidence: high
+      source: manual_contextual_alias
+      note: ZoeW 工程 owner 下的 disablebypass 是 W 音频路由控制，不是独立英雄或技能段数。
+    enablebypass:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: w_audio_bypass_enabled
+      label: W音频旁路开启
+      confidence: high
+      source: manual_contextual_alias
+      note: ZoeW 工程 owner 下的 enablebypass 是 W 音频路由控制，不是独立英雄或技能段数。
+  Akshan:
+    AkshanWRevive:
+      kind: champion_spell_component
+      spell: w
+      asset_kind: sfx
+      component: going_rogue_revive
+      label: 赴险夺人复活
+      confidence: high
+      source: manual_contextual_alias
+      note: WRevive 是 W“赴险夺人”的友军复活音效；buffcast 表示触发阶段。
+  Pantheon:
+    PantheonRmissile:
+      kind: champion_spell_component
+      spell: r
+      asset_kind: sfx
+      infer_stage: false
+      component: grand_starfall_missile
+      label: 大荒星陨飞弹
+      confidence: high
+      source: manual_contextual_alias
+      note: Rmissile3 是 R“大荒星陨”的飞弹资产；尾号 3 是资源变体，不表示第三段施法。
+  Taliyah:
+    TaliyahQMisBig:
+      kind: champion_spell_component
+      spell: q
+      asset_kind: sfx
+      component: threaded_volley_empowered_missile
+      label: 石穿强化岩石飞弹
+      confidence: high
+      source: manual_contextual_alias
+      note: QMisBig 表示 Q“石穿”在掘石场上投出的强化岩石飞弹。
+    TaliyahQBigMis:
+      kind: champion_spell_component
+      spell: q
+      asset_kind: sfx
+      component: threaded_volley_empowered_missile
+      label: 石穿强化岩石飞弹
+      confidence: high
+      source: manual_contextual_alias
+      note: QBigMis 是同一 Q 强化岩石飞弹的内部词序变体。
+  Teemo:
+    TeemoRBounce:
+      kind: champion_spell_component
+      spell: r
+      asset_kind: sfx
+      component: noxious_trap_bounce
+      label: 种蘑菇弹跳
+      confidence: high
+      source: manual_contextual_alias
+      note: RBounce 是 R“种蘑菇”的陷阱弹跳/飞弹释放阶段。
+  Belveth:
+    Laugh3D:
+      kind: champion_action_component
+      asset_kind: sfx
+      mode: strawberry
+      component: boss_laugh
+      label: 首领大笑音效
+      confidence: high
+      source: manual_contextual_alias
+      note: Strawberry_Boss_Belveth 的 Laugh3D 是首领大笑动作音效。
+    announcement:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: strawberry
+      component: boss_announcement
+      label: 首领登场播报
+      confidence: high
+      source: manual_contextual_alias
+      note: Strawberry_Gameplay_HUD_Boss_Belveth_announcement 是 PVE 首领卑尔维斯的界面登场播报；Gameplay/HUD/Boss 都只是路径角色。
+    fallingdebris:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: strawberry
+      component: falling_debris
+      label: 坠落碎石
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        explode: 爆炸
+      note: Strawberry_Boss_Belveth 的 fallingdebris_explode 是首领坠落碎石爆炸机制。
+    Spikes:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: strawberry
+      component: boss_spikes
+      label: 首领尖刺
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        mega: 巨型变体
+      note: Strawberry_Boss_Belveth 的 Spikes 是首领尖刺机制；mega 变体必须进入中文展示。
+  Hwei:
+    HweiWashBrush:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: wash_brush
+      label: 清洗画笔
+      confidence: high
+      source: manual_contextual_alias
+      note: HweiWashBrush_cast 跨基础与多套皮肤稳定表示清洗画笔动作音效，不是 W 技能释放。
+  KSante:
+    wall:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      required_tokens: [effect, travel]
+      component: wall_travel
+      label: 穿墙移动
+      confidence: high
+      source: manual_contextual_alias
+      note: effect_wall_travel 跨基础与多套皮肤稳定表示奎桑提穿墙移动音效；effect 是资源分组词。
+  Swain:
+    Music:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: skin_music
+      label: 皮肤音乐
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        FirstMove: 首次移动
+      note: Swain 皮肤的 Music_FirstMove 是首次移动触发的皮肤音乐，触发条件必须保留。
+  Veigar:
+    buttonclick:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: skin_button_click
+      label: 皮肤按钮点击
+      confidence: high
+      source: manual_contextual_alias
+      note: VeigarSkin09_buttonclick_01 是皮肤按钮点击音效；尾号是资源变体，不是技能段数。
+    Bark:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: ruby
+      component: hud_bark
+      label: 界面语音提示
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        Left: 左侧
+      note: Ruby_HUD_FNVeigar_Bark_Left 是末日人机维迦的左侧界面语音提示，不是 HUD 或 Ruby 实体。
+    DelayedDarkMatter:
+      kind: champion_spell_component
+      spell: w
+      asset_kind: sfx
+      mode: ruby
+      component: delayed_dark_matter
+      label: 延迟黑暗物质
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        warning: 预警
+        small: 小型
+        big: 大型
+      note: Ruby_Boss_FNVeigar 的 DelayedDarkMatter 是最终首领维迦的延迟 W 黑暗物质，预警与大小必须保留。
+    WideQ:
+      kind: champion_spell_component
+      spell: q
+      asset_kind: sfx
+      mode: ruby
+      component: wide_baleful_strike
+      label: 广域黑暗祭祀
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        warning: 预警
+      note: WideQ 是最终首领维迦的广域 Q 黑暗祭祀，warning 是预警层。
+    FNVeigarBalefulStrike:
+      kind: champion_spell_component
+      spell: q
+      asset_kind: sfx
+      mode: ruby
+      component: baleful_strike
+      label: 黑暗祭祀
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        powerup: 强化
+      note: FN 是工程前缀；BalefulStrike 是维迦 Q 黑暗祭祀，powerup 表示强化阶段。
+    FNVeigarEventHorizon:
+      kind: champion_spell_component
+      spell: e
+      asset_kind: sfx
+      mode: ruby
+      component: event_horizon
+      label: 扭曲空间
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        warning: 预警
+      note: FN 是工程前缀；EventHorizon 是维迦 E 扭曲空间，warning/loop 分别保留预警与循环阶段。
+    FNVeigarR:
+      kind: champion_spell_component
+      spell: r
+      asset_kind: sfx
+      mode: ruby
+      component: primordial_burst
+      label: 能量爆裂
+      confidence: high
+      source: manual_contextual_alias
+      note: FN 是工程前缀；FNVeigarR 是最终首领维迦 R 能量爆裂，OnCast/OnHit/弹道阶段不得丢弃。
+    FNVeigarTeleport:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: ruby
+      component: boss_teleport
+      label: 首领传送
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        arrive: 抵达
+      note: FNVeigarTeleport 是最终首领维迦的传送流程；start 与 arrive 分别表示启动和抵达。
+    MordeE:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: ruby
+      component: borrowed_deaths_grasp
+      label: 借用断魂一扼
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        warning: 预警
+      note: MordeE 是首领借用莫德凯撒 E 断魂一扼的机制，不得误写成维迦 E。
+    MordeEMissile:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: ruby
+      component: borrowed_deaths_grasp_missile
+      label: 借用断魂一扼飞弹
+      confidence: high
+      source: manual_contextual_alias
+      note: MordeEMissile 是首领借用断魂一扼的飞弹层，OnMissileCast 保留飞弹施放阶段。
+    MordeR:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: ruby
+      component: borrowed_realm_of_death
+      label: 借用轮回绝境
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        self: 自身
+        target: 目标
+      note: MordeR 是首领借用莫德凯撒 R 轮回绝境的机制，不得误写成维迦 R。
+    Imprison:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: ruby
+      component: boss_imprison
+      label: 首领禁锢
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        Player: 玩家
+        shield: 护盾
+        beam: 光束
+        doghouse: 囚笼
+      note: Imprison 是最终首领维迦的玩家禁锢机制；护盾、光束与囚笼层必须保留。
+    SafeZone:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: ruby
+      component: safe_zone
+      label: 安全区机制
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        OrbitalLaser: 轨道激光
+        aoe: 范围效果
+        red: 红色
+        runes: 符文
+        shrink: 收缩
+      note: SafeZone 是最终首领战的安全区机制；轨道激光、范围、颜色、符文与收缩语义不得丢失。
+    PreFightPhase:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: ruby
+      component: pre_fight_phase
+      label: 战前阶段
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        OrbitalLaser: 轨道激光
+        aoe: 范围效果
+        claw: 利爪
+        transition: 过渡
+      note: PreFightPhase 是最终首领出现前的战前流程；轨道激光与利爪过渡层必须保留。
+    Knockaway:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: ruby
+      component: knockaway
+      label: 击退机制
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        warning: 预警
+        impact: 冲击
+      note: Knockaway 是最终首领的击退机制，warning/impact 分别为预警与冲击层。
+    SoulTether:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: ruby
+      component: soul_tether
+      label: 灵魂系链
+      confidence: high
+      source: manual_contextual_alias
+      note: SoulTether 是最终首领维迦的灵魂系链机制。
+    InstaKill:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: ruby
+      component: instant_kill
+      label: 即死机制
+      confidence: high
+      source: manual_contextual_alias
+      note: InstaKill 是最终首领的即死命中机制，FNVeigarr 只是历史拼写变体。
+    footstep:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: ruby
+      component: boss_footstep
+      label: 首领脚步
+      confidence: high
+      source: manual_contextual_alias
+      note: Ruby_Boss_FNVeigar_footstep 是最终首领维迦的脚步音效。
+    portal:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      mode: ruby
+      component: boss_portal
+      label: 首领传送门
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        spawn: 生成
+      note: Ruby_Boss_FNVeigar_portal_spawn 是最终首领传送门生成音效。
+  Amumu:
+    Key:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: key_turning
+      label: 钥匙转动
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        turning: 转动
+      note: AmumuSkin23_Key_turning 是皮肤钥匙转动音效，不是技能槽位。
+  Seraphine:
+    JoketoIdle:
+      kind: champion_action_component
+      asset_kind: sfx
+      component: joke_to_idle
+      label: 玩笑转待机音效
+      confidence: high
+      source: manual_contextual_alias
+      note: SeraphineSkin03_JoketoIdle3D 是玩笑动作结束后转入待机的过渡音效。
+  Viktor:
+    ViktorExpirationTimer:
+      kind: generic_sfx_effect
+      asset_kind: sfx
+      component: expiration_timer
+      label: 到期计时器
+      confidence: high
+      source: manual_contextual_alias
+      qualifiers:
+        storm: 风暴
+      note: ViktorSkin05_ViktorExpirationTimer_* 是皮肤风暴效果的到期计时音效，不按技能词首猜测。
 modes:
   Ruby:
     Boss:
@@ -3395,7 +5451,7 @@ modes:
       mode: ruby
       mode_label: 末日人机
       component: final_boss
-      label: 最终 Boss
+      label: 最终首领
       confidence: medium
       source: manual_contextual_alias
       note: Ruby_Boss 只在末日人机/Ruby 模式中表示最终 Boss，不泛化到其它模式。
@@ -3409,6 +5465,104 @@ modes:
       source: manual_contextual_alias
       note: Ultimate Spellbook mode voice prefix.
 sfx:
+  Blitzcrank:
+    Overdrive:
+      kind: champion_spell_component
+      spell: w
+      component: overdrive
+      label: 过载运转
+      confidence: high
+      source: manual_sfx_alias
+      note: 英雄 SFX 上下文中的 Overdrive 是布里茨 W 的官方技能名；该规则不作用于同名 VO Stable pattern。
+  Kaisa:
+    Helmet:
+      kind: generic_sfx_effect
+      component: helmet
+      label: 头盔
+      confidence: high
+      source: manual_sfx_alias
+      note: Helmet 跨基础与多套 Kaisa 皮肤表示头盔开关音效，不属于技能槽位。
+    EvolveSelf:
+      kind: generic_sfx_effect
+      component: evolve_self
+      label: 自身进化
+      confidence: high
+      source: manual_sfx_alias
+      note: EvolveSelf 表示卡莎自身进化音效；E 是英文 Evolve 的词首，不能据此写成 E 技能。
+    EvolveOthers:
+      kind: generic_sfx_effect
+      component: evolve_others
+      label: 他人进化
+      confidence: high
+      source: manual_sfx_alias
+      note: EvolveOthers 表示其他玩家可听见的进化音效；E 是英文词首，不是 E 技能槽位。
+  Kled:
+    movement:
+      kind: generic_sfx_effect
+      component: mounted_movement
+      label: 坐骑移动
+      confidence: high
+      source: manual_sfx_alias
+      note: movement 在 Kled/KledRider 跨皮肤资源中与 saddle/leather 等材质尾段连用，表示坐骑移动音效。
+    RunMad:
+      kind: generic_sfx_effect
+      component: run_mad
+      label: 狂奔
+      confidence: high
+      source: manual_sfx_alias
+      note: RunMad 在 KledRider 跨皮肤 SFX 中表示骑乘狂奔音效，不属于 R 技能。
+  Warwick:
+    QuadrupedFast:
+      kind: generic_sfx_effect
+      component: quadruped_fast_movement
+      label: 四足快速移动
+      confidence: high
+      source: manual_sfx_alias
+      note: QuadrupedFast 跨 Warwick 皮肤与方向尾段连用，表示四足快速移动音效，不属于技能槽位。
+  Yuumi:
+    meow:
+      kind: generic_sfx_effect
+      component: meow
+      label: 喵叫
+      confidence: high
+      source: manual_sfx_alias
+      qualifiers:
+        '01': 1号变体
+        '02': 2号变体
+        '03': 3号变体
+      note: meow 跨 Yuumi 皮肤与编号变体稳定表示喵叫音效。
+    purr:
+      kind: generic_sfx_effect
+      component: purr
+      label: 呼噜
+      confidence: high
+      source: manual_sfx_alias
+      qualifiers:
+        oneoffs: 独立触发
+      note: purr 跨 Yuumi 皮肤稳定表示呼噜音效，不是 P 技能。
+    fly:
+      kind: generic_sfx_effect
+      component: fly
+      label: 飞行
+      confidence: high
+      source: manual_sfx_alias
+      note: fly 跨 Yuumi 皮肤表示飞行动作音效。
+    frightened:
+      kind: generic_sfx_effect
+      component: frightened
+      label: 受惊
+      confidence: high
+      source: manual_sfx_alias
+      note: frightened 跨 Yuumi 皮肤表示受惊反应音效。
+  Ryze:
+    RyzeRChannel:
+      kind: champion_spell_component
+      spell: r
+      component: realm_warp_channel
+      label: 曲境折跃引导
+      confidence: high
+      source: manual_sfx_alias
+      note: Ruby_RyzeRChannel_end 具有末日人机 Ryze 演员、显式 R 与 Channel/end 结构，表示 R 曲境折跃引导结束。
   global:
     Spawn:
       kind: generic_sfx_effect
@@ -3679,6 +5833,20 @@ sfx:
       confidence: high
       source: manual_sfx_alias
       note: Arena 模式内部代号，主代理裁决词条（T3.4 头部词条表）。
+    Kiwi:
+      kind: map_system_entity
+      component: kiwi
+      label: 海克斯大乱斗
+      confidence: medium
+      source: manual_sfx_alias
+      note: ARAM Mayhem 内部代号；2026-08-22 社区解释与 Riot 模式说明、本地 Kiwi 增益命名键及事件共现复核一致。中文采用社区通称，不宣称国服官方标题。
+    Slime:
+      kind: map_system_entity
+      component: slime
+      label: 极限闪击
+      confidence: high
+      source: manual_sfx_alias
+      note: Nexus Blitz 的 Project SLIME 开发代号；2026-08-22 社区资料与本地 Slime2018/NexusBlitz 事件共现、reference/maps/NB 官方中文名复核一致。
     NexusBlitz:
       kind: map_system_entity
       component: nexus_blitz
@@ -3693,6 +5861,118 @@ sfx:
       confidence: high
       source: manual_sfx_alias
       note: HUD/界面反馈音，主代理裁决词条（T3.4 头部词条表）。
+    Boss:
+      kind: map_system_entity
+      component: boss
+      label: 首领
+      confidence: high
+      source: manual_sfx_alias
+      note: 末日人机/PVE 模式中的首领分组；仅供没有已解析英雄演员的模式系统事件。
+    MiniBoss:
+      kind: map_system_entity
+      component: mini_boss
+      label: 小型首领
+      confidence: high
+      source: manual_sfx_alias
+      note: PVE 模式中的小型首领分组；rule_key 同时覆盖 Miniboss 大小写变体。
+    Curse:
+      kind: map_system_entity
+      component: curse
+      label: 诅咒
+      confidence: high
+      source: manual_sfx_alias
+      note: 末日人机模式的诅咒机制分组。
+    Spire:
+      kind: map_system_entity
+      component: spire
+      label: 尖塔
+      confidence: high
+      source: manual_sfx_alias
+      note: PVE 模式的尖塔目标分组。
+    Gameplay:
+      kind: map_system_entity
+      component: gameplay
+      label: 玩法
+      confidence: high
+      source: manual_sfx_alias
+      note: 特殊模式的玩法系统分组。
+    Enemy:
+      kind: map_system_entity
+      component: enemy
+      label: 敌方单位
+      confidence: high
+      source: manual_sfx_alias
+      note: PVE 模式的敌方单位分组。
+    POI:
+      kind: map_system_entity
+      component: point_of_interest
+      label: 地图目标
+      confidence: high
+      source: manual_sfx_alias
+      note: PVE 模式内部 POI（Point of Interest）目标分组。
+    Fountain:
+      kind: map_system_entity
+      component: fountain
+      label: 泉水
+      confidence: high
+      source: manual_sfx_alias
+      note: PVE 模式的泉水系统分组。
+    Drop:
+      kind: map_system_entity
+      component: drop
+      label: 掉落物
+      confidence: high
+      source: manual_sfx_alias
+      note: PVE 模式的掉落物分组。
+    SpicyPortal:
+      kind: map_system_entity
+      component: special_portal
+      label: 特殊传送门
+      confidence: high
+      source: manual_sfx_alias
+      note: 末日人机模式的特殊传送门工程分组，不按字面硬译 Spicy。
+    KingOfTheHill:
+      kind: map_system_entity
+      component: king_of_the_hill
+      label: 据点争夺
+      confidence: high
+      source: manual_sfx_alias
+      note: 末日人机模式的据点争夺机制分组。
+    Pumpkin:
+      kind: map_system_entity
+      component: pumpkin
+      label: 南瓜
+      confidence: high
+      source: manual_sfx_alias
+      note: 末日人机模式的南瓜场景实体。
+    player:
+      kind: map_system_entity
+      component: player
+      label: 玩家
+      confidence: high
+      source: manual_sfx_alias
+      note: PVE 模式中的玩家实体分组。
+    Destructible:
+      kind: map_system_entity
+      component: destructible
+      label: 可破坏物
+      confidence: high
+      source: manual_sfx_alias
+      note: PVE 模式的可破坏场景物分组。
+    Rebuild:
+      kind: map_system_entity
+      component: rebuild
+      label: 重建
+      confidence: high
+      source: manual_sfx_alias
+      note: PVE 模式的重建机制分组。
+    Tibbers:
+      kind: map_system_entity
+      component: tibbers
+      label: 提伯斯
+      confidence: high
+      source: manual_sfx_alias
+      note: PVE 模式事件中的安妮召唤物实体；BasicAttack 等尾段必须另存为动作。
     Perks:
       kind: map_system_entity
       component: perks

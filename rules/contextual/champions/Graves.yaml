@@ -2,8 +2,7 @@ scope: champion
 owner: Graves
 aliases:
   AutoAttackRecoilCastEDummy:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: auto_attack_recoil_dummy
     label: 普攻后坐力占位
     confidence: medium
@@ -34,16 +33,14 @@ aliases:
     source: manual_contextual_alias
     note: ClusterShotSoundMissile 在 Graves 事件中对应 Q 技能终极爆弹的声音/飞弹表现。
   GravesBasicAttack:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: basic_attack
     label: 普攻
     confidence: medium
     source: manual_contextual_alias
     note: GravesBasicAttack 在 Graves 皮肤别名事件中对应基础攻击。
   GravesCritAttack:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: crit_attack
     label: 暴击攻击
     confidence: medium

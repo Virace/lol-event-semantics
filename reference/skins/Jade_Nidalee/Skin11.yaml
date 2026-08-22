@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Nidalee
+  champion_id: 60076
+  skin_number: 11
+  skin_token: Skin11
+  id: 60076011
+  alias: Jade_NidaleeSkin11
+  names:
+    en_US:
+      - value: Dawnbringer Nidalee
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 黎明使者 奈德丽
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 193
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_NidaleeSkin11

@@ -1,0 +1,268 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60040
+  alias: Jade_Janna
+  names:
+    en_US:
+      - value: Janna
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 风暴之怒
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_JannaE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Eye Of The Storm
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 风暴之眼
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:9227e6703dc695f7c76130a3940ffd8a1c8b7e176942fe938e4deb106a32051e
+            value: Janna conjures a defensive gale that shields an ally champion
+              or turret from incoming damage and increases their Attack Damage.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:2ed14a8d57b6c5b14ba1949303c239f31c6356021cadf1bcc66d6176ea98b88d
+            value: 迦娜制造出一阵防御性的气旋，来为目标友军或防御塔吸收即将到来的伤害，并提高目标的攻击力。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_JannaPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Tailwind
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 顺风而行
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:bea9cb7c4ec15584e3c2ec09a8609c57cd01b0fb7244f9e4359f39894b7a7d61
+            value: Janna and her allied champions gain 3% increased Movement
+              Speed.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:1acf722a9ca739528ef4dfcb0481214893892eda1a0b3ff866cfaa10bfbfb284
+            value: 迦娜和友方英雄的移动速度提升3%。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_JannaQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Howling Gale
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 飓风呼啸
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:8d2f1588621d005f4e6a19619a1167a1a04af08bbe3bae4af0911407570c774c
+            value: By creating a localized change in pressure and temperature,
+              Janna is able to create a small storm that grows in size with
+              time. She can active the spell again to release the storm. On
+              release this storm will fly towards the direction it was cast in,
+              dealing damage and knocking away any enemies in its path.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:ba77ce96a057c99dbddeeb6aaaceb6c32bef85fca3b2793549128378a4d7febb
+            value:
+              迦娜改变气压和温度，在目标区域召唤小型风暴，对沿途的所有单位造成伤害和击飞效果。召唤风暴时，迦娜可以再次使用此技能来立刻施放风暴，造成的伤害取决于蓄力时间的长短。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_JannaR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Monsoon
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 复苏季风
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:919f14d3c860644fea00be59e612e50f1e5d5d2fbcba688c6d51a24393ec9096
+            value: Janna surrounds herself in a magical storm, throwing enemies
+              back. After the storm has settled, soothing winds heal nearby
+              allies while the ability is active.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:3b1078b6913722369c1ff19e7153dfb460fca8a56085a475215b766557fe52a2
+            value: 迦娜召唤魔法风暴围绕自己，将敌人击退。唤出风暴后会刮起治愈之风，在持续时间内为附近的友军回复生命值。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_JannaW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Zephyr
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 和风守护
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:b6127f15001f8458e467ffb7b8cb5d73ca657109c4482cb76f64b2412ed4f337
+            value: Janna summons an air elemental that passively increases her
+              Movement Speed and enables her to pass through units. She may also
+              activate this ability to deal damage and slow an enemy's Movement
+              Speed. The passive is lost while this ability is on cooldown.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:de37fe4430018b9475a5420c03327b80bf38663e7f27a0290edc544476a1623a
+            value:
+              迦娜召唤出一个空气元素灵体，被动地提升她的移动速度，并使她能够穿越单位。她也可以主动激活这个技能，对一个敌人造成伤害和减速效果。该技能冷却期间将失去被动效果。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

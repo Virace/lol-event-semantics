@@ -1,0 +1,196 @@
+{
+  "$id": "https://lol-event-semantics.local/schema/pattern-catalog.v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "decision_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "pattern_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "pattern_signature_version": {
+      "const": "pattern-signature.v1"
+    },
+    "patterns": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "asset_kind": {
+            "enum": [
+              "vo",
+              "sfx",
+              "control",
+              "unknown"
+            ]
+          },
+          "en_US_template": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "example_event_names": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "frame_type": {
+            "type": "string"
+          },
+          "frame_version": {},
+          "introduced_in": {
+            "type": "string"
+          },
+          "optional_roles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "pattern_id": {
+            "pattern": "^pattern-v1-[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "provenance_policy": {
+            "type": "object"
+          },
+          "record_count": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "required_roles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "review_status": {
+            "enum": [
+              "not_required",
+              "pending",
+              "accepted",
+              "rejected",
+              "superseded"
+            ]
+          },
+          "signature": {
+            "type": "object"
+          },
+          "superseded_by": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "support_level": {
+            "enum": [
+              "stable",
+              "experimental",
+              "unsupported"
+            ]
+          },
+          "warning_counts": {
+            "type": "object"
+          },
+          "zh_cn_label_variants": {
+            "additionalProperties": {
+              "additionalProperties": false,
+              "properties": {
+                "distinct_label_count": {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                "variants": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "label": {
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "record_count": {
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      "sample_raw_event_names": {
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "minItems": 1,
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "label",
+                      "record_count",
+                      "sample_raw_event_names"
+                    ],
+                    "type": "object"
+                  },
+                  "minItems": 1,
+                  "type": "array"
+                }
+              },
+              "required": [
+                "distinct_label_count",
+                "variants"
+              ],
+              "type": "object"
+            },
+            "propertyNames": {
+              "minLength": 1
+            },
+            "type": "object"
+          },
+          "zh_CN_template": {
+            "type": [
+              "object",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "pattern_id",
+          "signature",
+          "asset_kind",
+          "frame_type",
+          "frame_version",
+          "required_roles",
+          "optional_roles",
+          "support_level",
+          "zh_CN_template",
+          "en_US_template",
+          "provenance_policy",
+          "example_event_names",
+          "record_count",
+          "warning_counts",
+          "zh_cn_label_variants",
+          "review_status",
+          "introduced_in",
+          "superseded_by"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "schema_version": {
+      "const": 1
+    }
+  },
+  "required": [
+    "schema_version",
+    "pattern_signature_version",
+    "decision_id",
+    "pattern_count",
+    "patterns"
+  ],
+  "title": "lol-event-semantics pattern catalog v1",
+  "type": "object"
+}

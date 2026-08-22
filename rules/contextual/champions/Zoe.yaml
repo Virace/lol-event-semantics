@@ -1,0 +1,39 @@
+scope: champion
+owner: Zoe
+aliases:
+  QMis2Warning:
+    kind: champion_spell_component
+    spell: q
+    stage: 2
+    asset_kind: sfx
+    component: paddle_star_second_flight_warning
+    label: 飞星乱入预警
+    confidence: high
+    source: manual_contextual_alias
+    note: QMis2Warning 表示 Q 飞星乱入二段飞行的预警。
+  QMis2WarningSleepCombo:
+    kind: champion_spell_component
+    spell: q
+    stage: 2
+    asset_kind: sfx
+    component: paddle_star_second_flight_sleep_warning
+    label: 飞星乱入催眠预警
+    confidence: high
+    source: manual_contextual_alias
+    note: QMis2WarningSleepCombo 表示 Q 二段飞行与催眠气泡组合时的预警。
+  disablebypass:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: w_audio_bypass_disabled
+    label: W音频旁路关闭
+    confidence: high
+    source: manual_contextual_alias
+    note: ZoeW 工程 owner 下的 disablebypass 是 W 音频路由控制，不是独立英雄或技能段数。
+  enablebypass:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: w_audio_bypass_enabled
+    label: W音频旁路开启
+    confidence: high
+    source: manual_contextual_alias
+    note: ZoeW 工程 owner 下的 enablebypass 是 W 音频路由控制，不是独立英雄或技能段数。

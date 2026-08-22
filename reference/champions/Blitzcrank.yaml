@@ -9,71 +9,71 @@ entity:
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
     zh_CN:
       - value: 布里茨
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
   title:
     zh_CN:
       - value: 蒸汽机器人
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: game_data
             first_seen: '16.14'
-            last_seen: '16.14'
+            last_seen: '16.16'
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
   nicknames:
     zh_CN:
       - value: 机器人
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
   search_alias:
     zh_CN:
       - value: blc
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: bulici
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: jiqiren
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: jqr
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: zhengqijiqiren
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: zqjqr
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
 spells:
   - slot: E
     ids:
@@ -81,31 +81,31 @@ spells:
         sources:
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: PowerFist
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
     names:
       en_US:
         - value: Power Fist
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 能量铁拳
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -114,61 +114,61 @@ spells:
             value: Blitzcrank charges up their fist to make the next attack deal
               double damage and pop their target up in the air.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
               sha256:d7563eaa731a347aaf71d0fbfb9121f4c6893d1c65a48f6087fb9ab591e32941
             value: 布里茨为机械手臂充能，下次攻击造成双倍伤害并击飞目标。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'
   - slot: P
     ids:
       - value: BlitzcrankPassive
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
     names:
       en_US:
         - value: Mana Barrier
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 法力屏障
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -177,63 +177,63 @@ spells:
             value: Blitzcrank gains a shield based on their mana when dropping 
               to low health.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
               sha256:abdd3cfa19cd7de208b9753e16895ae02535778980c18ca9cd85859bfdc30298
             value: 布里茨在血量过低时会获得一层基于它法力值的护盾。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'
   - slot: Q
     ids:
       - value: BlitzcrankQ
         sources:
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: RocketGrab
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
     names:
       en_US:
         - value: Rocket Grab
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 机械飞爪
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -242,63 +242,63 @@ spells:
             value: Blitzcrank fires their right hand to grab an opponent on its 
               path, dealing damage and dragging it back to them.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
               sha256:d240eb96ecb17d8a6e7ecc3cb7e354c7b878116497f565fcafd70087bdcbacfc
             value: 布里茨发射它的右手，来抓取碰到的第一个敌人，在对敌人造成伤害的同时，还会将这名敌人拉到它的面前。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'
   - slot: R
     ids:
       - value: BlitzcrankR
         sources:
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: StaticField
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
     names:
       en_US:
         - value: Static Field
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 静电力场
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -309,16 +309,16 @@ spells:
               ability to remove nearby enemies' shields, damage them, and 
               silence them briefly.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
@@ -326,47 +326,47 @@ spells:
             value: 
               被布里茨攻击过的敌人会被标记并在1秒后受到闪电伤害。此外，布里茨可以主动激活这个技能来移除附近敌人们的护盾、对他们造成伤害并暂时沉默他们。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'
   - slot: W
     ids:
       - value: BlitzcrankW
         sources:
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: Overdrive
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
     names:
       en_US:
         - value: Overdrive
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 过载运转
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -376,29 +376,29 @@ spells:
               increased Move and Attack Speed. They are temporarily slowed after
               the effect ends.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
               sha256:c73ad70da99be6e6f83919864ffa5b78f6788ba08c39868f1a1ded7f67c2f572
             value: 布里茨对自己进行了超级充电，它的攻击速度和移动速度得到了显著提升。它会在效果结束后暂时减速。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'

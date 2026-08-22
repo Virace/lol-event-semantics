@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Rammus
+  champion_id: 60033
+  skin_number: 17
+  skin_token: Skin17
+  id: 60033017
+  alias: Jade_RammusSkin17
+  names:
+    en_US:
+      - value: Astronaut Rammus
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 宇航员 拉莫斯
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 94
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_RammusSkin17

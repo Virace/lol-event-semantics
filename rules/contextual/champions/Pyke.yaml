@@ -1,0 +1,21 @@
+scope: champion
+owner: Pyke
+aliases:
+  PykePassive:
+    kind: champion_spell_component
+    spell: p
+    asset_kind: sfx
+    component: gift_of_the_drowned_ones_heal
+    label: 溺水之幸灰色生命回复
+    confidence: high
+    source: manual_contextual_alias
+    note: PykePassive_heal 是派克真实被动溺水之幸的灰色生命回复音效；heal 与播放生命周期必须保留。
+  PykePassiveVFX:
+    kind: champion_spell_component
+    spell: p
+    asset_kind: sfx
+    component: gift_of_the_drowned_ones_vfx
+    label: 溺水之幸表现
+    confidence: high
+    source: manual_contextual_alias
+    note: PykePassiveVFX 是派克真实被动溺水之幸的视觉/音频表现，不得只翻译成泛化的被动技能状态。

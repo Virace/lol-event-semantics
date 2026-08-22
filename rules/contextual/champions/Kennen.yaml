@@ -3,20 +3,20 @@ owner: Kennen
 aliases:
   DoubleStrikeLive:
     kind: champion_spell_component
-    spell: p
+    spell: w
     component: double_strike_live
     label: 双重打击生效
     confidence: medium
     source: manual_contextual_alias
-    note: DoubleStrikeLive 在 Kennen 事件中对应被动 Electrical Surge 的生效/就绪状态。
+    note: DoubleStrikeLive 对应 W 奥义！电刃的被动攻击计数/就绪状态；这是 W 的被动部分，不是英雄 P 槽位。
   MegaProc:
     kind: champion_spell_component
-    spell: p
+    spell: w
     component: mega_proc
     label: 被动触发
     confidence: medium
     source: manual_contextual_alias
-    note: MegaProc 在 Kennen 事件中对应被动 Electrical Surge 的触发表现。
+    note: MegaProc 对应 W 奥义！电刃的被动强化攻击触发，不是英雄 P 槽位。
   ShurikenHurlMissile:
     kind: champion_spell_component
     spell: q

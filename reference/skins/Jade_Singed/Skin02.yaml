@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Singed
+  champion_id: 60027
+  skin_number: 2
+  skin_token: Skin02
+  id: 60027002
+  alias: Jade_SingedSkin02
+  names:
+    en_US:
+      - value: Hextech Singed
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 机械污染 辛吉德
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 40
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_SingedSkin02
+  - Jade_SingedSkin2

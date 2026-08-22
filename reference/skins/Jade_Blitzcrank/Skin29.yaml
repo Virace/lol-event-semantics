@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Blitzcrank
+  champion_id: 60053
+  skin_number: 29
+  skin_token: Skin29
+  id: 60053029
+  alias: Jade_BlitzcrankSkin29
+  names:
+    en_US:
+      - value: Space Groove Blitz & Crank
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 太空律动 “猫猫” 布里和里茨
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 144
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_BlitzcrankSkin29

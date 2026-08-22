@@ -9,6 +9,16 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: BlueMonster 在 KaynSkin20 事件中对应蓝色形态/皮肤主题怪物状态音效。
+  FX:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: skin_glitch_effect
+    label: 皮肤故障效果
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      Glitch: 故障
+    note: KaynSkin20_FX_Glitch 是皮肤故障主题音效；FX 是资源分组词，不是技能槽位。
   InfestKill:
     kind: champion_spell_component
     spell: r
@@ -17,6 +27,23 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: InfestKill 在 Kayn 事件中对应 R 技能 Umbral Trespass 的侵入击杀结果；3D 只作为音频维度处理。
+  Music:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: skin_music
+    label: 皮肤音乐
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      Mute: 静音
+      UnMute: 取消静音
+      Dance3D: 舞蹈
+      Idle3D: 待机
+      Spell: 技能
+      exit: 退出
+      Recall3D: 回城
+      shared: 共享
+    note: KaynSkin20 的 Music_Mute/UnMute 是皮肤音乐控制；中间操作词必须进入结构化修饰语。
   RedMonster:
     kind: champion_spell_component
     spell: p
@@ -25,3 +52,13 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: RedMonster 在 KaynSkin20 事件中对应红色形态/皮肤主题怪物状态音效。
+  SpellToIdle:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: spell_to_idle
+    label: 技能动作转待机
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      mus: 音乐层
+    note: KaynSkin20 的 SpellToIdle_mus 是技能动作结束后转入待机的音乐层，不是无对象的“状态启动”。

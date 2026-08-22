@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Fiddlesticks
+  champion_id: 60009
+  skin_number: 3
+  skin_token: Skin03
+  id: 60009003
+  alias: Jade_FiddlesticksSkin03
+  names:
+    en_US:
+      - value: Bandito Fiddlesticks
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 荒野幽灵 费德提克
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 39
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_FiddlesticksSkin03
+  - Jade_FiddlesticksSkin3

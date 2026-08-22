@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Katarina
+  champion_id: 60055
+  skin_number: 9
+  skin_token: Skin09
+  id: 60055009
+  alias: Jade_KatarinaSkin09
+  names:
+    en_US:
+      - value: 'PROJECT: Katarina'
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 源计划：雄心 卡特琳娜
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 18
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_KatarinaSkin09
+  - Jade_KatarinaSkin9

@@ -1,0 +1,261 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60015
+  alias: Jade_Sivir
+  names:
+    en_US:
+      - value: Sivir
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 战争女神
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_SivirE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Spell Shield
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 法术护盾
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:a8cef93925351376a7c59f5510c9a476a551517e4f0a9f64d770970746f11b95
+            value: Sivir creates a magical barrier on herself that blocks a
+              single enemy ability. She regains Mana if an ability is
+              successfully blocked.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:fc11a542beba324c74b6f1a6baa6492d9cfe219362a7b6316b9c327972849ab4
+            value: 希维尔制造一层法术屏障，从而格挡一次对她施放的敌方单体技能。如果成功格挡技能，则希维尔回复法力值。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_SivirPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Fleet of Foot
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 敏锐疾行
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:78e7c30d26553c0b4d87a78d780fd67a10f4fc7848bf7cddd3f691e35d118eba
+            value: Sivir gains a short burst of Movement Speed when she attacks
+              an enemy champion.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:172fac79da6590db376e03ff9516d9f7fe93198d202e89e8c4400b6e21043075
+            value: 希维尔攻击敌方英雄时，会短暂获得移动速度提升。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_SivirQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Boomerang Blade
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 回旋之刃
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:794d11ddd32b80a933ea12a1768e76783b6a961d69d2a8e55c60ebbe2b12c481
+            value: Sivir hurls her crossblade like a boomerang, dealing damage
+              each way.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:b420f0aea21fb09aabe5b640eab5d38ce2b6ec3c0d3dde508965ac836d5f9550
+            value: 希维尔将十字刃当作回力标挥出，利刃在往返时造成伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_SivirR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: On The Hunt
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 狩猎
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:796931f3da8ecec451d3dadaf68aa5b71a80549fc4482a1e6fd380170fe799a1
+            value: Sivir leads her allies into battle granting them increased
+              Movement and Attack Speeds for a period of time.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:5fcecec7eda330b5755dc8ed489c031813fe3bfcaa3e3029e76fb783e0ccbed1
+            value: 希维尔在战斗中引领友军，在一段时间内提高其移动速度和攻击速度。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_SivirW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Ricochet
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 弹射
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:3a72bcb65721fe3ef5cfc00e65c0e57ee2576ccfe70bcf34eb14e94da79035d5
+            value: Sivir's next basic attack will bounce between targets,
+              dealing reduced damage with each successive hit.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:3f7383b08729debd34e22b2b736de625af2727d02a22aadb5b3ca3051362d584
+            value: 希维尔的下一次普通攻击将在目标之间弹射，每次后续命中时，造成的伤害衰减。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

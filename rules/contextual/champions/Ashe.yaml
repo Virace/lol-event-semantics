@@ -1,6 +1,22 @@
 scope: champion
 owner: Ashe
 aliases:
+  AsheHUD:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: skin_hud
+    label: 皮肤界面
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      Transform: 变形
+      Bow: 弓
+      Flower: 花朵形态
+      Human: 人形态
+      Spirit: 灵体形态
+      ready: 就绪
+      click: 点击
+    note: AsheSkin76 的 AsheHUD_Transform/click 是皮肤界面与弓形态切换；中间形态路径不得丢弃。
   CritChance:
     kind: champion_spell_component
     spell: p
@@ -9,14 +25,6 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: CritChance 在 Ashe 事件中对应被动 Frost Shot 的暴击/强化准备状态。
-  Helm:
-    kind: champion_spell_component
-    spell: p
-    component: helm
-    label: 头盔
-    confidence: medium
-    source: manual_contextual_alias
-    note: Helm 在 AsheSkin08 事件中对应皮肤头盔状态音效。
   FrostArrow:
     kind: champion_spell_component
     spell: p
@@ -25,6 +33,14 @@ aliases:
     confidence: high
     source: manual_contextual_alias
     note: FrostArrow 在 Ashe SFX 中对应被动 Frost Shot 的箭矢命中/释放表现。
+  Helm:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: helm
+    label: 头盔
+    confidence: medium
+    source: manual_contextual_alias
+    note: Helm 在 AsheSkin08 事件中对应皮肤头盔状态音效，不属于英雄被动槽位。
   VolleyAttack:
     kind: champion_spell_component
     spell: w
@@ -49,14 +65,6 @@ aliases:
     confidence: high
     source: manual_contextual_alias
     note: VolleyCenterAttack 在 Ashe SFX 中对应 W 技能 Volley 的中央箭矢命中表现。
-  VolleyRightAttack:
-    kind: champion_spell_component
-    spell: w
-    component: volley_attack_right
-    label: 万箭齐发右侧箭矢
-    confidence: high
-    source: manual_contextual_alias
-    note: VolleyRightAttack 在 Ashe SFX 中对应 W 技能 Volley 的右侧箭矢命中表现。
   VolleyRank:
     kind: champion_spell_component
     spell: w
@@ -65,3 +73,24 @@ aliases:
     confidence: high
     source: manual_contextual_alias
     note: VolleyRankN 在 Ashe VO/SFX 中对应 W 技能 Volley 的技能等级语音或音效。
+  VolleyRightAttack:
+    kind: champion_spell_component
+    spell: w
+    component: volley_attack_right
+    label: 万箭齐发右侧箭矢
+    confidence: high
+    source: manual_contextual_alias
+    note: VolleyRightAttack 在 Ashe SFX 中对应 W 技能 Volley 的右侧箭矢命中表现。
+  windup:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: skin_action
+    label: 皮肤动作
+    confidence: medium
+    source: manual_contextual_alias
+    qualifiers:
+      Recall3D: 回城
+      Joke: 玩笑
+      Taunt: 嘲讽
+      hologram: 全息影像
+    note: windup 是动作阶段；Recall/Joke/Taunt 与 hologram 等 cue 另作已审阅修饰语保留，不猜测具体技能。

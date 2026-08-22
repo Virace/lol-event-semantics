@@ -1,14 +1,6 @@
 scope: champion
 owner: Malphite
 aliases:
-  ObduracyAttack:
-    kind: champion_spell_component
-    spell: w
-    component: obduracy_attack
-    label: 雷霆拍击攻击
-    confidence: high
-    source: manual_contextual_alias
-    note: ObduracyAttack 在 Malphite SFX 中对应 W 技能 Thunderclap/Obduracy 的强化普攻表现。
   Cleave:
     kind: champion_spell_component
     spell: w
@@ -25,6 +17,23 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: CleaveArc 在 Malphite 事件中对应 W 技能 Thunderclap 的顺劈命中特效。
+  ObduracyAttack:
+    kind: champion_spell_component
+    spell: w
+    component: obduracy_attack
+    label: 雷霆拍击攻击
+    confidence: high
+    source: manual_contextual_alias
+    note: ObduracyAttack 在 Malphite SFX 中对应 W 技能 Thunderclap/Obduracy 的强化普攻表现。
+  ObduracyBuff:
+    kind: champion_spell_component
+    spell: w
+    component: obduracy_buff
+    label: 雷霆拍击增益
+    confidence: medium
+    source: manual_contextual_alias
+    note: reference W 技能 id 含 Obduracy（Thunderclap 雷霆拍击），ObduracyBuff 对应 W
+      开启期间的强化增益状态，与 ObduracyAttack 同源。
   ShieldEffect:
     kind: champion_spell_component
     spell: p
@@ -33,11 +42,3 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: ShieldEffect 在 Malphite 事件中对应被动 Granite Shield 的护盾特效。
-  ObduracyBuff:
-    kind: champion_spell_component
-    spell: w
-    component: obduracy_buff
-    label: 雷霆拍击增益
-    confidence: medium
-    source: manual_contextual_alias
-    note: reference W 技能 id 含 Obduracy（Thunderclap 雷霆拍击），ObduracyBuff 对应 W 开启期间的强化增益状态，与 ObduracyAttack 同源。

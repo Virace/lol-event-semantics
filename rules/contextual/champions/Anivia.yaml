@@ -1,6 +1,28 @@
 scope: champion
 owner: Anivia
 aliases:
+  AniviaEgg:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: ruby
+    required_tokens:
+      - Timer
+    component: curse_egg_timer
+    label: 冰晶凤凰蛋诅咒
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      Timer: 计时器
+    note: Ruby_Curse_AniviaEgg_Timer 是末日人机艾尼维亚 APC 的凤凰蛋诅咒计时机制。
+  FlashFrostSpell:
+    kind: champion_spell_component
+    spell: q
+    asset_kind: sfx
+    component: flash_frost
+    label: 寒冰闪耀
+    confidence: high
+    source: manual_contextual_alias
+    note: FlashFrostSpell 是 Q 寒冰闪耀的飞行与爆炸音效，尾段 explode/end 由相位保留。
   FrashFrostSpell:
     kind: champion_spell_component
     spell: q

@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Katarina
+  champion_id: 60055
+  skin_number: 1
+  skin_token: Skin01
+  id: 60055001
+  alias: Jade_KatarinaSkin01
+  names:
+    en_US:
+      - value: Mercenary Katarina
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 赏金猎人 卡特琳娜
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_KatarinaSkin01
+  - Jade_KatarinaSkin1

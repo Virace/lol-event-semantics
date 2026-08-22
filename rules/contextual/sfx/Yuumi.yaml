@@ -1,0 +1,37 @@
+scope: sfx
+owner: Yuumi
+aliases:
+  fly:
+    kind: generic_sfx_effect
+    component: fly
+    label: 飞行
+    confidence: high
+    source: manual_sfx_alias
+    note: fly 跨 Yuumi 皮肤表示飞行动作音效。
+  frightened:
+    kind: generic_sfx_effect
+    component: frightened
+    label: 受惊
+    confidence: high
+    source: manual_sfx_alias
+    note: frightened 跨 Yuumi 皮肤表示受惊反应音效。
+  meow:
+    kind: generic_sfx_effect
+    component: meow
+    label: 喵叫
+    confidence: high
+    source: manual_sfx_alias
+    qualifiers:
+      '01': 1号变体
+      '02': 2号变体
+      '03': 3号变体
+    note: meow 跨 Yuumi 皮肤与编号变体稳定表示喵叫音效。
+  purr:
+    kind: generic_sfx_effect
+    component: purr
+    label: 呼噜
+    confidence: high
+    source: manual_sfx_alias
+    qualifiers:
+      oneoffs: 独立触发
+    note: purr 跨 Yuumi 皮肤稳定表示呼噜音效，不是 P 技能。

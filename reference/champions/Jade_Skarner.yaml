@@ -1,0 +1,269 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60072
+  alias: Jade_Skarner
+  names:
+    en_US:
+      - value: Skarner
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 水晶先锋
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_SkarnerE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Fracture
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 晶体破碎
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:e781e9fe20fcea60fd01289ba142ff33b2be0c88c1f780a3fe6707405d27adda
+            value: Skarner summons a blast of crystalline energy which deals
+              damage to enemies struck and marks them. Striking enemies will
+              consume the mark to heal Skarner. Killing targets outright will
+              also activate the heal.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:8e78476ba8e86504c25f37253ea54add6dbf46fc49a3baa571b9d60b3e8b9fc2
+            value:
+              斯卡纳召唤一股水晶能量，对命中的敌人造成伤害并将其标记。攻击敌人会消耗标记，为斯卡纳治疗生命值。直接击杀目标同样可触发该治疗效果。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_SkarnerPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Energize
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 水晶能量
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:184c0ae788dfb9ac892f63da14aa2767eec68cb8e3cf09bfa7e4ac0f40f73daa
+            value: Basic attacks lower all ability cooldowns by 0.5 seconds.
+              Double effect when attacking champions.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:1b2895ff8af3e7e548a214e6f1120f10ddc41407e072b4bd9d92e339b46c5088
+            value: 普通攻击使所有技能的冷却时间缩短0.5秒。攻击英雄时将此效果翻倍。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_SkarnerQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Crystal Slash
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 水晶横扫
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:d198460f220406c29bc25e083db7bec84b7f69ca49661fe981388417932340d1
+            value: Skarner lashes out with his claws, dealing physical damage to
+              all nearby enemies and charging himself with Crystal Energy for
+              several seconds if a unit is struck.  If he casts Crystal Slash
+              again while powered by Crystal Energy, he deals bonus magic damage
+              and slows all targets hit.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:bbf6fa5d8ab85221339a9ec474c0f2bc3b8bcd00db946071519c1ac2b1d4f208
+            value:
+              斯卡纳用爪子猛击周围敌军，对附近所有敌人造成物理伤害。如果斯卡纳击中了一个目标，身上就会暂时充盈水晶能量。充盈水晶能量期间，斯卡纳的【水晶横扫】将造成额外魔法伤害，并减速所有命中的目标。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_SkarnerR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Impale
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 晶状毒刺
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:63437021dd8b2bbdb19a9a283ad37f1a1c7550183e8cc9f31232d9db2a6210d8
+            value: Skarner suppresses an enemy champion and deals magic damage
+              to it.  During this time, Skarner can move freely and will drag
+              his helpless victim around with him.  When the effect ends,
+              Skarner's target will be dealt additional damage.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:f8170e962cab921147db91c7a7f87427b4db3218d4126a3ce5a48e22cde1c1f2
+            value: 斯卡纳压制一名敌方英雄并对其造成魔法伤害。在此期间，斯卡纳可以自由移动并拖拽目标。效果结束时，斯卡纳会对目标造成额外伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_SkarnerW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Crystalline Exoskeleton
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 水晶蝎甲
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:5c0bfe8eb23f02235d46f6fbe85db31787b798312ddae594030c2edf2abe90bf
+            value: Skarner gains a shield, and while the shield persists his
+              movement speed and attack speed are both increased.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:3b54cb9aa56ba2adcf15ce65490d03445f8a9e9773c07faac1c0b35cd2ac01a5
+            value: 斯卡纳获得护盾，在护盾存在期间，他的移动速度和攻击速度提高。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

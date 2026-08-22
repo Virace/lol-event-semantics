@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Garen
+  champion_id: 60086
+  skin_number: 14
+  skin_token: Skin14
+  id: 60086014
+  alias: Jade_GarenSkin14
+  names:
+    en_US:
+      - value: Demacia Vice Garen
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 德玛西亚警官 盖伦
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 117
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_GarenSkin14

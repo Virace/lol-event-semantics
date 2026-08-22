@@ -1,0 +1,60 @@
+scope: champion
+owner: Briar
+aliases:
+  EMis:
+    kind: champion_spell_component
+    spell: e
+    asset_kind: sfx
+    component: chilling_scream_shockwave
+    label: 惊吼冲击波
+    confidence: high
+    source: manual_contextual_alias
+    note: EMis 跨皮肤以 missilecast 和大小/受众尾段出现，对应 E 惊吼释放的冲击波。
+  MissileGrid:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: strawberry
+    component: missile_grid
+    label: 飞弹阵列
+    confidence: high
+    source: manual_contextual_alias
+    note: Strawberry_Boss_Briar 的 MissileGrid 是 PVE 首领专属飞弹阵列。
+  announcement:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: strawberry
+    component: boss_announcement
+    label: 首领登场播报
+    confidence: high
+    source: manual_contextual_alias
+    note: Strawberry_Gameplay_HUD_Boss_Briar_announcement 是 PVE
+      首领贝蕾亚的界面登场播报；Gameplay/HUD/Boss 都只是路径角色。
+  player:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: strawberry
+    required_tokens:
+      - targeted
+    component: player_targeted
+    label: 玩家被锁定提示
+    confidence: high
+    source: manual_contextual_alias
+    note: Strawberry_Boss_Briar_player_targeted 表示玩家成为首领机制目标的提示音。
+  push:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: strawberry
+    component: push
+    label: 击退冲击
+    confidence: high
+    source: manual_contextual_alias
+    note: Strawberry_Boss_Briar 的 push 是 PVE 首领击退冲击效果。
+  spawn:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: strawberry
+    component: boss_spawn
+    label: 首领生成
+    confidence: high
+    source: manual_contextual_alias
+    note: Strawberry_Boss_Briar_spawn 是 PVE 首领生成音效。

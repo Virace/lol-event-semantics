@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Brand
+  champion_id: 60063
+  skin_number: 22
+  skin_token: Skin22
+  id: 60063022
+  alias: Jade_BrandSkin22
+  names:
+    en_US:
+      - value: Prestige Debonair Brand
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 至臻 焰执事 布兰德
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 23
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_BrandSkin22

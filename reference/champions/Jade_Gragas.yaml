@@ -1,0 +1,262 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60079
+  alias: Jade_Gragas
+  names:
+    en_US:
+      - value: Gragas
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 酒桶
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_GragasE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Body Slam
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 肉弹冲击
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:ea773269f38fd1e91cb53e0577e6d1d6994b0c78e3f9e97f3a7157e2ad4edf5d
+            value: Gragas charges forward, colliding with the first enemy,
+              damaging nearby enemies and Slowing them.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:7e5b5c20b8741d8832eb23bb9b9d4e0677b1c3d16d6b16faca87d4dbcdf02c6e
+            value: 古拉加斯向前冲锋，从而撞击碰到的第一个敌人，对附近敌人们造成伤害和减速。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_GragasPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Happy Hour
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 欢乐时光
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:1474930720569cd51102c0754e35bced7412d21920daac76578baf4de8f091d7
+            value: On ability use, Gragas takes a drink, restoring some of his
+              Health.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:5f1bc95110eb8cf6ae4cb1a143921d7616035c8e2bfe499704d9094bc0f23257
+            value: 古拉加斯每次使用技能后都会喝一小杯，从而回复些许生命值。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_GragasQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Barrel Roll
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 滚动酒桶
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:6be9687d4bca088650a6836b5151cfe9c721dab2dc0a753ed0deb6b943ffc0bc
+            value: Gragas rolls a barrel that explodes after a short delay,
+              damaging and slowing Attack Speed. Recast to detonate the barrel
+              early.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:b6f88f3f2f59546fc391107f5536e1d9d881a8bbbf8e3413c58ba998024c502f
+            value: 古拉加斯投掷一个酒桶，它会在短暂延迟后爆炸，从而对敌人造成伤害和攻速减缓效果。再次施放可提前引爆该酒桶。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_GragasR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Explosive Cask
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 爆破酒桶
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:0eddd5c14376dc205aaf637cdcd6a41e7107e8230fc7fb42e680b7410c81c576
+            value: Gragas hurls his cask, damaging and Knocking Away enemies
+              from the impact.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:362667b1a9219c06d37721fd75950960aff0029a3157f72e521d7f965a975eeb
+            value: 古拉加斯猛抛他的酒桶，从而造成伤害并将敌人们从爆炸中心击退。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_GragasW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Drunken Rage
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 醉酒狂暴
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:911ecd8b3a2094806464a677797b4148f4b64d2e1b6c66c21b81ae7b46e8ecdc
+            value: Gragas guzzles down brew from his cask, restoring Mana. He
+              then gains Attack Damage and reduces damage taken for several
+              seconds.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:96d0b9555751a05d51e111bbc7328e8927b6b3ab1133ce58dd745d51b75e0883
+            value: 古拉加斯畅饮他的佳酿，从而回复法力值。随后他获得持续数秒的攻击力和伤害减免。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

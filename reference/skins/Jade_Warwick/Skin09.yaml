@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Warwick
+  champion_id: 60019
+  skin_number: 9
+  skin_token: Skin09
+  id: 60019009
+  alias: Jade_WarwickSkin09
+  names:
+    en_US:
+      - value: Urfwick
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 海牛狼人 沃里克
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 168
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_WarwickSkin09
+  - Jade_WarwickSkin9

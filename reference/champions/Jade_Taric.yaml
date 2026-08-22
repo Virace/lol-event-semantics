@@ -1,0 +1,271 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60044
+  alias: Jade_Taric
+  names:
+    en_US:
+      - value: Taric
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 宝石骑士
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_TaricE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Dazzle
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 炫光
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:a3cd7d1dcec1635514b32fb32f1520384d4ab9de17ef9408ca7d1ce02200afd9
+            value: Taric emits a brilliant ball of prismatic light from his
+              gemmed shield, stunning his target and damaging them based on how
+              close he is to them.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:a73d1b4f1c26c1bcd843c544b1dcdd4b1153c83fcb14ea1c49ecc12c14270c9a
+            value: 塔里克从镶有宝石的护盾中射出一颗灿烂的棱彩光球，晕眩目标，并根据他与目标相隔的距离造成伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_TaricPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Gemcraft
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 宝石工艺
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:887fbeb432b98e50c09ab935b3aabc7fd4e1e47df1c0a3ee93a74cf4a02f9f35
+            value: Taric loves to socket magical gems into all of his weapons,
+              resulting in his basic attacks dealing bonus magic damage based on
+              his maximum Mana.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:656a3a5c01ee1cdba3eb99d50c041eca9c907864ee576958f1aad3912f1e384c
+            value: 塔里克喜欢在所有武器上镶嵌魔法宝石，使他的普通攻击根据他的最大法力值造成额外魔法伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_TaricQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Imbue
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 神圣洗礼
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:dd4504cd469d434004936118329543cbd8e91c9ba2245d4f91aaa51601163f6f
+            value: Taric brings forth earthen energy to heal an ally and
+              himself. This heal is more potent when Taric heals only himself.
+              Additionally,Taric's basic attacks reduce Imbue's cooldown.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:cb3c308227fba62f2942ed8d6ee0fed31587a53779a28a1f49efa40db497d997
+            value:
+              塔里克召唤大地之力，治疗一名友军和自身。塔里克只为自身进行治疗时，治疗效果会变得更强。此外，塔里克的普通攻击会缩短神圣洗礼‌的冷却时间。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_TaricR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Radiance
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 辉耀
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:4f3ecba77a157d2c9d482b872eb6dd5f194e6621c0ecacdabca34bc17cea5f83
+            value: Taric slams his hammer into the ground to deal damage to
+              nearby enemies. For a time after, Taric's gems radiate energy
+              empowering Taric and his allies with bonus Attack Damage and
+              Ability Power
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:d84c44b557010cf669a3ea4339700133655152456e7b705e47389659cabae8ed
+            value:
+              塔里克挥锤猛砸地面，对附近的敌人造成伤害。在接下来的一段时间里，塔里克的宝石会释放能量，为自己和友军提供额外的攻击力和法术强度
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_TaricW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Shatter
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 宝石护盾‌
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:2b0df5684d7d250ff2557b072264eb9fa3633ef45a268354fcc74d345ed752a0
+            value: Taric is protected by a hardening aura, increasing the Armor
+              of himself and nearby allied champions. He may choose to splinter
+              the enchanted rocks surrounding him to deal damage and decrease
+              the Armor of nearby enemies at the cost of some Armor for a short
+              time.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:8d56f4ad0049d17f4339fb4e80c42a3f5d2e429056c5479aef54bab09588470c
+            value:
+              塔里克受到坚韧光环的守护，提高自身及附近友方英雄的护甲。他可以选择粉碎环绕在身边的魔法石块，对附近敌人造成伤害并降低其护甲，同时自身在短时间内失去部分护甲。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

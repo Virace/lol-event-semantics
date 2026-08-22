@@ -1,0 +1,269 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60013
+  alias: Jade_Ryze
+  names:
+    en_US:
+      - value: Ryze
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 流浪法师
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_RyzeE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Spell Flux
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 法术涌动
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:702bbe96a26898b11e625369a6b2ba7941707b8473bfadf99e3fd6f8a949e4f4
+            value: Ryze fires a chaotic bolt of magic that can bounce between
+              enemies, dealing <magicDamage>magic damage</magicDamage> and
+              reducing their <scaleMR>Magic Resist</scaleMR>.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:3da5762cc34383a506bce2399027c76dd98c56539e945c5d00aabf9e9ee6000f
+            value:
+              瑞兹发射一道混乱魔法能量，可在敌人之间弹跳，造成<magicDamage>魔法伤害</magicDamage>并降低其<scaleMR>魔法抗性</scaleMR>。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_RyzePassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Arcane Mastery
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 奥术专精
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:413f6f7e273efa8c2b25808900d35bc81d282569c9fad6c2fa8b9618037b2027
+            value: Ryze's abilities reduce the cooldown of all other abilities.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:0a5f78343f2d3a1356bc603cd617a4e74065c54faca64ba66610e9520f062977
+            value: 瑞兹的技能会减少其他所有技能的冷却时间。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_RyzeQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Overload
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 超负荷
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:01895b170cd4044d8e7bdbbb61e10de691eca18a4c2201a70738d2d07398d488
+            value: '<spellPassive>Passive</spellPassive>: Ryze permanently gains Cooldown
+              Reduction.<br><br><spellActive>Active</spellActive>: Ryze unleashes
+              an orb of energy, dealing <magicDamage>magic damage</magicDamage> to
+              his target.'
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:fed9500f866f097a77a7cb0372121e22f3a500773f6befdaa4c6ad8c82d2871f
+            value:
+              <spellPassive>被动</spellPassive>：瑞兹永久获得冷却缩减。<br><br><spellActive>主动</spellActive>：瑞兹释放一个能量法球，对目标造成<magicDamage>魔法伤害</magicDamage>
+              。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_RyzeR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Desperate Power
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 绝望之力
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:944d4c020943813846bf88675d1656a6839177c5b6bb772de01fdc698f1890ef
+            value: Ryze temporary harnesses his full powers, gaining
+              <magicDamage>area of effect damage</magicDamage> on all abilities,
+              <healing>Spell Vamp</healing>, and <speed>Move Speed</speed> for a
+              short time.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:ca647d3080177b97d66cfabc6fffafdd11b416f240cfa63cde695b36533d3c3e
+            value:
+              瑞兹暂时释放全部力量，短时间内使所有技能获得<magicDamage>范围伤害</magicDamage>、<healing>法术吸血</healing>和<speed>移动速度</speed>提升。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_RyzeW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Rune Prison
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 符文禁锢
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:aff32bfd533df31cf06634a04f57f3c5a57abc4fe1286512fa4a2c404859b872
+            value: Ryze magically imprisons an enemy, <status>rooting</status>
+              them and dealing <magicDamage>magic damage</magicDamage>.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:76d048c666d10feaaf8b7c7bfc2ac499b0733ccf533e41f9af5ea8365d7069ea
+            value:
+              瑞兹用魔法控制一名敌人，将其<status>禁锢</status>并造成<magicDamage>魔法伤害</magicDamage>。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

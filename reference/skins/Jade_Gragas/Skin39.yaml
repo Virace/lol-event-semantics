@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Gragas
+  champion_id: 60079
+  skin_number: 39
+  skin_token: Skin39
+  id: 60079039
+  alias: Jade_GragasSkin39
+  names:
+    en_US:
+      - value: Music Fan Gragas
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 超级音乐粉丝 古拉加斯
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 210
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_GragasSkin39

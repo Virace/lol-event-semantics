@@ -1,0 +1,267 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60076
+  alias: Jade_Nidalee
+  names:
+    en_US:
+      - value: Nidalee
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 狂野女猎手
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_NidaleeE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Primal Surge / Swipe
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 野性奔腾/挥击
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:f21be9d5d3c49cf91438ecaff5bdda79ef5292569a0597dcd6f4c4cc11c80a2f
+            value: In human form, Nidalee channels the spirit of the cougar to
+              heal her allies and imbue them with attack speed for a short
+              duration.  As a cougar, she rapidly claws enemies in front of her.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:c4cefdb12aafed0eee86105ea5f85bf5ccb336da85ea4c36847d73dd3ef23b1e
+            value: 人类形态下，奈德丽引导美洲狮的灵魂治疗友方单位，并且短暂提升其攻击速度。美洲狮形态下，她对面前的敌人们发动快速爪击。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_NidaleePassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Prowl
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 寻觅
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:224f1faccf558f57360d3e6141cbefbe3368b70aabb432167d83bd1c249befb1
+            value: Moving through brush increases Nidalee's Movement Speed by
+              15% for 2 seconds.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:e99db4e40f0995f6cf8a31b45e3a8b7d292bc6c210b1f09dc88b05c1b7566678
+            value: 穿越草丛时，奈德丽的移动速度提升15%，持续2秒。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_NidaleeQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Javelin Toss / Takedown
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 标枪投掷/推倒
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:7951af483a94d6c77c3f7751138e4f0eb772ee7f7b0193d885b1be71be823ee6
+            value: In human form, Nidalee throws a spiked javelin at her target
+              that gains damage as it flies.  As a cougar, her next attack will
+              attempt to fatally wound her target, dealing more damage the less
+              life they have.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:cc4b93ef42fbba750024a569d235143115c2c5d09c1d16db778d34ed598ea736
+            value:
+              人类形态下，奈德丽向她的目标投掷标枪，标枪会随着飞行距离造成额外伤害。美洲狮形态下，她的下一次攻击会试图对目标造成致命伤害，目标的生命值越低，造成的伤害越大。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_NidaleeR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Aspect Of The Cougar
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 美洲狮形态
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:60337904a3581a4970f1237677732af19deb2439b2268a14757f8973541273bc
+            value: Nidalee transforms into a cougar, gaining new abilities and
+              increased Movement Speed.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:e83cc7b35e9b7143cf76046cca01794ff4e0ebc2aa6635119a4928e615701208
+            value: 奈德丽转变成美洲狮形态，获得全新技能并提高移动速度。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_NidaleeW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Bushwhack / Pounce
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 丛林伏击/猛扑
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:2e03a858c0846d4a035045ed13eb64ce1c3c1d35fa3adb9023d24ea2565f199e
+            value: In human form, Nidalee lays a damaging trap for unwary
+              opponents that, when sprung, reveals the target and reduces their
+              Armor and Magic Resist for 12 seconds. As a cougar, she pounces
+              forward, dealing a small amount of damage when she lands.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:1a553ae83f4ae992d9ba3f48e0744e3851e7670c798d6f53516f4902b7d02f3f
+            value:
+              人类形态下，奈德丽为粗心大意的对手布置一个伤害陷阱，敌人触发后会被其显形，并在12秒内降低护甲和魔法抗性。美洲狮形态下，奈德丽向前跃击，在落地时造成少量伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

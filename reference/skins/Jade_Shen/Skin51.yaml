@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Shen
+  champion_id: 60098
+  skin_number: 51
+  skin_token: Skin51
+  id: 60098051
+  alias: Jade_ShenSkin51
+  names:
+    en_US:
+      - value: Three Honors Shen
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 荣誉使者 慎
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 176
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_ShenSkin51

@@ -1,0 +1,13 @@
+scope: champion
+owner: Swain
+aliases:
+  Music:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: skin_music
+    label: 皮肤音乐
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      FirstMove: 首次移动
+    note: Swain 皮肤的 Music_FirstMove 是首次移动触发的皮肤音乐，触发条件必须保留。

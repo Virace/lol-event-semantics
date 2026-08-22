@@ -1,0 +1,11 @@
+scope: sfx
+owner: Blitzcrank
+aliases:
+  Overdrive:
+    kind: champion_spell_component
+    spell: w
+    component: overdrive
+    label: 过载运转
+    confidence: high
+    source: manual_sfx_alias
+    note: 英雄 SFX 上下文中的 Overdrive 是布里茨 W 的官方技能名；该规则不作用于同名 VO Stable pattern。

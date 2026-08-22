@@ -1,0 +1,261 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60029
+  alias: Jade_Twitch
+  names:
+    en_US:
+      - value: Twitch
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 瘟疫之源
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_TwitchE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Expunge
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 毁灭印记
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:4f59dabe357a1487434bf2c1235fdb8db9b440fd65b1f353dec3ffc677221bd3
+            value: All nearby enemies secrete Twitch's toxic venoms from their
+              bodies, dealing damage for each stack.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:748c4b536fb84bbc4a91beae11ae880151602e5105710ee9a8a162ffbb786e18
+            value: 附近所有敌人会将图奇的毒液从他们的身体中排出，每层可造成伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_TwitchPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Deadly Venom
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 致命印记
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:0de33a379221a82b97aa9e84a5b75ef2c0297c27a91fe8589d37f66be7c51046
+            value: Twitch's basic attacks infect the target, dealing magic
+              damage each second.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:78c43e8c1bc3f057ce92490db0b1096c9db465023cdd05da1fd7e71f68f2466f
+            value: 图奇的普通攻击会使目标感染，每秒造成魔法伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_TwitchQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Ambush
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 隐秘伏击
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:bf0022556e9b5d55edbb0dea226d065d113a4fdd9e9ed5252c76a229b834640a
+            value: Twitch turns Invisible for several seconds, gaining Move
+              Speed. He then gains Attack Speed after coming out of
+              Invisibility.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:fe042e42a094c4cdf8ca15b0dc56e113562f23cf80b3517165fb7c54e3f7aedc
+            value: 图奇在短时间内隐身，隐身期间获得移动速度。脱离隐身状态时，图奇获得短时间内持续的攻击速度。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_TwitchR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Spray and Pray
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 火力全开
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:daf15790286ee92b71717d4fdc2b1345e93828ece2edf27ad87427208fa319b8
+            value: Twitch closes his eyes and fires his crossbow, rapidly
+              spraying powerful piercing bolts ahead of him.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:25f52715a7295ec2a736ded19910bfcc0e7f82ebd79a712ec562c05ad1291b87
+            value: 图奇闭上双眼扣下扳机，快速向前方射出强力贯穿弩箭。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_TwitchW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Venom Cask
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 剧毒之桶
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:14fb82ac40b7af25c3a0382b76880815fd98d06b1e29feed7c4f1184a2aa1c87
+            value: Twitch hurls a cask of venom that explodes, inflicting Deadly
+              Venom and slowing enemies in the area.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:08d8f7b53eacb63d6a5d8b5035893a6728d5c56125995e465ff618cb56fcef2d
+            value: 图奇扔出一个会爆炸的毒性之桶，从而对区域内的敌人施加死亡毒液并造成减速效果。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

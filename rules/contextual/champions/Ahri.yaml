@@ -1,6 +1,47 @@
 scope: champion
 owner: Ahri
 aliases:
+  EmoteVFX:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: emote_effect
+    label: 表情特效
+    confidence: high
+    source: manual_contextual_alias
+    note: AhriSkin89_EmoteVFX_loop 是皮肤表情特效循环音效，不是 E 技能。
+  Evolve:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: skin_evolve
+    label: 皮肤进化
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      Burst: 爆发
+      Intro: 入场
+      Gear: 装备
+    note: AhriSkin86 的 Evolve_Burst/Intro_Gear 是皮肤进化表现；所有中间变体词必须进入结构化修饰语。
+  Faker:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    required_tokens:
+      - Emote
+    component: faker_emote
+    label: 李相赫主题表情
+    confidence: high
+    source: manual_contextual_alias
+    note: AhriSkin86 的 Emote_Faker 是李相赫主题表情音效；Faker 是主题名，不是英雄实体或技能槽位。
+  Tower:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: tower_effect
+    label: 防御塔音效
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      Finisher: 终结
+      Signature: 标志变体
+    note: AhriSkin86 的 Tower_Finisher/Signature 是皮肤防御塔终结表现，不是技能事件。
   Transformation:
     kind: champion_spell_component
     spell: r

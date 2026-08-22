@@ -9,71 +9,71 @@ entity:
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
     zh_CN:
       - value: 维迦
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
   title:
     zh_CN:
       - value: 邪恶小法师
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: game_data
             first_seen: '16.14'
-            last_seen: '16.14'
+            last_seen: '16.16'
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
   nicknames:
     zh_CN:
       - value: 小法师
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
   search_alias:
     zh_CN:
       - value: weijia
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: wj
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: xexfs
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: xfs
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: xiaofashi
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: xieexiaofashi
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
 spells:
   - slot: E
     ids:
@@ -81,31 +81,31 @@ spells:
         sources:
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: VeigarEventHorizon
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
     names:
       en_US:
         - value: Event Horizon
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 扭曲空间
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -114,61 +114,61 @@ spells:
             value: Veigar twists the edges of space, creating a cage that Stuns 
               enemies that pass through.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
               sha256:fad46bf6b7909f87231e7af0358629e6f01cd6e8d3ea7547b6af4920b07a0fec
             value: 维迦扭曲空间的边缘，创造一个牢笼来使途径的敌人晕眩。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'
   - slot: P
     ids:
       - value: VeigarPassive
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
     names:
       en_US:
         - value: Phenomenal Evil Power
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 超凡邪力
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -179,16 +179,16 @@ spells:
               Champion with a spell or scoring a takedown grants Veigar 
               permanently increased Ability Power.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
@@ -196,47 +196,47 @@ spells:
             value: 
               维迦是最强大的恶魔，甚至能对符文之地之心发起攻击——并且他只会越来越强大！用技能攻击一名敌人、击杀单位或拆毁防御塔都会为维迦永久提升法术强度加成。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'
   - slot: Q
     ids:
       - value: VeigarBalefulStrike
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
       - value: VeigarQ
         sources:
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
     names:
       en_US:
         - value: Baleful Strike
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 黑暗祭祀
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -246,61 +246,61 @@ spells:
               damage to the first two enemies hit. Units killed by this bolt 
               grant Veigar some ability power permanently.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
               sha256:9577a703aed6309f0abcb6d65dfd2fe32233b44a5da71fb18e74a0e950cbfe8b
             value: 维迦释放一束黑暗能量，对最先被命中的两个敌人造成魔法伤害。被这个能量束所击杀的单位，会永久地为维迦提供一些法术强度。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'
   - slot: R
     ids:
       - value: VeigarR
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
     names:
       en_US:
         - value: Primordial Burst
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 能量爆裂
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -309,63 +309,63 @@ spells:
             value: Blasts target enemy champion, dealing a large amount of magic
               damage, increasing based on the target's missing health.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
               sha256:8d5fc926470eab1324f3d48868c0e901930b5f931ebce0fa5c1ae253b5d53c7b
             value: 引爆目标敌方英雄，造成大量魔法伤害，并基于目标已损失生命值提升伤害。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'
   - slot: W
     ids:
       - value: VeigarDarkMatter
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
       - value: VeigarW
         sources:
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
     names:
       en_US:
         - value: Dark Matter
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 黑暗物质
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -375,29 +375,29 @@ spells:
               to the target location, dealing magic damage when it lands. Stacks
               of Phenomenal Evil reduce Dark Matter's cooldown.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
               sha256:eb9ba17963d6116f15f18ff3e758a6a660267477650e0f4ec5a95ea99a2106b7
             value: 维迦召唤一大团黑暗物质轰击目标区域，落地造成魔法伤害。【超凡邪力】的层数会缩短这个技能的冷却时间。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'

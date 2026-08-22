@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Shaco
+  champion_id: 60035
+  skin_number: 64
+  skin_token: Skin64
+  id: 60035064
+  alias: Jade_ShacoSkin64
+  names:
+    en_US:
+      - value: Cat-in-the-Box Shaco
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 盒子猫 萨科
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 98
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_ShacoSkin64

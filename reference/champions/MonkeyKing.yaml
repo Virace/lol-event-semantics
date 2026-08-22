@@ -9,71 +9,71 @@ entity:
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
     zh_CN:
       - value: 孙悟空
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
   title:
     zh_CN:
       - value: 齐天大圣
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: game_data
             first_seen: '16.14'
-            last_seen: '16.14'
+            last_seen: '16.16'
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
   nicknames:
     zh_CN:
       - value: 猴子
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
   search_alias:
     zh_CN:
       - value: houzi
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: hz
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: qitiandasheng
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: qtds
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: sunwukong
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: swk
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.14'
+            last_seen: '16.16'
 spells:
   - slot: E
     ids:
@@ -81,31 +81,31 @@ spells:
         sources:
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: MonkeyKingNimbus
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
     names:
       en_US:
         - value: Nimbus Strike
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 腾云突击
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -115,61 +115,61 @@ spells:
               attack enemies near his target, dealing damage to each enemy 
               struck.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
               sha256:f73c6d6901718929823ea15b15590a984990dfe9c9ca24ffba72dafa4324a1e4
             value: 孙悟空突进至一名目标敌人处，并放出幻象来攻击他目标附近的敌人，同时对每个被击中的敌人造成伤害。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'
   - slot: P
     ids:
       - value: MonkeyKingPassive
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
     names:
       en_US:
         - value: Stone Skin
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 金刚不坏
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -178,63 +178,63 @@ spells:
             value: Wukong gains stacking armor and max health regeneration while
               fighting champions and monsters.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
               sha256:cf193e563a742718beb1cbd53b2763999464744890dd6c161e9c27ae9b5ffd83
             value: 孙悟空在与英雄或野怪战斗时，会获得可叠加的护甲和最大生命值回复。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'
   - slot: Q
     ids:
       - value: MonkeyKingDoubleAttack
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
       - value: MonkeyKingQ
         sources:
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
     names:
       en_US:
         - value: Crushing Blow
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 粉碎打击
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -243,63 +243,63 @@ spells:
             value: Wukong's next attack gains attack range, deals bonus damage, 
               and reduces the target's armor for a few seconds.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
               sha256:fdbc9872fb1da6950df2e4d89b0e5b26dc83c90c62361ff486935851d032a338
             value: 孙悟空的下次攻击获得额外距离，造成额外伤害，并暂时减少敌人的护甲。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'
   - slot: R
     ids:
       - value: MonkeyKingR
         sources:
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
       - value: MonkeyKingSpinToWin
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
     names:
       en_US:
         - value: Cyclone
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 大闹天宫
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -309,63 +309,63 @@ spells:
               gaining Move Speed.<br><br>Enemies struck take damage and are 
               knocked up.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
               sha256:1e737f35ec15bc432fa10c25b1931d753627e2d87c3a55d4d90a608fab8a144c
             value: 孙悟空伸展金箍棒不断旋转，并获得移动速度。<br><br>击中敌人时会造成伤害和击飞效果。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'
   - slot: W
     ids:
       - value: MonkeyKingDecoy
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
       - value: MonkeyKingW
         sources:
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.14'
+            last_seen: '16.16'
     names:
       en_US:
         - value: Warrior Trickster
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.14'
+              last_seen: '16.16'
       zh_CN:
         - value: 真假猴王
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.14.1
+              last_seen: 16.16.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.14'
+              last_seen: '16.16'
     descriptions:
       en_US:
         snapshots:
@@ -375,16 +375,16 @@ spells:
               dashes in a direction, leaving behind a clone that will attack 
               nearby enemies.
             first_seen: '16.5'
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.14'
+                last_seen: '16.16'
       zh_CN:
         snapshots:
           - hash: 
@@ -392,13 +392,13 @@ spells:
             value: 孙悟空变为<font 
               color='#91d7ee'>隐形</font>状态并朝着一个方向突进，同时留下一个会攻击附近敌人的分身。
             first_seen: 16.5.1
-            last_seen: 16.14.1
+            last_seen: 16.16.1
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.14.1
+                last_seen: 16.16.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.14'
+                last_seen: '16.16'

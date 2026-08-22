@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Ryze
+  champion_id: 60013
+  skin_number: 4
+  skin_token: Skin04
+  id: 60013004
+  alias: Jade_RyzeSkin04
+  names:
+    en_US:
+      - value: Triumphant Ryze
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 守护者雕像 瑞兹
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 184
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_RyzeSkin04
+  - Jade_RyzeSkin4

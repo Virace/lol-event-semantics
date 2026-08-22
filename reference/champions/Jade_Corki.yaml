@@ -1,0 +1,264 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60042
+  alias: Jade_Corki
+  names:
+    en_US:
+      - value: Corki
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 英勇投弹手
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_CorkiE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Gatling Gun
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 格林机枪
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:c74368946cb77794662b5077d5ed79f64df2819fc2fa9f7cb738a7df062ad87d
+            value: Corki's gatling gun rapidly fires in a cone in front of him,
+              dealing damage and reducing enemy armor.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:481cdf93d92d47dcd3fd0cae72bd5e513708f81b893d12da49001aa9e57db48e
+            value: 库奇使用格林机枪扫射他面前锥形范围内的敌人，造成伤害并削减敌人护甲。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_CorkiPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Hextech Shrapnel Shells
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 海克斯科技榴弹
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:0387c73b6e49cd3b080fec7f474db1d8d74e60cde66d7a041cfddad45004c379
+            value: Corki's basic attacks deal bonus true damage to minions,
+              monsters, and champions.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:64c7e0727a5af80e56733d0dc903e303e94f79f5ab999fed2dd3ed4e2d9e1858
+            value: 库奇的普攻对小兵、野怪和英雄造成额外真实伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_CorkiQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Phosphorus Bomb
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 磷光炸弹
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:903b90e819ff28f5678d5edc1ebd7f7646088f1608e3f5b1dedc99fdc3aa8108
+            value: Corki fires a flash bomb at a target location. This attack
+              reveals non-stealthed units around the blast and champions for 6
+              seconds.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:0f2c25375c57f6315da976a33a0c2719b94a722567d28e140353b316928d6b8a
+            value: 库奇向目标区域发射一枚闪光弹。这次攻击会显形爆炸周围非潜行状态的单位和英雄，持续6秒。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_CorkiR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Missile Barrage
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 火箭轰击
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:c7e42fcb7a18af0ba6357499787a2d8d77766c608e17faa7c22d2c90e4e36d20
+            value: Corki fires a missile toward his target location that
+              explodes on impact, dealing damage to enemies in an area. Corki
+              stores one missile every 12 seconds up to 7 missiles total. Every
+              3rd missile will be a Big One, dealing extra damage.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:f4e48e11e249f9b85e07066429a4a4ce9b58eeb68d3bb2f536cc8e2e9bbc0b7b
+            value:
+              库奇朝着他的目标位置发射一枚导弹。导弹会在命中第一个敌人后爆炸，并对目标周围单位造成伤害。库奇每12秒就会挂载一枚导弹，最多挂载7枚。每发射3枚导弹后，下一次就会发射超级导弹，造成额外伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_CorkiW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Valkyrie
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 瓦尔基里俯冲
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:a8ec9dbdfd41113addf40e4368d650b69b0fe4cae71623079b39a7230dbf9be3
+            value: Corki surges to target location, dropping bombs that create a
+              trail of destruction for opponents who remain in the fire.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:e5216ea05d7f05127f9ad6457ce39182518747de6cea7ebccb678f5f2f07fe6b
+            value: 库奇冲向目标位置，沿途投下炸弹，留下一道火焰路径，对停留其中的敌人造成伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

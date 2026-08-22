@@ -91,20 +91,19 @@
   },
   {
     "raw_event_name": "Play_sfx_JhinSkin05_Idle_Passive_buffactivate",
-    "expected_frame_type": "skin_named_state",
-    "required_roles": ["champion", "skin", "action", "phase"],
-    "zh_cn_default": "Jhin Skin05 被动待机状态启动",
-    "zh_cn_main": "被动待机状态启动",
-    "pending_frame": true,
-    "notes": "被动待机。"
+    "expected_frame_type": "ability_state_change",
+    "required_roles": ["champion", "skin", "ability_component", "phase"],
+    "zh_cn_default": "烬 暗星尊 被动技能待机音轨生效",
+    "zh_cn_main": "被动技能待机音轨生效",
+    "notes": "已审阅的被动技能待机音轨。"
   },
   {
     "raw_event_name": "Play_sfx_CorkiSkin18_RapidReload_buffactivate",
-    "expected_frame_type": "ability_state_change",
-    "required_roles": ["champion", "skin", "ability_component", "phase"],
-    "zh_cn_default": "库奇 柯基 快速装填状态启动",
-    "zh_cn_main": "快速装填状态启动",
-    "notes": "冠军状态组件。"
+    "expected_frame_type": "champion_sfx_effect_event",
+    "required_roles": ["champion", "skin", "effect", "phase"],
+    "zh_cn_default": "库奇 柯基 快速装填音效开始",
+    "zh_cn_main": "快速装填音效开始",
+    "notes": "已审阅的快速装填音效。"
   },
   {
     "raw_event_name": "Play_sfx_KledSkin01_AnimalThreshold_buffactivate",
@@ -505,7 +504,7 @@
   },
   {
     "raw_event_name": "Play_sfx_AsheSkin08_VolleyRank2_OnCast",
-    "expected_frame_type": "ability_state_change",
+    "expected_frame_type": "ability_cast_event",
     "required_roles": ["champion", "skin", "ability_slot", "ability_component", "rank", "phase"],
     "zh_cn_default": "艾希 源计划：联合 W技能万箭齐发2级释放",
     "zh_cn_main": "W技能万箭齐发2级释放",
@@ -513,7 +512,7 @@
   },
   {
     "raw_event_name": "Play_sfx_Ashe_VolleyRank5_OnCast",
-    "expected_frame_type": "ability_state_change",
+    "expected_frame_type": "ability_cast_event",
     "required_roles": ["champion", "ability_slot", "ability_component", "rank", "phase"],
     "zh_cn_default": "艾希 W技能万箭齐发5级释放",
     "zh_cn_main": "W技能万箭齐发5级释放",

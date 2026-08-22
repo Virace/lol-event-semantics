@@ -17,3 +17,33 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: SpinToWin 在 MonkeyKing/Wukong 事件中对应 R 技能 Cyclone 的旋转表现。
+  WukongQAttack:
+    kind: champion_spell_component
+    spell: q
+    asset_kind: sfx
+    mode: ruby
+    component: crushing_blow_attack
+    label: 定海神针强化攻击
+    confidence: high
+    source: manual_contextual_alias
+    note: Ruby_WukongQAttack 是末日人机孙悟空的 Q 定海神针强化攻击，OnCast/OnHit 分别保留出手与命中。
+  WukongSpinToWin:
+    kind: champion_spell_component
+    spell: r
+    asset_kind: sfx
+    mode: ruby
+    component: cyclone_spin
+    label: 大闹天宫旋转
+    confidence: high
+    source: manual_contextual_alias
+    note: Ruby_WukongSpinToWin 是末日人机孙悟空演员的 R 大闹天宫旋转表现；Ruby 只表示模式上下文。
+  WukongW:
+    kind: champion_spell_component
+    spell: w
+    asset_kind: sfx
+    mode: ruby
+    component: warrior_trickster
+    label: 真假猴王
+    confidence: high
+    source: manual_contextual_alias
+    note: Ruby_WukongW 是末日人机孙悟空的 W 真假猴王；cast/deactivate 是生命周期阶段。

@@ -1,14 +1,23 @@
-"""本地一键数据刷新：decompose→build→validate→metrics→ratchet 全链串联。"""
+"""本地一键数据刷新：build、全局验证、Stable 门禁与趋势棘轮全链串联。"""
 
 from __future__ import annotations
 
 import argparse
+import json
 import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+from time import perf_counter
 
-from lol_event_semantics.full_refresh import RefreshStep, StepRunner, run_refresh_steps
+from lol_event_semantics.dataset_runs import (
+    DatasetRun,
+    DatasetRunError,
+    complete_dataset_run,
+    create_dataset_run,
+    fail_dataset_run,
+)
+from lol_event_semantics.full_refresh import RefreshResult, RefreshStep, StepRunner, run_refresh_steps
 
 # 仓库内脚本目录，用于组装各步骤的入口脚本路径。
 SCRIPTS_DIR = Path(__file__).resolve().parent
@@ -18,6 +27,8 @@ STEP_UPDATE = "update"
 STEP_DECOMPOSE = "decompose"
 STEP_BUILD = "build"
 STEP_VALIDATE = "validate"
+STEP_QUALITY = "quality"
+STEP_REVIEW = "review"
 STEP_RATCHET = "ratchet"
 STEP_METRICS = "metrics"
 
@@ -26,16 +37,31 @@ STEP_METRICS = "metrics"
 class FullRefreshArgs:
     """一键刷新脚本参数。"""
 
+    repo_root: Path
     raw_root: Path
     reference_root: Path
-    output_root: Path
-    work_root: Path
+    rules_root: Path
+    overrides_root: Path
+    contract_assets_root: Path
+    pattern_policy: Path
+    decision_source: Path
+    sources_manifest: Path
+    frozen_profile: Path
+    runs_root: Path
     baseline: Path
-    report_root: Path
     update_first: bool
     game_version: str | None
     game_data_base_url: str | None
     allow_ratchet_regression: bool
+
+
+@dataclass(frozen=True, slots=True)
+class RefreshPaths:
+    """绑定到单个 staging run 的隔离输出路径。"""
+
+    output_root: Path
+    work_root: Path
+    report_root: Path
 
 
 def main(argv: list[str] | None = None, *, runner: StepRunner | None = None) -> int:
@@ -47,10 +73,37 @@ def main(argv: list[str] | None = None, *, runner: StepRunner | None = None) -> 
     """
 
     args = parse_args(argv)
-    steps = build_steps(args)
-    non_blocking = frozenset({STEP_RATCHET}) if args.allow_ratchet_regression else frozenset()
+    command_args = sys.argv[1:] if argv is None else argv
+    try:
+        run = create_dataset_run(
+            args.runs_root,
+            repo_root=args.repo_root,
+            command=["python", "scripts/run_full_refresh.py", *command_args],
+        )
+    except (OSError, ValueError, DatasetRunError) as exc:
+        print(f"FAILED to create dataset run: {exc}")
+        return 2
 
-    result = run_refresh_steps(steps, runner or run_step, non_blocking=non_blocking)
+    paths = RefreshPaths(
+        output_root=run.normalized_root,
+        work_root=run.work_root,
+        report_root=run.report_root,
+    )
+    steps = build_steps(args, paths)
+    non_blocking = frozenset({STEP_RATCHET}) if args.allow_ratchet_regression else frozenset()
+    started = perf_counter()
+    try:
+        result = run_refresh_steps(steps, runner or run_step, non_blocking=non_blocking)
+    except Exception as exc:
+        failed_root = record_failed_run(
+            run,
+            result=None,
+            error_code="runner_exception",
+            message=str(exc),
+            elapsed_seconds=perf_counter() - started,
+        )
+        print(f"FAILED with exception; diagnostics={failed_root}: {exc}")
+        return 2
 
     for step in result.results:
         if not step.blocking and step.exit_code != 0:
@@ -58,11 +111,62 @@ def main(argv: list[str] | None = None, *, runner: StepRunner | None = None) -> 
 
     failed = result.failed_step
     if failed is not None:
-        print(f"FAILED at step: {failed.name} (exit {failed.exit_code})")
+        failed_root = record_failed_run(
+            run,
+            result=result,
+            error_code="step_failed",
+            message=f"{failed.name} exited with {failed.exit_code}",
+            elapsed_seconds=perf_counter() - started,
+        )
+        print(f"FAILED at step: {failed.name} (exit {failed.exit_code}); diagnostics={failed_root}")
         return failed.exit_code
 
-    print(f"full refresh succeeded: {' -> '.join(step.name for step in result.results)}")
+    try:
+        completed = complete_dataset_run(
+            run,
+            result,
+            elapsed_seconds=perf_counter() - started,
+            promotion_eligibility=load_promotion_eligibility(paths.report_root / "quality-gates.json"),
+        )
+    except (OSError, ValueError, DatasetRunError) as exc:
+        failed_root = record_failed_run(
+            run,
+            result=result,
+            error_code="completion_failed",
+            message=str(exc),
+            elapsed_seconds=perf_counter() - started,
+        )
+        print(f"FAILED to complete dataset run; diagnostics={failed_root}: {exc}")
+        return 2
+
+    print(
+        f"full refresh completed candidate: {' -> '.join(step.name for step in result.results)} "
+        f"run_id={completed.run_id} dataset_id={completed.dataset_id} root={completed.root}"
+    )
     return 0
+
+
+def record_failed_run(
+    run: DatasetRun,
+    *,
+    result: RefreshResult | None,
+    error_code: str,
+    message: str,
+    elapsed_seconds: float,
+) -> Path:
+    """尽力固化失败诊断；失败本身仍以明确异常终止。"""
+
+    try:
+        return fail_dataset_run(
+            run,
+            result=result,
+            error_code=error_code,
+            message=message,
+            elapsed_seconds=elapsed_seconds,
+        )
+    except (OSError, DatasetRunError) as exc:
+        print(f"WARNING: failed to finalize run diagnostics: {exc}")
+        return run.staging_root
 
 
 def run_step(name: str, argv: list[str]) -> int:
@@ -73,12 +177,14 @@ def run_step(name: str, argv: list[str]) -> int:
     return completed.returncode
 
 
-def build_steps(args: FullRefreshArgs) -> list[RefreshStep]:
+def build_steps(args: FullRefreshArgs, paths: RefreshPaths) -> list[RefreshStep]:
     """按序组装刷新步骤及各自 argv。"""
 
     # report_root 下派生 validation 与 metrics 的固定报告路径，与 CI 口径一致。
-    validation_json = args.report_root / "normalized-validation.json"
-    metrics_json = args.report_root / "quality-metrics.json"
+    validation_json = paths.report_root / "normalized-validation.json"
+    quality_gates_json = paths.report_root / "quality-gates.json"
+    support_diff_json = paths.report_root / "quality-diff.json"
+    metrics_json = paths.report_root / "quality-metrics.json"
 
     steps: list[RefreshStep] = []
 
@@ -97,13 +203,13 @@ def build_steps(args: FullRefreshArgs) -> list[RefreshStep]:
                     "--state-file",
                     str(args.raw_root.parent / "update-state.json"),
                     "--raw-input-root",
-                    str(args.work_root / "raw-round"),
+                    str(paths.work_root / "raw-round"),
                     "--game-version",
                     str(args.game_version),
                     "--game-data-base-url",
                     str(args.game_data_base_url),
                     "--report-root",
-                    str(args.report_root / "update-report"),
+                    str(paths.report_root / "update-report"),
                 ),
             )
         )
@@ -117,10 +223,14 @@ def build_steps(args: FullRefreshArgs) -> list[RefreshStep]:
                 str(args.raw_root),
                 "--reference-root",
                 str(args.reference_root),
+                "--rules-root",
+                str(args.rules_root),
+                "--overrides-root",
+                str(args.overrides_root),
                 "--output-root",
-                str(args.work_root),
+                str(paths.work_root),
                 "--report-root",
-                str(args.report_root),
+                str(paths.report_root),
             ),
         )
     )
@@ -130,11 +240,29 @@ def build_steps(args: FullRefreshArgs) -> list[RefreshStep]:
             script_argv(
                 "build_normalized_outputs.py",
                 "--decomposition-root",
-                str(args.work_root),
+                str(paths.work_root),
                 "--output-root",
-                str(args.output_root),
+                str(paths.output_root),
+                "--repo-root",
+                str(args.repo_root),
+                "--raw-root",
+                str(args.raw_root),
                 "--reference-version",
                 "cumulative",
+                "--reference-root",
+                str(args.reference_root),
+                "--rules-root",
+                str(args.rules_root),
+                "--overrides-root",
+                str(args.overrides_root),
+                "--pattern-policy",
+                str(args.pattern_policy),
+                "--contract-assets-root",
+                str(args.contract_assets_root),
+                "--sources-manifest",
+                str(args.sources_manifest),
+                "--frozen-profile",
+                str(args.frozen_profile),
             ),
         )
     )
@@ -144,9 +272,46 @@ def build_steps(args: FullRefreshArgs) -> list[RefreshStep]:
             script_argv(
                 "validate_normalized_outputs.py",
                 "--normalized-root",
-                str(args.output_root),
+                str(paths.output_root),
                 "--output-json",
                 str(validation_json),
+            ),
+        )
+    )
+    steps.append(
+        (
+            STEP_QUALITY,
+            script_argv(
+                "check_tiered_quality.py",
+                "--normalized-root",
+                str(paths.output_root),
+                "--validation-json",
+                str(validation_json),
+                "--runs-root",
+                str(args.runs_root),
+                "--output-json",
+                str(quality_gates_json),
+                "--support-diff-json",
+                str(support_diff_json),
+            ),
+        )
+    )
+    steps.append(
+        (
+            STEP_REVIEW,
+            script_argv(
+                "manage_review.py",
+                "build",
+                "--normalized-root",
+                str(paths.output_root),
+                "--support-diff",
+                str(support_diff_json),
+                "--decision-source",
+                str(args.decision_source),
+                "--rules-root",
+                str(args.rules_root),
+                "--output-root",
+                str(paths.report_root / "review-site"),
             ),
         )
     )
@@ -158,7 +323,7 @@ def build_steps(args: FullRefreshArgs) -> list[RefreshStep]:
             script_argv(
                 "report_quality_metrics.py",
                 "--normalized-root",
-                str(args.output_root),
+                str(paths.output_root),
                 "--validation-json",
                 str(validation_json),
                 "--output-json",
@@ -175,7 +340,7 @@ def build_steps(args: FullRefreshArgs) -> list[RefreshStep]:
                 "--baseline",
                 str(args.baseline),
                 "--normalized-root",
-                str(args.output_root),
+                str(paths.output_root),
                 "--validation-json",
                 str(validation_json),
             ),
@@ -183,6 +348,16 @@ def build_steps(args: FullRefreshArgs) -> list[RefreshStep]:
     )
 
     return steps
+
+
+def load_promotion_eligibility(path: Path) -> dict[str, object]:
+    """从已通过的 P4 门禁报告读取不可伪造为最终人工批准的 attestation。"""
+
+    report = json.loads(path.read_text(encoding="utf-8"))
+    eligibility = report.get("promotion_eligibility") if isinstance(report, dict) else None
+    if not isinstance(eligibility, dict):
+        raise ValueError(f"quality gate report 缺少 promotion_eligibility: {path}")
+    return dict(eligibility)
 
 
 def script_argv(script_name: str, *script_args: str) -> list[str]:
@@ -195,33 +370,49 @@ def parse_args(argv: list[str] | None = None) -> FullRefreshArgs:
     """解析命令行参数。"""
 
     parser = argparse.ArgumentParser(
-        description="Run the local decompose->build->validate->metrics->ratchet refresh chain.",
+        description="Run the local decompose->build->validate->quality->review->metrics->ratchet refresh chain.",
     )
+    parser.add_argument("--repo-root", type=Path, default=Path("."), help="Repository root for generator identity.")
     parser.add_argument("--raw-root", type=Path, default=Path("raw/events"), help="Cumulative raw events root.")
     parser.add_argument("--reference-root", type=Path, default=Path("reference"), help="Internal reference root.")
+    parser.add_argument("--rules-root", type=Path, default=Path("rules"), help="Versioned rules root.")
+    parser.add_argument("--overrides-root", type=Path, default=Path("overrides"), help="Manual overrides root.")
     parser.add_argument(
-        "--output-root",
+        "--contract-assets-root",
         type=Path,
-        default=Path("dist/normalized"),
-        help="Normalized output root.",
+        default=Path("data"),
+        help="Committed schema/examples contract root.",
     )
     parser.add_argument(
-        "--work-root",
+        "--pattern-policy",
         type=Path,
-        default=Path("dist/work/event-decomposition"),
-        help="Intermediate decomposition output root.",
+        default=Path("rules/translation_patterns.yaml"),
+        help="Versioned translation pattern policy.",
     )
+    parser.add_argument(
+        "--decision-source",
+        type=Path,
+        default=Path("rules/review-decisions.v1.json"),
+        help="Committed product review decision source.",
+    )
+    parser.add_argument(
+        "--sources-manifest",
+        type=Path,
+        default=Path("data/frozen-sources-manifest.v1.json"),
+        help="Frozen source acquisition manifest.",
+    )
+    parser.add_argument(
+        "--frozen-profile",
+        type=Path,
+        default=Path("data/frozen-profile.v1.json"),
+        help="Committed frozen release profile.",
+    )
+    parser.add_argument("--runs-root", type=Path, default=Path("dist/runs"), help="Transactional dataset runs root.")
     parser.add_argument(
         "--baseline",
         type=Path,
         default=Path("data/quality-baseline.json"),
         help="Quality ratchet baseline JSON.",
-    )
-    parser.add_argument(
-        "--report-root",
-        type=Path,
-        default=Path("dist/reports/runs/latest"),
-        help="Report root for decomposition, validation, and metrics reports.",
     )
     parser.add_argument(
         "--update-first",
@@ -239,14 +430,23 @@ def parse_args(argv: list[str] | None = None) -> FullRefreshArgs:
 
     if namespace.update_first and (namespace.game_version is None or namespace.game_data_base_url is None):
         parser.error("--update-first requires --game-version and --game-data-base-url")
+    expected_decision_source = (namespace.rules_root / "review-decisions.v1.json").resolve()
+    if namespace.decision_source.resolve() != expected_decision_source:
+        parser.error("--decision-source must be <rules-root>/review-decisions.v1.json")
 
     return FullRefreshArgs(
+        repo_root=namespace.repo_root,
         raw_root=namespace.raw_root,
         reference_root=namespace.reference_root,
-        output_root=namespace.output_root,
-        work_root=namespace.work_root,
+        rules_root=namespace.rules_root,
+        overrides_root=namespace.overrides_root,
+        contract_assets_root=namespace.contract_assets_root,
+        pattern_policy=namespace.pattern_policy,
+        decision_source=namespace.decision_source,
+        sources_manifest=namespace.sources_manifest,
+        frozen_profile=namespace.frozen_profile,
+        runs_root=namespace.runs_root,
         baseline=namespace.baseline,
-        report_root=namespace.report_root,
         update_first=namespace.update_first,
         game_version=namespace.game_version,
         game_data_base_url=namespace.game_data_base_url,

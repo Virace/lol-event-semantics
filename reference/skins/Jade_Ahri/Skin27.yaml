@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Ahri
+  champion_id: 60103
+  skin_number: 27
+  skin_token: Skin27
+  id: 60103027
+  alias: Jade_AhriSkin27
+  names:
+    en_US:
+      - value: Spirit Blossom Ahri
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 灵魂莲华 阿狸
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 171
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_AhriSkin27

@@ -9,11 +9,18 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: BrambleZoneSplash 在 Zyra 事件中对应荆棘/植物区域效果的溅射音效。
+  ZyraPlantEnrage:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: plant_enrage
+    label: 植物狂暴
+    confidence: high
+    source: manual_contextual_alias
+    note: PlantEnrage 是婕拉植物单位的强化状态音效，不能仅凭植物来源写成 P 技能。
   hellvine:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: hellvine_basic_attack
     label: 地狱藤蔓普攻
     confidence: medium
     source: manual_contextual_alias
-    note: hellvine 在 Zyra 事件中对应植物/藤蔓单位的普攻表现。
+    note: hellvine 在 Zyra 事件中对应植物/藤蔓单位的普攻表现；BasicAttack 是普通攻击，不附会成 P 技能。

@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_KogMaw
+  champion_id: 60096
+  skin_number: 37
+  skin_token: Skin37
+  id: 60096037
+  alias: Jade_KogMawSkin37
+  names:
+    en_US:
+      - value: Zap'Maw
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 电格莫
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 162
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_KogMawSkin37

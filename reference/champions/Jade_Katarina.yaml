@@ -1,0 +1,263 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60055
+  alias: Jade_Katarina
+  names:
+    en_US:
+      - value: Katarina
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 不祥之刃
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_KatarinaE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Shunpo
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 瞬步
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:ed269eecd600c8aafa0947c6814734b0bd29f52b97a32ba8e8cc7e2e6404d8a5
+            value: Katarina instantly moves to her target's location and takes
+              reduced damage from enemies for a few seconds. If the target is an
+              enemy, she deals damage.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:410ae2ece28bcf6fb6bfbdc23937638f15d44a590982fd97c1e1dc76f5efa3aa
+            value: 卡特琳娜瞬间移动到目标位置，并在数秒内降低受到的敌方伤害。如果目标是敌人，则会造成伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_KatarinaPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Voracity
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 贪婪
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:72633b37f3750cacdaa3d2dfc1fdb0e299bce0f8e6390372115a755d42aa5a37
+            value: Champion kills or assists reduce Katarina's cooldowns by 15
+              seconds.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:25aff852d5fce998407b89618c556de32d8c10137300ab6abf85a94b1ccff6c0
+            value: 击杀英雄或参与助攻可使她的技能冷却时间减少15秒。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_KatarinaQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Bouncing Blade
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 弹射之刃
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:9ecf794b769f4d79665dbf05612610732c3eeaca70eff6995173bec8d40ea358
+            value: Katarina throws a dagger that bounces from enemy to enemy,
+              dealing magic damage.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:3d63f15cacd17f71ac0cda378d17570a98b638015d3c147d9637cf52c17c09cc
+            value: 卡特琳娜投掷一把匕首，在敌人之间弹跳，造成魔法伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_KatarinaR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Death Lotus
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 死亡莲华
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:e979b2c374abd599a713de2033c4c19331442625c9dd81738300540862d3ab8d
+            value: Katarina becomes a flurry of blades, throwing daggers with
+              unrivaled speed at up to three nearby Champions.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:64194b47dadfd1a1599f318db6775b63cd7b797858f71203756ec904f78b558c
+            value: 卡特琳娜化身刀刃风暴，以无可匹敌的速度向附近至多三名英雄投掷匕首。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_KatarinaW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Sinister Steel
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 不祥之刃
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:58670198843efd235f95801e9e750c73fddbb319b8b2ce6b003e251f705c7b63
+            value: Katarina whirls her daggers around her, dealing magic damage
+              to all enemies in the area. If she hits an enemy Champion,
+              Katarina gains a burst of speed for a short duration.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:2f8ae7f568c2a6412f3c40805222597502670b70a0c03809e85f6795088a80a3
+            value:
+              卡特琳娜将她的双刃环绕自身挥舞，从而对区域内的所有敌人造成魔法伤害。如果此技能命中了一个敌方英雄，那么卡特琳娜就会获得短时间内持续的爆发性移动速度。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

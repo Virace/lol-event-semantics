@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Wukong
+  champion_id: 60062
+  skin_number: 7
+  skin_token: Skin07
+  id: 60062007
+  alias: Jade_WukongSkin07
+  names:
+    en_US:
+      - value: Battle Academia Wukong
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 战斗学院 孙悟空
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 113
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_WukongSkin07
+  - Jade_WukongSkin7

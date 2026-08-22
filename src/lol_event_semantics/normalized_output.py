@@ -4,16 +4,28 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
 from collections import defaultdict
 from dataclasses import dataclass
-from datetime import UTC, datetime
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any, Iterable, Mapping
 
 from .decomposition_model import EventDecompositionRecord, SemanticProfile
-from .display_labels import get_reference_item_names
-from .display_tier import classify_display_tier
+from .dataset_identity import CONTENT_DIGEST_VERSION, content_digest, describe_payload_files, unmanaged_payload_paths
+from .display_labels import (
+    get_reference_item_names,
+    item_names_from_collection,
+    load_display_labels,
+    load_reference_item_names,
+    map_names_from_collection,
+)
+from .display_tier import classify_display_tier, is_akshan_revive_sfx
+from .normalized_contract import (
+    apply_normalized_contract,
+    build_public_pattern_catalog,
+    merge_equivalent_decomposition_records,
+)
 from .normalized_translation_builder import (
     LABEL_SOURCE_REFERENCE,
     LABEL_SOURCE_SKIN_VOTE,
@@ -23,13 +35,18 @@ from .normalized_translation_builder import (
     ChampionLabelEntry,
     asset_kind_words,
     build_translation,
+    champion_alias_for_skin,
+    skin_token_for_record,
 )
 from .normalized_translation_model import TranslationBuildContext
 from .normalized_translation_renderer import build_compat_display
+from .pattern_catalog import PatternPolicy
 from .reference_collection import load_reference_collection, read_yaml
 from .rules import RuleBook, rule_key
+from .tiered_quality import build_quality_summary, load_accepted_corpus
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
+PATTERN_CATALOG_SCHEMA_VERSION = 1
 TECHNICAL_DISPLAY_TOKENS = ("Play_vo", "Play_sfx", "cast3D", "2D", "3D", "voProcessing")
 DEFAULT_REFERENCE_ROOT = Path("reference")
 DEFAULT_OVERRIDES_ROOT = Path("overrides")
@@ -53,27 +70,42 @@ def build_normalized_record(
     record: EventDecompositionRecord,
     *,
     translation_context: TranslationBuildContext | None = None,
+    display_context: NormalizedDisplayContext | None = None,
 ) -> dict[str, object]:
     """把拆解记录转换为对外 normalized 记录。
 
     Args:
         record: 已完成 profile/reference enrichment 的拆解记录。
         translation_context: translation 构建上下文。
+        display_context: legacy display 所需的显式 reference/rules 索引。
 
     Returns:
         可直接写入 JSONL 的 normalized 记录。
     """
 
-    translation = build_translation(record, translation_context or TranslationBuildContext())
+    active_translation_context = translation_context or TranslationBuildContext()
+    translation = build_translation(record, active_translation_context)
+    legacy_short = canonicalize_legacy_user_display(
+        build_short_display(record, display_context=display_context),
+        record,
+        active_translation_context,
+    )
+    legacy_detail = canonicalize_legacy_user_display(
+        build_detail_display(record, display_context=display_context),
+        record,
+        active_translation_context,
+    )
     legacy_display = {
-        "zh_cn_short": build_short_display(record),
-        "zh_cn_detail": build_detail_display(record),
+        "zh_cn_short": legacy_short,
+        "zh_cn_detail": legacy_detail,
         "debug_label": build_debug_label(record),
     }
-    display = build_compat_display(
-        translation,
-        legacy_display=legacy_display,
-        raw_event_name=record.raw_event_name,
+    display: dict[str, object] = dict(
+        build_compat_display(
+            translation,
+            legacy_display=legacy_display,
+            raw_event_name=record.raw_event_name,
+        )
     )
     tier = classify_display_tier(record, has_translation=translation is not None)
     display["tier"] = tier
@@ -107,6 +139,117 @@ def build_normalized_record(
         normalized["translation"] = translation
 
     return normalized
+
+
+RAW_SKIN_DISPLAY_PATTERN = re.compile(r"(?P<prefix>皮肤\s*)?Skin[0-9]+", re.IGNORECASE)
+
+
+def canonicalize_legacy_user_display(
+    text: str,
+    record: EventDecompositionRecord,
+    context: TranslationBuildContext,
+) -> str:
+    """用权威中文词条清洗 legacy 用户文案，原始工程名只留在 debug/semantic。
+
+    Args:
+        text: legacy 构建器生成的中文展示文本。
+        record: 当前拆解记录。
+        context: 含英雄与皮肤权威名称的 translation 上下文。
+
+    Returns:
+        不含可替换英雄 alias、模式工程键和 SkinNN 的用户展示文本。
+    """
+
+    rendered = text
+    champion_alias = champion_alias_for_skin(record, context)
+    champion_labels = context.champion_label(champion_alias)
+    champion_zh = localized_zh_label(champion_labels)
+    if champion_alias is not None and champion_zh is not None:
+        rendered = replace_ascii_display_token(rendered, champion_alias, champion_zh)
+
+    namespace = record.semantic_slots.get("context_namespace")
+    if isinstance(namespace, dict):
+        namespace_key = namespace.get("key")
+        namespace_label = namespace.get("label")
+        if isinstance(namespace_key, str) and isinstance(namespace_label, str):
+            rendered = replace_ascii_display_token(rendered, namespace_key, namespace_label)
+            rendered = replace_ascii_display_token(rendered, namespace_key.replace("_", ""), namespace_label)
+
+        raw_namespace = record.owner.raw_owner_token or record.owner.alias
+        if isinstance(raw_namespace, str) and isinstance(namespace_label, str):
+            rendered = replace_ascii_display_token(rendered, raw_namespace, namespace_label)
+
+    skin_token = skin_token_for_record(record)
+    skin_zh = legacy_skin_display_label(context, champion_alias, champion_zh, skin_token)
+    if skin_token is not None:
+        rendered = replace_skin_display_token(rendered, skin_token, skin_zh)
+
+    # ZoeSkin01W / GangplankSkin23Taunt3D 这类无分隔符 owner 在替换 SkinNN
+    # 之前，英雄 alias 右侧仍是 ASCII，第一次边界替换不会命中；皮肤词条替换
+    # 后边界已经清晰，必须再规范化一次英雄名。
+    if champion_alias is not None and champion_zh is not None:
+        rendered = replace_ascii_display_token(rendered, champion_alias, champion_zh)
+
+    # 任意残留 SkinNN 都只能说明 reference 没有对应词条；用户文案必须明确
+    # 标成未收录，而不是暴露工程号。debug_label 与 semantic slots 保持原值。
+    rendered = RAW_SKIN_DISPLAY_PATTERN.sub(
+        lambda match: f"皮肤 未收录皮肤" if match.group("prefix") else "未收录皮肤",
+        rendered,
+    )
+    return compact_display(rendered)
+
+
+def localized_zh_label(labels: Mapping[str, str] | None) -> str | None:
+    """读取可用的简体中文 label。"""
+
+    if labels is None:
+        return None
+    value = labels.get("zh_CN")
+    return value.strip() if isinstance(value, str) and value.strip() else None
+
+
+def legacy_skin_display_label(
+    context: TranslationBuildContext,
+    champion_alias: str | None,
+    champion_zh: str | None,
+    skin_token: str | None,
+) -> str:
+    """返回去掉英雄名后缀的皮肤中文名；缺词条时使用显式占位。"""
+
+    if champion_alias is None or skin_token is None:
+        return "未收录皮肤"
+    labels = context.skin_label(champion_alias, skin_token)
+    skin_zh = localized_zh_label(labels)
+    if skin_zh is None:
+        return "未收录皮肤"
+    if champion_zh is not None:
+        suffix = f" {champion_zh}"
+        if skin_zh.endswith(suffix):
+            skin_zh = skin_zh[: -len(suffix)].rstrip()
+    return skin_zh or "未收录皮肤"
+
+
+def replace_ascii_display_token(text: str, token: str, replacement: str) -> str:
+    """按 ASCII 边界替换中文混排文本中的工程 token。"""
+
+    if not token or token.casefold() == replacement.casefold():
+        return text
+    return re.sub(
+        rf"(?<![A-Za-z0-9]){re.escape(token)}(?![A-Za-z0-9])",
+        replacement,
+        text,
+        flags=re.IGNORECASE,
+    )
+
+
+def replace_skin_display_token(text: str, skin_token: str, replacement: str) -> str:
+    """替换指定 SkinNN，同时保留既有“皮肤”说明词。"""
+
+    pattern = re.compile(rf"(?P<prefix>皮肤\s*)?{re.escape(skin_token)}", re.IGNORECASE)
+    return pattern.sub(
+        lambda match: f"皮肤 {replacement}" if match.group("prefix") else replacement,
+        text,
+    )
 
 
 def entity_key(record: EventDecompositionRecord) -> dict[str, str]:
@@ -170,17 +313,21 @@ def item_entity_from_alias(alias: str, known_item_ids: Iterable[int] | None = No
     return entity
 
 
-def item_entity_label(alias: str) -> str | None:
+def item_entity_label(
+    alias: str,
+    item_names: Mapping[int, Mapping[str, str]] | None = None,
+) -> str | None:
     """把装备别名渲染成 reference 装备名（zh 优先，en 兜底）。
 
     Args:
         alias: map/系统域实体别名。
+        item_names: 可选的显式装备名索引；缺省保留旧 helper 行为。
 
     Returns:
         装备名；别名不是可认领装备时返回 None。
     """
 
-    names = get_reference_item_names()
+    names = item_names if item_names is not None else get_reference_item_names()
     entity = item_entity_from_alias(alias, names)
     if entity is None:
         return None
@@ -199,16 +346,41 @@ def resolved_entity_subject(record: EventDecompositionRecord) -> tuple[str, str]
         `(kind, alias)`；未解析出主体时返回 None。
     """
 
-    subject = record.semantic_slots.get("subject")
-    if isinstance(subject, dict):
+    namespace = record.semantic_slots.get("context_namespace") or record.semantic_slots.get("mode_context")
+    namespace_key = str(namespace.get("key") or "") if isinstance(namespace, dict) else ""
+
+    for slot_name in ("subject", "mode_actor"):
+        subject = record.semantic_slots.get(slot_name)
+        if not isinstance(subject, dict):
+            continue
         kind = str(subject.get("kind") or record.owner.kind or record.scope or "unknown")
         alias = subject.get("alias") or subject.get("name") or subject.get("label")
-        if alias:
+        if alias and str(alias).casefold() != namespace_key.casefold():
             return (kind, str(alias))
 
     subject_hint = record.semantic_slots.get("subject_hint")
-    if subject_hint:
+    if subject_hint and str(subject_hint).casefold() != namespace_key.casefold():
         return ("champion", str(subject_hint))
+
+    if namespace_key:
+        mode_entity = record.semantic_slots.get("mode_entity")
+        if isinstance(mode_entity, dict):
+            kind = str(mode_entity.get("kind") or "mode_system")
+            alias = (
+                mode_entity.get("alias")
+                or mode_entity.get("raw")
+                or mode_entity.get("name")
+                or mode_entity.get("label")
+            )
+            if alias and str(alias).casefold() != namespace_key.casefold():
+                return (kind, str(alias))
+
+        cue_path = record.semantic_slots.get("cue_path")
+        if isinstance(cue_path, list):
+            cue_entity = next((str(token) for token in cue_path if str(token).strip()), None)
+            if cue_entity is not None and cue_entity.casefold() != namespace_key.casefold():
+                return ("mode_system", cue_entity)
+        return ("mode_system", "system")
 
     owner_context = record.semantic_slots.get("owner_context")
     if isinstance(owner_context, dict):
@@ -249,17 +421,24 @@ def sanitize_entity_alias(alias: str | None) -> str:
     return value or "unknown"
 
 
-def build_short_display(record: EventDecompositionRecord) -> str:
+def build_short_display(
+    record: EventDecompositionRecord,
+    *,
+    display_context: NormalizedDisplayContext | None = None,
+) -> str:
     """生成普通用户短展示文案。
 
     Args:
         record: 拆解记录。
+        display_context: legacy display 所需的显式 reference/rules 索引。
 
     Returns:
         面向下游用户的短中文说明，Stop/Mute 壳动词以停止/静音收尾。
     """
 
-    return f"{build_short_display_core(record)}{playback_verb_suffix(record.shell.verb)}"
+    return (
+        f"{build_short_display_core(record, display_context=display_context)}{playback_verb_suffix(record.shell.verb)}"
+    )
 
 
 def playback_verb_suffix(verb: object) -> str:
@@ -282,19 +461,24 @@ def playback_verb_suffix(verb: object) -> str:
     return labels[0] if labels is not None else ""
 
 
-def build_short_display_core(record: EventDecompositionRecord) -> str:
+def build_short_display_core(
+    record: EventDecompositionRecord,
+    *,
+    display_context: NormalizedDisplayContext | None = None,
+) -> str:
     """按事件族生成不含壳动词后缀的短文案主体。
 
     Args:
         record: 拆解记录。
+        display_context: legacy display 所需的显式 reference/rules 索引。
 
     Returns:
         短中文说明主体。
     """
 
     slots = record.semantic_slots
-    owner = display_owner(record)
-    spell_key = slots.get("spell_key") or slots.get("spell_key_hint")
+    owner = display_owner(record, display_context=display_context)
+    spell_key = display_spell_key(slots)
     phase = slots.get("phase")
 
     if mode_key(slots.get("mode_context")) == "ultimate_spellbook" and spell_key == "r":
@@ -321,7 +505,9 @@ def build_short_display_core(record: EventDecompositionRecord) -> str:
     if record.profile.primary_family == "skin_audio_transition":
         skin_token = slots.get("skin_token")
         skin = f" {skin_token}" if skin_token else ""
-        return compact_display(f"{owner}{skin} 音乐风格{slots.get('genre_index')}过渡{transition_phase_label(slots.get('transition_phase'))}")
+        return compact_display(
+            f"{owner}{skin} 音乐风格{slots.get('genre_index')}过渡{transition_phase_label(slots.get('transition_phase'))}"
+        )
 
     if record.profile.primary_family == "skin_named_state":
         skin_token = slots.get("skin_token")
@@ -344,8 +530,16 @@ def build_short_display_core(record: EventDecompositionRecord) -> str:
     if modifier is not None and modifier.get("display"):
         return compact_display(f"{owner}{modifier['display']}")
 
+    if is_akshan_revive_sfx(record):
+        return "复活音效"
+
     if spell_key:
         return compact_display(f"{owner} {str(spell_key).upper()} 技能{phase_label(phase)}")
+
+    if record.profile.semantic_profile is SemanticProfile.SPELL_EVENT:
+        phase_text = map_system_phase_label(phase)
+        if phase_text:
+            return compact_display(f"{owner}{phase_text}")
 
     if record.profile.primary_family == "move":
         return compact_display(f"{owner}移动")
@@ -374,17 +568,22 @@ def build_short_display_core(record: EventDecompositionRecord) -> str:
     return compact_display(f"{owner}{family_label(record.profile.primary_family)}")
 
 
-def build_detail_display(record: EventDecompositionRecord) -> str:
+def build_detail_display(
+    record: EventDecompositionRecord,
+    *,
+    display_context: NormalizedDisplayContext | None = None,
+) -> str:
     """生成详细展示文案。
 
     Args:
         record: 拆解记录。
+        display_context: legacy display 所需的显式 reference/rules 索引。
 
     Returns:
         比短文案略完整的中文说明。
     """
 
-    short = build_short_display(record)
+    short = build_short_display(record, display_context=display_context)
     slots = record.semantic_slots
     details: list[str] = []
 
@@ -418,7 +617,11 @@ def build_debug_label(record: EventDecompositionRecord) -> str:
     return record.raw_event_name
 
 
-def display_owner(record: EventDecompositionRecord) -> str:
+def display_owner(
+    record: EventDecompositionRecord,
+    *,
+    display_context: NormalizedDisplayContext | None = None,
+) -> str:
     """返回适合展示的 owner 名称。
 
     map/系统域记录没有具体 subject 时：可认领的装备别名（数字 id，含
@@ -428,6 +631,7 @@ def display_owner(record: EventDecompositionRecord) -> str:
 
     Args:
         record: 拆解记录。
+        display_context: legacy display 所需的显式 reference/rules 索引。
 
     Returns:
         owner 展示名称。
@@ -440,29 +644,40 @@ def display_owner(record: EventDecompositionRecord) -> str:
     alias = record.owner.alias or record.owner.raw_owner_token or "未知实体"
 
     if record.owner.kind == "map_or_system":
-        item_label = item_entity_label(alias)
+        item_label = item_entity_label(
+            alias,
+            display_context.item_names if display_context is not None else None,
+        )
         if item_label is not None:
             return item_label
 
-        label = map_system_entity_label(alias)
+        label = map_system_entity_label(
+            alias,
+            display_context.map_system_entity_labels if display_context is not None else None,
+        )
         if label is not None:
             return label
 
     return alias
 
 
-def map_system_entity_label(alias: str) -> str | None:
+def map_system_entity_label(
+    alias: str,
+    labels: Mapping[str, str] | None = None,
+) -> str | None:
     """把 map/系统域实体英文别名渲染成人工核对的中文词条。
 
     Args:
         alias: map/系统域实体的原始英文别名（owner.alias）。
+        labels: 可选的显式规则词条索引；缺省保留旧 helper 行为。
 
     Returns:
         中文词条；别名不在 T3.4 头部词条表内时返回 None，调用方原样保留
         英文 alias（宁可保留英文，不硬造翻译——仓库红线）。
     """
 
-    return get_map_system_entity_labels().get(rule_key(alias))
+    active_labels = labels if labels is not None else get_map_system_entity_labels()
+    return active_labels.get(rule_key(alias))
 
 
 def load_map_system_entity_labels(rules_root: Path, overrides_root: Path) -> dict[str, str]:
@@ -525,6 +740,23 @@ def display_subject(slots: dict[str, Any]) -> str | None:
         return str(champion)
 
     return None
+
+
+def display_spell_key(slots: dict[str, Any]) -> object | None:
+    """返回足以进入用户中文的技能键，拒绝普通 PascalCase 词首弱提示。"""
+
+    spell_key = slots.get("spell_key")
+    if spell_key is not None:
+        return spell_key
+
+    hint = slots.get("spell_key_hint")
+    if hint is None:
+        return None
+
+    residual = slots.get("alias_residual") or slots.get("effect_residual")
+    if isinstance(residual, str) and len(residual) > 1 and residual[0].islower():
+        return None
+    return hint
 
 
 def first_spell_modifier(slots: dict[str, Any]) -> dict[str, Any] | None:
@@ -792,6 +1024,7 @@ def map_system_phase_label(phase: object) -> str:
         return direct
 
     underscored_aliases = {
+        "end": "结束",
         "missile_launch": "发射",
         "missile_cast": "发射",
         "on_buff_activate": "状态启动",
@@ -940,9 +1173,15 @@ def write_normalized_outputs(
     output_root: Path,
     *,
     reference_version: str,
+    reference_root: Path,
+    rules_root: Path,
+    overrides_root: Path,
+    input_identity: Mapping[str, object],
     reference_aliases: dict[tuple[str, str], str] | None = None,
     resolver: "ChampionEntityResolver | None" = None,
     translation_context: TranslationBuildContext | None = None,
+    pattern_policy: PatternPolicy,
+    contract_assets_root: Path,
 ) -> None:
     """写出 normalized 目录。
 
@@ -950,25 +1189,45 @@ def write_normalized_outputs(
         records: 拆解记录集合。
         output_root: normalized 输出目录。
         reference_version: 本次生成使用的参考版本。
-        reference_aliases: 可选的预加载实体归一 alias 映射；缺省时从默认
-            reference 根加载。供进程内多次调用复用，避免重复解析全量合集。
-        resolver: 可选的预构建 champion 实体解析器；缺省时从默认根加载。
-        translation_context: 可选的预构建 translation 上下文；缺省时从默认
-            reference 根加载。
+        reference_root: 本次构建实际使用的 reference 根目录。
+        rules_root: 本次构建实际使用的 rules 根目录。
+        overrides_root: 本次构建实际使用的 overrides 根目录。
+        input_identity: 已通过冻结预检的完整输入身份。
+        reference_aliases: 可选的预加载实体归一 alias 映射；缺省时从显式
+            reference_root 加载。供进程内多次调用复用，避免重复解析全量合集。
+        resolver: 可选的预构建 champion 实体解析器；缺省时从显式根加载。
+        translation_context: 可选的预构建 translation 上下文；缺省时从显式
+            reference/rules/overrides 根加载。
+        pattern_policy: 已从显式路径加载的 P1 pattern/promotion policy。
+        contract_assets_root: 提交入库的 JSON Schema 与 examples 根目录。
     """
 
     clear_generated_outputs(output_root)
     output_root.mkdir(parents=True, exist_ok=True)
     if reference_aliases is None:
-        reference_aliases = load_reference_entity_aliases(DEFAULT_REFERENCE_ROOT)
+        reference_aliases = load_reference_entity_aliases(reference_root)
     if resolver is None:
-        resolver = load_champion_entity_resolver(DEFAULT_REFERENCE_ROOT, DEFAULT_OVERRIDES_ROOT)
+        resolver = load_champion_entity_resolver(reference_root, overrides_root)
     if translation_context is None:
-        translation_context = build_translation_context(DEFAULT_REFERENCE_ROOT)
+        translation_context = build_translation_context(
+            reference_root,
+            rules_root=rules_root,
+            overrides_root=overrides_root,
+        )
+    display_context = NormalizedDisplayContext(
+        item_names=translation_context.reference_item_names or load_reference_item_names(reference_root),
+        map_system_entity_labels=(
+            translation_context.map_system_entity_labels or load_map_system_entity_labels(rules_root, overrides_root)
+        ),
+    )
     pending_rows: dict[tuple[str, str], list[dict[str, object]]] = defaultdict(list)
 
     for record in records:
-        normalized = build_normalized_record(record, translation_context=translation_context)
+        normalized = build_normalized_record(
+            record,
+            translation_context=translation_context,
+            display_context=display_context,
+        )
         entity = normalized["entity"]
         if not isinstance(entity, dict):
             continue
@@ -992,31 +1251,65 @@ def write_normalized_outputs(
         pending_rows[(kind, canonical.casefold())].append(normalized)
 
     grouped = canonicalize_entity_groups(pending_rows, reference_aliases)
+    all_rows = [row for rows in grouped.values() for row in rows]
+    pattern_report = apply_normalized_contract(
+        all_rows,
+        pattern_policy,
+    )
+    pattern_catalog = build_public_pattern_catalog(pattern_report, pattern_policy)
+    accepted_corpus = load_accepted_corpus(contract_assets_root / "accepted-corpus.v1.json")
+    quality_summary = build_quality_summary(all_rows, pattern_report, pattern_catalog, accepted_corpus)
 
     shard_paths = assign_entity_shard_paths(grouped.keys())
     for (kind, alias), rows in sorted(grouped.items()):
         path = output_root / shard_paths[(kind, alias)]
         write_normalized_jsonl(rows, path)
 
-    write_manifest(grouped, output_root / "manifest.json", reference_version)
+    write_normalized_event_stream(all_rows, output_root / "normalized-events.jsonl")
+    write_json_document(pattern_catalog, output_root / "pattern-catalog.json")
+    write_json_document(quality_summary, output_root / "quality-summary.json")
+    write_contract_assets(contract_assets_root, output_root)
     write_entity_summary(grouped, output_root / "entity-summary.json", shard_paths)
+    write_manifest(
+        grouped,
+        output_root / "manifest.json",
+        reference_version,
+        pattern_catalog=pattern_catalog,
+        quality_summary=quality_summary,
+        input_identity=input_identity,
+    )
 
 
-def build_translation_context(reference_root: Path = DEFAULT_REFERENCE_ROOT) -> TranslationBuildContext:
+def build_translation_context(
+    reference_root: Path = DEFAULT_REFERENCE_ROOT,
+    *,
+    rules_root: Path = DEFAULT_RULES_ROOT,
+    overrides_root: Path = DEFAULT_OVERRIDES_ROOT,
+) -> TranslationBuildContext:
     """创建 normalized translation 构建上下文。
 
     Args:
         reference_root: 仓库 reference 合集根目录。
+        rules_root: 仓库 rules 根目录。
+        overrides_root: 仓库 overrides 根目录。
 
     Returns:
         包含 reference label 的 translation 构建上下文。
     """
 
+    display_labels = load_display_labels(rules_root / "display_labels.yaml")
+    map_system_labels = load_map_system_entity_labels(rules_root, overrides_root)
     if not reference_root.exists():
-        return TranslationBuildContext()
+        return TranslationBuildContext(
+            display_labels=display_labels,
+            map_system_entity_labels=map_system_labels,
+        )
 
     collection = load_reference_collection(reference_root)
+    reference_map_names = map_names_from_collection(collection)
+    reference_item_names = item_names_from_collection(collection)
     champion_labels: dict[str, ChampionLabelEntry] = {}
+    champion_ids: dict[int, str] = {}
     for row in collection.champions.values():
         entity = row.get("entity")
         if not isinstance(entity, dict) or not entity.get("alias"):
@@ -1029,6 +1322,8 @@ def build_translation_context(reference_root: Path = DEFAULT_REFERENCE_ROOT) -> 
             label_sources={language: LABEL_SOURCE_REFERENCE for language in labels},
             name_forms=reference_name_forms(entity),
         )
+        if isinstance(entity.get("id"), int):
+            champion_ids[entity["id"]] = str(entity["alias"])
     skin_labels: dict[tuple[str, str], dict[str, str]] = {}
     for row in collection.skins.values():
         entity = row.get("entity")
@@ -1043,7 +1338,15 @@ def build_translation_context(reference_root: Path = DEFAULT_REFERENCE_ROOT) -> 
         skin_labels[(champion_alias, skin_token)] = reference_labels(entity)
 
     infer_champion_labels_from_skin_labels(champion_labels, skin_labels)
-    return TranslationBuildContext(champion_labels=champion_labels, skin_labels=skin_labels)
+    return TranslationBuildContext(
+        champion_labels=champion_labels,
+        champion_ids=champion_ids,
+        skin_labels=skin_labels,
+        display_labels=display_labels,
+        reference_map_names=reference_map_names,
+        reference_item_names=reference_item_names,
+        map_system_entity_labels=map_system_labels,
+    )
 
 
 def infer_champion_labels_from_skin_labels(
@@ -1216,6 +1519,14 @@ def add_reference_aliases(
 
         value = sanitize_entity_alias(str(alias))
         aliases[(kind, value.casefold())] = value
+
+
+@dataclass(frozen=True)
+class NormalizedDisplayContext:
+    """normalized legacy display 所需的显式只读索引。"""
+
+    item_names: Mapping[int, Mapping[str, str]]
+    map_system_entity_labels: Mapping[str, str]
 
 
 @dataclass(frozen=True)
@@ -1558,24 +1869,46 @@ def clear_generated_outputs(output_root: Path) -> None:
         output_root: normalized 输出目录。
     """
 
-    for name in ("manifest.json", "entity-summary.json"):
+    for name in (
+        "manifest.json",
+        "entity-summary.json",
+        "normalized-events.jsonl",
+        "pattern-catalog.json",
+        "quality-summary.json",
+    ):
         path = output_root / name
         if path.exists():
             path.unlink()
 
+    for name in ("schema", "examples"):
+        clear_generated_directory(output_root / name)
+
     by_entity = output_root / "by-entity"
-    if not by_entity.exists():
+    if by_entity.exists():
+        for path in by_entity.rglob("*.jsonl"):
+            path.unlink()
+
+        for path in sorted((item for item in by_entity.rglob("*") if item.is_dir()), reverse=True):
+            if not any(path.iterdir()):
+                path.rmdir()
+
+        if not any(by_entity.iterdir()):
+            by_entity.rmdir()
+
+
+def clear_generated_directory(root: Path) -> None:
+    """删除 writer 专属目录中的生成文件并清理空目录。"""
+
+    if not root.exists():
         return
-
-    for path in by_entity.rglob("*.jsonl"):
-        path.unlink()
-
-    for path in sorted((item for item in by_entity.rglob("*") if item.is_dir()), reverse=True):
+    for path in root.rglob("*"):
+        if path.is_file():
+            path.unlink()
+    for path in sorted((item for item in root.rglob("*") if item.is_dir()), reverse=True):
         if not any(path.iterdir()):
             path.rmdir()
-
-    if not any(by_entity.iterdir()):
-        by_entity.rmdir()
+    if not any(root.iterdir()):
+        root.rmdir()
 
 
 def write_normalized_jsonl(rows: list[dict[str, object]], output_path: Path) -> None:
@@ -1589,15 +1922,76 @@ def write_normalized_jsonl(rows: list[dict[str, object]], output_path: Path) -> 
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     with output_path.open("w", encoding="utf-8", newline="\n") as file:
-        for row in sorted(rows, key=lambda item: str(item["raw_event_name"])):
+        for row in sorted(rows, key=lambda item: (str(item["raw_event_name"]), str(item.get("record_id") or ""))):
             file.write(json.dumps(row, ensure_ascii=False, sort_keys=True))
             file.write("\n")
+
+
+def write_normalized_event_stream(rows: list[dict[str, object]], output_path: Path) -> None:
+    """按 record_id 写出 V2 全量稳定记录流。"""
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with output_path.open("w", encoding="utf-8", newline="\n") as file:
+        for row in sorted(rows, key=lambda item: str(item.get("record_id") or "")):
+            file.write(json.dumps(row, ensure_ascii=False, sort_keys=True))
+            file.write("\n")
+
+
+def write_json_document(document: dict[str, object], output_path: Path) -> None:
+    """以确定性格式写出单个 JSON document。"""
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
+        json.dumps(document, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+def write_contract_assets(contract_assets_root: Path, output_root: Path) -> None:
+    """把提交入库的 JSON Schema 与 examples 复制到数据集。"""
+
+    required_assets = {
+        "schema": (
+            "manifest.schema.json",
+            "normalized-event.schema.json",
+            "pattern-catalog.schema.json",
+            "quality-summary.schema.json",
+            "review-bundle.schema.json",
+            "review-decision.schema.json",
+        ),
+        "examples": (
+            "manifest.v2.json",
+            "normalized-event.v2.json",
+            "pattern-catalog.v1.json",
+            "quality-summary.v1.json",
+            "review-bundle.v1.json",
+            "review-decisions.v1.json",
+            "consumer.py",
+        ),
+    }
+    for directory, filenames in required_assets.items():
+        source_root = contract_assets_root / directory
+        target_root = output_root / directory
+        target_root.mkdir(parents=True, exist_ok=True)
+        for filename in filenames:
+            source = source_root / filename
+            if not source.is_file():
+                raise ValueError(f"normalized contract asset 不存在: {source}")
+            shutil.copyfile(source, target_root / filename)
+    corpus = contract_assets_root / "accepted-corpus.v1.json"
+    if not corpus.is_file():
+        raise ValueError(f"normalized accepted corpus 不存在: {corpus}")
+    shutil.copyfile(corpus, output_root / "examples" / "accepted-corpus.v1.json")
 
 
 def write_manifest(
     grouped: dict[tuple[str, str], list[dict[str, object]]],
     output_path: Path,
     reference_version: str,
+    *,
+    pattern_catalog: dict[str, object],
+    quality_summary: dict[str, object],
+    input_identity: Mapping[str, object],
 ) -> None:
     """写出 normalized manifest。
 
@@ -1605,18 +1999,78 @@ def write_manifest(
         grouped: 按实体分组后的 normalized 记录。
         output_path: manifest 输出路径。
         reference_version: 本次生成使用的参考版本。
+        pattern_catalog: 同批生成的公共 Pattern Catalog。
+        quality_summary: 同批生成的确定性分层质量摘要。
+        input_identity: 已通过冻结预检的完整输入身份。
     """
 
+    output_root = output_path.parent
+    files = describe_payload_files(output_root)
+    unmanaged = unmanaged_payload_paths(files)
+    if unmanaged:
+        raise ValueError(f"normalized output 含 writer 未管理的 payload 文件: {', '.join(unmanaged)}")
+    rows = [row for entity_rows in grouped.values() for row in entity_rows]
+    support_counts = value_counts(rows, "support_level")
+    review_counts = value_counts(rows, "review_status")
+    profile = input_identity.get("profile")
+    profile = profile if isinstance(profile, Mapping) else {}
+    input_sections = input_identity.get("inputs")
+    input_sections = input_sections if isinstance(input_sections, Mapping) else {}
+    review_identity = input_sections.get("review_decisions")
+    if not isinstance(review_identity, Mapping):
+        raise ValueError("input identity 缺少 review_decisions")
+    content_identity: dict[str, object] = {
+        "input_identity": dict(input_identity),
+        "corpus_scope": profile.get("corpus_scope"),
+        "base_game_version": profile.get("base_game_version"),
+        "review": {
+            "decision_id": pattern_catalog.get("decision_id"),
+            "record_counts": review_counts,
+            "decision_set_id": review_identity.get("decision_set_id"),
+            "decision_set_digest": review_identity.get("digest"),
+            "decision_status": review_identity.get("status"),
+        },
+        "support_level_counts": support_counts,
+        "quality_status": quality_summary.get("status"),
+        "quality_gate_version": quality_summary.get("gate_version"),
+    }
+    digest = content_digest(content_identity, files)
     manifest = {
         "schema_version": SCHEMA_VERSION,
-        "generated_at": datetime.now(UTC).isoformat(),
+        "dataset_schema_version": "normalized-dataset.v2",
+        "normalized_record_schema_version": SCHEMA_VERSION,
+        "pattern_catalog_schema_version": PATTERN_CATALOG_SCHEMA_VERSION,
+        "dataset_id": f"local-v1-{digest[:16]}",
+        "content_digest": digest,
+        "content_digest_algorithm": CONTENT_DIGEST_VERSION,
+        "content_identity": content_identity,
+        "files": files,
         "reference_version": reference_version,
         "entity_count": len(grouped),
         "record_count": sum(len(rows) for rows in grouped.values()),
-        "contains_full_raw_event_index": False,
-        "outputs": ["manifest.json", "entity-summary.json", "by-entity/"],
+        "pattern_count": pattern_catalog.get("pattern_count"),
+        "contains_full_raw_event_index": True,
+        "outputs": [
+            "manifest.json",
+            "normalized-events.jsonl",
+            "pattern-catalog.json",
+            "quality-summary.json",
+            "entity-summary.json",
+            "by-entity/",
+            "schema/",
+            "examples/",
+        ],
     }
     output_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def value_counts(rows: Iterable[Mapping[str, object]], field: str) -> dict[str, int]:
+    """稳定统计 normalized 记录中的枚举字段。"""
+
+    counts: dict[str, int] = defaultdict(int)
+    for row in rows:
+        counts[str(row.get(field) or "missing")] += 1
+    return dict(sorted(counts.items()))
 
 
 def write_entity_summary(
@@ -1737,4 +2191,4 @@ def read_decomposition_root(decomposition_root: Path) -> list[EventDecomposition
     for name in ("champions.jsonl", "maps.jsonl"):
         records.extend(read_decomposition_jsonl(decomposition_root / name))
 
-    return records
+    return merge_equivalent_decomposition_records(records)

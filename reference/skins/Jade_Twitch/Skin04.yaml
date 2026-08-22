@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Twitch
+  champion_id: 60029
+  skin_number: 4
+  skin_token: Skin04
+  id: 60029004
+  alias: Jade_TwitchSkin04
+  names:
+    en_US:
+      - value: Crime City Twitch
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 黑金诱惑 图奇
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 51
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_TwitchSkin04
+  - Jade_TwitchSkin4

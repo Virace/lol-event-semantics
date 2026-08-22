@@ -1,0 +1,265 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60099
+  alias: Jade_Lux
+  names:
+    en_US:
+      - value: Lux
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 光辉女郎
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_LuxE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Lucent Singularity
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 透光奇点
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:57e757eee6207605568712355320f909a57b1197fc53e8ff7b64794f66910465
+            value: Fires an anomaly of twisted light to an area, which slows
+              nearby enemies. Lux can detonate it to damage enemies in the area
+              of effect.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:7ef9c4565941a34ee87d813016a03704bca84de118b9b736b0bba3b6b02932f3
+            value: 向指定区域释放一道不规则的扭曲之光，减速附近的敌人。拉克丝可随后将其引爆，对范围内敌人造成伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_LuxPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Illumination
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 光芒四射
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:a7fa3ff7af58dc70a334fd29ed304eb7a5c805fdde19d3b95e2e85afb1808433
+            value: Lux's damaging spells charge the target with energy for 6
+              seconds. Lux's next attack ignites the energy, dealing bonus magic
+              damage (depending on Lux's level) to the target.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:203d66a42f86465cb2b74c2255bed993553ab787b8be14f47456b12686ceb4a9
+            value:
+              拉克丝的伤害类技能会将能量注入敌人，持续6秒。拉克丝的下一次攻击将会点燃这股能量，对目标造成额外魔法伤害（基于拉克丝的等级）。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_LuxQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Light Binding
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 光之束缚
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:73603935920b708dd40fd0bf800af56ee6fc4dd2a75d877d9bcc915aba631575
+            value: Lux releases a sphere of light that binds and deals damage to
+              up to two enemy units.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:69fdd4c48ea82d41495897f83fe7f5934d5f11caa343de69de050aadbc93ebb6
+            value: 拉克丝释放一个光球，束缚并伤害最多两个敌方单位。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_LuxR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Finales Funkeln
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 终极闪光
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:e4ca0c2c98d6e0e28603eaea83c3df589f3dc7ce9fb93c5a04551ce78f40d640
+            value: After gathering energy, Lux fires a beam of light that deals
+              damage to all targets in the area.  In addition, triggers Lux's
+              passive ability and refreshes the Illumination debuff duration.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:52d92d3016160bb2045a606da5e9b5e0efd10aa493d92e0bc9b91f73ead6dc40
+            value:
+              短暂蓄力后，拉克丝发射一束光能射线，对射线内的所有目标造成伤害。此外，该技能会触发拉克丝的被动技能，并刷新光芒四射减益效果的持续时间。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_LuxW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Prismatic Barrier
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 曲光屏障
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:e988e24ffa831827005523943d4029d122099b523ac5a3e6ae3e44090d1d24c4
+            value: Lux throws her wand and bends the light around any friendly
+              target it touches, protecting them from enemy damage.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:2c5e5b101204392405720ab1377e102ebff4e55d09629e22bb11323a11c6e72d
+            value: 拉克丝掷出她的魔杖，被触及的友方单位会被光芒缠绕，保护其免受敌方伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

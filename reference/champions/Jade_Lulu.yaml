@@ -1,0 +1,269 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60117
+  alias: Jade_Lulu
+  names:
+    en_US:
+      - value: Lulu
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 仙灵女巫
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_LuluE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Help, Pix!
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 帮忙，皮克斯！
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:d4a715482b346e5a03cad234190c8bf3abb18b9f847073e2308f6874b3f816bd
+            value: If cast on an ally, commands Pix to jump to an ally and
+              shield them. He then follows them and aids their attacks. If cast
+              on an enemy, commands Pix to jump to an enemy and damage them. He
+              then follows them and grants you vision of that enemy.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:87fceaa59803b0a1367a98f0f10a0741316c065d32cdca374648add0bc6ea9f9
+            value:
+              如果对友军施放，会命令皮克斯跳到一名友军身上进行保护，之后会跟随并协助目标（而不是璐璐）进行攻击。如果对敌人施放，皮克斯会跳到敌人身上造成伤害，之后会跟随并提供目标的视野。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_LuluPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Pix, Faerie Companion
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 皮克斯，仙灵伙伴
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:0eed8131be5af9da4024189b3bc2647d1ea6ba4f439aa3c405f1bd3a46646e27
+            value: Pix fires magical bolts of energy whenever the champion he's
+              following attacks another enemy unit. These bolts are homing, but
+              can be intercepted by other units.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:4d4ed755b3b8db85af8cbadfb22dc79fc6211ad5568e54401ab87537662ff64a
+            value: 每当皮克斯正在跟随的英雄进行攻击时，皮克斯就会发射魔法飞弹。这些飞弹会自动寻敌，但也会被其它单位所拦截。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_LuluQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Glitterlance
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 闪耀长枪
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:53faa628ef445149b5aeb4d05fccead0a728f11b65191db5972ff771c067e5e7
+            value: Pix and Lulu each fire a bolt of magical energy that heavily
+              slows all enemies it hits. An enemy can only be damaged by one
+              bolt.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:2923159978049f85f9974ef8e2b52be9937bbd27cf1f13d19d808074ad499713
+            value: 璐璐和皮克斯各自发射一束穿刺飞弹，对命中的敌人造成重度减速效果。一个敌人只会受到一个飞弹的伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_LuluR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Wild Growth
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 狂野生长
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:5557ad24bfc59c7f5e0fe3ac1b0c9921e87191896a4f44de5ea33bf0ae2c9232
+            value: Lulu enlarges an ally, knocking nearby enemies into the air
+              and granting the ally a large amount of bonus health. For the next
+              few seconds, that ally gains an aura that slows nearby enemies.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:e07a89c36040f8687de69a72226e73c74c2fae9af750fbe8ceb29d7efea4c86e
+            value:
+              璐璐让她的友军变大，击飞目标附近的敌人，同时为目标友军提供大量生命值加成。接下来的几秒内，该友军会获得一个光环，减速附近的敌人。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_LuluW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Whimsy
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 奇思妙想
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:fda6a2c364bd1a84727e456094cb6cdd6e5af00023af4ac68ced060b9dab4055
+            value: If cast on an ally, grants them movement speed and ability
+              power for a short time. If cast on an enemy, turns them into an
+              adorable critter that can't attack or cast spells.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:64ba4808ed8cd21e7cde085d775a92d2eaada8cd634daf754addd4b06829f1e2
+            value:
+              如果对友军施放，会在短时间内增加目标友军的移动速度和法术强度。如果对敌人施放，则会将一名敌方英雄变成可爱的动物，使其无法攻击或施放技能。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

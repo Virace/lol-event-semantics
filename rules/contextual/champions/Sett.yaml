@@ -1,17 +1,42 @@
 scope: champion
 owner: Sett
 aliases:
+  Gift:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: skin_gift
+    label: 礼物音效
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      Tier1: 等级1
+      Tier2: 等级2
+      Tier3: 等级3
+    note: SettSkin66 的 Gift_TierN 是礼物等级变体，数字是资源等级而非技能段数。
+  HUD:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: skin_hud
+    label: 皮肤界面
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      FormChange: 形态切换
+      Click: 点击
+      Gaugemeter: 计量表
+      Full: 已满
+      Gift: 礼物
+      Orbmeter: 能量球计量
+    note: SettSkin66 的 HUD_* 是皮肤界面操作与计量状态；完整路径必须进入中文展示。
   Recallin:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_action_component
     component: recall_in
     label: 回城进入
     confidence: medium
     source: manual_contextual_alias
     note: Recallin 在 SettSkin19 事件中对应回城进入阶段。
   Recallout:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_action_component
     component: recall_out
     label: 回城离开
     confidence: medium

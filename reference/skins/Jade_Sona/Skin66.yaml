@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Sona
+  champion_id: 60037
+  skin_number: 66
+  skin_token: Skin66
+  id: 60037066
+  alias: Jade_SonaSkin66
+  names:
+    en_US:
+      - value: Spirit Blossom Springs Sona
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 莲华温泉 娑娜
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 218
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_SonaSkin66

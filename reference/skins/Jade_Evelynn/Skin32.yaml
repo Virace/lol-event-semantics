@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Evelynn
+  champion_id: 60028
+  skin_number: 32
+  skin_token: Skin32
+  id: 60028032
+  alias: Jade_EvelynnSkin32
+  names:
+    en_US:
+      - value: Spirit Blossom Evelynn
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 灵魂莲华 伊芙琳
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 171
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_EvelynnSkin32

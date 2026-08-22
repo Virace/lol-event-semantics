@@ -2,18 +2,24 @@ scope: champion
 owner: Volibear
 aliases:
   Celebrate:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_action_component
     component: celebrate
     label: 庆祝动作
     confidence: medium
     source: manual_contextual_alias
     note: Celebrate 在 Volibear 事件中对应角色专属庆祝动作音效。
   Roar:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_action_component
     component: roar
     label: 咆哮
     confidence: medium
     source: manual_contextual_alias
     note: Roar 在 Volibear 事件中对应角色专属咆哮动作音效。
+  StartRun:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: start_run
+    label: 起跑
+    confidence: high
+    source: manual_contextual_alias
+    note: StartRun_loop 跨基础与多套皮肤稳定表示开始奔跑后的循环音效，不按技能槽位猜测。

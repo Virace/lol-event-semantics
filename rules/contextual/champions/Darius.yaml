@@ -25,6 +25,26 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: Hemo 在 Darius 事件中对应被动 Hemorrhage 的出血层数/最大层数状态。
+  HemoMax:
+    kind: champion_spell_component
+    spell: p
+    component: hemorrhage_max_stack
+    label: 出血最大层数
+    confidence: high
+    source: manual_contextual_alias
+    note: HemoMax 在 Darius 事件中明确表示被动 Hemorrhage 已达到最大出血层数。
+  NorseKing:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    required_tokens:
+      - Recall
+    component: norse_king_recall
+    label: 北欧之王回城
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      Recall: 回城
+    note: Darius_NorseKing_Recall_windup 是旧皮肤主题回城起手音效，NorseKing 是主题名而非实体。
   NoxianTacticsONH:
     kind: champion_spell_component
     spell: w

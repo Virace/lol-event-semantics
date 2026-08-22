@@ -1,0 +1,56 @@
+scope: champion
+owner: Rengar
+aliases:
+  Eemp:
+    kind: champion_spell_component
+    spell: e
+    asset_kind: sfx
+    component: empowered_bola_strike
+    label: 强化套索打击
+    confidence: high
+    source: manual_contextual_alias
+    note: Eemp 表示 E 强化套索打击。
+  Eempmis:
+    kind: champion_spell_component
+    spell: e
+    asset_kind: sfx
+    component: empowered_bola_missile
+    label: 强化套索飞弹
+    confidence: high
+    source: manual_contextual_alias
+    note: Eempmis 表示 E 强化套索的飞弹，跨皮肤 launch/hit 证据一致。
+  RengarManager:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: skin_audio_manager
+    label: 皮肤音效管理
+    confidence: high
+    source: manual_contextual_alias
+    note: RengarSkin08_RengarManager 是皮肤音效管理状态，不是 R 技能提示。
+  Rpassivebuff:
+    kind: champion_spell_component
+    spell: r
+    asset_kind: sfx
+    component: thrill_of_the_hunt_passive_buff
+    label: 狩猎律动增益
+    confidence: high
+    source: manual_contextual_alias
+    note: Rpassivebuff 的 passive 是 R 内部增益，不是英雄 P 槽位。
+  Rstealth:
+    kind: champion_spell_component
+    spell: r
+    asset_kind: sfx
+    component: thrill_of_the_hunt_stealth
+    label: 狩猎律动潜行
+    confidence: high
+    source: manual_contextual_alias
+    note: Rstealth 跨皮肤稳定以 start/end 出现，对应 R 狩猎律动的潜行阶段。
+  Wemp:
+    kind: champion_spell_component
+    spell: w
+    asset_kind: sfx
+    component: empowered_battle_roar
+    label: 强化战争咆哮
+    confidence: high
+    source: manual_contextual_alias
+    note: Wemp 表示 W 强化战争咆哮。

@@ -90,6 +90,16 @@ class DecompositionLexerShellTests(unittest.TestCase):
         self.assertEqual(record.shell.asset_kind, "sfx")
         self.assertEqual(record.owner.alias, "Akshan")
 
+    def test_padded_stop_shell_keeps_real_owner(self) -> None:
+        """导出中双下划线填充的 __Stop_ 仍是停止壳，不得把 Stop 当 owner。"""
+
+        record = decompose_event_name("__Stop_sfx_Bard_BardR_mis", game_version="16.16")
+
+        self.assertEqual(record.shell.verb, "stop")
+        self.assertEqual(record.shell.asset_kind, "sfx")
+        self.assertEqual(record.owner.alias, "Bard")
+        self.assertEqual([atom.raw for atom in record.lexical_atoms], ["BardR", "mis"])
+
     def test_implicit_asset_kind_shell_without_play_verb(self) -> None:
         record = decompose_event_name("mus_ViegoSkin43_BigPartyBonanza", game_version="16.5")
 
@@ -293,6 +303,42 @@ class DecompositionLexerOwnerSkinCaseTests(unittest.TestCase):
         self.assertIsNone(record.owner.alias)
         self.assertEqual(record.owner.raw_owner_token, "E")
         self.assertEqual([atom.raw for atom in record.lexical_atoms], ["ivernsbrush"])
+
+    def test_glued_skin_skill_cue_is_not_part_of_owner(self) -> None:
+        """SkinNN 后粘连的技能 cue 要还给 body，不能污染英雄身份。"""
+
+        record = decompose_event_name("Play_sfx_ZoeSkin01W_enablebypass", game_version="16.16")
+
+        self.assertEqual(record.owner.alias, "Zoe")
+        self.assertEqual(record.owner.skin_token, "Skin01")
+        self.assertEqual(record.owner.raw_owner_token, "ZoeSkin01")
+        self.assertEqual([atom.raw for atom in record.lexical_atoms], ["W", "enablebypass"])
+
+    def test_glued_skin_action_cue_is_not_part_of_owner(self) -> None:
+        """SkinNN 后粘连的 Taunt3D 要按动作解析，而不是伪英雄 alias。"""
+
+        record = decompose_event_name(
+            "Play_sfx_GangplankSkin23Taunt3D_buffactivate",
+            game_version="16.16",
+        )
+
+        self.assertEqual(record.owner.alias, "Gangplank")
+        self.assertEqual(record.owner.skin_token, "Skin23")
+        self.assertEqual([atom.raw for atom in record.lexical_atoms], ["Taunt3D", "buffactivate"])
+
+    def test_glued_skin_actor_form_stays_in_owner(self) -> None:
+        """Tibbers/Shadow 等角色形态不是技能或动作 cue，不做激进拆分。"""
+
+        record = decompose_event_name(
+            "Play_sfx_AnnieSkin08Tibbers_AnnieTibbersBasicAttack_OnHit",
+            game_version="16.16",
+        )
+
+        self.assertEqual(record.owner.alias, "AnnieSkin08Tibbers")
+        self.assertEqual(
+            [atom.raw for atom in record.lexical_atoms],
+            ["AnnieTibbersBasicAttack", "OnHit"],
+        )
 
 
 class DecompositionLexerInlineTests(unittest.TestCase):

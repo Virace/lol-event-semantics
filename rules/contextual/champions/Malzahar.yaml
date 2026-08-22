@@ -11,9 +11,9 @@ aliases:
     note: VoidGateSpawn 在 Malzahar 事件中对应 R 技能 Nether Grasp 的虚空门/召唤表现。
   Voidling:
     kind: champion_spell_component
-    spell: p
+    spell: w
     component: voidling_summon
     label: 虚灵
-    confidence: medium
+    confidence: high
     source: manual_contextual_alias
-    note: Voidling 在 Malzahar 事件中对应被动召唤的虚灵单位表现。
+    note: 16.16 中虚灵由 W 虚空虫群召唤；Voidling 归 W，不再沿用旧版被动分类。

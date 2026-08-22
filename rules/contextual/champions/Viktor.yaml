@@ -1,0 +1,13 @@
+scope: champion
+owner: Viktor
+aliases:
+  ViktorExpirationTimer:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: expiration_timer
+    label: 到期计时器
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      storm: 风暴
+    note: ViktorSkin05_ViktorExpirationTimer_* 是皮肤风暴效果的到期计时音效，不按技能词首猜测。

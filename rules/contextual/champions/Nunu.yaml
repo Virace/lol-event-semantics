@@ -58,18 +58,17 @@ aliases:
     source: manual_contextual_alias
     note: HasteLoop 在 Nunu 事件中对应 Blood Boil 的循环段。
   Horn:
-    kind: champion_spell_component
-    spell: p
-    component: horn
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: skin_horn
     label: 号角
     confidence: medium
     source: manual_contextual_alias
     note: Horn 在 NunuSkin04 事件中对应皮肤号角释放音效。
   StructureAttack:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: structure_attack
-    label: 建筑攻击
-    confidence: medium
+    label: 对建筑普通攻击
+    confidence: high
     source: manual_contextual_alias
     note: StructureAttack 在 Nunu 事件中对应攻击建筑的基础攻击变体。

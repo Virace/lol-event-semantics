@@ -1,0 +1,261 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60004
+  alias: Jade_TwistedFate
+  names:
+    en_US:
+      - value: Twisted Fate
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 卡牌大师
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_TwistedFateE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Gate
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 传送之门
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:338a9260a72698bb5507b608fb4d949dee5ee3583b0d1ebf4c3ec6b910055dfa
+            value: After channeling, Twisted Fate Teleports to any target
+              location.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:4fefc81e8154b509e8f50983bd0ee7533317c92684fdfb8d3204542522063fb0
+            value: 引导结束后，崔斯特传送至任意目标位置。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_TwistedFatePassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Loaded Dice
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 灌铅骰子
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:d40d751a46c1a812fdc3aa21f0e6f0b47a3d023177235a9cdde4ec86ff3f53e7
+            value: Twisted Fate and his allies receive an additional 2 gold per
+              kill.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:f81c3d76f2941bcbd4a61dff997b383e6c1750aaeed4c5f4b183bb5a10de3901
+            value: 崔斯特与友军每次击杀可额外获得2金币。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_TwistedFateQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Wild Cards
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 万能牌
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:1c26539b59ac2b55507db00c6cb2280f61f72f083683015c921979d4022c141a
+            value: Twisted Fate throws three cards, dealing damage to each enemy
+              unit they pass through.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:4376d0f4fc28da1c8d6be9c414652f2f107fb06ddfae48272bf9bf42dccc205f
+            value: 崔斯特扔出三张卡牌，卡牌会对它们途经的每个敌方单位造成伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_TwistedFateR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Destiny
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 命运
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:98251c50f033613800e37ce43302c76fbf3ee43948143f7b3875340d359966c4
+            value: Twisted Fate predicts the fortunes of his foes, revealing and
+              slowing all enemy champions. Gate's channel time is also reduced
+              during this duration.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:8c8f7488a491e4e565b265bb80728a9ed49f0c12f8846cf64664b5a29429fe1f
+            value: 崔斯特为敌人算卜命运，短时间内显示所有敌方英雄的位置并使其减速。在此期间，传送之门的引导时间也会缩短。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_TwistedFateW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Pick A Card
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 选牌
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:c7d5d29bc8d3a2bb97d2a6fc02103d8bcc36a9a088860953963235daf2323236
+            value: Twisted Fate chooses a magic card from his deck, and uses
+              that for his next attack, causing bonus effects.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:802f058f8d4ceaec7286746151aea211a2faed24a0bc26e87b2a2a788684da37
+            value: 崔斯特挑选一张魔法卡牌，并用在他的下次攻击，从而造成额外效果。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

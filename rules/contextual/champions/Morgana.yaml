@@ -9,3 +9,33 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: Deathpetals 在 MorganaSkin80 事件中对应皮肤主题死亡花瓣效果。
+  MaskSwap:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: mask_swap
+    label: 面具切换
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      mask1: 形态1
+      mask2: 形态2
+      mask3: 形态3
+    note: MorganaSkin80 的 MaskSwap3D_maskN 是皮肤面具形态切换；形态编号是用户语义，不得丢弃。
+  Petals:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: petals
+    label: 花瓣环绕
+    confidence: high
+    source: manual_contextual_alias
+    note: MorganaSkin80 的 Petals3D_loop 是皮肤花瓣环绕循环，不按技能槽位解释。
+  gear:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: gear_swap
+    label: 装备切换
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      swap: 切换
+    note: MorganaSkin80_gear_swap 是皮肤装备切换音效。

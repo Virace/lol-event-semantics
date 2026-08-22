@@ -18,8 +18,10 @@ phase:
   leadout: {zh_CN: 引出, en_US: lead out}
   winddown: {zh_CN: 收尾, en_US: wind down}
   hit: {zh_CN: 命中, en_US: hit}
+  revive: {zh_CN: 复活, en_US: revive}
   phase_select: {zh_CN: 阶段选择, en_US: phase select}
   missile_launch: {zh_CN: 弹道发射, en_US: missile launch}
+  missile_cast: {zh_CN: 飞弹施放, en_US: missile cast}
   launch: {zh_CN: 发射, en_US: launch}
   end: {zh_CN: 结束, en_US: end}
   start: {zh_CN: 开始, en_US: start}
@@ -47,6 +49,12 @@ phase:
   # 不硬造 state_activate 等时机语义。2026-07-19 审计后由「音效」改
   # 「整段音效」——保留 overall 与分段相位（引入/循环/收尾）的层级区分。
   overall: {zh_CN: 整段音效, en_US: full sfx}
+  # frame 专属生命周期：不再把效果、音效与攻击动作统一写成“状态启动”。
+  effect_activate: {zh_CN: 生效, en_US: effect active}
+  effect_deactivate: {zh_CN: 结束, en_US: effect ended}
+  audio_start: {zh_CN: 开始, en_US: audio started}
+  audio_end: {zh_CN: 结束, en_US: audio ended}
+  attack_cast: {zh_CN: 出手, en_US: attack cast}
 
 action:
   # action argument：皮肤动作/招式展示词；key 为小写 action 原值。
@@ -58,9 +66,30 @@ action:
   joke: {zh_CN: 玩笑, en_US: joke}
   laugh: {zh_CN: 大笑, en_US: laugh}
   respawn: {zh_CN: 重生, en_US: respawn}
+  idle: {zh_CN: 待机, en_US: idle}
+  homeguard: {zh_CN: 家园卫士, en_US: homeguard}
+  winddown: {zh_CN: 收招, en_US: wind down}
   # 批次5b：media_base 高频动作词（voice_event 家族词用「跳舞」，状态措辞
   # 沿 SPEC 例词「舞蹈状态启动」取「舞蹈」，实现者补选，待主代理裁决）。
   dance: {zh_CN: 舞蹈, en_US: dance}
+  recall_sfx: {zh_CN: 回城音效, en_US: recall sfx}
+  death_sfx: {zh_CN: 死亡音效, en_US: death sfx}
+  respawn_sfx: {zh_CN: 重生音效, en_US: respawn sfx}
+  idle_sfx: {zh_CN: 待机音效, en_US: idle sfx}
+  homeguard_sfx: {zh_CN: 家园卫士音效, en_US: homeguard sfx}
+  winddown_sfx: {zh_CN: 收招音效, en_US: wind-down sfx}
+  execute_action: {zh_CN: 处决动作, en_US: execute action}
+  attack_sfx: {zh_CN: 攻击音效, en_US: attack sfx}
+  dance_sfx: {zh_CN: 舞蹈音效, en_US: dance sfx}
+  joke_sfx: {zh_CN: 玩笑音效, en_US: joke sfx}
+  laugh_sfx: {zh_CN: 大笑音效, en_US: laugh sfx}
+  taunt_sfx: {zh_CN: 嘲讽音效, en_US: taunt sfx}
+
+attack:
+  basic_attack: {zh_CN: 普通攻击, en_US: basic attack}
+  crit_attack: {zh_CN: 暴击攻击, en_US: critical attack}
+  ranged_basic_attack: {zh_CN: 远程普通攻击, en_US: ranged basic attack}
+  melee_basic_attack: {zh_CN: 近战普通攻击, en_US: melee basic attack}
 
 ability_component:
   # ability_component argument 的组件中文兜底词，供 contextual_alias 缺 raw_label
@@ -74,6 +103,227 @@ gameplay_event:
   # gameplay_event argument：玩法事件展示词；key 为小写事件名。
   # 官方 onfirstblood 原文「第一滴血」；「一血」为社区惯称（2026-07-20 检查轮核验后用户终审改）。
   first_blood: {zh_CN: 第一滴血, en_US: first blood}
+
+# HUD/Base 与 Gameplay 是资源路径壳。这里只收录逐路径审阅过的系统音效；
+# key 已按 segment 小写归一，尾部 buffactivate/buffdeactivate/loop 由 builder
+# 拆成生命周期。表外路径不逐词硬译，也不会把工程 owner 混进中文。
+system_sfx:
+  context:
+    cherry: 斗魂竞技场
+    doombots: 末日人机
+  # 装备 SFX 动作只按「reference 装备 ID/受审词干」精确命中。这里不提供
+  # 跨装备的通用 suffix fallback，避免未来数字 owner 因同形词干被误晋升。
+  item_action:
+    2065/movespeed: {zh_CN: 移速加成, en_US: movement speed}
+    3001/debuff: {zh_CN: 减益, en_US: debuff}
+    3046/buff: {zh_CN: 增益, en_US: buff}
+    3053/shield: {zh_CN: 护盾, en_US: shield}
+    3121/shield: {zh_CN: 护盾, en_US: shield}
+    3155/hexdrinkerbuff: {zh_CN: 护盾, en_US: shield}
+    3156/mawbuff: {zh_CN: 护盾, en_US: shield}
+    3190/shield: {zh_CN: 护盾, en_US: shield}
+    3748/active: {zh_CN: 主动效果, en_US: active effect}
+    3748/projectile: {zh_CN: 投射物, en_US: projectile}
+    3869/shieldbreak: {zh_CN: 护盾破裂, en_US: shield break}
+    4004/active: {zh_CN: 主动效果, en_US: active effect}
+    4401/maxstacked: {zh_CN: 满层, en_US: maximum stacks}
+    4629/stackcounter: {zh_CN: 层数计数, en_US: stack counter}
+    4633/enragebuff: {zh_CN: 狂怒增益, en_US: enrage buff}
+    4644/shieldprotectionbuff: {zh_CN: 护盾保护, en_US: shield protection}
+    6617/chargeshieldbuff: {zh_CN: 充能护盾, en_US: charge shield}
+    6653/burn: {zh_CN: 灼烧, en_US: burn}
+    6655/buff: {zh_CN: 增益, en_US: buff}
+    6662/slow: {zh_CN: 减速, en_US: slow}
+    6664/active: {zh_CN: 主动效果, en_US: active effect}
+    6672/buff: {zh_CN: 增益, en_US: buff}
+    6673/shield: {zh_CN: 护盾, en_US: shield}
+    6676/gold: {zh_CN: 金币, en_US: gold}
+    6691/stealth: {zh_CN: 隐身, en_US: stealth}
+    6692/shield: {zh_CN: 护盾, en_US: shield}
+    6697/bronze: {zh_CN: 青铜段位, en_US: Bronze tier}
+    6697/silver: {zh_CN: 白银段位, en_US: Silver tier}
+    6697/gold: {zh_CN: 黄金段位, en_US: Gold tier}
+    6697/platinum: {zh_CN: 铂金段位, en_US: Platinum tier}
+    6697/emerald: {zh_CN: 翡翠段位, en_US: Emerald tier}
+    6697/diamond: {zh_CN: 钻石段位, en_US: Diamond tier}
+    6697/master: {zh_CN: 大师段位, en_US: Master tier}
+    6697/grandmaster: {zh_CN: 宗师段位, en_US: Grandmaster tier}
+    6697/challenger: {zh_CN: 王者段位, en_US: Challenger tier}
+    8001/vengeance: {zh_CN: 复仇效果, en_US: vengeance effect}
+    443079/cast: {zh_CN: 施放, en_US: cast}
+    444644/shieldprotectionbuff: {zh_CN: 护盾保护, en_US: shield protection}
+    447114/knockback: {zh_CN: 击退, en_US: knockback}
+    447118/groundobject: {zh_CN: 地面效果, en_US: ground effect}
+    447119/shield: {zh_CN: 护盾, en_US: shield}
+  exact:
+    # 通用 HUD：标记轮盘与队伍标记。
+    pings/areaiswarded: 该区域已有视野标记
+    pings/attack: 进攻标记
+    pings/base: 基地标记
+    pings/button: 标记轮盘按钮
+    pings/click: 标记轮盘点击
+    pings/comehere: 来这里标记
+    pings/danger: 危险标记
+    pings/defend: 防守标记
+    pings/getback: 撤退标记
+    pings/mia: 敌人消失标记
+    pings/onmyway: 正在路上标记
+    pings/onmyway/caster: 正在路上标记发送
+    pings/onmyway/close: 正在路上标记关闭
+    pings/onmyway/far: 远距离正在路上标记
+    pings/onmyway/recipient: 正在路上标记接收
+    pings/srp/4: 标记轮盘4号变体
+    pings/srp/6: 标记轮盘6号变体
+    pings/srp/7: 标记轮盘7号变体
+    pings/srp/9: 标记轮盘9号变体
+    pings/srp/11: 标记轮盘11号变体
+    pings/srp/12: 标记轮盘12号变体
+    pings/srp/13: 标记轮盘13号变体
+
+    # 通用 HUD：技能、装备、聊天、地图与基础界面反馈。
+    attackfail/disarm: 无法攻击提示音
+    button: 通用界面按钮
+    camera/lock: 镜头锁定
+    camera/unlock: 镜头解锁
+    champ/stats/close: 英雄属性面板关闭
+    champ/stats/open: 英雄属性面板打开
+    chat/all: 全体聊天切换
+    chat/team: 队伍聊天切换
+    emotes/bubblenotification: 表情气泡通知
+    generic/button: 通用界面按钮
+    generic/button/click: 通用界面按钮点击
+    generic/click: 通用界面点击
+    intromode/warning: 新手引导警告提示音
+    item/slot/drop: 装备栏放下装备
+    item/slot/grab: 装备栏拿起装备
+    levelup/click: 升级界面点击
+    levelup/layer: 升级界面音层
+    levelup/release: 升级界面释放
+    map/close: 地图关闭
+    map/open: 地图打开
+    menu/close: 菜单关闭
+    menu/open: 菜单打开
+    options/click0: 设置界面点击0号变体
+    options/click1: 设置界面点击1号变体
+    options/click2: 设置界面点击2号变体
+    options/close: 设置界面关闭
+    options/endgame: 退出对局选项
+    options/open: 设置界面打开
+    recall/select: 回城选择
+    score/open: 计分面板打开
+    scoreboard/close: 计分板关闭
+    scoreboard/open: 计分板打开
+    spell/generic/use: 技能使用
+    spell/levelup: 技能升级
+    spell/summoner/use: 召唤师技能使用
+    spell/use: 技能使用
+    spell/upgrade: 技能加点
+    spellfail/cooldown: 技能尚未冷却提示音
+    spellfail/grounded: 缚地状态无法施法提示音
+    spellfail/nomana: 法力不足提示音
+    spellfail/silence: 沉默状态无法施法提示音
+
+    # 通用 HUD：观战、场景按钮与商店。
+    scn7/btn/1: 场景界面1号按钮
+    scn7/btn/2: 场景界面2号按钮
+    scn7/btn/3: 场景界面3号按钮
+    scn7/btn/4: 场景界面4号按钮
+    scn7/btn/5: 场景界面5号按钮
+    scn7/btn/6: 场景界面6号按钮
+    scn7/btn/7: 场景界面7号按钮
+    spectator/burstdamage: 观战爆发伤害提示
+    spectator/burstdamageleft: 观战左侧爆发伤害提示
+    spectator/burstdamageright: 观战右侧爆发伤害提示
+    spectator/scn1/btn/12: 观战界面12号按钮
+    spectator/scn1/btn/17: 观战界面17号按钮
+    store/click: 商店点击
+    store/expand/open: 商店展开面板打开
+    store/filter/invert: 商店筛选反选
+    store/filter/remove: 商店筛选移除
+    store/filter/select: 商店筛选选择
+    store/filter/stat/select: 商店属性筛选选择
+    store/generic/close: 商店关闭
+    store/generic/open: 商店打开
+    store/inventorytab/close: 商店背包页关闭
+    store/inventorytab/open: 商店背包页打开
+    store/item/buy/basic: 商店购买基础装备
+    store/item/buy/components: 商店购买装备组件
+    store/item/buy/legendary: 商店购买传说级装备
+    store/item/buy/mythic: 商店购买神话级装备
+    store/item/buy/upgrade: 商店购买升级装备
+    store/item/hover/blue: 商店悬停蓝色装备
+    store/item/hover/mythic: 商店悬停神话级装备
+    store/item/sell: 商店出售装备
+    store/item/with/debt: 商店赊购装备
+    store/quicktab/close: 商店快捷页关闭
+    store/quicktab/open: 商店快捷页打开
+    store/quicktab/open/highlight: 商店快捷页高亮打开
+    store/quicktab/pin: 商店快捷页固定
+    store/rec/select: 商店推荐装备选择
+    store/select: 商店选择
+    store/tab/select: 商店分页选择
+    store/undo: 商店撤销交易
+
+    # 斗魂竞技场 Gameplay。
+    augments/ceremony/gold: 黄金强化选择仪式
+    augments/ceremony/prismatic: 棱彩强化选择仪式
+    augments/ceremony/silver: 白银强化选择仪式
+    celebration/fireworks/explosion: 庆祝烟花爆炸
+    combobreaker: 连招中断保护
+    destructiblepillar/break: 可破坏石柱碎裂
+    destructiblepillar/hit/reaction: 可破坏石柱受击反馈
+    destructiblepillar/land: 可破坏石柱落地
+    destructiblepillar/ready: 可破坏石柱就绪
+    destructiblepillar/respawning: 可破坏石柱重生
+    grantgold: 金币发放
+    hud/augment/appear: 强化选择界面出现
+    hud/augment/gold/select: 黄金强化选择
+    hud/augment/hover: 强化选项悬停
+    hud/augment/prismatic/select: 棱彩强化选择
+    hud/augment/refresh: 强化选项刷新
+    hud/augment/silver/select: 白银强化选择
+    hud/combat/begin: 战斗阶段开始提示音
+    hud/combat/timer/countdown: 战斗倒计时
+    hud/elimination/leave/click: 淘汰界面离开按钮点击
+    hud/elimination/open: 淘汰界面打开
+    hud/elimination/spectate/click: 淘汰界面观战按钮点击
+    hud/fight/defeat: 战斗失败提示音
+    hud/fight/victory: 战斗胜利提示音
+    hud/generic/click: 玩法界面通用点击
+    hud/generic/hover: 玩法界面通用悬停
+    hud/guestofhonor/hover: 特邀嘉宾选项悬停
+    hud/guestofhonor/vote/click: 特邀嘉宾投票点击
+    hud/phase/transition/combat: 切换至战斗阶段
+    hud/phase/transition/roundprep: 切换至备战阶段
+    hud/phase/transition/voting: 切换至投票阶段
+    hud/timer/warning/five/seconds: 五秒倒计时警告
+    hud/timer/warning/ten/seconds: 十秒倒计时警告
+    hud/ui/rounded/press: 圆形界面按钮按下
+    hud/ui/rounded/release: 圆形界面按钮松开
+    luckydice/reroll: 幸运骰子重随
+    revive: 复活
+    revive/progress: 复活进度
+    revive/ring/aoe: 复活圈范围
+    revive/ring/ready: 复活圈就绪提示音
+
+    # Map35、末日人机与其他玩法系统。
+    champion/kill/chaos: 混沌方英雄击杀
+    champion/kill/order: 秩序方英雄击杀
+    endgame/stinger: 对局结束短乐
+    hud/augment/refresh/golden/click/vfx: 金色强化刷新点击特效提示音
+    hud/augment/refresh/golden/vfx: 金色强化刷新特效提示音
+    hud/timer/complete: 计时完成提示音
+    hud/timer/countdown: 倒计时
+    junglemonster/gold: 野怪金币奖励
+    minion/haste: 小兵加速
+    minion/kill/chaos: 混沌方小兵击杀
+    minion/kill/order: 秩序方小兵击杀
+    minion/large/jump/vosfx: 大型小兵跳跃拟声
+    minion/small/jump/vosfx: 小型小兵跳跃拟声
+    portal/chaos/absorb: 混沌方传送门吸收
+    portal/order/absorb: 秩序方传送门吸收
+    shield/break: 护盾破裂
+    spawn: 单位生成
 
 maps:
   # map argument 的人工核对高置信地图中文名（T3.3 新增）。宁缺毋错：未列出的
@@ -126,6 +376,7 @@ counterpart:
   Vastaya: 瓦斯塔亚
   Demon: 恶魔
   Human: 人类
+  Ambessa's Type: 安蓓萨偏好的类型
   # species_or_faction
   Darkin: 暗裔
   Ascended: 飞升者
@@ -268,6 +519,14 @@ shop:
     SpearOfShojin: 朔极之矛
     Stormsurge: 风暴狂涌
     YommusGhostblade: 幽梦之灵
+
+# 自身动作语音中可直接展示的 qualifier。仅复用已在现有规则中核验的中文：
+# 表外 token 由 builder 输出为低置信「待审修饰」，不可静默落入泛化家族名。
+voice_qualifier:
+  onmyway: {zh_CN: 正在路上, en_US: on my way}
+  assistme: {zh_CN: 协助我, en_US: assist me}
+  danger: {zh_CN: 危险, en_US: danger}
+  river: {zh_CN: 河道, en_US: river}
 
 announcer:
   # 播报员事件词表（批次5a 第一批，主代理裁决，逐字使用）。

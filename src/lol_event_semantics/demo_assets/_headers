@@ -1,0 +1,21 @@
+/*
+  Content-Security-Policy: default-src 'self'; base-uri 'none'; connect-src 'self' https://ddragon.leagueoflegends.com; form-action 'none'; frame-ancestors 'none'; img-src 'self' data: https://ddragon.leagueoflegends.com; object-src 'none'; script-src 'self'; style-src 'self'
+  Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), microphone=(), payment=(), usb=()
+  Referrer-Policy: no-referrer
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/app.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+/styles.css
+  Cache-Control: public, max-age=0, must-revalidate
+
+/site.webmanifest
+  Cache-Control: public, max-age=0, must-revalidate
+
+/data/*
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400

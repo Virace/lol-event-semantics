@@ -9,3 +9,24 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: HallucinateFull 在 Shaco 事件中对应 R 技能 Hallucinate 的完整释放表现。
+  ShacoBoxSpell:
+    kind: champion_spell_component
+    spell: w
+    asset_kind: sfx
+    component: jack_in_the_box_attack
+    label: 惊吓魔盒攻击
+    confidence: high
+    source: manual_contextual_alias
+    note: ShacoBox 是萨科 W 召唤物的音频 bank owner；ShacoBoxSpell 是魔盒攻击，不是独立英雄或 P 技能。
+  ShacoClone:
+    kind: champion_spell_component
+    spell: r
+    asset_kind: sfx
+    mode: strawberry
+    component: hallucinate_clone
+    label: 幻像分身
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      Death: 阵亡
+    note: Strawberry_Enemy_ShacoClone_Death 是 PVE 敌方萨科 R 幻像分身阵亡，Enemy 是演员角色。

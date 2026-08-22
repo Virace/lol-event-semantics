@@ -1,0 +1,264 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60025
+  alias: Jade_Morgana
+  names:
+    en_US:
+      - value: Morgana
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 堕落天使
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_MorganaE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Black Shield
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 黑暗之盾
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:f6659d30aebc513bf17d7aa40b8d7a8b3a328b79914e520e85cbf699fbb85aac
+            value: Places a protective barrier around an allied champion,
+              absorbing magical damage and disables until penetrated or the
+              shield dissipates.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:d40306c8a1ad1f297a41dcaeee46a7af6cc34940858740401149724bc3f4334e
+            value: 为友方英雄施放保护盾，吸收魔法伤害并阻挡限制效果，直到护盾被击穿或消失。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_MorganaPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Soul Siphon
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 灵魂吸取
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:60ae97b58ef5e6df6f8c356724253c013ae0bee6c2f857aedf3b141efdbc3269
+            value: Morgana has Spell Vamp, healing herself whenever she deals
+              damage with her spells.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:0aa587718dffd8f8832baeb6ae599ac7a24afe3a976daf3e5f81836e3385ad0b
+            value: 莫甘娜拥有法术吸血效果，在技能造成伤害时回复自身生命值。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_MorganaQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Dark Binding
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 暗之禁锢
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:3e666e6283a8c607dabf00b5bfd6a299797da0fd06533cd79fa3daf8034e6078
+            value: Morgana releases a sphere of dark magic.  Upon contact with
+              an enemy unit, the sphere will deal magic damage and force the
+              unit to the ground for a period of time.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:9a290dce9c84ebd4a9498004212162bcecc9938c1fdccceb02ec06047b3b3376
+            value: 莫甘娜放出一个黑暗魔法球。击中一个敌方目标后，魔法球将造成魔法伤害，并将该目标暂时定在原地。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_MorganaR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Soul Shackles
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 灵魂镣铐
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:2a771dbc77829857e79d4891d29bbe45cb34995f9992672bedb2b080d521e165
+            value: Latches chains of energy onto nearby enemy champions, dealing
+              initial damage to them and slowing their Movement Speed, and then
+              echoing the pain a few seconds later and stunning them if they
+              remain close to Morgana.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:11dd492e61302f923583b495cee94c54414a9ae572bb47e986ad74c9d8a96e3c
+            value: 用能量拴住附近的敌方英雄，对其造成初始伤害和减速效果；一段时间后，仍然留在莫甘娜身边的敌人会再次受到伤害和晕眩。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_MorganaW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Tormented Soil
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 痛苦腐蚀
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:2dcbdcf418d1c7dbbe2860baff32dfd2d6ea181d7a36c4648d018b18913518b2
+            value: Infects an area with desecrated soil, causing enemy units who
+              stand on the location to take continual damage.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:29567bddc1e16244d351d8c5569f49af150e427f03a672d7c06fda2da04cfac7
+            value: 莫甘娜诅咒一大片区域，对区域内的敌人持续造成伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

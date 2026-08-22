@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Morgana
+  champion_id: 60025
+  skin_number: 41
+  skin_token: Skin41
+  id: 60025041
+  alias: Jade_MorganaSkin41
+  names:
+    en_US:
+      - value: Prestige Bewitching Morgana
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 至臻 魅惑女巫 莫甘娜
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 172
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_MorganaSkin41

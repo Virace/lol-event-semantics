@@ -1,0 +1,270 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60011
+  alias: Jade_MasterYi
+  names:
+    en_US:
+      - value: Master Yi
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+  title:
+    zh_CN:
+      - value: 无极剑圣
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+spells:
+  - slot: E
+    ids:
+      - value: Jade_MasterYiE
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Wuju Style
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 无极剑道
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:94bf2f4d402ef7786e57922b0c496d8d8dc04d2aff0d552aca9873f8df81cd9b
+            value: Master Yi becomes skilled in the art of Wuju, passively
+              increasing his Attack Damage.  Activating Wuju Style grants bonus
+              true damage on basic attacks, but the passive bonus is then lost
+              while on cooldown.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:5a9e4be006a849563d367335ef57715b87e60d65113a5e06893922b3276a6ec5
+            value:
+              易的无极技艺变得更加熟练，被动提升攻击力。激活【无极剑道】会让易的普通攻击附带真实伤害，但技能冷却期间会失去被动效果的加成。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: P
+    ids:
+      - value: Jade_MasterYiPassive
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Double Strike
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 双重打击
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:3e4f26fbca772839564377dd870db81518ea9174ace3a37df3a8ce5fb1f89eea
+            value: Master Yi occassionaly strikes twice.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:4bd68b915b59c5a66cf427507441e4427d4fc7d69a453325ba75afc9aec26108
+            value: 易有时会连续攻击两次。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: Q
+    ids:
+      - value: Jade_MasterYiQ
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Alpha Strike
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 阿尔法突袭
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:e72a6ebdcd5b5334fb1f5181438c31c73b44c635d725b563a6cc302c9567ea95
+            value: Master Yi leaps across the battlefield with blinding speed,
+              dealing physical damage to multiple units in his path. Alpha
+              strike can critically strike and deals bonus physical damage to
+              minions and monsters. Basic attacks reduce Alpha Strike's
+              cooldown.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:fd4c447fca4ed4f958a30dd0afe2f0a299da1174437f594afd3cad3a2003459e
+            value:
+              易以肉眼难以发觉的速度穿梭于战场，对沿途多个敌人造成物理伤害。【阿尔法突袭】可触发暴击，对小兵和野怪造成额外物理伤害。普通攻击可缩短阿尔法突袭的冷却时间。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: R
+    ids:
+      - value: Jade_MasterYiR
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Highlander
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 高原血统
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:f462426c7d30945a5912b43124fc272392a16c6b93fe9aba79d97459b4472255
+            value: Master Yi moves with unparalleled agility, temporarily
+              increasing his Movement and Attack speeds as well as making him
+              immune to all slowing effects. While active, Champion kills or
+              assists extends Highlander's duration. Passively reduces cooldown
+              for his other abilities on a kill or assist.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:8771293065e870c5ee90e2f387bfc3f1de4dcba66990e49777518fd78723c8b6
+            value:
+              易以超乎想象的身法进行移动，短时间内提升移动速度和攻击速度，并免疫减速效果。技能持续期间，对英雄的击杀或助攻会延长该技能持续时间。完成对英雄的击杀或助攻时，被动效果会使其他技能的冷却时间缩短。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+  - slot: W
+    ids:
+      - value: Jade_MasterYiW
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    names:
+      en_US:
+        - value: Meditate
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+      zh_CN:
+        - value: 冥想
+          sources:
+            - source: game_data
+              first_seen: '16.16'
+              last_seen: '16.16'
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:7fb450da7ee4e43b92ca63a0a2050ee0c90bfb53d82686745cbd18a765ecad11
+            value: Master Yi rejuvenates his body by focus of mind, restoring
+              Health and taking reduced damage for a short time.
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:5bb1e78cc41a75ae5c3ac4fffdb5999e53ddb94c9628719e492155ba15a56bfe
+            value: 易集中念力、活化身体，短时间内回复生命值并减少所受的伤害。
+            first_seen: '16.16'
+            last_seen: '16.16'
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: '16.16'
+                last_seen: '16.16'

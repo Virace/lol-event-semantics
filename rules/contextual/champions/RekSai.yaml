@@ -9,3 +9,53 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: TSActive 在 RekSai 事件中对应被动 Tremor Sense/地听状态激活。
+  announcement:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: strawberry
+    component: boss_announcement
+    label: 首领登场播报
+    confidence: high
+    source: manual_contextual_alias
+    note: Strawberry_Gameplay_HUD_Boss_RekSai_announcement 是 PVE
+      首领雷克塞的界面登场播报；Gameplay/HUD/Boss 都只是路径角色。
+  fallingdebris:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: strawberry
+    component: falling_debris
+    label: 坠落碎石
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      explode: 爆炸
+    note: Strawberry_Boss_Reksai 的 fallingdebris_explode 是首领坠落碎石爆炸机制。
+  fullstacks:
+    kind: champion_spell_component
+    spell: p
+    asset_kind: sfx
+    component: fury_full_stacks
+    label: 艾克塞之怒层数已满
+    confidence: high
+    source: manual_contextual_alias
+    note: RekSaiSkin09_fullstacks 表示被动艾克塞之怒的怒气层数已满。
+  mini:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: strawberry
+    required_tokens:
+      - spawn
+    component: mini_spawn
+    label: 小型单位生成
+    confidence: high
+    source: manual_contextual_alias
+    note: Strawberry_Boss_Reksai_mini_spawn 表示首领生成小型单位。
+  spawn:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    mode: strawberry
+    component: boss_spawn
+    label: 首领生成
+    confidence: high
+    source: manual_contextual_alias
+    note: Strawberry_Boss_Reksai_spawn 是 PVE 首领生成音效。

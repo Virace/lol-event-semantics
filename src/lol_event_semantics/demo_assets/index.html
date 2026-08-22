@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#f7f5f0">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="按英雄、皮肤、模式和地图浏览英雄联盟音频事件原名与中文语义。">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:site_name" content="峡谷事件语义图鉴">
+    <meta property="og:title" content="峡谷事件语义图鉴 · Rift Event Atlas">
+    <meta property="og:description" content="按英雄、皮肤、模式和地图浏览英雄联盟音频事件原名与中文语义。">
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; base-uri 'none'; connect-src 'self' https://ddragon.leagueoflegends.com; form-action 'none'; img-src 'self' data: https://ddragon.leagueoflegends.com; object-src 'none'; script-src 'self'; style-src 'self'"
+    >
+    <title>峡谷事件语义图鉴 · Rift Event Atlas</title>
+    <link rel="preconnect" href="https://ddragon.leagueoflegends.com" crossorigin>
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#mainContent">跳到事件列表</a>
+    <div class="app-shell" id="appShell" aria-busy="true">
+      <aside class="sidebar" aria-label="数据浏览导航">
+        <header class="brand">
+          <p class="eyebrow">PUBLIC DATA EXPLORER</p>
+          <h1>峡谷事件语义图鉴</h1>
+          <p class="brand-en">Rift Event Atlas</p>
+        </header>
+
+        <div class="navigation-axis">
+          <div class="navigation-axis-row">
+            <span class="axis-label">数据状态</span>
+            <div class="view-switch" role="group" aria-label="选择数据状态">
+              <button class="view-tab" id="confirmedStatusButton" type="button" aria-pressed="true">已确定数据</button>
+              <button class="view-tab" id="reviewStatusButton" type="button" aria-pressed="false">需要 Review</button>
+            </div>
+          </div>
+          <div class="navigation-axis-row">
+            <span class="axis-label">数据分类</span>
+            <div class="view-switch" role="group" aria-label="选择数据分类">
+              <button class="view-tab" id="championEntityButton" type="button" aria-pressed="true">英雄</button>
+              <button class="view-tab" id="mapEntityButton" type="button" aria-pressed="false">地图</button>
+            </div>
+          </div>
+        </div>
+
+        <details class="dataset-disclosure" id="datasetDisclosure">
+          <summary>
+            <span>数据概览</span>
+            <span class="dataset-summary-inline" id="datasetSummaryInline">正在读取…</span>
+          </summary>
+          <dl class="dataset-stats" aria-label="数据集摘要">
+            <div><dt>版本</dt><dd id="datasetVersion">—</dd></div>
+            <div><dt>英雄</dt><dd id="championCount">—</dd></div>
+            <div><dt>地图</dt><dd id="mapCount">—</dd></div>
+            <div><dt>英雄事件</dt><dd id="eventCount">—</dd></div>
+            <div><dt>地图事件</dt><dd id="mapEventCount">—</dd></div>
+            <div><dt>未归属</dt><dd id="unassignedCount">—</dd></div>
+          </dl>
+        </details>
+
+        <div id="browseNavigation">
+          <label class="field-label" id="browseSearchLabel" for="browseSearch">查找英雄</label>
+          <div class="search-field">
+            <span aria-hidden="true">⌕</span>
+            <input id="browseSearch" type="search" autocomplete="off" placeholder="名称、称号或别名">
+          </div>
+          <div class="sidebar-heading">
+            <h2 id="browseListHeading">英雄</h2>
+            <span id="browseResultCount">—</span>
+          </div>
+          <nav class="champion-list" id="browseList" aria-label="选择英雄"></nav>
+        </div>
+
+        <footer class="sidebar-footer">
+          <span id="datasetId" translate="no">等待数据</span>
+          <span>只读静态数据站</span>
+        </footer>
+      </aside>
+
+      <main class="main-content" id="mainContent" tabindex="-1">
+        <div class="loading-banner" id="loadingBanner" role="status">正在读取演示数据…</div>
+        <div id="championView">
+          <section class="champion-header" aria-labelledby="championName">
+          <img class="champion-avatar" id="championPortrait" alt="" width="72" height="72">
+          <div class="champion-identity">
+            <p class="eyebrow" id="championAlias" translate="no">—</p>
+            <h2 id="championName">选择英雄</h2>
+            <p id="championTitle">从左侧列表开始浏览</p>
+          </div>
+          <dl class="champion-stats" aria-label="当前英雄摘要">
+            <div><dt>事件</dt><dd id="championEventCount">—</dd></div>
+            <div><dt>Stable</dt><dd id="championStableCount">—</dd></div>
+            <div><dt>皮肤</dt><dd id="championSkinCount">—</dd></div>
+            <div><dt>中文覆盖</dt><dd id="championRenderedRatio">—</dd></div>
+          </dl>
+          </section>
+
+          <section class="mode-section" aria-labelledby="modeHeading">
+          <div class="section-heading compact-heading">
+            <div>
+              <p class="eyebrow">MODE NAMESPACES</p>
+              <h2 id="modeHeading">模式命名空间</h2>
+            </div>
+            <p>前缀后接实体；点击卡片可筛选当前英雄事件。</p>
+          </div>
+          <div class="mode-cards" id="modeCards"></div>
+          </section>
+
+          <section class="media-panel" aria-labelledby="skinHeading">
+          <figure class="splash-frame">
+            <img id="splashImage" alt="" decoding="async">
+            <figcaption class="splash-caption">
+              <p class="eyebrow" id="skinToken" translate="no">BASE</p>
+              <h2 id="skinHeading">英雄原画</h2>
+              <p id="skinEnglishName">—</p>
+            </figcaption>
+            <button class="image-nav image-nav-prev" id="previousSkin" type="button" aria-label="上一款皮肤">←</button>
+            <button class="image-nav image-nav-next" id="nextSkin" type="button" aria-label="下一款皮肤">→</button>
+            <span class="image-counter" id="skinCounter">— / —</span>
+          </figure>
+          <div class="skin-toolbar">
+            <label for="skinPreviewSelect">预览皮肤</label>
+            <select id="skinPreviewSelect"></select>
+            <p id="imageFallbackNote">若某个炫彩没有独立原画，将回退到基础原画。</p>
+          </div>
+          </section>
+
+          <section class="events-section" aria-labelledby="eventsHeading">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">RAW EVENT → ZH_CN</p>
+              <h2 id="eventsHeading">事件语义</h2>
+            </div>
+            <p id="resultsSummary">等待选择英雄</p>
+          </div>
+
+          <form class="filters" id="eventFilters" role="search">
+            <label class="wide-filter" for="eventSearch">
+              <span>搜索事件</span>
+              <input id="eventSearch" type="search" autocomplete="off" placeholder="原始事件名或中文标签">
+            </label>
+            <label for="assetFilter">
+              <span>事件类型</span>
+              <select id="assetFilter"><option value="all">全部</option></select>
+            </label>
+            <label for="supportFilter">
+              <span>支持度</span>
+              <select id="supportFilter"><option value="all">全部</option></select>
+            </label>
+            <label for="modeFilter">
+              <span>语义模式</span>
+              <select id="modeFilter"><option value="all">全部</option></select>
+            </label>
+            <label for="mapFilter">
+              <span>地图（英雄事件）</span>
+              <select id="mapFilter"><option value="all">全部地图</option></select>
+            </label>
+            <label for="skinFilter">
+              <span>皮肤事件</span>
+              <select id="skinFilter"><option value="all">全部皮肤</option></select>
+            </label>
+            <button class="secondary-button" id="resetFilters" type="button">重置筛选</button>
+          </form>
+
+          <div class="table-frame" tabindex="0" aria-label="事件结果，可横向滚动">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">原始事件名 / 中文标签</th>
+                  <th scope="col">类型</th>
+                  <th scope="col">支持度</th>
+                  <th scope="col">模式 / 地图</th>
+                  <th scope="col">皮肤</th>
+                </tr>
+              </thead>
+              <tbody id="eventTableBody"></tbody>
+            </table>
+            <div class="empty-state" id="emptyState" hidden>
+              <strong>没有匹配事件</strong>
+              <span>缩短关键词，或重置模式、地图、皮肤与支持度筛选。</span>
+            </div>
+          </div>
+
+          <nav class="pagination" aria-label="事件分页">
+            <button class="secondary-button" id="previousPage" type="button">上一页</button>
+            <span id="pageStatus">第 — 页</span>
+            <button class="secondary-button" id="nextPage" type="button">下一页</button>
+            <label for="pageSize">每页</label>
+            <select id="pageSize">
+              <option value="50">50</option>
+              <option value="100" selected>100</option>
+              <option value="200">200</option>
+            </select>
+          </nav>
+          </section>
+        </div>
+
+        <div id="mapView" hidden>
+          <section class="champion-header map-header" aria-labelledby="mapName">
+            <div class="map-identifier" id="mapIdentifier" aria-hidden="true">MAP</div>
+            <div class="champion-identity">
+              <p class="eyebrow" id="mapAlias" translate="no">—</p>
+              <h2 id="mapName">选择地图</h2>
+              <p id="mapIdentity">从左侧列表开始浏览</p>
+            </div>
+            <dl class="champion-stats" aria-label="当前地图摘要">
+              <div><dt>事件</dt><dd id="mapCurrentEventCount">—</dd></div>
+              <div><dt>Stable</dt><dd id="mapStableCount">—</dd></div>
+              <div><dt>模式</dt><dd id="mapModeCount">—</dd></div>
+              <div><dt>中文覆盖</dt><dd id="mapRenderedRatio">—</dd></div>
+            </dl>
+          </section>
+
+          <section class="events-section map-events-section" aria-labelledby="mapEventsHeading">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">EXPLICIT MAP SLOT</p>
+                <h2 id="mapEventsHeading">地图事件语义</h2>
+              </div>
+              <p id="mapResultsSummary">等待选择地图</p>
+            </div>
+
+            <form class="filters map-filters" id="mapEventFilters" role="search">
+              <label class="wide-filter" for="mapEventSearch">
+                <span>搜索事件</span>
+                <input id="mapEventSearch" type="search" autocomplete="off" placeholder="原始事件名、中文或实体">
+              </label>
+              <label for="mapAssetFilter">
+                <span>事件类型</span>
+                <select id="mapAssetFilter"><option value="all">全部</option></select>
+              </label>
+              <label for="mapSupportFilter">
+                <span>支持度</span>
+                <select id="mapSupportFilter"><option value="all">全部</option></select>
+              </label>
+              <label for="mapModeFilter">
+                <span>语义模式</span>
+                <select id="mapModeFilter"><option value="all">全部</option></select>
+              </label>
+              <label for="mapEntityFilter">
+                <span>来源实体</span>
+                <select id="mapEntityFilter"><option value="all">全部</option></select>
+              </label>
+              <button class="secondary-button" id="resetMapFilters" type="button">重置筛选</button>
+            </form>
+
+            <div class="table-frame" tabindex="0" aria-label="地图事件结果，可横向滚动">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">原始事件名 / 中文标签</th>
+                    <th scope="col">类型</th>
+                    <th scope="col">支持度</th>
+                    <th scope="col">模式</th>
+                    <th scope="col">实体 / 语义族</th>
+                  </tr>
+                </thead>
+                <tbody id="mapEventTableBody"></tbody>
+              </table>
+              <div class="empty-state" id="mapEmptyState" hidden>
+                <strong>没有匹配事件</strong>
+                <span>缩短关键词，或重置类型、支持度、模式与实体筛选。</span>
+              </div>
+            </div>
+
+            <nav class="pagination" aria-label="地图事件分页">
+              <button class="secondary-button" id="mapPreviousPage" type="button">上一页</button>
+              <span id="mapPageStatus">第 — 页</span>
+              <button class="secondary-button" id="mapNextPage" type="button">下一页</button>
+              <label for="mapPageSize">每页</label>
+              <select id="mapPageSize">
+                <option value="50">50</option>
+                <option value="100" selected>100</option>
+                <option value="200">200</option>
+              </select>
+            </nav>
+          </section>
+        </div>
+
+        <div class="review-view" id="reviewView" hidden>
+          <section class="review-header" aria-labelledby="reviewHeading">
+            <div>
+              <p class="eyebrow">SFX RESIDUAL REVIEW</p>
+              <h2 id="reviewHeading">英雄 Review</h2>
+              <p id="reviewDescription">同一 candidate 中无显式地图槽位的残差与未归属记录；点击记录可查看原因并复制稳定定位。</p>
+            </div>
+            <dl class="review-stats" aria-label="Review 摘要">
+              <div><dt>残差记录</dt><dd id="reviewResidualCount">—</dd></div>
+              <div><dt>问题</dt><dd id="reviewIssueCount">—</dd></div>
+              <div><dt>未归属</dt><dd id="reviewUnassignedCount">—</dd></div>
+            </dl>
+          </section>
+
+          <section class="review-layer-section" aria-labelledby="reviewLayerHeading">
+            <div class="section-heading compact-heading">
+              <div>
+                <p class="eyebrow">VALIDATION LAYERS</p>
+                <h2 id="reviewLayerHeading">残差分层</h2>
+              </div>
+              <p>层级只来自 validator 合同；未归属队列独立保留，不据此猜测英雄归属。</p>
+            </div>
+            <div class="review-layer-cards" id="reviewLayerCards"></div>
+          </section>
+
+          <section class="review-queue-section" aria-labelledby="reviewQueueHeading">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">REVIEW WORKLIST</p>
+                <h2 id="reviewQueueHeading">待审清单</h2>
+              </div>
+              <p id="reviewResultsSummary">正在读取 Review 数据…</p>
+            </div>
+
+            <form class="review-filters" id="reviewFilters" role="search">
+              <label for="reviewQueue">
+                <span>队列</span>
+                <select id="reviewQueue"></select>
+              </label>
+              <label class="wide-filter" for="reviewSearch">
+                <span>搜索</span>
+                <input id="reviewSearch" type="search" autocomplete="off" placeholder="事件名、中文或 record ID">
+              </label>
+              <label for="reviewLayer">
+                <span>层级</span>
+                <select id="reviewLayer"><option value="all">全部层级</option></select>
+              </label>
+              <label for="reviewCode">
+                <span>问题代码</span>
+                <select id="reviewCode"><option value="all">全部代码</option></select>
+              </label>
+              <label for="reviewFamily">
+                <span>语义族</span>
+                <select id="reviewFamily"><option value="all">全部语义族</option></select>
+              </label>
+              <label for="reviewEntity">
+                <span>实体</span>
+                <select id="reviewEntity"><option value="all">全部实体</option></select>
+              </label>
+              <label id="reviewMapField" for="reviewMap">
+                <span>地图</span>
+                <select id="reviewMap"><option value="all">全部地图</option></select>
+              </label>
+              <label for="reviewStatus">
+                <span>状态</span>
+                <select id="reviewStatus"><option value="all">全部状态</option></select>
+              </label>
+              <button class="secondary-button" id="resetReviewFilters" type="button">重置筛选</button>
+            </form>
+
+            <div class="review-workspace">
+              <div>
+                <div class="table-frame" tabindex="0" aria-label="Review 结果，可横向滚动">
+                  <table class="review-table">
+                    <thead>
+                      <tr>
+                        <th scope="col">定位 / 展示</th>
+                        <th scope="col">层级 / 问题</th>
+                        <th scope="col">实体 / 语义族</th>
+                        <th scope="col">状态</th>
+                      </tr>
+                    </thead>
+                    <tbody id="reviewTableBody"></tbody>
+                  </table>
+                  <div class="empty-state" id="reviewEmptyState" hidden>
+                    <strong>没有匹配的 Review 记录</strong>
+                    <span>调整队列或清除层级、代码、实体、地图与状态筛选。</span>
+                  </div>
+                </div>
+
+                <nav class="pagination" aria-label="Review 分页">
+                  <button class="secondary-button" id="reviewPreviousPage" type="button">上一页</button>
+                  <span id="reviewPageStatus">第 — 页</span>
+                  <button class="secondary-button" id="reviewNextPage" type="button">下一页</button>
+                  <label for="reviewPageSize">每页</label>
+                  <select id="reviewPageSize">
+                    <option value="50" selected>50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                  </select>
+                </nav>
+              </div>
+
+              <aside class="review-detail" id="reviewDetail" aria-labelledby="reviewDetailTitle" hidden>
+                <p class="eyebrow">STABLE LOCATOR</p>
+                <h3 id="reviewDetailTitle">记录详情</h3>
+                <code id="reviewDetailLocator" translate="no">—</code>
+                <button class="secondary-button" id="copyReviewLocator" type="button">复制定位</button>
+                <div class="review-detail-labels" id="reviewDetailLabels"></div>
+                <dl class="review-detail-meta" id="reviewDetailMeta"></dl>
+                <h4>原因与证据</h4>
+                <ul class="review-issue-list" id="reviewIssueList"></ul>
+              </aside>
+            </div>
+          </section>
+        </div>
+
+        <footer class="legal-footer">
+          <p>
+            Rift Event Atlas isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or
+            anyone officially involved in producing or managing Riot Games properties. Riot Games, and all associated
+            properties are trademarks or registered trademarks of Riot Games, Inc.
+          </p>
+          <p>
+            英雄与皮肤图片来自
+            <a href="https://developer.riotgames.com/docs/lol#data-dragon" target="_blank" rel="noreferrer">Riot Data Dragon</a>；
+            本站只展示仓库生成的只读语义投影；页面本身不授予发布或批准状态。
+          </p>
+          <p class="site-links">
+            <button class="text-button" id="copyPageLink" type="button">复制当前页面链接</button>
+            <a href="https://github.com/Virace/lol-event-semantics" target="_blank" rel="noreferrer">查看源码与数据说明</a>
+          </p>
+        </footer>
+      </main>
+    </div>
+    <div class="sr-status" id="liveRegion" aria-live="polite" aria-atomic="true"></div>
+  </body>
+</html>

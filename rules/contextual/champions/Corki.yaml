@@ -18,21 +18,27 @@ aliases:
     source: manual_contextual_alias
     note: CarpetBombMega 在 Corki 事件中对应强化 W Valkyrie/包裹俯冲表现。
   CorkiBasicAttack:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: basic_attack
     label: 普攻
     confidence: medium
     source: manual_contextual_alias
     note: CorkiBasicAttack 在 Corki 事件中对应基础攻击音效。
   CorkiCritAttack:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: crit_attack
     label: 暴击攻击
     confidence: medium
     source: manual_contextual_alias
     note: CorkiCritAttack 在 Corki 事件中对应暴击基础攻击音效。
+  DangerZoneLoaded:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: danger_zone_loaded
+    label: 危险区装填完成
+    confidence: high
+    source: manual_contextual_alias
+    note: DangerZoneLoaded 跨基础与多套皮肤稳定表示危险区资源装填完成的循环提示，不按技能槽位猜测。
   GGun:
     kind: champion_spell_component
     spell: e
@@ -81,6 +87,19 @@ aliases:
     confidence: medium
     source: manual_contextual_alias
     note: PhosphorusBomb 在 Corki 事件中对应 Q 技能 Phosphorus Bomb。
+  RapidReload:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    component: rapid_reload
+    label: 快速装填
+    confidence: high
+    source: manual_contextual_alias
+    qualifiers:
+      helibuffactivate: 直升机主题
+      ufobuffactivate: 飞碟主题
+      redbaronbuffactivate: 红色男爵主题
+      Boom: 爆炸
+    note: RapidReload 是库奇快速装填音效；拼接在尾段中的载具主题与 Boom 必须保留，不能因相位未拆开而只留泛化状态。
   Valkyrie:
     kind: champion_spell_component
     spell: w

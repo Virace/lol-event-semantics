@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+import json
+import tempfile
 import unittest
 from pathlib import Path
 
 from lol_event_semantics.full_refresh import run_refresh_steps
-from scripts.run_full_refresh import build_steps, main, parse_args
+from scripts.run_full_refresh import RefreshPaths, build_steps, main, parse_args
 
 
 def step_names(steps) -> list[str]:
@@ -35,7 +37,7 @@ class BuildStepsTests(unittest.TestCase):
     """验证默认参数下的步骤组装。"""
 
     def test_core_chain_order_and_argv(self) -> None:
-        """默认五步顺序正确且 argv 含正确参数。"""
+        """默认六步顺序正确且 argv 含正确参数。"""
 
         args = parse_args(
             [
@@ -43,21 +45,20 @@ class BuildStepsTests(unittest.TestCase):
                 "raw/events",
                 "--reference-root",
                 "reference",
-                "--output-root",
-                "out/normalized",
-                "--work-root",
-                "out/work",
                 "--baseline",
                 "data/quality-baseline.json",
-                "--report-root",
-                "out/reports",
             ]
         )
-        steps = build_steps(args)
+        paths = RefreshPaths(
+            output_root=Path("out/normalized"),
+            work_root=Path("out/work"),
+            report_root=Path("out/reports"),
+        )
+        steps = build_steps(args, paths)
 
         self.assertEqual(
             step_names(steps),
-            ["decompose", "build", "validate", "metrics", "ratchet"],
+            ["decompose", "build", "validate", "quality", "review", "metrics", "ratchet"],
         )
 
         decompose = find_argv(steps, "decompose")
@@ -72,6 +73,10 @@ class BuildStepsTests(unittest.TestCase):
         self.assertIn(as_path("out/work"), build)
         self.assertIn("--output-root", build)
         self.assertIn(as_path("out/normalized"), build)
+        self.assertEqual(
+            build[build.index("--sources-manifest") + 1],
+            as_path("data/frozen-sources-manifest.v1.json"),
+        )
 
         # validate 与 metrics 复用 report_root 下同一 validation 报告路径。
         validate = find_argv(steps, "validate")
@@ -79,6 +84,26 @@ class BuildStepsTests(unittest.TestCase):
         self.assertIn(as_path("out/normalized"), validate)
         validation_json = validate[validate.index("--output-json") + 1]
         self.assertTrue(validation_json.endswith("normalized-validation.json"))
+
+        quality = find_argv(steps, "quality")
+        self.assertEqual(quality[quality.index("--validation-json") + 1], validation_json)
+        self.assertTrue(quality[quality.index("--output-json") + 1].endswith("quality-gates.json"))
+        self.assertTrue(quality[quality.index("--support-diff-json") + 1].endswith("quality-diff.json"))
+
+        review = find_argv(steps, "review")
+        self.assertIn("manage_review.py", review[1])
+        self.assertEqual(review[2], "build")
+        self.assertEqual(review[review.index("--normalized-root") + 1], as_path("out/normalized"))
+        self.assertEqual(
+            review[review.index("--support-diff") + 1],
+            quality[quality.index("--support-diff-json") + 1],
+        )
+        self.assertEqual(
+            review[review.index("--decision-source") + 1],
+            as_path("rules/review-decisions.v1.json"),
+        )
+        self.assertEqual(review[review.index("--rules-root") + 1], as_path("rules"))
+        self.assertTrue(review[review.index("--output-root") + 1].endswith("review-site"))
 
         ratchet = find_argv(steps, "ratchet")
         self.assertIn("--baseline", ratchet)
@@ -101,11 +126,14 @@ class BuildStepsTests(unittest.TestCase):
                 "https://example.test/game-data",
             ]
         )
-        steps = build_steps(args)
+        steps = build_steps(
+            args,
+            RefreshPaths(Path("out/normalized"), Path("out/work"), Path("out/reports")),
+        )
 
         self.assertEqual(
             step_names(steps),
-            ["update", "decompose", "build", "validate", "metrics", "ratchet"],
+            ["update", "decompose", "build", "validate", "quality", "review", "metrics", "ratchet"],
         )
         update = find_argv(steps, "update")
         self.assertIn("update_raw_events.py", update[1])
@@ -122,6 +150,22 @@ class BuildStepsTests(unittest.TestCase):
 
         with self.assertRaises(SystemExit):
             parse_args(["--update-first"])
+
+    def test_decision_source_must_be_fixed_under_rules_root(self) -> None:
+        """外部 decision source 不得影响未绑定该 source 的 candidate。"""
+
+        with self.assertRaises(SystemExit):
+            parse_args(["--decision-source", "outside/review-decisions.v1.json"])
+
+        args = parse_args(
+            [
+                "--rules-root",
+                "fixture-rules",
+                "--decision-source",
+                "fixture-rules/review-decisions.v1.json",
+            ]
+        )
+        self.assertEqual(args.decision_source, Path("fixture-rules/review-decisions.v1.json"))
 
 
 class RunRefreshStepsTests(unittest.TestCase):
@@ -218,16 +262,14 @@ class MainTests(unittest.TestCase):
     def test_main_returns_failed_step_exit_code(self) -> None:
         """阻断步骤失败时 main 返回该步 exit code 并报名。"""
 
-        def runner(name: str, argv: list[str]) -> int:
-            return 3 if name == "build" else 0
+        with tempfile.TemporaryDirectory() as temp:
+            calls: list[str] = []
 
-        calls: list[str] = []
+            def tracking_runner(name: str, argv: list[str]) -> int:
+                calls.append(name)
+                return 3 if name == "build" else 0
 
-        def tracking_runner(name: str, argv: list[str]) -> int:
-            calls.append(name)
-            return runner(name, argv)
-
-        code = main(["--raw-root", "raw/events"], runner=tracking_runner)
+            code = main(["--raw-root", "raw/events", "--runs-root", temp], runner=tracking_runner)
 
         self.assertEqual(code, 3)
         # build 失败后 validate/ratchet/metrics 不再执行。
@@ -236,13 +278,15 @@ class MainTests(unittest.TestCase):
     def test_main_allow_ratchet_regression_continues(self) -> None:
         """--allow-ratchet-regression 时 ratchet 失败非阻断，全链走完且整体成功。"""
 
-        calls: list[str] = []
+        with tempfile.TemporaryDirectory() as temp:
+            calls: list[str] = []
 
-        def runner(name: str, argv: list[str]) -> int:
-            calls.append(name)
-            return 1 if name == "ratchet" else 0
+            def runner(name: str, argv: list[str]) -> int:
+                calls.append(name)
+                materialize_run_outputs(name, argv)
+                return 1 if name == "ratchet" else 0
 
-        code = main(["--allow-ratchet-regression"], runner=runner)
+            code = main(["--allow-ratchet-regression", "--runs-root", temp], runner=runner)
 
         self.assertEqual(code, 0)
         # ratchet 现为最后一步，非阻断失败不影响整体成功。
@@ -252,18 +296,65 @@ class MainTests(unittest.TestCase):
     def test_main_ratchet_failure_blocks_by_default(self) -> None:
         """默认 ratchet 失败（exit 1）阻断，但 metrics 已在其前产出。"""
 
-        calls: list[str] = []
+        with tempfile.TemporaryDirectory() as temp:
+            calls: list[str] = []
 
-        def runner(name: str, argv: list[str]) -> int:
-            calls.append(name)
-            return 1 if name == "ratchet" else 0
+            def runner(name: str, argv: list[str]) -> int:
+                calls.append(name)
+                materialize_run_outputs(name, argv)
+                return 1 if name == "ratchet" else 0
 
-        code = main([], runner=runner)
+            code = main(["--runs-root", temp], runner=runner)
 
         self.assertEqual(code, 1)
         # metrics 在 ratchet 之前执行，故 ratchet 阻断失败时 metrics 已产出。
         self.assertIn("metrics", calls)
-        self.assertEqual(calls, ["decompose", "build", "validate", "metrics", "ratchet"])
+        self.assertEqual(calls, ["decompose", "build", "validate", "quality", "review", "metrics", "ratchet"])
+
+
+def materialize_run_outputs(name: str, argv: list[str]) -> None:
+    """为 main 编排测试写出 completion 所需的最小候选/报告。"""
+
+    if name == "build":
+        output_root = Path(argv[argv.index("--output-root") + 1])
+        output_root.mkdir(parents=True, exist_ok=True)
+        manifest = {
+            "dataset_id": "local-v1-" + "1" * 16,
+            "content_digest": "1" * 64,
+            "content_identity": {
+                "input_identity": {
+                    "generator_state": {"commit": "a" * 40, "dirty": False},
+                }
+            },
+        }
+        (output_root / "manifest.json").write_text(json.dumps(manifest) + "\n", encoding="utf-8")
+    elif name in {"validate", "metrics"}:
+        output_path = Path(argv[argv.index("--output-json") + 1])
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text("{}\n", encoding="utf-8")
+    elif name == "quality":
+        output_path = Path(argv[argv.index("--output-json") + 1])
+        diff_path = Path(argv[argv.index("--support-diff-json") + 1])
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(
+            json.dumps(
+                {
+                    "promotion_eligibility": {
+                        "eligible": False,
+                        "gate_version": "stable-product-gates.v1",
+                        "automatic_gates_passed": True,
+                        "reason": "manual review pending",
+                    }
+                }
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        diff_path.write_text("{}\n", encoding="utf-8")
+    elif name == "review":
+        output_root = Path(argv[argv.index("--output-root") + 1])
+        output_root.mkdir(parents=True, exist_ok=True)
+        (output_root / "review-bundle.json").write_text("{}\n", encoding="utf-8")
 
 
 if __name__ == "__main__":

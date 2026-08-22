@@ -17,7 +17,8 @@ from .decomposition_model import (
     UnknownKind,
 )
 from .game_data import compact
-from .match_audit import SPELL_MATCH_CONSTRAINTS_SOURCE_PATH, MatchAuditEvent, record_match
+from .match_audit import MatchAuditEvent, record_match
+from .mode_namespace import ModeNamespace, mode_namespace_for_token, split_mode_entity_alias
 from .reference_collection import load_reference_collection
 from .rules import ContextualAlias, LowTrustEventRule, RuleBook
 
@@ -31,6 +32,94 @@ SKIN_CONTEXT_PREFIXES = {
 OWNER_FORM_SUFFIXES = {
     "Dragon": "dragon",
 }
+
+NON_SPELL_SELF_ACTION_FAMILIES = frozenset(
+    {
+        "assist",
+        "attack",
+        "basic_attack",
+        "buy_item",
+        "contextual_action",
+        "crit_attack",
+        "dance",
+        "dance_response",
+        "death",
+        "game_end",
+        "heal",
+        "homeguard",
+        "idle",
+        "joke",
+        "joke_response",
+        "laugh",
+        "level_up",
+        "move",
+        "ping",
+        "recall",
+        "respawn",
+        "shop",
+        "taunt",
+        "taunt_response",
+        "use_item",
+        "winddown",
+    }
+)
+
+MODE_ACTOR_ATTACK_PATTERN = re.compile(
+    r"(?P<attack>BasicAttack|CritAttack|RangedAttack|MeleeAttack)(?P<variant>[0-9]*)$",
+    re.IGNORECASE,
+)
+MODE_ACTOR_SLOT_PATTERN = re.compile(r"^(?P<spell_key>[PQWER])(?P<residual>(?:[A-Z0-9][A-Za-z0-9]*)?)$")
+MODE_ACTOR_SLOT_DENY_RESIDUALS = frozenset({"tpc"})
+GROUPED_ACTION_DIMENSION_PATTERN = re.compile(r"(?P<action>[A-Za-z]+)(?:[23]D)$", re.IGNORECASE)
+GROUPED_ACTION_ALIASES = {
+    "dance": "dance",
+    "death": "death",
+    "homeguard": "homeguard",
+    "idle": "idle",
+    "joke": "joke",
+    "laugh": "laugh",
+    "recall": "recall",
+    "recallin": "recall",
+    "respawn": "respawn",
+    "respown": "respawn",
+    "taunt": "taunt",
+    "winddown": "winddown",
+}
+GROUPED_ACTION_QUALIFIER_LABELS = {
+    "a": "A段",
+    "anim": "动画音轨",
+    "b": "B段",
+    "body": "身体音效层",
+    "buttons": "按键",
+    "camera": "镜头",
+    "close": "收起",
+    "crystal": "水晶音效层",
+    "flash": "闪光",
+    "gun": "枪械音效层",
+    "gunshot": "枪声",
+    "ignite": "点火",
+    "lp": "低通音频层",
+    "music": "音乐",
+    "oneoffs": "独立触发",
+    "open": "展开",
+}
+GROUPED_ACTION_PHASE_TOKENS = frozenset(
+    {
+        "buffactivate",
+        "buffdeactivate",
+        "cast",
+        "deactivate",
+        "end",
+        "in",
+        "leadin",
+        "leadout",
+        "loop",
+        "out",
+        "start",
+        "winddown",
+        "windup",
+    }
+)
 
 
 @dataclass(slots=True)
@@ -363,6 +452,7 @@ class ReferenceIndex:
                 "skin_en": legacy.skin_en,
                 "skin_name": legacy.skin_name,
                 "form_name": legacy.form_name,
+                "form_key": legacy.form_key,
                 "note": legacy.note,
             },
         )
@@ -530,7 +620,10 @@ class ReferenceIndex:
             self.entities[ref.key] = ref
 
     def add_champion_entity(self, entity: ReferenceEntity) -> None:
-        """注册英雄实体及其可安全使用的别名。"""
+        """注册英雄实体，并按稳定优先级解决别名冲突。
+
+        规范 alias 优先；同为展示名或兼容别名时，基础英雄优先于扩展模式实体。
+        """
 
         aliases = dedupe_preserve_order(
             [
@@ -545,8 +638,11 @@ class ReferenceIndex:
             if not alias:
                 continue
 
-            self.entities[alias] = entity
-            self.champions_by_alias[alias] = entity
+            champion = self.champions_by_alias.get(alias)
+            if champion is None or champion_alias_rank(entity, alias) < champion_alias_rank(champion, alias):
+                champion = entity
+                self.champions_by_alias[alias] = champion
+            self.entities[alias] = champion
 
         if entity.id is not None:
             self.champions_by_id[entity.id] = entity
@@ -800,16 +896,111 @@ def enrich_with_reference(
     add_token_candidates(record, reference)
     enrich_unknown_profile(record, reference)
     resolve_ambiguous_entities(record, reference)
-    add_contextual_alias_candidates(record, reference)
+    add_sfx_cue_champion_context(record, reference)
+    # 命名空间与真实演员必须先于别名/技能推断建立；Ruby、OdysseyAugments
+    # 等前缀只是上下文，不能占用英雄 owner。
+    add_mode_namespace_candidate(record, reference)
     add_mode_champion_actor_candidate(record, reference)
+    add_owner_form_context(record, reference)
+    add_grouped_champion_action_context(record, reference)
+    add_contextual_alias_candidates(record, reference)
     apply_tail_modifier_rules(record, reference)
     apply_kill_spell_method(record, reference)
+    add_mode_attack_candidate(record, reference)
     add_ultimate_spellbook_spell_candidate(record, reference)
     add_inferred_champion_spell_candidate(record, reference)
     add_spell_combo_candidate(record, reference)
     add_composite_owner_candidate(record, reference)
     apply_low_trust_event_rule(record, reference)
     return record
+
+
+def add_sfx_cue_champion_context(
+    record: EventDecompositionRecord,
+    reference: ReferenceIndex,
+) -> None:
+    """从 HUD/UI 外壳内已核验的皮肤 token 恢复真实英雄主体。
+
+    ``Play_sfx_hud_LuxSkin07_...`` 一类名字把 ``hud`` 放在 owner 位置，
+    但真正归属仍由 cue path 中可在参考表精确解析的 ``ChampionSkinNN``
+    决定。这里只处理原本被判为系统 SFX 的 HUD/UI 外壳，并要求命中正式
+    skin 实体，避免把普通系统 token 或名字前缀猜成英雄。
+    """
+
+    if record.shell.asset_kind != "sfx" or record.semantic_slots.get("sfx_scope") != "system_sfx":
+        return
+
+    owner = compact(record.owner.raw_owner_token or record.owner.alias or "")
+    if owner not in {"hud", "ui"}:
+        return
+
+    cue_path = record.semantic_slots.get("cue_path")
+    if not isinstance(cue_path, list):
+        return
+
+    for token in cue_path:
+        if not isinstance(token, str):
+            continue
+        skin = reference.resolve_token(token, record.raw_event_name)
+        if skin is None or skin.kind != "skin":
+            continue
+
+        if set_cue_skin_champion_context(record, reference, skin, raw_token=token):
+            return
+
+    # 部分 HUD 事件把 ``MissFortuneSkin16`` 拆成相邻的
+    # ``MissFortune``/``Skin16`` 两段。只有两段相邻、前段精确命中英雄且
+    # (英雄, SkinNN) 能在皮肤参考表中反查时才恢复，避免把任意系统词和
+    # 孤立 SkinNN 拼成角色。
+    for index, token in enumerate(cue_path[:-1]):
+        skin_token = cue_path[index + 1]
+        if not isinstance(token, str) or not isinstance(skin_token, str):
+            continue
+        if re.fullmatch(r"Skin[0-9]+", skin_token, re.IGNORECASE) is None:
+            continue
+        champion = reference.resolve_token(token, record.raw_event_name)
+        if champion is None or champion.kind != "champion" or champion.alias is None:
+            continue
+        skin = reference.resolve_champion_skin(champion.alias, skin_token)
+        if skin is None:
+            continue
+        if set_cue_skin_champion_context(
+            record,
+            reference,
+            skin,
+            raw_token=f"{token}_{skin_token}",
+        ):
+            return
+
+
+def set_cue_skin_champion_context(
+    record: EventDecompositionRecord,
+    reference: ReferenceIndex,
+    skin: ReferenceEntity,
+    *,
+    raw_token: str,
+) -> bool:
+    """把已精确解析的 cue 皮肤实体写回英雄主体与皮肤上下文。"""
+
+    champion_alias = skin.metadata.get("champion_alias")
+    skin_token = skin.metadata.get("skin_token")
+    if not isinstance(champion_alias, str) or not isinstance(skin_token, str):
+        return False
+
+    champion = reference.champions_by_alias.get(compact(champion_alias))
+    if champion is None:
+        return False
+
+    record.semantic_slots["subject"] = champion.to_dict()
+    record.semantic_slots["subject_hint"] = champion.alias or champion.label
+    record.semantic_slots["skin_token"] = skin_token
+    record.semantic_slots["sfx_scope"] = "champion_sfx"
+    record.semantic_slots["cue_skin_context"] = {
+        "raw": raw_token,
+        "skin_token": skin_token,
+        "source": skin.source,
+    }
+    return True
 
 
 def add_token_candidates(record: EventDecompositionRecord, reference: ReferenceIndex) -> None:
@@ -928,6 +1119,198 @@ def add_contextual_alias_candidates(record: EventDecompositionRecord, reference:
     apply_mode_contextual_alias(record, reference)
 
 
+def add_owner_form_context(record: EventDecompositionRecord, reference: ReferenceIndex) -> None:
+    """把已审阅的复合 owner 形态保存在主体和动作语义中。"""
+
+    owner_candidates = dedupe_preserve_order(
+        [
+            record.owner.alias or "",
+            record.owner.raw_owner_token or "",
+        ]
+    )
+    legacy_owner = None
+    owner = ""
+    for owner in owner_candidates:
+        if not owner:
+            continue
+        legacy_owner = reference.resolve_legacy_owner_alias(owner)
+        if legacy_owner is not None:
+            break
+
+    if legacy_owner is None:
+        return
+
+    form_name = legacy_owner.metadata.get("form_name")
+    form_key = legacy_owner.metadata.get("form_key")
+    if not isinstance(form_name, str) or not isinstance(form_key, str):
+        return
+
+    form_payload: dict[str, str | None] = {
+        "raw": owner,
+        "kind": "champion_form_qualifier",
+        "label": form_name,
+        "component": form_key,
+        "source": "overrides/legacy_aliases.yaml",
+        "confidence": "high",
+        "note": str(legacy_owner.metadata.get("note") or "") or None,
+    }
+    record.semantic_slots.setdefault("subject", legacy_owner.to_dict())
+    record.semantic_slots.setdefault("owner_form", form_payload)
+    if record.profile.semantic_profile is SemanticProfile.SELF_ACTION:
+        record.semantic_slots.setdefault("action_form", form_payload)
+
+    action = normalize_trigger_family(record.profile.primary_family)
+    if record.shell.asset_kind != "sfx" or action not in {"dance", "joke", "laugh", "recall", "taunt"}:
+        return
+
+    phase = first_form_action_phase_value(record)
+    if phase is None:
+        return
+
+    if action == "recall" and record.owner.skin_token is None:
+        # skin_recall_state 的契约要求真实 SkinNN；基础形态 owner 没有皮肤
+        # 角色，继续使用 recall/champion_action_event，但补回明确生命周期。
+        record.semantic_slots["phase"] = phase
+        record.semantic_slots["recall_action"] = "recall"
+        return
+
+    primary_family = "skin_recall_state" if action == "recall" else "skin_action_state"
+    record.profile = EventProfile(
+        primary_family=primary_family,
+        semantic_profile=SemanticProfile.SELF_ACTION,
+        requires_context=False,
+        reason="resolved reviewed form owner self-action lifecycle",
+    )
+    record.semantic_slots["trigger_family"] = primary_family
+    record.semantic_slots["subject_hint"] = legacy_owner.alias or legacy_owner.label
+    record.semantic_slots["skin_token"] = record.owner.skin_token
+    record.semantic_slots["action"] = action
+    record.semantic_slots["phase"] = phase
+    if action == "recall":
+        record.semantic_slots["recall_action"] = "recall"
+
+
+def add_grouped_champion_action_context(
+    record: EventDecompositionRecord,
+    reference: ReferenceIndex,
+) -> None:
+    """把 ``Emote/Base/<动作>/<尾段>`` 拆成动作、阶段与结构化修饰语。
+
+    Emote/Base 只是资源分组，不是实体或用户可见动作。这里只处理已确认的
+    champion_sfx，并使用封闭动作/修饰语词表；表外动作继续留在原 profile，
+    防止把系统 UI 或任意英文 token 猜成英雄动作。
+    """
+
+    if (
+        record.shell.asset_kind != "sfx"
+        or record.semantic_slots.get("sfx_scope") != "champion_sfx"
+        or record.profile.primary_family not in {"emote_system", "media_base"}
+    ):
+        return
+
+    owner_context = record.semantic_slots.get("owner_context")
+    owner_alias = str(owner_context.get("alias") or "") if isinstance(owner_context, dict) else ""
+    subject = reference.champions_by_alias.get(compact(owner_alias))
+    if subject is None:
+        subject = reference.resolve_legacy_owner_alias(owner_alias)
+    if subject is None:
+        existing_subject = record.semantic_slots.get("subject")
+        if isinstance(existing_subject, dict):
+            subject_alias = str(existing_subject.get("alias") or "")
+            subject = reference.champions_by_alias.get(compact(subject_alias))
+    if subject is None:
+        return
+
+    cue_path = record.semantic_slots.get("cue_path")
+    if not isinstance(cue_path, list):
+        return
+    expected_group = "emote" if record.profile.primary_family == "emote_system" else "base"
+    action_index = None
+    for index, token in enumerate(cue_path[:-1]):
+        if isinstance(token, str) and compact(token) == expected_group:
+            action_index = index + 1
+            break
+    if action_index is None:
+        return
+
+    raw_action = cue_path[action_index]
+    if not isinstance(raw_action, str):
+        return
+    dimension_match = GROUPED_ACTION_DIMENSION_PATTERN.fullmatch(raw_action)
+    action_word = dimension_match.group("action") if dimension_match is not None else raw_action
+    action = GROUPED_ACTION_ALIASES.get(compact(action_word))
+    if action is None:
+        return
+
+    tail = [token for token in cue_path[action_index + 1 :] if isinstance(token, str)]
+    qualifiers = grouped_action_qualifier_payloads(tail)
+    record.semantic_slots["grouped_action"] = {
+        "group": expected_group,
+        "raw": raw_action,
+        "key": action,
+        "dimension_token": dimension_match.group(0)[-2:].upper() if dimension_match is not None else None,
+        "source": "grouped_champion_sfx_cue",
+    }
+    if qualifiers:
+        record.semantic_slots["action_qualifiers"] = qualifiers
+
+    if record.profile.primary_family == "media_base":
+        return
+
+    if compact(action_word) == "recallin":
+        phase = "in"
+    elif action == "winddown":
+        # winddown 在这里是动作名本身，不得再次当作尾段阶段吞掉后续
+        # buffactivate；真正生命周期仍由其余 phase atom 决定。
+        phase = first_phase_value(record)
+    else:
+        phase = first_form_action_phase_value(record)
+    if phase is not None:
+        record.semantic_slots["phase"] = phase
+
+    record.profile = EventProfile(
+        primary_family=action,
+        semantic_profile=SemanticProfile.SELF_ACTION,
+        requires_context=False,
+        reason="resolved champion Emote group action cue",
+    )
+    record.semantic_slots["trigger_family"] = action
+    record.semantic_slots["subject"] = subject.to_dict()
+    record.semantic_slots["subject_hint"] = subject.alias or subject.label
+    if action == "recall":
+        record.semantic_slots["recall_action"] = "recall"
+    clear_unknowns_by_keys(record, {expected_group, raw_action, *tail})
+
+
+def grouped_action_qualifier_payloads(tokens: list[str]) -> list[dict[str, str]]:
+    """提取动作 cue 中已审阅的姿势、音层、等级与编号修饰语。"""
+
+    qualifiers: list[dict[str, str]] = []
+    seen: set[str] = set()
+    for token in tokens:
+        key = compact(token)
+        label = GROUPED_ACTION_QUALIFIER_LABELS.get(key)
+        if label is None:
+            match = re.fullmatch(r"pose(?P<number>[0-9]+)", key)
+            if match is not None:
+                label = f"姿势{int(match.group('number'))}"
+            else:
+                match = re.fullmatch(r"lv(?P<number>[0-9]+)", key)
+                if match is not None:
+                    label = f"{int(match.group('number'))}级"
+                else:
+                    match = re.fullmatch(r"buffactivate(?P<number>[0-9]+)", key)
+                    if match is not None:
+                        label = f"激活变体{int(match.group('number'))}"
+                    elif re.fullmatch(r"0*[1-9][0-9]*", key) is not None:
+                        label = f"{int(key)}号变体"
+        if label is None or key in GROUPED_ACTION_PHASE_TOKENS or key in seen:
+            continue
+        qualifiers.append({"key": key, "label": label, "raw": token})
+        seen.add(key)
+    return qualifiers
+
+
 def apply_sfx_contextual_alias(record: EventDecompositionRecord, reference: ReferenceIndex) -> bool:
     """应用公共 SFX 效果别名。"""
 
@@ -939,28 +1322,92 @@ def apply_sfx_contextual_alias(record: EventDecompositionRecord, reference: Refe
     if not isinstance(effect_base, str):
         return False
 
-    owner = record.owner.raw_owner_token or record.owner.alias
-    rule = reference.rules.contextual_alias_for("sfx", owner, effect_base)
+    owner_context = record.semantic_slots.get("owner_context")
+    subject = record.semantic_slots.get("subject")
+    raw_owner = record.owner.raw_owner_token or record.owner.alias
+    legacy_owner = reference.resolve_legacy_owner_alias(raw_owner) if raw_owner else None
+    lookup_owners = dedupe_preserve_order(
+        [
+            record.owner.raw_owner_token or "",
+            record.owner.alias or "",
+            str(owner_context.get("alias") or "") if isinstance(owner_context, dict) else "",
+            str(subject.get("alias") or "") if isinstance(subject, dict) else "",
+            legacy_owner.alias if legacy_owner is not None and legacy_owner.alias is not None else "",
+        ]
+    )
+    rule = None
+    matched_token = effect_base
+    for owner in lookup_owners:
+        if not owner:
+            continue
+        lookup_tokens = contextual_alias_effect_tokens(record)
+        for atom in record.lexical_atoms:
+            lookup_tokens.extend(contextual_alias_lookup_tokens(atom, owner))
+        for token in dedupe_preserve_order(lookup_tokens):
+            candidate = reference.rules.contextual_alias_for("sfx", owner, token)
+            if candidate is None or not champion_contextual_alias_matches_record(record, candidate):
+                continue
+            rule = candidate
+            matched_token = token
+            break
+        if rule is not None:
+            break
 
     if rule is None:
         rule = reference.rules.contextual_alias_for("sfx", "global", effect_base)
+        matched_token = effect_base
+        if rule is not None and not champion_contextual_alias_matches_record(record, rule):
+            rule = None
 
     if rule is None:
         return False
 
     record.semantic_slots["sfx_alias"] = {
-        "raw": effect_base,
+        "raw": matched_token,
         "kind": rule.kind,
         "label": rule.label,
+        "spell": rule.spell,
         "component": rule.component,
         "source": rule.source,
         "confidence": rule.confidence,
         "note": rule.note,
+        "qualifiers": contextual_alias_qualifier_payloads(record, rule),
     }
-    append_candidate(record, contextual_alias_candidate(record, effect_base, rule, subject=None))
-    audit_contextual_alias_hit(record, rule, effect_base)
+    append_candidate(record, contextual_alias_candidate(record, matched_token, rule, subject=None))
+    audit_contextual_alias_hit(record, rule, matched_token)
     record.confidence = max_confidence(record.confidence, confidence_value(rule.confidence))
-    clear_contextual_unknowns(record, effect_base, rule)
+    if rule.kind == "generic_sfx_effect":
+        # EvolveSelf 一类普通英文词会被通用词首启发式暂记为 E 技能提示。
+        # 人工 owner-scoped 规则已经确认它是角色音效后，应同时撤销该弱提示
+        # 与对应残留，避免语义层继续伪装成 spell_event。
+        record.profile = EventProfile(
+            primary_family="sfx",
+            semantic_profile=SemanticProfile.MAP_OR_SYSTEM,
+            requires_context=False,
+            reason="resolved reviewed owner-scoped generic SFX effect",
+        )
+        record.semantic_slots["trigger_family"] = "sfx_event"
+        record.semantic_slots.pop("spell_key_hint", None)
+        record.semantic_slots.pop("effect_residual", None)
+    elif rule.kind == "champion_spell_component" and rule.spell in {"p", "q", "w", "e", "r"}:
+        spell_subject = legacy_owner
+        if spell_subject is None:
+            for owner in lookup_owners:
+                spell_subject = reference.champions_by_alias.get(compact(owner))
+                if spell_subject is not None:
+                    break
+        if spell_subject is not None:
+            record.profile = EventProfile(
+                primary_family="spell",
+                semantic_profile=SemanticProfile.SPELL_EVENT,
+                requires_context=True,
+                reason="resolved owner-scoped SFX spell component",
+            )
+            record.semantic_slots["trigger_family"] = "spell"
+            record.semantic_slots["subject"] = spell_subject.to_dict()
+            record.semantic_slots["spell_key"] = rule.spell
+            record.semantic_slots.pop("spell_key_hint", None)
+    clear_contextual_unknowns(record, matched_token, rule)
     return True
 
 
@@ -979,9 +1426,14 @@ def backfill_skin_token_from_owner(record: EventDecompositionRecord, owner_alias
 def apply_champion_contextual_alias(record: EventDecompositionRecord, reference: ReferenceIndex) -> bool:
     """应用英雄上下文别名。"""
 
-    owner_alias = record.owner.alias
+    subject_slot = record.semantic_slots.get("subject")
+    owner_alias = (
+        str(subject_slot.get("alias") or subject_slot.get("key") or "")
+        if isinstance(subject_slot, dict)
+        else record.owner.alias
+    )
 
-    if owner_alias is None:
+    if not owner_alias:
         return False
 
     subject, lookup_owners, owner_form = resolve_contextual_owner(owner_alias, reference)
@@ -992,9 +1444,22 @@ def apply_champion_contextual_alias(record: EventDecompositionRecord, reference:
     for index, atom in enumerate(record.lexical_atoms):
         for lookup_owner in lookup_owners:
             for token in contextual_alias_lookup_tokens(atom, lookup_owner):
-                rule = reference.rules.contextual_alias_for("champion", lookup_owner, token) if reference.rules else None
+                rule = (
+                    reference.rules.contextual_alias_for("champion", lookup_owner, token) if reference.rules else None
+                )
 
                 if rule is None:
+                    continue
+
+                if not champion_contextual_alias_matches_record(record, rule):
+                    continue
+
+                if (
+                    record.profile.semantic_profile is SemanticProfile.INTERACTION
+                    and rule.kind == "champion_action_component"
+                ):
+                    # FirstEncounter2DLunari 一类事件里，尾部 token 是交互对象；
+                    # 同名角色动作规则不得反向覆盖已经成立的 interaction。
                     continue
 
                 if owner_form is not None:
@@ -1021,6 +1486,15 @@ def apply_champion_contextual_alias(record: EventDecompositionRecord, reference:
             if rule is None:
                 continue
 
+            if not champion_contextual_alias_matches_record(record, rule):
+                continue
+
+            if (
+                record.profile.semantic_profile is SemanticProfile.INTERACTION
+                and rule.kind == "champion_action_component"
+            ):
+                continue
+
             if owner_form is not None:
                 record.semantic_slots["owner_form"] = {
                     "raw": owner_alias,
@@ -1041,6 +1515,39 @@ def apply_champion_contextual_alias(record: EventDecompositionRecord, reference:
             append_candidate(record, contextual_alias_candidate(record, token, rule, subject))
             audit_contextual_alias_hit(record, rule, token)
             set_champion_contextual_alias_profile(record, subject, atom, -1, rule)
+            return True
+
+    return False
+
+
+def champion_contextual_alias_matches_record(
+    record: EventDecompositionRecord,
+    rule: ContextualAlias,
+) -> bool:
+    """限定英雄别名只在规则声明的资产类型和模式内生效。"""
+
+    if rule.asset_kind is not None:
+        asset_kind = record.shell.asset_kind
+        if asset_kind is None or compact(asset_kind) != compact(rule.asset_kind):
+            return False
+
+    if rule.required_tokens:
+        cue_path = record.semantic_slots.get("cue_path")
+        available_tokens = (
+            {compact(token) for token in cue_path if isinstance(token, str)}
+            if isinstance(cue_path, list)
+            else {compact(atom.raw) for atom in record.lexical_atoms}
+        )
+        if any(token not in available_tokens for token in rule.required_tokens):
+            return False
+
+    if rule.mode is None:
+        return True
+
+    expected_mode = compact(rule.mode)
+    for slot_name in ("context_namespace", "mode_context"):
+        context = record.semantic_slots.get(slot_name)
+        if isinstance(context, dict) and compact(str(context.get("key") or "")) == expected_mode:
             return True
 
     return False
@@ -1209,6 +1716,7 @@ def add_mode_champion_actor_candidate(record: EventDecompositionRecord, referenc
 
     if spell_variant is not None:
         record.semantic_slots["spell_variant"] = spell_variant
+        record.semantic_slots["spell_stage"] = spell_variant
 
     unresolved = unresolved_context_after(record, 1)
 
@@ -1218,6 +1726,366 @@ def add_mode_champion_actor_candidate(record: EventDecompositionRecord, referenc
     record.confidence = max_confidence(record.confidence, DecompositionConfidence.MEDIUM)
     backfill_phase(record)
     clear_unknowns_by_keys(record, {actor.key, compact(actor_atom.raw), compact(spell_atom.raw), spell_key})
+
+
+def add_mode_attack_candidate(record: EventDecompositionRecord, reference: ReferenceIndex) -> None:
+    """把模式 map 资产中的英雄或已审阅模式单位攻击恢复为攻击事件。"""
+
+    if not isinstance(record.semantic_slots.get("mode_context"), dict):
+        return
+
+    actor = owner_champion_entity(record, reference)
+
+    matched_atom: LexicalAtom | None = None
+    match: re.Match[str] | None = None
+    for atom in record.lexical_atoms:
+        candidate = MODE_ACTOR_ATTACK_PATTERN.search(atom.raw)
+        if candidate is not None:
+            matched_atom = atom
+            match = candidate
+            break
+
+    if matched_atom is None or match is None:
+        return
+
+    attack_token = match.group("attack").lower()
+    attack_kind = "crit_attack" if attack_token == "critattack" else "basic_attack"
+    attack_form = {
+        "rangedattack": "ranged",
+        "meleeattack": "melee",
+    }.get(attack_token)
+    variant_text = match.group("variant")
+    component_prefix = matched_atom.raw[: match.start()] or None
+    unit_rule = None
+    if actor is None and component_prefix and reference.rules is not None:
+        unit_rule = reference.rules.contextual_alias_for("sfx", "entity", component_prefix)
+    if actor is None and (unit_rule is None or unit_rule.kind != "map_system_entity"):
+        return
+
+    actor_alias = (actor.alias or actor.label) if actor is not None else None
+    entity_alias = actor_alias or (unit_rule.token if unit_rule is not None else component_prefix)
+    attack_context = component_prefix
+    if attack_context and actor_alias and attack_context.casefold().startswith(actor_alias.casefold()):
+        attack_context = attack_context[len(actor_alias) :] or None
+    if actor is None:
+        attack_context = None
+
+    record.profile = EventProfile(
+        primary_family=attack_kind,
+        semantic_profile=SemanticProfile.SELF_ACTION,
+        requires_context=True,
+        reason="resolved strong attack cue for mode actor or reviewed mode unit",
+    )
+    for key in (
+        "spell_key",
+        "spell_key_hint",
+        "spell_name",
+        "spell_rank",
+        "spell_stage",
+        "spell_variant",
+    ):
+        record.semantic_slots.pop(key, None)
+    record.semantic_slots.update(
+        {
+            "trigger_family": attack_kind,
+            "attack_kind": attack_kind,
+            "attack_form": attack_form,
+            "attack_variant": int(variant_text) if variant_text else None,
+            "attack_component_raw": component_prefix,
+            "attack_context": attack_context,
+            "attack_raw": matched_atom.raw,
+            "related_spell_key": None,
+            "asset_kind": record.shell.asset_kind,
+        }
+    )
+    if actor is not None:
+        record.semantic_slots["subject"] = actor.to_dict()
+        record.semantic_slots["subject_hint"] = actor_alias
+    else:
+        record.semantic_slots.pop("subject", None)
+        record.semantic_slots.pop("subject_hint", None)
+        assert unit_rule is not None
+        record.semantic_slots["mode_entity"] = {
+            "kind": "mode_unit",
+            "raw": component_prefix,
+            "alias": unit_rule.token,
+            "label": unit_rule.label,
+            "component": unit_rule.component,
+            "source": unit_rule.source,
+            "confidence": unit_rule.confidence,
+        }
+    phase = first_phase_value(record)
+    if phase is not None:
+        record.semantic_slots["phase"] = phase
+    record.confidence = max_confidence(record.confidence, DecompositionConfidence.HIGH)
+    candidate: dict[str, Any] = {
+        "kind": "mode_champion_attack" if actor is not None else "mode_unit_attack",
+        "raw_event_name": record.raw_event_name,
+        "raw": matched_atom.raw,
+        "attack_kind": attack_kind,
+        "confidence": "high",
+        "evidence": "declared mode context with actor or reviewed unit followed by strong attack cue",
+        "meaning": f"{entity_alias} performs a {attack_kind.replace('_', ' ')} in mode context.",
+    }
+    if actor is not None:
+        candidate["subject"] = actor.to_dict()
+    elif unit_rule is not None:
+        candidate["mode_entity"] = dict(record.semantic_slots["mode_entity"])
+    append_candidate(record, candidate)
+    clear_unknowns_by_keys(record, {compact(matched_atom.raw), attack_token})
+
+
+def add_mode_namespace_candidate(record: EventDecompositionRecord, reference: ReferenceIndex) -> None:
+    """为已确认前缀补充统一的模式或机制上下文。"""
+
+    match = record_mode_namespace(record)
+
+    if match is None:
+        return
+
+    namespace, raw, position = match
+    existing_namespace = record.semantic_slots.get("context_namespace")
+
+    if isinstance(existing_namespace, dict) and existing_namespace.get("key") not in {None, namespace.key}:
+        return
+
+    if not isinstance(existing_namespace, dict):
+        record.semantic_slots["context_namespace"] = {
+            "key": namespace.key,
+            "label": namespace.label,
+            "kind": namespace.kind,
+            "source": "namespace_convention",
+        }
+
+    existing_context = record.semantic_slots.get("mode_context")
+    if namespace.kind == "mode" and not isinstance(existing_context, dict):
+        record.semantic_slots["mode_context"] = {
+            "key": namespace.key,
+            "label": namespace.label,
+            "source": "mode_namespace_convention",
+        }
+
+    actor, actor_role = mode_actor_for_record(record, reference, namespace)
+
+    existing_actor = record.semantic_slots.get("mode_actor")
+    if actor is not None and (not isinstance(existing_actor, dict) or not existing_actor.get("alias")):
+        resolved_actor = actor.to_dict()
+        if isinstance(existing_actor, dict) and existing_actor.get("raw"):
+            resolved_actor["raw"] = existing_actor["raw"]
+        record.semantic_slots["mode_actor"] = resolved_actor
+
+    if actor is not None and "subject" not in record.semantic_slots:
+        record.semantic_slots["subject"] = actor.to_dict()
+
+    if actor_role is not None:
+        record.semantic_slots["mode_actor_role"] = actor_role
+
+    add_mode_system_entity(record, namespace, actor)
+
+    candidate: dict[str, Any] = {
+        "kind": "mode_namespace",
+        "raw_event_name": record.raw_event_name,
+        "raw": raw,
+        "position": position,
+        "mode": namespace.key,
+        "mode_label": namespace.label,
+        "context_kind": namespace.kind,
+        "confidence": "high",
+        "evidence": "declared mode namespace prefix",
+        "meaning": f"{raw} identifies the {namespace.label} namespace.",
+    }
+
+    if actor is not None:
+        candidate["actor"] = actor.to_dict()
+
+    if actor_role is not None:
+        candidate["actor_role"] = actor_role
+
+    append_candidate(record, candidate)
+    clear_unknowns_by_keys(record, {raw, namespace.prefix})
+
+
+def add_mode_system_entity(
+    record: EventDecompositionRecord,
+    namespace: ModeNamespace,
+    actor: ReferenceEntity | None,
+) -> None:
+    """把无英雄演员的模式事件首个业务 cue 记录为真实系统实体。"""
+
+    if namespace.kind != "mode" or actor is not None or "mode_entity" in record.semantic_slots:
+        return
+
+    cue_path = record.semantic_slots.get("cue_path")
+    if not isinstance(cue_path, list):
+        return
+
+    ignored = {
+        compact(namespace.key),
+        compact(namespace.prefix),
+        "gamemode",
+    }
+    raw_entity = next(
+        (cue for cue in cue_path if isinstance(cue, str) and cue.strip() and compact(cue) not in ignored),
+        None,
+    )
+    if raw_entity is None:
+        return
+
+    record.semantic_slots["mode_entity"] = {
+        "kind": "mode_system",
+        "raw": raw_entity,
+        "alias": raw_entity,
+        "source": "mode_namespace_cue",
+        "confidence": "medium",
+    }
+
+
+def record_mode_namespace(record: EventDecompositionRecord) -> tuple[ModeNamespace, str, str] | None:
+    """从 owner 或词法限定词中查找模式前缀。"""
+
+    owner = record.owner.raw_owner_token or record.owner.alias
+
+    if owner:
+        namespace = mode_namespace_for_token(owner)
+
+        if namespace is not None:
+            return namespace, owner, "owner"
+
+    for atom in record.lexical_atoms:
+        namespace = mode_namespace_for_token(atom.raw)
+
+        if namespace is not None:
+            return namespace, atom.raw, "qualifier"
+
+    return None
+
+
+def mode_actor_for_record(
+    record: EventDecompositionRecord,
+    reference: ReferenceIndex,
+    namespace: ModeNamespace,
+) -> tuple[ReferenceEntity | None, str | None]:
+    """解析命名空间事件中的基础英雄演员。"""
+
+    if namespace.key == "ruby":
+        for index, atom in enumerate(record.lexical_atoms[:-1]):
+            if compact(atom.raw) != "boss":
+                continue
+            actor_atom = record.lexical_atoms[index + 1]
+            actor = reference.resolve_token(actor_atom.raw, record.raw_event_name)
+            if actor is None or actor.kind != "champion":
+                actor = prefixed_mode_actor(actor_atom.raw, reference)
+            if actor is not None and actor.kind == "champion":
+                return actor, "boss"
+
+    if namespace.key == "strawberry":
+        for index, atom in enumerate(record.lexical_atoms[:-1]):
+            marker = compact(atom.raw)
+            if marker not in {"boss", "enemy", "npc"}:
+                continue
+
+            actor_atom = record.lexical_atoms[index + 1]
+            actor = reference.resolve_token(actor_atom.raw, record.raw_event_name)
+            if actor is None:
+                actor = reference.find_champion_alias(actor_atom.raw)
+
+            if actor is not None and actor.kind == "champion":
+                return actor, marker
+
+    # Ruby_XerathArcanopulse2 / OdysseyAugments_yasuoqe1 这类事件把
+    # 英雄与后续 cue 粘在同一 atom；按最长安全英雄前缀恢复真实演员。
+    for atom in record.lexical_atoms:
+        actor = reference.find_champion_alias(atom.raw)
+
+        if actor is not None:
+            return actor, namespace.actor_role
+
+        actor = short_mode_actor_from_semantic_cue(atom.raw, reference)
+        if actor is not None:
+            return actor, namespace.actor_role
+
+        actor = prefixed_mode_actor(atom.raw, reference)
+        if actor is not None:
+            return actor, namespace.actor_role
+
+    for owner in [record.owner.alias, record.owner.raw_owner_token]:
+        if not owner:
+            continue
+
+        actor = reference.resolve_token(owner, record.raw_event_name)
+
+        if actor is not None and actor.kind == "skin":
+            champion_alias = actor.metadata.get("champion_alias")
+            actor = reference.resolve_token(str(champion_alias or ""), record.raw_event_name)
+
+        if actor is not None and actor.kind == "champion":
+            return actor, namespace.actor_role
+
+    subject = record.semantic_slots.get("subject")
+
+    if isinstance(subject, dict):
+        actor = reference.resolve_token(str(subject.get("alias") or subject.get("label") or ""), record.raw_event_name)
+
+        if actor is not None and actor.kind == "champion":
+            return actor, namespace.actor_role
+
+    return None, None
+
+
+SHORT_MODE_ACTOR_CUE_PREFIXES = (
+    "basicattack",
+    "critattack",
+    "rangedattack",
+    "meleeattack",
+    "q",
+    "w",
+    "e",
+    "r",
+    "p",
+    "dance",
+    "laugh",
+    "taunt",
+    "recall",
+    "death",
+    "idle",
+    "respawn",
+)
+
+
+def short_mode_actor_from_semantic_cue(token: str, reference: ReferenceIndex) -> ReferenceEntity | None:
+    """仅在短英雄别名后紧跟明确语义 cue 时接受前缀匹配。
+
+    全局短前缀仍保持禁用，避免 ``Vi`` 误吸附 ``VillainLab``；这里已经有
+    Jade/Ruby/Strawberry/OdysseyAugments 命名空间证据，再用攻击、技能槽位或
+    动作 cue 做第二道门禁，覆盖 ``LuxBasicAttack`` 等真实组合。
+    """
+
+    actor = reference.find_champion_alias(token, allow_short_prefix=True)
+    if actor is None or len(actor.key) >= 4:
+        return None
+    compact_token = compact(token)
+    if not compact_token.startswith(actor.key):
+        return None
+    suffix = compact_token[len(actor.key) :]
+    if not suffix or not suffix.startswith(SHORT_MODE_ACTOR_CUE_PREFIXES):
+        return None
+    return actor
+
+
+MODE_ACTOR_ENGINEERING_PREFIXES = ("fn",)
+
+
+def prefixed_mode_actor(token: str, reference: ReferenceIndex) -> ReferenceEntity | None:
+    """剥离已核验的模式工程前缀后解析真实英雄，如 FNVeigar。"""
+
+    compact_token = compact(token)
+    for prefix in MODE_ACTOR_ENGINEERING_PREFIXES:
+        if not compact_token.startswith(prefix) or len(compact_token) == len(prefix):
+            continue
+        actor = reference.find_champion_alias(compact_token[len(prefix) :])
+        if actor is not None:
+            return actor
+    return None
 
 
 def apply_tail_modifier_rules(record: EventDecompositionRecord, reference: ReferenceIndex) -> None:
@@ -1306,12 +2174,20 @@ def apply_kill_spell_method(record: EventDecompositionRecord, reference: Referen
 def add_spell_combo_candidate(record: EventDecompositionRecord, reference: ReferenceIndex) -> None:
     """识别 LeBlanc RW/RQ/RE 这类需要英雄机制解释的技能组合。"""
 
-    owner = reference.find_champion_alias(record.owner.alias or "") if record.owner.alias else None
+    if (
+        record.profile.semantic_profile is SemanticProfile.SELF_ACTION
+        and record.profile.primary_family in NON_SPELL_SELF_ACTION_FAMILIES
+    ):
+        # Dance3D_ee / Taunt_* 一类动作尾段常含短音效层缩写；已经由强
+        # trigger 确认的动作不能再被纯字母 Q/W/E/R 序列覆盖为组合技。
+        return
+
+    owner = owner_champion_entity(record, reference)
 
     for atom in record.lexical_atoms:
-        token = strip_owner_alias(atom.raw, record.owner.alias)
-        sequence, sequence_modifiers = parse_spell_sequence_details(token)
         subject = owner or reference.find_champion_alias(atom.raw)
+        token = strip_owner_alias(atom.raw, subject.alias if subject is not None else record.owner.alias)
+        sequence, sequence_modifiers = parse_spell_sequence_details(token)
 
         if subject is None or len(sequence) < 2:
             continue
@@ -1336,7 +2212,7 @@ def add_spell_combo_candidate(record: EventDecompositionRecord, reference: Refer
 def add_inferred_champion_spell_candidate(record: EventDecompositionRecord, reference: ReferenceIndex) -> None:
     """从英雄技能名、素材名和 owner 上下文推测技能事件。"""
 
-    if is_switch_record(record):
+    if is_switch_record(record) or record.profile.primary_family in {"basic_attack", "crit_attack"}:
         return
 
     owner = owner_champion_entity(record, reference)
@@ -1353,10 +2229,89 @@ def add_inferred_champion_spell_candidate(record: EventDecompositionRecord, refe
                 best_candidate = candidate
 
     if best_candidate is None:
+        best_candidate = mode_actor_slot_spell_candidate(record, reference, owner)
+    if best_candidate is None:
+        return
+
+    contextual_alias = record.semantic_slots.get("contextual_alias")
+    if (
+        isinstance(contextual_alias, dict)
+        and contextual_alias.get("kind") == "champion_spell_component"
+        and contextual_alias.get("source") == "manual_contextual_alias"
+        and record.semantic_slots.get("state_key") == "passive_idle"
+        and best_candidate.get("spell_key") == record.semantic_slots.get("spell_key")
+    ):
         return
 
     append_candidate(record, best_candidate)
     set_inferred_spell_profile(record, best_candidate)
+
+
+def mode_actor_slot_spell_candidate(
+    record: EventDecompositionRecord,
+    reference: ReferenceIndex,
+    subject: ReferenceEntity | None,
+) -> dict[str, Any] | None:
+    """以已解析模式演员为边界，识别独立大写 Q/W/E/R/P 技能前缀。"""
+
+    if subject is None or not isinstance(record.semantic_slots.get("mode_context"), dict):
+        return None
+
+    actor_alias = subject.alias or subject.label
+    for atom in record.lexical_atoms:
+        relative = atom.raw
+        if actor_alias and relative.casefold().startswith(actor_alias.casefold()):
+            relative = relative[len(actor_alias) :]
+        elif compact(relative) == subject.key:
+            continue
+
+        match = MODE_ACTOR_SLOT_PATTERN.fullmatch(relative)
+        if match is None:
+            continue
+
+        spell_key = match.group("spell_key").lower()
+        residual_raw = match.group("residual") or ""
+        if residual_raw.casefold() in MODE_ACTOR_SLOT_DENY_RESIDUALS:
+            continue
+
+        spell = spell_for_key(reference, subject, spell_key)
+        if spell is None:
+            continue
+
+        stage = mode_slot_stage(residual_raw)
+        term_match = SpellTermMatch(
+            term=spell_key,
+            source="mode_actor_slot_prefix",
+            residual=compact(residual_raw),
+            match_type="prefix" if residual_raw else "exact",
+            stage=stage,
+        )
+        candidate = inferred_spell_candidate(
+            record,
+            subject,
+            spell,
+            atom.raw,
+            term_match,
+            90,
+            ["mode_context", "resolved_mode_actor", "explicit_slot_prefix"],
+        )
+        attach_residual_modifier_analysis(candidate, residual_raw, reference.rules)
+        return candidate
+
+    return None
+
+
+def mode_slot_stage(residual: str) -> int | None:
+    """只从技能键后的紧邻数字/英文序数读取模式技能段数。"""
+
+    match = re.match(r"^(?P<stage>[123])(?:$|[A-Z])", residual)
+    if match is not None:
+        return int(match.group("stage"))
+
+    word_match = re.match(r"^(?P<stage>One|Two|Three)(?:$|[A-Z])", residual)
+    if word_match is None:
+        return None
+    return {"one": 1, "two": 2, "three": 3}[word_match.group("stage").lower()]
 
 
 def add_ultimate_spellbook_spell_candidate(record: EventDecompositionRecord, reference: ReferenceIndex) -> None:
@@ -1420,7 +2375,9 @@ def add_ultimate_spellbook_spell_candidate(record: EventDecompositionRecord, ref
     if phase is not None:
         record.semantic_slots["phase"] = phase
 
-    record.confidence = max_confidence(record.confidence, DecompositionConfidence.HIGH if spell is not None else DecompositionConfidence.MEDIUM)
+    record.confidence = max_confidence(
+        record.confidence, DecompositionConfidence.HIGH if spell is not None else DecompositionConfidence.MEDIUM
+    )
     clear_unknowns_by_keys(record, {"ultbook", compact(spell_atom.raw), "r"})
 
 
@@ -1428,6 +2385,12 @@ def add_composite_owner_candidate(record: EventDecompositionRecord, reference: R
     """识别 Ruby_Brand 这类前缀加英雄的组合 owner。"""
 
     if not record.owner.alias or not record.lexical_atoms:
+        return
+
+    action_form = record.semantic_slots.get("action_form")
+    if isinstance(action_form, dict) and action_form.get("kind") == "champion_form_qualifier":
+        # Gnar_GnarBig_Dance 中的 GnarBig 是已审阅形态修饰，不是第二个
+        # 英雄 actor；组合 owner 回填不得覆盖已经成立的动作生命周期。
         return
 
     first_atom = record.lexical_atoms[0]
@@ -1479,6 +2442,17 @@ def owner_champion_entity(
     reference: ReferenceIndex,
 ) -> ReferenceEntity | None:
     """解析 owner 对应的基础英雄，允许 NidaleeCougar 这类形态后缀。"""
+
+    for slot_name in ["subject", "mode_actor"]:
+        value = record.semantic_slots.get(slot_name)
+        if not isinstance(value, dict):
+            continue
+
+        alias = value.get("alias") or value.get("key") or value.get("label")
+        if alias:
+            entity = reference.find_champion_alias(str(alias))
+            if entity is not None:
+                return entity
 
     owner_alias = record.owner.alias
 
@@ -1603,7 +2577,10 @@ def set_spell_combo_profile(
 ) -> None:
     """把紧凑技能组合提升为 spell_event。"""
 
-    if record.profile.semantic_profile is SemanticProfile.UNKNOWN_PROFILE:
+    if record.profile.semantic_profile is SemanticProfile.UNKNOWN_PROFILE or (
+        record.profile.primary_family == "sfx"
+        and record.semantic_slots.get("sfx_scope") in {"champion_sfx", "mode_sfx"}
+    ):
         record.profile = EventProfile(
             primary_family="spell",
             semantic_profile=SemanticProfile.SPELL_EVENT,
@@ -1615,6 +2592,10 @@ def set_spell_combo_profile(
     record.semantic_slots["subject"] = subject.to_dict()
     record.semantic_slots["spell_sequence"] = sequence
     record.semantic_slots["spell_sequence_modifiers"] = sequence_modifiers or []
+    if sequence_modifiers is not None and len(sequence_modifiers) == 1:
+        stage = sequence_modifiers[0].get("stage")
+        if isinstance(stage, int) and stage > 0:
+            record.semantic_slots["spell_sequence_stage"] = stage
     record.semantic_slots["requires_champion_mechanic_context"] = True
     record.confidence = max_confidence(record.confidence, DecompositionConfidence.MEDIUM)
     backfill_phase(record)
@@ -1626,7 +2607,10 @@ def set_inferred_spell_profile(record: EventDecompositionRecord, candidate: dict
 
     score = int(candidate["score"])
 
-    if record.profile.semantic_profile is SemanticProfile.UNKNOWN_PROFILE or record.semantic_slots.get("trigger_family") == "sfx_event":
+    if (
+        record.profile.semantic_profile is SemanticProfile.UNKNOWN_PROFILE
+        or record.semantic_slots.get("trigger_family") == "sfx_event"
+    ):
         record.profile = EventProfile(
             primary_family="spell",
             semantic_profile=SemanticProfile.SPELL_EVENT,
@@ -1638,6 +2622,9 @@ def set_inferred_spell_profile(record: EventDecompositionRecord, candidate: dict
     record.semantic_slots["subject"] = candidate["subject"]
     record.semantic_slots["spell_key"] = candidate["spell_key"]
     record.semantic_slots["spell_name"] = candidate["spell_name"]
+    stage = candidate.get("stage")
+    if isinstance(stage, int):
+        record.semantic_slots["spell_stage"] = stage
     record.semantic_slots["spell_match"] = {
         "raw": candidate["raw"],
         "matched_term": candidate["matched_term"],
@@ -1670,7 +2657,124 @@ def set_champion_contextual_alias_profile(
     atom_index: int,
     rule: ContextualAlias,
 ) -> None:
-    """把英雄上下文别名提升为技能事件。"""
+    """把英雄上下文别名归入技能、攻击或角色动作组件事件。"""
+
+    alias_payload = {
+        "raw": atom.raw,
+        "kind": rule.kind,
+        "label": rule.label,
+        "component": rule.component,
+        "source": rule.source,
+        "confidence": rule.confidence,
+        "note": rule.note,
+        "qualifiers": contextual_alias_qualifier_payloads(record, rule),
+    }
+    is_attack_component = rule.kind == "champion_attack_component" or record.profile.primary_family in {
+        "basic_attack",
+        "crit_attack",
+    }
+
+    if rule.kind == "generic_sfx_effect":
+        record.profile = EventProfile(
+            primary_family="sfx",
+            semantic_profile=SemanticProfile.MAP_OR_SYSTEM,
+            requires_context=False,
+            reason="resolved owner-scoped generic SFX effect",
+        )
+        for key in (
+            "counterpart",
+            "spell_key",
+            "spell_key_hint",
+            "spell_name",
+            "spell_rank",
+            "spell_stage",
+            "spell_variant",
+            "variant_kind",
+            "related_spell_key",
+            "effect_residual",
+        ):
+            record.semantic_slots.pop(key, None)
+        record.semantic_slots["trigger_family"] = "sfx_event"
+        if record.shell.asset_kind == "sfx":
+            record.semantic_slots.setdefault("asset_kind", "sfx")
+            record.semantic_slots.setdefault(
+                "sfx_scope",
+                "mode_sfx"
+                if any(
+                    isinstance(record.semantic_slots.get(slot_name), dict)
+                    for slot_name in ("context_namespace", "mode_context")
+                )
+                else "champion_sfx",
+            )
+        record.semantic_slots["subject"] = subject.to_dict()
+        record.semantic_slots["contextual_alias"] = alias_payload
+        record.semantic_slots["sfx_alias"] = alias_payload
+        record.confidence = max_confidence(record.confidence, confidence_value(rule.confidence))
+        backfill_phase(record)
+        clear_contextual_unknowns(record, atom.raw, rule)
+        return
+
+    if rule.kind == "champion_form_qualifier":
+        set_champion_form_qualified_action_profile(record, subject, atom, atom_index, alias_payload)
+        return
+
+    if rule.kind == "champion_action_component":
+        record.profile = EventProfile(
+            primary_family="contextual_action",
+            semantic_profile=SemanticProfile.SELF_ACTION,
+            requires_context=False,
+            reason="resolved owner-scoped action component",
+        )
+        for key in (
+            "counterpart",
+            "spell_key",
+            "spell_key_hint",
+            "spell_name",
+            "spell_rank",
+            "spell_stage",
+            "spell_variant",
+            "variant_kind",
+            "related_spell_key",
+        ):
+            record.semantic_slots.pop(key, None)
+        record.semantic_slots["trigger_family"] = "contextual_action"
+        record.semantic_slots["subject"] = subject.to_dict()
+        record.semantic_slots["contextual_alias"] = alias_payload
+        record.semantic_slots["action_component"] = alias_payload
+        record.confidence = max_confidence(record.confidence, confidence_value(rule.confidence))
+        backfill_phase(record)
+        clear_contextual_unknowns(record, atom.raw, rule)
+        return
+
+    if is_attack_component:
+        attack_kind = record.semantic_slots.get("attack_kind")
+        if attack_kind not in {"basic_attack", "crit_attack"}:
+            marker = compact(atom.raw)
+            attack_kind = "crit_attack" if "critattack" in marker else "basic_attack"
+        record.profile = EventProfile(
+            primary_family=str(attack_kind),
+            semantic_profile=SemanticProfile.SELF_ACTION,
+            requires_context=False,
+            reason="resolved owner-scoped attack component",
+        )
+        record.semantic_slots.pop("spell_key", None)
+        record.semantic_slots.pop("spell_key_hint", None)
+        record.semantic_slots.pop("spell_name", None)
+        record.semantic_slots.pop("spell_rank", None)
+        record.semantic_slots["trigger_family"] = attack_kind
+        record.semantic_slots["attack_kind"] = attack_kind
+        record.semantic_slots["subject"] = subject.to_dict()
+        record.semantic_slots["contextual_alias"] = alias_payload
+        record.semantic_slots["attack_component"] = alias_payload
+        if rule.related_spell is not None:
+            record.semantic_slots["related_spell_key"] = rule.related_spell
+        variant = first_number(atom)
+        if variant is not None:
+            record.semantic_slots["attack_variant"] = variant
+        record.confidence = max_confidence(record.confidence, confidence_value(rule.confidence))
+        backfill_phase(record)
+        clear_contextual_unknowns(record, atom.raw, rule)
+        return
 
     record.profile = EventProfile(
         primary_family="spell",
@@ -1681,20 +2785,22 @@ def set_champion_contextual_alias_profile(
     record.semantic_slots.pop("counterpart", None)
     record.semantic_slots["trigger_family"] = "spell"
     record.semantic_slots["subject"] = subject.to_dict()
+    record.semantic_slots.pop("spell_key_hint", None)
     record.semantic_slots["spell_key"] = rule.spell
-    record.semantic_slots["contextual_alias"] = {
-        "raw": atom.raw,
-        "kind": rule.kind,
-        "label": rule.label,
-        "component": rule.component,
-        "source": rule.source,
-        "confidence": rule.confidence,
-        "note": rule.note,
-    }
-    rank = first_number(atom)
+    record.semantic_slots["contextual_alias"] = alias_payload
+    number = first_number(atom)
+    if rule.stage is not None:
+        stage = rule.stage
+    elif rule.infer_stage:
+        stage = number if number is not None else stage_from_term(atom.raw)
+    else:
+        stage = None
 
-    if rank is not None and "spell_rank" not in record.semantic_slots:
-        record.semantic_slots["spell_rank"] = rank
+    if stage is not None:
+        if re.search(r"Rank[0-9]+$", atom.raw, re.IGNORECASE):
+            record.semantic_slots.setdefault("spell_rank", stage)
+        else:
+            record.semantic_slots.setdefault("spell_stage", stage)
 
     unresolved = unresolved_context_after(record, atom_index)
 
@@ -1704,6 +2810,120 @@ def set_champion_contextual_alias_profile(
     record.confidence = max_confidence(record.confidence, confidence_value(rule.confidence))
     backfill_phase(record)
     clear_contextual_unknowns(record, atom.raw, rule)
+
+
+def set_champion_form_qualified_action_profile(
+    record: EventDecompositionRecord,
+    subject: ReferenceEntity,
+    atom: LexicalAtom,
+    atom_index: int,
+    alias_payload: dict[str, str | None],
+) -> None:
+    """把 ``GnarBig_Dance/Recall`` 一类结构拆成形态修饰与真实动作。"""
+
+    trigger_atom = first_trigger_atom(record, start_index=atom_index + 1)
+    trigger = part_value(trigger_atom, "trigger_token") if trigger_atom is not None else None
+    if trigger not in {"dance", "joke", "laugh", "recall", "taunt"}:
+        return
+
+    action = normalize_trigger_family(trigger)
+    phase = first_form_action_phase_value(record)
+    if phase is None:
+        existing_phase = record.semantic_slots.get("phase")
+        phase = existing_phase if isinstance(existing_phase, str) else None
+
+    if action == "recall" and phase is not None:
+        primary_family = "skin_recall_state"
+    elif phase is not None:
+        primary_family = "skin_action_state"
+    else:
+        primary_family = "contextual_action"
+
+    record.profile = EventProfile(
+        primary_family=primary_family,
+        semantic_profile=SemanticProfile.SELF_ACTION,
+        requires_context=False,
+        reason="resolved owner-scoped form qualifier followed by self action",
+    )
+    for key in (
+        "counterpart",
+        "spell_key",
+        "spell_key_hint",
+        "spell_name",
+        "spell_rank",
+        "spell_stage",
+        "spell_variant",
+        "variant_kind",
+        "related_spell_key",
+        "sfx_alias",
+    ):
+        record.semantic_slots.pop(key, None)
+    record.semantic_slots["trigger_family"] = primary_family
+    record.semantic_slots["subject"] = subject.to_dict()
+    record.semantic_slots["subject_hint"] = subject.alias or subject.label
+    record.semantic_slots["skin_token"] = record.owner.skin_token
+    record.semantic_slots["action"] = action
+    record.semantic_slots["action_form"] = alias_payload
+    record.semantic_slots["contextual_alias"] = alias_payload
+    record.semantic_slots["dimension_token"] = part_raw(trigger_atom, "dimension_token")
+    if action == "recall":
+        record.semantic_slots["recall_action"] = "recall"
+    if phase is not None:
+        record.semantic_slots["phase"] = phase
+    record.confidence = max_confidence(
+        record.confidence,
+        confidence_value(str(alias_payload.get("confidence") or "medium")),
+    )
+    clear_unknowns_by_keys(record, {atom.raw, trigger_atom.raw})
+
+
+def contextual_alias_qualifier_payloads(
+    record: EventDecompositionRecord,
+    rule: ContextualAlias,
+) -> list[dict[str, str]]:
+    """从 cue path 提取规则明确审阅过的 SFX 修饰语。
+
+    主效果词和阶段之外的 ``Mute``、``mask2``、``mega`` 等片段不能只
+    留在调试字段里。规则以保守白名单声明可展示修饰语；此处保持原始顺序
+    和 token，供 translation frame 与完整性校验共同消费。
+    """
+
+    if not rule.qualifiers:
+        return []
+
+    cue_path = record.semantic_slots.get("cue_path")
+    tokens = [item for item in cue_path if isinstance(item, str)] if isinstance(cue_path, list) else []
+    if not tokens:
+        tokens = [atom.raw for atom in record.lexical_atoms]
+
+    qualifiers: list[dict[str, str]] = []
+    seen: set[str] = set()
+    for token in tokens:
+        key = compact(token)
+        label = rule.qualifiers.get(key)
+        if label is None or key in seen:
+            continue
+        qualifiers.append({"key": key, "label": label, "raw": token})
+        seen.add(key)
+    return qualifiers
+
+
+def first_form_action_phase_value(record: EventDecompositionRecord) -> str | None:
+    """读取形态动作的生命周期尾段，保留 leadin/loop/winddown 等语义。"""
+
+    lifecycle_phases = {
+        "leadin": "leadin",
+        "leadout": "leadout",
+        "loop": "loop",
+        "winddown": "winddown",
+        "windup": "windup",
+    }
+    for tail in reversed(record.lexical_atoms):
+        phase = lifecycle_phases.get(compact(tail.raw))
+        if phase is not None:
+            return phase
+
+    return first_phase_value(record)
 
 
 def set_mode_contextual_alias_profile(
@@ -1726,6 +2946,10 @@ def set_mode_contextual_alias_profile(
         reason="resolved mode-scoped contextual alias",
     )
     record.semantic_slots["trigger_family"] = trigger_family
+    if trigger_atom is not None:
+        phase = first_form_action_phase_value(record)
+        if phase is not None:
+            record.semantic_slots["phase"] = phase
     record.semantic_slots["mode_context"] = {
         "key": rule.mode or compact(rule.owner),
         "label": rule.mode_label or rule.owner,
@@ -1743,7 +2967,11 @@ def set_mode_contextual_alias_profile(
     actor = first_context_atom_after(record, atom_index)
 
     if actor is not None:
-        record.semantic_slots["mode_actor"] = {"raw": actor.raw}
+        existing_actor = record.semantic_slots.get("mode_actor")
+        if isinstance(existing_actor, dict) and existing_actor.get("alias"):
+            existing_actor.setdefault("raw", actor.raw)
+        else:
+            record.semantic_slots["mode_actor"] = {"raw": actor.raw}
 
     record.confidence = max_confidence(record.confidence, confidence_value(rule.confidence))
     clear_contextual_unknowns(record, atom.raw, rule)
@@ -1770,6 +2998,9 @@ def set_composite_owner_profile(record: EventDecompositionRecord, entity: Refere
     )
     record.semantic_slots["trigger_family"] = normalize_trigger_family(trigger)
     record.semantic_slots["dimension_token"] = part_raw(action_atom, "dimension_token")
+    phase = first_form_action_phase_value(record)
+    if phase is not None:
+        record.semantic_slots["phase"] = phase
     record.semantic_slots["owner_composition"] = {
         "prefix": record.owner.raw_owner_token,
         "entity": entity.to_dict(),
@@ -2117,6 +3348,17 @@ def champion_extra_aliases(entity: ReferenceEntity) -> list[str]:
         aliases.append("wuko")
 
     return aliases
+
+
+def champion_alias_rank(entity: ReferenceEntity, alias: str) -> tuple[bool, bool, str]:
+    """返回同名候选优先级，避免扩展模式实体覆盖基础英雄。
+
+    规范 alias 优先于派生名称；派生名称冲突时，基础英雄优先于模式实体。
+    """
+
+    exact = alias in {entity.key, compact(entity.alias or "")}
+    mode_entity = split_mode_entity_alias(entity.alias or "") is not None
+    return (not exact, mode_entity, entity.key)
 
 
 def skin_number_from_row(row: dict[str, Any], champion: ReferenceEntity) -> int | None:
@@ -2484,8 +3726,14 @@ def add_spell_term(
     if len(key) < 3:
         return
 
-    terms.setdefault(key, source)
     champion_key = compact(champion_alias or "")
+    if source in {"spell_name", "reference_spell_name", "passive_name"} and key == champion_key:
+        # 例如纳尔 R 的英文名 ``GNAR!`` 归一化后等于英雄 alias。它不能
+        # 单独充当技能证据，否则 GnarTransform/GnarHelmet 等任意英雄前缀
+        # cue 都会被误判成 R；真实技能仍可由 spell id、键位词和上下文规则命中。
+        return
+
+    terms.setdefault(key, source)
 
     if champion_key and key.startswith(champion_key) and len(key) > len(champion_key):
         stripped_key = key[len(champion_key) :]
@@ -2684,7 +3932,14 @@ def infer_spell_candidate_for_subject(
             if match is None:
                 continue
 
+            manual_residual = manual_trusted_single_key_residual(match, subject, spell, reference.rules)
+            if not has_trusted_single_key_residual(match, subject, spell, reference.rules):
+                continue
+
             score, components = score_spell_match(record, spell, match, owner_matches, subject_prefix)
+            if manual_residual is not None:
+                score = min(100, score + 20)
+                components.append("trusted_single_key_residual")
 
             if score < 70:
                 # 裸 Passive 门(Gate②)的哨兵 reason 不落 record，这里显式留审计痕使丢弃可见
@@ -2701,12 +3956,9 @@ def infer_spell_candidate_for_subject(
 
         keyword_match = description_keyword_match(stripped_raw, spell)
 
-        # BasicAttack/CritAttack 类通用词极易把普攻音效误标成技能，仅白名单英雄槽位放行
-        if keyword_match is not None and not generic_attack_inference_allowed(keyword_match, subject, spell, reference.rules):
+        # BasicAttack/CritAttack 类通用词只能证明攻击动作，不能证明技能槽位。
+        if keyword_match is not None and is_generic_attack_keyword_match(keyword_match):
             keyword_match = None
-        elif keyword_match is not None and is_generic_attack_keyword_match(keyword_match):
-            # 白名单放行留痕在调用点记录，generic_attack_inference_allowed 谓词保持无副作用
-            audit_attack_modifier_whitelist_hit(record, reference.rules, subject, spell, atom_raw)
 
         if keyword_match is not None:
             score, components = score_spell_match(record, spell, keyword_match, owner_matches, subject_prefix)
@@ -2772,17 +4024,56 @@ def can_prefix_match_spell_term(term: str, source: str) -> bool:
     return len(term) >= 4 or source in {"spell_key", "passive_key"}
 
 
+def has_trusted_single_key_residual(
+    match: SpellTermMatch,
+    subject: ReferenceEntity,
+    spell: ReferenceSpell,
+    rules: RuleBook | None,
+) -> bool:
+    """限制英雄名加单字母槽位的前缀匹配只接受受控后缀。
+
+    ``LuxP...``、``RenektonE...`` 这类内部名不能仅因首字母与槽位相同
+    就归属技能。只有后缀能够被既有 residual modifier 规则完整拆解时，才把
+    ``<Champion><Q/W/E/R/P><modifier>`` 视为可信的内部技能命名。
+    """
+
+    if match.match_type != "prefix" or match.source not in {"spell_key", "passive_key"}:
+        return True
+
+    if match.term != f"{subject.key}{spell.spell_key}":
+        return True
+
+    modifiers, unresolved = parse_residual_modifiers(match.residual, rules)
+    return (bool(modifiers) and not unresolved) or manual_trusted_single_key_residual(
+        match, subject, spell, rules
+    ) is not None
+
+
+def manual_trusted_single_key_residual(
+    match: SpellTermMatch,
+    subject: ReferenceEntity,
+    spell: ReferenceSpell,
+    rules: RuleBook | None,
+) -> object | None:
+    """返回单字母技能 residual 的显式人工证据。"""
+
+    if (
+        rules is None
+        or match.match_type != "prefix"
+        or match.source not in {"spell_key", "passive_key"}
+        or match.term != f"{subject.key}{spell.spell_key}"
+    ):
+        return None
+    return rules.trusted_spell_residual_for(subject.alias or subject.key, spell.spell_key, match.residual)
+
+
 def description_keyword_match(stripped_key: str, spell: ReferenceSpell) -> SpellTermMatch | None:
     """用描述关键词弱匹配视觉化技能名。"""
 
     if not spell.keywords:
         return None
 
-    token_words = [
-        compact(word)
-        for word in split_identifier(stripped_key)
-        if is_spell_keyword(word)
-    ]
+    token_words = [compact(word) for word in split_identifier(stripped_key) if is_spell_keyword(word)]
 
     if len(token_words) < 2:
         return None
@@ -2810,23 +4101,6 @@ def is_generic_attack_keyword_match(match: SpellTermMatch) -> bool:
     """判断描述关键词命中是否全部由普攻类通用词构成。"""
 
     return bool(match.keyword_hits) and all(hit in GENERIC_ATTACK_KEYWORDS for hit in match.keyword_hits)
-
-
-def generic_attack_inference_allowed(
-    match: SpellTermMatch,
-    subject: ReferenceEntity,
-    spell: ReferenceSpell,
-    rules: RuleBook | None,
-) -> bool:
-    """判断普攻类通用词弱命中能否保留为技能候选。"""
-
-    if not is_generic_attack_keyword_match(match):
-        return True
-
-    if rules is None:
-        return False
-
-    return rules.attack_modifier_spell_for(subject.alias or subject.key, spell.spell_key) is not None
 
 
 # 皮肤待机/命名状态事件家族；裸 Passive token 在这些事件里指动画状态而非 P 技能
@@ -2909,6 +4183,9 @@ def score_spell_match(
     elif match.source == "dragontail_spell_id":
         score += 45
         components.append("dragontail_spell_id")
+    elif match.source == "reference_spell_id":
+        score += 45
+        components.append("reference_spell_id")
     elif match.source == "dragontail_image":
         score += 40
         components.append("dragontail_image")
@@ -2954,14 +4231,8 @@ def residual_keyword_hits(residual: str, spell: ReferenceSpell) -> list[str]:
     """查看 residual 是否落在技能描述关键词中。"""
 
     keyword_set = set(spell.keywords)
-    return [
-        word
-        for word in split_identifier(residual)
-        if is_spell_keyword(word) and compact(word) in keyword_set
-    ] + [
-        keyword
-        for keyword in keyword_set
-        if len(keyword) >= 4 and keyword in residual
+    return [word for word in split_identifier(residual) if is_spell_keyword(word) and compact(word) in keyword_set] + [
+        keyword for keyword in keyword_set if len(keyword) >= 4 and keyword in residual
     ]
 
 
@@ -3043,11 +4314,7 @@ def parse_residual_modifiers(
 
     while cursor < len(key):
         hit = next(
-            (
-                (term, modifier)
-                for term, modifier in terms
-                if key.startswith(term, cursor)
-            ),
+            ((term, modifier) for term, modifier in terms if key.startswith(term, cursor)),
             None,
         )
 
@@ -3100,8 +4367,7 @@ def has_phase_context(record: EventDecompositionRecord) -> bool:
         raw_key = compact(atom.raw)
 
         if raw_key.startswith("on") and any(
-            phase in raw_key
-            for phase in ["buffactivate", "buffdeactivate", "cast", "hit", "missile", "launch"]
+            phase in raw_key for phase in ["buffactivate", "buffdeactivate", "cast", "hit", "missile", "launch"]
         ):
             return True
 
@@ -3164,10 +4430,7 @@ def append_candidate(record: EventDecompositionRecord, candidate: dict[str, Any]
     """去重追加候选解释。"""
 
     key = json.dumps(candidate, ensure_ascii=False, sort_keys=True)
-    existing = {
-        json.dumps(item, ensure_ascii=False, sort_keys=True)
-        for item in record.candidates
-    }
+    existing = {json.dumps(item, ensure_ascii=False, sort_keys=True) for item in record.candidates}
 
     if key not in existing:
         record.candidates.append(candidate)
@@ -3245,11 +4508,12 @@ def audit_event_for_candidate(
             token=str(candidate.get("raw") or ""),
         )
 
-    if kind in {"mode_champion_actor", "composite_owner", "structured_counterpart"}:
+    if kind in {"mode_champion_actor", "mode_namespace", "composite_owner", "structured_counterpart"}:
         source = str(candidate.get("evidence") or kind)
+        mode_suffix = f":{candidate.get('mode')}" if kind == "mode_namespace" else ""
         return MatchAuditEvent(
             matcher_kind="inference",
-            rule_id=f"inference:{kind}",
+            rule_id=f"inference:{kind}{mode_suffix}",
             source_path=source,
             raw_event_name=record.raw_event_name,
             owner=record.owner.alias or record.owner.raw_owner_token,
@@ -3316,32 +4580,6 @@ def audit_low_trust_event_rule_hit(record: EventDecompositionRecord, rule: LowTr
             raw_event_name=record.raw_event_name,
             owner=record.owner.alias or record.owner.raw_owner_token,
             token=record.raw_event_name,
-        )
-    )
-
-
-def audit_attack_modifier_whitelist_hit(
-    record: EventDecompositionRecord,
-    rules: RuleBook | None,
-    subject: ReferenceEntity,
-    spell: ReferenceSpell,
-    raw: str,
-) -> None:
-    """记录普攻改写白名单放行普攻类关键词推断。"""
-
-    entry = rules.attack_modifier_spell_for(subject.alias or subject.key, spell.spell_key) if rules is not None else None
-
-    if entry is None:
-        return
-
-    record_match(
-        MatchAuditEvent(
-            matcher_kind="manual_spell_constraint",
-            rule_id=f"spell_constraint:attack_modifier:{entry.champion}:{entry.spell_key}",
-            source_path=SPELL_MATCH_CONSTRAINTS_SOURCE_PATH,
-            raw_event_name=record.raw_event_name,
-            owner=entry.champion,
-            token=raw,
         )
     )
 
@@ -3474,10 +4712,14 @@ def parse_spell_sequence_details(token: str) -> tuple[list[str], list[dict[str, 
         sequence.append(spell_key)
 
         if digits:
+            numeric_modifier = int("".join(digits))
             modifiers.append(
                 {
                     "spell_key": spell_key,
-                    "cast_count": int("".join(digits)),
+                    # 旧 cast_count 字段暂留兼容；stage 是新的权威含义，避免
+                    # 把 Q3/W2 这类技能分段误写成施放次数或技能等级。
+                    "cast_count": numeric_modifier,
+                    "stage": numeric_modifier,
                     "source": "compact_spell_sequence",
                 }
             )
@@ -3509,7 +4751,7 @@ def raw_atom(record: EventDecompositionRecord, index: int) -> str | None:
     return record.lexical_atoms[index].raw
 
 
-def first_trigger_atom(record: EventDecompositionRecord, start_index: int):
+def first_trigger_atom(record: EventDecompositionRecord, start_index: int) -> LexicalAtom | None:
     """查找指定位置后的第一个 trigger atom。"""
 
     for atom in record.lexical_atoms[start_index:]:
@@ -3519,7 +4761,7 @@ def first_trigger_atom(record: EventDecompositionRecord, start_index: int):
     return None
 
 
-def part_value(atom, kind: str) -> str | None:
+def part_value(atom: LexicalAtom, kind: str) -> str | None:
     """读取 atom 中指定 kind 的 value。"""
 
     for part in atom.parts:
@@ -3529,7 +4771,7 @@ def part_value(atom, kind: str) -> str | None:
     return None
 
 
-def part_raw(atom, kind: str) -> str | None:
+def part_raw(atom: LexicalAtom, kind: str) -> str | None:
     """读取 atom 中指定 kind 的 raw。"""
 
     for part in atom.parts:
@@ -3540,10 +4782,22 @@ def part_raw(atom, kind: str) -> str | None:
 
 
 def first_phase_value(record: EventDecompositionRecord) -> str | None:
-    """返回记录中第一个阶段值。"""
+    """返回记录中显式事件尾阶段，避免组件状态词抢占。"""
 
-    for atom in record.lexical_atoms:
-        phase = part_value(atom, "phase_or_state_token") or part_value(atom, "phase_token") or phase_alias_from_atom(atom)
+    for atom in reversed(record.lexical_atoms):
+        phase = phase_alias_from_atom(atom)
+
+        if phase is not None:
+            return phase
+
+    for atom in reversed(record.lexical_atoms):
+        phase = part_value(atom, "phase_token")
+
+        if phase is not None:
+            return phase
+
+    for atom in reversed(record.lexical_atoms):
+        phase = part_value(atom, "phase_or_state_token")
 
         if phase is not None:
             return phase
@@ -3632,9 +4886,11 @@ def is_phase_like_atom(atom: LexicalAtom) -> bool:
 
     raw_key = compact(atom.raw)
 
+    if raw_key in {"2d", "3d", "leadin", "leadout", "loop", "winddown", "windup"}:
+        return True
+
     if raw_key.startswith("on") and any(
-        phase in raw_key
-        for phase in ["buffactivate", "buffdeactivate", "cast", "hit", "missile", "launch"]
+        phase in raw_key for phase in ["buffactivate", "buffdeactivate", "cast", "hit", "missile", "launch"]
     ):
         return True
 
@@ -3665,11 +4921,7 @@ def clear_unknowns_by_keys(record: EventDecompositionRecord, compact_keys: set[s
     """移除已经被结构化解释覆盖的未知项。"""
 
     targets = {compact(key) for key in compact_keys if key}
-    record.unknowns = [
-        unknown
-        for unknown in record.unknowns
-        if compact(unknown.raw) not in targets
-    ]
+    record.unknowns = [unknown for unknown in record.unknowns if compact(unknown.raw) not in targets]
 
 
 def clear_contextual_unknowns(

@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_MasterYi
+  champion_id: 60011
+  skin_number: 4
+  skin_token: Skin04
+  id: 60011004
+  alias: Jade_MasterYiSkin04
+  names:
+    en_US:
+      - value: Samurai Yi
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: 侍魂 易
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_MasterYiSkin04
+  - Jade_MasterYiSkin4

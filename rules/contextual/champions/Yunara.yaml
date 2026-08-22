@@ -2,16 +2,14 @@ scope: champion
 owner: Yunara
 aliases:
   ItemHurricaneYunaraAttack:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: hurricane_attack
     label: 飓风普攻
     confidence: medium
     source: manual_contextual_alias
     note: ItemHurricaneYunaraAttack 在 Yunara 事件中对应卢安娜飓风触发的普攻音效。
   ItemHurricaneYunaraAttackCrit:
-    kind: champion_spell_component
-    spell: p
+    kind: champion_attack_component
     component: hurricane_crit_attack
     label: 飓风暴击普攻
     confidence: medium
@@ -26,8 +24,8 @@ aliases:
     source: manual_contextual_alias
     note: ItemHurricaneYunaraQAttack 在 Yunara 事件中对应 Q 状态下卢安娜飓风触发的攻击音效。
   ItemHurricaneYunaraQAttackCrit:
-    kind: champion_spell_component
-    spell: q
+    kind: champion_attack_component
+    related_spell: q
     component: hurricane_q_crit_attack
     label: 飓风 Q 暴击普攻
     confidence: medium

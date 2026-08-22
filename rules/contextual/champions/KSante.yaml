@@ -1,0 +1,14 @@
+scope: champion
+owner: KSante
+aliases:
+  wall:
+    kind: generic_sfx_effect
+    asset_kind: sfx
+    required_tokens:
+      - effect
+      - travel
+    component: wall_travel
+    label: 穿墙移动
+    confidence: high
+    source: manual_contextual_alias
+    note: effect_wall_travel 跨基础与多套皮肤稳定表示奎桑提穿墙移动音效；effect 是资源分组词。

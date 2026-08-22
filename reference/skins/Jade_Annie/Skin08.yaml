@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Annie
+  champion_id: 60001
+  skin_number: 8
+  skin_token: Skin08
+  id: 60001008
+  alias: Jade_AnnieSkin08
+  names:
+    en_US:
+      - value: Panda Annie
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+    zh_CN:
+      - value: “你看见过我的熊猫吗？”安妮
+        sources:
+          - source: game_data
+            first_seen: '16.16'
+            last_seen: '16.16'
+skinlines:
+  - id: 54
+    sources:
+      - source: game_data
+        first_seen: '16.16'
+        last_seen: '16.16'
+aliases:
+  - Jade_AnnieSkin08
+  - Jade_AnnieSkin8
