@@ -55,8 +55,15 @@ uv run python scripts/update_raw_events.py `
   --raw-input-root .temp\raw-events-round `
   --game-version 16.12 `
   --game-data-base-url <snapshot-root-containing-global> `
+  --sources-manifest .temp\source-identity\source-manifest.json `
+  --frozen-profile data\frozen-profile.v1.json `
   --report-root .temp\update-report
 ```
+
+`--mode online` 必须同时提供本轮可移植远端来源清单和 frozen profile；入口会在任何在线 reference
+下载前拒绝缺失、`local` 模式、不符合 profile 的来源证据，以及跨 frozen 系列的 GAME/显式 Data Dragon
+请求版本。`--mode local` 仍可省略两者，或成对提供以对
+staging 输出执行 frozen preflight。
 
 构建拆解 JSONL 和报告：
 
@@ -103,7 +110,7 @@ uv run python scripts/report_translation_patterns.py `
   --output-md .temp\manual-reports\translation-patterns.md
 ```
 
-该报告从 semantic frame 派生模式，不以 `BaseName,Label` 作为主模型。默认规则输入为 `rules/translation_patterns.yaml`；JSON 和 Markdown 输出必须显式给定并应位于被忽略的报告目录。当前 inventory 有独立版本化报告 schema；首个 approved-local promotion 与远端发布仍不属于当前实现。
+该报告从 semantic frame 派生模式，不以 `BaseName,Label` 作为主模型。默认规则输入为 `rules/translation_patterns.yaml`；JSON 和 Markdown 输出必须显式给定并应位于被忽略的报告目录。当前 inventory 有独立版本化报告 schema；首个 approved-local promotion 已完成，远端稳定发布仍不属于当前实现。
 
 本地一键刷新全链（decompose→build→validate→quality→review→metrics→ratchet）：
 
@@ -154,8 +161,9 @@ uv run lookup-normalized-event `
 - `import_reference_data.py`：把本地或在线 GAME data 和 Data Dragon 导入仓库内部 `reference/` 精简合集，包括英雄、地图和皮肤系列分组。
 - `extract_raw_events_from_game.py`：从本地 GAME WAD/BIN 或已抽取事件 JSON 生成标准 raw round txt。
 - `check_raw_update.py`：只读检查本轮 raw round txt 相对累计 `raw/events/` 的差集。
-- `update_raw_events.py`：把本轮 raw round txt 差集合并进累计 `raw/events/`，并可串起 reference 导入。
-- `.github/workflows/update-raw-events.yml`：手动触发的 raw/reference 更新 workflow；可消费同一 workflow run 中的前置 raw round artifact，也可在可选 `riotmanifest` 可用时用 GAME manifest + `.github/raw-event-requests.example.json` 形状的请求表生成 raw round，报告作为 artifact 保存。
+- `download_sources.py` 写出的 producer 游标带版本化 `schema_version`；`prepare_source_manifest.py` 把该游标规范化为可移植来源清单，或在 raw 抽取成功后从 manifest 模式的 GAME manifest ID/版本与 LCU 证据构建清单。入口先按版本化 frozen profile 校验，拒绝 `local` 来源冒充 workflow 采集。
+- `update_raw_events.py`：把本轮 raw round txt 差集合并进累计 `raw/events/`，并可串起 reference 导入；online 模式强制提供同轮可移植远端来源清单与 frozen profile，并在下载前验证来源合同；local 模式可成对提供二者。随后对 staging raw/reference 做 frozen preflight，再原子替换长期目标。
+- `.github/workflows/update-raw-events.yml`：以 Python 3.13 的全新锁定环境手动更新 frozen V1 16.16 raw/reference；artifact 模式用显式 `raw_input_run_id`、仓库身份和当前 Actions token 从同一 producer run 下载 raw round 与来源清单，manifest 模式生成同轮可移植来源清单。该清单显式传入 staged update 与 full refresh。选择提交时先在 runner 本地形成精确数据提交，隔离 full refresh 全绿且 `candidate-dataset` 上传完成后才 push；失败 run 只上传 `failed-run-diagnostics`，不自动 promotion。未来 live 版本必须先建立新的版本化 profile/来源合同。
 - `decompose_events.py`：把 raw event name 拆成 lexical atoms、semantic slots、JSONL 产物和 review reports；解释阶段只读取内部 `reference/`，可用 `--write-low-trust-rules` 额外导出低信任规则命中表。
 - `build_review_site.py`：从 decomposition JSONL 构建通用维护 review 页面；它不是 P5 产品批准入口。
 - `build_demo_site.py`：从 approved-local 或显式 normalized candidate 生成 `dist/demo-site/` 平台中立静态工作台；默认配对同 run validator 报告，显式 candidate 必须传 `--validation-json`。页面用“已确定 / Review × 英雄 / 地图”两级导航按需加载英雄与显式地图分片，并提供 SFX 残差/未归属过滤、详情及稳定深链；输出可直接托管到 GitHub Pages 或 Cloudflare Pages，该投影不写回 Review 决定，也不执行 promotion，完整说明见 `docs/DEMO_SITE.md`。

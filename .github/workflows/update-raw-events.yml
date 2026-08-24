@@ -4,8 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       game_version:
-        description: GAME/game-data main version, for example 16.12
+        description: Frozen V1 GAME/game-data version; must be 16.16
         required: true
+        default: "16.16"
         type: string
       game_data_base_url:
         description: Online GAME data snapshot root that contains global/{locale}/v1
@@ -15,6 +16,15 @@ on:
         description: Artifact name containing extracted raw round txt files
         required: false
         default: raw-events-round
+        type: string
+      raw_input_run_id:
+        description: Source workflow run ID; required when raw_source_mode=artifact
+        required: false
+        type: string
+      source_manifest_artifact:
+        description: Artifact from the same source run containing source-manifest.json
+        required: false
+        default: raw-source-manifest
         type: string
       raw_source_mode:
         description: raw round source, artifact or manifest
@@ -26,6 +36,18 @@ on:
           - manifest
       game_manifest_url:
         description: GAME manifest URL for raw_source_mode=manifest
+        required: false
+        type: string
+      game_manifest_id:
+        description: GAME manifest ID matching game_manifest_url; required for raw_source_mode=manifest
+        required: false
+        type: string
+      lcu_version:
+        description: Matching LCU version; required for raw_source_mode=manifest
+        required: false
+        type: string
+      lcu_manifest_id:
+        description: Matching lobby snapshot LCU manifest ID; required for raw_source_mode=manifest
         required: false
         type: string
       manifest_request_file:
@@ -48,28 +70,67 @@ permissions:
   contents: write
   actions: read
 
+concurrency:
+  group: update-raw-events-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   update:
     runs-on: ubuntu-latest
+    timeout-minutes: 90
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
 
       - name: Set up Python
-        run: uv python install
+        run: uv python install 3.13
 
       - name: Sync dependencies
-        run: uv sync --dev
+        run: uv sync --python 3.13 --dev --locked
+
+      - name: Run lint
+        run: uv run ruff check src scripts tests
+
+      - name: Run type checks
+        run: uv run mypy
 
       - name: Run tests
         run: uv run python -m pytest tests/ -q
 
       - name: Install optional GAME manifest extractor
         if: ${{ inputs.raw_source_mode == 'manifest' }}
-        run: uv pip install riotmanifest
+        run: uv sync --python 3.13 --dev --extra download --locked
+
+      - name: Validate frozen workflow version
+        env:
+          GAME_VERSION: ${{ inputs.game_version }}
+        run: |
+          uv run python - <<'PY'
+          import os
+          from pathlib import Path
+          from lol_event_semantics.dataset_identity import load_frozen_profile, version_series
+
+          profile = load_frozen_profile(Path("data/frozen-profile.v1.json"))
+          requested = os.environ["GAME_VERSION"]
+          expected = str(profile["base_game_version"])
+          if version_series(requested) != version_series(expected):
+              raise SystemExit(f"game_version must match frozen profile series {expected}")
+          PY
+
+      - name: Validate artifact source
+        if: ${{ inputs.raw_source_mode == 'artifact' }}
+        env:
+          RAW_INPUT_RUN_ID: ${{ inputs.raw_input_run_id }}
+        run: |
+          if [[ ! "$RAW_INPUT_RUN_ID" =~ ^[1-9][0-9]*$ ]]; then
+            echo "raw_input_run_id must be a positive workflow run ID when raw_source_mode=artifact" >&2
+            exit 2
+          fi
 
       - name: Download extracted raw round
         if: ${{ inputs.raw_source_mode == 'artifact' }}
@@ -77,18 +138,78 @@ jobs:
         with:
           name: ${{ inputs.raw_input_artifact }}
           path: .temp/raw-events-round
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.raw_input_run_id }}
+
+      - name: Download producer source manifest
+        if: ${{ inputs.raw_source_mode == 'artifact' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.source_manifest_artifact }}
+          path: .temp/source-identity-producer
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.raw_input_run_id }}
+
+      - name: Normalize artifact source identity
+        if: ${{ inputs.raw_source_mode == 'artifact' }}
+        run: |
+          if [[ ! -f .temp/source-identity-producer/source-manifest.json ]]; then
+            echo "source manifest artifact must contain source-manifest.json" >&2
+            exit 2
+          fi
+          uv run python scripts/prepare_source_manifest.py \
+            --input .temp/source-identity-producer/source-manifest.json \
+            --frozen-profile data/frozen-profile.v1.json \
+            --output .temp/source-identity/source-manifest.json
+
+      - name: Validate manifest source inputs
+        if: ${{ inputs.raw_source_mode == 'manifest' }}
+        env:
+          GAME_MANIFEST_URL: ${{ inputs.game_manifest_url }}
+          GAME_MANIFEST_ID: ${{ inputs.game_manifest_id }}
+          LCU_VERSION: ${{ inputs.lcu_version }}
+          LCU_MANIFEST_ID: ${{ inputs.lcu_manifest_id }}
+        run: |
+          if [[ -z "$GAME_MANIFEST_URL" || -z "$GAME_MANIFEST_ID" || -z "$LCU_VERSION" || -z "$LCU_MANIFEST_ID" ]]; then
+            echo "game_manifest_url, game_manifest_id, lcu_version, and lcu_manifest_id are required when raw_source_mode=manifest" >&2
+            exit 2
+          fi
 
       - name: Extract raw round from GAME manifest
         if: ${{ inputs.raw_source_mode == 'manifest' }}
+        env:
+          GAME_MANIFEST_URL: ${{ inputs.game_manifest_url }}
+          MANIFEST_REQUEST_FILE: ${{ inputs.manifest_request_file }}
         run: |
           uv run python scripts/extract_raw_events_from_game.py \
             --mode manifest \
-            --game-manifest-url "${{ inputs.game_manifest_url }}" \
-            --request-file "${{ inputs.manifest_request_file }}" \
+            --game-manifest-url "$GAME_MANIFEST_URL" \
+            --request-file "$MANIFEST_REQUEST_FILE" \
             --cache-root .temp/game-manifest \
             --output-root .temp/raw-events-round
 
+      - name: Prepare manifest source identity
+        if: ${{ inputs.raw_source_mode == 'manifest' }}
+        env:
+          GAME_VERSION: ${{ inputs.game_version }}
+          GAME_MANIFEST_ID: ${{ inputs.game_manifest_id }}
+          LCU_VERSION: ${{ inputs.lcu_version }}
+          LCU_MANIFEST_ID: ${{ inputs.lcu_manifest_id }}
+        run: |
+          uv run python scripts/prepare_source_manifest.py \
+            --game-version "$GAME_VERSION" \
+            --game-manifest-id "$GAME_MANIFEST_ID" \
+            --lcu-version "$LCU_VERSION" \
+            --lcu-manifest-id "$LCU_MANIFEST_ID" \
+            --frozen-profile data/frozen-profile.v1.json \
+            --output .temp/source-identity/source-manifest.json
+
       - name: Update cumulative data
+        env:
+          GAME_VERSION: ${{ inputs.game_version }}
+          GAME_DATA_BASE_URL: ${{ inputs.game_data_base_url }}
         run: |
           uv run python scripts/update_raw_events.py \
             --mode online \
@@ -96,80 +217,82 @@ jobs:
             --raw-root raw/events \
             --state-file raw/update-state.json \
             --raw-input-root .temp/raw-events-round \
-            --game-version "${{ inputs.game_version }}" \
-            --game-data-base-url "${{ inputs.game_data_base_url }}" \
+            --game-version "$GAME_VERSION" \
+            --game-data-base-url "$GAME_DATA_BASE_URL" \
             --cache-root .temp/reference-sources \
-            --report-root .temp/update-report
+            --report-root .temp/update-report \
+            --sources-manifest .temp/source-identity/source-manifest.json \
+            --frozen-profile data/frozen-profile.v1.json
 
-      - name: Smoke test updated decomposition
+      - name: Prepare local update commit
+        if: ${{ inputs.commit_changes }}
         run: |
-          uv run python scripts/decompose_events.py \
-            --raw-root raw/events \
-            --reference-root reference \
-            --output-root .temp/event-decomposition \
-            --report-root .temp/decomposition-report \
-            --limit 500
+          if [[ "$GITHUB_REF_TYPE" != "branch" ]]; then
+            echo "commit_changes requires a branch ref" >&2
+            exit 2
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- raw/events raw/update-state.json reference
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(data): update raw events and reference data"
+          fi
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "unexpected tracked changes remain after preparing the update commit" >&2
+            git status --short
+            exit 2
+          fi
 
-      - name: Full decomposition
+      - name: Run isolated full refresh candidate
+        env:
+          ALLOW_QUALITY_REGRESSION: ${{ inputs.allow_quality_regression }}
         run: |
-          uv run python scripts/decompose_events.py \
-            --raw-root raw/events \
-            --reference-root reference \
-            --output-root .temp/event-decomposition-full \
-            --report-root dist/reports/runs/latest
+          refresh_args=()
+          if [[ "$ALLOW_QUALITY_REGRESSION" == "true" ]]; then
+            refresh_args+=(--allow-ratchet-regression)
+          fi
+          uv run python scripts/run_full_refresh.py \
+            --sources-manifest .temp/source-identity/source-manifest.json \
+            --frozen-profile data/frozen-profile.v1.json \
+            "${refresh_args[@]}"
 
-      - name: Build normalized outputs
-        run: |
-          uv run python scripts/build_normalized_outputs.py \
-            --decomposition-root .temp/event-decomposition-full \
-            --output-root dist/normalized \
-            --reference-version cumulative
-
-      - name: Validate normalized outputs
-        run: |
-          uv run python scripts/validate_normalized_outputs.py \
-            --normalized-root dist/normalized \
-            --output-json dist/reports/runs/latest/normalized-validation.json
-
-      - name: Report quality metrics
-        if: always()
-        run: |
-          uv run python scripts/report_quality_metrics.py \
-            --normalized-root dist/normalized \
-            --validation-json dist/reports/runs/latest/normalized-validation.json \
-            --output-json dist/reports/runs/latest/quality-metrics.json
-
-      - name: Check quality ratchet
-        continue-on-error: ${{ inputs.allow_quality_regression }}
-        run: |
-          uv run python scripts/check_quality_ratchet.py \
-            --baseline data/quality-baseline.json \
-            --normalized-root dist/normalized \
-            --validation-json dist/reports/runs/latest/normalized-validation.json
-
-      - name: Upload normalized dataset
+      - name: Upload dataset run candidate
         uses: actions/upload-artifact@v4
-        if: always()
+        if: ${{ success() }}
         with:
-          name: normalized-dataset
+          name: candidate-dataset-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            dist/normalized
-            dist/reports/runs/latest
-          if-no-files-found: ignore
+            dist/runs/completed/*/completion.json
+            dist/runs/completed/*/normalized
+            dist/runs/completed/*/reports
+            .temp/source-identity/source-manifest.json
+          if-no-files-found: error
+
+      - name: Upload failed run diagnostics
+        uses: actions/upload-artifact@v4
+        if: ${{ failure() }}
+        with:
+          name: failed-run-diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            dist/runs/failed/*/failure.json
+            dist/runs/failed/*/normalized
+            dist/runs/failed/*/reports
+            dist/runs/.staging/*/run.json
+            dist/runs/.staging/*/reports
+            .temp/update-report
+            .temp/source-identity/source-manifest.json
+          if-no-files-found: warn
 
       - name: Upload update report
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: raw-events-update-report
+          name: raw-events-update-report-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             .temp/update-report
-            .temp/decomposition-report
-          if-no-files-found: ignore
+            .temp/source-identity/source-manifest.json
+          if-no-files-found: warn
 
-      - name: Commit updated data
+      - name: Push validated data commit
         if: ${{ inputs.commit_changes }}
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "chore(data): update raw events and reference data"
-          file_pattern: raw/events raw/update-state.json reference
+        run: git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"

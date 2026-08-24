@@ -9,6 +9,8 @@
 ## 2. 技术栈与真实命令
 
 - 运行时：Python 3.12 及以上；`.python-version` 固定当前本地开发解释器为 Python 3.14。
+- GitHub Actions 的全新锁定安装固定使用 Python 3.13；当前 `league-tools` 传递依赖在 3.14
+  的无缓存构建环境中不可安装，本地 3.14 环境与代码的 3.12 最低语法边界保持不变。
 - 项目与环境管理：uv，锁文件为 `uv.lock`。
 - 共享模块采用 `src/` 布局；Hatchling 仅用于让 uv 安装项目代码和 console script，不把 wheel/sdist 作为交付物。
 - 主要依赖：league-tools 1.2.0 及以上、msgpack、ruamel.yaml；下载 GAME manifest 时通过 `download` 可选组启用 riotmanifest。
@@ -43,7 +45,7 @@ uv run python -c "import lol_event_semantics; print(lol_event_semantics.__versio
 uv run python scripts/run_full_refresh.py
 ```
 
-`ruff format` 必须在命令尾传入本次修改的 Python 文件路径；未经单独授权，不运行无路径的全仓库格式化。CI 执行锁定依赖同步、Ruff、mypy 和 pytest。完整刷新会写入被忽略的 `dist/`，成本高于默认测试，只在规则、参考数据、normalized contract 或发布产物受影响时运行。
+`ruff format` 必须在命令尾传入本次修改的 Python 文件路径；未经单独授权，不运行无路径的全仓库格式化。提交或交付前在本地执行锁定依赖同步、Ruff、mypy 和 pytest；手动数据更新 workflow 会复跑同组门禁。仓库不再为每次 push/PR 启动重复的默认 test workflow。完整刷新会写入被忽略的 `dist/`，成本高于默认测试，只在规则、参考数据、normalized contract 或发布产物受影响时运行。
 
 ## 3. 代码组织
 
@@ -99,7 +101,7 @@ uv run python scripts/run_full_refresh.py
 - 默认交付门禁：`uv run ruff check src scripts tests`、`uv run mypy`、`uv run python -m pytest tests/ -q`。
 - 发布数据门禁：默认交付门禁、`uv run python scripts/run_full_refresh.py`、代表事件查询与必要的人工审阅。
 
-当前 mypy 只覆盖已完整注解的稳定核心模块；新增稳定模块应逐步加入，未纳入部分仍由运行时测试和 Ruff 守护。Ruff 暂不对历史代码执行全规则或全量格式门禁；扩大规则集必须先形成可审阅的独立清债变更。在线源和真实游戏安装链不在默认 CI 中，涉及相应适配器时必须报告是否完成在线验收。
+当前 mypy 只覆盖已完整注解的稳定核心模块；新增稳定模块应逐步加入，未纳入部分仍由运行时测试和 Ruff 守护。Ruff 暂不对历史代码执行全规则或全量格式门禁；扩大规则集必须先形成可审阅的独立清债变更。在线源和真实游戏安装链不在本地默认门禁中，涉及相应适配器时必须报告是否完成在线验收。
 
 ## 7. 项目例外
 

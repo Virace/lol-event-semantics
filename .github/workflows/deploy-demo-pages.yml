@@ -26,10 +26,10 @@ jobs:
           enable-cache: true
 
       - name: Set up Python
-        run: uv python install
+        run: uv python install 3.13
 
       - name: Sync dependencies
-        run: uv sync --dev --locked
+        run: uv sync --python 3.13 --dev --locked
 
       - name: Build validated dataset candidate
         run: uv run python scripts/run_full_refresh.py --runs-root .temp/pages-runs

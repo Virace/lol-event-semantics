@@ -40,6 +40,7 @@ import datetime as dt
 import json
 import sys
 from pathlib import Path
+from typing import Mapping
 
 from lol_event_semantics.http_fetch import fetch_bytes
 from lol_event_semantics.manifest_diff import (
@@ -58,6 +59,7 @@ from lol_event_semantics.source_sync import (
     trim_rst_hashes,
     verify_corpus,
 )
+from lol_event_semantics.source_manifest import SOURCE_MANIFEST_SCHEMA_VERSION
 from lol_event_semantics.wad_source import (
     DEFAULT_REGION,
     download_champion_bins,
@@ -121,6 +123,37 @@ def load_cursor(path: Path) -> dict:
     return {}
 
 
+def build_source_cursor(
+    *,
+    mode: str,
+    game_dir: str | None,
+    region: str | None,
+    game_version: str | None,
+    lcu_version: str | None,
+    game_manifest: object,
+    lobby_snapshot: object,
+    sources: Mapping[str, str],
+    local_wads: object,
+    downloaded_at: str,
+) -> dict[str, object]:
+    """构建版本化 producer 游标，供增量下载与可移植来源投影共同消费。"""
+
+    return {
+        "schema_version": SOURCE_MANIFEST_SCHEMA_VERSION,
+        "mode": mode,
+        "game_dir": game_dir,
+        "region": region,
+        "game_version": game_version,
+        "lcu_version": lcu_version,
+        "game_manifest": game_manifest,
+        "downloaded_at": downloaded_at,
+        "rst_hashes_url": RST_HASHES_URL,
+        "lobby_snapshot": lobby_snapshot,
+        "sources": dict(sources),
+        "local_wads": local_wads,
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     """入口：解析 manifest 对并按选定源下载。"""
 
@@ -147,9 +180,7 @@ def main(argv: list[str] | None = None) -> int:
         pair = resolve_pair(args.region)
         base_game_version = pair.game_version
         print(f"manifest 对：game={pair.game_version} lcu={pair.lcu_version} region={pair.region}")
-    same_version = (
-        base_game_version is not None and cursor.get("game_version") == base_game_version
-    )
+    same_version = base_game_version is not None and cursor.get("game_version") == base_game_version
 
     work_dir = root / "work"
     game_extractor = None
@@ -173,22 +204,13 @@ def main(argv: list[str] | None = None) -> int:
 
     for source in sources:
         # raw-bins 按英雄集请求不吃版本跳过；lobby 幂等判据是快照 generatedAt（分支内判断）。
-        if (
-            same_version
-            and not args.force
-            and done.get(source) == "ok"
-            and source not in ("raw-bins", "lobby")
-        ):
+        if same_version and not args.force and done.get(source) == "ok" and source not in ("raw-bins", "lobby"):
             print(f"[skip] {source}：版本未变（--force 覆盖）")
             continue
 
         if source == "stringtable":
             out_dir = root / "stringtable"
-            present = {
-                locale
-                for locale in locales
-                if (out_dir / f"Global.{locale}-lol.stringtable").is_file()
-            }
+            present = {locale for locale in locales if (out_dir / f"Global.{locale}-lol.stringtable").is_file()}
             todo = tuple(narrow_locales(locales, affected, present))
             if not todo:
                 print("[skip] stringtable：清单判定各语言未变化（--force 覆盖）")
@@ -207,11 +229,7 @@ def main(argv: list[str] | None = None) -> int:
             clone = ensure_snapshot_clone(root)
             meta = json.loads((clone / "metadata.json").read_text(encoding="utf-8"))
             previous = cursor.get("lobby_snapshot") or {}
-            if (
-                not args.force
-                and done.get("lobby") == "ok"
-                and previous.get("generated_at") == meta.get("generatedAt")
-            ):
+            if not args.force and done.get("lobby") == "ok" and previous.get("generated_at") == meta.get("generatedAt"):
                 print(f"[skip] lobby：快照未更新（{meta.get('generatedAt')}，--force 覆盖）")
                 continue
             results = copy_lobby_from_clone(clone, meta, locales, root / "lobby")
@@ -287,9 +305,7 @@ def main(argv: list[str] | None = None) -> int:
                             target = args.emit_raw_round / "champions" / f"{numeric}.txt"
                             target.parent.mkdir(parents=True, exist_ok=True)
                             # newline="\n"：Windows 下防 write_text 把 LF 转 CRLF。
-                            target.write_text(
-                                "\n".join(sorted(names)) + "\n", encoding="utf-8", newline="\n"
-                            )
+                            target.write_text("\n".join(sorted(names)) + "\n", encoding="utf-8", newline="\n")
                             line += f" | round: {target}（{len(names)} 条）"
                 print(line)
             done[source] = "ok"
@@ -306,25 +322,20 @@ def main(argv: list[str] | None = None) -> int:
                 "version": pair.game_version,
             }
 
+    cursor_payload = build_source_cursor(
+        mode="local" if args.game_dir is not None else "remote",
+        game_dir=str(args.game_dir) if args.game_dir is not None else None,
+        region=pair.region if pair is not None else None,
+        game_version=base_game_version,
+        lcu_version=pair.lcu_version if pair is not None else None,
+        game_manifest=game_manifest_anchor,
+        downloaded_at=dt.datetime.now(dt.UTC).isoformat(timespec="seconds"),
+        lobby_snapshot=cursor.get("lobby_snapshot"),
+        sources=done,
+        local_wads=local_wads_anchor,
+    )
     cursor_path.write_text(
-        json.dumps(
-            {
-                "mode": "local" if args.game_dir is not None else "remote",
-                "game_dir": str(args.game_dir) if args.game_dir is not None else None,
-                "region": pair.region if pair is not None else None,
-                "game_version": base_game_version,
-                "lcu_version": pair.lcu_version if pair is not None else None,
-                "game_manifest": game_manifest_anchor,
-                "downloaded_at": dt.datetime.now(dt.UTC).isoformat(timespec="seconds"),
-                "rst_hashes_url": RST_HASHES_URL,
-                "lobby_snapshot": cursor.get("lobby_snapshot"),
-                "sources": done,
-                "local_wads": local_wads_anchor,
-            },
-            ensure_ascii=False,
-            indent=2,
-        )
-        + "\n",
+        json.dumps(cursor_payload, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
     print(f"游标已写入 {cursor_path}")

@@ -225,13 +225,14 @@ uv run python scripts/report_translation_patterns.py `
 分别表示待精确审阅和暂缓。公共 manifest/record/catalog/quality Schema、accepted corpus、
 无项目源码 consumer 和最小样例位于 `data/`，生成时复制进 candidate 的 `normalized/`。
 确定性身份、事务 run、分层绝对门禁、全接受 source review 的版本化 decision importer 和原子 pointer
-机制已实现；首个真实 approved-local promotion 与远端发布仍属于后续阶段。
+机制已实现，首个真实 approved-local promotion 已完成；远端 workflow 只交付候选与审核证据，
+不会把 artifact 自动声明为 approved 或稳定发布。
 
 ### 无源码消费者快速验证
 
 下面的入口只使用 Python 标准库，同时校验 JSON Schema、manifest 必需路径和实际 payload
 文件集闭包、逐文件哈希、`content_digest`、quality/catalog 身份、JSONL 排序与 Pattern Catalog
-引用。把 `<run-id>` 换成一次 P4 completed candidate；三个命令分别证明 Stable 命中、
+引用。把 `<run-id>` 换成一次 completed candidate；三个命令分别证明 Stable 命中、
 Experimental 明示与稳定 MISS：
 
 ```powershell
@@ -241,12 +242,21 @@ uv run python "$root\examples\consumer.py" --root $root --query Play_vo_Annie_Mo
 uv run python "$root\examples\consumer.py" --root $root --query Play_vo_NotARealEvent --expect miss
 ```
 
-## 自动更新与 CI
+## 自动更新与 Actions
 
 `.github/workflows/update-raw-events.yml` 为手动触发的更新 workflow
-（在线最小子集 + 全量重建 + 质量棘轮门禁 + normalized artifact 发布）。
-远端 workflow 仍是旧式 artifact 路径，不等同于本地 approved-local 发布链；本地权威入口为
-`scripts/run_full_refresh.py`。更新流程详解见
+（在线最小子集 + 锁定依赖门禁 + 隔离 full refresh + candidate artifact）。选择提交数据时，
+workflow 先在 runner 本地形成提交，只有 clean candidate 的完整门禁通过后才 push；未选择提交时
+只上传 review-only 候选。成功 run 使用 `candidate-dataset` artifact；失败 run 只进入
+`failed-run-diagnostics`，不会以候选数据集命名。artifact 不自动 promotion；本地权威消费入口仍是
+`approved-local.json`。Actions 的全新依赖安装固定使用 Python 3.13；push/PR 不再重复运行默认 test job，
+提交或交付前仍按 `PROJECT_STANDARD.md` 在本地执行完整门禁。
+
+当前 workflow 只接受 frozen V1 16.16。artifact 模式要求 raw round 与可移植来源清单来自同一个
+producer run；manifest 模式要求同轮 GAME/LCU 证据并生成运行时来源清单。workflow 和直接 online
+更新入口都会在网络准备前验证这份 portable remote contract。该清单同时进入累计更新
+的 staging preflight、候选内容身份和诊断 artifact，GAME manifest ID 也进入来源身份；仓库内的本地 frozen source manifest 不会被
+用来冒充在线采集。未来 live 版本须先建立并 Review 新的版本化 profile/来源合同。更新流程详解见
 `docs/UPDATE_WORKFLOW.md`，贡献指引见 `CONTRIBUTING.md`，仓库分层说明见
 `REPOSITORY.md`。
 
