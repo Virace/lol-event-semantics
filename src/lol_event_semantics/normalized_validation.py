@@ -18,7 +18,9 @@ from .dataset_identity import (
 )
 from .decomposition_lexer import parse_shell
 from .normalized_contract import (
+    EVENT_ID_ALGORITHM_VERSION,
     RECORD_ID_ALGORITHM_VERSION,
+    event_id_for_normalized_record,
     record_id_for_normalized_record,
     source_identity_from_paths,
 )
@@ -167,6 +169,7 @@ class NormalizedValidationIssue:
     path: str
     message: str
     raw_event_name: str | None = None
+    record_id: str | None = None
 
     def to_dict(self) -> dict[str, object]:
         """返回 JSON 友好的字典。"""
@@ -184,6 +187,8 @@ class NormalizedValidationReport:
     error_count: int
     warning_count: int
     issues: list[NormalizedValidationIssue]
+    dataset_id: str | None = None
+    content_digest: str | None = None
 
     def to_dict(self) -> dict[str, object]:
         """返回 JSON 友好的报告。"""
@@ -195,6 +200,8 @@ class NormalizedValidationReport:
                 "record_count": self.record_count,
                 "error_count": self.error_count,
                 "warning_count": self.warning_count,
+                "dataset_id": self.dataset_id,
+                "content_digest": self.content_digest,
             },
             "issues": [issue.to_dict() for issue in self.issues],
         }
@@ -229,6 +236,7 @@ def validate_normalized_root(root: Path) -> NormalizedValidationReport:
     for rel_path, rows in shard_rows.items():
         for row_index, row in enumerate(rows, start=1):
             row_path = f"{rel_path}:{row_index}"
+            issue_start = len(issues)
             validate_record(
                 row,
                 row_path,
@@ -238,6 +246,8 @@ def validate_normalized_root(root: Path) -> NormalizedValidationReport:
                 seen_record_ids,
                 issues,
             )
+            for issue in issues[issue_start:]:
+                issue.record_id = string_or_none(row.get("record_id"))
 
     if manifest_schema_version == 2:
         validate_v2_dataset(root, manifest, shard_rows, issues)
@@ -252,6 +262,8 @@ def validate_normalized_root(root: Path) -> NormalizedValidationReport:
         error_count=error_count,
         warning_count=warning_count,
         issues=issues,
+        dataset_id=string_or_none(manifest.get("dataset_id")),
+        content_digest=string_or_none(manifest.get("content_digest")),
     )
 
 
@@ -572,6 +584,16 @@ def validate_v2_record_fields(
 
     if row.get("record_id_algorithm") != RECORD_ID_ALGORITHM_VERSION:
         issues.append(error("record_id_algorithm_invalid", row_path, "record_id_algorithm 不受支持。", raw))
+
+    if "event_id" in row or "event_id_algorithm" in row:
+        if row.get("event_id_algorithm") != EVENT_ID_ALGORITHM_VERSION:
+            issues.append(error("event_id_algorithm_invalid", row_path, "event_id_algorithm 不受支持或缺失。", raw))
+        try:
+            expected_event_id = event_id_for_normalized_record(row)
+        except ValueError:
+            expected_event_id = None
+        if expected_event_id is None or row.get("event_id") != expected_event_id:
+            issues.append(error("event_id_identity_mismatch", row_path, "event_id 与事件原名及逻辑实体不一致。", raw))
 
     source_scope = string_or_none(row.get("source_scope"))
     if source_scope is None:
@@ -1717,8 +1739,18 @@ def validate_context_subject_contract(
     entity = row.get("entity")
     subject_alias = string_or_none(subject.get("alias")) if isinstance(subject, dict) else None
     entity_alias = string_or_none(entity.get("alias")) if isinstance(entity, dict) else None
+    attribution = entity.get("attribution") if isinstance(entity, dict) else None
+    basis = attribution.get("basis") if isinstance(attribution, dict) else None
+    base_champion = entity.get("base_champion") if isinstance(entity, dict) else None
+    base_alias = string_or_none(base_champion.get("alias")) if isinstance(base_champion, dict) else None
+    public_system = isinstance(entity, dict) and entity.get("kind") == "system" and basis == "public_system"
     expected_key = string_or_none(namespace.get("key"))
-    if expected_key is not None and entity_alias is not None and rule_key(expected_key) == rule_key(entity_alias):
+    if (
+        not public_system
+        and expected_key is not None
+        and entity_alias is not None
+        and rule_key(expected_key) == rule_key(entity_alias)
+    ):
         issues.append(
             error(
                 "context_namespace_used_as_entity",
@@ -1728,7 +1760,8 @@ def validate_context_subject_contract(
             )
         )
 
-    if subject_alias is not None and entity_alias is not None and subject_alias.casefold() != entity_alias.casefold():
+    valid_subjects = {value.casefold() for value in (entity_alias, base_alias) if value is not None}
+    if subject_alias is not None and entity_alias is not None and subject_alias.casefold() not in valid_subjects:
         issues.append(
             error(
                 "context_subject_entity_mismatch",
@@ -2015,7 +2048,7 @@ def validate_translation_render(
         ("zh_CN.default", RenderOptions(locale="zh_CN", mode="default"), "zh_cn_detail"),
         (
             "zh_CN.main",
-            RenderOptions(locale="zh_CN", mode="main", known_context=frozenset({"champion", "skin"})),
+            RenderOptions(locale="zh_CN", mode="main", known_context=frozenset({"champion", "skin", "item"})),
             "zh_cn_short",
         ),
     )

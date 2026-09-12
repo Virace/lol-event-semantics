@@ -11,11 +11,18 @@ from pathlib import Path
 
 from lol_event_semantics.normalized_translation_model import FRAME_REGISTRY, FrameSpec, RenderOptions
 from lol_event_semantics.normalized_translation_renderer import render_translation
-from lol_event_semantics.normalized_validation import validate_normalized_root
+from lol_event_semantics.normalized_validation import validate_normalized_root, validate_v2_record_fields
 
 
 class NormalizedValidationTests(unittest.TestCase):
     """验证 normalized 输出校验器。"""
+
+    def test_malformed_event_identity_is_reported_without_crashing(self) -> None:
+        """缺失原名或实体的身份字段产生诊断，不中断整份报告。"""
+
+        issues = []
+        validate_v2_record_fields({"event_id": "invalid"}, "row:1", {}, issues, None)
+        self.assertIn("event_id_identity_mismatch", {issue.code for issue in issues})
 
     def test_valid_minimal_output_has_no_issues(self) -> None:
         """结构完整且文案干净的最小产物不产生问题。"""

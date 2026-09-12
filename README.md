@@ -18,6 +18,7 @@ raw/events/ + rules/ + overrides/ + reference/
   -> decomposition JSONL + 审计报告
   -> dist/runs/completed/<run>/normalized/
   -> dist/runs/approved-local.json # 唯一默认消费入口（原子指向 approved run）
+  -> dist/consumption/<export-id>/{web,software,lookup}/ # 按用途派生消费包
 ```
 
 ## 快速开始
@@ -57,7 +58,7 @@ uv run python scripts/search_stringtable.py 厄塔汗 "first blood"
 
 ### 事件语义静态演示站
 
-演示站用两级导航组织同一 candidate：先选“已确定数据 / 需要 Review”，再选“英雄 / 地图”。默认读取 approved-local 及其同 run validation 报告；检查尚未批准的 completed candidate 时必须同时显式传入二者：
+演示站 V3 用统一实体浏览组织同一 candidate：英雄、装备、地图、模式实体、公共系统、未知实体六类，与“全部 / 已确定 / 待反馈”语义状态独立筛选。默认读取 approved-local 及其同 run validation 报告；检查尚未批准的 completed candidate 时必须同时显式传入二者：
 
 ```powershell
 uv run python scripts/build_demo_site.py `
@@ -66,7 +67,22 @@ uv run python scripts/build_demo_site.py `
 uv run python -m http.server 8765 --directory dist\demo-site
 ```
 
-访问 `http://127.0.0.1:8765/`。生成结果是平台中立的纯静态站，可原样托管到 GitHub Pages 或 Cloudflare Pages；仓库提供只允许手动触发的 Pages workflow，不会在 push 时自动部署。英雄浏览保留 `Jade_`、`Ruby_`、`Strawberry_` 的经典模式、末日人机和 PVE 模式归属；地图浏览只接受显式结构化地图槽位，并按 `reference/maps` 使用中文名，不从事件名猜测。Review 队列在英雄与地图入口内分别支持残差层、问题代码、语义族、实体和状态过滤，并用 hash URL 与 `record_id` 恢复定位。“已确定数据”只表示当前实体浏览轴有结构化归属，不等于把 candidate 提升为 approved-local。详细构建、托管、安全头、候选状态边界和图片来源见 [`docs/DEMO_SITE.md`](docs/DEMO_SITE.md)。
+访问 `http://127.0.0.1:8765/`。生成结果是平台中立的纯静态站，可托管到 GitHub Pages 或 Cloudflare Pages。页面先读取轻量索引，再按需读取当前实体分片；中文解释复用消费层投影，支持度、语义状态与人工审核分别展示。实体归属直接读取 normalized 的证据；模式英雄可通过显式基础英雄关系归组，模式与地图上下文仍保留。详情提供 `event_id`、`record_id`、原名、归属依据和校验问题，筛选可通过 hash URL 恢复。“已确定”要求中文已生成且无记录警告、校验或归属问题，不代表 Stable 或人工批准。旧审计产物缺少归属证据时须重建候选；详细构建、身份检查、托管与图片来源见 [`docs/DEMO_SITE.md`](docs/DEMO_SITE.md)。
+
+### 按用途导出中文事件数据
+
+完整 normalized 保留审计证据。在其下可独立生成 `web`（实体分片、中文词典、原名路由和浏览器客户端）、`software`（具名字段 JSONL）与 `lookup`（原名到多候选的单文件索引）。默认保留全部支持级别和资产类型；只导出 Stable 或 VO 须显式筛选。
+
+```powershell
+uv run python scripts/build_consumption.py `
+  --normalized-root dist/runs/completed/<run-id>/normalized `
+  --output-root dist/consumption/<export-id>
+uv run python scripts/validate_consumption.py `
+  --root dist/consumption/<export-id>/web `
+  --normalized-root dist/runs/completed/<run-id>/normalized
+```
+
+输出目录必须尚不存在。省略 `--normalized-root` 时读取 approved-local；导出不改变批准状态。网页仅省略有结构化证据的主体英雄/皮肤上下文，保留原名、多候选、语义状态与源定位。完整格式、筛选与独立客户端用法见 [`CONSUMPTION.md`](CONSUMPTION.md)。
 
 ## 数据源体系
 
@@ -110,6 +126,8 @@ manifest，数据源之间天然同版本。`16.16` 是本轮 frozen acceptance 
   - `dist/runs/completed/<run>/`：含 `normalized/`、`reports/`、`run.json`、`completion.json` 的不可变候选。
   - `dist/runs/failed/<run>/`：含 `failure.json` 与部分诊断的失败运行。
   - `dist/runs/approved-local.json`：默认消费者唯一入口；同目录临时文件 fsync 后原子替换。
+  - `dist/consumption/<export-id>/`：从明确 normalized 派生的 `web/`、`software/`、`lookup/` 独立消费包，各自带 manifest 与校验客户端。
+  - `dist/demo-site/`：同候选的只读静态 Demo，索引与实体分片按需加载。
   - 旧 `dist/normalized/` 只作为显式维护候选路径兼容，不再被默认 lookup 消费。
 
 ## 事件拆解说明
@@ -140,11 +158,13 @@ approved run 的 normalized 记录内 `translation` 对象是结构化渲染 con
 裁剪文案的下游程序应读取 `translation` 并按 `locale`、`mode`、
 `known_context` 渲染。生成后运行：
 
-每条兼容记录还会增量写入版本化 `record_id`、`source_scope`、`provenance`、
+每条兼容记录还会增量写入版本化 `record_id`、`event_id`、`source_scope`、`provenance`、
 `asset_kind`、`pattern_id`、`support_level`、`semantic_frame`、`rendered_labels`、
 `render_status`、`review_status` 和 `warnings`。`record_id` 由 raw、来源域/资产与
 最终 owner 的 canonical tuple 生成，不依赖本机路径、输入顺序或生成时间；
 `raw_event_name` 仍保持不可变，但不再被当作全数据集天然唯一键。
+
+`record_id` 表示包含来源集合的审计快照身份；`event_id` 由原名和逻辑实体生成，补充来源不会改变它，实体纠正则可能改变。`compare_event_identity.py` 可比较两份 normalized：优先匹配记录身份与事件身份，再用相同原名和来源重叠证明一对一迁移；歧义单独报告，不自动合并。实体归属优先使用来源资产与 reference 精确证据；冲突保持未知，人工 `keep` / `downgrade` 不能覆写强来源。详见 [`CONSUMPTION.md`](CONSUMPTION.md)。
 
 `manifest.json` 的 V2 内容身份不含生成时间、本机绝对路径或运行耗时。它记录
 冻结 profile、Git commit/dirty 状态、raw/reference/rules/overrides/契约资产与

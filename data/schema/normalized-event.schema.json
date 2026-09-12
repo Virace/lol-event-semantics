@@ -21,6 +21,50 @@
           "minLength": 1,
           "type": "string"
         },
+        "raw_alias": {
+          "type": "string"
+        },
+        "attribution": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["basis", "confidence", "evidence"],
+          "properties": {
+            "basis": {"type": "string", "minLength": 1},
+            "confidence": {"enum": ["high", "medium", "low", "unknown"]},
+            "reason": {"type": "string", "minLength": 1},
+            "evidence": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["source", "value"],
+                "properties": {
+                  "source": {"type": "string", "minLength": 1},
+                  "value": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "base_champion": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "alias", "basis"],
+          "properties": {
+            "kind": {"const": "champion"},
+            "alias": {"type": "string", "minLength": 1},
+            "basis": {"const": "reference_alias_suffix"}
+          }
+        },
+        "candidate": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "id"],
+          "properties": {
+            "kind": {"const": "item"},
+            "id": {"type": "integer", "minimum": 0}
+          }
+        },
         "kind": {
           "minLength": 1,
           "type": "string"
@@ -31,6 +75,13 @@
         "alias"
       ],
       "type": "object"
+    },
+    "event_id": {
+      "pattern": "^event-v1-[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "event_id_algorithm": {
+      "const": "lol-event-semantics.event-id.v1"
     },
     "game_version": {
       "minLength": 1,

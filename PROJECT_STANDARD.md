@@ -58,6 +58,8 @@ uv run python scripts/run_full_refresh.py
 - `data/`：小型 schema、样例与质量基线。
 - `dist/`：生成的下游数据、报告和中间产物，整体不入 Git。
 
+完整 normalized 是审计合同；`consumption.py` 在其下生成 web/software/lookup 消费合同，不能为减小网页体积删除审计证据。消费中文由正式 renderer 派生，主体上下文省略必须有结构化证据，字典编码与分片不得丢失原名、多候选、状态和源定位。消费合同与命令见 `CONSUMPTION.md`；修改此层须运行 `tests/test_consumption.py`、`tests/test_consumer_clients.py` 并对真实候选执行 `validate_consumption.py --normalized-root ...`。
+
 依赖方向为 `scripts -> src/lol_event_semantics`；共享模块不得反向导入脚本。源数据与规则经拆解层生成结构化记录，再由 normalized 层输出消费者 contract；校验和质量指标只读取生成结果，不成为源数据。只有稳定能力已由多个相关模块组成、需要公开边界或依赖隔离时才建立子模块目录，不为单个小文件或形式化分层创建目录。
 
 ## 4. 命名与文档

@@ -24,6 +24,9 @@
   `.staging`、`failed`、未批准 `completed` 与旧 `dist/normalized/` 都只能显式用于维护诊断。
   translation schema、frame type、字段和路径变化属于消费者 contract 变更。
 - `raw_event_name` 必须保留原值但不是公开唯一键；`record_id` 由版本化 canonical tuple 确定，至少包含 raw、来源域/资产和最终 owner，不得包含本机绝对路径、输入顺序、随机数或生成时间。真实 identity 冲突必须 fail-closed 或用可解释来源身份消歧。
+- `event_id` 是 additive 连续身份，由 raw 和逻辑 owner 生成；补充来源不改变它，实体纠正仍须显式迁移。同名多 owner 不合并，歧义不能绕过 Stable 降级门禁。
+- `entity.attribution` 区分来源容器、精确 reference、装备数字 ID、显式地图、公共系统及未确认依据；cue 或动作 token 不能独立证明实体。模式实体与基础英雄的关联必须显式保留。
+- web/software/lookup 是从审计 normalized 派生的独立消费包，manifest 必须绑定源身份、范围和逐文件摘要。网页可省略已有主体上下文显示名称，但不得删除触发条件、原名、支持状态或审计定位；不能把 rendered/preview 冒充 Stable。
 - `zh_CN` 是正式渲染 locale；其他 locale、回退与来源信息必须以结构化 translation 数据表达，不得以兼容 `display` 预览替代正式渲染 contract。
 - VO 是优先支持对象；SFX 必须保留并按 Stable、Experimental、Unsupported 表达支持状态，不能因未稳定而静默丢弃。
 - Pattern Catalog 只能从 semantic frame 派生，不能以 `BaseName,Label` 等字符串对作为主模型。只有同时命中已审 selector、精确 canonical pattern ID 且通过 Stable 绝对门禁的记录可标记 Stable；任何新 ID 默认回到 Experimental/pending。Stable 质量门禁不读取趋势 baseline，并独立冻结已批准 decision、pattern ID 集合与记录总数，不能靠协调缩减 policy/corpus 洗绿。任何 support level 新增、移除、晋级或降级都必须进入结构化 diff；Stable 降级额外阻断自动门禁。accepted corpus 与最终 approved-local promotion 仍分别受精确断言和人工 Review 约束。

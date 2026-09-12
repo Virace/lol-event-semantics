@@ -37,6 +37,202 @@ from lol_event_semantics.normalized_output import (
     resolve_champion_entity,
 )
 from lol_event_semantics.normalized_validation import validate_normalized_root
+from lol_event_semantics.normalized_translation_model import TranslationBuildContext
+
+
+class LogicalEntityTests(unittest.TestCase):
+    """实体身份与来源、语义分离，并严格使用显式构建上下文。"""
+
+    @staticmethod
+    def context() -> TranslationBuildContext:
+        """构造不依赖仓库默认 reference 的身份索引。"""
+
+        return TranslationBuildContext(
+            champion_labels={
+                "Jinx": {"zh_CN": "金克丝"},
+                "Ruby_Jinx": {"en_US": "Doom Bot Jinx"},
+                "Annie": {"zh_CN": "安妮"},
+            },
+            champion_ids={222: "Jinx", 66617: "Ruby_Jinx", 1: "Annie"},
+            reference_item_names={999999: {"zh_CN": "测试装备", "en_US": "Test Item"}},
+        )
+
+    def test_champion_source_preserves_mode_identity_and_base_relation(self) -> None:
+        """Dance3D 是 cue，单一可证明源实体必须保留 Ruby_Jinx 身份。"""
+
+        record = normalize_semantics(
+            decompose_event_name(
+                "Play_sfx_Ruby_Dance3D_loop",
+                game_version="test",
+                source_path="raw/events/champions/66617.txt",
+            )
+        )
+        record.semantic_slots["mode_entity"] = {
+            "kind": "mode_system",
+            "alias": "Dance3D",
+            "source": "mode_namespace_cue",
+        }
+        record.semantic_slots["subject_hint"] = "Jinx"
+        row = build_normalized_record(record, translation_context=self.context())
+        entity = row["entity"]
+        self.assertEqual((entity["kind"], entity["alias"]), ("champion", "Ruby_Jinx"))
+        self.assertEqual(entity["base_champion"]["alias"], "Jinx")
+        self.assertEqual(entity["attribution"]["basis"], "source_asset")
+        self.assertEqual(row["semantic"]["slots"]["mode_entity"]["alias"], "Dance3D")
+
+    def test_item_identity_and_label_use_same_explicit_reference(self) -> None:
+        """新装备可归属，默认 reference 已知但本上下文缺失的装备不可穿透。"""
+
+        for item_id, expected_kind in ((999999, "item"), (1039, "unknown")):
+            with self.subTest(item_id=item_id):
+                record = normalize_semantics(
+                    decompose_event_name(
+                        f"Play_sfx_{item_id}_buffactivate",
+                        game_version="test",
+                        source_path="raw/events/maps/0.txt",
+                    )
+                )
+                row = build_normalized_record(record, translation_context=self.context())
+                self.assertEqual(row["entity"]["kind"], expected_kind)
+                if item_id == 999999:
+                    self.assertIn("测试装备", row["display"]["zh_cn_detail"])
+                    self.assertEqual(row["entity"]["attribution"]["basis"], "reference_item_id")
+                else:
+                    self.assertNotIn("冰雹刀刃", row["display"]["zh_cn_detail"])
+
+    def test_unknown_numeric_suffixes_share_candidate_without_confirmation(self) -> None:
+        """6688Cast/Shield 共享候选编号，但不能确认成已发布装备。"""
+
+        for suffix in ("Cast", "Shield"):
+            record = normalize_semantics(
+                decompose_event_name(
+                    f"Play_sfx_6688{suffix}_OnCast",
+                    game_version="test",
+                    source_path="raw/events/maps/0.txt",
+                )
+            )
+            entity = build_normalized_record(record, translation_context=self.context())["entity"]
+            self.assertEqual((entity["kind"], entity["alias"]), ("unknown", "6688"))
+            self.assertEqual(entity["candidate"], {"kind": "item", "id": 6688})
+            self.assertEqual(entity["raw_alias"], f"6688{suffix}")
+            self.assertEqual(entity["attribution"]["basis"], "unresolved")
+
+    def test_competing_champion_sources_fail_closed(self) -> None:
+        """同名记录的多个英雄来源互相冲突时保留全部证据。"""
+
+        record = normalize_semantics(
+            decompose_event_name(
+                "Set_Switch_aggro_off", game_version="test", source_path="raw/events/champions/222.txt"
+            )
+        )
+        record.source_paths.append("raw/events/champions/1.txt")
+        entity = build_normalized_record(record, translation_context=self.context())["entity"]
+        self.assertEqual(entity["kind"], "unknown")
+        self.assertEqual(entity["attribution"]["reason"], "conflicting_champion_sources")
+        self.assertEqual(len(entity["attribution"]["evidence"]), 2)
+
+    def test_exact_champion_disagreement_fails_closed(self) -> None:
+        """来源与另一个精确英雄身份矛盾时不能静默选择。"""
+
+        record = normalize_semantics(
+            decompose_event_name(
+                "Play_vo_Annie_AnnieQ_OnCast", game_version="test", source_path="raw/events/champions/222.txt"
+            )
+        )
+        entity = build_normalized_record(record, translation_context=self.context())["entity"]
+        self.assertEqual(entity["kind"], "unknown")
+        self.assertEqual(entity["attribution"]["reason"], "source_reference_conflict")
+
+    def test_mode_base_relation_uses_unique_non_mode_official_name(self) -> None:
+        """Ruby_Wukong后缀能精确对应MonkeyKing，Jade同名实体不能抢基础关系。"""
+
+        context = TranslationBuildContext(
+            champion_labels={
+                "Ruby_Wukong": {"en_US": "Doom Bot Wukong"},
+                "Jade_Wukong": {"en_US": "Wukong"},
+                "MonkeyKing": {"en_US": "Wukong"},
+            },
+            champion_ids={66614: "Ruby_Wukong"},
+        )
+        record = normalize_semantics(
+            decompose_event_name(
+                "Play_sfx_Ruby_WukongBasicAttack_OnCast",
+                game_version="test",
+                source_path="raw/events/champions/66614.txt",
+            )
+        )
+        record.semantic_slots["subject_hint"] = "MonkeyKing"
+        entity = build_normalized_record(record, translation_context=context)["entity"]
+        self.assertEqual(entity["alias"], "Ruby_Wukong")
+        self.assertEqual(entity["base_champion"]["alias"], "MonkeyKing")
+
+    def test_multiple_map_containers_do_not_erase_proven_namespace(self) -> None:
+        """共享模式系统跨地图出现不等于实体证据冲突。"""
+
+        record = normalize_semantics(
+            decompose_event_name(
+                "Play_sfx_Ruby_Dance3D_loop", game_version="test", source_path="raw/events/maps/11.txt"
+            )
+        )
+        record.source_paths.append("raw/events/maps/21.txt")
+        record.semantic_slots["context_namespace"] = {"key": "ruby", "source": "namespace_convention"}
+        entity = build_normalized_record(record, translation_context=self.context())["entity"]
+        self.assertEqual((entity["kind"], entity["alias"]), ("system", "ruby"))
+        self.assertEqual(entity["attribution"]["basis"], "public_system")
+
+    def test_writer_rebuild_does_not_reuse_default_or_previous_item_index(self) -> None:
+        """同一进程连续写出时，装备身份和名称仅由本轮显式上下文决定。"""
+
+        from reference_cache import CONTRACT_ASSETS_ROOT, TEST_INPUT_IDENTITY, pattern_policy
+        from lol_event_semantics.normalized_output import write_normalized_outputs
+
+        record = normalize_semantics(
+            decompose_event_name(
+                "Play_sfx_999999_buffactivate", game_version="test", source_path="raw/events/maps/0.txt"
+            )
+        )
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            for context, kind in ((self.context(), "item"), (TranslationBuildContext(), "unknown")):
+                with self.subTest(kind=kind):
+                    write_normalized_outputs(
+                        [record],
+                        root / "normalized",
+                        reference_version="test",
+                        reference_root=root / "reference",
+                        rules_root=root / "rules",
+                        overrides_root=root / "overrides",
+                        input_identity=TEST_INPUT_IDENTITY,
+                        translation_context=context,
+                        pattern_policy=pattern_policy(),
+                        contract_assets_root=CONTRACT_ASSETS_ROOT,
+                    )
+                    row = json.loads((root / "normalized/normalized-events.jsonl").read_text(encoding="utf-8"))
+                    self.assertEqual(row["entity"]["kind"], kind)
+                    self.assertEqual("测试装备" in row["display"]["zh_cn_detail"], kind == "item")
+
+    def test_explicit_map_index_applies_even_without_custom_display_labels(self) -> None:
+        """只注入reference地图名时也必须隔离默认地图索引。"""
+
+        record = normalize_semantics(decompose_event_name("map12_FirstBlood_phase_select", game_version="test"))
+        for names, expected in (({12: "Test Map"}, "Test Map"), ({}, "Map12")):
+            context = TranslationBuildContext(reference_map_names=names)
+            row = build_normalized_record(record, translation_context=context)
+            self.assertEqual(row["translation"]["arguments"]["map"]["labels"]["en_US"], expected)
+
+    def test_word_suffix_without_source_does_not_confirm_champion(self) -> None:
+        """Explosion以Sion结尾只是词形巧合，不能作为英雄身份事实。"""
+
+        record = EventDecompositionRecord(
+            schema_version="event-decomposition.v1",
+            game_version="test",
+            raw_event_name="Play_sfx_Explosion",
+            owner=EventOwnerRef(kind="champion", alias="Explosion"),
+        )
+        context = TranslationBuildContext(champion_labels={"Sion": {"en_US": "Sion"}})
+        entity = build_normalized_record(record, translation_context=context)["entity"]
+        self.assertEqual((entity["kind"], entity["alias"]), ("unknown", "Explosion"))
+        self.assertEqual(entity["attribution"]["reason"], "unverified_owner_affix")
 
 
 class ItemEntityResolutionTests(unittest.TestCase):
@@ -385,18 +581,20 @@ class ChampionEntityAttributionTests(unittest.TestCase):
 
         return json.loads(path.read_text(encoding="utf-8").splitlines()[0])
 
-    def test_numeric_switch_alias_downgrades_to_unknown(self) -> None:
-        """Switch_CHAMP_578 的数字开关值降级为 unknown，alias 原样保留。"""
+    def test_numeric_switch_alias_uses_proven_champion_source(self) -> None:
+        """开关值578只留在raw_alias，逻辑实体由精确Kaisa来源证明。"""
 
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             self.write_single("Switch_CHAMP_578_Off", "raw/events/champions/145.txt", root)
 
             self.assertFalse((root / "by-entity" / "champions" / "578.jsonl").exists())
-            shard = root / "by-entity" / "unknown" / "578.jsonl"
+            shard = root / "by-entity" / "champions" / "Kaisa.jsonl"
             self.assertTrue(shard.is_file())
             entity = self.first_payload(shard)["entity"]
-            self.assertEqual(entity, {"kind": "unknown", "alias": "578"})
+            self.assertEqual((entity["kind"], entity["alias"]), ("champion", "Kaisa"))
+            self.assertEqual(entity["raw_alias"], "578")
+            self.assertEqual(entity["attribution"]["basis"], "source_asset")
 
     def test_lowercase_skin_alias_resolves_champion_with_raw_alias(self) -> None:
         """jinx_skin60 归入 Jinx，raw_alias 保留 lexer 原始 alias。"""
@@ -487,7 +685,7 @@ class ChampionEntityAttributionTests(unittest.TestCase):
             self.assertEqual(entity["raw_alias"], "Skin06")
 
     def test_ruby_mode_context_attaches_to_real_actor(self) -> None:
-        """Ruby 是末日人机上下文；实体分片必须归到后续真实英雄。"""
+        """Ruby来源实体独立保留，另建基础英雄关系供消费层聚合。"""
 
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
@@ -500,11 +698,13 @@ class ChampionEntityAttributionTests(unittest.TestCase):
             )
             write_outputs([record], root, reference_version="16.5")
 
-            shard = root / "by-entity" / "champions" / "Amumu.jsonl"
+            shard = root / "by-entity" / "champions" / "Ruby_Amumu.jsonl"
             self.assertTrue(shard.is_file())
             self.assertFalse((root / "by-entity" / "champions" / "Ruby.jsonl").exists())
             payload = self.first_payload(shard)
-            self.assertEqual(payload["entity"], {"kind": "champion", "alias": "Amumu"})
+            self.assertEqual(payload["entity"]["alias"], "Ruby_Amumu")
+            self.assertEqual(payload["entity"]["base_champion"]["alias"], "Amumu")
+            self.assertEqual(payload["entity"]["attribution"]["basis"], "source_asset")
             self.assertEqual(payload["semantic"]["slots"]["context_namespace"]["key"], "ruby")
 
     def test_regular_champion_alias_has_no_raw_alias(self) -> None:
@@ -516,7 +716,9 @@ class ChampionEntityAttributionTests(unittest.TestCase):
 
             shard = root / "by-entity" / "champions" / "Annie.jsonl"
             entity = self.first_payload(shard)["entity"]
-            self.assertEqual(entity, {"kind": "champion", "alias": "Annie"})
+            self.assertEqual((entity["kind"], entity["alias"]), ("champion", "Annie"))
+            self.assertNotIn("raw_alias", entity)
+            self.assertEqual(entity["attribution"]["basis"], "source_asset")
 
     def test_mixed_champion_and_map_sources_still_resolve_bank_champion(self) -> None:
         """英雄 bank 与地图 bank 混合来源不阻止文件 id 归属。"""
@@ -551,28 +753,20 @@ class ChampionEntityAttributionTests(unittest.TestCase):
             self.assertEqual(self.first_payload(yorick)["entity"]["raw_alias"], "aggro")
             self.assertEqual(self.first_payload(master_yi)["entity"]["raw_alias"], "aggro")
 
-    def test_affix_source_conflict_emits_quality_diagnostic(self) -> None:
-        """挂靠结论与 bank 文件 id 矛盾时写入 quality diagnostic，且不改变挂靠优先级。"""
+    def test_weak_owner_affix_cannot_override_proven_source(self) -> None:
+        """来源可证明Brand时，未确认的AnnieTibbers词形不能覆盖身份。"""
 
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
-            # AnnieTibbers 前缀挂靠 Annie，但事件放在 Brand 的 bank（63.txt）里。
             self.write_single(
                 "Play_sfx_AnnieTibbersSkin10_AnnieTibbersBasicAttack2_OnCast",
                 "raw/events/champions/63.txt",
                 root,
             )
-
-            shard = root / "by-entity" / "champions" / "Annie.jsonl"
-            self.assertTrue(shard.is_file())
-            payload = self.first_payload(shard)
-            self.assertEqual(payload["entity"]["alias"], "Annie")
-            diagnostics = payload["quality"]["diagnostics"]
-            conflicts = [item for item in diagnostics if item.startswith("entity_affix_source_conflict:")]
-            self.assertEqual(len(conflicts), 1)
-            self.assertIn("AnnieTibbers", conflicts[0])
-            self.assertIn("affix=Annie", conflicts[0])
-            self.assertIn("source_file=Brand", conflicts[0])
+            payload = self.first_payload(root / "by-entity" / "champions" / "Brand.jsonl")
+            self.assertEqual(payload["entity"]["alias"], "Brand")
+            self.assertEqual(payload["entity"]["raw_alias"], "AnnieTibbers")
+            self.assertEqual(payload["entity"]["attribution"]["basis"], "source_asset")
 
     def test_affix_matching_source_has_no_conflict_diagnostic(self) -> None:
         """挂靠结论与 bank 文件 id 一致时不产生矛盾 diagnostic。"""
@@ -603,17 +797,17 @@ class ChampionEntityResolverChainTests(unittest.TestCase):
 
         return ChampionEntityResolver(aliases=aliases or {}, ids=ids or {}, manual=manual or {})
 
-    def test_exact_match_wins_and_never_diagnoses(self) -> None:
-        """精确匹配优先于一切，且不做 bank 矛盾检查。"""
+    def test_exact_match_conflicting_with_source_is_unresolved(self) -> None:
+        """精确英雄与不同的已知来源英雄冲突时必须显式未归属。"""
 
         resolver = self.resolver(aliases={"annie": "Annie"}, ids={63: "Brand"})
         resolution = resolve_champion_entity("annie", ["raw/events/champions/63.txt"], resolver)
 
-        self.assertEqual((resolution.kind, resolution.alias), ("champion", "Annie"))
-        self.assertIsNone(resolution.diagnostic)
+        self.assertEqual((resolution.kind, resolution.alias), ("unknown", "annie"))
+        self.assertEqual(resolution.diagnostic, "source_reference_conflict")
 
-    def test_manual_keep_beats_skin_strip_and_file_id(self) -> None:
-        """人工 keep 优先于 SkinNN 剥离与文件 id 回退。"""
+    def test_source_precedes_unverified_manual_keep(self) -> None:
+        """单一精确来源身份优先于未提供独立reference的keep旧决策。"""
 
         resolver = self.resolver(
             aliases={"foo": "Foo"},
@@ -622,7 +816,7 @@ class ChampionEntityResolverChainTests(unittest.TestCase):
         )
         resolution = resolve_champion_entity("FooSkin12", ["raw/events/champions/1.txt"], resolver)
 
-        self.assertEqual((resolution.kind, resolution.alias), ("champion", "FooSkin12"))
+        self.assertEqual((resolution.kind, resolution.alias), ("champion", "Foo"))
 
     def test_manual_champion_maps_to_reference_casing(self) -> None:
         """人工 champion 决策映射到 reference 规范写法。"""
@@ -653,20 +847,17 @@ class ChampionEntityResolverChainTests(unittest.TestCase):
 
         self.assertEqual(resolution.alias, "Foo")
 
-    def test_affix_beats_file_id_with_conflict_diagnostic(self) -> None:
-        """挂靠优先于文件 id；两者矛盾时只附 diagnostic 不换结论。"""
+    def test_source_precedes_weak_affix_guess(self) -> None:
+        """前后缀词形猜测不能覆盖精确reference来源。"""
 
         resolver = self.resolver(aliases={"foo": "Foo", "bar": "Bar"}, ids={63: "Bar"})
         resolution = resolve_champion_entity("FooPet", ["raw/events/champions/63.txt"], resolver)
 
-        self.assertEqual((resolution.kind, resolution.alias), ("champion", "Foo"))
-        self.assertEqual(
-            resolution.diagnostic,
-            "entity_affix_source_conflict:alias=FooPet affix=Foo source_file=Bar",
-        )
+        self.assertEqual((resolution.kind, resolution.alias), ("champion", "Bar"))
+        self.assertIsNone(resolution.diagnostic)
 
-    def test_affix_agreeing_with_file_id_has_no_diagnostic(self) -> None:
-        """挂靠与文件 id 一致或 bank 无结论时不产生 diagnostic。"""
+    def test_affix_needs_independent_source_evidence(self) -> None:
+        """词形挂靠需要独立来源证明，无来源时只保留候选证据。"""
 
         resolver = self.resolver(aliases={"foo": "Foo"}, ids={1: "Foo"})
 
@@ -674,7 +865,8 @@ class ChampionEntityResolverChainTests(unittest.TestCase):
         no_bank = resolve_champion_entity("FooPet", [], resolver)
 
         self.assertIsNone(agree.diagnostic)
-        self.assertIsNone(no_bank.diagnostic)
+        self.assertEqual(no_bank.kind, "unknown")
+        self.assertEqual(no_bank.diagnostic, "unverified_owner_affix")
 
     def test_file_id_fallback_then_unresolved(self) -> None:
         """文件 id 兜底；全部失败时保留原 alias。"""
@@ -685,16 +877,10 @@ class ChampionEntityResolverChainTests(unittest.TestCase):
         unresolved = resolve_champion_entity("aggro", ["raw/events/maps/11.txt"], resolver)
 
         self.assertEqual(by_file.alias, "Yorick")
-        self.assertEqual((unresolved.kind, unresolved.alias), ("champion", "aggro"))
+        self.assertEqual((unresolved.kind, unresolved.alias), ("unknown", "aggro"))
 
     def test_equal_length_affix_tie_break_prefers_prefix(self) -> None:
-        """等长前后缀撞车偏前缀：AshenKnightPyke 归 Ashe。
-
-        这是对现行 tie-break 的文档化锚定而非理想行为——现实中
-        Ashen Knight Pyke 是 Pyke 的皮肤，理想归属应为 Pyke。当前
-        raw 语料没有此类 alias；若未来出现且与 bank 文件 id 矛盾，
-        entity_affix_source_conflict diagnostic 会以 warning 暴露。
-        """
+        """兼容候选器保留等长前缀排序；统一归属器不会据此确认实体。"""
 
         resolver = self.resolver(aliases={"ashe": "Ashe", "pyke": "Pyke"})
 
@@ -708,12 +894,7 @@ class ChampionEntityResolverChainTests(unittest.TestCase):
         self.assertIsNone(champion_by_alias_affix("vistorm", resolver))
 
     def test_suffix_match_attaches_plain_word_ending(self) -> None:
-        """后缀挂靠会把 Explosion 挂到 Sion——锚定现状并标注风险。
-
-        当前 raw 语料的 champion 碎片中不存在 *sion 类普通单词 alias
-        （全量审计后缀命中 12 例均为皮肤别名）；若未来出现，bank 文件
-        id 矛盾 diagnostic 是安全网。此用例防止行为被静默改变。
-        """
+        """兼容候选器可返回词形候选；无来源不得确认的行为由归属测试守护。"""
 
         resolver = self.resolver(aliases={"sion": "Sion"})
 
@@ -1215,11 +1396,12 @@ class NormalizedDisplayEndToEndTests(unittest.TestCase):
         )
         normalized = build_normalized_record(record, translation_context=self.context)
 
-        self.assertEqual(normalized["entity"], {"kind": "champion", "alias": "Veigar"})
+        self.assertEqual(normalized["entity"]["alias"], "Veigar")
+        self.assertEqual(normalized["entity"]["attribution"]["basis"], "reference_exact")
         self.assertNotIn("Ruby", normalized["display"]["zh_cn_detail"])
 
-    def test_mode_only_event_uses_post_prefix_system_entity(self) -> None:
-        """没有英雄 actor 时，Ruby/Strawberry 后首段才是系统实体，模式前缀不能占用 entity。"""
+    def test_mode_cue_is_semantic_detail_not_independent_entity(self) -> None:
+        """无独立实体证据的模式cue留在语义层，只确认所属模式系统。"""
 
         cases = [
             ("Play_sfx_Ruby_Curse_MirrorImage_clone_buffdeactivate", "Curse"),
@@ -1234,9 +1416,10 @@ class NormalizedDisplayEndToEndTests(unittest.TestCase):
                 )
                 normalized = build_normalized_record(record, translation_context=self.context)
 
-                self.assertEqual(normalized["entity"], {"kind": "mode_system", "alias": alias})
+                self.assertEqual(normalized["entity"]["kind"], "system")
+                self.assertEqual(normalized["entity"]["attribution"]["basis"], "public_system")
                 self.assertEqual(normalized["semantic"]["slots"]["mode_entity"]["alias"], alias)
-                self.assertNotIn(normalized["entity"]["alias"].casefold(), {"ruby", "strawberry"})
+                self.assertIn(normalized["entity"]["alias"].casefold(), {"ruby", "strawberry"})
 
     def test_reviewed_mode_system_sfx_has_meaningful_chinese_frame(self) -> None:
         """已审阅的模式系统实体应显示业务名与音效阶段，不再退化成“状态启动”。"""
@@ -1277,7 +1460,7 @@ class NormalizedDisplayEndToEndTests(unittest.TestCase):
                 normalized = self.build_normalized(raw)
                 translation = normalized["translation"]
 
-                self.assertEqual(normalized["entity"]["alias"], entity_alias)
+                self.assertEqual(normalized["semantic"]["slots"]["mode_entity"]["alias"], entity_alias)
                 self.assertEqual(translation["frame_type"], "mode_system_sfx_event")
                 self.assertEqual(translation["arguments"]["effect"]["labels"]["zh_CN"], effect_label)
                 if phase_key is None:
@@ -1359,7 +1542,8 @@ class NormalizedDisplayEndToEndTests(unittest.TestCase):
             "Play_sfx_strawberry_tibbersbasicattack_OnCast",
             source_path="raw/events/maps/11.txt",
         )
-        self.assertEqual(tibbers["entity"], {"kind": "mode_unit", "alias": "Tibbers"})
+        self.assertEqual((tibbers["entity"]["kind"], tibbers["entity"]["alias"]), ("mode_unit", "Tibbers"))
+        self.assertEqual(tibbers["entity"]["attribution"]["basis"], "reference_exact")
 
 
 class NormalizedOutputCliTests(unittest.TestCase):

@@ -37,6 +37,8 @@ raw/events/
 - `.temp/reference-sources/`：被忽略的版本敏感参考输入缓存，不对下游承诺稳定。
 - `dist/sources/`：`scripts/download_sources.py` 的数据源落点（字符串表 / 大厅 JSON / 皮肤 bin / RST key 字典 + 版本游标 `manifest.json`）；layout 与手工放置规范见根 README「目录契约」。
 - `dist/runs/`：事务性数据集运行根；`.staging` 隔离写入，`failed` 保留诊断，`completed` 保存不可变候选，`approved-local.json` 原子指向唯一默认消费数据集。每个 completed run 的 `normalized/` 以单流/catalog/quality-summary 为 V2 首选并保留兼容分片；manifest 固化输入树摘要、payload SHA-256 与 `content_digest`。
+- `dist/consumption/<export-id>/`：从明确 normalized 派生的 web/software/lookup 独立消费包，格式和校验方式见 `CONSUMPTION.md`。
+- `dist/demo-site/`：只读 Demo V3，使用 `data/index.json` 与惰性加载的 `data/entities/*.json` 统一浏览英雄、装备、地图、模式实体、公共系统、未知实体。
 - `dist/work/`、`dist/reports/runs/`：仅保留给显式维护命令的旧式独立输出；正式 full refresh 不再写入。
 
 旧的 `manifest/<version>/events` 和 `hashes/<version>/integrated` 路线只作为外部兼容来源存在，不再是本仓库主目录模型。
@@ -81,11 +83,13 @@ rules/low_trust_events.yaml
 - `raw/events/` 是源语料层，`raw_event_name` 在所有派生产物中保持原样。
 - `reference/` 是实体、英雄、皮肤、地图和 skinline 的 label/reference 层。
 - `rules/` 与 `overrides/` 是语义解释层，负责把事件名归一为技能、状态、动作、阶段和上下文别名。
-- approved completed run 的 `normalized/` 是生成的消费者层，V2 消费者优先读取按 `record_id` 排序的 `normalized-events.jsonl`；旧消费者可继续读取按实体拆分的兼容路径和 `display` 预览。
+- approved completed run 的 `normalized/` 是完整审计层，保留源证据、语义 frame、兼容字段和多语言渲染信息。V2 审计消费者优先读取按 `record_id` 排序的 `normalized-events.jsonl`；旧消费者可继续读取按实体拆分的兼容路径和 `display` 预览。
+- `web`、`software`、`lookup` 是审计层下的消费投影，分别面向按需加载网页、逐行导入软件和单文件原名查询；默认保留全部支持级别、资产类型及同名多候选。字典编码与主体上下文省略不改变原名、状态和源定位，也不缩减 normalized 审计内容。
 - `translation` 是 normalized 记录内的本地化渲染层；需要页面上下文省略、不同语言语序或调试审计时，应优先使用它，而不是只依赖固定 `display.zh_cn_short/detail`。
-- normalized 行以 `record_id` 作为公开唯一身份，并保留 `raw_event_name` 原值；`source_scope` / `provenance` 区分 champions、maps 等来源。不能把 raw 名称误当作全局唯一键。
+- normalized 行以 `record_id` 作为包含来源集合的审计快照身份，另以原名与逻辑实体生成 `event_id`；补充来源不改变事件身份，纠正实体则可能改变。`source_scope` / `provenance` 区分 champions、maps 等来源。不能把 raw 名称误当作全局唯一键；身份迁移工具保留多候选歧义，只确认有来源证据的一对一关系。
+- 逻辑实体归属由来源资产与 reference 精确证据优先确认；同层冲突保留未知，人工 `keep` / `downgrade` 不能覆写强来源。模式上下文不直接证明独立实体，数字 owner 只有命中装备 reference 才确认为装备。
 
-V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX 保留在语义词典中，支持状态为 Stable、Experimental 或 Unsupported。首批 exact approved 的 86 个 VO pattern 在 candidate 内为 Stable，其余范围仍为 Experimental；公共 catalog 与维护 inventory 都从 semantic frame 派生，不是以 `BaseName,Label` 为主模型的另一份词典。Stable absolute gates 与 accepted corpus 已进入本地 full refresh，用户 Review/promotion 仍是 approved-local 的独立后续门禁。
+V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX 保留在语义词典中，支持状态为 Stable、Experimental 或 Unsupported。只有 exact approved 且结构合格的 pattern 可进入 Stable，范围以长期 decision source 与生成 catalog 为准；公共 catalog 与维护 inventory 都从 semantic frame 派生。Stable absolute gates 与 accepted corpus 已进入本地 full refresh，用户 Review/promotion 仍是 approved-local 的独立后续门禁。Demo 的全部/已确定/待反馈筛选与实体分类、支持级别和人工批准分别表达，不构成审核工作流。
 
 普通用户展示文案应回答“这个音频什么时候触发”，例如：
 
@@ -114,7 +118,7 @@ V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX
 当前仓库不默认承担以下职责：
 
 - 音频提取逻辑本体
-- UI 展示逻辑
+- 下游应用的完整 UI 与业务逻辑（仓库仅提供消费客户端和只读静态 Demo）
 - 在线服务部署
 - 大体积原始游戏数据归档
 - 手工编辑最终 normalized 产物

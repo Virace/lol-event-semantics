@@ -11,13 +11,15 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
-from .decomposition_model import EventDecompositionRecord, SemanticProfile
+from .decomposition_model import EventDecompositionRecord, EventOwnerRef, SemanticProfile
 from .dataset_identity import CONTENT_DIGEST_VERSION, content_digest, describe_payload_files, unmanaged_payload_paths
 from .display_labels import (
     get_reference_item_names,
+    get_map_system_entity_labels,
+    load_map_system_entity_labels,
+    map_system_entity_label,
     item_names_from_collection,
     load_display_labels,
-    load_reference_item_names,
     map_names_from_collection,
 )
 from .display_tier import classify_display_tier, is_akshan_revive_sfx
@@ -42,7 +44,7 @@ from .normalized_translation_model import TranslationBuildContext
 from .normalized_translation_renderer import build_compat_display
 from .pattern_catalog import PatternPolicy
 from .reference_collection import load_reference_collection, read_yaml
-from .rules import RuleBook, rule_key
+from .entity_attribution import AttributionContext, resolve_entity
 from .tiered_quality import build_quality_summary, load_accepted_corpus
 
 SCHEMA_VERSION = 2
@@ -51,16 +53,11 @@ TECHNICAL_DISPLAY_TOKENS = ("Play_vo", "Play_sfx", "cast3D", "2D", "3D", "voProc
 DEFAULT_REFERENCE_ROOT = Path("reference")
 DEFAULT_OVERRIDES_ROOT = Path("overrides")
 DEFAULT_RULES_ROOT = Path("rules")
-# rules/contextual/sfx 中承载“实体自身”中文词条分片的保留 owner 值，
-# 与 HA.yaml/SRU.yaml 里描述实体内部子 token 的 owner=HA/SRU 互不冲突。
-MAP_SYSTEM_ENTITY_OWNER = "entity"
 ENTITY_ATTRIBUTION_FILENAME = "entity_attribution.yaml"
 ENTITY_ATTRIBUTION_DECISIONS = {"keep", "champion", "downgrade"}
 ENTITY_DOWNGRADE_KINDS = {"unknown", "map_or_system"}
 # 英雄音频 bank 文件名就是英雄数字 id（raw/events/champions/<id>.txt）。
 CHAMPION_SOURCE_FILE_PATTERN = re.compile(r"[\\/]champions[\\/]([0-9]+)\.txt$", re.IGNORECASE)
-# 剥离 alias 尾部 SkinNN（含尾随残段）后再尝试精确匹配英雄。
-SKIN_SUFFIX_ALIAS_PATTERN = re.compile(r"^(?P<base>[A-Za-z][A-Za-z0-9]*?)skin[0-9]+[A-Za-z0-9]*$", re.IGNORECASE)
 # 前后缀挂靠的最小 alias 长度，避免 Vi 这类超短名误挂。
 AFFIX_PREFIX_MIN_LENGTH = 3
 AFFIX_SUFFIX_MIN_LENGTH = 4
@@ -71,6 +68,7 @@ def build_normalized_record(
     *,
     translation_context: TranslationBuildContext | None = None,
     display_context: NormalizedDisplayContext | None = None,
+    attribution_context: AttributionContext | None = None,
 ) -> dict[str, object]:
     """把拆解记录转换为对外 normalized 记录。
 
@@ -78,12 +76,21 @@ def build_normalized_record(
         record: 已完成 profile/reference enrichment 的拆解记录。
         translation_context: translation 构建上下文。
         display_context: legacy display 所需的显式 reference/rules 索引。
+        attribution_context: 与展示共享 reference 的归属上下文，附加人工身份决策。
 
     Returns:
         可直接写入 JSONL 的 normalized 记录。
     """
 
-    active_translation_context = translation_context or TranslationBuildContext()
+    active_translation_context = (
+        translation_context if translation_context is not None else default_translation_context()
+    )
+    if display_context is None:
+        display_context = NormalizedDisplayContext(
+            item_names=active_translation_context.reference_item_names,
+            map_system_entity_labels=active_translation_context.map_system_entity_labels,
+        )
+    active_attribution = attribution_context or AttributionContext(active_translation_context)
     translation = build_translation(record, active_translation_context)
     legacy_short = canonicalize_legacy_user_display(
         build_short_display(record, display_context=display_context),
@@ -118,7 +125,7 @@ def build_normalized_record(
         "schema_version": SCHEMA_VERSION,
         "raw_event_name": record.raw_event_name,
         "game_version": record.game_version,
-        "entity": entity_key(record),
+        "entity": resolve_entity(record, active_attribution),
         "semantic": {
             "profile": record.profile.semantic_profile.value,
             "primary_family": record.profile.primary_family,
@@ -252,29 +259,15 @@ def replace_skin_display_token(text: str, skin_token: str, replacement: str) -> 
     )
 
 
-def entity_key(record: EventDecompositionRecord) -> dict[str, str]:
-    """返回 normalized 实体键。
+def entity_key(
+    record: EventDecompositionRecord,
+    *,
+    translation_context: TranslationBuildContext | None = None,
+) -> dict[str, Any]:
+    """通过统一归属器返回实体；旧调用缺省使用默认构建上下文。"""
 
-    Args:
-        record: 拆解记录。
-
-    Returns:
-        包含实体类型和别名的稳定键。
-    """
-
-    subject = resolved_entity_subject(record)
-    if subject is not None:
-        kind, alias = subject
-    else:
-        kind = record.owner.kind if record.owner.kind != "unknown" else record.scope
-        alias = record.owner.alias or record.owner.raw_owner_token or record.scope or "unknown"
-
-    if kind == "map_or_system":
-        item = item_entity_from_alias(alias)
-        if item is not None:
-            return item
-
-    return {"kind": sanitize_entity_kind(kind), "alias": sanitize_entity_alias(alias)}
+    context = translation_context if translation_context is not None else default_translation_context()
+    return resolve_entity(record, AttributionContext(context))
 
 
 ITEM_ALIAS_PATTERN = re.compile(r"^(\d+)(?:\D.*)?$")
@@ -336,60 +329,17 @@ def item_entity_label(
     return labels.get("zh_CN") or labels.get("en_US")
 
 
-def resolved_entity_subject(record: EventDecompositionRecord) -> tuple[str, str] | None:
-    """返回已解析出的真实实体主体。
+def resolved_entity_subject(
+    record: EventDecompositionRecord,
+    *,
+    translation_context: TranslationBuildContext | None = None,
+) -> tuple[str, str] | None:
+    """兼容旧主体查询入口，所有归属判断委托给统一实体解析器。"""
 
-    Args:
-        record: 拆解记录。
-
-    Returns:
-        `(kind, alias)`；未解析出主体时返回 None。
-    """
-
-    namespace = record.semantic_slots.get("context_namespace") or record.semantic_slots.get("mode_context")
-    namespace_key = str(namespace.get("key") or "") if isinstance(namespace, dict) else ""
-
-    for slot_name in ("subject", "mode_actor"):
-        subject = record.semantic_slots.get(slot_name)
-        if not isinstance(subject, dict):
-            continue
-        kind = str(subject.get("kind") or record.owner.kind or record.scope or "unknown")
-        alias = subject.get("alias") or subject.get("name") or subject.get("label")
-        if alias and str(alias).casefold() != namespace_key.casefold():
-            return (kind, str(alias))
-
-    subject_hint = record.semantic_slots.get("subject_hint")
-    if subject_hint and str(subject_hint).casefold() != namespace_key.casefold():
-        return ("champion", str(subject_hint))
-
-    if namespace_key:
-        mode_entity = record.semantic_slots.get("mode_entity")
-        if isinstance(mode_entity, dict):
-            kind = str(mode_entity.get("kind") or "mode_system")
-            alias = (
-                mode_entity.get("alias")
-                or mode_entity.get("raw")
-                or mode_entity.get("name")
-                or mode_entity.get("label")
-            )
-            if alias and str(alias).casefold() != namespace_key.casefold():
-                return (kind, str(alias))
-
-        cue_path = record.semantic_slots.get("cue_path")
-        if isinstance(cue_path, list):
-            cue_entity = next((str(token) for token in cue_path if str(token).strip()), None)
-            if cue_entity is not None and cue_entity.casefold() != namespace_key.casefold():
-                return ("mode_system", cue_entity)
-        return ("mode_system", "system")
-
-    owner_context = record.semantic_slots.get("owner_context")
-    if isinstance(owner_context, dict):
-        kind = str(owner_context.get("kind") or record.owner.kind or record.scope or "unknown")
-        alias = owner_context.get("alias") or owner_context.get("raw_owner_token")
-        if alias:
-            return (kind, str(alias))
-
-    return None
+    entity = entity_key(record, translation_context=translation_context)
+    if entity["attribution"]["basis"] == "unresolved":
+        return None
+    return str(entity["kind"]), str(entity["alias"])
 
 
 def sanitize_entity_kind(kind: str | None) -> str:
@@ -659,60 +609,6 @@ def display_owner(
             return label
 
     return alias
-
-
-def map_system_entity_label(
-    alias: str,
-    labels: Mapping[str, str] | None = None,
-) -> str | None:
-    """把 map/系统域实体英文别名渲染成人工核对的中文词条。
-
-    Args:
-        alias: map/系统域实体的原始英文别名（owner.alias）。
-        labels: 可选的显式规则词条索引；缺省保留旧 helper 行为。
-
-    Returns:
-        中文词条；别名不在 T3.4 头部词条表内时返回 None，调用方原样保留
-        英文 alias（宁可保留英文，不硬造翻译——仓库红线）。
-    """
-
-    active_labels = labels if labels is not None else get_map_system_entity_labels()
-    return active_labels.get(rule_key(alias))
-
-
-def load_map_system_entity_labels(rules_root: Path, overrides_root: Path) -> dict[str, str]:
-    """读取 map/系统域实体级中文词条表（T3.4 头部词条表）。
-
-    词条来自 rules/contextual/sfx 下 owner="entity" 的分片，key 为规则
-    引擎归一后的实体别名（rule_key），value 为人工核对的中文名。
-
-    Args:
-        rules_root: 仓库规则根目录。
-        overrides_root: 人工 overrides 根目录（RuleBook.load 需要，与
-            champion 实体归一使用的路径一致）。
-
-    Returns:
-        规范化实体别名到中文词条的映射；分片缺失时返回空表。
-    """
-
-    rulebook = RuleBook.load(rules_root, overrides_root)
-    entity_owner_key = rule_key(MAP_SYSTEM_ENTITY_OWNER)
-    return {
-        token: alias.label
-        for (scope, owner, token), alias in rulebook.contextual_aliases.items()
-        if scope == "sfx" and owner == entity_owner_key
-    }
-
-
-@lru_cache(maxsize=1)
-def get_map_system_entity_labels() -> dict[str, str]:
-    """返回进程内缓存的 map/系统域实体词条表。
-
-    Returns:
-        从默认规则目录加载的词条映射；同一进程内只读一次规则目录。
-    """
-
-    return load_map_system_entity_labels(DEFAULT_RULES_ROOT, DEFAULT_OVERRIDES_ROOT)
 
 
 def display_subject(slots: dict[str, Any]) -> str | None:
@@ -1193,9 +1089,10 @@ def write_normalized_outputs(
         rules_root: 本次构建实际使用的 rules 根目录。
         overrides_root: 本次构建实际使用的 overrides 根目录。
         input_identity: 已通过冻结预检的完整输入身份。
-        reference_aliases: 可选的预加载实体归一 alias 映射；缺省时从显式
-            reference_root 加载。供进程内多次调用复用，避免重复解析全量合集。
-        resolver: 可选的预构建 champion 实体解析器；缺省时从显式根加载。
+        reference_aliases: 可选的预加载实体归一 alias 映射；缺省从同一
+            translation 上下文提取，避免重复加载或串用其他 reference。
+        resolver: 可选的预构建 champion 实体解析器；缺省复用 translation
+            上下文的身份索引，并从 overrides_root 加载人工决策。
         translation_context: 可选的预构建 translation 上下文；缺省时从显式
             reference/rules/overrides 根加载。
         pattern_policy: 已从显式路径加载的 P1 pattern/promotion policy。
@@ -1204,22 +1101,24 @@ def write_normalized_outputs(
 
     clear_generated_outputs(output_root)
     output_root.mkdir(parents=True, exist_ok=True)
-    if reference_aliases is None:
-        reference_aliases = load_reference_entity_aliases(reference_root)
-    if resolver is None:
-        resolver = load_champion_entity_resolver(reference_root, overrides_root)
     if translation_context is None:
         translation_context = build_translation_context(
             reference_root,
             rules_root=rules_root,
             overrides_root=overrides_root,
         )
+    if reference_aliases is None:
+        reference_aliases = {("champion", alias.casefold()): alias for alias in translation_context.champion_labels}
+    if resolver is None:
+        aliases = {alias.casefold(): alias for alias in translation_context.champion_labels}
+        manual = load_entity_attribution_overrides(overrides_root)
+        validate_champion_overrides(manual, aliases)
+        resolver = ChampionEntityResolver(aliases, dict(translation_context.champion_ids), manual)
     display_context = NormalizedDisplayContext(
-        item_names=translation_context.reference_item_names or load_reference_item_names(reference_root),
-        map_system_entity_labels=(
-            translation_context.map_system_entity_labels or load_map_system_entity_labels(rules_root, overrides_root)
-        ),
+        item_names=translation_context.reference_item_names,
+        map_system_entity_labels=translation_context.map_system_entity_labels,
     )
+    attribution_context = AttributionContext(translation_context, resolver.manual)
     pending_rows: dict[tuple[str, str], list[dict[str, object]]] = defaultdict(list)
 
     for record in records:
@@ -1227,25 +1126,13 @@ def write_normalized_outputs(
             record,
             translation_context=translation_context,
             display_context=display_context,
+            attribution_context=attribution_context,
         )
         entity = normalized["entity"]
         if not isinstance(entity, dict):
             continue
         kind = str(entity["kind"])
         alias = str(entity["alias"])
-
-        if kind == "champion":
-            resolution = resolve_champion_entity(alias, record.source_paths, resolver)
-            kind, resolved = resolution.kind, resolution.alias
-            # 信息无损：只要归一改变了 alias，就把原始 alias 留在记录里。
-            if resolved != alias:
-                entity["raw_alias"] = alias
-            entity["kind"] = kind
-            entity["alias"] = resolved
-            if resolution.diagnostic is not None:
-                append_quality_diagnostic(normalized, resolution.diagnostic)
-            pending_rows[(kind, resolved.casefold())].append(normalized)
-            continue
 
         canonical = reference_aliases.get((kind, alias.casefold()), alias)
         pending_rows[(kind, canonical.casefold())].append(normalized)
@@ -1278,6 +1165,13 @@ def write_normalized_outputs(
         quality_summary=quality_summary,
         input_identity=input_identity,
     )
+
+
+@lru_cache(maxsize=1)
+def default_translation_context() -> TranslationBuildContext:
+    """为兼容单条调用缓存默认上下文，显式 writer 不使用此缓存。"""
+
+    return build_translation_context()
 
 
 def build_translation_context(
@@ -1476,7 +1370,6 @@ def reference_name_forms(entity: dict[str, Any]) -> dict[str, dict[str, list[str
     return forms
 
 
-@lru_cache(maxsize=4)
 def load_reference_entity_aliases(reference_root: Path) -> dict[tuple[str, str], str]:
     """读取 reference 中可用于最终实体归一的 alias。
 
@@ -1540,14 +1433,13 @@ class ChampionEntityResolver:
 
 @dataclass(frozen=True)
 class ChampionEntityResolution:
-    """champion 实体归一结果；diagnostic 记录挂靠与 bank 证据的矛盾。"""
+    """兼容英雄归属结果；diagnostic 保留未确认归属的原因码。"""
 
     kind: str
     alias: str
     diagnostic: str | None = None
 
 
-@lru_cache(maxsize=4)
 def load_champion_entity_resolver(reference_root: Path, overrides_root: Path) -> ChampionEntityResolver:
     """构建 champion 实体归一解析器。
 
@@ -1575,6 +1467,13 @@ def load_champion_entity_resolver(reference_root: Path, overrides_root: Path) ->
                 ids[entity["id"]] = canonical
 
     manual = load_entity_attribution_overrides(overrides_root)
+    validate_champion_overrides(manual, aliases)
+    return ChampionEntityResolver(aliases=aliases, ids=ids, manual=manual)
+
+
+def validate_champion_overrides(manual: Mapping[str, Mapping[str, str]], aliases: Mapping[str, str]) -> None:
+    """用本次构建的英雄索引核验人工决策，拒绝过期或相互冲突的映射。"""
+
     for key, row in manual.items():
         if row["decision"] == "champion" and str(row.get("champion", "")).casefold() not in aliases:
             raise ValueError(
@@ -1584,10 +1483,7 @@ def load_champion_entity_resolver(reference_root: Path, overrides_root: Path) ->
         if key in aliases:
             raise ValueError(f"entity_attribution.yaml alias 与 reference 英雄冲突：{row['alias']}")
 
-    return ChampionEntityResolver(aliases=aliases, ids=ids, manual=manual)
 
-
-@lru_cache(maxsize=4)
 def load_entity_attribution_overrides(overrides_root: Path) -> dict[str, dict[str, str]]:
     """读取人工实体归属决策表并做 fail-fast 校验。
 
@@ -1640,56 +1536,21 @@ def resolve_champion_entity(
     source_paths: list[str],
     resolver: ChampionEntityResolver,
 ) -> ChampionEntityResolution:
-    """把 champion 实体 alias 归一到 reference 英雄或诚实降级。
+    """兼容旧英雄归属入口，沿用统一解析器的来源与冲突处理规则。"""
 
-    归一链：reference 精确匹配 → 人工决策 → SkinNN 剥离 → 英雄名前后缀
-    挂靠（宠物/召唤物/皮肤别名）→ 单一英雄 bank 文件 id 回退；全部
-    失败时保留原 alias。挂靠结论与唯一 bank 文件 id 结论矛盾时不改变
-    优先级，只附带 diagnostic 供 validation 以 warning 暴露。
-
-    Args:
-        alias: 实体 alias。
-        source_paths: 记录来源路径。
-        resolver: champion 实体归一解析器。
-
-    Returns:
-        归一结果（kind/alias/可选 diagnostic）。
-    """
-
-    key = alias.casefold()
-    canonical = resolver.aliases.get(key)
-    if canonical is not None:
-        return ChampionEntityResolution("champion", canonical)
-
-    manual = resolver.manual.get(key)
-    if manual is not None:
-        if manual["decision"] == "keep":
-            return ChampionEntityResolution("champion", alias)
-
-        if manual["decision"] == "champion":
-            return ChampionEntityResolution("champion", resolver.aliases[manual["champion"].casefold()])
-
-        return ChampionEntityResolution(manual["kind"], alias)
-
-    stripped = SKIN_SUFFIX_ALIAS_PATTERN.match(alias)
-    if stripped is not None:
-        canonical = resolver.aliases.get(stripped.group("base").casefold())
-        if canonical is not None:
-            return ChampionEntityResolution("champion", canonical)
-
-    canonical = champion_by_alias_affix(key, resolver)
-    if canonical is not None:
-        return ChampionEntityResolution(
-            "champion",
-            canonical,
-            affix_source_conflict_diagnostic(alias, canonical, source_paths, resolver),
-        )
-
-    canonical = champion_by_source_file(source_paths, resolver)
-    if canonical is not None:
-        return ChampionEntityResolution("champion", canonical)
-
-    return ChampionEntityResolution("champion", alias)
+    context = TranslationBuildContext(
+        champion_labels={value: {} for value in resolver.aliases.values()},
+        champion_ids=resolver.ids,
+    )
+    record = EventDecompositionRecord(
+        schema_version="event-decomposition.v1",
+        game_version="unknown",
+        raw_event_name=alias,
+        owner=EventOwnerRef(kind="champion", alias=alias, raw_owner_token=alias),
+        source_paths=list(source_paths),
+    )
+    entity = resolve_entity(record, AttributionContext(context, resolver.manual))
+    return ChampionEntityResolution(str(entity["kind"]), str(entity["alias"]), entity["attribution"].get("reason"))
 
 
 def affix_source_conflict_diagnostic(
@@ -1718,7 +1579,7 @@ def affix_source_conflict_diagnostic(
 
 
 def champion_by_alias_affix(alias_key: str, resolver: ChampionEntityResolver) -> str | None:
-    """按最长英雄名前后缀挂靠宠物/召唤物/皮肤别名实体。
+    """兼容旧调用，按最长英雄名前后缀返回词形候选，不确认实体身份。
 
     Args:
         alias_key: casefold 后的实体 alias。

@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lol-event-semantics.local/schema/consumption.v1.json",
+  "title": "中文消费包 V1",
+  "description": "描述 profile manifest、实体片、原名路由、lookup 和 software 单行结构。摘要、文件闭包、字典索引边界、source 连续身份和跨文件完整覆盖必须由 consumer.py 或 client.mjs 检查；网页客户端只验证本次加载范围。null label 表示没有解释，不以原名伪造翻译。",
+  "oneOf": [
+    {"$ref": "#/$defs/manifest"},
+    {"$ref": "#/$defs/shard"},
+    {"$ref": "#/$defs/lookup"},
+    {"$ref": "#/$defs/record"},
+    {"$ref": "#/$defs/route"}
+  ],
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "index": {"type": "integer", "minimum": 0},
+    "labelIndex": {"type": ["integer", "null"], "minimum": 0},
+    "skin": {"type": ["integer", "null"], "minimum": 0},
+    "flags": {"type": "integer", "minimum": 0, "maximum": 63},
+    "sourceIndex": {"type": "integer", "minimum": 1},
+    "label": {"type": ["string", "null"], "minLength": 1},
+    "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))[^\\\\:%?#]+$"},
+    "entity": {
+      "type": "object", "required": ["kind", "alias"], "additionalProperties": false,
+      "properties": {
+        "kind": {"type": "string", "minLength": 1},
+        "alias": {"type": "string", "minLength": 1},
+        "base_champion": {"type": "string", "minLength": 1}
+      }
+    },
+    "source": {
+      "type": "object", "required": ["dataset_id", "content_digest", "record_count"], "additionalProperties": false,
+      "properties": {
+        "dataset_id": {"type": "string", "pattern": "^local-v1-[0-9a-f]{16}$"},
+        "content_digest": {"$ref": "#/$defs/digest"},
+        "record_count": {"$ref": "#/$defs/index"}
+      }
+    },
+    "state": {
+      "type": "array", "minItems": 5, "maxItems": 5,
+      "prefixItems": [
+        {"enum": ["vo", "sfx", "control", "unknown"]},
+        {"enum": ["stable", "experimental", "unsupported", "unknown"]},
+        {"enum": ["rendered", "fallback", "missing", "not_applicable", "unknown"]},
+        {"enum": ["not_required", "pending", "accepted", "rejected", "superseded", "unknown"]},
+        {"enum": ["translation", "preview", "missing"]}
+      ]
+    },
+    "labels": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "states": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/state"}},
+    "row": {
+      "type": "array", "minItems": 6, "maxItems": 6,
+      "prefixItems": [
+        {"type": "string", "minLength": 1}, {"$ref": "#/$defs/labelIndex"},
+        {"$ref": "#/$defs/flags"}, {"$ref": "#/$defs/skin"},
+        {"$ref": "#/$defs/index"}, {"$ref": "#/$defs/sourceIndex"}
+      ]
+    },
+    "shard": {
+      "type": "object", "required": ["schema_version", "entity", "columns", "labels", "states", "rows"], "additionalProperties": false,
+      "properties": {
+        "schema_version": {"const": 1}, "entity": {"$ref": "#/$defs/entity"},
+        "columns": {"const": ["raw", "label", "flags", "skin", "state", "source_index"]},
+        "labels": {"$ref": "#/$defs/labels"}, "states": {"$ref": "#/$defs/states"},
+        "rows": {"type": "array", "items": {"$ref": "#/$defs/row"}}
+      }
+    },
+    "lookupEntry": {
+      "type": "array", "minItems": 6, "maxItems": 6,
+      "prefixItems": [
+        {"$ref": "#/$defs/labelIndex"}, {"$ref": "#/$defs/flags"},
+        {"$ref": "#/$defs/skin"}, {"$ref": "#/$defs/index"},
+        {"$ref": "#/$defs/sourceIndex"}, {"$ref": "#/$defs/index"}
+      ]
+    },
+    "lookup": {
+      "type": "object", "required": ["schema_version", "columns", "labels", "states", "entities", "events"], "additionalProperties": false,
+      "properties": {
+        "schema_version": {"const": 1},
+        "columns": {"const": ["label", "flags", "skin", "state", "source_index", "entity"]},
+        "labels": {"$ref": "#/$defs/labels"}, "states": {"$ref": "#/$defs/states"},
+        "entities": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/entity"}},
+        "events": {"type": "object", "propertyNames": {"minLength": 1}, "additionalProperties": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/lookupEntry"}}}
+      }
+    },
+    "record": {
+      "type": "object", "required": ["raw_event_name", "entity", "label", "flags", "skin", "state", "source_index"], "additionalProperties": false,
+      "properties": {
+        "raw_event_name": {"type": "string", "minLength": 1}, "entity": {"$ref": "#/$defs/entity"},
+        "label": {"$ref": "#/$defs/label"}, "flags": {"$ref": "#/$defs/flags"},
+        "skin": {"$ref": "#/$defs/skin"}, "state": {"$ref": "#/$defs/state"},
+        "source_index": {"$ref": "#/$defs/sourceIndex"}, "full_label": {"$ref": "#/$defs/label"},
+        "record_id": {"type": ["string", "null"]}, "event_id": {"type": ["string", "null"]}
+      }
+    },
+    "route": {"type": "object", "propertyNames": {"minLength": 1}, "additionalProperties": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/index"}}},
+    "file": {
+      "type": "object", "required": ["path", "bytes", "sha256"], "additionalProperties": false,
+      "properties": {"path": {"$ref": "#/$defs/path"}, "bytes": {"$ref": "#/$defs/index"}, "sha256": {"$ref": "#/$defs/digest"}}
+    },
+    "manifest": {
+      "type": "object",
+      "required": ["schema_version", "profile", "locale", "source", "record_count", "filters", "projection_digest", "flags", "state_columns", "text_contract", "audit_locator", "files", "package_id"],
+      "properties": {
+        "schema_version": {"const": 1}, "profile": {"enum": ["web", "software", "lookup"]}, "locale": {"const": "zh_CN"},
+        "source": {"$ref": "#/$defs/source"}, "record_count": {"$ref": "#/$defs/index"},
+        "projection_digest": {"$ref": "#/$defs/digest"}, "package_id": {"type": "string", "pattern": "^consumption-v1-[0-9a-f]{64}$"},
+        "text_contract": {"const": "trigger-explanation.zh_CN.v1"}, "audit_locator": {"type": "string"},
+        "state_columns": {"const": ["asset_kind", "support_level", "render_status", "review_status", "label_basis"]},
+        "flags": {"const": {"raw_contains_skin": 1, "champion_context_omitted": 2, "skin_context_omitted": 4, "preview_label": 8, "needs_review": 16, "unresolved_entity": 32}},
+        "filters": {
+          "type": "object", "required": ["support_levels", "asset_kinds", "entities"], "additionalProperties": false,
+          "properties": {
+            "support_levels": {"type": "array", "uniqueItems": true, "items": {"enum": ["stable", "experimental", "unsupported"]}},
+            "asset_kinds": {"type": "array", "uniqueItems": true, "items": {"enum": ["vo", "sfx", "control", "unknown"]}},
+            "entities": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+          }
+        },
+        "files": {"type": "array", "items": {"$ref": "#/$defs/file"}},
+        "path": {"$ref": "#/$defs/path"},
+        "shards": {"type": "array", "items": {
+          "type": "object", "required": ["path", "entity", "record_count"], "additionalProperties": false,
+          "properties": {"path": {"$ref": "#/$defs/path"}, "entity": {"$ref": "#/$defs/entity"}, "record_count": {"$ref": "#/$defs/index"}}
+        }},
+        "routing": {
+          "type": "object", "required": ["algorithm", "prefix_length", "path", "buckets"], "additionalProperties": false,
+          "properties": {
+            "algorithm": {"const": "sha256-utf8-prefix"}, "prefix_length": {"const": 2}, "path": {"const": "routes/{bucket}.json"},
+            "buckets": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^[0-9a-f]{2}$"}}
+          }
+        }
+      },
+      "allOf": [
+        {"if": {"properties": {"profile": {"const": "web"}}}, "then": {"required": ["shards", "routing"], "not": {"required": ["path"]}}},
+        {"if": {"properties": {"profile": {"const": "software"}}}, "then": {"required": ["path"], "properties": {"path": {"const": "events.jsonl"}}}},
+        {"if": {"properties": {"profile": {"const": "lookup"}}}, "then": {"required": ["path"], "properties": {"path": {"const": "lookup.json"}}}}
+      ]
+    }
+  }
+}

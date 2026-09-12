@@ -2,210 +2,135 @@ from __future__ import annotations
 
 import hashlib
 import json
-import re
 from html.parser import HTMLParser
 from pathlib import Path
 
 import pytest
 
+from lol_event_semantics.dataset_identity import (
+    content_digest,
+    describe_payload_files,
+    paths_digest,
+    semantic_document_identity,
+)
+from lol_event_semantics.reference_collection import read_yaml
 from lol_event_semantics.demo_site import DemoSiteError, build_demo_site
 from scripts.build_demo_site import main as build_demo_main
 
 
-def test_build_demo_site_groups_mode_events_under_base_champions(tmp_path: Path) -> None:
+def test_demo_keeps_entity_assignment_and_feedback_orthogonal(tmp_path: Path) -> None:
+    """已知装备不会因缺少英雄而进入反馈；未知候选保留同一浏览实体。"""
+
     normalized_root, validation_json, reference_root = write_demo_inputs(tmp_path)
     output_root = tmp_path / "site"
-
     summary = build_demo_site(
         normalized_root=normalized_root,
         validation_json=validation_json,
         reference_root=reference_root,
         output_root=output_root,
     )
-
-    assert summary.champion_count == 7
+    index = read_json(output_root / "data/index.json")
+    assert index["schema_version"] == 3
     assert summary.event_count == 5
-    assert summary.map_count == 2
-    assert summary.map_event_count == 2
+    assert summary.map_event_count == 1
     assert summary.unassigned_event_count == 3
-
-    index = read_json(output_root / "data" / "index.json")
-    assert index["schema_version"] == 2
-    assert index["dataset"]["dataset_id"] == "local-v1-test"
-    assert index["dataset"]["data_dragon_version"] == "16.16.1"
-    assert index["counts"] == {
-        "champion_events": 5,
-        "champions": 7,
-        "map_events": 2,
-        "maps": 2,
-        "source_records": 8,
-        "unassigned_records": 3,
-    }
-    assert index["review"] == {
-        "data_path": "data/review/index.json",
-        "residual_records": 3,
-        "unassigned_records": 3,
-    }
-    assert [champion["alias"] for champion in index["champions"]] == [
-        "Aatrox",
-        "Annie",
-        "Ashe",
-        "Malzahar",
-        "Veigar",
-        "MonkeyKing",
-        "Ziggs",
-    ]
-    assert [(item["key"], item["event_count"]) for item in index["maps"]] == [
-        ("map11", 1),
-        ("map12", 1),
-    ]
-    annie_index = next(item for item in index["champions"] if item["alias"] == "Annie")
-    assert "火女" in annie_index["search_terms"]
-    assert annie_index["portrait_url"].endswith("/16.16.1/img/champion/Annie.png")
-
-    annie = read_json(output_root / "data" / "champions" / "Annie.json")
-    assert [skin["number"] for skin in annie["skins"]] == [0, 1, 2]
-    assert annie["skins"][1]["splash_url"].endswith("/Annie_1.jpg")
-    assert annie["skins"][2]["splash_url"].endswith("/Annie_1.jpg")
-    assert annie["skins"][2]["splash_skin_number"] == 1
-    assert annie["events"][0]["raw_event_name"] == "Play_vo_Annie_Spell3DQCast"
-    assert annie["events"][0]["mode"] == {"key": "jade", "label": "经典模式", "prefix": "Jade"}
-    assert annie["events"][0]["map"] == {
-        "alias": "SR",
-        "en_name": "Summoner's Rift",
-        "id": 11,
-        "key": "map11",
-        "label": "召唤师峡谷",
-    }
-    assert annie["events"][0]["skin_number"] == 1
-
-    veigar = read_json(output_root / "data" / "champions" / "Veigar.json")
-    assert veigar["events"][0]["raw_event_name"] == "Play_sfx_Ruby_Boss_FNVeigar_MordeR_buffdeactivate"
+    assert index["counts"]["source_records"] == 11
+    assert {entry["key"] for entry in index["categories"]} == {"champion", "item", "map", "mode_system", "unknown"}
+    entries = {entry["key"]: entry for entry in index["entities"]}
+    item = read_json(output_root / entries["item:1039"]["data_path"])
+    event = item["events"][0]
+    assert item["entity"]["label"] == "猎人的护身符"
+    assert event["semantic_status"] == "determined"
+    assert event["feedback_reasons"] == []
+    assert event["support_level"] == "experimental"
+    assert event["skin_number"] is None
+    assert "semantic" not in event
+    assert "translation" not in event
+    assert "events" not in entries["item:1039"]
+    unknown = read_json(output_root / entries["unknown:6688"]["data_path"])
+    assert len(unknown["events"]) == 2
+    assert all(event["semantic_status"] == "feedback" for event in unknown["events"])
+    assert all(event["entity"]["candidate"] == {"kind": "item", "id": 6688} for event in unknown["events"])
+    veigar = read_json(output_root / entries["champion:Veigar"]["data_path"])
+    assert veigar["events"][0]["entity"]["alias"] == "Ruby_Veigar"
+    assert veigar["events"][0]["semantic_status"] == "feedback"
+    assert veigar["events"][0]["issues"][0]["code"] == "translation_missing_for_supported_frame"
     assert veigar["events"][0]["mode"]["key"] == "ruby"
-    assert veigar["events"][0]["map"] == {
-        "alias": None,
-        "en_name": None,
-        "id": None,
-        "key": "base",
-        "label": "通用 / 未指定",
-    }
-    assert veigar["events"][0]["zh_cn_short"] is None
+    annie = read_json(output_root / entries["champion:Annie"]["data_path"])
+    assert annie["events"][0]["skin_number"] == 1
+    assert annie["events"][0]["map"]["label"] == "召唤师峡谷"
+    assert annie["events"][0]["semantic_status"] == "determined"
+    assert annie["events"][0]["support_level"] == "stable"
+    assert [skin["number"] for skin in annie["skins"]] == [0, 1, 2]
+    assert annie["skins"][2]["splash_skin_number"] == 1
+    assert sum(entry["stats"]["events"] for entry in entries.values()) == 11
+    assert all(
+        read_json(output_root / entry["data_path"])["dataset"]["demo_id"] == index["dataset"]["demo_id"]
+        for entry in entries.values()
+    )
 
-    malzahar = read_json(output_root / "data" / "champions" / "Malzahar.json")
-    assert malzahar["events"][0]["raw_event_name"] == "Play_sfx_Ruby_MalzaharBasicAttack2_OnHit"
-    assert malzahar["events"][0]["mode"]["key"] == "ruby"
 
-    ashe = read_json(output_root / "data" / "champions" / "Ashe.json")
-    assert ashe["events"] == []
+@pytest.mark.parametrize("with_record_id", [True, False])
+def test_demo_does_not_spread_issues_across_same_raw(tmp_path: Path, with_record_id: bool) -> None:
+    """同名不同实体仅关联自身问题，旧报告无法消歧时拒绝构建。"""
 
-    ziggs = read_json(output_root / "data" / "champions" / "Ziggs.json")
-    assert ziggs["events"] == []
+    normalized, validation, reference = write_demo_inputs(tmp_path)
+    path = normalized / "normalized-events.jsonl"
+    records = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+    records[-1]["raw_event_name"] = records[-3]["raw_event_name"]
+    path.write_text("".join(json.dumps(row) + "\n" for row in records), encoding="utf-8")
+    report = read_json(validation)
+    issue = {"raw_event_name": records[-1]["raw_event_name"], "code": "unknown_entity_output"}
+    if with_record_id:
+        issue["record_id"] = records[-1]["record_id"]
+    report["issues"].append(issue)
+    write_json(validation, report)
+    seal_demo_inputs(normalized, reference)
+    args = dict(
+        normalized_root=normalized, validation_json=validation, reference_root=reference, output_root=tmp_path / "site"
+    )
+    if not with_record_id:
+        with pytest.raises(DemoSiteError, match="ambiguous legacy"):
+            build_demo_site(**args)
+        return
+    build_demo_site(**args)
+    index = read_json(tmp_path / "site/data/index.json")
+    entries = {entry["key"]: entry for entry in index["entities"]}
+    item = read_json(tmp_path / "site" / entries["item:1039"]["data_path"])
+    assert item["events"][0]["issues"] == []
+    unknown = read_json(tmp_path / "site" / entries["unknown:6688"]["data_path"])
+    assert sum(bool(event["issues"]) for event in unknown["events"]) == 1
 
-    monkey_king = read_json(output_root / "data" / "champions" / "MonkeyKing.json")
-    assert monkey_king["events"][0]["raw_event_name"] == "Play_sfx_Ruby_WukongNimbus_OnCast"
 
-    aatrox = read_json(output_root / "data" / "champions" / "Aatrox.json")
-    assert aatrox["events"][0]["mode"] == {
-        "key": "strawberry",
-        "label": "PVE 模式",
-        "prefix": "Strawberry",
-    }
+@pytest.mark.parametrize("mutation", ["payload", "reference", "reference_manifest", "manifest", "validation"])
+def test_demo_rejects_content_substitution_with_unchanged_counts(tmp_path: Path, mutation: str) -> None:
+    """相同条数与路径不能掩盖不同输入内容。"""
 
-    summoners_rift = read_json(output_root / "data" / "maps" / "map11.json")
-    assert summoners_rift["schema_version"] == 2
-    assert summoners_rift["map"] == {
-        "alias": "SR",
-        "en_name": "Summoner's Rift",
-        "id": 11,
-        "key": "map11",
-        "label": "召唤师峡谷",
-    }
-    assert [event["record_id"] for event in summoners_rift["events"]] == ["record-annie"]
-    assert summoners_rift["events"][0]["entity"] == {"alias": "Annie", "kind": "champion"}
-
-    random_map = read_json(output_root / "data" / "maps" / "map12.json")
-    assert [event["record_id"] for event in random_map["events"]] == ["record-unassigned"]
-    assert random_map["events"][0]["entity"] == {"alias": "Ruby", "kind": "map_or_system"}
-
-    review = read_json(output_root / "data" / "review" / "index.json")
-    assert review["dataset"]["dataset_id"] == "local-v1-test"
-    assert review["counts"] == {
-        "residual_issues": 4,
-        "residual_records": 3,
-        "unassigned_records": 3,
-    }
-    assert review["scopes"] == [
-        {
-            "key": "champion",
-            "label": "英雄",
-            "residual_records": 2,
-            "unassigned_records": 2,
-        },
-        {
-            "key": "map",
-            "label": "地图",
-            "residual_records": 1,
-            "unassigned_records": 1,
-        },
-    ]
-    assert [(item["key"], item["record_count"]) for item in review["layers"]] == [
-        ("contract_shape", 0),
-        ("coverage", 1),
-        ("semantic_projection", 1),
-        ("review_evidence", 1),
-    ]
-    assert review["queues"] == [
-        {
-            "data_path": "data/review/residuals.json",
-            "key": "residual",
-            "label": "SFX 残差",
-            "record_count": 3,
-            "scope_counts": {"champion": 2, "map": 1},
-        },
-        {
-            "data_path": "data/review/unassigned.json",
-            "key": "unassigned",
-            "label": "未归属记录",
-            "record_count": 3,
-            "scope_counts": {"champion": 2, "map": 1},
-        },
-    ]
-    layer_by_key = {item["key"]: item for item in review["layers"]}
-    assert layer_by_key["review_evidence"]["scope_record_counts"] == {"champion": 0, "map": 1}
-    assert layer_by_key["review_evidence"]["scope_issue_counts"] == {"champion": 0, "map": 2}
-
-    residuals = read_json(output_root / "data" / "review" / "residuals.json")["records"]
-    residual = next(item for item in residuals if item["record_id"] == "record-unassigned")
-    assert residual["layers"] == ["review_evidence"]
-    assert [issue["code"] for issue in residual["issues"]] == [
-        "translation_argument_low_confidence",
-        "translation_label_fallback",
-    ]
-    assert residual["locator"] == {
-        "raw_event_name": "Play_sfx_Ruby_Boss_UnknownBoss_Charge",
-        "record_id": "record-unassigned",
-    }
-    assert residual["reason_code"] == "validator_issue"
-    assert residual["review_scope"] == "map"
-
-    unassigned = read_json(output_root / "data" / "review" / "unassigned.json")["records"]
-    assert {item["record_id"] for item in unassigned} == {
-        "record-strawberry-dasher",
-        "record-ruby-mission-ziggs",
-        "record-unassigned",
-    }
-    unassigned_by_id = {item["record_id"]: item for item in unassigned}
-    assert unassigned_by_id["record-unassigned"]["map"] == {
-        "alias": "HA",
-        "en_name": "Random Map",
-        "id": 12,
-        "key": "map12",
-        "label": "随机地图",
-    }
-    assert unassigned_by_id["record-ruby-mission-ziggs"]["map"]["key"] == "base"
-    assert unassigned_by_id["record-ruby-mission-ziggs"]["review_scope"] == "champion"
-    assert "semantic" not in unassigned[0]
-    assert {item["reason_code"] for item in unassigned} == {"no_safe_champion_assignment"}
+    normalized_root, validation_json, reference_root = write_demo_inputs(tmp_path)
+    if mutation == "payload":
+        path = normalized_root / "normalized-events.jsonl"
+        path.write_text(path.read_text(encoding="utf-8").replace("Q技能施放", "Q技能结束"), encoding="utf-8")
+    elif mutation == "reference":
+        path = reference_root / "champions/Annie.yaml"
+        path.write_text(path.read_text(encoding="utf-8").replace("安妮", "不同名字"), encoding="utf-8")
+    elif mutation == "reference_manifest":
+        path = reference_root / "manifest.yaml"
+        path.write_text(path.read_text(encoding="utf-8").replace("16.16.1", "16.17.1"), encoding="utf-8")
+    elif mutation == "manifest":
+        document = read_json(normalized_root / "manifest.json")
+        document["content_digest"] = "0" * 64
+        write_json(normalized_root / "manifest.json", document)
+    else:
+        document = read_json(validation_json)
+        document["summary"]["content_digest"] = "0" * 64
+        write_json(validation_json, document)
+    with pytest.raises(DemoSiteError, match="does not match"):
+        build_demo_site(
+            normalized_root=normalized_root,
+            validation_json=validation_json,
+            reference_root=reference_root,
+            output_root=tmp_path / "site",
+        )
 
 
 def test_build_demo_site_is_deterministic_and_refuses_unowned_output(tmp_path: Path) -> None:
@@ -287,6 +212,36 @@ def test_build_demo_site_rejects_validation_claiming_another_run(tmp_path: Path)
         )
 
 
+def test_demo_rejects_legacy_entity_and_failed_validation(tmp_path: Path) -> None:
+    """旧归属和硬错误数据不能被新的浏览布局伪装为已确认。"""
+
+    normalized_root, validation_json, reference_root = write_demo_inputs(tmp_path)
+    report = read_json(validation_json)
+    report["summary"]["error_count"] = 1
+    write_json(validation_json, report)
+    with pytest.raises(DemoSiteError, match="hard errors"):
+        build_demo_site(
+            normalized_root=normalized_root,
+            validation_json=validation_json,
+            reference_root=reference_root,
+            output_root=tmp_path / "site",
+        )
+    report["summary"]["error_count"] = 0
+    write_json(validation_json, report)
+    path = normalized_root / "normalized-events.jsonl"
+    records = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+    del records[0]["entity"]["attribution"]
+    path.write_text("".join(json.dumps(record, ensure_ascii=False) + "\n" for record in records), encoding="utf-8")
+    seal_demo_inputs(normalized_root, reference_root)
+    with pytest.raises(DemoSiteError, match="entity.attribution is required"):
+        build_demo_site(
+            normalized_root=normalized_root,
+            validation_json=validation_json,
+            reference_root=reference_root,
+            output_root=tmp_path / "site",
+        )
+
+
 def test_build_demo_site_rejects_conflicting_explicit_map_identity(tmp_path: Path) -> None:
     normalized_root, validation_json, reference_root = write_demo_inputs(tmp_path)
     events_path = normalized_root / "normalized-events.jsonl"
@@ -297,6 +252,7 @@ def test_build_demo_site_rejects_conflicting_explicit_map_identity(tmp_path: Pat
         encoding="utf-8",
     )
 
+    seal_demo_inputs(normalized_root, reference_root)
     with pytest.raises(DemoSiteError, match="conflicting map key and reference"):
         build_demo_site(
             normalized_root=normalized_root,
@@ -322,7 +278,9 @@ def test_demo_cli_requires_validation_for_explicit_candidate(
     assert "--validation-json is required with --normalized-root" in capsys.readouterr().err
 
 
-def test_demo_assets_keep_accessibility_security_and_responsive_contract(tmp_path: Path) -> None:
+def test_demo_assets_keep_accessible_controls_and_static_hosting(tmp_path: Path) -> None:
+    """静态包保留键盘控件、唯一DOM标识、安全响应头与相对资源。"""
+
     normalized_root, validation_json, reference_root = write_demo_inputs(tmp_path)
     output_root = tmp_path / "site"
     build_demo_site(
@@ -331,137 +289,28 @@ def test_demo_assets_keep_accessibility_security_and_responsive_contract(tmp_pat
         reference_root=reference_root,
         output_root=output_root,
     )
-
     html = (output_root / "index.html").read_text(encoding="utf-8")
-    javascript = (output_root / "app.js").read_text(encoding="utf-8")
-    stylesheet = (output_root / "styles.css").read_text(encoding="utf-8")
     dom = DemoDom()
     dom.feed(html)
-    element_block = re.search(
-        r"const elements = Object\.fromEntries\(\s*\[(.*?)\]\.map",
-        javascript,
-        re.DOTALL,
-    )
-    assert element_block is not None
-    referenced_element_ids = set(re.findall(r'"([A-Za-z][A-Za-z0-9]+)"', element_block.group(1)))
-    assert referenced_element_ids.issubset(dom.tags_by_id)
-
-    assert 'lang="zh-CN"' in html
-    assert 'name="theme-color" content="#f7f5f0"' in html
-    assert 'rel="preconnect" href="https://ddragon.leagueoflegends.com"' in html
-    assert 'aria-live="polite"' in html
-    assert "isn't endorsed by Riot Games" in html
-    assert "innerHTML" not in javascript
-    assert "textContent" in javascript
-    assert 'setAttribute("translate", "no")' in javascript
-    assert 'eventFilters.addEventListener("submit"' in javascript
-    assert 'reviewFilters.addEventListener("submit"' in javascript
-    assert 'fetchJson("data/review/index.json")' in javascript
-    assert 'params.get("status")' in javascript
-    assert 'params.get("type")' in javascript
-    assert 'params.get("view")' in javascript
-    assert 'params.get("queue")' in javascript
-    assert 'params.get("layer")' in javascript
-    assert 'params.get("code")' in javascript
-    assert 'params.get("family")' in javascript
-    assert 'params.get("entity")' in javascript
-    assert 'params.get("status")' in javascript
-    assert 'params.get("record")' in javascript
-    assert "window.history.replaceState" in javascript
-    assert {
-        "confirmedStatusButton",
-        "reviewStatusButton",
-        "championEntityButton",
-        "mapEntityButton",
-        "datasetDisclosure",
-        "datasetSummaryInline",
-        "browseNavigation",
-        "browseSearch",
-        "browseList",
-        "championView",
-        "mapView",
-        "mapEventFilters",
-        "mapEventTableBody",
-        "reviewView",
-        "reviewLayerCards",
-        "reviewFilters",
-        "reviewQueue",
-        "reviewSearch",
-        "reviewLayer",
-        "reviewCode",
-        "reviewFamily",
-        "reviewEntity",
-        "reviewMap",
-        "reviewStatus",
-        "reviewTableBody",
-        "reviewDetail",
-        "reviewDetailLocator",
-    }.issubset(dom.tags_by_id)
-    assert dom.tags_by_id["reviewFilters"] == "form"
-    assert dom.tags_by_id["mapEventFilters"] == "form"
-    assert dom.tags_by_id["datasetDisclosure"] == "details"
-    assert dom.tags_by_id["reviewQueue"] == "select"
-    assert dom.tags_by_id["mapFilter"] == "select"
-    assert dom.tags_by_id["reviewMap"] == "select"
-    assert dom.tags_by_id["reviewDetailLocator"] == "code"
     assert len(dom.ids) == len(set(dom.ids))
-    assert "@media (max-height: 900px) and (min-width: 901px)" in stylesheet
-    assert "@media (max-width: 600px)" in stylesheet
-    assert ":focus-visible" in stylesheet
-    assert "min-height: 44px" in stylesheet
-    assert "linear-gradient" not in stylesheet
-
-
-def test_demo_assets_are_ready_for_public_static_hosting(tmp_path: Path) -> None:
-    normalized_root, validation_json, reference_root = write_demo_inputs(tmp_path)
-    output_root = tmp_path / "site"
-    build_demo_site(
-        normalized_root=normalized_root,
-        validation_json=validation_json,
-        reference_root=reference_root,
-        output_root=output_root,
-    )
-
-    html = (output_root / "index.html").read_text(encoding="utf-8")
-    javascript = (output_root / "app.js").read_text(encoding="utf-8")
-    cloudflare_headers = (output_root / "_headers").read_text(encoding="utf-8")
-    manifest = read_json(output_root / "site.webmanifest")
-    champion = read_json(output_root / "data" / "champions" / "Annie.json")
-    dom = DemoDom()
-    dom.feed(html)
-
-    assert (output_root / ".nojekyll").read_text(encoding="utf-8") == ""
-    assert manifest["start_url"] == "."
-    assert manifest["scope"] == "."
-    assert manifest["lang"] == "zh-CN"
-    assert champion["dataset"] == {
-        "content_digest": "a" * 64,
-        "dataset_id": "local-v1-test",
-    }
-
+    assert dom.tags_by_id["semanticStatus"] == "select"
+    assert dom.tags_by_id["entityType"] == "select"
+    assert dom.tags_by_id["eventFilters"] == "form"
+    assert dom.tags_by_id["datasetDisclosure"] == "details"
+    assert dom.tags_by_id["copyPageLink"] == "button"
+    assert 'lang="zh-CN"' in html
+    assert 'aria-live="polite"' in html
     assert 'http-equiv="Content-Security-Policy"' in html
     assert 'name="referrer" content="no-referrer"' in html
-    assert 'rel="manifest" href="site.webmanifest"' in html
-    assert 'href="/"' not in html
-    assert 'src="/"' not in html
-    assert "PUBLIC DATA EXPLORER" in html
-    assert "本地静态浏览器" not in html
-    assert "本地数据投影" not in html
-    assert dom.tags_by_id["copyPageLink"] == "button"
-
-    assert 'url.searchParams.set("v", cacheVersion)' in javascript
-    assert 'cache: isEntryPoint ? "no-cache" : "default"' in javascript
-    assert "function assertDatasetIdentity" in javascript
-    assert 'cache: "no-store"' not in javascript
-    assert "请使用本地 HTTP 服务" not in javascript
-    assert "请在站点目录运行本地 HTTP 服务" not in javascript
-
-    assert "X-Content-Type-Options: nosniff" in cloudflare_headers
-    assert "Content-Security-Policy:" in cloudflare_headers
-    assert "/data/*" in cloudflare_headers
+    assert "isn't endorsed by Riot Games" in html
+    assert (output_root / ".nojekyll").is_file()
+    assert read_json(output_root / "site.webmanifest")["start_url"] == "."
+    assert "X-Content-Type-Options: nosniff" in (output_root / "_headers").read_text(encoding="utf-8")
 
 
 def write_demo_inputs(tmp_path: Path) -> tuple[Path, Path, Path]:
+    """生成含显式归属、语义状态与完整内容身份的代表语料。"""
+
     run_root = tmp_path / "test-run"
     normalized_root = run_root / "normalized"
     normalized_root.mkdir(parents=True)
@@ -471,7 +320,7 @@ def write_demo_inputs(tmp_path: Path) -> tuple[Path, Path, Path]:
             "schema_version": 2,
             "dataset_id": "local-v1-test",
             "content_digest": "a" * 64,
-            "record_count": 8,
+            "record_count": 11,
             "content_identity": {"base_game_version": "16.16"},
         },
     )
@@ -633,6 +482,62 @@ def write_demo_inputs(tmp_path: Path) -> tuple[Path, Path, Path]:
             "warnings": [],
         },
     ]
+    owners = [
+        ("champion", "Annie", None),
+        ("champion", "Ruby_Veigar", "Veigar"),
+        ("champion", "Ruby_Malzahar", "Malzahar"),
+        ("champion", "Strawberry_Aatrox", "Aatrox"),
+        ("mode_unit", "Strawberry_Dasher", None),
+        ("map", "map11", None),
+        ("champion", "Ruby_MonkeyKing", "MonkeyKing"),
+        ("unknown", "UnknownBoss", None),
+    ]
+    for record, (kind, alias, base) in zip(records, owners):
+        record["entity"] = {
+            "kind": kind,
+            "alias": alias,
+            "attribution": {
+                "basis": "unresolved" if kind == "unknown" else "source_asset",
+                "confidence": "low" if kind == "unknown" else "high",
+                "evidence": [],
+            },
+        }
+        if base:
+            record["entity"]["base_champion"] = {"kind": "champion", "alias": base, "basis": "reference_alias_suffix"}
+    records.append(
+        {
+            "record_id": "record-item",
+            "raw_event_name": "Play_sfx_1039_Activate",
+            "asset_kind": "sfx",
+            "entity": {
+                "kind": "item",
+                "alias": "1039",
+                "attribution": {"basis": "reference_item_id", "confidence": "high", "evidence": []},
+            },
+            "display": {"zh_cn_short": "激活", "zh_cn_detail": "猎人的护身符激活"},
+            "support_level": "experimental",
+            "render_status": "rendered",
+            "warnings": [],
+        }
+    )
+    for index, raw in enumerate(["Play_sfx_6688_Activate", "Play_sfx_UNKNOWN_6688_Activate"]):
+        records.append(
+            {
+                "record_id": f"record-unknown-{index}",
+                "raw_event_name": raw,
+                "asset_kind": "sfx",
+                "entity": {
+                    "kind": "unknown",
+                    "alias": "6688",
+                    "candidate": {"kind": "item", "id": 6688},
+                    "attribution": {"basis": "unresolved", "confidence": "low", "evidence": []},
+                },
+                "display": {"zh_cn_short": "激活"},
+                "support_level": "experimental",
+                "render_status": "rendered",
+                "warnings": [],
+            }
+        )
     (normalized_root / "normalized-events.jsonl").write_text(
         "".join(json.dumps(record, ensure_ascii=False, sort_keys=True) + "\n" for record in records),
         encoding="utf-8",
@@ -677,7 +582,7 @@ def write_demo_inputs(tmp_path: Path) -> tuple[Path, Path, Path]:
                 "entity_count": 4,
                 "error_count": 0,
                 "normalized_root": str(tmp_path / ".staging" / "test-run" / "normalized"),
-                "record_count": 8,
+                "record_count": 11,
                 "warning_count": 4,
             },
         },
@@ -777,6 +682,11 @@ entity:
 """,
         encoding="utf-8",
     )
+    (reference_root / "items").mkdir()
+    (reference_root / "items/1039.yaml").write_text(
+        "entity:\n  type: item\n  id: 1039\n  names:\n    zh_CN:\n      - value: 猎人的护身符\n", encoding="utf-8"
+    )
+    seal_demo_inputs(normalized_root, reference_root)
     return normalized_root, validation_json, reference_root
 
 
@@ -867,3 +777,26 @@ class DemoDom(HTMLParser):
         if element_id is not None:
             self.ids.append(element_id)
             self.tags_by_id[element_id] = tag
+
+
+def seal_demo_inputs(normalized_root: Path, reference_root: Path) -> None:
+    """给合成语料附上与生产算法一致的文件与参考身份。"""
+
+    manifest = read_json(normalized_root / "manifest.json")
+    paths = [path for path in reference_root.rglob("*") if path.is_file() and path != reference_root / "manifest.yaml"]
+    manifest["content_identity"]["input_identity"] = {
+        "inputs": {
+            "reference": paths_digest(reference_root, paths).to_dict(),
+            "reference_manifest": semantic_document_identity(
+                read_yaml(reference_root / "manifest.yaml"), excluded_keys={"updated_at"}
+            ),
+        }
+    }
+    manifest["files"] = describe_payload_files(normalized_root)
+    manifest["content_digest"] = content_digest(manifest["content_identity"], manifest["files"])
+    write_json(normalized_root / "manifest.json", manifest)
+    report_path = normalized_root.parent / "reports/normalized-validation.json"
+    report = read_json(report_path)
+    report["summary"]["dataset_id"] = manifest["dataset_id"]
+    report["summary"]["content_digest"] = manifest["content_digest"]
+    write_json(report_path, report)

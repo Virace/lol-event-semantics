@@ -300,7 +300,8 @@ class NormalizedTranslationBuilderChampionSfxEffectTests(unittest.TestCase):
             translation_context=reference_translation_context(),
         )
 
-        self.assertEqual(normalized["entity"], {"kind": "champion", "alias": "Blitzcrank"})
+        self.assertEqual(normalized["entity"]["alias"], "Blitzcrank")
+        self.assertEqual(normalized["entity"]["attribution"]["basis"], "reference_exact")
         self.assertEqual(normalized["display"]["zh_cn_short"], "W技能过载运转生效")
         self.assertIn("布里茨", normalized["display"]["zh_cn_detail"])
         self.assertNotIn("iBlitz", normalized["display"]["zh_cn_detail"])
@@ -2787,6 +2788,24 @@ class ChampionSfxSemanticRenderingTests(unittest.TestCase):
                 self.assertEqual(translation["arguments"]["phase"]["key"], "audio_start")
                 self.assertEqual(display["zh_cn_detail"], expected_detail)
 
+    def test_item_upgrade_ready_keeps_inference_evidence_and_item_context(self) -> None:
+        """3010 的 ready 使用精确审阅决策，升级推断与装备身份分别保留。"""
+
+        translation, display = self.render("Play_sfx_3010_ready")
+        effect = translation["arguments"]["effect"]
+        self.assertEqual(effect["labels"]["zh_CN"], "升级就绪音效")
+        self.assertEqual(effect["confidence"], "medium")
+        self.assertEqual(effect["provenance"]["source"], "official_mechanism_and_event_phase_inference")
+        self.assertEqual(translation["arguments"]["context"]["key"], "item_3010")
+        self.assertEqual(display["zh_cn_short"], "升级就绪音效")
+        self.assertEqual(display["zh_cn_detail"], "共生鞋鱼升级就绪音效")
+        from lol_event_semantics.normalized_validation import validate_translation_render
+
+        issues = []
+        validate_translation_render(translation, "item:3010", {"display": display}, issues, "Play_sfx_3010_ready")
+        self.assertNotIn("translation_display_mismatch", {issue.code for issue in issues})
+        self.assertIsNone(build_translation(enriched_record("Play_sfx_3013_ready"), reference_translation_context()))
+
     def test_reviewed_item_sfx_actions_keep_item_action_and_playback_semantics(self) -> None:
         """装备 ID 与精确动作对命中时，effect 同时保留装备身份和动作。"""
 
@@ -3489,7 +3508,7 @@ class MapArgumentDisplayLabelsTests(unittest.TestCase):
         """map11 经完整 gameplay_phase_control frame 构建后 map argument 同样命中词表不落 fallback。"""
 
         record = enriched_record("map11_FirstBlood_phase_select")
-        translation = build_translation(record, TranslationBuildContext())
+        translation = build_translation(record, reference_translation_context())
         self.assertIsNotNone(translation)
         assert translation is not None
         self.assertEqual(translation["frame_type"], "gameplay_phase_control")

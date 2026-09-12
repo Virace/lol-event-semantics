@@ -1,10 +1,11 @@
-# 人工实体归属决策（champion 实体归一的最后一道人工闸门）。
+# 人工实体归属决策：约束缺少强证据时的 champion alias 回退。
 #
-# 来源：人工 review dist/normalized/entity-summary.json 中无法自动归一的 champion alias。
+# 来源：人工 review normalized/entity-summary.json 中无法自动归一的 champion alias。
+# 来源资产与 reference 精确证据优先；keep / downgrade 不得覆写强来源，冲突保持未知。
 # 匹配大小写不敏感；decision 取值：
-#   keep      —— 确认为独立实体，保留原 alias，不参与前后缀/文件 id 回退归并。
+#   keep      —— 保留原 alias 并阻止低证据回退；单凭此决定不能确认独立实体。
 #   champion  —— 直接归入指定 reference 英雄（champion 字段必填，须存在于 reference/champions）。
-#   downgrade —— 无法证明是英雄，诚实降级到 kind 字段指定的实体类型（unknown / map_or_system）。
+#   downgrade —— 无法证明是英雄，统一归属层保持 unknown；kind 保留兼容输入约束。
 # 每条必须带 note 说明证据；加载时 fail-fast 校验。
 version: curated
 champion_aliases:

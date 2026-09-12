@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
-from .normalized_lookup import iter_normalized_rows
+from .identity_migration import build_identity_report, load_identity_rows, match_identities
 from .normalized_translation_model import FRAME_REGISTRY, RenderOptions
 from .normalized_translation_renderer import render_translation
 
@@ -233,7 +233,18 @@ def build_support_diff(current_root: Path, previous_root: Path | None) -> dict[s
         previous_rows = _rows_by_id(previous_root)
         previous_patterns = _catalog_by_id(previous_root)
     pattern_changes = _support_changes(previous_patterns, current_patterns, initial_stable_only=initial)
-    record_changes = _record_support_changes(previous_rows, current_rows, initial_stable_only=initial)
+    comparison = match_identities(previous_rows, current_rows)
+    matches, _ambiguous = comparison
+    migration = build_identity_report(previous_rows, current_rows, comparison=comparison)
+    successors = {match.previous_id: match.current_id for match in matches}
+    aligned_current = {match.previous_id: current_rows[match.current_id] for match in matches}
+    matched_current = set(successors.values())
+    aligned_current.update({key: row for key, row in current_rows.items() if key not in matched_current})
+    record_changes = _record_support_changes(previous_rows, aligned_current, initial_stable_only=initial)
+    for change in record_changes:
+        old_id = change["record_id"]
+        change["previous_record_id"] = old_id if old_id in previous_rows else None
+        change["current_record_id"] = successors.get(old_id, old_id if old_id in current_rows else None)
     pattern_downgrades = sorted(
         pattern_id
         for pattern_id, pattern in previous_patterns.items()
@@ -245,8 +256,8 @@ def build_support_diff(current_root: Path, previous_root: Path | None) -> dict[s
         for record_id, row in previous_rows.items()
         if row.get("support_level") == "stable"
         and (
-            current_rows.get(record_id, {}).get("support_level") != "stable"
-            or current_rows.get(record_id, {}).get("pattern_id") != row.get("pattern_id")
+            aligned_current.get(record_id, {}).get("support_level") != "stable"
+            or aligned_current.get(record_id, {}).get("pattern_id") != row.get("pattern_id")
         )
     )
     passed = not pattern_downgrades and not record_downgrades
@@ -254,7 +265,8 @@ def build_support_diff(current_root: Path, previous_root: Path | None) -> dict[s
         "schema_version": 1,
         "baseline": baseline,
         "passed": passed,
-        "review_required": bool(pattern_changes or record_changes),
+        "review_required": bool(pattern_changes or record_changes or migration["changes"] or migration["ambiguous"]),
+        "identity_migration": migration,
         "pattern_changes": pattern_changes,
         "record_changes": record_changes,
         "transition_counts": _transition_counts(pattern_changes, record_changes),
@@ -826,11 +838,9 @@ def _change_kind(previous: str | None, current: str | None) -> str:
 
 
 def _rows_by_id(root: Path) -> dict[str, dict[str, Any]]:
-    return {
-        str(row.get("record_id")): row
-        for _path, _line, row in iter_normalized_rows(root)
-        if isinstance(row.get("record_id"), str)
-    }
+    """载入质量比较需要的轻量字段并拒绝重复 record_id。"""
+
+    return load_identity_rows(root)
 
 
 def _catalog_by_id(root: Path) -> dict[str, dict[str, Any]]:

@@ -108,6 +108,19 @@ gameplay_event:
 # key 已按 segment 小写归一，尾部 buffactivate/buffdeactivate/loop 由 builder
 # 拆成生命周期。表外路径不逐词硬译，也不会把工程 owner 混进中文。
 system_sfx:
+  item_event:
+    Play_sfx_3010_ready:
+      item_id: 3010
+      key: upgrade_ready
+      zh_CN: 升级就绪音效
+      en_US: upgrade ready SFX
+      confidence: medium
+      provenance:
+        source: official_mechanism_and_event_phase_inference
+        reference_url: https://www.leagueoflegends.com/en-us/news/game-updates/patch-14-10-notes/
+        reference_section: Symbiotic Soles
+        mechanism: 累计移动150000单位后由3010升级为3013
+        inference: 根据官方升级机制与ready阶段联合推断升级就绪，未直接读取音频内容
   context:
     cherry: 斗魂竞技场
     doombots: 末日人机

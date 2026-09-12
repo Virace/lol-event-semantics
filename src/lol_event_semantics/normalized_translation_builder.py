@@ -10,7 +10,13 @@ from typing import Any
 
 from .decomposition_model import EventDecompositionRecord, SemanticProfile
 from .display_tier import is_akshan_revive_sfx
-from .display_labels import DisplayLabels, get_display_labels, get_reference_map_names, use_display_sources
+from .display_labels import (
+    DisplayLabels,
+    get_display_labels,
+    get_reference_map_names,
+    map_system_entity_label,
+    use_display_sources,
+)
 from .normalized_translation_model import (
     FRAME_VERSION,
     TRANSLATION_SCHEMA_VERSION,
@@ -337,8 +343,8 @@ def build_translation(
 
     active_context = context or TranslationBuildContext()
     display_scope = (
-        use_display_sources(active_context.display_labels, active_context.reference_map_names)
-        if active_context.display_labels is not None
+        use_display_sources(active_context.display_labels or get_display_labels(), active_context.reference_map_names)
+        if context is not None
         else nullcontext()
     )
     with display_scope:
@@ -1175,13 +1181,10 @@ def build_reviewed_system_sfx_event(
     Tier3 HUD 工程音。
     """
 
-    if (
-        record.shell.asset_kind != "sfx"
-        or any(
-            isinstance(record.semantic_slots.get(slot_name), dict)
-            and record.semantic_slots[slot_name].get("kind") == "champion"
-            for slot_name in ("subject", "mode_actor")
-        )
+    if record.shell.asset_kind != "sfx" or any(
+        isinstance(record.semantic_slots.get(slot_name), dict)
+        and record.semantic_slots[slot_name].get("kind") == "champion"
+        for slot_name in ("subject", "mode_actor")
     ):
         return None
 
@@ -1277,6 +1280,10 @@ def build_reviewed_item_sfx_event(
     effect；未知组合返回 ``None``，避免用装备总名掩盖尚未审阅的信息。
     """
 
+    exact = build_exact_item_sfx_event(record, context)
+    if exact is not None:
+        return exact
+
     if (
         record.shell.asset_kind != "sfx"
         or record.profile.primary_family not in {"phase_event", "spell"}
@@ -1358,6 +1365,50 @@ def build_reviewed_item_sfx_event(
         )
     )
     return build_frame(record, "system_sfx_event", [effect, phase])
+
+
+def build_exact_item_sfx_event(
+    record: EventDecompositionRecord, context: TranslationBuildContext
+) -> dict[str, object] | None:
+    """按完整原始事件名应用带来源的装备审阅决策，不泛化阶段含义。"""
+
+    labels = context.display_labels or get_display_labels()
+    row = labels.system_sfx_item_event.get(record.raw_event_name)
+    if row is None:
+        return None
+    item_id = row.get("item_id")
+    if not isinstance(item_id, int):
+        return None
+    names = context.reference_item_names.get(item_id)
+    if names is None:
+        return None
+    provenance = dict(row.get("provenance") or {})
+    provenance["rule"] = "display_labels.system_sfx.item_event"
+    provenance["item_id"] = item_id
+    confidence = str(row.get("confidence") or "medium")
+    effect = argument_to_dict(
+        TranslationArgument(
+            role="effect",
+            key=str(row["key"]),
+            token=record.raw_event_name,
+            labels={locale: str(row[locale]) for locale in ("zh_CN", "en_US")},
+            confidence=confidence,
+            provenance=provenance,
+        )
+    )
+    item = argument_to_dict(
+        TranslationArgument(
+            role="context",
+            key=f"item_{item_id}",
+            labels=dict(names),
+            confidence="high",
+            provenance={"source": "reference/items", "item_id": item_id},
+            omit_when_context_known=("item",),
+        )
+    )
+    frame = build_frame(record, "system_sfx_event", [item, effect])
+    frame["frame_confidence"] = confidence
+    return frame
 
 
 def system_sfx_context_argument(
@@ -3640,7 +3691,7 @@ def build_mode_augment_event(
         record,
         "mode_augment_event",
         [
-            mode_augment_mode_argument(record, labels=context.map_system_entity_labels or None),
+            mode_augment_mode_argument(record, labels=context.map_system_entity_labels),
             augment,
             champion,
             ability_slot,
@@ -3747,10 +3798,6 @@ def mode_augment_mode_argument(
     Returns:
         mode 参数；候选均不在词条表内时返回 None。
     """
-
-    # map_system_entity_label 定义在 normalized_output（该模块反向依赖本
-    # builder），函数内导入避免模块级循环依赖。
-    from .normalized_output import map_system_entity_label
 
     cue_path = record.semantic_slots.get("cue_path")
     cue_head = cue_path[0] if isinstance(cue_path, list) and cue_path else None

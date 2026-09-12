@@ -63,7 +63,9 @@ class ModeAugmentDispatchTests(unittest.TestCase):
 
         record = enriched_record("Play_sfx_Cherry_Augment_Goredrink_buffactivate")
         with patch(GET_LABELS_TARGET, return_value=INJECTED_LABELS):
-            translation = build_translation(record, TranslationBuildContext())
+            translation = build_translation(
+                record, TranslationBuildContext(map_system_entity_labels={"cherry": "测试竞技模式"})
+            )
 
         self.assertIsNotNone(translation)
         assert translation is not None

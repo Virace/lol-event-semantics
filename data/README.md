@@ -8,6 +8,7 @@
 
 - `schema/manifest.schema.json`：normalized manifest V2 Schema。
 - `schema/normalized-event.schema.json`：normalized record V2 Schema。
+  新增可选 event_id/event_id_algorithm 和 entity attribution/base_champion/candidate；旧 V2 仍可读取。
 - `schema/pattern-catalog.schema.json`：Pattern Catalog V1 Schema。
 - `schema/quality-summary.schema.json`：分层质量摘要与冻结 decision/pattern-set/record-count 的 Stable 绝对门禁 Schema。
 - `schema/review-decision.schema.json`：候选绑定、可哈希且带审核人/时间/理由的版本化人工决定 Schema。
@@ -19,6 +20,8 @@
   它是预检合同，不是历史版本下载能力或未来 live 默认值。
 
 其余边界：
+
+- 日常消费 profiles 与无源码客户端位于 `src/lol_event_semantics/consumption.py` 和 `consumer_assets/`，各包附带自身的消费 schema；它们不要求消费者携带本目录全部审计资产。详见根 `CONSUMPTION.md`。
 
 - 原始事件名属于 `raw/events/`。
 - 长期规则属于 `rules/` 和 `overrides/`。

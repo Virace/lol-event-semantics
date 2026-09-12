@@ -1590,3 +1590,33 @@ tbody tr:hover {
     scroll-behavior: auto;
   }
 }
+
+/* 实体列表与反馈视图共享同一结果布局。 */
+.status-explanation { color: var(--ink-soft); font-size: 12px; line-height: 1.65; }
+.entity-list-alias { display: block; color: var(--ink-soft); font-size: 11px; overflow-wrap: anywhere; }
+.champion-link { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px; min-height: 44px; text-decoration: none; border-bottom: 1px solid var(--border); }
+.champion-link:hover, .champion-link[aria-current="page"] { background: var(--jade-pale); }
+.entity-media { margin: 12px 0 24px; }
+.entity-media > summary { cursor: pointer; padding: 12px 0; color: var(--jade-dark); }
+.unified-filters { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.event-evidence { margin-top: 10px; color: var(--ink-soft); font-size: 12px; }
+.event-evidence summary { cursor: pointer; color: var(--jade-dark); min-height: 24px; }
+.event-evidence p, .event-evidence dd { max-width: 70ch; overflow-wrap: anywhere; }
+.event-evidence .review-detail-meta { margin-top: 12px; }
+.raw-event-name { display: block; font-size: 12px; overflow-wrap: anywhere; }
+.badge[data-status="feedback"] { background: var(--gold-pale); color: #79500a; }
+.badge[data-status="determined"] { background: var(--jade-pale); color: var(--jade-dark); }
+#entityType, #semanticStatus { width: 100%; min-width: 0; }
+#browseList { overflow-y: auto; }
+@media (max-width: 900px) { .unified-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .unified-filters { grid-template-columns: minmax(0, 1fr); } .event-evidence .review-detail-meta { grid-template-columns: minmax(0, 1fr); } }
+
+#entityView .champion-header { grid-template-columns: minmax(0, 1fr) minmax(220px, auto); }
+#entityView .champion-header:has(img:not([hidden])) { grid-template-columns: 72px minmax(0, 1fr) minmax(220px, auto); }
+#entityView .champion-stats { min-width: 0; grid-template-columns: repeat(3, minmax(65px, 1fr)); }
+.event-evidence .review-detail-meta dt { color: var(--ink-soft); }
+@media (max-width: 900px) {
+  #entityView .champion-header, #entityView .champion-header:has(img:not([hidden])) { grid-template-columns: minmax(0, 1fr); }
+  #entityView .champion-stats { grid-column: 1; }
+  #entityView .champion-avatar { display: none; }
+}

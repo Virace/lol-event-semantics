@@ -22,6 +22,8 @@ from .pattern_catalog import (
 
 RECORD_ID_ALGORITHM_VERSION = "lol-event-semantics.record-id.v1"
 RECORD_ID_PREFIX = "record-v1-"
+EVENT_ID_ALGORITHM_VERSION = "lol-event-semantics.event-id.v1"
+EVENT_ID_PREFIX = "event-v1-"
 CONTROL_ASSET_KINDS = {"control", "rtpc", "state", "switch"}
 WINDOWS_ABSOLUTE_PATH = re.compile(r"^[A-Za-z]:/")
 
@@ -141,6 +143,25 @@ def record_id_for_normalized_record(record: Mapping[str, Any]) -> str:
     return f"{RECORD_ID_PREFIX}{hashlib.sha256(payload.encode('utf-8')).hexdigest()}"
 
 
+def event_id_for_normalized_record(record: Mapping[str, Any]) -> str:
+    """计算 raw 与逻辑 owner 的连续身份，不受来源证据增减影响。
+
+    同名事件归属不同 owner 时保持不同身份；owner 纠正通过迁移报告关联，
+    不把相同 raw 当成全局唯一键。此身份不替代审计快照的 record_id。
+
+    Raises:
+        ValueError: raw 或 owner 缺少非空身份字段。
+    """
+
+    entity = record.get("entity")
+    owner = entity if isinstance(entity, dict) else {}
+    values = [record.get("raw_event_name"), owner.get("kind"), owner.get("alias")]
+    if not all(isinstance(value, str) and value for value in values):
+        raise ValueError("event identity requires raw_event_name and entity.kind/alias")
+    payload = json.dumps([EVENT_ID_ALGORITHM_VERSION, *values], ensure_ascii=False, separators=(",", ":"))
+    return f"{EVENT_ID_PREFIX}{hashlib.sha256(payload.encode('utf-8')).hexdigest()}"
+
+
 def apply_normalized_contract(rows: list[dict[str, object]], policy: PatternPolicy) -> dict[str, Any]:
     """给兼容行增量写入 V2 identity、support、render 与 review 字段。
 
@@ -186,6 +207,8 @@ def apply_normalized_contract(rows: list[dict[str, object]], policy: PatternPoli
 
         row["record_id"] = record_id
         row["record_id_algorithm"] = RECORD_ID_ALGORITHM_VERSION
+        row["event_id"] = event_id_for_normalized_record(row)
+        row["event_id_algorithm"] = EVENT_ID_ALGORITHM_VERSION
         row["source_scope"] = source_identity.scope
         row["provenance"] = source_identity.to_provenance()
         row["source_paths"] = list(source_identity.provenance_paths)

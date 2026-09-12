@@ -1,8 +1,9 @@
-"""从 normalized contract 生成英雄、地图与 Review 静态演示站。"""
+"""从 normalized contract 生成实体与语义状态正交的只读演示站。"""
 
 from __future__ import annotations
 
 import json
+import hashlib
 import os
 import re
 import shutil
@@ -16,11 +17,28 @@ from urllib.parse import quote
 from ruamel.yaml import YAML
 
 from .mode_namespace import MODE_NAMESPACES, split_mode_entity_alias
+from .consumption import project_record
+from .dataset_identity import (
+    canonical_json_bytes,
+    content_digest as calculate_content_digest,
+    describe_payload_files,
+    paths_digest,
+    semantic_document_identity,
+    sha256_file,
+)
 from .normalized_lookup import iter_normalized_rows
 
 __all__ = ["DemoBuildSummary", "DemoSiteError", "build_demo_site"]
 
-DEMO_SCHEMA_VERSION = 2
+DEMO_SCHEMA_VERSION = 3
+ENTITY_CATEGORIES = {
+    "champion": "英雄",
+    "item": "装备",
+    "map": "地图",
+    "mode_system": "模式实体",
+    "system": "公共系统",
+    "unknown": "未知实体",
+}
 GENERATED_MARKER_NAME = ".rift-event-atlas-generated"
 GENERATED_MARKER_VALUE = "rift-event-atlas-static-site.v1\n"
 ASSET_FILENAMES = ("index.html", "styles.css", "app.js", "_headers", "site.webmanifest")
@@ -33,13 +51,10 @@ BASE_MAP = {
     "en_name": None,
 }
 CHAMPION_ALIAS_PATTERN = re.compile(r"[A-Za-z][A-Za-z0-9]*\Z")
-MAP_KEY_PATTERN = re.compile(r"[a-z0-9][a-z0-9_-]*\Z")
 DATA_DRAGON_VERSION_PATTERN = re.compile(r"\d+\.\d+\.\d+\Z")
 SKIN_TOKEN_PATTERN = re.compile(r"Skin0*(\d+)\Z", re.IGNORECASE)
 RAW_SKIN_PATTERN = re.compile(r"Skin0*(\d+)", re.IGNORECASE)
 CHROMA_NAME_PATTERN = re.compile(r"(?P<base>.+?)\s+\([^()]+\)\Z")
-MODE_ENTITY_WRAPPERS = frozenset({"boss", "curse", "enemy", "hud", "npc"})
-SFX_EVENT_PATTERN = re.compile(r"^(?:play|stop|mute|unmute)_(?:sfx|sxf)_", re.IGNORECASE)
 REVIEW_LAYERS: tuple[tuple[str, str, frozenset[str]], ...] = (
     ("contract_shape", "合同结构", frozenset({"translation_frame_required_role_missing"})),
     ("coverage", "支持覆盖", frozenset({"translation_missing_for_supported_frame"})),
@@ -72,7 +87,6 @@ REVIEW_LAYERS: tuple[tuple[str, str, frozenset[str]], ...] = (
         ),
     ),
 )
-REVIEW_CODES = frozenset(code for _key, _label, codes in REVIEW_LAYERS for code in codes)
 
 
 class DemoSiteError(ValueError):
@@ -141,178 +155,248 @@ def build_demo_site(
     reference_root: Path,
     output_root: Path,
 ) -> DemoBuildSummary:
-    """生成可由普通静态 HTTP 服务托管的英雄事件与残差审阅站。"""
+    """生成按实体惰性加载、统一筛选语义反馈状态的静态站。"""
 
     normalized_root = normalized_root.resolve()
     validation_json = validation_json.resolve()
     reference_root = reference_root.resolve()
     output_root = output_root.resolve()
     _ensure_replaceable_output(output_root)
-
     manifest = _read_json_object(normalized_root / "manifest.json")
     reference_manifest = _read_yaml_object(reference_root / "manifest.yaml")
+    _validate_input_identity(normalized_root, reference_root, manifest, reference_manifest)
     dataset_id = _required_text(manifest, "dataset_id", "normalized manifest")
     content_digest = _required_text(manifest, "content_digest", "normalized manifest")
-    expected_record_count = _required_int(manifest, "record_count", "normalized manifest")
+    expected_count = _required_int(manifest, "record_count", "normalized manifest")
     validation = _read_json_object(validation_json)
     _validate_validation_source(
         normalized_root=normalized_root,
         validation_json=validation_json,
         validation=validation,
-        expected_record_count=expected_record_count,
-    )
-    issues_by_raw = _review_issues_by_raw(validation)
-    data_dragon_version = _data_dragon_version(reference_manifest)
-    base_game_version = str(_mapping(manifest.get("content_identity")).get("base_game_version") or "unknown")
-
-    champions = _load_champion_references(reference_root / "champions")
-    if not champions:
-        raise DemoSiteError(f"no base champion references found: {reference_root / 'champions'}")
-    champion_by_key = {champion.alias.casefold(): champion for champion in champions}
-    compact_aliases = _compact_champion_aliases(champions)
-    map_catalog = _load_map_references(reference_root / "maps")
-    events_by_alias: dict[str, list[dict[str, Any]]] = {champion.alias: [] for champion in champions}
-    map_events_by_key: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    map_profiles: dict[str, dict[str, Any]] = {}
-
-    source_record_count = 0
-    unassigned_record_count = 0
-    residual_records: list[dict[str, Any]] = []
-    unassigned_records: list[dict[str, Any]] = []
-    matched_issue_raws: set[str] = set()
-    for _path, _line_number, row in iter_normalized_rows(normalized_root):
-        source_record_count += 1
-        raw = _required_text(row, "raw_event_name", "normalized record")
-        projected_event = _project_event(row, map_catalog=map_catalog)
-        projected_map = _mapping(projected_event.get("map"))
-        map_key = str(projected_map.get("key") or "base")
-        if map_key != "base":
-            if MAP_KEY_PATTERN.fullmatch(map_key) is None:
-                raise DemoSiteError(f"unsafe projected map key: {map_key!r}")
-            map_events_by_key[map_key].append(projected_event)
-            existing_profile = map_profiles.get(map_key)
-            if existing_profile is not None and existing_profile != projected_map:
-                raise DemoSiteError(f"conflicting projected map profile: {map_key}")
-            map_profiles[map_key] = dict(projected_map)
-        review_issues = issues_by_raw.get(raw, ())
-        if review_issues:
-            residual_records.append(_project_review_record(row, map_catalog=map_catalog, issues=review_issues))
-            matched_issue_raws.add(raw)
-        champion_alias = _resolve_record_champion(row, champion_by_key, compact_aliases)
-        if champion_alias is None:
-            unassigned_record_count += 1
-            unassigned_records.append(_project_review_record(row, map_catalog=map_catalog))
-            continue
-        events_by_alias[champion_alias].append(projected_event)
-
-    if source_record_count != expected_record_count:
-        raise DemoSiteError(
-            f"normalized record count mismatch: manifest={expected_record_count} stream={source_record_count}"
-        )
-    missing_issue_raws = sorted(set(issues_by_raw).difference(matched_issue_raws), key=str.casefold)
-    if missing_issue_raws:
-        preview = ", ".join(missing_issue_raws[:3])
-        raise DemoSiteError(f"validation issues do not match normalized records: {preview}")
-
-    residual_records.sort(key=_review_record_sort_key)
-    unassigned_records.sort(key=_review_record_sort_key)
-
-    skins_by_alias = _load_skin_references(reference_root / "skins", champions)
-    champion_documents: list[dict[str, Any]] = []
-    champion_index: list[dict[str, Any]] = []
-    map_documents: list[dict[str, Any]] = []
-    map_index: list[dict[str, Any]] = []
-    global_mode_counts: Counter[str] = Counter()
-
-    for champion in sorted(champions, key=lambda item: (item.en_name.casefold(), item.alias.casefold())):
-        events = sorted(
-            events_by_alias[champion.alias],
-            key=lambda event: (str(event["raw_event_name"]).casefold(), str(event["record_id"])),
-        )
-        skins = _build_skin_payload(champion, skins_by_alias.get(champion.alias, ()), data_dragon_version)
-        document, index_entry = _build_champion_documents(
-            champion,
-            skins,
-            events,
-            dataset_id=dataset_id,
-            content_digest=content_digest,
-            data_dragon_version=data_dragon_version,
-        )
-        champion_documents.append(document)
-        champion_index.append(index_entry)
-        global_mode_counts.update(str(event["mode"]["key"]) for event in events)
-
-    for map_key in sorted(map_profiles, key=lambda key: _map_sort_key(map_profiles[key])):
-        events = sorted(
-            map_events_by_key[map_key],
-            key=lambda event: (str(event["raw_event_name"]).casefold(), str(event["record_id"])),
-        )
-        document, index_entry = _build_map_documents(
-            map_profiles[map_key],
-            events,
-            dataset_id=dataset_id,
-            content_digest=content_digest,
-        )
-        map_documents.append(document)
-        map_index.append(index_entry)
-
-    assigned_event_count = source_record_count - unassigned_record_count
-    map_event_count = sum(len(events) for events in map_events_by_key.values())
-    site_index = {
-        "schema_version": DEMO_SCHEMA_VERSION,
-        "product": {
-            "name": "峡谷事件语义图鉴",
-            "name_en": "Rift Event Atlas",
-            "description": "按英雄、皮肤、模式与显式地图浏览音频事件原名和中文语义。",
-        },
-        "dataset": {
-            "dataset_id": dataset_id,
-            "content_digest": content_digest,
-            "base_game_version": base_game_version,
-            "data_dragon_version": data_dragon_version,
-        },
-        "counts": {
-            "source_records": source_record_count,
-            "champion_events": assigned_event_count,
-            "map_events": map_event_count,
-            "unassigned_records": unassigned_record_count,
-            "champions": len(champions),
-            "maps": len(map_documents),
-        },
-        "modes": _mode_summaries(global_mode_counts),
-        "review": {
-            "data_path": "data/review/index.json",
-            "residual_records": len(residual_records),
-            "unassigned_records": len(unassigned_records),
-        },
-        "champions": champion_index,
-        "maps": map_index,
-    }
-    review_index = _build_review_index(
+        expected_record_count=expected_count,
         dataset_id=dataset_id,
         content_digest=content_digest,
-        residual_records=residual_records,
-        unassigned_records=unassigned_records,
     )
-    _write_site_output(
-        output_root,
-        site_index,
-        champion_documents,
-        map_documents,
-        review_index=review_index,
-        residual_records=residual_records,
-        unassigned_records=unassigned_records,
+    validation_digest = sha256_file(validation_json)
+    generator_digest = paths_digest(
+        Path(__file__).parent,
+        [
+            *Path(__file__).parent.rglob("*.py"),
+            *(Path(__file__).with_name("demo_assets") / name for name in ASSET_FILENAMES),
+        ],
+    ).digest
+    demo_id = (
+        "demo-v3-"
+        + hashlib.sha256(
+            canonical_json_bytes(
+                {
+                    "dataset": content_digest,
+                    "validation": validation_digest,
+                    "schema": DEMO_SCHEMA_VERSION,
+                    "generator": generator_digest,
+                }
+            )
+        ).hexdigest()[:20]
     )
+    identity = {"dataset_id": dataset_id, "content_digest": content_digest, "demo_id": demo_id}
+    issues_by_record = _review_issues_by_record(validation)
+    version = _data_dragon_version(reference_manifest)
+    champions = _load_champion_references(reference_root / "champions")
+    champion_by_key = {champion.alias.casefold(): champion for champion in champions}
+    skins = _load_skin_references(reference_root / "skins", champions)
+    map_catalog = _load_map_references(reference_root / "maps")
+    names = _load_entity_names(reference_root)
+    events_by_key: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    profiles: dict[str, dict[str, Any]] = {}
+    matched_issues: set[str] = set()
+    legacy_raw_seen: set[str] = set()
+    total = 0
+    for _path, _line, row in iter_normalized_rows(normalized_root):
+        total += 1
+        raw = _required_text(row, "raw_event_name", "normalized record")
+        entity = _mapping(row.get("entity"))
+        if not _mapping(entity.get("attribution")):
+            raise DemoSiteError("entity.attribution is required; regenerate normalized data before building the demo")
+        profile = _entity_profile(entity, champion_by_key, names, map_catalog, version)
+        key = profile["key"]
+        profiles[key] = profile
+        event = _project_event(row, map_catalog=map_catalog, source_index=_line)
+        issue_key = "record:" + str(row.get("record_id") or "")
+        legacy_key = "raw:" + raw
+        if legacy_key in issues_by_record:
+            if raw in legacy_raw_seen:
+                raise DemoSiteError("ambiguous legacy validation issue; regenerate validation with record_id")
+            legacy_raw_seen.add(raw)
+        issues = (*issues_by_record.get(issue_key, ()), *issues_by_record.get(legacy_key, ()))
+        if issues:
+            matched_issues.update((issue_key, legacy_key))
+        event["issues"] = [dict(issue) for issue in issues]
+        event["layers"] = _issue_layers(issues)
+        reasons = []
+        if entity.get("kind") == "unknown" or _mapping(entity.get("attribution")).get("basis") == "unresolved":
+            reasons.append("unresolved_entity")
+        if event["render_status"] != "rendered":
+            reasons.append("incomplete_render")
+        if event["warning_count"]:
+            reasons.append("record_warning")
+        if issues:
+            reasons.append("validator_issue")
+        event["feedback_reasons"] = reasons
+        event["semantic_status"] = "feedback" if reasons else "determined"
+        events_by_key[key].append(event)
+    if total != expected_count:
+        raise DemoSiteError(f"normalized record count mismatch: manifest={expected_count} stream={total}")
+    if missing := sorted(set(issues_by_record) - matched_issues):
+        raise DemoSiteError(f"validation issues do not match normalized records: {', '.join(missing[:3])}")
+
+    documents = []
+    entries = []
+    category_counts: Counter[str] = Counter()
+    feedback_count = 0
+    for key in sorted(profiles, key=lambda value: (profiles[value]["kind"], profiles[value]["alias"].casefold())):
+        profile = profiles[key]
+        events = sorted(events_by_key[key], key=_review_record_sort_key)
+        status_counts = Counter(event["semantic_status"] for event in events)
+        support_counts = Counter(event["support_level"] for event in events)
+        category_counts[profile["kind"]] += len(events)
+        feedback_count += status_counts["feedback"]
+        base = champion_by_key.get(profile["alias"].casefold()) if profile["kind"] == "champion" else None
+        skin_payload = _build_skin_payload(base, skins.get(base.alias, ()), version) if base else []
+        stats = {
+            "events": len(events),
+            "statuses": dict(status_counts),
+            "support": dict(support_counts),
+            "rendered": sum(event["render_status"] == "rendered" for event in events),
+        }
+        path = "data/entities/" + hashlib.sha256(key.encode("utf-8")).hexdigest()[:24] + ".json"
+        documents.append(
+            {
+                "schema_version": DEMO_SCHEMA_VERSION,
+                "dataset": identity,
+                "entity": profile,
+                "stats": stats,
+                "skins": skin_payload,
+                "events": events,
+                "data_path": path,
+            }
+        )
+        entries.append({**profile, "stats": stats, "data_path": path, "skin_count": len(skin_payload)})
+    site_index = {
+        "schema_version": DEMO_SCHEMA_VERSION,
+        "product": {"name": "峡谷事件语义图鉴", "name_en": "Rift Event Atlas"},
+        "dataset": {
+            **identity,
+            "base_game_version": _mapping(manifest.get("content_identity")).get("base_game_version", "unknown"),
+            "data_dragon_version": version,
+            "validation_digest": validation_digest,
+            "generator_digest": generator_digest,
+        },
+        "status_policy": {
+            "determined": "中文已生成且没有记录警告、校验问题或归属问题；不代表 Stable 或人工批准。",
+            "feedback": "含归属、渲染或校验问题，需要进一步反馈。",
+        },
+        "counts": {"source_records": total, "feedback_records": feedback_count, **dict(category_counts)},
+        "categories": [
+            {"key": key, "label": label, "event_count": category_counts[key]}
+            for key, label in ENTITY_CATEGORIES.items()
+            if category_counts[key]
+        ],
+        "entities": entries,
+    }
+    _write_site_output(output_root, site_index, documents)
     return DemoBuildSummary(
         output_root=output_root,
         dataset_id=dataset_id,
-        champion_count=len(champions),
-        event_count=assigned_event_count,
-        map_count=len(map_documents),
-        map_event_count=map_event_count,
-        unassigned_event_count=unassigned_record_count,
-        review_record_count=len(residual_records),
+        champion_count=sum(entry["kind"] == "champion" for entry in entries),
+        event_count=category_counts["champion"],
+        map_count=sum(entry["kind"] == "map" for entry in entries),
+        map_event_count=category_counts["map"],
+        unassigned_event_count=category_counts["unknown"],
+        review_record_count=feedback_count,
     )
+
+
+def _validate_input_identity(
+    normalized_root: Path,
+    reference_root: Path,
+    manifest: Mapping[str, Any],
+    reference_manifest: Mapping[str, Any],
+) -> None:
+    """验证实际 payload 与参考输入，拒绝同条数内容替换及跨版本展示词条。"""
+
+    files = manifest.get("files")
+    identity = _mapping(manifest.get("content_identity"))
+    if not isinstance(files, list) or files != describe_payload_files(normalized_root):
+        raise DemoSiteError("normalized payload does not match manifest files")
+    if manifest.get("content_digest") != calculate_content_digest(identity, files):
+        raise DemoSiteError("normalized content_digest does not match payload identity")
+    inputs = _mapping(_mapping(identity.get("input_identity")).get("inputs"))
+    paths = [
+        path
+        for path in reference_root.rglob("*")
+        if path.is_file()
+        and path != reference_root / "manifest.yaml"
+        and path.suffix.lower() not in {".pyc", ".pyo"}
+        and not set(path.parts).intersection({"__pycache__", ".mypy_cache", ".pytest_cache", ".ruff_cache"})
+    ]
+    if inputs.get("reference") != paths_digest(reference_root, paths).to_dict():
+        raise DemoSiteError("reference content does not match normalized input identity")
+    if inputs.get("reference_manifest") != semantic_document_identity(reference_manifest, excluded_keys={"updated_at"}):
+        raise DemoSiteError("reference manifest does not match normalized input identity")
+
+
+def _load_entity_names(reference_root: Path) -> dict[str, str]:
+    """读取非英雄实体已有中文名称，不承担归属判断。"""
+
+    names = {}
+    for path in sorted((reference_root / "items").glob("*.yaml")):
+        entity = _mapping(_read_yaml_object(path).get("entity"))
+        values = _localized_values(_mapping(entity.get("names")), "zh_CN")
+        if values:
+            names[f"item:{entity.get('id')}"] = values[0]
+    return names
+
+
+def _entity_profile(
+    entity: Mapping[str, Any],
+    champions: Mapping[str, ChampionReference],
+    names: Mapping[str, str],
+    maps: MapReferenceCatalog,
+    version: str,
+) -> dict[str, Any]:
+    """仅用统一归属及显式基础英雄关系构建浏览实体。"""
+
+    kind = str(entity.get("kind") or "unknown")
+    if kind in {"mode_unit", "mode_boss"}:
+        kind = "mode_system"
+    alias = str(entity.get("alias") or "unknown")
+    if kind not in ENTITY_CATEGORIES:
+        raise DemoSiteError(f"unsupported entity kind: {kind}")
+    base = _mapping(entity.get("base_champion"))
+    champion = champions.get(str(base.get("alias") or alias).casefold()) if kind == "champion" else None
+    if champion:
+        alias = champion.alias
+    key = f"{kind}:{alias}"
+    profile = {"key": key, "kind": kind, "alias": alias, "label": names.get(key, alias), "search_terms": [alias]}
+    if champion:
+        profile.update(
+            {
+                "label": champion.zh_name,
+                "title": champion.zh_title,
+                "en_name": champion.en_name,
+                "search_terms": list(champion.search_terms),
+                "portrait_url": _portrait_url(alias, version),
+            }
+        )
+    if kind == "map":
+        reference = maps.by_alias.get(alias.casefold())
+        if reference is None and alias.casefold().startswith("map") and alias[3:].isdigit():
+            reference = maps.by_id.get(int(alias[3:]))
+        if reference:
+            profile.update({"label": reference.zh_name, "en_name": reference.en_name})
+    if kind == "unknown":
+        profile["label"] = f"未知实体 · {alias}"
+    return profile
 
 
 def _load_champion_references(root: Path) -> list[ChampionReference]:
@@ -450,139 +534,22 @@ def _load_map_references(root: Path) -> MapReferenceCatalog:
     return MapReferenceCatalog(by_id=by_id, by_alias=by_alias)
 
 
-def _compact_champion_aliases(champions: Sequence[ChampionReference]) -> dict[str, str]:
-    """构建 canonical alias 与英文展示名的无歧义紧凑索引。"""
-
-    result: dict[str, str] = {}
-    for champion in champions:
-        for value in (champion.alias, champion.en_name):
-            key = _compact(value)
-            if not key:
-                continue
-            existing = result.get(key)
-            if existing is not None and existing != champion.alias:
-                raise DemoSiteError(f"ambiguous compact champion alias {value!r}: {existing!r} and {champion.alias!r}")
-            result[key] = champion.alias
-    return result
-
-
-def _resolve_record_champion(
-    row: Mapping[str, Any],
-    champion_by_key: Mapping[str, ChampionReference],
-    compact_aliases: Mapping[str, str],
-) -> str | None:
-    """按结构化证据和受控模式 token 解析基础英雄。"""
-
-    semantic = _mapping(row.get("semantic"))
-    slots = _mapping(semantic.get("slots"))
-    semantic_frame = _mapping(row.get("semantic_frame"))
-    frame_arguments = _mapping(semantic_frame.get("arguments"))
-    translation = _mapping(row.get("translation"))
-    translation_arguments = _mapping(translation.get("arguments"))
-    candidates = (
-        frame_arguments.get("champion"),
-        translation_arguments.get("champion"),
-        slots.get("mode_actor"),
-        slots.get("subject"),
-        row.get("entity"),
-        slots.get("owner_context"),
-    )
-    unresolved: list[str] = []
-    for candidate in candidates:
-        for value in _entity_candidate_values(candidate):
-            champion = champion_by_key.get(value.casefold())
-            if champion is not None:
-                return champion.alias
-            unresolved.append(value)
-
-    for value in unresolved:
-        match = _match_compact_champion_alias(value, compact_aliases, allow_short_edge_match=True)
-        if match is not None:
-            return match
-
-    for value in _mode_raw_entity_tokens(row, slots):
-        match = _match_compact_champion_alias(value, compact_aliases, allow_short_edge_match=False)
-        if match is not None:
-            return match
-    return None
-
-
-def _match_compact_champion_alias(
-    value: str,
-    compact_aliases: Mapping[str, str],
-    *,
-    allow_short_edge_match: bool,
-) -> str | None:
-    """返回唯一最长的紧凑英雄别名匹配。"""
-
-    compact_value = _compact(value)
-    matches = {
-        alias
-        for compact_alias, alias in compact_aliases.items()
-        if compact_alias
-        and (
-            compact_value == compact_alias
-            or (
-                allow_short_edge_match
-                and (compact_value.startswith(compact_alias) or compact_value.endswith(compact_alias))
-            )
-            or (
-                len(compact_alias) >= 4
-                and (compact_value.startswith(compact_alias) or compact_value.startswith(f"fn{compact_alias}"))
-            )
-        )
-    }
-    if not matches:
-        return None
-    longest = max(len(_compact(alias)) for alias in matches)
-    longest_matches = sorted(alias for alias in matches if len(_compact(alias)) == longest)
-    return longest_matches[0] if len(longest_matches) == 1 else None
-
-
-def _mode_raw_entity_tokens(row: Mapping[str, Any], slots: Mapping[str, Any]) -> tuple[str, ...]:
-    """提取已确认模式前缀后的受控实体 token。"""
-
-    mode_key = str(_mapping(slots.get("mode_context")).get("key") or "").casefold()
-    namespace = next((item for item in MODE_NAMESPACES if item.key == mode_key), None)
-    if namespace is None:
-        return ()
-
-    raw_event_name = row.get("raw_event_name")
-    if not isinstance(raw_event_name, str):
-        return ()
-    parts = raw_event_name.split("_")
-    for index, part in enumerate(parts):
-        if part.casefold() == namespace.prefix.casefold():
-            following = tuple(token for token in parts[index + 1 :] if token)
-            if not following:
-                return ()
-            if following[0].casefold() in MODE_ENTITY_WRAPPERS and len(following) > 1:
-                return following[:2]
-            return following[:1]
-    return ()
-
-
-def _entity_candidate_values(value: object) -> tuple[str, ...]:
-    """从结构化实体候选中提取可比较文本。"""
-
-    if isinstance(value, str):
-        return (value,) if value else ()
-    candidate = _mapping(value)
-    return tuple(text for key in ("alias", "raw", "label") if isinstance((text := candidate.get(key)), str) and text)
-
-
 def _validate_validation_source(
     *,
     normalized_root: Path,
     validation_json: Path,
     validation: Mapping[str, Any],
     expected_record_count: int,
+    dataset_id: str,
+    content_digest: str,
 ) -> None:
     """验证 normalized 与 validator 报告来自同一个标准 dataset run。"""
 
     if validation_json.parent.parent != normalized_root.parent:
         raise DemoSiteError("normalized root and validation report must belong to the same dataset run")
     summary = _mapping(validation.get("summary"))
+    if summary.get("dataset_id") != dataset_id or summary.get("content_digest") != content_digest:
+        raise DemoSiteError("validation identity does not match normalized manifest; regenerate the validation report")
     reported_root = Path(_required_text(summary, "normalized_root", "validation summary"))
     if reported_root.name != normalized_root.name or reported_root.parent.name != normalized_root.parent.name:
         raise DemoSiteError("validation report does not describe the same dataset run")
@@ -591,12 +558,14 @@ def _validate_validation_source(
         raise DemoSiteError(
             f"validation record count mismatch: manifest={expected_record_count} validation={record_count}"
         )
+    if _required_int(summary, "error_count", "validation summary") != 0:
+        raise DemoSiteError("validation report contains hard errors; repair normalized data before building the demo")
     if not isinstance(validation.get("issues"), list):
         raise DemoSiteError("validation report issues must be an array")
 
 
-def _review_issues_by_raw(validation: Mapping[str, Any]) -> dict[str, tuple[dict[str, str], ...]]:
-    """按 raw event 汇总需要进入 SFX 人工审阅队列的 validator 问题。"""
+def _review_issues_by_record(validation: Mapping[str, Any]) -> dict[str, tuple[dict[str, str], ...]]:
+    """按记录身份关联问题；旧报告仅在原名唯一时允许回退。"""
 
     grouped: dict[str, list[dict[str, str]]] = defaultdict(list)
     issues = validation.get("issues")
@@ -606,9 +575,11 @@ def _review_issues_by_raw(validation: Mapping[str, Any]) -> dict[str, tuple[dict
             raise DemoSiteError(f"validation issue {index} must be an object")
         code = str(value.get("code") or "")
         raw = str(value.get("raw_event_name") or "")
-        if code not in REVIEW_CODES or SFX_EVENT_PATTERN.match(raw) is None:
+        if not raw:
             continue
-        grouped[raw].append(
+        record_id = str(value.get("record_id") or "")
+        key = "record:" + record_id if record_id else "raw:" + raw
+        grouped[key].append(
             {
                 "code": code,
                 "severity": str(value.get("severity") or "warning"),
@@ -622,206 +593,34 @@ def _review_issues_by_raw(validation: Mapping[str, Any]) -> dict[str, tuple[dict
     }
 
 
-def _project_review_record(
-    row: Mapping[str, Any],
-    *,
-    map_catalog: MapReferenceCatalog,
-    issues: Sequence[Mapping[str, str]] = (),
-) -> dict[str, Any]:
-    """投影审阅所需的最小记录，不复制完整 normalized payload。
-
-    Args:
-        row: normalized 记录。
-        map_catalog: 用于本地化显式地图槽位的参考索引。
-        issues: 与记录匹配的 validator 问题。
-
-    Returns:
-        可由 Review 页面直接消费的轻量记录。
-    """
-
-    raw = _required_text(row, "raw_event_name", "normalized record")
-    record_id = _required_text(row, "record_id", f"normalized record {raw}")
-    entity = _mapping(row.get("entity"))
-    semantic = _mapping(row.get("semantic"))
-    slots = _mapping(semantic.get("slots"))
-    display = _mapping(row.get("display"))
-    translation = _mapping(row.get("translation"))
-    semantic_frame = _mapping(row.get("semantic_frame"))
-    projected_issues = [dict(issue) for issue in issues]
-    projected_map = _project_map(slots.get("map"), map_catalog)
-    return {
-        "record_id": record_id,
-        "raw_event_name": raw,
-        "locator": {"record_id": record_id, "raw_event_name": raw},
-        "asset_kind": str(row.get("asset_kind") or "unknown"),
-        "entity": {
-            "kind": str(entity.get("kind") or "unknown"),
-            "alias": str(entity.get("alias") or "unknown"),
-        },
-        "map": projected_map,
-        "review_scope": _review_scope(projected_map),
-        "family": str(semantic.get("primary_family") or "unknown"),
-        "profile": str(semantic.get("profile") or "unknown"),
-        "frame_type": str(translation.get("frame_type") or semantic_frame.get("frame_type") or "missing"),
-        "support_level": str(row.get("support_level") or "experimental"),
-        "review_status": str(row.get("review_status") or "pending"),
-        "render_status": str(row.get("render_status") or "missing"),
-        "zh_cn_short": _optional_text(display.get("zh_cn_short")),
-        "zh_cn_detail": _optional_text(display.get("zh_cn_detail")),
-        "reason_code": "validator_issue" if projected_issues else "no_safe_champion_assignment",
-        "layers": _issue_layers(projected_issues),
-        "issues": projected_issues,
-    }
-
-
 def _issue_layers(issues: Sequence[Mapping[str, str]]) -> list[str]:
-    """按固定展示顺序返回一条记录所属的 Review layer。"""
+    """按固定展示顺序返回一条记录的问题层级。"""
 
     issue_codes = {str(issue.get("code") or "") for issue in issues}
     return [key for key, _label, codes in REVIEW_LAYERS if issue_codes.intersection(codes)]
 
 
 def _review_record_sort_key(record: Mapping[str, Any]) -> tuple[str, str]:
-    """返回 Review 分片的确定性排序键。"""
+    """返回事件分片的确定性排序键。"""
 
     return (str(record.get("raw_event_name") or "").casefold(), str(record.get("record_id") or ""))
-
-
-def _review_scope(map_value: Mapping[str, Any]) -> str:
-    """按显式地图槽位把 Review 记录划入英雄或地图入口。"""
-
-    return "map" if str(map_value.get("key") or "base") != "base" else "champion"
-
-
-def _build_review_index(
-    *,
-    dataset_id: str,
-    content_digest: str,
-    residual_records: Sequence[Mapping[str, Any]],
-    unassigned_records: Sequence[Mapping[str, Any]],
-) -> dict[str, Any]:
-    """构建残差层、过滤 facet 与队列文件的轻量索引。"""
-
-    issue_counts: Counter[str] = Counter()
-    issue_records: Counter[str] = Counter()
-    for record in residual_records:
-        codes = [str(_mapping(issue).get("code") or "") for issue in record.get("issues", [])]
-        issue_counts.update(codes)
-        issue_records.update(set(codes))
-
-    layers = []
-    for key, label, codes in REVIEW_LAYERS:
-        scope_record_counts = {
-            scope: sum(
-                key in record.get("layers", []) and record.get("review_scope") == scope for record in residual_records
-            )
-            for scope in ("champion", "map")
-        }
-        scope_issue_counts = {
-            scope: sum(
-                str(_mapping(issue).get("code") or "") in codes
-                for record in residual_records
-                if record.get("review_scope") == scope
-                for issue in record.get("issues", [])
-            )
-            for scope in ("champion", "map")
-        }
-        layers.append(
-            {
-                "key": key,
-                "label": label,
-                "issue_count": sum(issue_counts[code] for code in codes),
-                "record_count": sum(key in record.get("layers", []) for record in residual_records),
-                "scope_issue_counts": scope_issue_counts,
-                "scope_record_counts": scope_record_counts,
-            }
-        )
-    combined_records = [*residual_records, *unassigned_records]
-    scopes = [
-        {
-            "key": scope,
-            "label": label,
-            "residual_records": sum(record.get("review_scope") == scope for record in residual_records),
-            "unassigned_records": sum(record.get("review_scope") == scope for record in unassigned_records),
-        }
-        for scope, label in (("champion", "英雄"), ("map", "地图"))
-    ]
-    return {
-        "schema_version": DEMO_SCHEMA_VERSION,
-        "dataset": {"dataset_id": dataset_id, "content_digest": content_digest},
-        "counts": {
-            "residual_issues": sum(issue_counts.values()),
-            "residual_records": len(residual_records),
-            "unassigned_records": len(unassigned_records),
-        },
-        "scopes": scopes,
-        "queues": [
-            {
-                "key": "residual",
-                "label": "SFX 残差",
-                "record_count": len(residual_records),
-                "scope_counts": _review_scope_counts(residual_records),
-                "data_path": "data/review/residuals.json",
-            },
-            {
-                "key": "unassigned",
-                "label": "未归属记录",
-                "record_count": len(unassigned_records),
-                "scope_counts": _review_scope_counts(unassigned_records),
-                "data_path": "data/review/unassigned.json",
-            },
-        ],
-        "layers": layers,
-        "codes": [
-            {"key": code, "issue_count": count, "record_count": issue_records[code]}
-            for code, count in sorted(issue_counts.items(), key=lambda item: (-item[1], item[0]))
-        ],
-        "families": _facet_counts(combined_records, "family"),
-        "entities": _entity_counts(combined_records),
-        "statuses": _facet_counts(combined_records, "review_status"),
-    }
-
-
-def _review_scope_counts(records: Sequence[Mapping[str, Any]]) -> dict[str, int]:
-    """返回 Review 队列在英雄与地图入口中的互斥记录数。"""
-
-    counts = Counter(str(record.get("review_scope") or "champion") for record in records)
-    return {scope: counts.get(scope, 0) for scope in ("champion", "map")}
-
-
-def _facet_counts(records: Sequence[Mapping[str, Any]], key: str) -> list[dict[str, Any]]:
-    """汇总一个平坦 Review facet 的记录数。"""
-
-    counts = Counter(str(record.get(key) or "unknown") for record in records)
-    return [
-        {"key": value, "record_count": count}
-        for value, count in sorted(counts.items(), key=lambda item: (-item[1], item[0].casefold()))
-    ]
-
-
-def _entity_counts(records: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
-    """汇总 Review 记录的实体 alias。"""
-
-    counts = Counter(str(_mapping(record.get("entity")).get("alias") or "unknown") for record in records)
-    return [
-        {"key": value, "record_count": count}
-        for value, count in sorted(counts.items(), key=lambda item: (-item[1], item[0].casefold()))
-    ]
 
 
 def _project_event(
     row: Mapping[str, Any],
     *,
     map_catalog: MapReferenceCatalog,
+    source_index: int,
 ) -> dict[str, Any]:
     """把 normalized 记录投影为演示站事件。
 
     Args:
         row: normalized 记录。
         map_catalog: 用于本地化显式地图槽位的参考索引。
+        source_index: 在审计单流中的一基行号。
 
     Returns:
-        英雄事件表消费的稳定投影。
+        所有实体与语义状态共用的事件投影。
     """
 
     display = _mapping(row.get("display"))
@@ -830,17 +629,20 @@ def _project_event(
     slots = _mapping(semantic.get("slots"))
     semantic_frame = _mapping(row.get("semantic_frame"))
     warnings = row.get("warnings")
+    consumer = project_record(row, source_index)
     return {
         "record_id": str(row.get("record_id") or ""),
         "raw_event_name": _required_text(row, "raw_event_name", "normalized record"),
         "zh_cn_short": _optional_text(display.get("zh_cn_short")),
         "zh_cn_detail": _optional_text(display.get("zh_cn_detail")),
+        "label": consumer["label"],
+        "label_basis": consumer["state"][-1],
+        "context_flags": consumer["flags"],
+        "full_label": consumer["full_label"],
         "display_tier": display.get("tier"),
         "asset_kind": str(row.get("asset_kind") or "unknown"),
-        "entity": {
-            "kind": str(entity.get("kind") or "unknown"),
-            "alias": str(entity.get("alias") or "unknown"),
-        },
+        "entity": dict(entity),
+        "event_id": row.get("event_id"),
         "frame_type": _optional_text(semantic_frame.get("frame_type")),
         "primary_family": _optional_text(semantic.get("primary_family")),
         "support_level": str(row.get("support_level") or "experimental"),
@@ -848,8 +650,9 @@ def _project_event(
         "render_status": str(row.get("render_status") or "missing"),
         "mode": _project_mode(slots.get("mode_context")),
         "map": _project_map(slots.get("map"), map_catalog),
-        "skin_number": _record_skin_number(row, slots, semantic_frame),
+        "skin_number": _record_skin_number(row, slots, semantic_frame) if entity.get("kind") == "champion" else None,
         "warning_count": len(warnings) if isinstance(warnings, list) else 0,
+        "warnings": warnings if isinstance(warnings, list) else [],
     }
 
 
@@ -989,202 +792,35 @@ def _skin_name_key(value: str) -> str:
     return " ".join(value.split()).casefold()
 
 
-def _build_champion_documents(
-    champion: ChampionReference,
-    skins: list[dict[str, Any]],
-    events: list[dict[str, Any]],
-    *,
-    dataset_id: str,
-    content_digest: str,
-    data_dragon_version: str,
-) -> tuple[dict[str, Any], dict[str, Any]]:
-    """构建单英雄数据分片及其轻量索引项。"""
-
-    support_counts = Counter(str(event["support_level"]) for event in events)
-    asset_counts = Counter(str(event["asset_kind"]) for event in events)
-    mode_counts = Counter(str(event["mode"]["key"]) for event in events)
-    rendered_count = sum(event["render_status"] == "rendered" for event in events)
-    profile = {
-        "id": champion.champion_id,
-        "alias": champion.alias,
-        "en_name": champion.en_name,
-        "zh_name": champion.zh_name,
-        "zh_title": champion.zh_title,
-        "nicknames": list(champion.nicknames),
-        "search_terms": list(champion.search_terms),
-        "portrait_url": _portrait_url(champion.alias, data_dragon_version),
-        "base_splash_url": _splash_url(champion.alias, 0),
-    }
-    stats = {
-        "events": len(events),
-        "rendered": rendered_count,
-        "missing_labels": len(events) - rendered_count,
-        "support": dict(sorted(support_counts.items())),
-        "asset_kinds": dict(sorted(asset_counts.items())),
-        "modes": dict(sorted(mode_counts.items())),
-    }
-    document = {
-        "schema_version": DEMO_SCHEMA_VERSION,
-        "dataset": {"dataset_id": dataset_id, "content_digest": content_digest},
-        "champion": profile,
-        "stats": stats,
-        "modes": _mode_summaries(mode_counts),
-        "skins": skins,
-        "events": events,
-    }
-    index_entry = {
-        **profile,
-        "event_count": len(events),
-        "stable_count": support_counts.get("stable", 0),
-        "experimental_count": support_counts.get("experimental", 0),
-        "mode_counts": dict(sorted(mode_counts.items())),
-        "skin_count": len(skins),
-        "data_path": f"data/champions/{champion.alias}.json",
-    }
-    return document, index_entry
-
-
-def _build_map_documents(
-    map_profile: Mapping[str, Any],
-    events: list[dict[str, Any]],
-    *,
-    dataset_id: str,
-    content_digest: str,
-) -> tuple[dict[str, Any], dict[str, Any]]:
-    """构建单地图数据分片及其轻量索引项。"""
-
-    key = _required_text(map_profile, "key", "map profile")
-    if key == "base" or MAP_KEY_PATTERN.fullmatch(key) is None:
-        raise DemoSiteError(f"unsafe map output key: {key!r}")
-    support_counts = Counter(str(event["support_level"]) for event in events)
-    asset_counts = Counter(str(event["asset_kind"]) for event in events)
-    mode_counts = Counter(str(event["mode"]["key"]) for event in events)
-    rendered_count = sum(event["render_status"] == "rendered" for event in events)
-    profile = dict(map_profile)
-    stats = {
-        "events": len(events),
-        "rendered": rendered_count,
-        "missing_labels": len(events) - rendered_count,
-        "support": dict(sorted(support_counts.items())),
-        "asset_kinds": dict(sorted(asset_counts.items())),
-        "modes": dict(sorted(mode_counts.items())),
-    }
-    document = {
-        "schema_version": DEMO_SCHEMA_VERSION,
-        "dataset": {"dataset_id": dataset_id, "content_digest": content_digest},
-        "map": profile,
-        "stats": stats,
-        "modes": _mode_summaries(mode_counts),
-        "events": events,
-    }
-    index_entry = {
-        **profile,
-        "event_count": len(events),
-        "stable_count": support_counts.get("stable", 0),
-        "experimental_count": support_counts.get("experimental", 0),
-        "mode_counts": dict(sorted(mode_counts.items())),
-        "data_path": f"data/maps/{key}.json",
-    }
-    return document, index_entry
-
-
-def _map_sort_key(map_profile: Mapping[str, Any]) -> tuple[bool, int, str, str]:
-    """优先按显式 Map ID，再按本地化名称与 key 排序。"""
-
-    raw_id = map_profile.get("id")
-    map_id = raw_id if isinstance(raw_id, int) and not isinstance(raw_id, bool) else 0
-    return (
-        raw_id is None,
-        map_id,
-        str(map_profile.get("label") or "").casefold(),
-        str(map_profile.get("key") or "").casefold(),
-    )
-
-
-def _mode_summaries(counts: Mapping[str, int]) -> list[dict[str, Any]]:
-    """按固定模式顺序构建非空计数摘要。"""
-
-    known = {namespace.key: namespace for namespace in MODE_NAMESPACES}
-    ordered_keys = ["base", *(namespace.key for namespace in MODE_NAMESPACES)]
-    ordered_keys.extend(sorted(key for key in counts if key not in {*ordered_keys}))
-    result: list[dict[str, Any]] = []
-    for key in ordered_keys:
-        count = int(counts.get(key, 0))
-        if count == 0:
-            continue
-        if key == "base":
-            metadata: dict[str, str | None] = dict(BASE_MODE)
-        elif key in known:
-            namespace = known[key]
-            metadata = {"key": namespace.key, "label": namespace.label, "prefix": namespace.prefix}
-        else:
-            metadata = {"key": key, "label": key, "prefix": None}
-        result.append({**metadata, "event_count": count})
-    return result
-
-
 def _write_site_output(
     output_root: Path,
     site_index: Mapping[str, Any],
-    champion_documents: Sequence[Mapping[str, Any]],
-    map_documents: Sequence[Mapping[str, Any]],
-    *,
-    review_index: Mapping[str, Any],
-    residual_records: Sequence[Mapping[str, Any]],
-    unassigned_records: Sequence[Mapping[str, Any]],
+    documents: Sequence[Mapping[str, Any]],
 ) -> None:
-    """在临时目录完成站点写入后原子替换输出。"""
+    """在受控暂存目录完成分片，再替换带生成器标记的站点。"""
 
     output_root.parent.mkdir(parents=True, exist_ok=True)
     staging_root = Path(tempfile.mkdtemp(prefix=f".{output_root.name}-", dir=output_root.parent))
     try:
         asset_root = Path(__file__).with_name("demo_assets")
         for filename in ASSET_FILENAMES:
-            source = asset_root / filename
-            if not source.is_file():
-                raise DemoSiteError(f"demo asset is missing: {source}")
-            shutil.copyfile(source, staging_root / filename)
+            shutil.copyfile(asset_root / filename, staging_root / filename)
         (staging_root / ".nojekyll").write_text("", encoding="utf-8")
-
-        data_root = staging_root / "data"
-        champion_root = data_root / "champions"
-        map_root = data_root / "maps"
-        review_root = data_root / "review"
-        champion_root.mkdir(parents=True)
-        map_root.mkdir(parents=True)
-        review_root.mkdir(parents=True)
-        _write_json(data_root / "index.json", site_index, pretty=True)
-        for document in champion_documents:
-            alias = _required_text(_mapping(document.get("champion")), "alias", "champion document")
-            if CHAMPION_ALIAS_PATTERN.fullmatch(alias) is None:
-                raise DemoSiteError(f"unsafe champion output alias: {alias!r}")
-            _write_json(champion_root / f"{alias}.json", document, pretty=False)
-        for document in map_documents:
-            key = _required_text(_mapping(document.get("map")), "key", "map document")
-            if key == "base" or MAP_KEY_PATTERN.fullmatch(key) is None:
-                raise DemoSiteError(f"unsafe map output key: {key!r}")
-            _write_json(map_root / f"{key}.json", document, pretty=False)
-        dataset = _mapping(review_index.get("dataset"))
-        dataset_id = _required_text(dataset, "dataset_id", "review index dataset")
-        _write_json(review_root / "index.json", review_index, pretty=True)
-        _write_json(
-            review_root / "residuals.json",
-            {"schema_version": DEMO_SCHEMA_VERSION, "dataset_id": dataset_id, "records": residual_records},
-            pretty=False,
-        )
-        _write_json(
-            review_root / "unassigned.json",
-            {"schema_version": DEMO_SCHEMA_VERSION, "dataset_id": dataset_id, "records": unassigned_records},
-            pretty=False,
-        )
+        (staging_root / "data" / "entities").mkdir(parents=True)
+        _write_json(staging_root / "data" / "index.json", site_index, pretty=False)
+        for document in documents:
+            path = str(document["data_path"])
+            if re.fullmatch(r"data/entities/[a-f0-9]{24}\.json", path) is None:
+                raise DemoSiteError(f"unsafe entity output path: {path}")
+            _write_json(
+                staging_root / path, {key: value for key, value in document.items() if key != "data_path"}, pretty=False
+            )
         (staging_root / GENERATED_MARKER_NAME).write_text(GENERATED_MARKER_VALUE, encoding="utf-8")
-
         if output_root.exists():
             shutil.rmtree(output_root)
         os.replace(staging_root, output_root)
     except Exception:
-        if staging_root.exists():
-            shutil.rmtree(staging_root)
+        # 保留失败现场供检查，不自动清理任务临时产物。
         raise
 
 
@@ -1250,12 +886,6 @@ def _unique_texts(values: Any) -> list[str]:
         seen.add(key)
         result.append(value)
     return result
-
-
-def _compact(value: str) -> str:
-    """把别名压缩为仅含小写 ASCII 字母数字的键。"""
-
-    return re.sub(r"[^a-z0-9]+", "", value.casefold())
 
 
 def _read_json_object(path: Path) -> dict[str, Any]:

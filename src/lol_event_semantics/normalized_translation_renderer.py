@@ -141,6 +141,12 @@ def render_role_texts(
     if frame_type == "mode_unit_attack_event":
         return join_mode_unit_attack_zh_cn(role_texts)
 
+    context = (arguments or {}).get("context")
+    provenance = context.get("provenance") if isinstance(context, dict) else None
+    if frame_type == "system_sfx_event" and isinstance(provenance, dict) and provenance.get("item_id") is not None:
+        # 精确装备事件的主体是名词前缀，中文直接连接效果；模式上下文仍使用原有空格。
+        return join_zh_cn([("item" if role == "context" else role, text) for role, text in role_texts])
+
     return join_zh_cn(role_texts)
 
 
@@ -678,7 +684,7 @@ def build_compat_display(
 
     short = render_translation(
         translation,
-        RenderOptions(locale="zh_CN", mode="main", known_context=frozenset({"champion", "skin"})),
+        RenderOptions(locale="zh_CN", mode="main", known_context=frozenset({"champion", "skin", "item"})),
     )
     detail = render_translation(translation, RenderOptions(locale="zh_CN", mode="default"))
     debug_source = raw_event_name or string_or_none(translation.get("raw_event_name")) or ""

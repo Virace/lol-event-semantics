@@ -20,11 +20,39 @@ from typing import Any
 from ruamel.yaml import YAML
 
 from .reference_collection import load_reference_collection
+from .rules import RuleBook, rule_key
 
 DEFAULT_DISPLAY_LABELS_PATH = Path("rules/display_labels.yaml")
 DEFAULT_REFERENCE_ROOT = Path("reference")
+DEFAULT_RULES_ROOT = Path("rules")
+DEFAULT_OVERRIDES_ROOT = Path("overrides")
 _ACTIVE_DISPLAY_LABELS: ContextVar[DisplayLabels | None]
 _ACTIVE_REFERENCE_MAP_NAMES: ContextVar[Mapping[int, str] | None]
+
+
+def map_system_entity_label(alias: str, labels: Mapping[str, str] | None = None) -> str | None:
+    """读取人工核对的系统实体词条；显式空索引不回落默认规则。"""
+
+    active = labels if labels is not None else get_map_system_entity_labels()
+    return active.get(rule_key(alias))
+
+
+def load_map_system_entity_labels(rules_root: Path, overrides_root: Path) -> dict[str, str]:
+    """从本次构建的规则读取 owner=entity 的系统实体词条。"""
+
+    rulebook = RuleBook.load(rules_root, overrides_root)
+    return {
+        token: alias.label
+        for (scope, owner, token), alias in rulebook.contextual_aliases.items()
+        if scope == "sfx" and owner == rule_key("entity")
+    }
+
+
+@lru_cache(maxsize=1)
+def get_map_system_entity_labels() -> dict[str, str]:
+    """为未传上下文的兼容调用缓存默认系统实体词条。"""
+
+    return load_map_system_entity_labels(DEFAULT_RULES_ROOT, DEFAULT_OVERRIDES_ROOT)
 
 
 @dataclass(frozen=True, slots=True)
@@ -66,6 +94,7 @@ class DisplayLabels:
             表外 owner 合法缺席，不把工程名带进中文。
         system_sfx_item_action: ``装备 ID/动作词干`` 到双语动作标签的精确映射；
             只承接用户审阅过的组合，不把某个装备的动作泛化到其他数字 owner。
+        system_sfx_item_event: 完整 raw 事件名到装备审阅决策，保留推断来源与置信度。
     """
 
     phase: Mapping[str, tuple[str, str]] = field(default_factory=dict)
@@ -86,6 +115,7 @@ class DisplayLabels:
     system_sfx_exact: Mapping[str, str] = field(default_factory=dict)
     system_sfx_context: Mapping[str, str] = field(default_factory=dict)
     system_sfx_item_action: Mapping[str, tuple[str, str]] = field(default_factory=dict)
+    system_sfx_item_event: Mapping[str, Mapping[str, Any]] = field(default_factory=dict)
 
 
 _ACTIVE_DISPLAY_LABELS = ContextVar("active_display_labels", default=None)
@@ -125,6 +155,8 @@ def parse_display_labels(data: Mapping[str, Any]) -> DisplayLabels:
     shop = shop if isinstance(shop, Mapping) else {}
     system_sfx = data.get("system_sfx")
     system_sfx = system_sfx if isinstance(system_sfx, Mapping) else {}
+    item_events = system_sfx.get("item_event")
+    item_events = item_events if isinstance(item_events, Mapping) else {}
     return DisplayLabels(
         phase=_parse_pair_section(data.get("phase")),
         action=_parse_pair_section(data.get("action")),
@@ -144,6 +176,9 @@ def parse_display_labels(data: Mapping[str, Any]) -> DisplayLabels:
         system_sfx_exact=_parse_scalar_section(system_sfx.get("exact")),
         system_sfx_context=_parse_scalar_section(system_sfx.get("context")),
         system_sfx_item_action=_parse_pair_section(system_sfx.get("item_action")),
+        system_sfx_item_event={
+            str(key): dict(value) for key, value in item_events.items() if isinstance(value, Mapping)
+        },
     )
 
 
