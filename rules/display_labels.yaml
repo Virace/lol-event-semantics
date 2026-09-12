@@ -98,6 +98,7 @@ ability_component:
   slow_stun: 减速/眩晕
   rapid_reload: 快速装填
   animal_threshold: 斯嘎尔阈值
+  shield: 护盾
 
 gameplay_event:
   # gameplay_event argument：玩法事件展示词；key 为小写事件名。
@@ -362,6 +363,15 @@ counterpart:
   # key 为 counterpart 槽位的英文 label（精确匹配优先，rule_key 归一 key 兜底），
   # value 为中文词条。防错优先：表外 kind/label 一律 fallback 直出英文，
   # 不硬造中文；扩词条改这里、不改代码。
+  # 技能阶段后的封闭条件词；生命值措辞沿用 announcer.event.LowHealth。
+  Enemy: 敌方
+  Ally: 友方
+  Self: 自身
+  General: 通用
+  SelfOnly: 仅自身
+  LowHealth: 生命值过低
+  AllyLowHealth: 友方生命值过低
+  CloseRange: 近距离
   # region
   Noxus: 诺克萨斯
   Demacia: 德玛西亚

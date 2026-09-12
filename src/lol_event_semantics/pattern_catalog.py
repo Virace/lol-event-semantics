@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
@@ -20,6 +21,7 @@ POLICY_SCHEMA_VERSION = "translation-pattern-policy.v1"
 SIGNATURE_SCHEMA_VERSION = "pattern-signature.v1"
 PATTERN_ID_PREFIX = "pattern-v1-"
 UNTRUSTED_CONFIDENCE = {"low", "failed", "unknown"}
+SPELL_CONTEXT_TAIL = re.compile(r"_(?:cast|hit)[23]D(?P<context>[A-Za-z].*)$", re.IGNORECASE)
 PARAMETERIZED_ENTITY_ROLES = {
     "augment",
     "champion",
@@ -410,6 +412,30 @@ def pattern_id_for_signature(signature: Mapping[str, Any]) -> str:
     return f"{PATTERN_ID_PREFIX}{digest}"
 
 
+def missing_spell_context(record: Mapping[str, Any]) -> bool:
+    """独立检查技能阶段后的目标或条件是否被解释层遗漏。
+
+    原名是证据来源，不能只信任已被错误清空的未知计数。与主体完全一致的
+    皮肤尾部允许作为已有上下文省略，其他字母尾部必须保留专门语义角色。
+    """
+
+    translation = record.get("translation")
+    if not isinstance(translation, dict) or translation.get("frame_type") != "ability_cast_event":
+        return False
+    match = SPELL_CONTEXT_TAIL.search(str(record.get("raw_event_name") or ""))
+    if match is None:
+        return False
+    arguments = translation.get("arguments")
+    if not isinstance(arguments, dict):
+        return True
+    tail = match["context"]
+    skin = arguments.get("skin")
+    if isinstance(skin, dict) and tail.casefold() == str(skin.get("token") or "").casefold():
+        return False
+    context = arguments.get("spell_context")
+    return not isinstance(context, dict)
+
+
 def build_pattern_report(records: Iterable[Mapping[str, Any]], policy: PatternPolicy) -> dict[str, Any]:
     """按 canonical signature 聚合 normalized 记录并生成报告。
 
@@ -633,6 +659,9 @@ def _assess_record(record: Mapping[str, Any], policy: PatternPolicy) -> RecordAs
     if not isinstance(arguments, dict):
         arguments = {}
         blockers.append("missing_arguments")
+
+    if missing_spell_context(record):
+        blockers.append("missing_spell_context")
 
     required_roles = FRAME_REGISTRY[frame_type].required_roles if frame_type in FRAME_REGISTRY else ()
     for role in required_roles:

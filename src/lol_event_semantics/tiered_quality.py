@@ -13,6 +13,7 @@ from typing import Any, Iterable, Mapping
 from .identity_migration import build_identity_report, load_identity_rows, match_identities
 from .normalized_translation_model import FRAME_REGISTRY, RenderOptions
 from .normalized_translation_renderer import render_translation
+from .pattern_catalog import missing_spell_context
 
 __all__ = [
     "GATE_VERSION",
@@ -357,6 +358,8 @@ def _stable_violations(row: Mapping[str, Any], pattern: Mapping[str, Any] | None
         # 单字母槽位前缀后仍有未解释残片时，不能把普通词首字母伪造成技能键。
         # 只阻断这条已证实的错误路径；其他 medium 记录继续在 Review 摘要中可见。
         violations["unresolved_single_key_spell_residual"] += 1
+    if missing_spell_context(row):
+        violations["missing_spell_context"] += 1
     arguments = translation.get("arguments")
     if not isinstance(arguments, dict):
         violations["missing_arguments"] += 1

@@ -77,6 +77,18 @@ class TieredQualityTests(unittest.TestCase):
                 )
                 self.assertFalse(gate["passed"])
 
+    def test_stable_gate_rechecks_spell_target_loss(self) -> None:
+        """即使旧产物声明已接受，阶段尾部的对象遗漏仍阻断质量门禁。"""
+
+        rows, report, catalog, corpus = build_contract([ability_record()])
+        rows[0]["raw_event_name"] = "Play_vo_Annie_AnnieQ_cast3DEnemy"
+        corpus["entries"][0]["raw_event_name"] = rows[0]["raw_event_name"]
+
+        summary = build_test_quality_summary(rows, report, catalog, corpus)
+
+        self.assertEqual(summary["status"], "failed")
+        self.assertIn("missing_spell_context", summary["stable"]["violation_counts"])
+
     def test_experimental_problem_is_observed_but_does_not_block_stable(self) -> None:
         approved = ability_record()
         experimental = voice_record("Play_vo_Annie_Move")

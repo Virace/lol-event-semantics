@@ -167,6 +167,41 @@ class PatternCatalogTests(unittest.TestCase):
 
         self.assertNotEqual(pattern_id_for_signature(move), pattern_id_for_signature(attack))
 
+    def test_spell_target_cannot_disappear_into_an_approved_pattern(self) -> None:
+        """原名中的技能对象未进入解释时，既有模式批准也不能放行。"""
+
+        record = ability_record()
+        record["raw_event_name"] = "Play_vo_Annie_AnnieQ_cast3DEnemy"
+        pattern_id = pattern_id_for_signature(canonical_pattern_signature(record, self.policy))
+        policy = replace(
+            self.policy,
+            promotion_decisions=replace(self.policy.promotion_decisions, approved_pattern_ids=frozenset({pattern_id})),
+        )
+
+        pattern = build_pattern_report([record], policy)["patterns"][0]
+
+        self.assertEqual(pattern["support_level"], "experimental")
+        self.assertEqual(pattern["blocking_reasons"]["missing_spell_context"], 1)
+
+    def test_spell_context_creates_a_new_review_target(self) -> None:
+        """补齐条件改变模式身份，不能继承无条件技能的旧批准。"""
+
+        original = ability_record()
+        original_id = pattern_id_for_signature(canonical_pattern_signature(original, self.policy))
+        policy = replace(
+            self.policy,
+            promotion_decisions=replace(self.policy.promotion_decisions, approved_pattern_ids=frozenset({original_id})),
+        )
+        record = ability_record()
+        record["raw_event_name"] = "Play_vo_Annie_AnnieQ_cast3DEnemy"
+        record["translation"]["arguments"]["spell_context"] = argument("spell_context", "enemy", "敌方")
+
+        pattern = build_pattern_report([record], policy)["patterns"][0]
+
+        self.assertNotEqual(pattern["pattern_id"], original_id)
+        self.assertEqual(pattern["support_level"], "experimental")
+        self.assertNotIn("missing_spell_context", pattern["blocking_reasons"])
+
     def test_input_order_does_not_change_report(self) -> None:
         """记录输入顺序不影响 pattern 顺序、计数或代表样例。"""
 

@@ -2,6 +2,8 @@
 
 完整 `normalized/` 保留源证据、语义 frame、兼容字段和审计能力；网页或软件无需附带这份完整审计数据。`build_consumption.py` 从一份已校验内容身份的本地 normalized 生成独立消费包。
 
+面向使用者的状态名称以 [`状态术语`](docs/TERMINOLOGY.md) 为准：例如“稳定支持”“已生成”“已接受”“本地已批准”。下文保留的英文枚举是兼容的程序协议值，不应直接用作界面标签。
+
 ## 选择用途
 
 | Profile | 使用方式 | 内容 |
@@ -10,7 +12,7 @@
 | `software` | 软件一次导入或逐行读取 | `events.jsonl`，具名字段、触发解释、完整主体文案、record/event 身份和状态 |
 | `lookup` | 简单工具读取单个 JSON | `lookup.json`，事件原名到词条 ID 和记录上下文的索引；同名始终保留多候选 |
 
-默认生成全部三种 profile，保留全部支持级别和资产类型。可以显式选择用途、VO/SFX、Stable 或特定实体；筛选条件和结果计数写入 manifest。
+默认生成全部三种 profile，保留全部支持级别和资产类型。可以显式选择用途、VO/SFX、稳定支持或特定实体；筛选条件和结果计数写入 manifest。
 
 ```powershell
 # 从明确的本地 candidate 构建；输出目录必须尚不存在
@@ -62,7 +64,7 @@ uv run python scripts/validate_consumption.py `
 
 `label`、`state` 是所在文件内的数组索引，不是跨导出永久 ID。`skin` 是有结构化主体证据的皮肤编号，缺失为 null；`source_index` 是原 `normalized-events.jsonl` 的一基行号，与源 content digest 共同定位完整审计记录。同一个原名可以对应多条记录，消费者不得直接覆盖为单值。
 
-`state_columns` 顺序为 `asset_kind, support_level, render_status, review_status, label_basis`。`rendered` 只代表正式渲染器已生成文案，不代表 Stable 或人工批准；Experimental、fallback、missing 和 preview 都保持显式。
+`state_columns` 顺序为 `asset_kind, support_level, render_status, review_status, label_basis`。“已生成”只代表正式生成器已产生文案，不代表稳定支持或人工批准；试验支持、回退显示、缺少解释和预览文案都保持显式。
 
 | 标志位 | 含义 |
 | --- | --- |
@@ -73,7 +75,9 @@ uv run python scripts/validate_consumption.py `
 | 16 | 存在归属、渲染或解释缺口，需要审阅 |
 | 32 | 逻辑实体尚未确认 |
 
-标志可以按位组合，数值定义同时写入 manifest。支持级别单独读取，不能用某个标志推导 Stable。
+标志可以按位组合，数值定义同时写入 manifest。支持级别单独读取，不能用某个标志推导稳定支持。
+
+待审阅标志还覆盖源记录的未知片段、诊断、警告、低可信证据和参数回退。即使中文已生成，这些缺口仍须保留；试验支持或模式待审阅本身不触发该标志。技能尾部的对象和条件属于触发解释，不能当作重复主体省略。
 
 `web/manifest.json` 只列实体分片与文件摘要，不附带全量事件。已知实体时直接加载对应片；只知道事件名时先按 UTF-8 SHA-256 前两个十六进制字符加载 `routes/<bucket>.json`，再加载命中的实体片。不要预取所有分片。
 
@@ -93,7 +97,7 @@ if (result.status === "FOUND") {
 
 每个包 manifest 保留源 `dataset_id/content_digest`、筛选器、记录数、公共投影摘要、文件 SHA-256 和确定性 `package_id`。不同包可独立校验；修改或增加文件、错配路由、越界词条、重复源定位均应失败。
 
-每个 profile 附带只依赖 Python 标准库的 `consumer.py`，其 `--help` 给出独立查询用法。`validate_consumption.py --normalized-root ...` 进一步证明导出符合当前源投影。两者不授予 dataset approval。
+每个 profile 附带只依赖 Python 标准库的 `consumer.py`，其 `--help` 给出独立查询用法。`validate_consumption.py --normalized-root ...` 进一步证明导出符合当前源投影。两者不授予数据集批准。
 
 可以用 `python -I -B consumer.py PROFILE_DIR EVENT_NAME` 在未安装本项目的环境中查询。作为模块导入时也使用 `-B` 或设置 `PYTHONDONTWRITEBYTECODE=1`，避免在封闭消费目录内生成 `__pycache__`，导致完整性检查因额外文件失败。
 

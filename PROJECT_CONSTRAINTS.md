@@ -24,18 +24,18 @@
   `.staging`、`failed`、未批准 `completed` 与旧 `dist/normalized/` 都只能显式用于维护诊断。
   translation schema、frame type、字段和路径变化属于消费者 contract 变更。
 - `raw_event_name` 必须保留原值但不是公开唯一键；`record_id` 由版本化 canonical tuple 确定，至少包含 raw、来源域/资产和最终 owner，不得包含本机绝对路径、输入顺序、随机数或生成时间。真实 identity 冲突必须 fail-closed 或用可解释来源身份消歧。
-- `event_id` 是 additive 连续身份，由 raw 和逻辑 owner 生成；补充来源不改变它，实体纠正仍须显式迁移。同名多 owner 不合并，歧义不能绕过 Stable 降级门禁。
+- `event_id` 是 additive 连续身份，由 raw 和逻辑 owner 生成；补充来源不改变它，实体纠正仍须显式迁移。同名多 owner 不合并，歧义不能绕过稳定支持降级门禁。
 - `entity.attribution` 区分来源容器、精确 reference、装备数字 ID、显式地图、公共系统及未确认依据；cue 或动作 token 不能独立证明实体。模式实体与基础英雄的关联必须显式保留。
-- web/software/lookup 是从审计 normalized 派生的独立消费包，manifest 必须绑定源身份、范围和逐文件摘要。网页可省略已有主体上下文显示名称，但不得删除触发条件、原名、支持状态或审计定位；不能把 rendered/preview 冒充 Stable。
+- web/software/lookup 是从审计 normalized 派生的独立消费包，manifest 必须绑定源身份、范围和逐文件摘要。网页可省略已有主体上下文显示名称，但不得删除触发条件、原名、支持状态或审计定位；不能把已生成文案或预览文案冒充稳定支持。
 - `zh_CN` 是正式渲染 locale；其他 locale、回退与来源信息必须以结构化 translation 数据表达，不得以兼容 `display` 预览替代正式渲染 contract。
-- VO 是优先支持对象；SFX 必须保留并按 Stable、Experimental、Unsupported 表达支持状态，不能因未稳定而静默丢弃。
-- Pattern Catalog 只能从 semantic frame 派生，不能以 `BaseName,Label` 等字符串对作为主模型。只有同时命中已审 selector、精确 canonical pattern ID 且通过 Stable 绝对门禁的记录可标记 Stable；任何新 ID 默认回到 Experimental/pending。Stable 质量门禁不读取趋势 baseline，并独立冻结已批准 decision、pattern ID 集合与记录总数，不能靠协调缩减 policy/corpus 洗绿。任何 support level 新增、移除、晋级或降级都必须进入结构化 diff；Stable 降级额外阻断自动门禁。accepted corpus 与最终 approved-local promotion 仍分别受精确断言和人工 Review 约束。
+- VO 是优先支持对象；SFX 必须保留并按稳定支持、试验支持、暂不支持表达支持状态，不能因未稳定而静默丢弃。
+- Pattern Catalog 只能从 semantic frame 派生，不能以 `BaseName,Label` 等字符串对作为主模型。只有同时命中已审 selector、精确 canonical pattern ID 且通过稳定支持绝对门禁的记录可标记稳定支持；任何新 ID 默认回到试验支持／待审阅。稳定支持质量门禁不读取趋势 baseline，并独立冻结已批准 decision、pattern ID 集合与记录总数，不能靠协调缩减 policy/corpus 洗绿。任何 support level 新增、移除、晋级或降级都必须进入结构化 diff；稳定支持降级额外阻断自动门禁。已接受样本集与最终 approved-local promotion 仍分别受精确断言和人工审阅约束。
 - YAML/JSON/JSONL 等文本资产必须保持可审阅、确定性和 UTF-8 编码。
 - normalized 内容身份不得包含时间、耗时、绝对路径、输入遍历顺序或随机值；dirty 工作树可生成
-  本地候选，但不得进入 approved/published 状态。
+  本地候选，但不得进入已批准或已发布状态。
 - completed run 不得原地覆盖或修改；promotion 必须校验 payload/report 摘要、clean generator、
   正式门禁 attestation；等待人工审核的候选还必须验证与 dataset/content digest 绑定的最终批准决定，
-  并在锁内用 expected previous digest 做 CAS 后原子替换小型 pointer。源审阅决定与 accepted corpus
+  并在锁内用 expected previous digest 做 CAS 后原子替换小型 pointer。源审阅决定与已接受样本集
   必须作为同一事务更新，任一拒绝、修改要求、stale target 或写入失败都不得留下部分状态。
 
 ## 安全与隐私
@@ -49,7 +49,7 @@
 ## 运行与部署环境
 
 - 项目是脚本、CLI 和离线数据流水线，不部署常驻应用服务或数据库；可部署由仓库生成、无后端且不写回数据的只读静态 Demo。
-- GitHub Actions 只保留手动 raw/reference 更新与静态 Demo 部署，不为每次 push/PR 运行重复 test job；提交或交付门禁仍须在本地执行。当前更新 workflow 只接受 frozen V1 16.16，未来 live 版本须先增加版本化 profile/来源合同。成功结果以 `candidate-dataset` artifact 交付，失败结果只能以 `failed-run-diagnostics` 交付；二者都保留本轮来源清单、隔离 run 身份与 Review 报告，不得自动视为 approved 或远端稳定发布。`dist/` 不入 Git。
+- GitHub Actions 只保留手动 raw/reference 更新与静态 Demo 部署，不为每次 push/PR 运行重复 test job；提交或交付门禁仍须在本地执行。当前更新 workflow 只接受 frozen V1 16.16，未来 live 版本须先增加版本化 profile/来源合同。成功结果以 `candidate-dataset` artifact 交付，失败结果只能以 `failed-run-diagnostics` 交付；二者都保留本轮来源清单、隔离 run 身份与 Review 报告，不得自动视为已批准或远端稳定发布。`dist/` 不入 Git。
 - 真实 GAME manifest/CDN、本地游戏安装和在线数据源属于可选集成环境，不得成为默认离线测试前提。
 
 ## 禁止事项

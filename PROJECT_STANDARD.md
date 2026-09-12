@@ -69,6 +69,7 @@ uv run python scripts/run_full_refresh.py
 - 新增或修改的函数必须有以中文为主的 Google-style docstring，并符合 PEP 257 的结构；短小函数可以只有一句摘要，有参数、返回值、异常或重要副作用时写相应章节。
 - 注释解释不可从代码直接看出的意图、不变量、来源优先级、兼容约束或 workaround；不逐行复述实现、不记录修改过程、不保留失效注释。
 - `raw_event_name`、translation schema 字段和 normalized 路径属于消费者可见契约，命名变化必须先明确兼容方案并同步文档与测试。
+- 面向使用者的状态标签和日常说明使用 `docs/TERMINOLOGY.md` 中的中文术语；支持级别、中文生成、模式审阅和整个数据集批准分别表达。程序枚举、事件原名与审计标识保持兼容，不直接作为界面状态标签。
 
 ## 5. 错误与日志
 

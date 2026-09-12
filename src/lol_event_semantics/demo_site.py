@@ -27,6 +27,7 @@ from .dataset_identity import (
     sha256_file,
 )
 from .normalized_lookup import iter_normalized_rows
+from .dataset_runs import read_approved_pointer, resolve_approved_dataset
 
 __all__ = ["DemoBuildSummary", "DemoSiteError", "build_demo_site"]
 
@@ -178,6 +179,7 @@ def build_demo_site(
         content_digest=content_digest,
     )
     validation_digest = sha256_file(validation_json)
+    dataset_status = _dataset_status(normalized_root, manifest)
     generator_digest = paths_digest(
         Path(__file__).parent,
         [
@@ -194,6 +196,7 @@ def build_demo_site(
                     "validation": validation_digest,
                     "schema": DEMO_SCHEMA_VERSION,
                     "generator": generator_digest,
+                    "status": dataset_status,
                 }
             )
         ).hexdigest()[:20]
@@ -290,10 +293,11 @@ def build_demo_site(
             "data_dragon_version": version,
             "validation_digest": validation_digest,
             "generator_digest": generator_digest,
+            "status": dataset_status,
         },
         "status_policy": {
-            "determined": "中文已生成且没有记录警告、校验问题或归属问题；不代表 Stable 或人工批准。",
-            "feedback": "含归属、渲染或校验问题，需要进一步反馈。",
+            "determined": "中文已生成且没有记录警告、校验问题或归属问题；支持级别、模式审阅与数据集批准仍需分别查看。",
+            "feedback": "含归属、中文生成或校验问题，需要进一步反馈。",
         },
         "counts": {"source_records": total, "feedback_records": feedback_count, **dict(category_counts)},
         "categories": [
@@ -357,6 +361,21 @@ def _load_entity_names(reference_root: Path) -> dict[str, str]:
     return names
 
 
+def _dataset_status(normalized_root: Path, manifest: Mapping[str, Any]) -> str:
+    """仅在本地批准指针通过身份复核后显示已批准；检查失败的产物仅供诊断。"""
+
+    if _mapping(manifest.get("content_identity")).get("quality_status") == "failed":
+        return "checks_failed"
+    completed_root = normalized_root.parent.parent
+    if completed_root.name == "completed":
+        runs_root = completed_root.parent
+        pointer = read_approved_pointer(runs_root, required=False)
+        if pointer and pointer.get("run_id") == normalized_root.parent.name:
+            if resolve_approved_dataset(runs_root) == normalized_root:
+                return "approved_local"
+    return "candidate"
+
+
 def _entity_profile(
     entity: Mapping[str, Any],
     champions: Mapping[str, ChampionReference],
@@ -390,6 +409,8 @@ def _entity_profile(
         )
     if kind == "map":
         reference = maps.by_alias.get(alias.casefold())
+        if reference is None and alias.isdigit():
+            reference = maps.by_id.get(int(alias))
         if reference is None and alias.casefold().startswith("map") and alias[3:].isdigit():
             reference = maps.by_id.get(int(alias[3:]))
         if reference:

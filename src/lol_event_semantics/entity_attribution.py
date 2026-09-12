@@ -12,7 +12,8 @@ from .normalized_translation_model import TranslationBuildContext
 from .rules import rule_key
 
 SOURCE_PATTERN = re.compile(r"(?:^|[/\\])(champions|maps)[/\\]([0-9]+)\.txt$", re.IGNORECASE)
-ITEM_PATTERN = re.compile(r"^(\d+)(?:[A-Za-z][A-Za-z0-9]*)?$")
+# 2v2 等对局规格不是装备编号；装备状态尾缀则同时存在 Cast 和 cast 两种大小写。
+ITEM_PATTERN = re.compile(r"^(?![0-9]+[vV][0-9])(?:Item)?([0-9]+)(?:[A-Za-z][A-Za-z0-9]*)?$")
 SKIN_PATTERN = re.compile(r"^([A-Za-z][A-Za-z0-9]*?)skin[0-9]+[A-Za-z0-9]*$", re.IGNORECASE)
 
 
@@ -124,7 +125,8 @@ def resolve_entity(record: EventDecompositionRecord, context: AttributionContext
     numeric = ITEM_PATTERN.fullmatch(numeric_alias)
     if numeric is not None:
         item_id = int(numeric[1])
-        evidence.append({"source": "raw_owner_numeric_prefix", "value": str(item_id)})
+        source = "raw_owner_item_prefix" if numeric_alias.startswith("Item") else "raw_owner_numeric_prefix"
+        evidence.append({"source": source, "value": str(item_id)})
         if item_id in reference.reference_item_names:
             evidence.append({"source": "reference_item_id", "value": str(item_id)})
             return result("item", str(item_id), "reference_item_id")

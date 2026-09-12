@@ -55,6 +55,8 @@ def render_translation(
     # 统一置于句首，避免 Ruby/OdysseyAugments 等前缀在渲染阶段再次丢失。
     if "context" in arguments and "context" not in template_roles:
         template_roles = ("context", *template_roles)
+    if "spell_context" in arguments and "spell_context" not in template_roles:
+        template_roles = (*template_roles, "spell_context")
 
     role_texts: list[tuple[str, str]] = []
     used_roles: list[str] = []
@@ -268,8 +270,8 @@ def join_zh_cn(role_texts: list[tuple[str, str]]) -> str:
     previous_text = ""
     for role, text in role_texts:
         current_text = strip_repeated_champion_from_skin(text, previous_text) if role == "skin" else text
-        if role == "companion":
-            # 批次6c：同行英雄条件统一全角括号后缀（「跳舞语音（霞在场）」）。
+        if role in {"companion", "spell_context"}:
+            # 同行英雄和技能对象／条件统一用括号后缀，保留触发语境。
             current_text = f"（{current_text}）"
         if not output:
             output = current_text

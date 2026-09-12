@@ -208,6 +208,23 @@ class NormalizedContractTests(unittest.TestCase):
         self.assertEqual(normalized_asset_kind("Set_Switch_aggro_off"), "control")
         self.assertEqual(normalized_asset_kind("Play_mus_Map11_Theme"), "unknown")
 
+    def test_public_catalog_retains_dynamic_spell_context(self) -> None:
+        """公开模式说明必须与正式渲染保留相同的条件角色。"""
+
+        row = minimal_normalized_row()
+        row["translation"]["arguments"]["spell_context"] = {
+            "role": "spell_context",
+            "key": "enemy",
+            "labels": {"zh_CN": "敌方", "en_US": "Enemy"},
+            "confidence": "high",
+            "fallback": False,
+        }
+        report = apply_normalized_contract([row], self.policy)
+        pattern = build_public_pattern_catalog(report, self.policy)["patterns"][0]
+
+        self.assertIn("spell_context", pattern["optional_roles"])
+        self.assertTrue(pattern["zh_CN_template"]["main"].endswith("{spell_context}"))
+
 
 def minimal_normalized_row() -> dict[str, object]:
     """构造满足 voice_event 结构门禁的最小兼容 normalized 行。"""

@@ -117,8 +117,37 @@ def test_missing_translation_keeps_preview_status_without_invention() -> None:
     assert result["state"][-1] == "preview"
 
 
+@pytest.mark.parametrize(
+    "path,value",
+    [
+        (("quality", "unknown_count"), 1),
+        (("quality", "diagnostics"), ["unresolved_counterpart"]),
+        (("warnings",), ["unresolved_counterpart"]),
+        (("semantic", "confidence"), "low"),
+        (("semantic", "confidence"), "failed"),
+        (("semantic", "slots", "low_trust_rule"), "unverified_effect"),
+        (("translation", "frame_confidence"), "low"),
+        (("translation", "arguments", "phase", "confidence"), "unknown"),
+        (("translation", "arguments", "phase", "fallback"), True),
+        (("entity", "attribution", "confidence"), "low"),
+    ],
+)
+def test_rendered_label_keeps_source_review_signals(path: tuple[str, ...], value: object) -> None:
+    """正式中文仍有审计或低证据缺口时，消费记录必须保留待审阅标志。"""
+
+    source = example()
+    field = source
+    for key in path[:-1]:
+        field = field.setdefault(key, {})
+    field[path[-1]] = value
+    projected = project_record(source, 1)
+    assert projected["label"] == "特殊模式 Q技能释放"
+    assert projected["flags"] & FLAGS["needs_review"]
+    assert projected["state"] == ["vo", "experimental", "rendered", "pending", "translation"]
+
+
 def test_all_profiles_round_trip_without_overwriting_same_raw(tmp_path: Path) -> None:
-    """三种格式均保留同名不同实体、状态、空文案和原始定位。"""
+    """三种格式均保留多候选、空文案、审阅缺口和原始定位。"""
 
     first = example()
     other = copy.deepcopy(first)
@@ -126,16 +155,20 @@ def test_all_profiles_round_trip_without_overwriting_same_raw(tmp_path: Path) ->
     missing = example("NoExplanation")
     missing.pop("translation")
     missing["render_status"] = "missing"
+    unresolved = example("UnknownFragment")
+    unresolved["quality"] = {"unknown_count": 1, "diagnostics": []}
     source = tmp_path / "source"
-    write_source(source, [first, other, missing])
+    write_source(source, [first, other, missing, unresolved])
     result = build_consumption(source, tmp_path / "out")
-    assert result["record_count"] == 3
+    assert result["record_count"] == 4
     for product in result["products"]:
         root = tmp_path / "out" / product["profile"]
-        assert validate_consumption(root, source)["record_count"] == 3
+        assert validate_consumption(root, source)["record_count"] == 4
         rows = read_package_records(root, verify_package(root))
         assert sum(row["raw_event_name"] == first["raw_event_name"] for row in rows) == 2
         assert next(row for row in rows if row["raw_event_name"] == "NoExplanation")["label"] is None
+        reviewed = next(row for row in rows if row["raw_event_name"] == "UnknownFragment")
+        assert reviewed["flags"] & FLAGS["needs_review"]
 
 
 def test_filters_are_explicit_and_empty_selection_is_valid(tmp_path: Path) -> None:

@@ -20,11 +20,11 @@
   使“相同干净 commit + 相同输入”成为可验证事实，而不是依赖生成时间或目录名。
 - 隔离每次生成运行；失败只保留诊断，成功候选只有通过正式门禁与 Review 后才以原子
   approved-local 指针进入默认消费路径。
-- 以 VO 为优先解释和展示对象，同时保留 SFX；SFX 的支持状态明确区分 Stable、Experimental 与 Unsupported。
+- 以 VO 为优先解释和展示对象，同时保留 SFX；SFX 的支持状态明确区分稳定支持、试验支持与暂不支持。
 - 将 `zh_CN` 作为正式渲染 locale，并保留结构化多语言信息和回退审计。
 - 从 semantic frame 派生只读 Pattern Catalog，供维护者发现可复用的翻译模式候选，而不把候选直接提升为稳定 contract。
 - 校验生成物的一致性，输出质量指标、审计报告和本地 review site。
-- 从显式 candidate 或 approved-local 数据生成实体与语义状态正交的只读静态演示站：英雄、装备、地图、模式实体、公共系统和未知分类共用记录组件；已确定/待反馈是独立筛选，不改变批准状态。
+- 从显式候选或 approved-local 数据生成实体与语义状态正交的只读静态演示站：英雄、装备、地图、模式实体、公共系统和未知分类共用记录组件；已确定/待反馈是独立筛选，不改变批准状态。
 - 在完整审计 normalized 下派生网页惰性分片、软件 JSONL 和单文件查询包；核心是事件原名对应中文触发解释，按明确规则省略主体英雄/皮肤上下文，保留触发条件和支持/渲染状态。不同格式可逐条复核为同一公共投影，使用方式见 `CONSUMPTION.md`。
 - 逻辑实体具有来源归属证据；模式源实体通过显式关系关联基础英雄。record_id 表示审计快照身份，event_id 在补充来源时保持稳定，实体修正通过一对一证据迁移报告衔接。
 - 通过本地脚本与 GitHub Actions 更新 raw/reference 并执行质量棘轮。
@@ -46,5 +46,5 @@
 - 结构化 translation 输出通过 frame、必需角色、locale 回退和 renderer contract 测试。
 - 更新链对差集、版本与失败具有可审计报告，不因中途失败留下部分写入状态。
 - `16.16` 仅是本轮冻结验收 profile，不是长期固定的“最新版本”默认值。
-- Pattern Catalog 只把 exact approved 且通过正式绝对门禁的 pattern 标记为 Stable；`scope_status` 与 `review_status` 分别记录已批准、待精确审阅或暂缓的产品决定。Stable support 是 candidate 内的产品能力声明，不等于 approved-local：后者仍必须完成用户 Review 与 promotion。未来新增的同 family pattern 默认回到 Experimental/pending，不能继承历史批准。
+- Pattern Catalog 只把精确审阅已接受且通过正式绝对门禁的 pattern 标记为稳定支持；`scope_status` 与 `review_status` 分别记录已批准、待精确审阅或暂缓的产品决定。稳定支持 是候选内的产品能力声明，不等于 approved-local：后者仍必须完成用户审阅与 promotion。未来新增的同 family pattern 默认回到试验支持／待审阅，不能继承历史批准。
 - 提交或交付前的本地门禁能在锁定依赖环境中完成静态检查、类型检查和离线测试；手动更新 workflow 复跑同组门禁，但普通 push/PR 不重复占用 test job。

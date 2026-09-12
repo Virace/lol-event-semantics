@@ -12,9 +12,11 @@ from lol_event_semantics.dataset_identity import (
     describe_payload_files,
     paths_digest,
     semantic_document_identity,
+    sha256_file,
 )
 from lol_event_semantics.reference_collection import read_yaml
 from lol_event_semantics.demo_site import DemoSiteError, build_demo_site
+from lol_event_semantics.dataset_runs import DatasetRunError
 from scripts.build_demo_site import main as build_demo_main
 
 
@@ -68,6 +70,124 @@ def test_demo_keeps_entity_assignment_and_feedback_orthogonal(tmp_path: Path) ->
         read_json(output_root / entry["data_path"])["dataset"]["demo_id"] == index["dataset"]["demo_id"]
         for entry in entries.values()
     )
+
+
+@pytest.mark.parametrize(
+    ("alias", "map_id", "reference_alias", "zh_name"),
+    [
+        ("11", 11, "SR", "召唤师峡谷"),
+        ("12", 12, "HA", "随机地图"),
+        ("21", 21, "NB", "极限闪击"),
+        ("30", 30, "TGR", "斗魂竞技场"),
+        ("33", 33, "Strawberry", "无尽狂潮"),
+        ("35", 35, "BDW", "班德尔之森"),
+        ("Map11", 11, "SR", "召唤师峡谷"),
+        ("SR", 11, "SR", "召唤师峡谷"),
+    ],
+)
+def test_demo_localizes_confirmed_map_entities(
+    tmp_path: Path, alias: str, map_id: int, reference_alias: str, zh_name: str
+) -> None:
+    """已确认地图的数字编号、技术别名与参考别名都使用本地中文名称。"""
+
+    normalized, validation, reference = write_demo_inputs(tmp_path)
+    path = normalized / "normalized-events.jsonl"
+    records = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+    record = next(row for row in records if row["entity"]["kind"] == "map")
+    raw = record["raw_event_name"]
+    record["entity"]["alias"] = alias
+    path.write_text("".join(json.dumps(row, ensure_ascii=False) + "\n" for row in records), encoding="utf-8")
+    write_map(reference, alias=reference_alias, map_id=map_id, en_name="Map", zh_name=zh_name)
+    seal_demo_inputs(normalized, reference)
+    output = tmp_path / "site"
+    build_demo_site(
+        normalized_root=normalized, validation_json=validation, reference_root=reference, output_root=output
+    )
+    index = read_json(output / "data/index.json")
+    entry = next(item for item in index["entities"] if item["kind"] == "map")
+    document = read_json(output / entry["data_path"])
+    assert entry["label"] == zh_name
+    assert document["entity"]["label"] == zh_name
+    assert document["entity"]["alias"] == alias
+    assert document["events"][0]["raw_event_name"] == raw
+    assert document["events"][0]["map"]["label"] == "通用 / 未指定"
+
+
+@pytest.mark.parametrize(("quality_status", "expected"), [("passed", "candidate"), ("failed", "checks_failed")])
+def test_demo_reports_dataset_quality_state(tmp_path: Path, quality_status: str, expected: str) -> None:
+    """检查失败的诊断产物不能因中文解释可用而显示为待审候选或已批准。"""
+
+    normalized, validation, reference = write_demo_inputs(tmp_path)
+    manifest = read_json(normalized / "manifest.json")
+    manifest["content_identity"]["quality_status"] = quality_status
+    write_json(normalized / "manifest.json", manifest)
+    seal_demo_inputs(normalized, reference)
+    output = tmp_path / "site"
+    build_demo_site(
+        normalized_root=normalized, validation_json=validation, reference_root=reference, output_root=output
+    )
+    index = read_json(output / "data/index.json")
+    assert index["dataset"]["status"] == expected
+
+
+def test_demo_binds_verified_approval_state_to_cache_identity(tmp_path: Path) -> None:
+    """仅身份闭包有效的批准指针改变展示状态，并使批准前后的分片缓存分离。"""
+
+    runs_root = tmp_path / "runs"
+    normalized, validation, reference = write_demo_inputs(runs_root / "completed")
+    manifest_path = normalized / "manifest.json"
+    manifest = read_json(manifest_path)
+    generator = {"commit": "a" * 40, "dirty": False}
+    manifest["content_identity"]["input_identity"]["generator_state"] = generator
+    manifest["content_digest"] = content_digest(manifest["content_identity"], manifest["files"])
+    write_json(manifest_path, manifest)
+    report = read_json(validation)
+    report["summary"]["content_digest"] = manifest["content_digest"]
+    write_json(validation, report)
+    write_json(validation.parent / "quality-metrics.json", {})
+    write_json(
+        normalized.parent / "completion.json",
+        {
+            "schema_version": 1,
+            "status": "completed",
+            "run_id": normalized.parent.name,
+            "dataset_id": manifest["dataset_id"],
+            "content_digest": manifest["content_digest"],
+            "normalized_manifest_sha256": sha256_file(manifest_path),
+            "generator_state": generator,
+            "quality_gate": "passed",
+            "reports": [
+                {"path": path.name, "bytes": path.stat().st_size, "sha256": sha256_file(path)}
+                for path in sorted(validation.parent.glob("*.json"))
+            ],
+        },
+    )
+    output = tmp_path / "site"
+    kwargs = dict(normalized_root=normalized, validation_json=validation, reference_root=reference, output_root=output)
+    build_demo_site(**kwargs)
+    candidate = read_json(output / "data/index.json")["dataset"]
+    assert candidate["status"] == "candidate"
+    write_json(
+        runs_root / "approved-local.json",
+        {
+            "schema_version": 1,
+            "status": "approved_local",
+            "run_id": normalized.parent.name,
+            "dataset_id": manifest["dataset_id"],
+            "content_digest": manifest["content_digest"],
+            "relative_dataset_path": f"completed/{normalized.parent.name}/normalized",
+        },
+    )
+    build_demo_site(**kwargs)
+    approved = read_json(output / "data/index.json")["dataset"]
+    assert approved["status"] == "approved_local"
+    assert approved["content_digest"] == candidate["content_digest"]
+    assert approved["demo_id"] != candidate["demo_id"]
+    pointer = read_json(runs_root / "approved-local.json")
+    pointer["content_digest"] = "0" * 64
+    write_json(runs_root / "approved-local.json", pointer)
+    with pytest.raises(DatasetRunError, match="身份不一致"):
+        build_demo_site(**kwargs)
 
 
 @pytest.mark.parametrize("with_record_id", [True, False])

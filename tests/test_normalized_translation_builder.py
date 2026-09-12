@@ -847,6 +847,52 @@ class SpellSfxNoPhaseTests(unittest.TestCase):
 class NormalizedTranslationBuilderAbilityCastTests(unittest.TestCase):
     """验证 ability_cast_event frame。"""
 
+    def test_spell_phase_tail_survives_reference_and_rendering(self) -> None:
+        """技能阶段尾部的关系、英雄和皮肤必须进入最终中文。"""
+
+        cases = [
+            ("Play_vo_Lulu_LuluW_cast3DEnemy", "Enemy", "敌方"),
+            ("Play_vo_Lulu_LuluW_cast3DAlly", "Ally", "友方"),
+            ("Play_vo_Lissandra_LissandraR_hit3DSelf", "Self", "自身"),
+            ("Play_vo_SylasSkin13_SylasR_hit3DQuinn", "Quinn", "奎因"),
+            ("Play_vo_Soraka_SorakaW_hit3DNidaleeSkin11", "NidaleeSkin11", "奈德丽"),
+            ("Play_vo_Briar_BriarR_cast2DSelfOnly", "SelfOnly", "仅自身"),
+            ("Play_vo_Tristana_TristanaW_cast3DLowHealth", "LowHealth", "生命值过低"),
+            ("Play_vo_Tristana_TristanaR_hit3DCloseRange", "CloseRange", "近距离"),
+            ("Play_vo_Lulu_LuluW_cast3DAllyLowHealth", "AllyLowHealth", "友方生命值过低"),
+            ("Play_vo_AhriSkin04_AhriE_cast3DSkin04", "Skin04", "阿狸"),
+        ]
+        for raw, token, label in cases:
+            with self.subTest(raw=raw):
+                record = enriched_record(raw)
+                translation = build_translation(record, reference_translation_context())
+                assert translation is not None
+                argument = translation["arguments"]["spell_context"]
+                self.assertEqual(argument["token"], token)
+                self.assertFalse(argument["fallback"])
+                self.assertFalse(any(unknown.location == "semantic_slots.spell_context" for unknown in record.unknowns))
+                if token == "Skin04":
+                    self.assertEqual(record.semantic_slots["spell_context"]["context_scope"], "speaker_skin")
+                display = build_compat_display(translation)
+                self.assertIn(label, display["zh_cn_short"])
+                self.assertIn(label, display["zh_cn_detail"])
+
+    def test_unknown_spell_phase_tail_stays_visible_and_diagnosed(self) -> None:
+        """无法解释的技能尾部仍显示原文并保留待核实证据。"""
+
+        cases = [
+            ("Play_vo_Lulu_LuluW_cast3DUnknownCondition", "UnknownCondition"),
+            ("Play_vo_AhriSkin04_AhriE_cast3DSkin05", "Skin05"),
+        ]
+        for raw, token in cases:
+            with self.subTest(raw=raw):
+                record = enriched_record(raw)
+                translation = build_translation(record, reference_translation_context())
+                assert translation is not None
+                self.assertTrue(any(unknown.raw == token for unknown in record.unknowns))
+                self.assertTrue(translation["arguments"]["spell_context"]["fallback"])
+                self.assertIn(token, build_compat_display(translation)["zh_cn_short"])
+
     def test_basic_spell_cast_builds_ability_cast_event(self) -> None:
         """普通技能施放构建 ability_cast_event，含槽位与相位角色。"""
 
@@ -1262,6 +1308,19 @@ class CounterpartArgumentResolutionTests(unittest.TestCase):
         args = translation["arguments"]
         self.assertIn("trigger", args)
         self.assertEqual(args["kill_method"]["labels"]["zh_CN"], "RActive")
+
+    def test_exact_ultimate_kill_method_uses_resolved_r_slot(self) -> None:
+        """精确 Ultimate 别名使用已解析的 R 键，原始 token 仍保留。"""
+
+        for tail in ("Ult", "Ultimate"):
+            with self.subTest(tail=tail):
+                record = enriched_record(f"Play_vo_Sylas_KillChampion3D{tail}")
+                translation = build_translation(record, reference_translation_context())
+                assert translation is not None
+                argument = translation["arguments"]["kill_method"]
+                self.assertEqual(argument["token"], tail)
+                self.assertEqual(argument["labels"]["zh_CN"], "R技能")
+                self.assertIn("R技能击杀语音", build_compat_display(translation)["zh_cn_detail"])
 
     def test_single_letter_kill_method_renders_spec_wording_in_detail_only(self) -> None:
         """QWER 单字母击杀键归一成功，kill_method argument 保留原始按键 token。"""

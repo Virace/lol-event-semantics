@@ -27,7 +27,7 @@
     <div class="app-shell" id="appShell" aria-busy="true">
       <aside class="sidebar" aria-label="数据浏览导航">
         <header class="brand">
-          <p class="eyebrow">PUBLIC DATA EXPLORER</p>
+          <p class="eyebrow">公开事件数据浏览</p>
           <h1>峡谷事件语义图鉴</h1>
           <p class="brand-en">Rift Event Atlas</p>
         </header>
@@ -45,11 +45,12 @@
             <select id="entityType"></select>
           </div>
         </div>
-        <p class="status-explanation" id="statusExplanation">已确定表示没有已知语义问题；支持度与人工审核状态单独展示。</p>
+        <p class="status-explanation" id="statusExplanation">已确定表示没有已知语义问题；支持级别、模式审阅与数据集批准分别展示。</p>
         <details class="dataset-disclosure" id="datasetDisclosure">
           <summary>数据概览 <span class="dataset-summary-inline" id="datasetSummaryInline">正在读取…</span></summary>
           <dl class="dataset-stats">
             <div><dt>版本</dt><dd id="datasetVersion">—</dd></div>
+            <div><dt>数据集状态</dt><dd id="datasetStatus">正在读取…</dd></div>
             <div><dt>事件</dt><dd id="totalCount">—</dd></div>
             <div><dt>待反馈</dt><dd id="feedbackCount">—</dd></div>
           </dl>
@@ -73,7 +74,7 @@
             </div>
             <dl class="champion-stats" aria-label="当前实体摘要">
               <div><dt>事件</dt><dd id="entityEventCount">—</dd></div>
-              <div><dt>Stable</dt><dd id="entityStableCount">—</dd></div>
+              <div><dt>稳定支持</dt><dd id="entityStableCount">—</dd></div>
               <div><dt>待反馈</dt><dd id="entityFeedbackCount">—</dd></div>
             </dl>
           </section>
@@ -85,11 +86,11 @@
             </section>
           </details>
           <section class="events-section" aria-labelledby="eventsHeading">
-            <div class="section-heading"><div><p class="eyebrow">RAW EVENT → ZH_CN</p><h2 id="eventsHeading">事件语义</h2></div><p id="resultsSummary"></p></div>
+            <div class="section-heading"><div><p class="eyebrow">事件原名 → 中文解释</p><h2 id="eventsHeading">事件语义</h2></div><p id="resultsSummary"></p></div>
             <form class="filters unified-filters" id="eventFilters" role="search">
-              <label class="wide-filter" for="eventSearch"><span>搜索事件</span><input id="eventSearch" type="search" autocomplete="off" placeholder="事件原名、中文或问题代码"></label>
+              <label class="wide-filter" for="eventSearch"><span>搜索事件</span><input id="eventSearch" type="search" autocomplete="off" placeholder="事件原名、中文或问题名称"></label>
               <label for="assetFilter"><span>事件类型</span><select id="assetFilter"></select></label>
-              <label for="supportFilter"><span>支持度</span><select id="supportFilter"></select></label>
+              <label for="supportFilter"><span>支持级别</span><select id="supportFilter"></select></label>
               <label for="modeFilter"><span>语义模式</span><select id="modeFilter"></select></label>
               <label for="mapFilter"><span>地图上下文</span><select id="mapFilter"></select></label>
               <label for="skinFilter"><span>皮肤上下文</span><select id="skinFilter"></select></label>
@@ -97,7 +98,7 @@
               <button class="secondary-button" id="resetFilters" type="button">重置筛选</button>
             </form>
             <div class="table-frame" tabindex="0" aria-label="事件结果，可横向滚动">
-              <table><thead><tr><th scope="col">事件原名 / 触发解释</th><th scope="col">类型 / 支持度</th><th scope="col">模式 / 皮肤</th><th scope="col">语义状态</th></tr></thead><tbody id="eventTableBody"></tbody></table>
+              <table><thead><tr><th scope="col">事件原名 / 触发解释</th><th scope="col">类型 / 支持级别</th><th scope="col">模式 / 皮肤</th><th scope="col">语义状态</th></tr></thead><tbody id="eventTableBody"></tbody></table>
               <div class="empty-state" id="emptyState" hidden><strong>没有匹配事件</strong><span>缩短关键词，或调整语义状态与筛选条件。</span></div>
             </div>
             <nav class="pagination" aria-label="事件分页">

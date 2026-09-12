@@ -117,6 +117,44 @@ class LogicalEntityTests(unittest.TestCase):
             self.assertEqual(entity["raw_alias"], f"6688{suffix}")
             self.assertEqual(entity["attribution"]["basis"], "unresolved")
 
+    def test_match_size_prefix_is_not_an_item_candidate(self) -> None:
+        """2v2 是对局规格；地图来源可归属，但数字 2 不能成为装备候选。"""
+
+        context = self.context()
+        context.reference_map_names = {30: "Arena"}
+        for owner in ("2v2RingOfFire", "2v2RingOfFireSFXMissile"):
+            for map_id, expected in ((30, ("map", "30")), (0, ("unknown", owner))):
+                with self.subTest(owner=owner, map_id=map_id):
+                    raw = f"Play_sfx_{owner}_OnMissileLaunch"
+                    record = normalize_semantics(
+                        decompose_event_name(raw, game_version="test", source_path=f"raw/events/maps/{map_id}.txt")
+                    )
+                    row = build_normalized_record(record, translation_context=context)
+                    entity = row["entity"]
+                    self.assertEqual(row["raw_event_name"], raw)
+                    self.assertEqual((entity["kind"], entity["alias"]), expected)
+                    self.assertNotIn("candidate", entity)
+
+    def test_item_prefix_requires_reference_and_map_does_not_confirm_unknown_item(self) -> None:
+        """显式 Item 编号仍须参考验证，地图容器不能确认未知装备的身份。"""
+
+        context = self.context()
+        context.reference_item_names = {2003: {"zh_CN": "生命药水"}}
+        context.reference_map_names = {30: "Arena"}
+        for owner, expected in (("Item2003", ("item", "2003")), ("6688Cast", ("unknown", "6688"))):
+            with self.subTest(owner=owner):
+                record = normalize_semantics(
+                    decompose_event_name(
+                        f"Play_sfx_{owner}_OnCast", game_version="test", source_path="raw/events/maps/30.txt"
+                    )
+                )
+                entity = build_normalized_record(record, translation_context=context)["entity"]
+                self.assertEqual((entity["kind"], entity["alias"]), expected)
+                if owner == "Item2003":
+                    self.assertEqual(entity["attribution"]["basis"], "reference_item_id")
+                else:
+                    self.assertEqual(entity["candidate"], {"kind": "item", "id": 6688})
+
     def test_competing_champion_sources_fail_closed(self) -> None:
         """同名记录的多个英雄来源互相冲突时保留全部证据。"""
 

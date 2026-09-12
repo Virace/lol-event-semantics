@@ -1567,7 +1567,51 @@ def fill_untrusted_spell_alias_slots(
     if owner_spell_hint is not None:
         record.semantic_slots["alias_residual"] = owner_spell_hint["residual"]
 
+    fill_spell_context(record)
     record.confidence = DecompositionConfidence.MEDIUM if owner_spell_hint is not None else DecompositionConfidence.LOW
+
+
+def fill_spell_context(record: EventDecompositionRecord) -> None:
+    """保存技能阶段后的对象或条件，不把皮肤条件直接解释成命中目标。"""
+
+    if "spell_context" in record.semantic_slots:
+        return
+    if record.profile.semantic_profile is not SemanticProfile.SPELL_EVENT and not record.semantic_slots.get(
+        "spell_key"
+    ):
+        return
+
+    tails = []
+    for atom in record.lexical_atoms:
+        match = re.fullmatch(r"(?:cast|hit)[23]D(?P<context>.+)", atom.raw, re.IGNORECASE)
+        if match is not None:
+            tails.append(match.group("context"))
+    if not tails:
+        return
+
+    raw = "_".join(tails)
+    conditions = {
+        "Enemy": {"relation": "enemy"},
+        "Ally": {"relation": "ally"},
+        "Self": {"relation": "self"},
+        "General": {"scope": "general"},
+        "SelfOnly": {"audience": "self_only"},
+        "LowHealth": {"health_state": "low"},
+        "AllyLowHealth": {"relation": "ally", "health_state": "low"},
+        "CloseRange": {"range": "close"},
+    }
+    if raw in conditions:
+        record.semantic_slots["spell_context"] = {
+            "raw": raw,
+            "kind": "spell_condition",
+            "key": raw.lower(),
+            "label": raw,
+            "source": "event_name_phase_tail",
+            **conditions[raw],
+        }
+    else:
+        record.semantic_slots["spell_context"] = unresolved_counterpart(raw)
+        add_ambiguous_entity(record, raw, "semantic_slots.spell_context")
 
 
 def fill_skin_recall_state_event(record: EventDecompositionRecord) -> bool:

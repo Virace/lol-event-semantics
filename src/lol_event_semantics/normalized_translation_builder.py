@@ -291,10 +291,6 @@ MODE_AUGMENT_TARGET_QUALIFIERS = {
     "player": ("自身", "self"),
     "others": ("其他玩家", "other players"),
 }
-MODE_AUGMENT_ABILITY_SEGMENT_PATTERN = re.compile(r"(?P<owner>[A-Z][A-Za-z0-9]*?)(?P<spell_key>[QWERP])$")
-MODE_AUGMENT_BORROWED_SPELL_PATTERN = re.compile(
-    r"(?P<owner>[A-Z][A-Za-z0-9]*?)(?P<spell_key>[QWERP])(?P<residual>[A-Z][A-Za-z0-9]+)"
-)
 # 系统/道具域标记不是模式名，模式前缀候选跳过不查 T3.4 词条表。
 MODE_AUGMENT_NON_MODE_MARKERS = frozenset({"augment", "item"})
 COMPONENT_CONTEXT_MODIFIER_PATTERN = re.compile(
@@ -354,6 +350,11 @@ def build_translation(
 
     attach_context_argument(translation, record)
     attach_playback_argument(translation, record)
+    spell_context = counterpart_argument(
+        record, active_context, labels=active_context.display_labels, slot_name="spell_context"
+    )
+    if spell_context is not None and isinstance(translation.get("arguments"), dict):
+        translation["arguments"]["spell_context"] = spell_context
     return translation
 
 
@@ -451,6 +452,11 @@ def build_translation_frame(
     if record.profile.primary_family == "contextual_action":
         return build_champion_action_event(record, context)
 
+    if isinstance(record.semantic_slots.get("borrowed_ability"), dict):
+        # 增益借用技能需要同时展示模式、增益与技能来源；普通技能 frame
+        # 无法承接这个主体关系，词表缺失时也不能回退为英雄本人施法。
+        return build_mode_augment_event(record, context)
+
     ability_sequence = build_champion_ability_sequence_event(record, context)
     if ability_sequence is not None:
         return ability_sequence
@@ -488,8 +494,7 @@ def build_translation_frame(
     if sfx_effect is not None:
         return sfx_effect
 
-    # 增益系分派必须在 ability builder 之后：借用英雄技能的增益记录
-    # （Oathsworn_KalistaRMis 等）由 ability frame 承接，不被增益 frame 抢占。
+    # 无借用技能的增益仍在通用英雄事件之后进入专用模式 frame。
     mode_augment = build_mode_augment_event(record, context)
     if mode_augment is not None:
         return mode_augment
@@ -3040,7 +3045,7 @@ def kill_method_spell_letter(kill_method: object) -> str | None:
         kill_method: kill_method 槽位值。
 
     Returns:
-        QWER 单字母；raw 非单字母（REmpowered/Ultimate/QW 等）时返回 None。
+        QWER 单字母或已解析为 R 的精确 Ult/Ultimate；其他修饰尾部返回 None。
     """
 
     if not isinstance(kill_method, dict):
@@ -3049,6 +3054,8 @@ def kill_method_spell_letter(kill_method: object) -> str | None:
     raw = string_or_none(kill_method.get("raw"))
     if raw is not None and raw.upper() in KILL_METHOD_SPELL_KEYS:
         return raw.upper()
+    if raw in {"Ult", "Ultimate"} and kill_method.get("kind") == "spell" and kill_method.get("spell_key") == "r":
+        return "R"
 
     return None
 
@@ -3074,6 +3081,7 @@ def counterpart_argument(
     context: TranslationBuildContext,
     *,
     labels: DisplayLabels | None = None,
+    slot_name: str = "counterpart",
 ) -> dict[str, object] | None:
     """构建 counterpart argument，按 SPEC 解析链取中文名。
 
@@ -3086,12 +3094,13 @@ def counterpart_argument(
         record: 拆解记录。
         context: translation 构建上下文。
         labels: 展示词表；为 None 时使用进程内缓存的默认词表（供测试注入替代词表）。
+        slot_name: 对象槽位及输出角色；技能尾部使用独立 spell_context。
 
     Returns:
         counterpart 参数；无 counterpart 或 kind=general（无特定对象）时返回 None。
     """
 
-    counterpart = record.semantic_slots.get("counterpart")
+    counterpart = record.semantic_slots.get(slot_name)
     if not isinstance(counterpart, dict) or not counterpart:
         return None
 
@@ -3112,7 +3121,11 @@ def counterpart_argument(
     fallback = False
     fallback_reason = None
 
-    if kind == "champion":
+    if slot_name == "spell_context" and kind == "spell_condition":
+        zh = counterpart_vocab_zh(key, english, labels=labels)
+        if zh is not None:
+            zh_source, confidence = "display_labels.counterpart", "high"
+    elif kind == "champion":
         entry = context.champion_label(alias or "")
         zh = string_or_none(entry.get("zh_CN")) if isinstance(entry, Mapping) else None
         if zh is not None:
@@ -3142,11 +3155,11 @@ def counterpart_argument(
 
     return argument_to_dict(
         TranslationArgument(
-            role="counterpart",
+            role=slot_name,
             labels={"zh_CN": zh or english, "en_US": english},
             confidence=confidence,
             provenance={
-                "source": "semantic_slots.counterpart",
+                "source": f"semantic_slots.{slot_name}",
                 "counterpart_kind": kind,
                 "counterpart_source": string_or_none(counterpart.get("source")),
                 "zh_source": zh_source,
@@ -3633,9 +3646,9 @@ def build_mode_augment_event(
     合法缺席。相位
     依次取既有 phase 映射、无相位 sfx 合成（cue 尾段相位词或整段音效）；
     已审 ``buff_cast`` 映射为释放，其他词表外相位维持 legacy 待考证。
-    借用英雄技能的同域记录通常由 ability builder 先接走；当增益名本身也
-    必须保留时，本 frame 追加 champion / ability_slot / qualifier 角色，
-    不再只显示英雄槽位而丢掉增益与听者目标。
+    借用英雄技能的记录追加 champion / ability_slot / ability_stage / ability_component /
+    qualifier 角色，组件词表缺失时保留原文与回退诊断，避免丢掉增益、
+    技能内部组件或听者目标。
 
     Args:
         record: 拆解记录。
@@ -3686,7 +3699,13 @@ def build_mode_augment_event(
             token=code,
         )
     )
-    champion, ability_slot, qualifier = mode_augment_borrowed_ability_arguments(record, context)
+    champion, ability_slot, component, qualifier = mode_augment_borrowed_ability_arguments(record, context)
+    borrowed = slots.get("borrowed_ability")
+    stage = (
+        ability_stage_argument(borrowed.get("stage"), source="semantic_slots.borrowed_ability.stage")
+        if isinstance(borrowed, dict)
+        else None
+    )
     return build_frame(
         record,
         "mode_augment_event",
@@ -3695,6 +3714,8 @@ def build_mode_augment_event(
             augment,
             champion,
             ability_slot,
+            stage,
+            component,
             qualifier,
             phase,
         ],
@@ -3704,32 +3725,59 @@ def build_mode_augment_event(
 def mode_augment_borrowed_ability_arguments(
     record: EventDecompositionRecord,
     context: TranslationBuildContext,
-) -> tuple[dict[str, object] | None, dict[str, object] | None, dict[str, object] | None]:
+) -> tuple[
+    dict[str, object] | None,
+    dict[str, object] | None,
+    dict[str, object] | None,
+    dict[str, object] | None,
+]:
     """解析增益 cue 中完整的借用英雄技能与听者目标。
 
-    只接受 ``Champion{QWERP}`` 精确段和 ``player|others`` 封闭目标词表；
-    普通增益的阶段段不会误命中。目标不存在时允许 qualifier 缺席，原始
-    cue_path 仍完整保留。
+    英雄与技能键必须由 reference 确认，技能后的内部组件独立保留；听者
+    目标只接受 ``player|others`` 封闭词表。缺少组件译名时显式回退。
     """
 
     cue_path = record.semantic_slots.get("cue_path")
-    if not isinstance(cue_path, list) or len(cue_path) < 3:
-        return None, None, None
-    spell_segment = cue_path[2]
-    if not isinstance(spell_segment, str):
-        return None, None, None
-    match = MODE_AUGMENT_ABILITY_SEGMENT_PATTERN.fullmatch(spell_segment)
-    if match is None:
-        return None, None, None
-
-    champion = champion_argument(record, context)
-    slot = ability_slot_argument(record.semantic_slots.get("spell_key"))
-    if champion is None or slot is None:
-        return None, None, None
-    if str(champion.get("alias") or "").lower() != match.group("owner").lower():
-        return None, None, None
-    if str(slot.get("key") or "").lower() != match.group("spell_key").lower():
-        return None, None, None
+    borrowed = record.semantic_slots.get("borrowed_ability")
+    if not isinstance(cue_path, list) or not isinstance(borrowed, dict):
+        return None, None, None, None
+    subject = borrowed.get("subject")
+    if not isinstance(subject, dict) or subject.get("kind") != "champion":
+        return None, None, None, None
+    alias = string_or_none(subject.get("alias"))
+    slot = ability_slot_argument(borrowed.get("spell_key"))
+    if alias is None or slot is None:
+        return None, None, None, None
+    entry = context.champion_label(alias)
+    champion = argument_to_dict(
+        TranslationArgument(
+            role="champion",
+            labels=locale_labels(entry, string_or_none(subject.get("label")) or alias),
+            confidence="high",
+            provenance={"source": "semantic_slots.borrowed_ability.subject", "kind": "borrowed_ability_source"},
+            alias=alias,
+            fallback=entry is None,
+            fallback_reason="missing_borrowed_champion_label" if entry is None else None,
+        )
+    )
+    slot["provenance"] = {"source": "semantic_slots.borrowed_ability.spell_key"}
+    component = None
+    residual = string_or_none(borrowed.get("residual"))
+    if residual:
+        component_key = rule_key(residual)
+        zh = get_display_labels().ability_component.get(component_key)
+        component = argument_to_dict(
+            TranslationArgument(
+                role="ability_component",
+                labels={"zh_CN": zh or residual, "en_US": residual},
+                confidence="medium" if zh is not None else "low",
+                provenance={"source": "semantic_slots.borrowed_ability.residual"},
+                key=component_key,
+                token=residual,
+                fallback=zh is None,
+                fallback_reason="untranslated_borrowed_component" if zh is None else None,
+            )
+        )
 
     qualifier = None
     for token in cue_path[3:]:
@@ -3750,7 +3798,7 @@ def mode_augment_borrowed_ability_arguments(
             )
         )
         break
-    return champion, slot, qualifier
+    return champion, slot, component, qualifier
 
 
 def mode_augment_cue(slots: Mapping[str, Any]) -> tuple[str, str] | None:
@@ -4128,43 +4176,7 @@ def resolved_spell_key_for_translation(record: EventDecompositionRecord) -> obje
             return None
         return hint
 
-    return mode_augment_spell_key_hint(record.semantic_slots)
-
-
-def mode_augment_spell_key_hint(slots: Mapping[str, Any]) -> str | None:
-    """从增益 Code 后的显式英雄技能段提取借用技能键位。
-
-    仅接受 owner 前缀、单字母槽位与大写开头的实质组件 residual 三段
-    连续出现的形态；普通 PascalCase 词（如 ``UltimateBackup``）不进入
-    ability frame。
-
-    Args:
-        slots: 拆解记录 semantic slots。
-
-    Returns:
-        小写技能键位；cue 结构或技能段不满足强边界时返回 None。
-    """
-
-    reference_entity = slots.get("reference_entity")
-    kind = reference_entity.get("kind") if isinstance(reference_entity, dict) else None
-    cue_path = slots.get("cue_path")
-    if (
-        kind not in MODE_AUGMENT_REFERENCE_KINDS
-        or mode_augment_cue(slots) is None
-        or not isinstance(cue_path, list)
-        or len(cue_path) < 3
-    ):
-        return None
-
-    spell_segment = cue_path[2]
-    if not isinstance(spell_segment, str):
-        return None
-
-    match = MODE_AUGMENT_BORROWED_SPELL_PATTERN.fullmatch(spell_segment)
-    if match is None:
-        return None
-
-    return match.group("spell_key").lower()
+    return None
 
 
 def ability_component_argument(

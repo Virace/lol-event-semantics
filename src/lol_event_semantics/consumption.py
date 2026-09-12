@@ -123,7 +123,12 @@ def project_record(row: Mapping[str, Any], source_index: int) -> dict[str, Any]:
     unresolved = kind == "unknown" or isinstance(attribution, dict) and attribution.get("basis") == "unresolved"
     if unresolved:
         flags |= FLAGS["unresolved_entity"]
-    if unresolved or row.get("render_status") not in {"rendered", "not_applicable"} or label_basis != "translation":
+    if (
+        unresolved
+        or row.get("render_status") not in {"rendered", "not_applicable"}
+        or label_basis != "translation"
+        or has_review_gap(row)
+    ):
         flags |= FLAGS["needs_review"]
     state = [str(row.get(key) or "unknown") for key in STATE_COLUMNS[:-1]] + [label_basis]
     return {
@@ -138,6 +143,47 @@ def project_record(row: Mapping[str, Any], source_index: int) -> dict[str, Any]:
         "record_id": row.get("record_id"),
         "event_id": row.get("event_id"),
     }
+
+
+def has_review_gap(row: Mapping[str, Any]) -> bool:
+    """保留源记录中的解释缺口；支持级别和人工审阅进度本身不代表缺口。"""
+
+    quality = row.get("quality")
+    if isinstance(quality, dict):
+        unknown_count = quality.get("unknown_count")
+        if isinstance(unknown_count, int) and unknown_count > 0:
+            return True
+        diagnostics = quality.get("diagnostics")
+        if isinstance(diagnostics, list) and diagnostics:
+            return True
+    warnings = row.get("warnings")
+    if isinstance(warnings, list) and warnings:
+        return True
+
+    low_confidence = {"low", "failed", "unknown"}
+    entity = row.get("entity")
+    attribution = entity.get("attribution") if isinstance(entity, dict) else None
+    if isinstance(attribution, dict) and attribution.get("confidence") in low_confidence:
+        return True
+    semantic = row.get("semantic")
+    if isinstance(semantic, dict):
+        if semantic.get("confidence") in low_confidence:
+            return True
+        slots = semantic.get("slots")
+        if isinstance(slots, dict) and "low_trust_rule" in slots:
+            return True
+    translation = row.get("translation")
+    if isinstance(translation, dict):
+        if translation.get("frame_confidence") in low_confidence:
+            return True
+        arguments = translation.get("arguments")
+        if isinstance(arguments, dict):
+            return any(
+                isinstance(argument, dict)
+                and (argument.get("confidence") in low_confidence or argument.get("fallback") is True)
+                for argument in arguments.values()
+            )
+    return False
 
 
 def common_record(row: Mapping[str, Any]) -> dict[str, Any]:

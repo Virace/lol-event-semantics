@@ -41,6 +41,8 @@ INJECTED_LABELS = DisplayLabels(
         "MadeUpAug": ("虚构增益", "Made Up Aug"),
         "ServeBeyondDeath": ("超越死亡的效劳", "Serve Beyond Death"),
         "Oathsworn": ("誓约者", "Oathsworn"),
+        "MidnightExpress": ("午夜快递", "Midnight Express"),
+        "HoldVeryStill": ("保持不动", "Hold Very Still"),
     },
 )
 GET_LABELS_TARGET = "lol_event_semantics.normalized_translation_builder.get_display_labels"
@@ -57,6 +59,52 @@ def enriched_record(raw_event_name: str):
 
 class ModeAugmentDispatchTests(unittest.TestCase):
     """验证增益系三家族记录的分派与角色齐备。"""
+
+    def test_borrowed_component_hit_keeps_mode_augment_and_champion(self) -> None:
+        """模式借用组件命中不能把模式 owner 当作英雄，且必须保留增益。"""
+
+        from reference_cache import translation_context
+
+        for prefix in ("Augment_ARAM", "Cherry_Augment"):
+            with self.subTest(prefix=prefix):
+                record = enriched_record(f"Play_sfx_{prefix}_MidnightExpress_ThreshWShield_hit")
+                translation = build_translation(record, translation_context())
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], "mode_augment_event")
+                args = translation["arguments"]
+                self.assertEqual(args["champion"]["alias"], "Thresh")
+                self.assertEqual(args["ability_slot"]["key"], "w")
+                self.assertEqual(args["augment"]["key"], "MidnightExpress")
+                self.assertIn("mode", args)
+                self.assertIn("锤石", render_translation(translation).text)
+                self.assertIn("午夜快递", render_translation(translation).text)
+
+    def test_unknown_borrowed_augment_cannot_fall_back_to_champion_cast(self) -> None:
+        """增益词表缺失时保留未支持状态，不回退为虚假的英雄施法。"""
+
+        record = enriched_record("Play_sfx_Augment_ARAM_UnverifiedAugment_ThreshWShield_hit")
+        self.assertIsNone(build_translation(record, TranslationBuildContext()))
+
+    def test_borrowed_spell_keeps_reference_resolved_stage(self) -> None:
+        """增益借用的技能分段沿用参考解析，不误作未知组件或丢弃。"""
+
+        from reference_cache import translation_context
+
+        for phase in ("OnBuffActivate", "OnBuffDeactivate"):
+            with self.subTest(phase=phase):
+                record = enriched_record(f"Play_sfx_Augment_ARAM_FeyMagic_LuluWTwo_{phase}")
+                self.assertEqual(record.semantic_slots["spell_stage"], 2)
+                translation = build_translation(record, translation_context())
+                assert translation is not None
+                self.assertEqual(translation["frame_type"], "mode_augment_event")
+                args = translation["arguments"]
+                self.assertEqual(args["ability_stage"]["value"], "2")
+                self.assertNotIn("ability_component", args)
+                rendered = render_translation(translation).text
+                self.assertIn("精怪魔法", rendered)
+                self.assertIn("璐璐", rendered)
+                self.assertIn("第2段", rendered)
+                self.assertNotIn("Two", rendered)
 
     def test_cherry_augment_builds_frame_with_mode(self) -> None:
         """Cherry owner 的增益记录建 frame，mode 经 T3.4 词条表出中文。"""
@@ -118,23 +166,23 @@ class ModeAugmentDispatchTests(unittest.TestCase):
         for role in FRAME_REGISTRY["mode_augment_event"].required_roles:
             self.assertIn(role, args)
 
-    def test_explicit_borrowed_champion_spell_records_keep_ability_frames(self) -> None:
-        """显式 owner+槽位+组件段由 ability builder 承接，不被增益 frame 抢占。"""
+    def test_explicit_borrowed_champion_spell_records_keep_augment_frame(self) -> None:
+        """显式借用技能须保留模式增益主体，且阶段和内部组件均不能丢失。"""
 
         cases = [
-            ("Play_sfx_Augment_ARAM_Oathsworn_KalistaRMis_OnCast", "ability_cast_event", "r"),
+            ("Play_sfx_Augment_ARAM_Oathsworn_KalistaRMis_OnCast", "cast", "r"),
             (
                 "Play_sfx_Augment_ARAM_MidnightExpress_ThreshWShield_OnBuffActivate",
-                "ability_state_change",
+                "state_activate",
                 "w",
             ),
             (
                 "Play_sfx_Augment_ARAM_HoldVeryStill_TeemoPStealthBuff_OnBuffActivate",
-                "ability_state_change",
+                "state_activate",
                 "p",
             ),
         ]
-        for raw_event_name, expected_frame, expected_slot in cases:
+        for raw_event_name, expected_phase, expected_slot in cases:
             with self.subTest(raw_event_name=raw_event_name):
                 record = enriched_record(raw_event_name)
                 with patch(GET_LABELS_TARGET, return_value=INJECTED_LABELS):
@@ -142,8 +190,11 @@ class ModeAugmentDispatchTests(unittest.TestCase):
 
                 self.assertIsNotNone(translation)
                 assert translation is not None
-                self.assertEqual(translation["frame_type"], expected_frame)
+                self.assertEqual(translation["frame_type"], "mode_augment_event")
                 self.assertEqual(translation["arguments"]["ability_slot"]["value"], expected_slot)
+                self.assertEqual(translation["arguments"]["phase"]["key"], expected_phase)
+                self.assertIn("ability_component", translation["arguments"])
+                self.assertIn("augment", translation["arguments"])
 
     def test_non_spell_ultimate_word_stays_mode_augment_event(self) -> None:
         """Ultimate 普通词段不能被 broad Ult hint 误判为 R 技能。"""
@@ -278,11 +329,11 @@ class ModeAugmentRegistryAndRenderTests(unittest.TestCase):
         self.assertEqual(spec.required_roles, ("augment",))
         self.assertEqual(
             spec.templates["zh_CN"]["default"],
-            ("mode", "augment", "champion", "ability_slot", "qualifier", "phase"),
+            ("mode", "augment", "champion", "ability_slot", "ability_stage", "ability_component", "qualifier", "phase"),
         )
         self.assertEqual(
             spec.templates["zh_CN"]["main"],
-            ("augment", "champion", "ability_slot", "qualifier", "phase"),
+            ("augment", "champion", "ability_slot", "ability_stage", "ability_component", "qualifier", "phase"),
         )
 
     def test_render_smoke_zh_default_and_main(self) -> None:

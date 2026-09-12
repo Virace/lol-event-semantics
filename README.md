@@ -7,6 +7,7 @@
 - 本仓库只处理仍属于《英雄联盟》客户端的事件名。云顶之弈 / TFTM 相关事件名不进入 raw 快照、拆解产物、审计报告或对外数据。
 - 本项目不是音频提取器，不重新分发 GAME WAD、BIN、BNK、WEM、WAV 或任何游戏资产大包。
 - `raw_event_name` 是不可变源数据；一切可读标签与翻译都是派生数据。
+- 界面和日常说明统一使用中文状态术语，区分支持级别、中文生成、模式审阅和数据集批准；见 [`状态术语`](docs/TERMINOLOGY.md)。英文状态码仅用于程序接口与原始审计数据。
 - 产品视图是一部累计语义词典：每轮只采集当前 live 输入，已纳入事件保留在累计语料中；不提供指定历史版本下载、重建或回放。
 
 ## 数据流总览
@@ -17,7 +18,7 @@ scripts/download_sources.py        # 初始化/更新入口：一键下载全部
 raw/events/ + rules/ + overrides/ + reference/
   -> decomposition JSONL + 审计报告
   -> dist/runs/completed/<run>/normalized/
-  -> dist/runs/approved-local.json # 唯一默认消费入口（原子指向 approved run）
+  -> dist/runs/approved-local.json # 唯一默认消费入口（原子指向已批准运行批次）
   -> dist/consumption/<export-id>/{web,software,lookup}/ # 按用途派生消费包
 ```
 
@@ -46,7 +47,7 @@ uv run python scripts/update_raw_events.py --mode local `
   --state-file raw\update-state.json --raw-input-root .temp\raw-events-round `
   --report-root .temp\update-report
 
-# 3) 全量刷新到隔离 run（含 validate、Stable gate、Review Site、趋势 ratchet）
+# 3) 全量刷新到隔离 run（含 validate、稳定支持gate、产品审阅站、趋势 ratchet）
 uv run python scripts/run_full_refresh.py
 
 # 4) 查询单个事件的已批准解析结果（P5 完成首个 approved-local 后可用）
@@ -58,7 +59,7 @@ uv run python scripts/search_stringtable.py 厄塔汗 "first blood"
 
 ### 事件语义静态演示站
 
-演示站 V3 用统一实体浏览组织同一 candidate：英雄、装备、地图、模式实体、公共系统、未知实体六类，与“全部 / 已确定 / 待反馈”语义状态独立筛选。默认读取 approved-local 及其同 run validation 报告；检查尚未批准的 completed candidate 时必须同时显式传入二者：
+演示站 V3 用统一实体浏览组织同一候选：英雄、装备、地图、模式实体、公共系统、未知实体六类，与“全部 / 已确定 / 待反馈”语义状态独立筛选。默认读取 approved-local 及其同 run validation 报告；检查尚未批准的已完成候选时必须同时显式传入二者：
 
 ```powershell
 uv run python scripts/build_demo_site.py `
@@ -67,11 +68,11 @@ uv run python scripts/build_demo_site.py `
 uv run python -m http.server 8765 --directory dist\demo-site
 ```
 
-访问 `http://127.0.0.1:8765/`。生成结果是平台中立的纯静态站，可托管到 GitHub Pages 或 Cloudflare Pages。页面先读取轻量索引，再按需读取当前实体分片；中文解释复用消费层投影，支持度、语义状态与人工审核分别展示。实体归属直接读取 normalized 的证据；模式英雄可通过显式基础英雄关系归组，模式与地图上下文仍保留。详情提供 `event_id`、`record_id`、原名、归属依据和校验问题，筛选可通过 hash URL 恢复。“已确定”要求中文已生成且无记录警告、校验或归属问题，不代表 Stable 或人工批准。旧审计产物缺少归属证据时须重建候选；详细构建、身份检查、托管与图片来源见 [`docs/DEMO_SITE.md`](docs/DEMO_SITE.md)。
+访问 `http://127.0.0.1:8765/`。生成结果是平台中立的纯静态站，可托管到 GitHub Pages 或 Cloudflare Pages。页面先读取轻量索引，再按需读取当前实体分片；中文解释复用消费层投影，支持度、语义状态与人工审核分别展示。实体归属直接读取 normalized 的证据；模式英雄可通过显式基础英雄关系归组，模式与地图上下文仍保留。详情提供 `event_id`、`record_id`、原名、归属依据和校验问题，筛选可通过 hash URL 恢复。“已确定”要求中文已生成且无记录警告、校验或归属问题，不代表稳定支持或人工批准。旧审计产物缺少归属证据时须重建候选；详细构建、身份检查、托管与图片来源见 [`docs/DEMO_SITE.md`](docs/DEMO_SITE.md)。
 
 ### 按用途导出中文事件数据
 
-完整 normalized 保留审计证据。在其下可独立生成 `web`（实体分片、中文词典、原名路由和浏览器客户端）、`software`（具名字段 JSONL）与 `lookup`（原名到多候选的单文件索引）。默认保留全部支持级别和资产类型；只导出 Stable 或 VO 须显式筛选。
+完整 normalized 保留审计证据。在其下可独立生成 `web`（实体分片、中文词典、原名路由和浏览器客户端）、`software`（具名字段 JSONL）与 `lookup`（原名到多候选的单文件索引）。默认保留全部支持级别和资产类型；只导出稳定支持或 VO 须显式筛选。
 
 ```powershell
 uv run python scripts/build_consumption.py `
@@ -122,7 +123,7 @@ manifest，数据源之间天然同版本。`16.16` 是本轮 frozen acceptance 
     （GAME WAD，原路径 `data/characters/{champion}/skins/skin{N}.bin`）；
     `rst-hashes/hashes.rst.xxh3.trimmed.txt`。
     **手工放置规范**：手动获取的文件放入上述同名路径即被识别（游标缺失仅告警，不阻断）；不支持其他手工路径。
-  - `dist/runs/.staging/<run>/`：单次刷新隔离写入区；失败不会触碰 approved pointer。
+  - `dist/runs/.staging/<run>/`：单次刷新隔离写入区；失败不会触碰批准指针。
   - `dist/runs/completed/<run>/`：含 `normalized/`、`reports/`、`run.json`、`completion.json` 的不可变候选。
   - `dist/runs/failed/<run>/`：含 `failure.json` 与部分诊断的失败运行。
   - `dist/runs/approved-local.json`：默认消费者唯一入口；同目录临时文件 fsync 后原子替换。
@@ -136,8 +137,8 @@ manifest，数据源之间天然同版本。`16.16` 是本轮 frozen acceptance 
 - 上下文别名主要维护在 `rules/contextual/**/*.yaml`；`rules/contextual_aliases.yaml` 保留为迁移和兼容来源。规则运行时全量聚合为一个 RuleBook，不按 owner 局部加载。
 - 展示词表维护在 `rules/display_labels.yaml`（phase/action/counterpart/shop/announcer/system SFX 等域），扩词条改词表、不改代码。系统音效只承接完整已审路径；装备 SFX 以 reference 装备 ID 定身份，纯生命周期直接承接，带效果后缀或额外段的记录只有命中“装备 ID/动作词干”精确白名单时才建 frame，未知或错配组合继续待审，不用装备总名掩盖语义缺口。
 - residual modifier 在 `rules/residual_modifiers.yaml`；手工 fallback 实体在 `rules/external_entities.yaml`；已审阅整句 fallback 在 `rules/low_trust_events.yaml`（保留 `trust: low` 标记）。
-- 单字母 `P/Q/W/E/R` 技能键若前缀猜测后仍有未解析 residual，不得进入 Stable；只有受控 modifier 解析或参考技能 ID 的明确匹配才能提高置信度。
-- VO qualifier 使用结构化 key 分组：已核验 key 渲染为对应中文，未知 key 明示为待审并保留 fallback，不能混入 Stable。`ShopOpen/ShopClose` 分别渲染为“进店/离店”，`DanceResponse` 是独立于普通舞蹈的回应语义。
+- 单字母 `P/Q/W/E/R` 技能键若前缀猜测后仍有未解析 residual，不得进入稳定支持；只有受控 modifier 解析或参考技能 ID 的明确匹配才能提高置信度。
+- VO qualifier 使用结构化 key 分组：已核验 key 渲染为对应中文，未知 key 明示为待审并保留 fallback，不能混入稳定支持。`ShopOpen/ShopClose` 分别渲染为“进店/离店”，`DanceResponse` 是独立于普通舞蹈的回应语义。
 - 皮肤短展示会移除与上下文英雄重复的 owner 名称，保留皮肤本体及其他有效描述。
 
 ## 展示数据与结构化翻译 contract
@@ -146,13 +147,13 @@ manifest，数据源之间天然同版本。`16.16` 是本轮 frozen acceptance 
 
 ```text
 安妮 Q 技能释放
-终极魔典 阿狸大招释放
+终极魔典阿狸大招释放
 ```
 
 `Play_vo`、皮肤编号、`cast3D`、`2D/3D`、`voProcessing` 等技术 token 进
 `debug_label` 或审计字段，不进短文案。
 
-approved run 的 normalized 记录内 `translation` 对象是结构化渲染 contract
+已批准运行批次的 normalized 记录内 `translation` 对象是结构化渲染 contract
 （`frame_type`、版本化 `arguments`、多语言 label、`provenance`、fallback
 标记）；`display.zh_cn_short/detail` 是兼容预览字段。需要按页面上下文
 裁剪文案的下游程序应读取 `translation` 并按 `locale`、`mode`、
@@ -174,23 +175,23 @@ approved run 的 normalized 记录内 `translation` 对象是结构化渲染 con
 LCU manifest id。dirty 工作树可以生成候选，但后续 promotion 不得批准它。
 
 `run_full_refresh.py` 的每个步骤都绑定同一个 staging run，并把候选绑定的
-`review-bundle.json` 与本地静态 Review Site 写入 `reports/review-site/`；成功写
+`review-bundle.json` 与本地静态产品审阅站写入 `reports/review-site/`；成功写
 `completion.json` 后同卷 rename 到 `completed/`，失败则写 `failure.json` 后移入
 `failed/`。`promote_dataset_run.py` 只接受 clean、报告/payload 摘要未漂移且带
 正式绝对门禁 attestation 的 completed run，并在独占锁内以 expected previous
 digest 做 CAS。P4 自动门禁 attestation 会明确记录 `automatic_gates_passed`，但在
-P5 用户 Review 前始终保持 `eligible=false`，因此不会把技术通过冒充人工批准。人工
-决定以版本化 JSON 导出；Stable 源审阅只在所有目标均接受时原子更新
-`rules/review-decisions.v1.json` 与 accepted corpus，拒绝或需要修改的结果不会部分写入。
-长期 source target 的哈希只覆盖 Stable pattern/corpus/scope 的稳定语义；相对 approved-local
-的 support diff、逐 pattern/label 样例计数和诊断分布仍完整显示，并进入最终 dataset approval，
-但不会因基线指针或非范围统计变化让相同语义决定失效；冻结的 Stable pattern 数、ID digest
-与总记录数仍在 source hash 内。真实目标漂移会回到 source review；决定源、
+P5 用户审阅前始终保持 `eligible=false`，因此不会把技术通过冒充人工批准。人工
+决定以版本化 JSON 导出；稳定支持源审阅只在所有目标均接受时原子更新
+`rules/review-decisions.v1.json` 与已接受样本集，拒绝或需要修改的结果不会部分写入。
+长期 source target 的哈希只覆盖稳定支持模式/corpus/scope 的稳定语义；相对 approved-local
+的 support diff、逐 pattern/label 样例计数和诊断分布仍完整显示，并进入最终数据集批准，
+但不会因基线指针或非范围统计变化让相同语义决定失效；冻结的稳定支持模式 数、ID digest
+与总记录数仍在 source hash 内。真实目标漂移会回到源审阅；决定源、
 corpus 合同或事务摘要损坏则继续阻断。
-最终数据集批准必须由 Review Site 针对重建后的同一 `dataset_id`/`content_digest` 导出，
+最终数据集批准必须由产品审阅站针对重建后的同一 `dataset_id`/`content_digest` 导出，
 promotion 时通过 `--decisions` 显式传入。
 
-Review Site 同时展示 Stable/Experimental 的置信度分布、Stable 中文标签中的英文残留、
+产品审阅站同时展示稳定支持/试验支持的置信度分布、稳定支持中文标签中的英文残留、
 qualifier 覆盖，以及每个 pattern 的全部非实体中文标签变体；这些是审核证据，不代表
 候选已获接受或可晋级。
 
@@ -203,7 +204,7 @@ uv run python scripts/validate_normalized_outputs.py `
 审核分两步完成，浏览器页面必须通过本地 HTTP 服务访问：
 
 ```powershell
-# 先打开 completed candidate 自带的 source review 页面并导出决定
+# 先打开已完成候选自带的源审阅页面并导出决定
 uv run python -m http.server 8765 `
   --directory dist\runs\completed\<run-id>\reports\review-site
 
@@ -212,25 +213,26 @@ uv run python scripts/manage_review.py apply `
   --bundle dist\runs\completed\<run-id>\reports\review-site\review-bundle.json `
   --decisions <导出的-review-decisions.json>
 
-# 提交长期源后重新生成 clean candidate，完成最终 dataset approval，再晋级
+# 提交长期源后重新生成工作树干净的候选，完成最终数据集批准，再晋级
 uv run python scripts/promote_dataset_run.py --run-id <new-run-id> `
   --decisions <导出的-dataset-approval.json>
 ```
 
 V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX 保留，目标支持
-状态为 Stable、Experimental 或 Unsupported。语义复核后的 91 个精确批准 canonical pattern
-在 candidate 中晋级为 Stable，共覆盖 4,127 条记录；同 family 的新 ID、全部 SFX 和暂缓
-范围仍保持 Experimental。Stable 使用独立 `quality-summary.json` 绝对门禁，不读取也不受
-`quality-baseline.json` 放宽；accepted corpus 的 91 条代表样本逐条精确复算 `zh_CN`
-default/main。门禁还独立冻结 decision ID、91 个 pattern ID 集合摘要和 4,127 条 Stable
+状态为稳定支持、试验支持或暂不支持。已批准基线冻结了 91 个精确语义模式，覆盖 4,127 条记录；
+修复对象或条件等语义后形成的新模式须重新审阅，不能继承相近模式的批准。当前修复结果须通过
+重新审阅与范围复核后才可批准；同类新模式、全部 SFX 和暂缓范围保持试验支持。
+稳定支持使用独立 `quality-summary.json` 绝对门禁，不读取也不受
+`quality-baseline.json` 放宽；已接受样本集的 91 条代表样本逐条精确复算 `zh_CN`
+default/main。门禁还独立冻结 decision ID、91 个 pattern ID 集合摘要和 4,127 条稳定支持
 记录总数，不能通过同时缩减 policy 与 corpus 绕过。corpus 与
 `rules/review-decisions.v1.json` 的状态必须一致；首轮 92 项源审阅已全部接受，后续
-clean candidate 进入 dataset approval，仍需候选绑定的最终批准才能晋级。
+工作树干净的候选进入数据集批准，仍需候选绑定的最终批准才能晋级。
 
 ## Pattern Catalog（只读维护报告）
 
 Pattern Catalog 从 semantic frame 派生，不以 `BaseName,Label` 为主模型。生成器会把
-公共消费者目录写入 approved run 的 `normalized/pattern-catalog.json`；下方入口则生成字段更丰富的
+公共消费者目录写入已批准运行批次的 `normalized/pattern-catalog.json`；下方入口则生成字段更丰富的
 本地维护 inventory，默认读取 `rules/translation_patterns.yaml`，并要求显式指定被忽略
 报告目录中的 JSON/Markdown 输出：
 
@@ -241,19 +243,19 @@ uv run python scripts/report_translation_patterns.py `
   --output-md dist\reports\runs\latest\translation-patterns.md
 ```
 
-公共 catalog 仅把 exact approved 且结构合格的 pattern 标记为 Stable；pending 与 deferred
-分别表示待精确审阅和暂缓。公共 manifest/record/catalog/quality Schema、accepted corpus、
+公共 catalog 仅把精确审阅已接受且结构合格的模式标记为稳定支持；待审阅与暂缓
+分别表示尚需精确审阅和当前暂缓纳入支持。公共 manifest/record/catalog/quality Schema、已接受样本集、
 无项目源码 consumer 和最小样例位于 `data/`，生成时复制进 candidate 的 `normalized/`。
-确定性身份、事务 run、分层绝对门禁、全接受 source review 的版本化 decision importer 和原子 pointer
+确定性身份、事务 run、分层绝对门禁、全接受源审阅的版本化 decision importer 和原子 pointer
 机制已实现，首个真实 approved-local promotion 已完成；远端 workflow 只交付候选与审核证据，
-不会把 artifact 自动声明为 approved 或稳定发布。
+不会把 artifact 自动声明为已批准或稳定发布。
 
 ### 无源码消费者快速验证
 
 下面的入口只使用 Python 标准库，同时校验 JSON Schema、manifest 必需路径和实际 payload
 文件集闭包、逐文件哈希、`content_digest`、quality/catalog 身份、JSONL 排序与 Pattern Catalog
-引用。把 `<run-id>` 换成一次 completed candidate；三个命令分别证明 Stable 命中、
-Experimental 明示与稳定 MISS：
+引用。把 `<run-id>` 换成一次已完成候选；三个命令分别证明稳定支持命中、
+试验支持明示与稳定 MISS：
 
 ```powershell
 $root = "dist\runs\completed\<run-id>\normalized"
@@ -266,7 +268,7 @@ uv run python "$root\examples\consumer.py" --root $root --query Play_vo_NotAReal
 
 `.github/workflows/update-raw-events.yml` 为手动触发的更新 workflow
 （在线最小子集 + 锁定依赖门禁 + 隔离 full refresh + candidate artifact）。选择提交数据时，
-workflow 先在 runner 本地形成提交，只有 clean candidate 的完整门禁通过后才 push；未选择提交时
+workflow 先在 runner 本地形成提交，只有工作树干净的候选的完整门禁通过后才 push；未选择提交时
 只上传 review-only 候选。成功 run 使用 `candidate-dataset` artifact；失败 run 只进入
 `failed-run-diagnostics`，不会以候选数据集命名。artifact 不自动 promotion；本地权威消费入口仍是
 `approved-local.json`。Actions 的全新依赖安装固定使用 Python 3.13；push/PR 不再重复运行默认 test job，

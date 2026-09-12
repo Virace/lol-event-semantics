@@ -28,6 +28,16 @@ class ProfileClassifierSlotTests(unittest.TestCase):
 
         return normalize_semantics(decompose_event_name(raw, game_version="16.5"))
 
+    def test_spell_phase_tail_is_preserved(self) -> None:
+        """技能阶段后的对象和条件必须独立保存，未知片段不能静默消失。"""
+
+        for tail in ("Enemy", "Ally", "Self", "Quinn", "NidaleeSkin11", "UnknownCondition"):
+            with self.subTest(tail=tail):
+                record = self.normalize(f"Play_vo_Lulu_LuluW_cast3D{tail}")
+                self.assertEqual(record.semantic_slots["spell_context"]["raw"], tail)
+                if tail not in {"Enemy", "Ally", "Self"}:
+                    self.assertTrue(any(unknown.raw == tail for unknown in record.unknowns))
+
     def test_first_encounter_interaction(self) -> None:
         record = self.normalize("Play_vo_Lux_FirstEncounter3DAshe")
 

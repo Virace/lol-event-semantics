@@ -276,6 +276,11 @@ def _public_pattern(pattern: Mapping[str, Any], policy: PatternPolicy) -> dict[s
         if frame is not None
         else set()
     )
+    signature_roles = signature_mapping.get("roles")
+    suffix_roles = (
+        ("spell_context",) if isinstance(signature_roles, list) and "spell_context" in signature_roles else ()
+    )
+    template_roles.update(suffix_roles)
     optional_roles = sorted(template_roles.difference(required_roles))
     examples = pattern.get("representative_examples")
     example_event_names = (
@@ -301,8 +306,8 @@ def _public_pattern(pattern: Mapping[str, Any], policy: PatternPolicy) -> dict[s
         "optional_roles": optional_roles,
         "support_level": str(pattern.get("support_level") or policy.default_support_level),
         "zh_cn_label_variants": dict(zh_cn_label_variants) if isinstance(zh_cn_label_variants, dict) else {},
-        "zh_CN_template": _public_frame_templates(frame_type, "zh_CN"),
-        "en_US_template": _public_frame_templates(frame_type, "en_US"),
+        "zh_CN_template": _public_frame_templates(frame_type, "zh_CN", suffix_roles),
+        "en_US_template": _public_frame_templates(frame_type, "en_US", suffix_roles),
         "provenance_policy": {
             "stable_requires_no_fallback": True,
             "required_role_min_confidence": "medium",
@@ -317,8 +322,8 @@ def _public_pattern(pattern: Mapping[str, Any], policy: PatternPolicy) -> dict[s
     }
 
 
-def _public_frame_templates(frame_type: str, locale: str) -> dict[str, str] | None:
-    """把 frame role 顺序编码为公共符号模板。"""
+def _public_frame_templates(frame_type: str, locale: str, suffix_roles: tuple[str, ...] = ()) -> dict[str, str] | None:
+    """把模板及当前模式实际具有的附加条件编码为公共符号模板。"""
 
     frame = FRAME_REGISTRY.get(frame_type)
     if frame is None:
@@ -326,7 +331,10 @@ def _public_frame_templates(frame_type: str, locale: str) -> dict[str, str] | No
     templates = frame.templates.get(locale)
     if templates is None:
         return None
-    return {mode: " ".join(f"{{{role}}}" for role in roles) for mode, roles in sorted(templates.items())}
+    return {
+        mode: " ".join(f"{{{role}}}" for role in (*roles, *(role for role in suffix_roles if role not in roles)))
+        for mode, roles in sorted(templates.items())
+    }
 
 
 def _decomposition_identity_payload(record: EventDecompositionRecord) -> str:

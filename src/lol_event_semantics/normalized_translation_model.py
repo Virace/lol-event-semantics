@@ -350,14 +350,31 @@ FRAME_REGISTRY: dict[str, FrameSpec] = {
     ),
     # Arena/ARAM 增益系事件：augment 为词表命中的增益/道具官方双语名（必需）；
     # mode（斗魂竞技场/极地大乱斗等模式前缀）走已审词条；借用英雄技能的
-    # 增益可追加 champion / ability_slot / qualifier，避免丢掉 RenataW 与
+    # 增益可追加 champion / ability_slot / ability_stage / ability_component / qualifier，避免丢掉 RenataW 与
     # player/others；phase 由既有相位映射或无相位 sfx 合成承接。
     "mode_augment_event": FrameSpec(
         required_roles=("augment",),
         templates={
             "zh_CN": {
-                "default": ("mode", "augment", "champion", "ability_slot", "qualifier", "phase"),
-                "main": ("augment", "champion", "ability_slot", "qualifier", "phase"),
+                "default": (
+                    "mode",
+                    "augment",
+                    "champion",
+                    "ability_slot",
+                    "ability_stage",
+                    "ability_component",
+                    "qualifier",
+                    "phase",
+                ),
+                "main": (
+                    "augment",
+                    "champion",
+                    "ability_slot",
+                    "ability_stage",
+                    "ability_component",
+                    "qualifier",
+                    "phase",
+                ),
             },
         },
     ),

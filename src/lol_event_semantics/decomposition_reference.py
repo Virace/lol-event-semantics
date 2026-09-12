@@ -912,7 +912,59 @@ def enrich_with_reference(
     add_spell_combo_candidate(record, reference)
     add_composite_owner_candidate(record, reference)
     apply_low_trust_event_rule(record, reference)
+    from .decomposition_profiles import fill_spell_context
+
+    fill_spell_context(record)
+    resolve_ambiguous_entities(record, reference)
+    add_augment_borrowed_ability(record, reference)
     return record
+
+
+def add_augment_borrowed_ability(record: EventDecompositionRecord, reference: ReferenceIndex) -> None:
+    """以完整增益 cue 和英雄参考保存借用技能，模式主体不改写为英雄。"""
+
+    slots = record.semantic_slots
+    entity = slots.get("reference_entity")
+    cue = slots.get("cue_path")
+    if (
+        not isinstance(entity, dict)
+        or entity.get("kind") not in {"augment_system", "game_mode", "item_system"}
+        or not isinstance(cue, list)
+        or len(cue) < 3
+        or str(cue[0]).lower() not in {"aram", "augment", "item"}
+    ):
+        return
+    raw = str(cue[2])
+    for subject in champion_spell_subjects(raw, None, reference):
+        alias = subject.alias or ""
+        if not alias or not raw.casefold().startswith(alias.casefold()):
+            continue
+        match = MODE_ACTOR_SLOT_PATTERN.fullmatch(raw[len(alias) :])
+        if match is None:
+            continue
+        spell_key = match.group("spell_key").lower()
+        if spell_for_key(reference, subject, spell_key) is None:
+            continue
+        slots["borrowed_ability"] = {
+            "raw": raw,
+            "subject": subject.to_dict(),
+            "spell_key": spell_key,
+            "residual": match.group("residual"),
+            "source": "reference_champion_and_explicit_slot",
+        }
+        spell_match = slots.get("spell_match")
+        stage = slots.get("spell_stage")
+        if (
+            isinstance(spell_match, dict)
+            and spell_match.get("raw") == raw
+            and slots.get("spell_key") == spell_key
+            and isinstance(stage, int)
+            and stage > 0
+        ):
+            slots["borrowed_ability"]["stage"] = stage
+            if spell_match.get("match_source") == "spell_key_stage" and spell_match.get("residual") == "":
+                slots["borrowed_ability"]["residual"] = ""
+        return
 
 
 def add_sfx_cue_champion_context(
@@ -1076,6 +1128,22 @@ def resolve_ambiguous_entities(record: EventDecompositionRecord, reference: Refe
     for unknown in list(record.unknowns):
         if unknown.kind is not UnknownKind.AMBIGUOUS_ENTITY:
             continue
+
+        if (
+            unknown.location == "semantic_slots.spell_context"
+            and re.fullmatch(r"Skin[0-9]+", unknown.raw, re.IGNORECASE)
+            and compact(unknown.raw) == compact(record.owner.skin_token or "")
+        ):
+            subject = owner_champion_entity(record, reference)
+            skin = reference.resolve_champion_skin(subject.alias or subject.key, unknown.raw) if subject else None
+            if skin is not None:
+                set_slot_value(
+                    record.semantic_slots,
+                    unknown.location,
+                    {**skin.to_dict(), "context_scope": "speaker_skin"},
+                )
+                record.unknowns.remove(unknown)
+                continue
 
         structured = structured_counterpart_for_token(unknown.raw, record, reference)
 
@@ -4672,6 +4740,8 @@ def set_slot_value(slots: dict[str, Any], location: str, value: dict[str, Any]) 
 
     if location.endswith("counterpart") and isinstance(slots.get("counterpart"), dict):
         slots["counterpart"] = value
+    elif location == "semantic_slots.spell_context" and isinstance(slots.get("spell_context"), dict):
+        slots["spell_context"] = {**value, "raw": slots["spell_context"]["raw"]}
 
 
 def strip_owner_alias(token: str, owner_alias: str | None) -> str:
