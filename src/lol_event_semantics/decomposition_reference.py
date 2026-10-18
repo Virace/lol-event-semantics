@@ -1082,6 +1082,28 @@ def enrich_unknown_profile(record: EventDecompositionRecord, reference: Referenc
         set_switch_profile(record)
         return
 
+    pre_context = record.semantic_slots.get("pre_context")
+    if (
+        record.shell.asset_kind == "vo"
+        and compact(record.owner.alias or "") == "shyvana"
+        and isinstance(pre_context, dict)
+        and pre_context.get("raw") == "Dragon"
+        and record.profile.primary_family in {"attack", "joke", "kill", "taunt"}
+    ):
+        # 希瓦娜的 Dragon_<动作> 是施动者的龙形态，不能按同名野怪
+        # 覆盖已经拆解出的攻击、表情或击杀动作。
+        form = {
+            "raw": "Dragon",
+            "kind": "champion_form_qualifier",
+            "component": "dragon_form",
+            "label": "龙形态",
+            "source": "owner_scoped_leading_voice_context",
+            "confidence": "high",
+        }
+        record.semantic_slots["owner_form"] = form
+        record.semantic_slots["action_form"] = form
+        return
+
     first_token = first_interesting_token(record)
 
     if first_token is None:
@@ -1594,6 +1616,13 @@ def champion_contextual_alias_matches_record(
     rule: ContextualAlias,
 ) -> bool:
     """限定英雄别名只在规则声明的资产类型和模式内生效。"""
+
+    if (
+        compact(rule.owner) == "viktor"
+        and rule.component == "permanent_ability_augment"
+        and record.shell.verb != "play"
+    ):
+        return False
 
     if rule.asset_kind is not None:
         asset_kind = record.shell.asset_kind

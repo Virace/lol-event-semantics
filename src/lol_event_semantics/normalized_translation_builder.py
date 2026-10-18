@@ -2316,7 +2316,7 @@ def build_champion_interaction_cue(
         return None
 
     champion = champion_argument(record, context)
-    trigger = interaction_trigger_argument(record)
+    trigger = apply_action_form(interaction_trigger_argument(record), record.semantic_slots)
     if champion is None or trigger is None or has_technical_champion_label(champion):
         return None
 
@@ -2355,7 +2355,7 @@ def build_kill_or_destroy_event(
         return None
 
     champion = champion_argument(record, context)
-    trigger = kill_trigger_argument(record)
+    trigger = apply_action_form(kill_trigger_argument(record), record.semantic_slots)
     if champion is None or trigger is None or has_technical_champion_label(champion):
         return None
 

@@ -420,6 +420,7 @@ def fill_special_champion_voice_event(record: EventDecompositionRecord, atom: Le
 
     return (
         fill_interactive_voice(record, atom)
+        or fill_targeted_passive_voice_event(record, atom)
         or fill_phase_only_owner_spell_event(record, atom)
         or fill_neutral_creature_voice_event(record, atom)
         or fill_animation_event(record, atom)
@@ -452,6 +453,50 @@ def fill_special_champion_voice_event(record: EventDecompositionRecord, atom: Le
         or fill_untrusted_spell_alias_event(record, atom)
         or fill_buff_state_event(record, atom)
     )
+
+
+def fill_targeted_passive_voice_event(record: EventDecompositionRecord, atom: LexicalAtom) -> bool:
+    """识别斯维因、妮蔻被动语音的 PCast 对象尾部，不丢失目标条件。"""
+
+    if (
+        record.shell.asset_kind != "vo"
+        or (record.owner.alias or "").casefold() not in {"swain", "neeko"}
+        or len(record.lexical_atoms) != 1
+    ):
+        return False
+
+    match = re.fullmatch(r"Spell2DPCast(?P<context>[A-Z][A-Za-z0-9]*)", atom.raw)
+    if match is None:
+        return False
+
+    raw_context = match.group("context")
+    record.profile = EventProfile(
+        primary_family="spell",
+        semantic_profile=SemanticProfile.SPELL_EVENT,
+        requires_context=True,
+        reason="matched owner-scoped targeted passive voice event",
+    )
+    record.semantic_slots = {
+        "trigger_family": "spell",
+        "spell_key": "p",
+        "phase": "cast",
+        "dimension_token": "2D",
+        "source": "owner_scoped_passive_voice_grammar",
+    }
+    if raw_context == "General":
+        record.semantic_slots["spell_context"] = {
+            "raw": raw_context,
+            "kind": "spell_condition",
+            "key": "general",
+            "label": "General",
+            "scope": "general",
+            "source": "event_name_passive_context",
+        }
+    else:
+        record.semantic_slots["spell_context"] = unresolved_counterpart(raw_context)
+        add_ambiguous_entity(record, raw_context, "semantic_slots.spell_context")
+    record.confidence = DecompositionConfidence.MEDIUM
+    return True
 
 
 def fill_owner_prefixed_attack_event(record: EventDecompositionRecord, atom: LexicalAtom) -> bool:
@@ -669,7 +714,7 @@ def fill_neutral_creature_voice_event(record: EventDecompositionRecord, atom: Le
     }
     action = actions.get(key)
 
-    if action is None and residue == "Victory":
+    if action is None and residue == "Victory" and first_part_value(atom, "trigger_token") is None:
         action = "victory"
 
     if action is None:
