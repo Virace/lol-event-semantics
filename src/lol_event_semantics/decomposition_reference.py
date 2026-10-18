@@ -14,6 +14,7 @@ from .decomposition_model import (
     EventProfile,
     LexicalAtom,
     SemanticProfile,
+    UnknownFragment,
     UnknownKind,
 )
 from .game_data import compact
@@ -1926,6 +1927,23 @@ def add_mode_namespace_candidate(record: EventDecompositionRecord, reference: Re
         }
 
     existing_context = record.semantic_slots.get("mode_context")
+    if namespace.key == "guests_of_honor" and position == "owner" and record.lexical_atoms:
+        # 只保存原始嘉宾 token，不把 NPC、角色组件或未知词转成英雄身份。
+        record.semantic_slots["context_namespace"]["guest_token"] = record.lexical_atoms[0].raw
+        cue_path = [atom.raw for atom in record.lexical_atoms[1:]]
+        record.semantic_slots["context_namespace"]["cue_path"] = cue_path
+        cue_raw = "_".join(cue_path)
+        location = "semantic_slots.context_namespace.cue_path"
+        if cue_raw and not any(unknown.location == location for unknown in record.unknowns):
+            record.unknowns.append(
+                UnknownFragment(
+                    kind=UnknownKind.UNPARSED_FRAGMENT,
+                    raw=cue_raw,
+                    location=location,
+                    blocking_reason="Guest-of-Honor scenario requires exact review",
+                    severity="medium",
+                )
+            )
     if namespace.kind == "mode" and not isinstance(existing_context, dict):
         record.semantic_slots["mode_context"] = {
             "key": namespace.key,
@@ -2022,7 +2040,7 @@ def record_mode_namespace(record: EventDecompositionRecord) -> tuple[ModeNamespa
     for atom in record.lexical_atoms:
         namespace = mode_namespace_for_token(atom.raw)
 
-        if namespace is not None:
+        if namespace is not None and not namespace.owner_only:
             return namespace, atom.raw, "qualifier"
 
     return None
@@ -2034,6 +2052,9 @@ def mode_actor_for_record(
     namespace: ModeNamespace,
 ) -> tuple[ReferenceEntity | None, str | None]:
     """解析命名空间事件中的基础英雄演员。"""
+
+    if not namespace.resolve_actor:
+        return None, None
 
     if namespace.key == "ruby":
         for index, atom in enumerate(record.lexical_atoms[:-1]):

@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Nasus
+  champion_id: 60075
+  skin_number: 1
+  skin_token: Skin01
+  id: 60075001
+  alias: Jade_NasusSkin01
+  names:
+    en_US:
+      - value: Galactic Nasus
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 星空之门 内瑟斯
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 136
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_NasusSkin01
+  - Jade_NasusSkin1

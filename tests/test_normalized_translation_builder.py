@@ -874,7 +874,12 @@ class NormalizedTranslationBuilderAbilityCastTests(unittest.TestCase):
                 if token == "Skin04":
                     self.assertEqual(record.semantic_slots["spell_context"]["context_scope"], "speaker_skin")
                 display = build_compat_display(translation)
-                self.assertIn(label, display["zh_cn_short"])
+                if token == "Skin04":
+                    self.assertEqual(argument["provenance"]["rendered_via"], "skin")
+                    self.assertNotIn(label, display["zh_cn_short"])
+                    self.assertEqual(display["zh_cn_detail"].count(label), 1)
+                else:
+                    self.assertIn(label, display["zh_cn_short"])
                 self.assertIn(label, display["zh_cn_detail"])
 
     def test_unknown_spell_phase_tail_stays_visible_and_diagnosed(self) -> None:

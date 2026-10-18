@@ -1,7 +1,7 @@
-# 更新流程开发者介绍：live 采集、冻结 V1 更新与新版本接入
+# 更新流程开发者介绍：live 采集、版本化累计更新与新版本接入
 
 本文说明事件数据怎样经过采集、语义处理和 Review。live 采集入口可以独立准备当前版本的 raw round；
-当前累计更新入口只接受冻结 V1 的 `16.16` 输入，不会把任意新 live 版本直接写入长期语料。新版本必须先建立并
+当前累计输入采用冻结 V2 的 `16.20` 合同，V1 `16.16` 历史档案保持不变。入口不会把任意新 live 版本直接写入长期语料。新版本必须先建立并
 Review 新的版本化 frozen profile 与来源合同，再进入正式更新。GitHub Actions 当前全部停用，
 采集与完整验证均在本地或云电脑直接执行；正式发布并完成本地完整流程验证后，才另行决定是否恢复。
 
@@ -42,9 +42,27 @@ dist/collection/
 中途失败时来源中的 `raw-bins` 保持 `pending`，不会推进 `latest.json`；全部完成后才写为 `ok`。
 来源解析或目录发现阶段就失败时可能尚无轮次报告，应查看命令错误。
 
+同步 GAME/LCU manifest 与 WAD Range 下载会遵循现有 HTTP(S) 环境代理和 `NO_PROXY`。
+适配只补充第三方同步连接池的代理路由，保留 TLS 验证、Range、超时、响应检查与异常；
+不修改系统网络配置，不改变异步整包下载器，也不在代理失败后切换直连。
+
+带 `catalog` 的新采集来源在 online 导入前还执行两层绑定：
+
+1. 本轮 raw 文件集合必须与 `collection.raw_files` 完全相同，并逐文件核验 SHA-256。
+2. reference 只能从 `catalog.revision` 的固定提交下载；metadata 摘要、GAME/LCU
+   主版本、精确 LCU manifest ID 及每个请求文件的长度/SHA-256 必须匹配采集证据。
+
+新 profile 的 `require_catalog: true` 强制上述证据；缺少证据时在 reference 下载前停止。
+严格在线缓存保留原始 JSON 字节与 metadata；local 导入也会离线复核这些摘要与本轮 raw，
+不能通过切换 local 模式跳过证据校验。中文版缓存仍使用既有 `zh_cn` 目录，远端为 `zh_CN`。
+online 的严格缓存位于指定 cache root 下的 `snapshots/<catalog revision>/`，避免不同快照
+留下的旧英雄文件混入本轮验证。英雄详情最多六路并发；下载失败只留下可诊断缓存，不写累计源。
+历史 V1 不凭空新增 catalog 字段，因此仍保留旧输入来源身份。新证据存在时会进入数据集
+来源摘要，防止同补丁不同目录或采集范围被当成同一输入。这些校验不代表语义批准或 promotion。
+
 采集在本地或云电脑直接执行 CLI；需要长期续跑时保留同一个输出根。
-新 live 结果仍会被现有更新器的 16.16 frozen profile 拒绝。
-采集完成只提供下一阶段可审查的输入；新增版本 profile、累计 reference 更新和语义复审是后续工作。
+16.20 已通过独立 V2 profile 合并累计 raw/reference；其他版本仍会被不匹配的 profile 拒绝。
+采集完成只提供可审查的输入，不能替代质量门禁、精确模式审阅与最终数据集批准。
 旧 `download_sources.py` 继续服务字符串表、大厅 JSON、RST 和本地兼容路径，其 raw-bins 的
 `range(100)` 皮肤探测不用于完整 raw 采集。
 
@@ -100,7 +118,8 @@ Actions token、仓库身份和同一个 run ID 下载两项输入，防止 raw 
 立即失败。
 
 更新器先在 staging 中生成 raw/reference/state/report，再用本轮来源清单和
-`data/frozen-profile.v1.json` 检查 GAME/LCU/reference 版本系列与 raw 唯一计数。任一项漂移都不会
+调用方选择的 profile 检查 GAME/LCU/reference 版本系列与 raw 唯一计数（当前为
+`data/frozen-profile.v2.json`，累计 109191 个唯一原名）。任一项漂移都不会
 替换长期目标。仓库中的 `data/frozen-sources-manifest.v1.json` 只用于复现已冻结的本地 V1 输入，
 不冒充远端 workflow 本轮采集证明。
 
@@ -108,7 +127,7 @@ Actions token、仓库身份和同一个 run ID 下载两项输入，防止 raw 
 构建兼容问题，并定义采集与写入前的 Ruff、mypy 与完整 pytest。所有 Actions 当前均停用，
 这些门禁需要通过本地命令执行，不能把保留模板视为已经运行的检查。
 
-## 第 1 层：数据摄入（冻结 V1 自动化）
+## 第 1 层：数据摄入（版本化累计更新）
 
 输入事件名与参考数据进入仓库的路径：
 

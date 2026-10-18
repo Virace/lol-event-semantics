@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Morgana
+  champion_id: 60025
+  skin_number: 1
+  skin_token: Skin01
+  id: 60025001
+  alias: Jade_MorganaSkin01
+  names:
+    en_US:
+      - value: Exiled Morgana
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 杀戮天使昔拉 莫甘娜
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 68
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_MorganaSkin01
+  - Jade_MorganaSkin1

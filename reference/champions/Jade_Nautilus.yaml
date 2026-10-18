@@ -1,0 +1,269 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60111
+  alias: Jade_Nautilus
+  names:
+    en_US:
+      - value: Nautilus
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+  title:
+    zh_CN:
+      - value: 深海泰坦
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+spells:
+  - slot: E
+    ids:
+      - value: Jade_NautilusE
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Riptide
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 暗流涌动
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:eed45c16d8e5dab98808a90940574c4a0b95b21dd0d39414092d74c1a58d062a
+            value: Nautilus slams the ground, causing the earth to explode
+              around him in a set of three explosions. Each explosion damages
+              and slows enemies.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:16764b5e6772780d08ba6344dcc1a026964d4cf10612053bd18604da27adb32b
+            value: 诺提勒斯猛击地面，使在他附近的土地爆炸三次。每次爆炸都会对敌人造成伤害和减速效果。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: P
+    ids:
+      - value: Jade_NautilusPassive
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Staggering Blow
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 排山倒海
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:4637ebea9cf87b2c0abbe5f6e74a37c4a05cd8a17e7df24c36e0ae887a2f6317
+            value: Nautilus' basic attacks deal bonus physical damage and
+              immoblize his targets. This effect cannot happen more than once
+              every few seconds on the same target.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:674d9f60346a5a89e6925f2319719289444d99c3bd7408dd91a293f711cf8a44
+            value: 诺提勒斯的普通攻击会对目标造成额外的物理伤害并令目标定身。这个效果只能在数秒内对相同目标生效一次。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: Q
+    ids:
+      - value: Jade_NautilusQ
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Dredge Line
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 疏通航道
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:a15376b95df8966d7a9d3c263b5e682d6125bc732e4aab52562e3745534437f0
+            value: Nautilus hurls his anchor forward. If it hits a champion, he
+              drags both himself and the opponent close together. If it hits
+              terrain, Nautilus instead pulls himself to the anchor and the
+              cooldown of Dredge Line is reduced.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:1e1a45e4a7f94fdbdeb5c3aa6a156c1593f8fa7cf6e1664d96ce365d9b82ba47
+            value:
+              诺提勒斯向前猛掷他的船锚。如果它击中了一名英雄，诺提勒斯就会将他自己和目标吸到一起。如果它击中了地形，诺提勒斯则会把自己拉拽到船锚处并缩短【疏通航道】的冷却时间。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: R
+    ids:
+      - value: Jade_NautilusR
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Depth Charge
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 深海冲击
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:ff3ab66ec392b96dfc519e8c0fbad71e4a74442ec87efe5d9f755f5847602fde
+            value: Nautilus fires a shockwave into the earth that chases an
+              opponent. This shockwave rips up the earth above it, knocking
+              enemies into the air. When it reaches the opponent, the shockwave
+              erupts, knocking his target into the air and stunning them.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:89dfe8f4caa61727dd8e554a4acef17bba4868ef4f26f00f02fa3e2a36d9146d
+            value:
+              诺提勒斯将一束冲击波打进土里，来追击敌方目标。这束冲击波会撕裂它上面的地表，将敌人震到半空中。当它命中目标时，冲击波会喷发，将他的目标震到半空中，并使目标晕眩。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: W
+    ids:
+      - value: Jade_NautilusW
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Titan's Wrath
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 泰坦之怒
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:0fd504155ab7eb2addddbb47ceb0421a0f8375e8148de78b6611d584a4708816
+            value: Nautilus gains a temporary Shield.  While it persists, his
+              Attacks deal damage over time to his target and surrounding
+              enemies.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:1c4507272dc37895f1555651236b9ff2f50b8c0953c6a44958b983be68ffcffa
+            value: 诺提勒斯获得一个临时护盾。当护盾存在时，他的攻击会对目标及目标周围的敌人造成持续伤害。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524

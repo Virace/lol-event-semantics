@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Nautilus
+  champion_id: 60111
+  skin_number: 6
+  skin_token: Skin06
+  id: 60111006
+  alias: Jade_NautilusSkin06
+  names:
+    en_US:
+      - value: Conqueror Nautilus
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 征服者 诺提勒斯
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 109
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_NautilusSkin06
+  - Jade_NautilusSkin6

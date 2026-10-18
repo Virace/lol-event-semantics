@@ -1,0 +1,265 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60105
+  alias: Jade_Fizz
+  names:
+    en_US:
+      - value: Fizz
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+  title:
+    zh_CN:
+      - value: 潮汐海灵
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+spells:
+  - slot: E
+    ids:
+      - value: Jade_FizzE
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Playful / Trickster
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 古灵/精怪
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:c97dd00c06fb3caf8ab00b5a0745387c22b9081a7f3a4840ff15cff5ac22c702
+            value: Fizz hops into the air, landing gracefully upon his spear
+              becoming untargetable. From this position, Fizz can either slam
+              the ground or choose to jump again before smashing back down.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:6b7a48f9614d90ed7bff96b64303deddeaec183045a7ecc6e31fbc1fbee884c9
+            value:
+              菲兹跳到空中，同时优雅地落在他的长矛上，变得不可被选取。在这个姿态下，菲兹可以选择原地着陆，也可以选择在着陆之前再跳一段距离。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: P
+    ids:
+      - value: Jade_FizzPassive
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Nimble Fighter
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 伶俐斗士
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:aeba7e2d73a8742fa365ca5b0272cf44d90782950bc993b49466ed17ea70f639
+            value: Fizz's dexterity allows him to move through units and take
+              less physical damage from basic attacks.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:6dcc8cb0d61f638302f04e1ce01624a8fac4bdfd156cae85c2fbdc656b6aca2a
+            value: 菲兹的灵巧身手能使他在移动时忽略单位的碰撞体积，并且减免来自普通攻击的物理伤害。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: Q
+    ids:
+      - value: Jade_FizzQ
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Urchin Strike
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 淘气打击
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:52b57410800e2324396269910ed901e3f24057e1636def4f24b9ed92f38a9e4d
+            value: Fizz strikes his target and runs them through, dealing magic
+              damage and applying on hit effects.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:b06d90439d3ebd16981e13a198afad3fa42380fe8e4740bae4defda1218521fd
+            value: 菲兹打击他的目标并穿过他的目标，从而造成魔法伤害，并施加攻击特效。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: R
+    ids:
+      - value: Jade_FizzR
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Chum the Waters
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 巨鲨强袭
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:955253b2cb7617e177c2e50070adaec76180c5be3e30f851fbd7c6092fbaebf5
+            value: Fizz unleashes a magical fish that latches onto enemies or
+              hovers over terrain, slowing champions if it is latched on to
+              them. After a brief delay, a shark erupts from beneath the earth,
+              dealing damage to enemies around the fish and knocking them aside.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:e4ca226726158c702ac087545e4bd5823d17e182bfab08f5df4e298134199aab
+            value:
+              菲兹释放一条魔法小鱼来缠附敌人或越过地形，从而在它缠附到英雄身上时对其造成减速。在一阵短暂的延迟后，一头巨鲨会破土而出，对小鱼周围的敌人们造成伤害并将他们震开。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: W
+    ids:
+      - value: Jade_FizzW
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Seastone Trident
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 海石三叉戟
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:d82f89e3bcdbe602465076da005e3b9c4c53f339b6b6604a88136b6655149eae
+            value: Fizz's Trident causes rending wounds in his opponents,
+              dealing magic damage to the target based on their missing health.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:522ce430f032bd02e9da595ec436698d3a66296c0dfae119382d86dc2264b2aa
+            value: 菲兹的三叉戟会在他的对手们身上引发撕裂型伤口，从而对该目标造成基于其已损失生命值的魔法伤害。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524

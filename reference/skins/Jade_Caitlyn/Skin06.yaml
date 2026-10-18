@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Caitlyn
+  champion_id: 60051
+  skin_number: 6
+  skin_token: Skin06
+  id: 60051006
+  alias: Jade_CaitlynSkin06
+  names:
+    en_US:
+      - value: Headhunter Caitlyn
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 铁血狙击手 凯特琳
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 30
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_CaitlynSkin06
+  - Jade_CaitlynSkin6

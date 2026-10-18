@@ -120,14 +120,15 @@ def test_committed_frozen_source_manifest_is_portable_and_matches_profile() -> N
     assert source_manifest_identity(manifest)["digest"] == (
         "f56e1c57f3be790c0aa6608b83d08aa49f99d87c964361d7f600f345e72a1f7b"
     )
+    # V1 来源摘要继续冻结；当前累计语料使用独立 V2 档案，不能改写旧计数。
     result = validate_frozen_inputs(
-        load_frozen_profile(ROOT / "data" / "frozen-profile.v1.json"),
+        load_frozen_profile(ROOT / "data" / "frozen-profile.v2.json"),
         raw_root=ROOT / "raw" / "events",
-        sources_manifest_path=manifest_path,
+        sources_manifest_path=ROOT / "data" / "frozen-sources-manifest.v2.json",
         reference_manifest_path=ROOT / "reference" / "manifest.yaml",
     )
-    assert result["profile_id"] == "v1-frozen-16.16"
-    assert result["raw_unique_count"] == 106926
+    assert result["profile_id"] == "v2-frozen-16.20"
+    assert result["raw_unique_count"] == 109191
 
 
 def test_frozen_preflight_accepts_only_documented_lcu_exception(tmp_path: Path) -> None:

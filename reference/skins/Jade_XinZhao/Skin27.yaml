@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_XinZhao
+  champion_id: 60005
+  skin_number: 27
+  skin_token: Skin27
+  id: 60005027
+  alias: Jade_XinZhaoSkin27
+  names:
+    en_US:
+      - value: Marauder Xin Zhao
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 黑暗骑士 赵信
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 45
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_XinZhaoSkin27

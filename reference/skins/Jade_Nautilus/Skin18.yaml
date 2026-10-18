@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Nautilus
+  champion_id: 60111
+  skin_number: 18
+  skin_token: Skin18
+  id: 60111018
+  alias: Jade_NautilusSkin18
+  names:
+    en_US:
+      - value: Fright Night Nautilus
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 魔域梦魇 诺提勒斯
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 170
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_NautilusSkin18

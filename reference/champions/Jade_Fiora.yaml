@@ -1,0 +1,266 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60114
+  alias: Jade_Fiora
+  names:
+    en_US:
+      - value: Fiora
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+  title:
+    zh_CN:
+      - value: 无双剑姬
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+spells:
+  - slot: E
+    ids:
+      - value: Jade_FioraE
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Burst of Speed
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 前进喷泉
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:6dc365200a0c44ddffee50eb7035218bea4d1a341e4c9bbee2bb8976ce3cd8eb
+            value: Fiora temporarily gains additional Attack Speed. Each attack
+              or Lunge she lands during this time increases her Movement Speed.
+              Killing a champion refreshes the cooldown on this ability.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:2f93e02e48f48b2ff9426e26d36278856f8d9d4aca078632d2b996bd0e9d78ba
+            value:
+              菲奥娜暂时获得额外的攻击速度。在此期间，她的每次攻击或【破空斩】在击中时都会提升她的移动速度。击杀一个英雄会刷新此技能的冷却时间。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: P
+    ids:
+      - value: Jade_FioraPassive
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Duelist
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 决斗达人
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:1ce826b64c51e319f85a3a77eac9ca0d671242ffc9568234c3601bedcb1c9a81
+            value: Fiora regenerates Health over time when she deals damage.
+              Striking champions will cause this effect to stack multiple times.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:13a36f2f4e86618666a36a517c5117513094b86a6a8836efe497a870f4f1076c
+            value: 菲奥娜在造成伤害时会持续回复生命值。击中英雄将使这个效果叠加多层。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: Q
+    ids:
+      - value: Jade_FioraQ
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Lunge
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 破空斩
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:7d177165730e5c6449accd85cf34d73515f6b3ffd46a80864174a4de10cdd1aa
+            value: Fiora dashes forward to strike her target, dealing physical
+              damage. Fiora can perform the dash a second time within a couple
+              of seconds at no Mana cost.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:61ae27e6dfa67822e774ce59601c94c79bb8aaea68cced76c32d680dfb513f63
+            value: 菲奥娜向前冲刺以打击她的目标，从而造成物理伤害。菲奥娜可以在若干秒内无法力消耗地进行第二次冲刺。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: R
+    ids:
+      - value: Jade_FioraR
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Blade Waltz
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 利刃华尔兹
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:3073861155c0ae6cc30807423d378ed66ae3329d542bd6f942a436632df8cb41
+            value: Fiora dashes around the battlefield to deal physical damage
+              to enemy champions. Successive strikes against the same target
+              deal less damage.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:4686529e26c67b9142ea4f19f5ecede108d2efd389a257a1892e857929cf9c10
+            value: 菲奥娜围绕战场进行冲刺，以对敌方英雄们造成物理伤害。对相同目标的后续打击会造成较少伤害。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: W
+    ids:
+      - value: Jade_FioraW
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Riposte
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 劳伦特心眼刀
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:0d7ffb754820ddc9517ef024808867d23a0b5aef68bc93bf322b169de3ea045b
+            value: Fiora's Attack Damage is increased. When activated, Fiora
+              parries the next basic attack and reflects magic damage back to
+              the attacker. Works against champions, monsters, and large
+              minions.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:2f5ba19bcb845c2de9a87f554646f3fd80b60f0b1d67483ed4f3f2343d677729
+            value: 菲奥娜的攻击力得到提升。在激活时，菲奥娜会招架下一次普攻并回敬魔法伤害给攻击者。可对英雄、野怪和大型小兵生效。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524

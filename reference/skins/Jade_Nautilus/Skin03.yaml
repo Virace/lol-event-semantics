@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Nautilus
+  champion_id: 60111
+  skin_number: 3
+  skin_token: Skin03
+  id: 60111003
+  alias: Jade_NautilusSkin03
+  names:
+    en_US:
+      - value: AstroNautilus
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 宇航员 诺提勒斯
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 94
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_NautilusSkin03
+  - Jade_NautilusSkin3

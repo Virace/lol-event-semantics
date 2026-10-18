@@ -31,8 +31,13 @@ def prepare_online_reference_sources(
     data_dragon_version: str | None = None,
     hero_list_url: str = TENCENT_HERO_LIST_URL,
     fetcher: Fetcher | None = None,
+    game_data_fetcher: Fetcher | None = None,
 ) -> OnlineReferenceSources:
-    """下载在线最小子集，并整理成现有本地导入 layout。"""
+    """下载在线最小子集，并整理成现有本地导入 layout。
+
+    game_data_fetcher 用于已绑定采集身份的 GAME 读取器；存在时保留原始
+    JSON 与 metadata 供 local 入口复核。其他来源仍使用通用 fetcher。
+    """
 
     root = Path(cache_root)
     game_data_root = root / "game-data"
@@ -44,8 +49,13 @@ def prepare_online_reference_sources(
         game_version=game_version,
         languages=languages,
         base_url=game_data_base_url,
-        fetcher=fetcher,
+        fetcher=game_data_fetcher or fetcher,
+        preserve_source_bytes=game_data_fetcher is not None,
     )
+    if game_data_fetcher is not None:
+        (game_data_root / "metadata.json").write_bytes(
+            game_data_fetcher(f"{game_data_base_url.rstrip('/')}/metadata.json")
+        )
     selected_data_dragon_version = download_data_dragon_subset(
         output_root=data_dragon_root,
         game_version=data_dragon_version or game_version,

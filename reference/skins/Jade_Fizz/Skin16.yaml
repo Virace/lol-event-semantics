@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Fizz
+  champion_id: 60105
+  skin_number: 16
+  skin_token: Skin16
+  id: 60105016
+  alias: Jade_FizzSkin16
+  names:
+    en_US:
+      - value: Little Devil Fizz
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 小恶魔 菲兹
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 116
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_FizzSkin16

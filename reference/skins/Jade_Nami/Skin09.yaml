@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Nami
+  champion_id: 60267
+  skin_number: 9
+  skin_token: Skin09
+  id: 60267009
+  alias: Jade_NamiSkin09
+  names:
+    en_US:
+      - value: Program Nami
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 源代码 娜美
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 17
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_NamiSkin09
+  - Jade_NamiSkin9

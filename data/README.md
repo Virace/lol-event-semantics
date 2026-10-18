@@ -14,10 +14,14 @@
 - `schema/review-decision.schema.json`：候选绑定、可哈希且带审核人/时间/理由的版本化人工决定 Schema。
 - `schema/review-bundle.schema.json`：Review Site 输入、source review 和最终 dataset approval 目标的 Schema。
 - `accepted-corpus.v1.json`：语义复核迁移后的 91 个 Stable pattern 精确 zh_CN default/main 代表样本；首轮 P5 source review 已接受，后续候选仍需 dataset approval。
-- `frozen-sources-manifest.v1.json`：当前 V1 可提交、无机器路径和运行时间的本地复现来源身份；远端更新必须携带本轮来源清单，不得复用它冒充在线采集。
+- `frozen-sources-manifest.v1.json`：历史 V1 可提交、无机器路径和运行时间的本地复现来源身份；远端更新必须携带本轮来源清单，不得复用它冒充在线采集。
 - `examples/`：与上述 Schema 对应的最小样例、accepted corpus 副本，以及只依赖 Python 标准库的 `consumer.py`；consumer 会先证明必需消费路径与实际 payload 全部处于 manifest hash/digest 闭包，再查询单流。
-- `frozen-profile.v1.json`：当前 V1 16.16 验收输入的版本、raw 唯一计数与显式 LCU 例外；
+- `frozen-profile.v1.json`：历史 V1 16.16 验收输入的版本、raw 唯一计数与显式 LCU 例外；
   它是预检合同，不是历史版本下载能力或未来 live 默认值。
+- `frozen-profile.v2.json`：16.20 累计输入合同，唯一原名 109191，强制完整 catalog 证据，
+  不继承 V1 的空 LCU 例外；profile 本身不代表语义审阅或数据集批准。
+- `frozen-sources-manifest.v2.json`：真实 16.20 全量目录范围采集来源，包含 GAME/LCU
+  manifest、固定快照提交及 metadata 摘要、178 个实体文件摘要；它不包含游戏资产。
 
 其余边界：
 
@@ -26,5 +30,5 @@
 - 原始事件名属于 `raw/events/`。
 - 长期规则属于 `rules/` 和 `overrides/`。
 - 对外候选数据属于 `dist/runs/<state>/<run-id>/normalized/`；默认消费者只解引用 approved-local pointer。
-- `16.16` 只是当前 V1 的 frozen acceptance profile，不是长期 live 默认值，也不在这里保存历史版本快照。
+- `16.16` 只是历史 V1 的 frozen acceptance profile，不是长期 live 默认值，也不在这里保存历史版本快照。
 - Pattern Catalog inventory 属于 `dist/reports/` 下的本地忽略维护报告；公共 `pattern-catalog.json` 由同一 policy/inventory 确定性生成，不在这里手工维护完整快照。

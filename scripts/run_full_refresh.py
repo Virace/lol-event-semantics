@@ -402,13 +402,13 @@ def parse_args(argv: list[str] | None = None) -> FullRefreshArgs:
     parser.add_argument(
         "--sources-manifest",
         type=Path,
-        default=Path("data/frozen-sources-manifest.v1.json"),
+        default=Path("data/frozen-sources-manifest.v2.json"),
         help="Frozen source acquisition manifest.",
     )
     parser.add_argument(
         "--frozen-profile",
         type=Path,
-        default=Path("data/frozen-profile.v1.json"),
+        default=Path("data/frozen-profile.v2.json"),
         help="Committed frozen release profile.",
     )
     parser.add_argument("--runs-root", type=Path, default=Path("dist/runs"), help="Transactional dataset runs root.")

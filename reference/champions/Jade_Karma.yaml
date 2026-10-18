@@ -1,0 +1,267 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60043
+  alias: Jade_Karma
+  names:
+    en_US:
+      - value: Karma
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+  title:
+    zh_CN:
+      - value: 天启者
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+spells:
+  - slot: E
+    ids:
+      - value: Jade_KarmaE
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Soul Shield
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 灵魂护盾
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:31aa5630eb82ba01afc5943a2ea9bd086aba48f564010c1dbe73810365e1728c
+            value: 'Karma summons a protective shield on an ally that absorbs incoming
+              damage.<br><br>Mantra: In addition to casting the shield, energy radiates
+              out from the shield, damaging enemies around her target.'
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:644e1a8b06ce1a10ffb61fe9c2ad1c50983c35241faa1c1b414e99e7006c0680
+            value:
+              卡尔玛为一个友军召唤一个保护型护盾来吸收即将到来的伤害。<br><br>梵咒：除了施放该护盾之外，能量会从该护盾处四散，从而对她的目标周围的敌人造成伤害。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: P
+    ids:
+      - value: Jade_KarmaPassive
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Inner Flame
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 心灵之火
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:41002f94cc17b6365436ee7d2974109918f6fa2326a4a25c0cc46e65335dcb15
+            value: Karma gains Ability Power based on her missing Health.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:708d9fe0859c323fd230cff488428642e52d258073b68bf4e26e7c04a6c7ba95
+            value: 卡尔玛基于她的已损失生命值获得法术强度。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: Q
+    ids:
+      - value: Jade_KarmaQ
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Heavenly Wave
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 天国之刃
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:6dccbeec82dcfe3db11bd3893ed4524658848b1aeee99e64523f4c30895a9904
+            value: 'Karma sends forth hidden blades from her fans, damaging enemies
+              in a cone.<br><br>Mantra: Heavenly Wave also heals allies in the cone
+              based on their missing Health.'
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:ea9fe08c628fe62731f4e9d2e8c2eac3b42d5aa5ec29d883dd14386632a36555
+            value:
+              卡尔玛从折扇中射出隐藏的刀锋，对她前方锥形范围内的敌人们造成伤害。<br><br>梵咒：【天国之刃】还会治疗锥形范围内的友方一部分已损失生命值。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: R
+    ids:
+      - value: Jade_KarmaR
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Mantra
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 梵咒
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:3f7e2306762e4579677759066efc4eacdf3cdc0df81a48c43bdee62556781054
+            value: Karma empowers her next ability to do an additional effect.
+              Mantra is available at level 1 and does not require a skill point.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:1248a82c2dbf94a1b2148895a54c26a97d8f17d07ba610772a3f14b696247934
+            value: 卡尔玛的下个技能会获得强化以造成一个额外效果。梵咒在1级时就可以使用，并且不需要投入技能点。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: W
+    ids:
+      - value: Jade_KarmaW
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Spirit Bond
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 灵魂连接
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:51154d9214ab81686094ef5eb98601f3a5062aab0818b82c3cea7dd95b342750
+            value: 'Karma creates a beam between her and another unit. Allied anchors
+              move faster and enemy anchors are slowed. The beam damages enemies and
+              applies the same movement speed adjustment to any champion it passes
+              through.<br><br>Mantra: Karma strengthens the bond to increase the movement
+              speed effect.'
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:6df58800917171e933b4135d869841acb13fa36958b4497126b1ba6842ce8544
+            value:
+              卡尔玛在她和另一个单位之间生成一道灵链。友方目标移动得更快并且敌方目标会被减速。该灵链会伤害敌人们，并对它途经的任何英雄施加相同的移速调整。<br><br>梵咒：卡尔玛加固该灵链以提升该移速调整效果。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524

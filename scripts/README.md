@@ -18,7 +18,7 @@ uv run python scripts/collect_raw_events.py --output-root dist/collection `
 成功输出 `dist/collection/rounds/<digest>/raw/{champions,maps}/*.txt`，同目录包含来源清单、
 采集计划与报告；`latest.json.run` 是最后成功目录名。保留整个输出根即可在重跑时复核并复用
 已完成实体；失败不更新 latest，缺失或损坏的缓存重新采集。新 live 结果导入前仍须建立并审阅对应
-版本化 profile，不能直接交给只接受 16.16 的冻结更新流程。
+版本化 profile；当前累计输入使用独立 16.20 V2，历史 16.16 V1 保留不变。
 
 准备 reference game-data JSON：
 
@@ -69,17 +69,18 @@ uv run python scripts/update_raw_events.py `
   --raw-root raw\events `
   --state-file raw\update-state.json `
   --raw-input-root .temp\raw-events-round `
-  --game-version 16.16 `
-  --game-data-base-url <snapshot-root-containing-global> `
+  --game-version 16.20 `
   --sources-manifest .temp\source-identity\source-manifest.json `
-  --frozen-profile data\frozen-profile.v1.json `
+  --frozen-profile data\frozen-profile.v2.json `
   --report-root .temp\update-report
 ```
 
 `--mode online` 必须同时提供本轮可移植远端来源清单和 frozen profile；入口会在任何在线 reference
 下载前拒绝缺失、`local` 模式、不符合 profile 的来源证据，以及跨 frozen 系列的 GAME/显式 Data Dragon
 请求版本。`--mode local` 仍可省略两者，或成对提供以对
-staging 输出执行 frozen preflight。
+staging 输出执行 frozen preflight。16.20 V2 要求完整 catalog 来源，online 自动选择采集的固定
+快照提交；local 也必须提供保持原始字节的 reference JSON/metadata 与完全匹配的本轮 raw。
+不能通过切换 local 模式绕过 V2 的来源校验。旧 V1 的可选参数兼容能力保持不变。
 
 构建拆解 JSONL 和报告：
 
@@ -110,11 +111,11 @@ uv run python scripts/build_normalized_outputs.py `
   --output-root .temp\manual-candidate\normalized `
   --repo-root . --raw-root raw\events `
   --reference-root reference --rules-root rules --overrides-root overrides `
-  --reference-version 16.16 `
+  --reference-version cumulative `
   --pattern-policy rules\translation_patterns.yaml `
   --contract-assets-root data `
-  --sources-manifest data\frozen-sources-manifest.v1.json `
-  --frozen-profile data\frozen-profile.v1.json
+  --sources-manifest data\frozen-sources-manifest.v2.json `
+  --frozen-profile data\frozen-profile.v2.json
 ```
 
 生成只读 Pattern Catalog 报告（候选仍为 Experimental，scope 可为 approved、pending 或 deferred；不写入 normalized 或规则源）：

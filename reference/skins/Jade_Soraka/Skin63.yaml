@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Soraka
+  champion_id: 60016
+  skin_number: 63
+  skin_token: Skin63
+  id: 60016063
+  alias: Jade_SorakaSkin63
+  names:
+    en_US:
+      - value: Ocean Song Soraka
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 海之歌 索拉卡
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 159
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_SorakaSkin63

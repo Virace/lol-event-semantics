@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Nunu
+  champion_id: 60020
+  skin_number: 1
+  skin_token: Skin01
+  id: 60020001
+  alias: Jade_NunuSkin01
+  names:
+    en_US:
+      - value: Sasquatch Nunu & Willump
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 荒野巨兽 努努和威朗普
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 72
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_NunuSkin01
+  - Jade_NunuSkin1

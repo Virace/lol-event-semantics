@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Tristana
+  champion_id: 60018
+  skin_number: 5
+  skin_token: Skin05
+  id: 60018005
+  alias: Jade_TristanaSkin05
+  names:
+    en_US:
+      - value: Buccaneer Tristana
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 约德尔海贼团 崔丝塔娜
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 49
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_TristanaSkin05
+  - Jade_TristanaSkin5

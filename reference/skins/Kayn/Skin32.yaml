@@ -1,0 +1,36 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Kayn
+  champion_id: 141
+  skin_number: 32
+  skin_token: Skin32
+  id: 141032
+  alias: KaynSkin32
+  names:
+    en_US:
+      - value: HEARTSTEEL Live My Life Kayn
+        sources:
+          - source: data_dragon
+            first_seen: 16.20.1
+            last_seen: 16.20.1
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 心之钢 我行我路 凯隐
+        sources:
+          - source: data_dragon
+            first_seen: 16.20.1
+            last_seen: 16.20.1
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 199
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - KaynSkin32

@@ -720,6 +720,9 @@ def omitted_roles_for_rendering(
     """
 
     default_roles = roles_for_template(frame_type, locale, "default")
+    # 与 render_translation 追加的通用技能条件角色保持一致，显式报告去重。
+    if "spell_context" in arguments and "spell_context" not in default_roles:
+        default_roles = (*default_roles, "spell_context")
     omitted = []
     for role in default_roles:
         argument = arguments.get(role)

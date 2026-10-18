@@ -1,0 +1,272 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60102
+  alias: Jade_Shyvana
+  names:
+    en_US:
+      - value: Shyvana
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+  title:
+    zh_CN:
+      - value: 龙血武姬
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+spells:
+  - slot: E
+    ids:
+      - value: Jade_ShyvanaE
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Flame Breath
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 烈焰吐息
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:17bf74e4a8dcb5c12a0c94f491ee629baea6562aa4130e764dbb43338f515c32
+            value: 'Shyvana unleashes a fireball that deals damage to all enemies
+              it encounters and leaves cinders on the target briefly marking them.
+              Basic attacks on marked targets deal a percentage of their maximum health
+              as damage on-hit. Dragon Form: Flame Breath engulfs all units in a cone
+              in front of her.'
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:617a7cfcaaecf99ec0e86335fefe377095ad85cabf51eb254c557963db6a7cb8
+            value:
+              希瓦娜放出一枚火球，对它遇到的所有敌人造成伤害，并在目标身上留下燃渣，从而将其短暂标记。对被标记目标们的普攻会附带其百分比最大生命值的额外伤害。魔龙形态：烈焰吐息会席卷希瓦娜前方一个锥形范围内的所有敌人。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: P
+    ids:
+      - value: Jade_ShyvanaPassive
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Fury of the Dragonborn
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 龙族之怒
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:602fab183649a59c709fb643019dba230033903b54407b01eaa3b6623676ac4f
+            value: Shyvana's basic attacks enhance her abilities.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:0dce570157befcb5dd93951569f7112b96f2a1b726549f108270b5274a79a7e6
+            value: 希瓦娜的普攻会增强她的技能。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: Q
+    ids:
+      - value: Jade_ShyvanaQ
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Twin Bite
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 龙牙突刺
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:165d506adb74c1f8fd69ee9d1d684a9e3e6fe5934c77cdfccfc8a1cb0934e332
+            value: 'Shyvana strikes twice on her next attack. Basic attacks reduce
+              the cooldown of Twin Bite. Dragon Form: Twin Bite cleaves all units
+              in front Shyvana.'
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:8c16352e9259129325c3d4ca61c6279837a4802725ecc0c3286579db83eaa8fa
+            value:
+              希瓦娜的下次攻击将进行两次打击。每次普通攻击会减少【龙牙突刺】的冷却时间。魔龙形态：【龙牙突刺】会顺劈希瓦娜面前的所有单位。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: R
+    ids:
+      - value: Jade_ShyvanaR
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Dragon's Descent
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 魔龙降世
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:e9bb87e2b59436238133216fe65649d2f71a03997fa3257f070fdbb72794caa9
+            value: Shyvana transforms into a dragon and takes flight to a target
+              location. Enemies along her path take damage and are knocked
+              toward her target location. Shyvana passively gains Armor and
+              Magic Resistance. Defensive bonuses are doubled in Dragon Form.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:72c0f8753938691ebd800b7c255309e202faec1b2f4c7db555715b278e2a332b
+            value:
+              希瓦娜变成一条巨龙，并且飞向目标区域。她途经的敌人会受到魔法伤害，并被震向她的目标区域。希瓦娜被动地获得护甲和魔抗。这些防御加成会在魔龙形态下翻倍。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: W
+    ids:
+      - value: Jade_ShyvanaW
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Burnout
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 烈火燎原
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:5657a56266e2082df04384f46a907b4e067202742ad60e90bb49f7714a44aaff
+            value: 'Shyvana surrounds herself in fire, dealing magic damage per second
+              to nearby enemies and briefly moving faster. The movement speed reduces
+              over the duration of the spell. Basic attacks extend the duration of
+              Burnout. Dragon Form: Burnout scorches the ground beneath it, enemies
+              on the scorched earth continue to take damage.'
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:645f733b16c35153e9a0950dd8f0efa314f5b1b9c685762fabc7c13c25d4d6f2
+            value:
+              希瓦娜将自己围在火焰之中，每秒对周围的敌人造成伤害，并在短时间内能移动得更快。这个移动速度会在该技能期间持续衰减。普攻会延长【烈火燎原】的持续时间。魔龙形态：【烈火燎原】会烧焦它下方的大地，站在烧焦大地上的敌人们会持续受到伤害。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524

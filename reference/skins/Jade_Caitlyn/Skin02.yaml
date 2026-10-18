@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Caitlyn
+  champion_id: 60051
+  skin_number: 2
+  skin_token: Skin02
+  id: 60051002
+  alias: Jade_CaitlynSkin02
+  names:
+    en_US:
+      - value: Sheriff Caitlyn
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 荒野治安官 凯特琳
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 39
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_CaitlynSkin02
+  - Jade_CaitlynSkin2

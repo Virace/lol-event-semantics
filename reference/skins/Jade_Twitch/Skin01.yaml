@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Twitch
+  champion_id: 60029
+  skin_number: 1
+  skin_token: Skin01
+  id: 60029001
+  alias: Jade_TwitchSkin01
+  names:
+    en_US:
+      - value: Kingpin Twitch
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 首领 图奇
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 49
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_TwitchSkin01
+  - Jade_TwitchSkin1

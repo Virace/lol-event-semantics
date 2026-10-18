@@ -16,7 +16,8 @@ from .game_data_source import GAME_DATA_SNAPSHOT_BASE_URL
 from .online_sources import prepare_online_reference_sources
 from .raw_update import RawUpdateMetadata, RawUpdateResult, update_raw_events
 from .reference_ingestion import import_local_reference
-from .source_manifest import load_source_manifest, validate_portable_source_manifest
+from .reference_snapshot import bind_reference_snapshot, validate_local_reference_snapshot
+from .source_manifest import load_source_manifest, validate_collection_raw, validate_portable_source_manifest
 from .tencent_hero_list_source import TENCENT_HERO_LIST_URL
 
 
@@ -82,6 +83,17 @@ def run_local_update_pipeline(
     """
 
     frozen_paths = _resolve_frozen_paths(sources_manifest_path, frozen_profile_path)
+    source_metadata = load_source_manifest(frozen_paths[0]) if frozen_paths is not None else {}
+    manifest_identity = source_metadata.get("game_manifest")
+    manifest_identity = manifest_identity if isinstance(manifest_identity, dict) else {}
+    catalog_identity = source_metadata.get("catalog")
+    catalog_identity = catalog_identity if isinstance(catalog_identity, dict) else {}
+    if frozen_paths is not None:
+        profile = load_frozen_profile(frozen_paths[1])
+        if "catalog" in source_metadata or profile.get("require_catalog") is True:
+            validate_portable_source_manifest(source_metadata, profile)
+            validate_collection_raw(source_metadata, Path(raw_input_root))
+            validate_local_reference_snapshot(source_metadata, Path(game_data_root), languages=languages)
     reference_target = Path(reference_root)
     raw_target = Path(raw_root)
     state_target = Path(state_file)
@@ -119,6 +131,8 @@ def run_local_update_pipeline(
                 game_version=game_version,
                 manifest_major_version=major_version(game_version),
                 data_dragon_version=data_dragon_version,
+                game_manifest_id=manifest_identity.get("id"),
+                game_data_snapshot_metadata_sha256=catalog_identity.get("metadata_sha256"),
             ),
         )
         result = UpdatePipelineResult(
@@ -200,16 +214,23 @@ def run_online_update_pipeline(
         raise TypeError("在线更新必须提供 sources_manifest_path 与 frozen_profile_path")
     sources_manifest, frozen_profile = frozen_paths
     profile = load_frozen_profile(frozen_profile)
-    source_evidence = validate_portable_source_manifest(
-        load_source_manifest(sources_manifest),
-        profile,
-    )
+    source_manifest = load_source_manifest(sources_manifest)
+    source_evidence = validate_portable_source_manifest(source_manifest, profile)
     base_game_version = str(source_evidence["base_game_version"])
     _require_frozen_series("online game_version", game_version, base_game_version)
     if data_dragon_version is not None:
         _require_frozen_series("online data_dragon_version", data_dragon_version, base_game_version)
+    game_data_fetcher = None
+    source_cache_root = Path(cache_root)
+    if "catalog" in source_manifest or profile.get("require_catalog") is True:
+        validate_collection_raw(source_manifest, Path(raw_input_root))
+        pinned_base, game_data_fetcher = bind_reference_snapshot(source_manifest, fetcher=fetcher)
+        if game_data_base_url not in (GAME_DATA_SNAPSHOT_BASE_URL, pinned_base):
+            raise ValueError("online GAME data URL 与采集 catalog 提交不一致")
+        game_data_base_url = pinned_base
+        source_cache_root = source_cache_root / "snapshots" / str(source_manifest["catalog"]["revision"])
     sources = prepare_online_reference_sources(
-        cache_root=cache_root,
+        cache_root=source_cache_root,
         game_version=game_version,
         languages=languages,
         game_data_base_url=game_data_base_url,
@@ -217,6 +238,7 @@ def run_online_update_pipeline(
         data_dragon_version=data_dragon_version,
         hero_list_url=hero_list_url,
         fetcher=fetcher,
+        game_data_fetcher=game_data_fetcher,
     )
     return run_local_update_pipeline(
         reference_root=reference_root,

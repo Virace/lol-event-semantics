@@ -9,71 +9,71 @@ entity:
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     zh_CN:
       - value: 希瓦娜
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
   title:
     zh_CN:
       - value: 龙血武姬
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.14'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
   nicknames:
     zh_CN:
       - value: 龙女
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
   search_alias:
     zh_CN:
       - value: ln
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: longnv
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: longxuewuji
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: lxwj
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: xiwana
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: xwn
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
 spells:
   - slot: E
     ids:
@@ -81,10 +81,10 @@ spells:
         sources:
           - source: data_dragon
             first_seen: 16.14.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
       - value: ShyvanaFireball
         sources:
           - source: data_dragon
@@ -104,10 +104,10 @@ spells:
           sources:
             - source: data_dragon
               first_seen: 16.14.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 烈焰吐息
           sources:
@@ -118,14 +118,14 @@ spells:
           sources:
             - source: data_dragon
               first_seen: 16.14.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:7cbea5d1cd23e4b07f50652b89d83a98ae8c5d5e943572be2275f3b09ebe0f20
             value: "Shyvana unleashes a fireball that deals damage to all enemies
               it encounters and leaves cinders on the target, marking them for 5 seconds.
@@ -144,28 +144,28 @@ spells:
               - source: game_data
                 first_seen: '16.5'
                 last_seen: '16.5'
-          - hash: 
+          - hash:
               sha256:2c304d912a57dddaf88d9748ae90d9ef6fa6404c284beeda72ff600ce93deef5
-            value: Shyvana launches a fireball that explodes upon striking a 
+            value: Shyvana launches a fireball that explodes upon striking a
               large target and slows them. In Dragon Form, it passes through and
-              explodes upon striking large enemies, leaving behind a trail of 
+              explodes upon striking large enemies, leaving behind a trail of
               fire.
             first_seen: '16.14'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous: 0.384106
             review_status: needs_review
             sources:
               - source: data_dragon
                 first_seen: 16.14.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:b7dcb2049891512a7e4cfbc336cabc46f4a9eaca8e5ca1c1b9842279e28af7d1
-            value: 
+            value:
               希瓦娜放出一枚火球，对沿途的所有目标造成魔法伤害，并在目标身上留下熔化护甲的燃渣，持续5秒。希瓦娜对被标记目标进行的普通攻击，会造成基于目标最大生命值的额外伤害。<br><br><font
               color='#FF3300'>魔龙形态：</font>烈焰吐息会在碰撞或在抵达目标位置后爆炸，造成额外伤害并灼烧大地一小段时间。
             first_seen: 16.5.1
@@ -176,31 +176,31 @@ spells:
               - source: data_dragon
                 first_seen: 16.5.1
                 last_seen: 16.5.1
-          - hash: 
+          - hash:
               sha256:a4adb776241b5319412eefabd4c97af81d0ede07b7f50c93308de785997ecaa6
-            value: 
+            value:
               希瓦娜发射一团火球，火球在击中一个大型目标时爆炸并将其减速。在【魔龙形态】下，它会穿过敌人并在击中大型目标时爆炸，还会留下一条烈焰轨迹。
             first_seen: '16.14'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous: 0.210526
             review_status: needs_review
             sources:
               - source: data_dragon
                 first_seen: 16.14.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: P
     ids:
       - value: ShyvanaPassive
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Fury of the Dragonborn
@@ -215,10 +215,10 @@ spells:
           sources:
             - source: data_dragon
               first_seen: 16.14.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 龙族之怒
           sources:
@@ -229,16 +229,16 @@ spells:
           sources:
             - source: data_dragon
               first_seen: 16.14.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:1453711d3aeed9f19117415529275a47c1f370f449a71d777405e6ac6abc7bf8
-            value: Shyvana deals bonus damage to dragons and gains Armor and 
+            value: Shyvana deals bonus damage to dragons and gains Armor and
               Magic Resistance. As Shyvana and her allies slay more dragons, she
               gains more bonus Armor and Magic Resistance.
             first_seen: '16.5'
@@ -252,26 +252,26 @@ spells:
               - source: game_data
                 first_seen: '16.5'
                 last_seen: '16.5'
-          - hash: 
+          - hash:
               sha256:70962b19a80b62ea100283770f018009e5531cda37eacf658ce792a0624b6609
-            value: Takedowns on enemy champions, large minions, and large 
+            value: Takedowns on enemy champions, large minions, and large
               monsters grant Shyvana Scalemail stacks, improving her defenses.
             first_seen: '16.14'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous: 0.333333
             review_status: needs_review
             sources:
               - source: data_dragon
                 first_seen: 16.14.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:1bdf695cf288c3d66b0669f4221473c71c98c712b4102740a16e3dca2d2cdf9f
-            value: 
+            value:
               希瓦娜对巨龙们造成额外伤害并获得护甲加成和魔法抗性加成。被希瓦娜或她的友军击败的元素亚龙们会为她提供额外的护甲和魔法抗性加成。
             first_seen: 16.5.1
             last_seen: 16.5.1
@@ -281,20 +281,20 @@ spells:
               - source: data_dragon
                 first_seen: 16.5.1
                 last_seen: 16.5.1
-          - hash: 
+          - hash:
               sha256:55569cb9f5afa823477bc00b881e3d733b91f7edfc6b4f20ecf787d567f48b69
             value: 参与击杀敌方英雄、大型小兵和大型野怪后，希瓦娜会获得【龙鳞铁衣】层数，从而改进她的防御属性。
             first_seen: '16.14'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous: 0.165138
             review_status: needs_review
             sources:
               - source: data_dragon
                 first_seen: 16.14.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: Q
     ids:
       - value: ShyvanaDoubleAttack
@@ -306,20 +306,20 @@ spells:
         sources:
           - source: data_dragon
             first_seen: 16.14.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Emberstrike
           sources:
             - source: data_dragon
               first_seen: 16.14.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
         - value: Twin Bite
           sources:
             - source: data_dragon
@@ -333,10 +333,10 @@ spells:
           sources:
             - source: data_dragon
               first_seen: 16.14.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
         - value: 龙牙突刺
           sources:
             - source: data_dragon
@@ -345,7 +345,7 @@ spells:
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:5927da4ebe93a11cdef78a08349cf681de6b5347469940e52d15b0e75ad85363
             value: "Shyvana strikes twice on her next attack and grants herself Attack
               Speed for her next attacks. Basic attacks reduce the cooldown of Twin
@@ -362,29 +362,29 @@ spells:
               - source: game_data
                 first_seen: '16.5'
                 last_seen: '16.5'
-          - hash: 
+          - hash:
               sha256:11c486fe0573f7abb23968cf824182927c4a151d3aa97688c79d40b7964e4f90
-            value: Shyvana's next attack strikes both the target and the 
-              surrounding area. This Ability can be recast. While in Dragon 
-              Form, it gains an additional recast, dealing massive damage to a 
+            value: Shyvana's next attack strikes both the target and the
+              surrounding area. This Ability can be recast. While in Dragon
+              Form, it gains an additional recast, dealing massive damage to a
               single target.
             first_seen: '16.14'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous: 0.288889
             review_status: needs_review
             sources:
               - source: data_dragon
                 first_seen: 16.14.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:de15fdaf9ff2f85e6f811f9cc05f7e3983dd03b20777adeb5bc3d598b104d8ff
-            value: 希瓦娜的下次攻击将进行两次打击并为她接下来的若干次攻击提供攻击速度。每次普通攻击会减少【龙牙突刺】0.5 
-              秒冷却时间。<br><br><font 
+            value: 希瓦娜的下次攻击将进行两次打击并为她接下来的若干次攻击提供攻击速度。每次普通攻击会减少【龙牙突刺】0.5
+              秒冷却时间。<br><br><font
               color='#FF3300'>魔龙形态：</font>【龙牙突刺】会顺劈希瓦娜面前的所有单位。
             first_seen: 16.5.1
             last_seen: 16.5.1
@@ -394,31 +394,31 @@ spells:
               - source: data_dragon
                 first_seen: 16.5.1
                 last_seen: 16.5.1
-          - hash: 
+          - hash:
               sha256:3cc4cc610291732da5fd8780df15fff0a0d6281e10839585a7466c835b5b19d0
-            value: 
+            value:
               希瓦娜的下次攻击会打击目标和周围区域。这个技能可以再次施放。在【魔龙形态】下，它提供一次额外的再次施放，对单体目标造成巨额伤害。
             first_seen: '16.14'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous: 0.227027
             review_status: needs_review
             sources:
               - source: data_dragon
                 first_seen: 16.14.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: R
     ids:
       - value: ShyvanaR
         sources:
           - source: data_dragon
             first_seen: 16.14.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
       - value: ShyvanaTransformCast
         sources:
           - source: data_dragon
@@ -430,27 +430,27 @@ spells:
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 魔龙降世
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:188b8d36e1485e9ef62e772951c1881ed96d9e7fbcde8c5f66a87b92c7edc37e
             value: Shyvana transforms into a dragon and takes flight to a target
-              location. Enemies along her path take damage and are knocked 
-              toward her target location.<br><br>Shyvana passively gains Fury 
+              location. Enemies along her path take damage and are knocked
+              toward her target location.<br><br>Shyvana passively gains Fury
               per second and gains 2 Fury on basic attack.
             first_seen: '16.5'
             last_seen: 16.5.1
@@ -463,27 +463,27 @@ spells:
               - source: game_data
                 first_seen: '16.5'
                 last_seen: '16.5'
-          - hash: 
+          - hash:
               sha256:b91de80b91351b0b08cb2228686c61ac16ef6c82e5e5bb6b073f1f9a5cd7bf86
-            value: Shyvana transforms into a Dragon and leaps forward causing 
-              enemies along her path to flee. While in Dragon form she becomes 
+            value: Shyvana transforms into a Dragon and leaps forward causing
+              enemies along her path to flee. While in Dragon form she becomes
               larger and her basic abilities are empowered.
             first_seen: '16.14'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous: 0.48
             review_status: needs_review
             sources:
               - source: data_dragon
                 first_seen: 16.14.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:a207450548d88887a698a6671c9713dabbb25e455617bcb7aad2ad469224d320
-            value: 
+            value:
               希瓦娜变成一条巨龙，并且飞向目标区域。沿途的敌人会受到魔法伤害，并被震向她的目标区域。<br><br>希瓦娜每秒都会被动获取怒气，并且她的每次普通攻击会提供2点怒气。
             first_seen: 16.5.1
             last_seen: 16.5.1
@@ -493,21 +493,21 @@ spells:
               - source: data_dragon
                 first_seen: 16.5.1
                 last_seen: 16.5.1
-          - hash: 
+          - hash:
               sha256:2db71b9909579d864f3dbbbf6670e1b69969fd62f51fdc43f4a61bde080e7097
-            value: 
+            value:
               希瓦娜变形成一头魔龙并向前跳跃来使途经的敌人们因恐惧而逃跑。在【魔龙形态】下，她的体型变得更大并且她的基础技能都会获得强化。
             first_seen: '16.14'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous: 0.317241
             review_status: needs_review
             sources:
               - source: data_dragon
                 first_seen: 16.14.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: W
     ids:
       - value: ShyvanaImmolationAura
@@ -519,10 +519,10 @@ spells:
         sources:
           - source: data_dragon
             first_seen: 16.14.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Burnout
@@ -537,19 +537,19 @@ spells:
           sources:
             - source: data_dragon
               first_seen: 16.14.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 烈火圣盾
           sources:
             - source: data_dragon
               first_seen: 16.14.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
         - value: 烈火燎原
           sources:
             - source: data_dragon
@@ -558,7 +558,7 @@ spells:
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:d035b16d99968af296a8c2202e956f1835ee0c1bb75819ba899c3c1db6f15ec5
             value: "Shyvana surrounds herself in fire, dealing magic damage per second
               to nearby enemies and moving faster for 3 seconds, part of this damage
@@ -577,27 +577,27 @@ spells:
               - source: game_data
                 first_seen: '16.5'
                 last_seen: '16.5'
-          - hash: 
+          - hash:
               sha256:4cd4ef440474d4c86fda2d525570155935c58efcf89c516e4914293bea47738f
-            value: Shyvana gains a shield, movement speed, and after a short 
-              delay, the area around her detonates.  While in Dragon Form, the 
+            value: Shyvana gains a shield, movement speed, and after a short
+              delay, the area around her detonates.  While in Dragon Form, the
               explosion will heal her if it strikes an enemy champion.
             first_seen: '16.14'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous: 0.20922
             review_status: needs_review
             sources:
               - source: data_dragon
                 first_seen: 16.14.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:65a7af74e86c7fad7c45c0a64888d3e85e4edf83986581c60a790540367fc2ba
-            value: 
+            value:
               希瓦娜将自己围在火焰之中，每秒对周围的敌人造成伤害，并能移动得更快，持续3秒。在这个技能开启时，希瓦娜的普攻会对敌人造成基于此技能伤害的额外伤害。移动速度加成会随着技能的持续时间而减少。普通攻击会延长烈火燎原的持续时间。<br><br><font
               color='#FF3300'>魔龙形态：</font>烈火燎原会随体积增长。
             first_seen: 16.5.1
@@ -608,18 +608,18 @@ spells:
               - source: data_dragon
                 first_seen: 16.5.1
                 last_seen: 16.5.1
-          - hash: 
+          - hash:
               sha256:856725ad868a990614fd6deff5864cc090ea918ac0a331fbd7654cb02b468b08
-            value: 
+            value:
               希瓦娜获得一个护盾和移动速度，并在短暂延迟后，她周围的区域会被引爆。在【魔龙形态】下，这次爆炸如果击中一个敌方英雄，则会治疗希瓦娜。
             first_seen: '16.14'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous: 0.148472
             review_status: needs_review
             sources:
               - source: data_dragon
                 first_seen: 16.14.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524

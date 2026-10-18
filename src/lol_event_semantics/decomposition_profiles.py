@@ -96,6 +96,7 @@ VOICE_CONDITION_ALIASES = {
     "VOUnBound": {"key": "unbound", "label": "Unbound"},
 }
 MOVEMENT_CONTEXT_RESIDUES = {
+    "AllyNear": {"kind": "team_proximity", "key": "ally_near", "label": "Ally Nearby"},
     "Base": {"kind": "location", "key": "base", "label": "Base"},
     "River": {"kind": "location", "key": "river", "label": "River"},
     "Jungle": {"kind": "location", "key": "jungle", "label": "Jungle"},
