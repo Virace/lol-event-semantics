@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Heimerdinger
+  champion_id: 60074
+  skin_number: 2
+  skin_token: Skin02
+  id: 60074002
+  alias: Jade_HeimerdingerSkin02
+  names:
+    en_US:
+      - value: Blast Zone Heimerdinger
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 拆弹专家 黑默丁格
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 70
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_HeimerdingerSkin02
+  - Jade_HeimerdingerSkin2

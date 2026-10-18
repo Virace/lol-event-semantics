@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Fiddlesticks
+  champion_id: 60009
+  skin_number: 1
+  skin_token: Skin01
+  id: 60009001
+  alias: Jade_FiddlesticksSkin01
+  names:
+    en_US:
+      - value: Spectral Fiddlesticks
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 幽魂 费德提克
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 80
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_FiddlesticksSkin01
+  - Jade_FiddlesticksSkin1

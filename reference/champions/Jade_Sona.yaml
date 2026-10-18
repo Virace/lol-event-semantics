@@ -9,14 +9,14 @@ entity:
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
   title:
     zh_CN:
       - value: 琴瑟仙女
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
 spells:
   - slot: E
     ids:
@@ -24,20 +24,20 @@ spells:
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Song of Celerity
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 迅捷奏鸣曲
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -54,6 +54,19 @@ spells:
               - source: game_data
                 first_seen: '16.16'
                 last_seen: '16.16'
+          - hash:
+              sha256:ac92348b63a61ed345504ffa01c5fdc8d01797679e5b41798f402b725436241f
+            value: Sona plays the Song of Celerity, granting nearby allies bonus
+              Movement Speed. Additionally, casting this ability energizes
+              nearby allies with a burst of speed.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous: 0.969512
+            review_status: needs_review
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
@@ -67,26 +80,37 @@ spells:
               - source: game_data
                 first_seen: '16.16'
                 last_seen: '16.16'
+          - hash:
+              sha256:4bb24e222b408850e145d7df0fa33d0d0ca7aad3aaf1b2dd769050abf8ed0c19
+            value: 娑娜弹奏迅捷奏鸣曲，为附近友军提供移动速度加成。此外，施放这个技能还会用一个爆发性的移速加成来激发附近的友军。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous: 0.641509
+            review_status: needs_review
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
   - slot: P
     ids:
       - value: Jade_SonaPassive
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Power Chord
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 能量和弦
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -103,6 +127,18 @@ spells:
               - source: game_data
                 first_seen: '16.16'
                 last_seen: '16.16'
+          - hash:
+              sha256:d8323fe02e57435409279e5af6d4e0331c03db7eb21e398de526860fbbef4076
+            value: Every few spells, Sona's next attack deals bonus magic damage
+              and causes her target to deal reduced damage for a few seconds.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous: 0.929688
+            review_status: needs_review
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
@@ -116,26 +152,37 @@ spells:
               - source: game_data
                 first_seen: '16.16'
                 last_seen: '16.16'
+          - hash:
+              sha256:cb08e2f03b281e4c0d4e60d5fdb947538b62523ee1262541d062ce32108dc382
+            value: 每若干次技能，娑娜的下一次攻击造成额外魔法伤害并降低她的目标在若干秒内造成的伤害。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous: 0.915663
+            review_status: needs_review
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
   - slot: Q
     ids:
       - value: Jade_SonaQ
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Hymn of Valor
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 英勇赞美诗
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -146,13 +193,13 @@ spells:
               this ability sends out bolts of sound, dealing magic damage to the
               nearest two enemy champions or monsters.
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
@@ -160,33 +207,33 @@ spells:
             value:
               娑娜演奏英勇赞美诗，为附近的友方英雄提供额外伤害和法术强度。此外，施放该技能会射出音波，对相距最近的两名敌方英雄或野怪造成魔法伤害。
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: R
     ids:
       - value: Jade_SonaR
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Crescendo
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 狂舞终乐章
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -195,46 +242,46 @@ spells:
             value: Sona plays her ultimate chord, forcing enemy champions to
               dance and dealing magic damage to them.
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
               sha256:e774439b197c11d8f3c1d72e43a3e5e4a42671fdd08fcfeb64cfab2de3be2364
             value: 娑娜弹奏终极和弦，迫使敌方英雄开始跳舞并对其造成魔法伤害。
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: W
     ids:
       - value: Jade_SonaW
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Aria of Perseverance
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 坚毅咏叹调
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -245,13 +292,13 @@ spells:
               ability sends out healing melodies, healing Sona and a nearby
               wounded ally.
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
@@ -259,10 +306,10 @@ spells:
             value:
               娑娜演奏坚毅咏叹调，为附近的友方英雄提供额外护甲和额外魔法抗性。此外，施放该技能会弹奏疗愈旋律，为娑娜和附近一位受伤的友军提供治疗。
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524

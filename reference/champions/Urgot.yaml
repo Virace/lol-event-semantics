@@ -9,54 +9,54 @@ entity:
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     zh_CN:
       - value: 厄加特
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
   title:
     zh_CN:
       - value: 无畏战车
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.14'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
   search_alias:
     zh_CN:
       - value: ejiate
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: ejt
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: wuweizhanche
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: wwzc
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
 spells:
   - slot: E
     ids:
@@ -64,316 +64,316 @@ spells:
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Disdain
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 鄙弃
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:899eecb7f1516d8148307a8cb844c79998a3450ff1c535fb505366982bc6d69d
             value: Urgot charges in a direction, shielding himself and trampling
-              non-champion enemies. If he catches an enemy champion, he will 
+              non-champion enemies. If he catches an enemy champion, he will
               stop and hurl them out of his way.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:a78bfc5cba6956337f428a797faa6b03c8dd5cde92f3839fc0c099ef66fb2b57
             value: 厄加特向一个方向冲锋，为自身提供护盾并践踏非英雄的敌人。如果他捕捉到一个敌方英雄，他将会停下并将该英雄抛到他的另一侧。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: P
     ids:
       - value: UrgotPassive
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Echoing Flames
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 回响烈焰
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:ae92b4dd9fb9c093d7a0858a64f2791c3f3340c0588728858af7fa591b411bae
-            value: Urgot's basic attacks and Purge periodically trigger blasts 
+            value: Urgot's basic attacks and Purge periodically trigger blasts
               of flame from his legs, dealing physical damage.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:02dc1ea7c683c8a600579b8acf26beb7f1272c7c75b544b8ba5132a8624bc58f
             value: 厄加特的普攻和【净除】会周期性地触发他腿上的烈焰喷射，造成物理伤害。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: Q
     ids:
       - value: UrgotQ
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Corrosive Charge
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 腐蚀电荷
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:3c6ef119e0350578481101a6c2155287b5e679ef649627f9ae2c9a1d918a4103
-            value: Fires an explosive charge at the target location, dealing 
+            value: Fires an explosive charge at the target location, dealing
               physical damage and slowing enemies caught in the explosion.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:47bd0c144aa136e943fc86028fc6f0e6e5ba6e09fbafccb8cd5998427039bb40
             value: 发射一个可爆炸的电荷至目标位置，对爆炸波及到的敌人造成物理伤害和减速效果。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: R
     ids:
       - value: UrgotR
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Fear Beyond Death
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 超越死亡的恐惧
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:0a56ad83cb349d4aef87e2477d4206d9cbf69d2d4b0d05a325960fd3c1caf992
-            value: Urgot fires a chem-drill that impales the first enemy 
-              champion hit. If that champion falls below a health threshold, 
+            value: Urgot fires a chem-drill that impales the first enemy
+              champion hit. If that champion falls below a health threshold,
               Urgot judges them weak and can execute them.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:43b481ab1097e940897d08b0cfd7632313133c7ff0987b03c8a9b04718623fb3
-            value: 
+            value:
               厄加特发射一个化学钻头，刺穿命中的第一个敌方英雄。如果该英雄的生命值低于一定阈值，那么厄加特就会将该英雄评判为弱者并将其处决。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: W
     ids:
       - value: UrgotW
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Purge
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 净除
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:21f17d64d4f84a22d000575ba7a8d4cda6cadee3db4bf929703dd83249e48d73
-            value: Urgot slows himself while he unloads his weapon on nearby 
-              enemies. Prioritizes enemy champions Urgot has recently struck 
+            value: Urgot slows himself while he unloads his weapon on nearby
+              enemies. Prioritizes enemy champions Urgot has recently struck
               with other abilities and triggers Echoing Flames.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:faecfadb83fac118337bf08126c5ae382fc7229295f938a1d36df1b98cc8edae
             value: 厄加特减速自身的同时对附近的敌人们火力全开。优先攻击被厄加特近期用其它技能命中过的敌方英雄，并触发回响烈焰。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524

@@ -9,14 +9,14 @@ entity:
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
   title:
     zh_CN:
       - value: 英勇投弹手
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
 spells:
   - slot: E
     ids:
@@ -24,20 +24,20 @@ spells:
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Gatling Gun
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 格林机枪
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -46,46 +46,46 @@ spells:
             value: Corki's gatling gun rapidly fires in a cone in front of him,
               dealing damage and reducing enemy armor.
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
               sha256:481cdf93d92d47dcd3fd0cae72bd5e513708f81b893d12da49001aa9e57db48e
             value: 库奇使用格林机枪扫射他面前锥形范围内的敌人，造成伤害并削减敌人护甲。
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: P
     ids:
       - value: Jade_CorkiPassive
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Hextech Shrapnel Shells
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 海克斯科技榴弹
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -94,46 +94,46 @@ spells:
             value: Corki's basic attacks deal bonus true damage to minions,
               monsters, and champions.
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
               sha256:64c7e0727a5af80e56733d0dc903e303e94f79f5ab999fed2dd3ed4e2d9e1858
             value: 库奇的普攻对小兵、野怪和英雄造成额外真实伤害。
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: Q
     ids:
       - value: Jade_CorkiQ
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Phosphorus Bomb
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 磷光炸弹
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -150,6 +150,18 @@ spells:
               - source: game_data
                 first_seen: '16.16'
                 last_seen: '16.16'
+          - hash:
+              sha256:e4d9611151bc50779aecc8e67c4b9022c583d536e0737c4651873e8dea9f353f
+            value: Corki fires a bomb, damaging and revealing enemies around the
+              blast.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous: 0.51
+            review_status: needs_review
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
@@ -163,26 +175,37 @@ spells:
               - source: game_data
                 first_seen: '16.16'
                 last_seen: '16.16'
+          - hash:
+              sha256:68ea053085b03fd762f2164fae993b368956107780bbf9ae7c94addc6b477ada
+            value: 库奇发射一颗炸弹，从而伤害并显形爆裂点周围的敌人们。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous: 0.376812
+            review_status: needs_review
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
   - slot: R
     ids:
       - value: Jade_CorkiR
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Missile Barrage
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 火箭轰击
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -200,6 +223,19 @@ spells:
               - source: game_data
                 first_seen: '16.16'
                 last_seen: '16.16'
+          - hash:
+              sha256:e8b2676ae11ae4d534d3168a2b38583c9c0b90d4a4baea3da3dc8a2d87fd44db
+            value: Corki fires a missile toward his target location that
+              explodes on impact, dealing damage to enemies in an area. Some
+              missiles will be a Big One, dealing extra damage.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous: 0.81592
+            review_status: needs_review
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
@@ -214,26 +250,38 @@ spells:
               - source: game_data
                 first_seen: '16.16'
                 last_seen: '16.16'
+          - hash:
+              sha256:32f4fcdf502c73137c1bbc43c033050fb88bacb89012785e4cb3bf536830a697
+            value:
+              库奇朝着他的目标地点发射一枚导弹。导弹会在命中第一个敌人后爆炸，并对目标周围单位造成伤害。有些导弹将是超级导弹，可造成额外伤害。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous: 0.716981
+            review_status: needs_review
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
   - slot: W
     ids:
       - value: Jade_CorkiW
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Valkyrie
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 瓦尔基里俯冲
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -242,23 +290,23 @@ spells:
             value: Corki surges to target location, dropping bombs that create a
               trail of destruction for opponents who remain in the fire.
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
               sha256:e5216ea05d7f05127f9ad6457ce39182518747de6cea7ebccb678f5f2f07fe6b
             value: 库奇冲向目标位置，沿途投下炸弹，留下一道火焰路径，对停留其中的敌人造成伤害。
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524

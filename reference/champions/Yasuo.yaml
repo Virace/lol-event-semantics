@@ -9,66 +9,66 @@ entity:
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     zh_CN:
       - value: 亚索
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
   title:
     zh_CN:
       - value: 疾风剑豪
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.14'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
   nicknames:
     zh_CN:
       - value: 剑豪
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
   search_alias:
     zh_CN:
       - value: jfjh
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: jh
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: jianhao
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: jifengjianhao
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: ys
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
 spells:
   - slot: E
     ids:
@@ -76,330 +76,330 @@ spells:
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Sweeping Blade
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 踏前斩
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:33d91da8305790362f162549441373e262ed3527d3ab11eeca497be8fb10dc8b
-            value: Dashes through target enemy, dealing magic damage. Each cast 
-              increases subsequent dash's damage, up to a max 
-              amount.<br><br>Cannot be re-cast on the same enemy for a few 
-              seconds.<br><br><font color='#99FF99'>If Steel Tempest is cast 
+            value: Dashes through target enemy, dealing magic damage. Each cast
+              increases subsequent dash's damage, up to a max
+              amount.<br><br>Cannot be re-cast on the same enemy for a few
+              seconds.<br><br><font color='#99FF99'>If Steel Tempest is cast
               while dashing, it will strike as a circle.</font>
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:ea906b398c1fe2bb6a63b5767d47a272f0811a429b4180d8fd827eb89d2b007a
-            value: 
+            value:
               向目标敌人突进，造成魔法伤害。每次施法都会提升你的后续突进的伤害，直到抵达上限。<br><br>在若干秒内无法对相同敌人重复施放。<br><br><font
               color='#99FF99'>如果在突进的过程中施放斩钢闪，那么斩钢闪就会呈环状出剑。</font>
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: P
     ids:
       - value: YasuoPassive
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Way of the Wanderer
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 浪客之道
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:56975a09745e9759244070304180def60bfcae596448016e8d129ca5e39a2c14
-            value: Yasuo's Critical Strike Chance is increased. Additionally, 
-              Yasuo builds toward a shield whenever he is moving. The shield 
+            value: Yasuo's Critical Strike Chance is increased. Additionally,
+              Yasuo builds toward a shield whenever he is moving. The shield
               triggers when he takes damage from a champion or monster.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:c17485f374846ccf455b9e55fadcedcae1c12074d71c9bf1206ec854ba6ada44
             value: 亚索的暴击几率提升。此外，亚索在移动时会为一层护盾攒能。护盾会在他受到来自英雄或野怪的伤害时触发。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: Q
     ids:
       - value: YasuoQ
         sources:
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
       - value: YasuoQ1Wrapper
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
     names:
       en_US:
         - value: Steel Tempest
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 斩钢闪
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:4da3a92c44f19822685e2a8c10c8192ce0d79fad625a67372ed0bd163928f9f2
-            value: Thrusts forward, damaging all enemies in a line.<br><br>On 
-              hit, grants a stack of Gathering Storm for a few seconds. At 2 
-              stacks, Steel Tempest fires a whirlwind that knocks <font 
-              color='#6655CC'>Airborne</font>.<br><br>Steel Tempest is treated 
+            value: Thrusts forward, damaging all enemies in a line.<br><br>On
+              hit, grants a stack of Gathering Storm for a few seconds. At 2
+              stacks, Steel Tempest fires a whirlwind that knocks <font
+              color='#6655CC'>Airborne</font>.<br><br>Steel Tempest is treated
               as a basic attack and scales with all the same things.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:dd1ce7b80a949e97cd78418db105336c0ffec2f92f18073e76de2892aba10f9a
-            value: 
+            value:
               向前出剑，呈直线造成伤害。<br><br>在命中时，斩钢闪会获得一层旋风烈斩效果，持续数秒。在积攒2层旋风烈斩效果后，斩钢闪会形成一阵能够<font
               color='#6655CC'>击飞</font>敌人的旋风。<br><br>斩钢闪被视为普通攻击，并且可以从所有作用于普攻的东西上获得收益。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: R
     ids:
       - value: YasuoR
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Last Breath
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 狂风绝息斩
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:5a81f527768c7e712785963a76765d88015c522a099526db5cf2151d50fde4fa
-            value: Blinks to an <factionIonia1>Airborne</factionIonia1> enemy 
-              champion, dealing physical damage and holding all 
+            value: Blinks to an <factionIonia1>Airborne</factionIonia1> enemy
+              champion, dealing physical damage and holding all
               <factionIonia1>Airborne</factionIonia1> enemies in the area in the
-              air. Grants maximum Flow but resets all stacks of Gathering 
-              Storm.<br><br>For a moderate time afterwards, Yasuo's critical 
+              air. Grants maximum Flow but resets all stacks of Gathering
+              Storm.<br><br>For a moderate time afterwards, Yasuo's critical
               strikes gain significant Bonus Armor Penetration.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:362170e39249590ac6bce24ff1c5523879cd815e562d683799ca24fc1d03bc9e
-            value: 
+            value:
               闪烁到一个<factionIonia1>浮空</factionIonia1>的敌方英雄身边，造成物理伤害，并使范围内的所有<factionIonia1>浮空</factionIonia1>的敌人滞留在空中。获得满额的剑意值，但会重置旋风烈斩的层数。<br><br>在接下来的若干秒里，亚索的暴击会获得显著的额外护甲穿透加成值。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: W
     ids:
       - value: YasuoW
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Wind Wall
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 风之障壁
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:3ffe7aa9e226104a1f1ef92499528834405070fba2e4c8086d07a208e480f5f3
             value: Creates a moving wall that blocks all enemy projectiles for 4
               seconds.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:2269e7a62ac7b9b3f610b3f7296b0fa28f1dff29b4da838b7fc110929f7f4d9a
             value: 形成一个持续4秒的气流之墙，来阻挡敌方的飞行道具。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524

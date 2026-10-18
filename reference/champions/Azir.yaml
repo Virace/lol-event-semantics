@@ -9,71 +9,71 @@ entity:
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     zh_CN:
       - value: 阿兹尔
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
   title:
     zh_CN:
       - value: 沙漠皇帝
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.14'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
   nicknames:
     zh_CN:
       - value: 沙皇
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
   search_alias:
     zh_CN:
       - value: aze
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: azier
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: sh
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: shahuang
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: shamohuangdi
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: smhd
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
 spells:
   - slot: E
     ids:
@@ -81,322 +81,322 @@ spells:
         sources:
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
       - value: AzirEWrapper
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
     names:
       en_US:
         - value: Shifting Sands
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 流沙移形
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:964ccb722e6b71582e82902e98dd53265064dfdd7d9eee823ac897c645e266b7
-            value: Azir shields himself briefly and dashes to one of his Sand 
-              Soldiers, damaging enemies. If he hits an enemy champion, he 
-              instantly readies a new Sand Soldier for deployment and halts his 
+            value: Azir shields himself briefly and dashes to one of his Sand
+              Soldiers, damaging enemies. If he hits an enemy champion, he
+              instantly readies a new Sand Soldier for deployment and halts his
               dash.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:14b1a25ddcc513470b800167de76483b5b2fbe056ea5fd3364a36ef900d2c875
-            value: 
+            value:
               阿兹尔暂时套上一层护盾并冲向他的一个黄沙士兵，伤害敌人。如果他命中了一位敌方英雄，那么他就会准备好一个新的黄沙士兵并中断他的位移。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: P
     ids:
       - value: AzirPassive
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Shurima's Legacy
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 恕瑞玛的传承
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:79f396f3befc3c3e9af62b25736f59528d8c44432c01ea62fe3042666d6d3603
-            value: Azir can summon the Disc of the Sun from the ruins of allied 
+            value: Azir can summon the Disc of the Sun from the ruins of allied
               or enemy turrets.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:c69f5d8e0848e3ad923c9678266cf8eaab27e25776fc76d24e4bb79263ac821e
             value: 阿兹尔可以从友方或敌方防御塔的废墟中召唤太阳圆盘。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: Q
     ids:
       - value: AzirQ
         sources:
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
       - value: AzirQWrapper
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
     names:
       en_US:
         - value: Conquering Sands
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 狂沙猛攻
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:48440aca64b1db90daac2aced9ba29c6b185aea4240d0ecdbc561d62a51d7cff
-            value: Azir sends all Sand Soldiers towards a location. Sand 
-              Soldiers deal magic damage to enemies they pass through and apply 
+            value: Azir sends all Sand Soldiers towards a location. Sand
+              Soldiers deal magic damage to enemies they pass through and apply
               a slow for 1 second.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:8cb703d2bd13d250586c9b6f3c7bfa368724d6d512ebbe2b8cf6e69c558cc2f7
             value: 阿兹尔把所有黄沙士兵派往一个地点。黄沙士兵会对沿途的所有敌人造成魔法伤害，并施加持续1秒的减速效果。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: R
     ids:
       - value: AzirR
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Emperor's Divide
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 禁军之墙
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:37fe51b7ea3d043ef0ffd1b96915351ac4347e7b4360f1ecc41ec40bf472dee3
-            value: Azir summons a wall of soldiers which charge forward, 
+            value: Azir summons a wall of soldiers which charge forward,
               knocking back and damaging enemies.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:1759ea1396deb1f974c1c6aaa06f361e220274a75c3291ed9aa345c2c69d8fb6
             value: 阿兹尔召唤一道由禁军组成的人墙向前冲锋，对敌人造成伤害和击退效果。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: W
     ids:
       - value: AzirW
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Arise!
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 沙兵现身
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:690afd797ee6807f9cc7c895d7147a15c500f76b47484daeeb8ee81125dd51ab
             value: Azir summons a Sand Soldier to attack nearby targets for him,
-              replacing his basic attack against targets within the soldier's 
+              replacing his basic attack against targets within the soldier's
               range. Their attacks deal magic damage to enemies in a line.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:61b6be82a5ba3dac34a11735e67f3762a7bc080dbad9f1362f7db16c2bfa98e8
-            value: 
+            value:
               阿兹尔召唤一个黄沙士兵来为他攻击附近的敌方单位。如果敌方单位在士兵的攻击距离内，那么士兵会代替阿兹尔进行普攻。士兵的攻击会对一条直线上的敌人造成魔法伤害。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524

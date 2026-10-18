@@ -1,0 +1,267 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60266
+  alias: Jade_Aatrox
+  names:
+    en_US:
+      - value: Aatrox
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+  title:
+    zh_CN:
+      - value: 暗裔剑魔
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+spells:
+  - slot: E
+    ids:
+      - value: Jade_AatroxE
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Blades of Torment
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 痛苦利刃
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:1b1c2bd6825166d2b2e1f9e27abbcba55efa4ae560698b0162a1191ec61ec378
+            value: Aatrox unleashes the power of his blade, dealing damage to
+              all enemies hit and slowing them.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:60d6b4516c0060c433c136594a49d7d8c028d6d66913c81da714939663f20e7b
+            value: 亚托克斯释放剑气，对命中的所有敌人造成伤害和减速效果。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: P
+    ids:
+      - value: Jade_AatroxPassive
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Blood Well
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 鲜血魔井
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:1097daf715482cfc9f0546aa1f1f7dfee79fe3df9ac18ad067a2f2f0ea4a7b4e
+            value: When using an ability that costs Health, Aatrox stores the
+              self-inflicted damage into the Blood Well. Upon taking fatal
+              damage Aatrox extracts the blood from the well and recovers it as
+              health over a brief duration. Additionally, Aatrox gains 1% Attack
+              Speed for every 2% blood that is in the well.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:b4576622fdffcb466427abb99c9b841a643ed8fa5f475939cfe32b874520d78f
+            value:
+              当使用消耗血量的技能时，亚托克斯会将生命消耗储存进血池。在受到致命伤害后，亚托克斯从血池中提取鲜血并在短时间内将之作为生命值回复。此外，魔井中每有2%的鲜血，就会为亚托克斯提供1%攻击速度。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: Q
+    ids:
+      - value: Jade_AatroxQ
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Dark Flight
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 黑暗之跃
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:6941ab769b77cf1f7e3f2da2db7165244b4e754d7167700e1b237a697da13dd1
+            value: Aatrox takes flight and slams down at a targeted location,
+              dealing damage and knocking up enemies at the center of impact.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:ae947dfa48903beb36301df1cc665f96da65c9f116bfdfe90e46d6dacdc2ba31
+            value: 亚托克斯向目标位置纵身一跃并猛击，造成伤害并击飞落点中央的敌人。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: R
+    ids:
+      - value: Jade_AatroxR
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Massacre
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 浴血屠戮
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:b328835ad51e53630e960afc9f18f12c9a55b5e66d1679d2a185b7517870d1a6
+            value: Aatrox draws in the blood of his foes, damaging all nearby
+              enemy champions around him and gaining increased Attack Speed and
+              bonus Attack Range for a short duration.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:87a303bb4286b789b4eaccb0f101e82638643683a01d07276ce16368353658ae
+            value: 亚托克斯抽取敌人的血液，对他周围的所有敌方英雄造成伤害并获得持续一段短时间的额外攻击速度和攻击距离。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: W
+    ids:
+      - value: Jade_AatroxW
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Blood Thirst / Blood Price
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 血之渴望/血之报偿
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:7e36ac49d59d6fe479ea94cab97a374c7f303dc51ec8c817efcc2c355d51cad3
+            value: While toggled on Aatrox deals bonus damage every third
+              subsequent attack at the expense of his own Health. While toggled
+              off Aatrox restores Health every third subsequent attack.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:4b82294d7e3d04a156b3e9e3c59cf2ff4c7fec547ed8c5a08179ed83c34dae55
+            value:
+              在开启状态下，亚托克斯的每第三次攻击将以损失自己生命为代价对敌人造成额外伤害。在关闭状态下，亚托克斯的每第三次攻击将回复自己的生命值。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524

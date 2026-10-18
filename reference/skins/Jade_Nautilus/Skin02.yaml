@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Nautilus
+  champion_id: 60111
+  skin_number: 2
+  skin_token: Skin02
+  id: 60111002
+  alias: Jade_NautilusSkin02
+  names:
+    en_US:
+      - value: Subterranean Nautilus
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 地底迷城 诺提勒斯
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_NautilusSkin02
+  - Jade_NautilusSkin2

@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Ezreal
+  champion_id: 60081
+  skin_number: 1
+  skin_token: Skin01
+  id: 60081001
+  alias: Jade_EzrealSkin01
+  names:
+    en_US:
+      - value: Nottingham Ezreal
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 冒险精神 伊泽瑞尔
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 97
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_EzrealSkin01
+  - Jade_EzrealSkin1

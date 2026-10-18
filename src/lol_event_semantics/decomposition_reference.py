@@ -14,6 +14,7 @@ from .decomposition_model import (
     EventProfile,
     LexicalAtom,
     SemanticProfile,
+    UnknownFragment,
     UnknownKind,
 )
 from .game_data import compact
@@ -1081,6 +1082,28 @@ def enrich_unknown_profile(record: EventDecompositionRecord, reference: Referenc
         set_switch_profile(record)
         return
 
+    pre_context = record.semantic_slots.get("pre_context")
+    if (
+        record.shell.asset_kind == "vo"
+        and compact(record.owner.alias or "") == "shyvana"
+        and isinstance(pre_context, dict)
+        and pre_context.get("raw") == "Dragon"
+        and record.profile.primary_family in {"attack", "joke", "kill", "taunt"}
+    ):
+        # 希瓦娜的 Dragon_<动作> 是施动者的龙形态，不能按同名野怪
+        # 覆盖已经拆解出的攻击、表情或击杀动作。
+        form = {
+            "raw": "Dragon",
+            "kind": "champion_form_qualifier",
+            "component": "dragon_form",
+            "label": "龙形态",
+            "source": "owner_scoped_leading_voice_context",
+            "confidence": "high",
+        }
+        record.semantic_slots["owner_form"] = form
+        record.semantic_slots["action_form"] = form
+        return
+
     first_token = first_interesting_token(record)
 
     if first_token is None:
@@ -1594,6 +1617,13 @@ def champion_contextual_alias_matches_record(
 ) -> bool:
     """限定英雄别名只在规则声明的资产类型和模式内生效。"""
 
+    if (
+        compact(rule.owner) == "viktor"
+        and rule.component == "permanent_ability_augment"
+        and record.shell.verb != "play"
+    ):
+        return False
+
     if rule.asset_kind is not None:
         asset_kind = record.shell.asset_kind
         if asset_kind is None or compact(asset_kind) != compact(rule.asset_kind):
@@ -1926,6 +1956,23 @@ def add_mode_namespace_candidate(record: EventDecompositionRecord, reference: Re
         }
 
     existing_context = record.semantic_slots.get("mode_context")
+    if namespace.key == "guests_of_honor" and position == "owner" and record.lexical_atoms:
+        # 只保存原始嘉宾 token，不把 NPC、角色组件或未知词转成英雄身份。
+        record.semantic_slots["context_namespace"]["guest_token"] = record.lexical_atoms[0].raw
+        cue_path = [atom.raw for atom in record.lexical_atoms[1:]]
+        record.semantic_slots["context_namespace"]["cue_path"] = cue_path
+        cue_raw = "_".join(cue_path)
+        location = "semantic_slots.context_namespace.cue_path"
+        if cue_raw and not any(unknown.location == location for unknown in record.unknowns):
+            record.unknowns.append(
+                UnknownFragment(
+                    kind=UnknownKind.UNPARSED_FRAGMENT,
+                    raw=cue_raw,
+                    location=location,
+                    blocking_reason="Guest-of-Honor scenario requires exact review",
+                    severity="medium",
+                )
+            )
     if namespace.kind == "mode" and not isinstance(existing_context, dict):
         record.semantic_slots["mode_context"] = {
             "key": namespace.key,
@@ -2022,7 +2069,7 @@ def record_mode_namespace(record: EventDecompositionRecord) -> tuple[ModeNamespa
     for atom in record.lexical_atoms:
         namespace = mode_namespace_for_token(atom.raw)
 
-        if namespace is not None:
+        if namespace is not None and not namespace.owner_only:
             return namespace, atom.raw, "qualifier"
 
     return None
@@ -2034,6 +2081,9 @@ def mode_actor_for_record(
     namespace: ModeNamespace,
 ) -> tuple[ReferenceEntity | None, str | None]:
     """解析命名空间事件中的基础英雄演员。"""
+
+    if not namespace.resolve_actor:
+        return None, None
 
     if namespace.key == "ruby":
         for index, atom in enumerate(record.lexical_atoms[:-1]):

@@ -19,9 +19,22 @@ class ModeNamespace:
     label: str
     kind: str = "mode"
     actor_role: str | None = None
+    resolve_actor: bool = True
+    owner_only: bool = False
 
 
 MODE_NAMESPACES = (
+    # Arena 地图来源及 Riot 的 Guests of Honor 机制说明互相印证；
+    # 嘉宾包含 NPC 与角色组件，仅保留 token，不按英雄前缀推断演员。
+    # https://www.leagueoflegends.com/en-gb/news/dev/dev-leveling-up-arena/
+    ModeNamespace(
+        prefix="GoH",
+        key="guests_of_honor",
+        label="Guests of Honor",
+        kind="mechanism",
+        resolve_actor=False,
+        owner_only=True,
+    ),
     ModeNamespace(prefix="Jade", key="jade", label="经典模式", actor_role="champion"),
     ModeNamespace(prefix="Ruby", key="ruby", label="末日人机", actor_role="apc"),
     ModeNamespace(prefix="Strawberry", key="strawberry", label="PVE 模式", actor_role="boss"),

@@ -9,14 +9,14 @@ entity:
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
   title:
     zh_CN:
       - value: 虚空行者
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
 spells:
   - slot: E
     ids:
@@ -24,20 +24,20 @@ spells:
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Force Pulse
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 能量脉冲
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -47,46 +47,46 @@ spells:
               charging up, Kassadin can use Force Pulse to damage and slow
               enemies in a cone in front of him.
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
               sha256:22b3b0c674100fd18fa0c29fb3b815d261c06e2f8ae578acb8f9488464d14915
             value: 附近有单位施放法术技能时，卡萨丁将吸收能量。当充能完毕后，吸收的能量可转化为脉冲，对面前锥形区域内敌人造成伤害并减速。
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: P
     ids:
       - value: Jade_KassadinPassive
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Void Stone
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 虚空之石
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -103,6 +103,19 @@ spells:
               - source: game_data
                 first_seen: '16.16'
                 last_seen: '16.16'
+          - hash:
+              sha256:5fd76f39c7362400b837bcd1d3a3c6cc6b7023f3c9c18b5ad1f928bac16c6e3c
+            value: Kassadin takes reduced <magicDamage>magic
+              damage</magicDamage> and transforms incoming magic damage into
+              bonus <attackSpeed>Attack Speed</attackSpeed>.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous: 0.932432
+            review_status: needs_review
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
@@ -117,26 +130,38 @@ spells:
               - source: game_data
                 first_seen: '16.16'
                 last_seen: '16.16'
+          - hash:
+              sha256:256825919c5e237b4b810b02bdfef934167d1a355ceac6908f81447099c9f12d
+            value:
+              卡萨丁所受的<magicDamage>魔法伤害</magicDamage>减少，并将即将到来的魔法伤害转化为额外<attackSpeed>攻击速度</attackSpeed>。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous: 0.924855
+            review_status: needs_review
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
   - slot: Q
     ids:
       - value: Jade_KassadinQ
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Null Sphere
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 虚无法球
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -145,46 +170,46 @@ spells:
             value: Kassadin fires an ethereal bolt of void energy, dealing
               damage and silencing the target for a duration.
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
               sha256:117fe7e1a0d7712e26d785d40ec426bf104968cc4566693f4a6d772b874846df
             value: 卡萨丁发射一道缥缈的虚空能量弹，对目标造成伤害并使其暂时沉默。
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: R
     ids:
       - value: Jade_KassadinR
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Riftwalk
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 虚空行走
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -195,13 +220,13 @@ spells:
               period of time cause them to cost additional Mana and deal
               additional damage.
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
@@ -209,33 +234,33 @@ spells:
             value:
               卡萨丁传送到附近区域，对区域内的敌方单位造成魔法伤害。此外，在一段时间内连续施放虚空行走技能会消耗更多的法力值，并造成额外伤害。
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: W
     ids:
       - value: Jade_KassadinW
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Nether Blade
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 虚空之刃
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -252,6 +277,18 @@ spells:
               - source: game_data
                 first_seen: '16.16'
                 last_seen: '16.16'
+          - hash:
+              sha256:1de483caf9d0102a9adbda58bccfdb3d034604b5b850e8c4c283ba43b137d97a
+            value: "Passive: Kassadin's basic attacks restore Mana. Active: Kassadin's
+              basic attacks deal additional magic damage."
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous: 0.80292
+            review_status: needs_review
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
@@ -265,3 +302,14 @@ spells:
               - source: game_data
                 first_seen: '16.16'
                 last_seen: '16.16'
+          - hash:
+              sha256:d52acb8d1b296bf0cb12f0cf44c8de199dba62f6d6b6cdb4d945cd2ea5b4fd19
+            value: 被动：卡萨丁的普攻回复法力值。主动：卡萨丁的普攻造成额外魔法伤害。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous: 0.733333
+            review_status: needs_review
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524

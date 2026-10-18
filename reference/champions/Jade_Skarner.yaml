@@ -9,14 +9,14 @@ entity:
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
   title:
     zh_CN:
       - value: 水晶先锋
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
 spells:
   - slot: E
     ids:
@@ -24,20 +24,20 @@ spells:
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Fracture
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 晶体破碎
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -48,13 +48,13 @@ spells:
               consume the mark to heal Skarner. Killing targets outright will
               also activate the heal.
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
@@ -62,33 +62,33 @@ spells:
             value:
               斯卡纳召唤一股水晶能量，对命中的敌人造成伤害并将其标记。攻击敌人会消耗标记，为斯卡纳治疗生命值。直接击杀目标同样可触发该治疗效果。
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: P
     ids:
       - value: Jade_SkarnerPassive
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Energize
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 水晶能量
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -104,6 +104,18 @@ spells:
               - source: game_data
                 first_seen: '16.16'
                 last_seen: '16.16'
+          - hash:
+              sha256:cfa1fae953f9c7d8736a89dfa29c253535a2c3c70be745df7a33b78580f2df96
+            value: Basic attacks reduce all ability cooldowns. This effect is
+              stronger against champions.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous: 0.699454
+            review_status: needs_review
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
@@ -117,26 +129,37 @@ spells:
               - source: game_data
                 first_seen: '16.16'
                 last_seen: '16.16'
+          - hash:
+              sha256:99a1d2de98129d5ecb0920cfc0956e4ce3b79e00f02f90f140d24af8edb9c932
+            value: 普通攻击使所有技能的冷却时间缩短。这个效果在对抗英雄时会更强。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous: 0.65625
+            review_status: needs_review
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
   - slot: Q
     ids:
       - value: Jade_SkarnerQ
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Crystal Slash
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 水晶横扫
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -148,13 +171,13 @@ spells:
               again while powered by Crystal Energy, he deals bonus magic damage
               and slows all targets hit.
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
@@ -162,33 +185,33 @@ spells:
             value:
               斯卡纳用爪子猛击周围敌军，对附近所有敌人造成物理伤害。如果斯卡纳击中了一个目标，身上就会暂时充盈水晶能量。充盈水晶能量期间，斯卡纳的【水晶横扫】将造成额外魔法伤害，并减速所有命中的目标。
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: R
     ids:
       - value: Jade_SkarnerR
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Impale
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 晶状毒刺
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -199,46 +222,46 @@ spells:
               his helpless victim around with him.  When the effect ends,
               Skarner's target will be dealt additional damage.
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
               sha256:f8170e962cab921147db91c7a7f87427b4db3218d4126a3ce5a48e22cde1c1f2
             value: 斯卡纳压制一名敌方英雄并对其造成魔法伤害。在此期间，斯卡纳可以自由移动并拖拽目标。效果结束时，斯卡纳会对目标造成额外伤害。
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: W
     ids:
       - value: Jade_SkarnerW
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Crystalline Exoskeleton
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 水晶蝎甲
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -247,23 +270,23 @@ spells:
             value: Skarner gains a shield, and while the shield persists his
               movement speed and attack speed are both increased.
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
               sha256:3b54cb9aa56ba2adcf15ce65490d03445f8a9e9773c07faac1c0b35cd2ac01a5
             value: 斯卡纳获得护盾，在护盾存在期间，他的移动速度和攻击速度提高。
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524

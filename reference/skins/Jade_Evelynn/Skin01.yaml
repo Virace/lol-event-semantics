@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Evelynn
+  champion_id: 60028
+  skin_number: 1
+  skin_token: Skin01
+  id: 60028001
+  alias: Jade_EvelynnSkin01
+  names:
+    en_US:
+      - value: Shadow Evelynn
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 黑暗女王 伊芙琳
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 87
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_EvelynnSkin01
+  - Jade_EvelynnSkin1

@@ -1,0 +1,263 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60051
+  alias: Jade_Caitlyn
+  names:
+    en_US:
+      - value: Caitlyn
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+  title:
+    zh_CN:
+      - value: 皮城女警
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+spells:
+  - slot: E
+    ids:
+      - value: Jade_CaitlynE
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: 90 Caliber Net
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 90口径绳网
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:16b52c9611ae576f8259498fa00eb288a8c94a512a57b0b448f34ae0a122e446
+            value: Caitlyn fires a heavy net to slow her target. The recoil
+              knocks Caitlyn back.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:b05c9ef66c351dd131742ac88bae12b22ca0044f65e58aa4a8cdfa1d782880fa
+            value: 凯特琳朝目标放出一张网，对其减速。对凯特琳造成一定的反冲效果。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: P
+    ids:
+      - value: Jade_CaitlynPassive
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Headshot
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 爆头
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:9ee614a2bee10b0b6cfda1c06bd424acd018ab73b7a1304823477a6f696db2c6
+            value: Every few basic attacks, Caitlyn will fire a headshot dealing
+              extra damage.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:f9b4c7c450bf715eca6bbff7b2f1453207ee450b96882610cce47396996a9205
+            value: 每若干次普攻，凯特琳的射击将进行一次爆头以造成额外伤害。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: Q
+    ids:
+      - value: Jade_CaitlynQ
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Piltover Peacemaker
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 和平使者
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:55814dc99f3a8bf2f3eb24b8b5b6dff20465244134107307c365e3f5c91a5443
+            value: Caitlyn unleashes a penetrating shot that damages all enemies
+              in a line.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:418ee5820191dd9506b656e21ab377d3890ee37f05dd45b1ce7abc500b1122c0
+            value: 凯特琳释放一颗贯穿性的子弹以对一条直线上的所有敌人造成伤害。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: R
+    ids:
+      - value: Jade_CaitlynR
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Ace in the Hole
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 让子弹飞
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:fccc81c8d521f68bc398bc7b2cc611d030740abeabc7fbdc42a6ad1c67eb889a
+            value: Caitlyn takes time to line up the perfect shot, dealing
+              massive damage to an enemy champion at a huge range. Other enemy
+              champions can intercept the bullet for their ally.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:f9b3c141ad0e9eaab1b123806cf7dea4511d3ab19cb887bc4c05ca3d8690f801
+            value: 凯特琳精心准备完美一击，对超远距离内的一个敌方英雄造成巨大伤害。其他敌方英雄能为其友军拦截该子弹。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: W
+    ids:
+      - value: Jade_CaitlynW
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Yordle Snap Trap
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 约德尔诱捕器
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:97cce4e208494b5518ed85541f3c9b8d0455ad2e4a871d66712afe4b61ba2ef1
+            value: Caitlyn sets a trap to find sneaky yordles. When sprung by a
+              champion, the trap immobilizes, reveals, and damages them over a
+              short duration.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:32407347c5da5d9e24bfd0fe232ab608b2ac1328cd9e11031331db8f2de6881f
+            value:
+              凯特琳设下一个陷阱，来让鬼鬼祟祟的约德尔人暴露无遗。当被一个英雄踩到时，该陷阱会将其禁锢、显形、并在一段短时间内持续造成魔法伤害。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524

@@ -9,14 +9,14 @@ entity:
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
   title:
     zh_CN:
       - value: 不祥之刃
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
 spells:
   - slot: E
     ids:
@@ -24,20 +24,20 @@ spells:
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Shunpo
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 瞬步
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -47,46 +47,46 @@ spells:
               reduced damage from enemies for a few seconds. If the target is an
               enemy, she deals damage.
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
               sha256:410ae2ece28bcf6fb6bfbdc23937638f15d44a590982fd97c1e1dc76f5efa3aa
             value: 卡特琳娜瞬间移动到目标位置，并在数秒内降低受到的敌方伤害。如果目标是敌人，则会造成伤害。
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: P
     ids:
       - value: Jade_KatarinaPassive
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Voracity
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 贪婪
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -102,6 +102,17 @@ spells:
               - source: game_data
                 first_seen: '16.16'
                 last_seen: '16.16'
+          - hash:
+              sha256:3ade543c4e7adc08befe8b74bf194eb502555093adc9391126536d0627144608
+            value: Champion takedowns reduce Katarina's cooldowns.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous: 0.713043
+            review_status: needs_review
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
@@ -115,26 +126,37 @@ spells:
               - source: game_data
                 first_seen: '16.16'
                 last_seen: '16.16'
+          - hash:
+              sha256:2fbd2d62a3d50b187a55b5a1509d8493d9f9e5863c5e802c3182264034415477
+            value: 参与击杀英雄和助攻可缩短卡特琳娜的技能冷却时间。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous: 0.612245
+            review_status: needs_review
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
   - slot: Q
     ids:
       - value: Jade_KatarinaQ
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Bouncing Blade
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 弹射之刃
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -143,46 +165,46 @@ spells:
             value: Katarina throws a dagger that bounces from enemy to enemy,
               dealing magic damage.
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
               sha256:3d63f15cacd17f71ac0cda378d17570a98b638015d3c147d9637cf52c17c09cc
             value: 卡特琳娜投掷一把匕首，在敌人之间弹跳，造成魔法伤害。
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: R
     ids:
       - value: Jade_KatarinaR
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Death Lotus
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 死亡莲华
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -198,6 +220,19 @@ spells:
               - source: game_data
                 first_seen: '16.16'
                 last_seen: '16.16'
+          - hash:
+              sha256:19ef98d532545a564529db0058b28e6c754960a506bda169c980b9ff9091c2ad
+            value: Katarina becomes a flurry of blades, throwing daggers with
+              unrivaled speed at nearby enemy Champions, dealing significant
+              damage and applying Wounds.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous: 0.742188
+            review_status: needs_review
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
@@ -211,26 +246,37 @@ spells:
               - source: game_data
                 first_seen: '16.16'
                 last_seen: '16.16'
+          - hash:
+              sha256:89fe38d6b250e24a8e18aea99e41decb7e468b1e7a62291cfa92bdce2d893e20
+            value: 卡特琳娜化身为一道剑刃飓风，以无与伦比的速度对周围敌方英雄们投掷匕首，从而造成巨量魔法伤害并施加重伤效果。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous: 0.488372
+            review_status: needs_review
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
   - slot: W
     ids:
       - value: Jade_KatarinaW
         sources:
           - source: game_data
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Sinister Steel
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 不祥之刃
           sources:
             - source: game_data
               first_seen: '16.16'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
@@ -240,13 +286,13 @@ spells:
               to all enemies in the area. If she hits an enemy Champion,
               Katarina gains a burst of speed for a short duration.
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
           - hash:
@@ -254,10 +300,10 @@ spells:
             value:
               卡特琳娜将她的双刃环绕自身挥舞，从而对区域内的所有敌人造成魔法伤害。如果此技能命中了一个敌方英雄，那么卡特琳娜就会获得短时间内持续的爆发性移动速度。
             first_seen: '16.16'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: game_data
                 first_seen: '16.16'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524

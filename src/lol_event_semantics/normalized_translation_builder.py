@@ -355,6 +355,24 @@ def build_translation(
     )
     if spell_context is not None and isinstance(translation.get("arguments"), dict):
         translation["arguments"]["spell_context"] = spell_context
+        skin = translation["arguments"].get("skin")
+        parsed_context = record.semantic_slots.get("spell_context")
+        if (
+            isinstance(parsed_context, dict)
+            and parsed_context.get("context_scope") == "speaker_skin"
+            and parsed_context.get("kind") == "skin"
+            and parsed_context.get("source") == "reference/skins"
+            and isinstance(skin, dict)
+            and skin.get("alias")
+            and skin.get("token")
+            and skin.get("alias") == spell_context.get("alias")
+            and skin.get("token") == spell_context.get("token")
+            and skin.get("fallback") is False
+            and spell_context.get("fallback") is False
+        ):
+            # 仅去重已证明为说话者本身的皮肤，保留角色、原词和模式签名。
+            spell_context["provenance"]["context_scope"] = "speaker_skin"
+            spell_context["provenance"]["rendered_via"] = "skin"
     return translation
 
 
@@ -2298,7 +2316,7 @@ def build_champion_interaction_cue(
         return None
 
     champion = champion_argument(record, context)
-    trigger = interaction_trigger_argument(record)
+    trigger = apply_action_form(interaction_trigger_argument(record), record.semantic_slots)
     if champion is None or trigger is None or has_technical_champion_label(champion):
         return None
 
@@ -2337,7 +2355,7 @@ def build_kill_or_destroy_event(
         return None
 
     champion = champion_argument(record, context)
-    trigger = kill_trigger_argument(record)
+    trigger = apply_action_form(kill_trigger_argument(record), record.semantic_slots)
     if champion is None or trigger is None or has_technical_champion_label(champion):
         return None
 

@@ -9,71 +9,71 @@ entity:
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     zh_CN:
       - value: 卡兹克
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
   title:
     zh_CN:
       - value: 虚空掠夺者
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.14'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
   nicknames:
     zh_CN:
       - value: 螳螂
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
   search_alias:
     zh_CN:
       - value: kazike
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: kzk
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: tanglang
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: tl
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: xkldz
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: xukonglueduozhe
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
 spells:
   - slot: E
     ids:
@@ -81,54 +81,55 @@ spells:
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Leap
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 跃击
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:8b353c83e73b5d4dbbeec8b8aa5b4f115bcfac9c09531444d475694e3c9ef78b
-            value: Kha'Zix leaps to an area, dealing physical damage upon 
-              landing. If he chooses to <font color='#00DD33'>Evolve 
-              Wings</font>, Leap's range increases by 200 and the cooldown 
+            value: Kha'Zix leaps to an area, dealing physical damage upon
+              landing. If he chooses to <font color='#00DD33'>Evolve
+              Wings</font>, Leap's range increases by 200 and the cooldown
               resets on champion kill or assist.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
+            similarity_to_latest: 0.98263
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:cef3206c0a8e332e50f159f5687db77f2a9c6298ee42d1ecb219be2d8f6c09b5
-            value: 卡兹克跳向一个区域，在着陆时造成物理伤害。如果他选择<font 
+            value: 卡兹克跳向一个区域，在着陆时造成物理伤害。如果他选择<font
               color='#00DD33'>进化虫翼</font>的话，跃击的距离会提升200并在击杀和助攻时重置冷却时间。
             first_seen: 16.5.1
             last_seen: 16.16.1
@@ -141,283 +142,297 @@ spells:
               - source: game_data
                 first_seen: '16.14'
                 last_seen: '16.16'
+          - hash:
+              sha256:316287ab51c45fe24d755c6fb25024eccd7732932f395ceaa5f34d27221628d8
+            value: "卡兹克跳跃至一个区域，在着陆时造成物理伤害。如果他选择<font color='#00DD33'>进化虫翼</font>的话，【跃击】的距离会提升并在击杀和助攻时重置冷却时间。 "
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous: 0.949153
+            review_status: needs_review
+            sources:
+              - source: data_dragon
+                first_seen: 16.20.1
+                last_seen: 16.20.1
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
   - slot: P
     ids:
       - value: KhazixPassive
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Unseen Threat
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 无形威胁
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:0c840270fb931604912d1565457fc1346ce0b148cedaeb54c4b1a5fb2a85a1eb
             value: Nearby enemies that are <font color='#FFF673'>Isolated</font>
-              from their allies are marked. Kha'Zix's abilities have 
-              interactions with <font color='#FFF673'>Isolated</font> 
-              targets.<br><br>When Kha'Zix is not visible to the enemy team, he 
-              gains Unseen Threat, causing his next basic attack against an 
-              enemy champion to deal bonus magic damage and slow them for a few 
+              from their allies are marked. Kha'Zix's abilities have
+              interactions with <font color='#FFF673'>Isolated</font>
+              targets.<br><br>When Kha'Zix is not visible to the enemy team, he
+              gains Unseen Threat, causing his next basic attack against an
+              enemy champion to deal bonus magic damage and slow them for a few
               seconds.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:737111cf38b1f582ef04ad561927becf764e731391ef3119d796aa7d4e1ccb29
-            value: 附近陷入<font 
-              color='#FFF673'>孤立无援</font>状态的敌人会被标记出来。卡兹克的技能会与<font 
+            value: 附近陷入<font
+              color='#FFF673'>孤立无援</font>状态的敌人会被标记出来。卡兹克的技能会与<font
               color='#FFF673'>孤立无援</font>的目标产生交互作用。<br><br>当卡兹克没有被敌方队伍所看见时，他会获得无形威胁，使他的下次对敌方英雄发动的普通攻击造成额外魔法伤害，并使目标减速数秒。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: Q
     ids:
       - value: KhazixQ
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Taste Their Fear
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 品尝恐惧
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:f4b0adcdeb4b79ecabd5dba74399bb20ef46b6335367df5f7c8c2d5e56766f93
-            value: Deals physical damage to the target. Damage increased on 
-              <font color='#FFF673'>Isolated</font> targets. If he chooses to 
-              <font color='#00DD33'>Evolve Reaper Claws</font>, this refunds a 
-              percent of it's cooldown against <font 
-              color='#FFF673'>Isolated</font> targets. Kha'Zix also gains 
+            value: Deals physical damage to the target. Damage increased on
+              <font color='#FFF673'>Isolated</font> targets. If he chooses to
+              <font color='#00DD33'>Evolve Reaper Claws</font>, this refunds a
+              percent of it's cooldown against <font
+              color='#FFF673'>Isolated</font> targets. Kha'Zix also gains
               increased range on his basic attacks and Taste Their Fear.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:3d86d3749b2c50a2d71240e81b8873877750ef81f9b05713f26b13f8f46c48d4
-            value: 对目标造成物理伤害。对<font 
-              color='#FFF673'>孤立无援</font>的目标造成的伤害会提高。如果他选择<font 
-              color='#00DD33'>进化收割利爪</font>的话，这个技能会在对抗<font 
+            value: 对目标造成物理伤害。对<font
+              color='#FFF673'>孤立无援</font>的目标造成的伤害会提高。如果他选择<font
+              color='#00DD33'>进化收割利爪</font>的话，这个技能会在对抗<font
               color='#FFF673'>孤立无援</font>的目标时返还一部分冷却时间。卡兹克也会提升他的普通攻击和品尝恐惧的距离。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: R
     ids:
       - value: KhazixR
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Void Assault
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 虚空来袭
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:f561654308b1de5ff0d456c6d6900de8a9d455364490b597d5432331f03c6955
-            value: Each rank allows Kha'Zix to evolve one of his abilities, 
-              giving it a unique additional effect. When activated, Kha'Zix 
-              becomes <font color='#91d7ee'>Invisible</font>, triggering Unseen 
-              Threat and increasing Move Speed. If he chooses to <font 
-              color='#00DD33'>Evolve Adaptive Cloaking</font>, Void Assault 
-              gains increased <font color='#91d7ee'>Invisibility</font> 
+            value: Each rank allows Kha'Zix to evolve one of his abilities,
+              giving it a unique additional effect. When activated, Kha'Zix
+              becomes <font color='#91d7ee'>Invisible</font>, triggering Unseen
+              Threat and increasing Move Speed. If he chooses to <font
+              color='#00DD33'>Evolve Adaptive Cloaking</font>, Void Assault
+              gains increased <font color='#91d7ee'>Invisibility</font>
               duration, and an additional use.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:5d632dc666b7c9bfab75531a4398954265881876a53334e62adde6b6f9472202
-            value: 每升一级此技能都会允许卡兹克进化他的一项技能，给予该技能独特的附加效果。在激活【虚空来袭】时，会使卡兹克变成<font 
-              color='#91d7ee'>隐形</font>状态，触发无形威胁并提升移动速度。如果他选择<font 
-              color='#00DD33'>进化动态遮蔽</font>的话，【虚空来袭】获得已提升的<font 
+            value: 每升一级此技能都会允许卡兹克进化他的一项技能，给予该技能独特的附加效果。在激活【虚空来袭】时，会使卡兹克变成<font
+              color='#91d7ee'>隐形</font>状态，触发无形威胁并提升移动速度。如果他选择<font
+              color='#00DD33'>进化动态遮蔽</font>的话，【虚空来袭】获得已提升的<font
               color='#91d7ee'>隐形</font>持续时间，以及一次额外的使用次数。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: W
     ids:
       - value: KhazixW
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Void Spike
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 虚空突刺
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:1af9c34edc65458605a18352cc05334fcaa8cabecb183a2e616591df2beff8a2
-            value: Kha'Zix fires exploding spikes that deal physical damage to 
-              enemies hit. Kha'Zix is healed if he is also within the explosion 
-              radius. If he chooses to <font color='#00DD33'>Evolve Spike 
-              Racks</font>, Void Spike now fires three spikes in a cone, slow 
-              enemies hit, and reveals enemy champions hit for 2 seconds. <font 
+            value: Kha'Zix fires exploding spikes that deal physical damage to
+              enemies hit. Kha'Zix is healed if he is also within the explosion
+              radius. If he chooses to <font color='#00DD33'>Evolve Spike
+              Racks</font>, Void Spike now fires three spikes in a cone, slow
+              enemies hit, and reveals enemy champions hit for 2 seconds. <font
               color='#FFF673'>Isolated</font> targets are slowed for extra.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:4e6bc877317dc4151a4f7119feb9c5eb8466b59875317a7332367a48115621dd
-            value: 卡兹克发射爆炸性的尖刺，对命中的敌人造成物理伤害。卡兹克如果在爆炸范围内，则会回复生命值。如果他选择<font 
+            value: 卡兹克发射爆炸性的尖刺，对命中的敌人造成物理伤害。卡兹克如果在爆炸范围内，则会回复生命值。如果他选择<font
               color='#00DD33'>进化刺鞘</font>的话，虚空突刺现在会呈锥形发射三个尖刺，减速被命中的敌人并使被命中的敌方英雄显形2秒。<font
               color='#FFF673'>孤立无援</font>的目标会被减速额外的幅度。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524

@@ -38,6 +38,8 @@ from threading import RLock, get_ident
 from types import ModuleType
 from typing import Any, Iterator
 
+from .riotmanifest_transport import configure_environment_proxy
+
 DEFAULT_REGION = "OC1"
 _BIN_PARSE_LOCK = RLock()
 
@@ -49,6 +51,7 @@ def _riotmanifest():
         import riotmanifest
     except ImportError as exc:  # pragma: no cover - 依赖缺失提示
         raise ImportError("远程下载需要可选依赖组 download（riotmanifest）：uv sync --extra download") from exc
+    configure_environment_proxy()
     return riotmanifest
 
 

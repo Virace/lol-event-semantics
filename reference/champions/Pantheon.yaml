@@ -9,54 +9,54 @@ entity:
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     zh_CN:
       - value: 潘森
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
   title:
     zh_CN:
       - value: 不屈之枪
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.14'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
   search_alias:
     zh_CN:
       - value: PS
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: bqzq
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: buquzhiqiang
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: pansen
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
 spells:
   - slot: E
     ids:
@@ -64,311 +64,311 @@ spells:
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Aegis Assault
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 神佑枪阵
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:6222b214363868a09ed4d7d2c4f1eea92695baa0b4d9effcf96f83b7cd37f07e
-            value: Pantheon sets his shield, becoming invulnerable to damage 
+            value: Pantheon sets his shield, becoming invulnerable to damage
               from the front and striking repeatedly with his spear.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:60b229f9d2c481aa33b96f083f845d01a898f39ac77d6f29945c8b178e2645ef
             value: 潘森架起他的圣盾，变得免疫来自前方的伤害，并快速地用他的长枪戳刺。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: P
     ids:
       - value: PantheonPassive
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Mortal Will
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 矢志不退
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:54c28397ffbfe4392dd6f3e13328e8f68615d127b26db1ba2b8ca930ef884ec6
-            value: Every few spells or attacks, Pantheon's next spell is 
+            value: Every few spells or attacks, Pantheon's next spell is
               empowered.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:2ad128bb65245d398214b5641250123acdc30f8c651cdabc42ae64634aa47b04
             value: 在数次技能或攻击后，潘森的下一个技能会得到强化。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: Q
     ids:
       - value: PantheonQ
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Comet Spear
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 贯星长枪
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:dbb5b642ddc2a65cf2d93d0949a84d5f5f3c72617d8d9e6a3e6e7863e4162191
-            value: Pantheon either thrusts his spear or throws his spear in the 
+            value: Pantheon either thrusts his spear or throws his spear in the
               chosen direction.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:128a931c5554cc785eba6b6396cb1704fef7cbaf39c54ddfb09fe1fc054adf62
             value: 潘森朝着选定方向刺出或投掷他的长枪。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: R
     ids:
       - value: PantheonR
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Grand Starfall
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 大荒星陨
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:34e3f50a45c2e891a698ec33d1c3b5d4b8ab0b43e85fe95409d12b3008f94b6d
-            value: Pantheon composes himself and then leaps into the air, 
+            value: Pantheon composes himself and then leaps into the air,
               landing at a chosen location as a comet.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:99dd861e425bede711c01858f43aa392f42c44e0086cba55fae5cf85c81b7e8e
             value: 潘森屏气凝神然后跃至空中， 随后如流星一般落到选定的位置上。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: W
     ids:
       - value: PantheonW
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Shield Vault
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 斗盾跃击
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:ffcb009a60181d427530068fb6f17c60a9bcdb2351ed9c451fa655cba2dacbb4
             value: Pantheon dashes to a target, damaging and stunning them.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:7066e1f7670911cbc78da30dbf08cac819f097b6438990c76f91972fd6ad4650
             value: 潘森跃向一个目标，对其造成伤害和晕眩。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524

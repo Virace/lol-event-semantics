@@ -1,0 +1,260 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60039
+  alias: Jade_Irelia
+  names:
+    en_US:
+      - value: Irelia
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+  title:
+    zh_CN:
+      - value: 刀锋意志
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+spells:
+  - slot: E
+    ids:
+      - value: Jade_IreliaE
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Equilibrium Strike
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 均衡打击
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:1caa8e90d5620b6618d4fbd90d2a674ea291d7a6678195368f6b48fb271fdaad
+            value: Irelia's attack balances the scales, dealing damage and
+              slowing her target. If they have a higher Health % than her, the
+              blow stuns them instead.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:32352aefe9c7c39e60d616b59561781a5938eb27fcebcb2fbc0e79e6261df73f
+            value: 艾瑞莉娅的攻击会使战斗的天平变得平衡，从而对她的目标造成伤害和减速。如果目标的生命值百分比高于她，则会转而晕眩该目标。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: P
+    ids:
+      - value: Jade_IreliaPassive
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Ionian Fervor
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 艾欧尼亚热诚
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:4c63748f55267001fdc47b1a89efe90758c90612be50d69b06b3ce6be60b24a8
+            value: Irelia gains Tenacity for each nearby enemy champion.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:30ed8cfd23a554b181bf6d25787b5462e5f703f891363ccdfef6f8dae9ca6ff7
+            value: 附近的每个敌方英雄都会为艾瑞莉娅提供韧性。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: Q
+    ids:
+      - value: Jade_IreliaQ
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Bladesurge
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 利刃冲击
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:e3398c1f0aaea1acdb964ccaf30e877d531921837064fed5caef0b8b74742b09
+            value: Irelia dashes to strike her target. If it kills, Bladesurge's
+              cooldown refreshes and refunds some of its Mana cost.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:f0b5f2c0047c6b2a87726fd08a813952094bb65022403d73c3742f8969acbd0c
+            value: 艾瑞莉娅冲刺以打击她的目标。如果这个技能击杀了目标，那么【利刃冲击】的冷却时间会刷新并返还一些法力值。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: R
+    ids:
+      - value: Jade_IreliaR
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Transcendent Blades
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 至尊锋刃
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:e814f985e9147d23ad7cceb19626f380b775dbf147b06ab4c34226a0043216c1
+            value: Irelia summons 4 spirit blades that she can fling to damage
+              and siphon life from enemies they pass through.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:c9604a549388b7aad2ff412fe0219afee0f0102774f709aa16119d9c8526a2f0
+            value: 艾瑞莉娅召唤4柄灵刃供她投掷，以造成伤害并从它们途经的敌人们身上虹吸生命力。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: W
+    ids:
+      - value: Jade_IreliaW
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Hiten Style
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 飞天姿态
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:b6ce09fb696414dea8e8800f6550856425cf619780634f78f2ab7c5f3aeb68f6
+            value: "Passive: Irelia's attacks restore Health.<br><br>Active: Irelia's
+              attacks deal bonus true damage and restore more Health for a few seconds."
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:b56583c42ae09f46672c5d016b825fd8a0e9470323ada80173a1ecc629610682
+            value: 被动：艾瑞莉娅的攻击可以回复生命值。<br><br>主动：艾瑞莉娅的攻击会在若干秒内造成额外真实伤害并回复更多生命值。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524

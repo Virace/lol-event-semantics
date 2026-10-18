@@ -9,71 +9,71 @@ entity:
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     zh_CN:
       - value: 蒙多医生
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
   title:
     zh_CN:
       - value: 祖安狂人
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.14'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
   nicknames:
     zh_CN:
       - value: 蒙多
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
   search_alias:
     zh_CN:
       - value: md
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: mdys
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: mengduo
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: mengduoyisheng
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: zakr
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: zuankuangren
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
 spells:
   - slot: E
     ids:
@@ -81,326 +81,326 @@ spells:
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Blunt Force Trauma
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 大力行医
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:f0da0ef5b668bab387423cbf43e68593a104c8997fcdd0f86929f6a731ba987a
-            value: Passive - Dr. Mundo gains bonus Attack Damage, increasing 
-              based on his max Health.<br><br>Active - Dr. Mundo slams his 
-              “medical” bag into an enemy, dealing additional damage based on 
-              his missing Health. If the enemy dies they are swatted away, 
+            value: Passive - Dr. Mundo gains bonus Attack Damage, increasing
+              based on his max Health.<br><br>Active - Dr. Mundo slams his
+              “medical” bag into an enemy, dealing additional damage based on
+              his missing Health. If the enemy dies they are swatted away,
               dealing damage to enemies they pass through.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:8d17b2afbab334b3ad9304ac57b97322d4bbf9b4ee38ed4427fbfa361e757d6f
-            value: 被动 - 蒙多医生获得额外攻击力，数额会基于他的最大生命值而提升。<br><br>主动 - 
+            value: 被动 - 蒙多医生获得额外攻击力，数额会基于他的最大生命值而提升。<br><br>主动 -
               蒙多医生用他的“医用”手提包猛砸一个敌人，造成基于他已损失生命值的额外伤害。如果这个敌人被击杀，那么还会被拍飞，对途经的所有敌人造成伤害。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: P
     ids:
       - value: DrMundoPassive
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Goes Where He Pleases
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 想去哪就去哪
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:cd09e5352323edeb57e605f57d8e57c45e3e81b69cac9df66b49e3df6fcfa7bf
-            value: Dr. Mundo resists the first Immobilizing effect that hits 
-              him, instead losing Health and dropping a chemical cannister 
-              nearby. Dr. Mundo can pick it up by walking over it, restoring 
+            value: Dr. Mundo resists the first Immobilizing effect that hits
+              him, instead losing Health and dropping a chemical cannister
+              nearby. Dr. Mundo can pick it up by walking over it, restoring
               Health and reducing this Ability's Cooldown.<br><br>Dr. Mundo also
               has significantly increased Health regeneration.<br>
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:d5c90a9a4f60bd674455c83dd9732e2465b59bdd6efdd7f9844195eb0a5e7b3c
-            value: 
+            value:
               蒙多医生抵抗他受到的第一个定身效果，但会失去生命值并在附近掉落一罐化学药剂。蒙多医生可移动到化学药剂上来拾取它，从而回复生命值并缩短这个技能的冷却时间。<br><br>蒙多医生也会显著提升生命回复。<br>
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: Q
     ids:
       - value: DrMundoQ
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Infected Bonesaw
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 病毒屠刀
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:3d477a5c94210cd34d307254b805efdbb576f6cee147ba9d05a261b97517317c
-            value: Dr. Mundo throws an infected bonesaw, dealing damage to the 
+            value: Dr. Mundo throws an infected bonesaw, dealing damage to the
               first enemy hit based on their current health and slowing them.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:5dc37d1eeb753bcee9d83e43e76b7d9b8d1129dcb4bec2430678e1976c2e7920
             value: 蒙多医生掷出一把沾染病菌的骨锯，对命中的第一个敌人造成基于其当前生命值的魔法伤害和减速效果。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: R
     ids:
       - value: DrMundoR
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Maximum Dosage
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 极限剂量
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:755deb8f9b04c58e0fe98cc94988318a7a94568274acc1d48ec457874540a2df
-            value: Dr. Mundo pumps himself with chemicals, instantly healing a 
-              percent of his missing Health. He then gains Move Speed and 
+            value: Dr. Mundo pumps himself with chemicals, instantly healing a
+              percent of his missing Health. He then gains Move Speed and
               regenerates a portion of his maximum Health over a long duration.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:e7d7b958bf59293827b5281f8a3b8a1d218ee38e9ae7c2b132272380871f4a93
-            value: 
+            value:
               蒙多医生给自己注入化学药剂，立刻治疗他的一部分已损失生命值。随后他会获得移动速度并在一段长周期内持续回复自身一部分最大生命值。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: W
     ids:
       - value: DrMundoW
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Heart Zapper
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 电击疗法
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:3f83bc447c8b3d8c071b4f4e5b5079c7f0c78daa56c2b57d6c1d697b550ee797
-            value: Dr. Mundo electrocutes himself, dealing persistent damage to 
-              nearby enemies and storing a portion of damage he takes. At the 
-              end of the duration or on Recast, Dr. Mundo deals a burst of 
-              damage to nearby enemies. If the burst hit an enemy, he heals a 
+            value: Dr. Mundo electrocutes himself, dealing persistent damage to
+              nearby enemies and storing a portion of damage he takes. At the
+              end of the duration or on Recast, Dr. Mundo deals a burst of
+              damage to nearby enemies. If the burst hit an enemy, he heals a
               percentage of the stored damage.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:1facde932ae05f8e458abd633840641bf78a0c6ea8c3b94ab2f684c01ce234b5
-            value: 
+            value:
               蒙多医生电击他自己，对附近的敌人们造成持续伤害并储存他受到的一部分伤害。在持续时间结束时或再次施放时，蒙多医生会对附近的敌人们造成一次爆发伤害。如果这个效果命中了一名敌人，那么蒙多医生会回复一部分已储存的伤害值。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524

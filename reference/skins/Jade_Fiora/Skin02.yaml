@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Fiora
+  champion_id: 60114
+  skin_number: 2
+  skin_token: Skin02
+  id: 60114002
+  alias: Jade_FioraSkin02
+  names:
+    en_US:
+      - value: Nightraven Fiora
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 夜鸦 菲奥娜
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 126
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_FioraSkin02
+  - Jade_FioraSkin2

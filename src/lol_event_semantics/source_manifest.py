@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import hashlib
+import re
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -153,6 +155,44 @@ def write_source_manifest(path: Path, manifest: Mapping[str, Any]) -> None:
         encoding="utf-8",
         newline="\n",
     )
+
+
+def validate_collection_raw(manifest: Mapping[str, Any], raw_root: Path) -> None:
+    """核验本轮 raw 文件闭包，拒绝与采集来源清单不一致的导入。
+
+    Args:
+        manifest: 采集器成功轮次的可移植来源清单。
+        raw_root: 待导入的本轮 raw 根目录，不是累计语料。
+
+    Raises:
+        ValueError: 身份、路径、文件闭包或摘要不符合采集证明。
+    """
+
+    collection = manifest.get("collection")
+    if not isinstance(collection, Mapping) or not isinstance(collection.get("run_id"), str):
+        raise ValueError("source manifest 缺少 collection 身份")
+    if not re.fullmatch(r"[0-9a-f]{24}", collection["run_id"]):
+        raise ValueError("source manifest collection.run_id 无效")
+    files = collection.get("raw_files")
+    if not isinstance(files, Mapping) or not files:
+        raise ValueError("source manifest 缺少 collection.raw_files")
+    for path, digest in files.items():
+        if (
+            not isinstance(path, str)
+            or not re.fullmatch(r"(?:champions|maps)/[0-9]+\.txt", path)
+            or not isinstance(digest, str)
+            or not re.fullmatch(r"[0-9a-f]{64}", digest)
+        ):
+            raise ValueError("source manifest collection.raw_files 路径或摘要无效")
+    actual = {path.relative_to(raw_root).as_posix() for path in raw_root.rglob("*.txt")}
+    if actual != set(files):
+        raise ValueError("本轮 raw 文件集合与采集清单不一致")
+    for path, digest in files.items():
+        target = raw_root / path
+        if target.is_symlink() or not target.resolve().is_relative_to(raw_root.resolve()):
+            raise ValueError("本轮 raw 文件不得通过符号链接逃逸输入目录")
+        if hashlib.sha256(target.read_bytes()).hexdigest() != digest:
+            raise ValueError(f"本轮 raw SHA-256 与采集清单不一致：{path}")
 
 
 def _require_series(label: str, value: str, expected: str) -> None:

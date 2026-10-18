@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Sion
+  champion_id: 60014
+  skin_number: 1
+  skin_token: Skin01
+  id: 60014001
+  alias: Jade_SionSkin01
+  names:
+    en_US:
+      - value: Hextech Sion
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 钢铁终结者 赛恩
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 40
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_SionSkin01
+  - Jade_SionSkin1

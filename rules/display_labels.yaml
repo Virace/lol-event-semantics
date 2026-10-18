@@ -546,6 +546,8 @@ shop:
 # 自身动作语音中可直接展示的 qualifier。仅复用已在现有规则中核验的中文：
 # 表外 token 由 builder 输出为低置信「待审修饰」，不可静默落入泛化家族名。
 voice_qualifier:
+  # 精确 AllyNear 复用 Ally=友方及同行条件“在附近”，不指定英雄或距离阈值。
+  allynear: {zh_CN: 友方在附近, en_US: ally nearby}
   onmyway: {zh_CN: 正在路上, en_US: on my way}
   assistme: {zh_CN: 协助我, en_US: assist me}
   danger: {zh_CN: 危险, en_US: danger}

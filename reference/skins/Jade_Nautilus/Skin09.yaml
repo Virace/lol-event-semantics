@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Nautilus
+  champion_id: 60111
+  skin_number: 9
+  skin_token: Skin09
+  id: 60111009
+  alias: Jade_NautilusSkin09
+  names:
+    en_US:
+      - value: Shan Hai Scrolls Nautilus
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 山海绘卷 诺提勒斯
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 139
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_NautilusSkin09
+  - Jade_NautilusSkin9

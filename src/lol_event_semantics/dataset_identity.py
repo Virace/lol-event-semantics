@@ -213,6 +213,9 @@ def validate_frozen_inputs(
     sources = _read_json_object(sources_manifest_path)
     reference = read_yaml(reference_manifest_path)
 
+    if profile.get("require_catalog") is True:
+        _validate_required_catalog(sources, expected_series)
+
     _require_series("sources.game_version", sources.get("game_version"), expected_series)
     source_versions = reference.get("source_versions")
     if not isinstance(source_versions, dict):
@@ -272,6 +275,61 @@ def validate_frozen_inputs(
         "raw_unique_count": raw_unique_count,
         "accepted_exceptions": exceptions,
     }
+
+
+def _validate_required_catalog(sources: Mapping[str, Any], expected_series: str) -> None:
+    """要求新冻结档案具备完整采集身份，不借用历史 LCU 空值例外。
+
+    此处只验证可持久化的证据结构；当轮 raw 和 reference 字节在导入边界
+    单独核验，累计 raw 不应与单轮文件摘要直接比较。
+
+    Args:
+        sources: 当前冻结输入的来源清单。
+        expected_series: 冻结档案要求的主版本。
+
+    Raises:
+        ValueError: 采集身份缺失、未完成或版本不一致。
+    """
+
+    catalog = sources.get("catalog")
+    if not isinstance(catalog, dict):
+        raise ValueError("frozen profile require_catalog 缺少 catalog")
+    for field, length in (("revision", 40), ("metadata_sha256", 64)):
+        value = catalog.get(field)
+        if not isinstance(value, str) or not re.fullmatch(rf"[0-9a-f]{{{length}}}", value):
+            raise ValueError(f"frozen profile require_catalog 的 catalog.{field} 无效")
+    _require_series("sources.lcu_version", sources.get("lcu_version"), expected_series)
+    manifest_id = _nested(sources, "lobby_snapshot", "lcu_manifest_id")
+    if not isinstance(manifest_id, str) or not manifest_id.strip():
+        raise ValueError("frozen profile require_catalog 缺少 LCU manifest 身份")
+    game_id = _nested(sources, "game_manifest", "id")
+    if not isinstance(game_id, str) or not game_id.strip():
+        raise ValueError("frozen profile require_catalog 缺少 GAME manifest 身份")
+    _require_series("sources.game_manifest.version", _nested(sources, "game_manifest", "version"), expected_series)
+    statuses = sources.get("sources")
+    if (
+        not isinstance(statuses, dict)
+        or statuses.get("raw-bins") != "ok"
+        or any(status != "ok" for status in statuses.values())
+    ):
+        raise ValueError("frozen profile require_catalog 的采集来源未完成")
+    collection = sources.get("collection")
+    if not isinstance(collection, dict):
+        raise ValueError("frozen profile require_catalog 缺少 collection")
+    run_id = collection.get("run_id")
+    files = collection.get("raw_files")
+    if not isinstance(run_id, str) or not re.fullmatch(r"[0-9a-f]{24}", run_id):
+        raise ValueError("frozen profile require_catalog 的 collection.run_id 无效")
+    if not isinstance(files, dict) or not files:
+        raise ValueError("frozen profile require_catalog 缺少 collection.raw_files")
+    for path, digest in files.items():
+        if (
+            not isinstance(path, str)
+            or not re.fullmatch(r"(?:champions|maps)/[0-9]+\.txt", path)
+            or not isinstance(digest, str)
+            or not re.fullmatch(r"[0-9a-f]{64}", digest)
+        ):
+            raise ValueError("frozen profile require_catalog 的 collection.raw_files 无效")
 
 
 def build_input_identity(
@@ -433,6 +491,10 @@ def source_manifest_identity(manifest: Mapping[str, Any]) -> dict[str, object]:
             "id": game_manifest.get("id"),
             "version": game_manifest.get("version"),
         }
+    # 新采集证据参与身份；缺省时保持历史冻结输入的摘要不变。
+    for key in ("catalog", "collection_scope", "collection"):
+        if key in manifest:
+            semantic[key] = manifest[key]
     return semantic_document_identity(semantic)
 
 

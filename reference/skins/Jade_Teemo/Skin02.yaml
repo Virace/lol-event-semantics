@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Teemo
+  champion_id: 60017
+  skin_number: 2
+  skin_token: Skin02
+  id: 60017002
+  alias: Jade_TeemoSkin02
+  names:
+    en_US:
+      - value: Recon Teemo
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 军情五处 提莫
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_TeemoSkin02
+  - Jade_TeemoSkin2

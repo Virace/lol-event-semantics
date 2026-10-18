@@ -74,7 +74,9 @@ def check_raw_update(
     current = read_raw_tree(Path(raw_root))
     incoming = read_raw_tree(Path(input_root))
     result = diff_raw_trees(current, incoming)
-    metadata_changed = has_metadata_changed(Path(state_file), metadata) if state_file is not None and metadata is not None else False
+    metadata_changed = (
+        has_metadata_changed(Path(state_file), metadata) if state_file is not None and metadata is not None else False
+    )
     return with_update_flags(result, metadata_changed=metadata_changed)
 
 
@@ -230,19 +232,22 @@ def write_raw_tree(root: Path, tree: dict[tuple[str, str], set[str]]) -> None:
                 path.unlink()
 
     for (group, name), events in sorted(tree.items()):
-        write_event_file(root / group / f"{name}.txt", events)
+        path = root / group / f"{name}.txt"
+        if not path.is_file() or read_event_file(path) != events:
+            write_event_file(path, events)
 
 
 def write_event_file(path: Path, events: set[str]) -> None:
-    """稳定写出单个事件名文本文件。"""
+    """稳定写出单个事件名文本文件，保留已存在文件的换行风格。"""
 
     path.parent.mkdir(parents=True, exist_ok=True)
-    text = "\n".join(sorted(events))
+    newline = "\r\n" if path.is_file() and b"\r\n" in path.read_bytes() else "\n"
+    text = newline.join(sorted(events))
 
     if text:
-        text += "\n"
+        text += newline
 
-    path.write_text(text, encoding="utf-8")
+    path.write_bytes(text.encode("utf-8"))
 
 
 def write_update_state(path: Path, raw_root: Path, metadata: RawUpdateMetadata) -> None:

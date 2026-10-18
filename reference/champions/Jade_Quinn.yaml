@@ -1,0 +1,267 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60133
+  alias: Jade_Quinn
+  names:
+    en_US:
+      - value: Quinn
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+  title:
+    zh_CN:
+      - value: 德玛西亚之翼
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+spells:
+  - slot: E
+    ids:
+      - value: Jade_QuinnE
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Vault
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 旋翔掠杀
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:063f69349c756859e2a8448aabd2e6a2903c94e87cfd901460f22d447634a26f
+            value: Quinn or Valor dashes to an enemy, dealing damage, knocking
+              back, and slowing their target. If cast as Quinn, she then vaults
+              off of them, keeping her distance while Valor marks them with
+              Harrier.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:0952dd1022b306c9b60ba06a5e16155220084d62bfad8da3d4d05727607f3aaa
+            value:
+              奎因或华洛冲刺至一个敌人身旁，从而对目标造成伤害、击退和减速。如果作为奎因施放，则她会后跳远离该目标，从而保持她与目标相隔的距离并让华洛给其打上【侵扰】标记。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: P
+    ids:
+      - value: Jade_QuinnPassive
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Harrier
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 侵扰
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:c3bcdfb2633ff70973a56414359d9d0e9459541d16daed24d236391ea32db204
+            value: Valor periodically marks enemies as Vulnerable, whom Quinn
+              can attack to deal bonus damage.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:9f0d2cc747b726270de72f8dfdd79bf7951c3d0242463c9747d5971012a08eab
+            value: 华洛周期性地标记敌人为易损状态，从而使奎因能够对其造成额外伤害。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: Q
+    ids:
+      - value: Jade_QuinnQ
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Blinding Assault
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 炫目攻势
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:2703fd4eb7b640f1642f1679ee19e3751d3ccc755785c7ae975fa02b26acd365
+            value: Valor flies out and strikes the first enemy in his path,
+              damaging and blinding all enemies near that point.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:204534dd98c7ac9b3dc5b8f4baca36db03f33c4bb16ce9c3962b5a891587e45e
+            value: 华洛飞出去打击他途中的第一个敌人，从而对那个点附近的所有敌人造成伤害和致盲效果。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: R
+    ids:
+      - value: Jade_QuinnR
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Tag Team
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 王牌搭档
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:8569060a9b0f714974c2c1ff5720f7bc5184aa3cee92272b60376a5fe1cf917e
+            value: Valor replaces Quinn on the battlefield as a mobile melee
+              attacker, gaining movement speed and modifying her abilities. Cast
+              again to perform Skystrike, damaging all nearby enemies.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:fe55159fb2556016591f64eb8be29947514f7229f26ee4cbff9df16edc3be5c4
+            value:
+              华洛代替奎因出现在战场上，定位为一个高机动普攻型近战，从而获得移动速度并修改她的技能。再次施放可以进行【鹰翼天翔】，从而对附近的所有敌人造成伤害。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: W
+    ids:
+      - value: Jade_QuinnW
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Heightened Senses
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 敏锐感知
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:9b310388ded31d2b90991165cc926b5761b1c7807fad30b7be2390ee6bd1fd1b
+            value: 'Passive as Quinn: Gain attack and move speed for a few seconds
+              when triggering Harrier.<br><br>Passive as Valor: Gain attack speed.<br><br>Active:
+              Reveal a large area around Quinn and Valor.'
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:f8b91d0da41afe11df5812ebf4e85196fe392ef360890af987fad17f3700fcac
+            value:
+              作为奎因的被动效果：在触发侵扰时获得持续若干秒的攻速和移速。<br><br>作为华洛的被动效果：获得攻击速度。<br><br>主动：显形奎因和华洛周围的一大片区域。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524

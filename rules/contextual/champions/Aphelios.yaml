@@ -1,6 +1,46 @@
 scope: champion
 owner: Aphelios
 aliases:
+  ApheliosCalibrumAttack:
+    kind: champion_attack_component
+    asset_kind: vo
+    component: calibrum_basic_attack
+    label: 通碧普攻
+    confidence: high
+    source: manual_contextual_alias
+    note: Riot Aphelios Kit Primer 区分各武器普攻与 Q；该 Attack cue 与独立 CalibrumQ cue 对照，武器中文名来自 reference/champions/Aphelios.yaml。
+  ApheliosSeverumAttack:
+    kind: champion_attack_component
+    asset_kind: vo
+    component: severum_basic_attack
+    label: 断魄普攻
+    confidence: high
+    source: manual_contextual_alias
+    note: Riot Aphelios Kit Primer 区分各武器普攻与 Q；该 Attack cue 与独立 SeverumQ cue 对照，武器中文名来自 reference/champions/Aphelios.yaml。
+  ApheliosGravitumAttack:
+    kind: champion_attack_component
+    asset_kind: vo
+    component: gravitum_basic_attack
+    label: 坠明普攻
+    confidence: high
+    source: manual_contextual_alias
+    note: Riot Aphelios Kit Primer 区分各武器普攻与 Q；该 Attack cue 与独立 GravitumQ cue 对照，武器中文名来自 reference/champions/Aphelios.yaml。
+  ApheliosInfernumAttack:
+    kind: champion_attack_component
+    asset_kind: vo
+    component: infernum_basic_attack
+    label: 荧焰普攻
+    confidence: high
+    source: manual_contextual_alias
+    note: Riot Aphelios Kit Primer 区分各武器普攻与 Q；该 Attack cue 与独立 InfernumQ cue 对照，武器中文名来自 reference/champions/Aphelios.yaml。
+  ApheliosCrescendumAttack:
+    kind: champion_attack_component
+    asset_kind: vo
+    component: crescendum_basic_attack
+    label: 折镜普攻
+    confidence: high
+    source: manual_contextual_alias
+    note: Riot Aphelios Kit Primer 区分各武器普攻与 Q；该 Attack cue 与独立 CrescendumQ cue 对照，武器中文名来自 reference/champions/Aphelios.yaml。
   CalibrumQMarkRed:
     kind: champion_spell_component
     spell: q

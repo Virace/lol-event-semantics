@@ -75,7 +75,7 @@ class BuildStepsTests(unittest.TestCase):
         self.assertIn(as_path("out/normalized"), build)
         self.assertEqual(
             build[build.index("--sources-manifest") + 1],
-            as_path("data/frozen-sources-manifest.v1.json"),
+            as_path("data/frozen-sources-manifest.v2.json"),
         )
 
         # validate 与 metrics 复用 report_root 下同一 validation 报告路径。

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+from io import StringIO
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from difflib import SequenceMatcher
@@ -148,12 +149,15 @@ class ReferenceCollection:
         self._dirty = set_if_changed(champion["entity"], "type", "champion") or self._dirty
 
         for language, value in sorted(item.names.items()):
-            self._dirty = add_sourced_value(
-                champion["entity"].setdefault("names", {}).setdefault(language, []),
-                value,
-                item.source,
-                item.version,
-            ) or self._dirty
+            self._dirty = (
+                add_sourced_value(
+                    champion["entity"].setdefault("names", {}).setdefault(language, []),
+                    value,
+                    item.source,
+                    item.version,
+                )
+                or self._dirty
+            )
 
         self._merge_name_system(champion["entity"], item)
 
@@ -163,12 +167,15 @@ class ReferenceCollection:
         for language, value in sorted((item.title or {}).items()):
             if not value:
                 continue
-            self._dirty = add_sourced_value(
-                entity.setdefault("title", {}).setdefault(language, []),
-                value,
-                item.source,
-                item.version,
-            ) or self._dirty
+            self._dirty = (
+                add_sourced_value(
+                    entity.setdefault("title", {}).setdefault(language, []),
+                    value,
+                    item.source,
+                    item.version,
+                )
+                or self._dirty
+            )
 
         for field_name, values_by_language in (
             ("nicknames", item.nicknames),
@@ -191,12 +198,15 @@ class ReferenceCollection:
         self._dirty = add_sourced_value(spell.setdefault("ids", []), item.id, item.source, item.version) or self._dirty
 
         for language, value in sorted(item.names.items()):
-            self._dirty = add_sourced_value(
-                spell.setdefault("names", {}).setdefault(language, []),
-                value,
-                item.source,
-                item.version,
-            ) or self._dirty
+            self._dirty = (
+                add_sourced_value(
+                    spell.setdefault("names", {}).setdefault(language, []),
+                    value,
+                    item.source,
+                    item.version,
+                )
+                or self._dirty
+            )
 
     def merge_map(self, item: ReferenceMapInput) -> None:
         """合并一个地图实体。"""
@@ -218,12 +228,15 @@ class ReferenceCollection:
         self._dirty = set_if_changed(map_entity["entity"], "type", "map") or self._dirty
 
         for language, value in sorted(item.names.items()):
-            self._dirty = add_sourced_value(
-                map_entity["entity"].setdefault("names", {}).setdefault(language, []),
-                value,
-                item.source,
-                item.version,
-            ) or self._dirty
+            self._dirty = (
+                add_sourced_value(
+                    map_entity["entity"].setdefault("names", {}).setdefault(language, []),
+                    value,
+                    item.source,
+                    item.version,
+                )
+                or self._dirty
+            )
 
     def merge_item(self, item: ReferenceItemInput) -> None:
         """合并一个装备实体（以数字 id 字符串为分组键）。"""
@@ -244,12 +257,15 @@ class ReferenceCollection:
         self._dirty = set_if_changed(item_entity["entity"], "id", item.id) or self._dirty
 
         for language, value in sorted(item.names.items()):
-            self._dirty = add_sourced_value(
-                item_entity["entity"].setdefault("names", {}).setdefault(language, []),
-                value,
-                item.source,
-                item.version,
-            ) or self._dirty
+            self._dirty = (
+                add_sourced_value(
+                    item_entity["entity"].setdefault("names", {}).setdefault(language, []),
+                    value,
+                    item.source,
+                    item.version,
+                )
+                or self._dirty
+            )
 
     def merge_skinline(self, item: ReferenceEntityInput) -> None:
         """合并一个皮肤系列实体。"""
@@ -271,12 +287,15 @@ class ReferenceCollection:
         self._dirty = set_if_changed(skinline["entity"], "type", "skinline") or self._dirty
 
         for language, value in sorted(item.names.items()):
-            self._dirty = add_sourced_value(
-                skinline["entity"].setdefault("names", {}).setdefault(language, []),
-                value,
-                item.source,
-                item.version,
-            ) or self._dirty
+            self._dirty = (
+                add_sourced_value(
+                    skinline["entity"].setdefault("names", {}).setdefault(language, []),
+                    value,
+                    item.source,
+                    item.version,
+                )
+                or self._dirty
+            )
 
     def merge_skin(self, item: ReferenceSkinInput) -> None:
         """合并一个具体皮肤实体。"""
@@ -313,15 +332,22 @@ class ReferenceCollection:
         self._dirty = set_if_changed(entity, "alias", item.alias) or self._dirty
 
         for language, value in sorted(item.names.items()):
-            self._dirty = add_sourced_value(
-                entity.setdefault("names", {}).setdefault(language, []),
-                value,
-                item.source,
-                item.version,
-            ) or self._dirty
+            self._dirty = (
+                add_sourced_value(
+                    entity.setdefault("names", {}).setdefault(language, []),
+                    value,
+                    item.source,
+                    item.version,
+                )
+                or self._dirty
+            )
 
         aliases = skin.setdefault("aliases", [])
-        for alias in [item.alias, f"{item.champion_alias}{item.skin_token}", f"{item.champion_alias}Skin{item.skin_number}"]:
+        for alias in [
+            item.alias,
+            f"{item.champion_alias}{item.skin_token}",
+            f"{item.champion_alias}Skin{item.skin_number}",
+        ]:
             self._dirty = add_string_value(aliases, alias) or self._dirty
 
         skinline_rows = skin.setdefault("skinlines", [])
@@ -502,11 +528,7 @@ def add_string_value(rows: list[str], value: str) -> bool:
 def add_sourced_skinline(rows: list[dict[str, Any]], value: dict[str, Any], source: str, version: str) -> bool:
     """向皮肤系列集合追加唯一值，并记录来源。"""
 
-    normalized = {
-        key: value[key]
-        for key in ["id", "alias", "name"]
-        if key in value and value[key] not in (None, "")
-    }
+    normalized = {key: value[key] for key in ["id", "alias", "name"] if key in value and value[key] not in (None, "")}
     if not normalized:
         return False
 
@@ -712,8 +734,16 @@ def write_yaml(path: Path, data: dict[str, Any]) -> None:
     yaml.default_flow_style = False
     yaml.allow_unicode = True
     yaml.indent(mapping=2, sequence=4, offset=2)
-    with path.open("w", encoding="utf-8", newline="\n") as file:
-        yaml.dump(data, file)
+    stream = StringIO()
+    yaml.dump(data, stream)
+    rendered = stream.getvalue()
+    compact = "\n".join(line.rstrip(" \t") for line in rendered.split("\n"))
+    # ruamel 的换行布局可产生无语义行尾空格；只在解码完全等价时移除。
+    if compact != rendered:
+        reader = YAML(typ="safe")
+        if reader.load(compact) == reader.load(rendered):
+            rendered = compact
+    path.write_text(rendered, encoding="utf-8", newline="\n")
 
 
 def current_timestamp() -> str:

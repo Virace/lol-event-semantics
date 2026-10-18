@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Poppy
+  champion_id: 60078
+  skin_number: 4
+  skin_token: Skin04
+  id: 60078004
+  alias: Jade_PoppySkin04
+  names:
+    en_US:
+      - value: Ragdoll Poppy
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 圣诞玩偶 波比
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 61
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_PoppySkin04
+  - Jade_PoppySkin4

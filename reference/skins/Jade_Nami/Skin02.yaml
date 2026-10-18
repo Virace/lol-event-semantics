@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Nami
+  champion_id: 60267
+  skin_number: 2
+  skin_token: Skin02
+  id: 60267002
+  alias: Jade_NamiSkin02
+  names:
+    en_US:
+      - value: River Spirit Nami
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 河水之灵 娜美
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 72
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_NamiSkin02
+  - Jade_NamiSkin2

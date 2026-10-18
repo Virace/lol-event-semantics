@@ -1,0 +1,264 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60003
+  alias: Jade_Galio
+  names:
+    en_US:
+      - value: Galio
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+  title:
+    zh_CN:
+      - value: 哨兵之殇
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+spells:
+  - slot: E
+    ids:
+      - value: Jade_GalioE
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Righteous Gust
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 正义罡风
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:c10e2f3e7ce6185421fae6e46fc96ab9834c48a573ffb0bbc73875b01d050ea7
+            value: Galio claps his wings, unleashing a gust of concussive wind
+              that damages enemies and leaves a directional draft in its wake
+              that increases ally movement speed.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:4853f5d05ba2cb3baad2a39605788848762baf19c305c79bd15e911d98cbd4b4
+            value: 加里奥扇动他的双翼，从而释放出一股震荡强风，来对敌人们造成伤害并留下一条指向气流来提升友军的移动速度。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: P
+    ids:
+      - value: Jade_GalioPassive
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Runic Skin
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 符文石肤
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:131c8fdcd1e9bb27f66e5e90363cac6a9b22b6a3506424b5988f5cc5646332ed
+            value: Galio converts Magic Resistance into Ability Power.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:70b2d9140c8bbab15bdd036c39da1f1c0177a077894cc2f80d21552e0c74d62b
+            value: 加里奥将魔法抗性转化为法术强度。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: Q
+    ids:
+      - value: Jade_GalioQ
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Resolute Smite
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 坚定重击
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:fbb495f34ffdb5255066eb4ea7fff09383deaabe435d9bbb27ed69e173a11729
+            value: Galio fires a concussive blast from his eyes, slowing and
+              dealing damage to enemies caught near the impact point.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:a1df1294bbe3626a49994f59e368bb6588022692e2d3be1b7970f27be97ce1b7
+            value: 加里奥从他的双眼发射一道震荡爆裂，从而对冲击点附近的敌人们造成减速和伤害。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: R
+    ids:
+      - value: Jade_GalioR
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Idol of Durand
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 杜朗石像
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:0a8cb934b7d66d898d0615ce3722ae5c6d95ada0bf7ed136261a3098c1a111be
+            value: Galio assumes the form of a statue, taunting nearby enemies
+              and storing concussive energy as they attack him.  Galio then
+              bursts from his statue shell, releasing the stored energy to
+              damage surrounding foes.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:8e4544acbaa42e032d8e1d04e1fca2c97446caa6f2aabf66560d58c9fe5d0f31
+            value:
+              加里奥现出石像形态，从而嘲讽附近的敌人们并在他们攻击他时储存震荡能量。加里奥随后从他的石像甲壳中爆裂而出，从而释放已储存的能量来伤害周围的敌人们。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: W
+    ids:
+      - value: Jade_GalioW
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Bulwark
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 坚强壁垒
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:60162e5bac7a1dcc60bc8bcd4059c1aeb6ce133202cb16b984c5225c6c40089b
+            value: Galio shields an ally Champion, increasing their Armor and
+              Magic Resistance, and restoring Galio's health each time that
+              Champion suffers damage.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:151d99b84a9b96fe5662779b19ec907dd4c54b71bf1135b8e2bb8de6e19b8c25
+            value: 加里奥为一名友方英雄提供护盾，从而提升其护甲和魔法抗性，并在该英雄每次遭受伤害时回复加里奥的生命值。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524

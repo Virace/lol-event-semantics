@@ -1,0 +1,36 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Seraphine
+  champion_id: 147
+  skin_number: 69
+  skin_token: Skin69
+  id: 147069
+  alias: SeraphineSkin69
+  names:
+    en_US:
+      - value: Heartsong Seraphine
+        sources:
+          - source: data_dragon
+            first_seen: 16.20.1
+            last_seen: 16.20.1
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 心之歌 萨勒芬妮
+        sources:
+          - source: data_dragon
+            first_seen: 16.20.1
+            last_seen: 16.20.1
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 233
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - SeraphineSkin69

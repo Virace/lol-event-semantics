@@ -1,0 +1,266 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60078
+  alias: Jade_Poppy
+  names:
+    en_US:
+      - value: Poppy
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+  title:
+    zh_CN:
+      - value: 钢铁大使
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+spells:
+  - slot: E
+    ids:
+      - value: Jade_PoppyE
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Heroic Charge
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 英勇冲锋
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:031677641db9eb517412900a15e2a1e6440a4e65dfd6f1b562ba06606a977b2e
+            value: Poppy charges at an enemy and carries them further. The
+              initial impact deals a small amount of damage, and if they collide
+              with terrain, her target will take a high amount of damage and be
+              stunned.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:780f9791f64f4f8f7b061c26c1fc65677f27267a17f9ff9bb7bf49ae44d7d899
+            value:
+              波比对一个敌人进行冲锋并将其挟带至更远的地方。第一段冲击造成小额伤害，并且如果其与地形产生碰撞，那么她的目标将受到高额伤害并被晕眩。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: P
+    ids:
+      - value: Jade_PoppyPassive
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Valiant Fighter
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 英勇战士
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:d24e41ea25e600490817093a914017016ef8c8027c8b7ccbac1411ab61c493e5
+            value: Damage dealt to Poppy that exceeds a portion of her current
+              health is reduced.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:3bc8103f7de4b26c0e188504953cbeb190ae5b425a7b00fc1a8cdb61343cc36c
+            value: 所有对波比造成的伤害，只要超过了她的一部分当前生命值，就会被削减。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: Q
+    ids:
+      - value: Jade_PoppyQ
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Devastating Blow
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 毁灭重击
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:840de4935a33e5a16fb78c73a75674cf88220c7aa4130b3bf555f86290b6b92c
+            value: Poppy's next attack crushes her opponent, dealing bonus
+              damage based on her target's max health.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:474cf4a0686bf8e0fa19889a9d7b9cb7b7adf671e8f6c4826bd79039be032931
+            value: 波比的下一次攻击会碾压她的对手，从而根据目标的最大生命值造成额外伤害。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: R
+    ids:
+      - value: Jade_PoppyR
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Diplomatic Immunity
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 外交豁免
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:2ec3a3535c53b2406ec47c8383205d692a363724985df8253f55d1ec9f80ed54
+            value: Poppy focuses intently on a single enemy champion, dealing
+              increased damage to them. Poppy is immune to any damage and
+              abilities from enemies other than her target.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:b4735869a7ee105e4f1787f847f5af18ca8933c70f4e73c0a83c310030e8e5bb
+            value: 波比一心一意地专注于单个目标，从而对其造成额外伤害。波比免疫来自她的目标之外的敌人的任何伤害和技能。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: W
+    ids:
+      - value: Jade_PoppyW
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Paragon of Demacia
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 德玛西亚光辉
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:53f6d90030316449fab99bdec2f6c8efdddd985ce5f82fabc2e509b67d932ecc
+            value: "Passive: Upon receiving damage from or dealing damage with a basic
+              attack, Poppy's armor and damage are increased, which can stack. Active:
+              Poppy gains max stacks of Paragon of Demacia increased movement speed."
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:75011ed1ec7483b43d637255bebdb45e67f564a7472de7c35e1909da3dcfafc9
+            value:
+              被动：在每次受到或造成普攻伤害时，波比的护甲和伤害获得提升，这个效果可以叠加。主动：波比获得最大层数的【德玛西亚光辉】并且移动速度得到提升。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524

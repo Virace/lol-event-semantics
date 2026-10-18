@@ -2153,6 +2153,46 @@ champions:
       source: manual_contextual_alias
       note: QIdle1/2/3 表示 Xin Zhao Q 技能 Three Talon Strike 生效后的三次强化普攻待触发阶段。
   Aphelios:
+    ApheliosCalibrumAttack:
+      kind: champion_attack_component
+      asset_kind: vo
+      component: calibrum_basic_attack
+      label: 通碧普攻
+      confidence: high
+      source: manual_contextual_alias
+      note: Riot Aphelios Kit Primer 区分各武器普攻与 Q；该 Attack cue 与独立 CalibrumQ cue 对照，武器中文名来自 reference/champions/Aphelios.yaml。
+    ApheliosSeverumAttack:
+      kind: champion_attack_component
+      asset_kind: vo
+      component: severum_basic_attack
+      label: 断魄普攻
+      confidence: high
+      source: manual_contextual_alias
+      note: Riot Aphelios Kit Primer 区分各武器普攻与 Q；该 Attack cue 与独立 SeverumQ cue 对照，武器中文名来自 reference/champions/Aphelios.yaml。
+    ApheliosGravitumAttack:
+      kind: champion_attack_component
+      asset_kind: vo
+      component: gravitum_basic_attack
+      label: 坠明普攻
+      confidence: high
+      source: manual_contextual_alias
+      note: Riot Aphelios Kit Primer 区分各武器普攻与 Q；该 Attack cue 与独立 GravitumQ cue 对照，武器中文名来自 reference/champions/Aphelios.yaml。
+    ApheliosInfernumAttack:
+      kind: champion_attack_component
+      asset_kind: vo
+      component: infernum_basic_attack
+      label: 荧焰普攻
+      confidence: high
+      source: manual_contextual_alias
+      note: Riot Aphelios Kit Primer 区分各武器普攻与 Q；该 Attack cue 与独立 InfernumQ cue 对照，武器中文名来自 reference/champions/Aphelios.yaml。
+    ApheliosCrescendumAttack:
+      kind: champion_attack_component
+      asset_kind: vo
+      component: crescendum_basic_attack
+      label: 折镜普攻
+      confidence: high
+      source: manual_contextual_alias
+      note: Riot Aphelios Kit Primer 区分各武器普攻与 Q；该 Attack cue 与独立 CrescendumQ cue 对照，武器中文名来自 reference/champions/Aphelios.yaml。
     CalibrumQMarkRed:
       kind: champion_spell_component
       spell: q
@@ -5434,6 +5474,54 @@ champions:
       source: manual_contextual_alias
       note: SeraphineSkin03_JoketoIdle3D 是玩笑动作结束后转入待机的过渡音效。
   Viktor:
+    QAugment:
+      kind: champion_spell_component
+      asset_kind: vo
+      spell: q
+      component: permanent_ability_augment
+      label: 升级
+      confidence: high
+      source: manual_contextual_alias
+      required_tokens:
+      - Switch
+      infer_stage: false
+      note: Play_vo_Viktor*_Switch_QAugment 是被动光荣进化永久强化 Q 技能时的语音；Switch 为内部切换片段，不是释放技能。依据 https://www.leagueoflegends.com/en-us/champions/viktor/ 的永久技能强化机制；真实 Switch_vo 控制外壳不适用。
+    WAugment:
+      kind: champion_spell_component
+      asset_kind: vo
+      spell: w
+      component: permanent_ability_augment
+      label: 升级
+      confidence: high
+      source: manual_contextual_alias
+      required_tokens:
+      - Switch
+      infer_stage: false
+      note: Play_vo_Viktor*_Switch_WAugment 是被动光荣进化永久强化 W 技能时的语音；Switch 为内部切换片段，不是释放技能。依据 https://www.leagueoflegends.com/en-us/champions/viktor/ 的永久技能强化机制；真实 Switch_vo 控制外壳不适用。
+    EAugment:
+      kind: champion_spell_component
+      asset_kind: vo
+      spell: e
+      component: permanent_ability_augment
+      label: 升级
+      confidence: high
+      source: manual_contextual_alias
+      required_tokens:
+      - Switch
+      infer_stage: false
+      note: Play_vo_Viktor*_Switch_EAugment 是被动光荣进化永久强化 E 技能时的语音；Switch 为内部切换片段，不是释放技能。依据 https://www.leagueoflegends.com/en-us/champions/viktor/ 的永久技能强化机制；真实 Switch_vo 控制外壳不适用。
+    RAugment:
+      kind: champion_spell_component
+      asset_kind: vo
+      spell: r
+      component: permanent_ability_augment
+      label: 升级
+      confidence: high
+      source: manual_contextual_alias
+      required_tokens:
+      - Switch
+      infer_stage: false
+      note: Play_vo_Viktor*_Switch_RAugment 是被动光荣进化永久强化 R 技能时的语音；Switch 为内部切换片段，不是释放技能。依据 https://www.leagueoflegends.com/en-us/champions/viktor/ 的永久技能强化机制；真实 Switch_vo 控制外壳不适用。
     ViktorExpirationTimer:
       kind: generic_sfx_effect
       asset_kind: sfx

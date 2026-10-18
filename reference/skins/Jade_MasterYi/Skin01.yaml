@@ -1,0 +1,31 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_MasterYi
+  champion_id: 60011
+  skin_number: 1
+  skin_token: Skin01
+  id: 60011001
+  alias: Jade_MasterYiSkin01
+  names:
+    en_US:
+      - value: Assassin Master Yi
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 暗影 易
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 167
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_MasterYiSkin01
+  - Jade_MasterYiSkin1

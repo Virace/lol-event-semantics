@@ -11,3 +11,51 @@ aliases:
     qualifiers:
       storm: 风暴
     note: ViktorSkin05_ViktorExpirationTimer_* 是皮肤风暴效果的到期计时音效，不按技能词首猜测。
+  QAugment:
+    kind: champion_spell_component
+    asset_kind: vo
+    spell: q
+    component: permanent_ability_augment
+    label: 升级
+    confidence: high
+    source: manual_contextual_alias
+    required_tokens:
+    - Switch
+    infer_stage: false
+    note: Play_vo_Viktor*_Switch_QAugment 是被动光荣进化永久强化 Q 技能时的语音；Switch 为内部切换片段，不是释放技能。依据 https://www.leagueoflegends.com/en-us/champions/viktor/ 的永久技能强化机制；真实 Switch_vo 控制外壳不适用。
+  WAugment:
+    kind: champion_spell_component
+    asset_kind: vo
+    spell: w
+    component: permanent_ability_augment
+    label: 升级
+    confidence: high
+    source: manual_contextual_alias
+    required_tokens:
+    - Switch
+    infer_stage: false
+    note: Play_vo_Viktor*_Switch_WAugment 是被动光荣进化永久强化 W 技能时的语音；Switch 为内部切换片段，不是释放技能。依据 https://www.leagueoflegends.com/en-us/champions/viktor/ 的永久技能强化机制；真实 Switch_vo 控制外壳不适用。
+  EAugment:
+    kind: champion_spell_component
+    asset_kind: vo
+    spell: e
+    component: permanent_ability_augment
+    label: 升级
+    confidence: high
+    source: manual_contextual_alias
+    required_tokens:
+    - Switch
+    infer_stage: false
+    note: Play_vo_Viktor*_Switch_EAugment 是被动光荣进化永久强化 E 技能时的语音；Switch 为内部切换片段，不是释放技能。依据 https://www.leagueoflegends.com/en-us/champions/viktor/ 的永久技能强化机制；真实 Switch_vo 控制外壳不适用。
+  RAugment:
+    kind: champion_spell_component
+    asset_kind: vo
+    spell: r
+    component: permanent_ability_augment
+    label: 升级
+    confidence: high
+    source: manual_contextual_alias
+    required_tokens:
+    - Switch
+    infer_stage: false
+    note: Play_vo_Viktor*_Switch_RAugment 是被动光荣进化永久强化 R 技能时的语音；Switch 为内部切换片段，不是释放技能。依据 https://www.leagueoflegends.com/en-us/champions/viktor/ 的永久技能强化机制；真实 Switch_vo 控制外壳不适用。

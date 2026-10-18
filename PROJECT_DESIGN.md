@@ -10,7 +10,7 @@
 | `rules/` | 可复用的归一化规则、词典、模板和上下文分片 |
 | `overrides/` | 人工审阅后的精确覆盖、兼容别名和归属决策 |
 | `reference/` | 从外部来源收敛出的累计精简实体参考 |
-| `data/` | 小型 schema、代表样例和质量基线；`16.16` 仅作为本轮冻结验收 profile |
+| `data/` | 小型 schema、代表样例和质量基线；当前为 `16.20` V2 profile，保留历史 V1 |
 | `tests/` | 确定性行为、contract 与文件系统集成测试 |
 | `dist/` | 被忽略的隔离 runs、生成数据、报告、review site 和中间工作目录 |
 
@@ -39,6 +39,11 @@
 `scripts/` 可以依赖共享模块，共享模块不得依赖脚本。来源适配器不得直接写最终 normalized；拆解层不得依赖 `dist/` 中的上次生成结果；展示渲染不得改写 raw 或 reference。
 
 ## 核心数据流
+
+在线 reference 的 `reference_snapshot.py` 将带 catalog 的采集输入绑定到同一固定快照
+提交，验证 metadata 与逐文件摘要；`source_manifest.validate_collection_raw` 在联网前验证
+当轮 raw 文件闭包。`riotmanifest_transport.py` 只在既有 HTTP(S) 环境代理存在时包装第三方
+同步连接池，遵循 NO_PROXY 并保留 TLS 和请求参数，不涉及系统网络设置或异步整包下载。
 
 ```text
 外部 GAME/LCU/Data Dragon/官网来源
@@ -110,6 +115,6 @@ complete normalized audit contract
 - 技能释放或命中阶段后的对象、皮肤及条件保存在 `semantic_slots.spell_context` 与同名翻译角色中，渲染为括号后缀，公共模式模板同时声明该角色。英雄和皮肤依靠 reference 解析，封闭条件由展示词表解释；其余尾部保留原文、未知项和回退信号。新增角色形成新模式，不能沿用旧精确审阅决定；稳定支持门禁独立拒绝遗漏条件的旧结构。
 - 模式增益借用英雄技能时，`borrowed_ability` 保存参考确认的英雄、技能键、分段及内部组件；使用模式增益 frame，同时展示增益和借用技能来源，不能以模式名充当英雄。参考已解析的分段进入 `ability_stage`，不再当作未知组件重复显示；未知组件继续回退并待审阅。
 - `zh_CN` 是当前正式渲染 locale；VO 优先支持，SFX 不删除但按稳定支持、试验支持、暂不支持区分能力边界。
-- `16.16` 是本轮 frozen acceptance profile，不参与未来 live 版本的默认选择。正式消费者 Pattern Catalog schema、本地 promotion 机制、分层绝对门禁 attestation、全接受源审阅 importer 与首个 approved-local 数据集已实现；非 accept 决定的产品修复和远端稳定发布仍是后续工作。当前 inventory 仍使用独立的报告 schema。
+- 当前累计输入使用 `16.20` V2 frozen profile，`16.16` V1 历史档案保留不变；冻结版本不参与未来 live 版本的默认选择。正式消费者 Pattern Catalog schema、本地 promotion 机制、分层绝对门禁 attestation、全接受源审阅 importer 与首个 approved-local 数据集已实现；非 accept 决定的产品修复和远端稳定发布仍是后续工作。当前 inventory 仍使用独立的报告 schema。
 
 当前没有在线服务、数据库或跨进程消息协议。若未来引入这些边界，必须先明确数据所有权、版本兼容、失败恢复和部署环境，再更新本设计与项目约束。

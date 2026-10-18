@@ -14,12 +14,16 @@
 
 - `raw_event_name` 是不可变源数据；新版本只增量合并，不因当前版本缺失而删除历史事件。
 - 每轮采集只读取当时的 live 最新版本；项目不提供指定历史版本的下载、重建或回放。累计语料保存已纳入事件名，但不构成历史版本快照服务。
-- `16.16` 是本轮 frozen acceptance profile，仅用于当前验收基线；不得把它编码为长期“最新版本”默认值。
+- 当前累计输入使用 `16.20` V2 frozen profile；`16.16` V1 历史档案保持不变。冻结版本不得冒充长期“最新版本”。
 - GAME 与 LCU 来源必须在同轮内进行主版本一致性校验；不能把不同版本的来源静默混合为同一结果。
 - live 采集目录必须来自固定快照提交，逐文件核验长度和摘要，并与当轮 LCU manifest ID 精确匹配。自动范围是目录声明的皮肤/炫彩及当前地图根 BIN，不能宣称对任意 WAD 的 BIN 穷举。采集只输出独立 raw round；失败不将来源标记为完成，也不推进成功指针。
 - 远端 raw artifact 必须和可移植来源清单绑定同一 workflow run；manifest 采集必须生成本轮来源清单并提供非空 LCU version，不能借用本地冻结源的 null 例外。online 更新入口在任何网络准备前必须验证该清单、frozen profile 及 GAME/Data Dragon 请求版本属于同一系列；更新器在替换累计 raw/reference/state/report 前还要对 staging 输入做 fail-closed 预检。
 - 当前 16.16 冻结源未暴露 `lcu_version`，只允许版本化 frozen profile 中记录的显式例外：
   `lobby_snapshot.game_version=16.16` 且 `lcu_manifest_id` 非空；该例外不得扩展到未来 live 采集。
+- 带 catalog 的 online 更新必须验证当轮 raw 文件集合和摘要，并将 reference 下载固定到
+  同一采集快照提交，验证 metadata 摘要、精确 LCU manifest 及逐文件长度和摘要。
+  新 profile 的 `require_catalog: true` 不得回退到无来源绑定的下载；local 导入必须离线验证
+  原始 reference JSON、metadata 和当轮 raw，冻结构建必须验证完整采集身份；历史 V1 保持兼容。
 - `rules/`、`overrides/` 和累计 `reference/` 是解释层的权威输入。生成文件不得反向成为人工维护源。
 - `dist/runs/approved-local.json` 原子指向的 completed `normalized/` 是唯一默认消费源；
   `.staging`、`failed`、未批准 `completed` 与旧 `dist/normalized/` 都只能显式用于维护诊断。
@@ -51,7 +55,7 @@
 
 - 项目是脚本、CLI 和离线数据流水线，不部署常驻应用服务或数据库；可部署由仓库生成、无后端且不写回数据的只读静态 Demo。
 - GitHub Actions 全部停用，更新与 Demo 部署定义只以 `.yml.disabled` 模板保留；当前采集、更新、生成和验证直接运行本地或云电脑 CLI。本地完整流程验证通过且正式发布后，才另行决定是否恢复 Actions，不得自动启用模板。提交或交付门禁仍须在本地执行。
-- 累计更新入口与保留的更新模板只接受 frozen V1 16.16，未来 live 版本须先增加版本化 profile/来源合同。模板保留 `candidate-dataset` 与 `failed-run-diagnostics` 分离、同轮来源与 Review 证据的边界，不得把候选自动视为已批准或远端稳定发布。`dist/` 不入 Git。
+- 累计更新入口通过独立 V2 profile 接纳 16.20；已停用模板仍保留历史 V1 16.16 定义，未来 live 版本须先增加版本化 profile/来源合同。模板保留 `candidate-dataset` 与 `failed-run-diagnostics` 分离、同轮来源与 Review 证据的边界，不得把候选自动视为已批准或远端稳定发布。`dist/` 不入 Git。
 - 真实 GAME manifest/CDN、本地游戏安装和在线数据源属于可选集成环境，不得成为默认离线测试前提。
 
 ## 禁止事项

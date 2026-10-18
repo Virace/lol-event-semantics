@@ -9,44 +9,44 @@ entity:
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     zh_CN:
       - value: 泽丽
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
   title:
     zh_CN:
       - value: 祖安花火
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.14'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
   search_alias:
     zh_CN:
       - value: zeli
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: zuanhuahuo
         sources:
           - source: tencent_101
             first_seen: '16.13'
-            last_seen: '16.16'
+            last_seen: '16.20'
 spells:
   - slot: E
     ids:
@@ -54,36 +54,36 @@ spells:
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Spark Surge
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 灿丽花火
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:67349061e16086f30f42df895fbbc40c059189b17c0c78c34ce36d2c1f3c1220
-            value: Zeri dashes a short distance and energizes her next 3 shots 
-              of Burst Fire, causing them to pierce through enemies. She will 
+            value: Zeri dashes a short distance and energizes her next 3 shots
+              of Burst Fire, causing them to pierce through enemies. She will
               vault and grind over any terrain she touches.
             first_seen: '16.5'
             last_seen: 16.5.1
@@ -96,25 +96,25 @@ spells:
               - source: game_data
                 first_seen: '16.5'
                 last_seen: '16.5'
-          - hash: 
+          - hash:
               sha256:0e29d23db5bb1a2112eb0b1f23137eb1f95f3c2731c6e0a93bb1c3f39018e025
-            value: Zeri dashes a short distance and energizes Burst Fire to 
-              pierce through enemies. She will vault and grind over any terrain 
+            value: Zeri dashes a short distance and energizes Burst Fire to
+              pierce through enemies. She will vault and grind over any terrain
               she touches.
             first_seen: '16.14'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous: 0.888158
             review_status: needs_review
             sources:
               - source: data_dragon
                 first_seen: 16.14.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:d28cbbc9329c2ce7ec058d06294ccef0369d9b945409f57ced1e5c6853a4584e
             value: 泽丽冲刺一小段距离，并激发她的下3发【电火迸射】，使它们获得穿刺敌人的效果。她将在接触任何地形时进行翻越和滑行。
             first_seen: 16.5.1
@@ -125,277 +125,277 @@ spells:
               - source: data_dragon
                 first_seen: 16.5.1
                 last_seen: 16.5.1
-          - hash: 
+          - hash:
               sha256:9c94192dbf326f0a46d37ce1e746ff62230f96fd29e892ae5a70dcf0acced3bc
             value: 泽丽冲刺一小段距离，并激发【电火迸射】，使其获得穿刺敌人的效果。她将在接触任何地形时进行翻越和滑行。
             first_seen: '16.14'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous: 0.924528
             review_status: needs_review
             sources:
               - source: data_dragon
                 first_seen: 16.14.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: P
     ids:
       - value: ZeriPassive
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Living Battery
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 内能迁转
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:3d333d851301092554e5da678e46aebd04cedace29fdc97fa4028ee13799a3ae
-            value: Zeri's Attacks deal magic damage and are treated as 
-              Abilities. Moving and casting Burst Fire stores up energy in 
-              Zeri's Sparkpack. When fully charged her next Attack deals bonus 
+            value: Zeri's Attacks deal magic damage and are treated as
+              Abilities. Moving and casting Burst Fire stores up energy in
+              Zeri's Sparkpack. When fully charged her next Attack deals bonus
               damage.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:6c5648e14d649f7fc6edabdbff705fc85743b66909f5be3518a50792b0ce0023
-            value: 
+            value:
               泽丽的攻击造成魔法伤害并被视为技能。移动和施放【电火迸射】会将能量储存至泽丽的【火花背包】。在完全充能后，她的下次攻击将造成额外伤害。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: Q
     ids:
       - value: ZeriQ
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Burst Fire
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 电火迸射
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:663ec87b9e5d411748c2abd9b0d272c4021149c30bab83b2402d8ed0b2fdb9c2
             value: Burst Fire shoots a burst of 7 rounds that deal attack damage
               to the first enemy hit. This Ability is treated as an Attack.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:1e0bf991929af613e3982a13a102fddbfb146e7aaa2c8857a1c4779e19d57b0c
             value: 【电火迸射】连续发射7发子弹，对命中的首个敌人造成相当于攻击力的物理伤害。这个技能会被视为一次攻击。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: R
     ids:
       - value: ZeriR
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Lightning Crash
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 超限爆闪
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:a57c700fad3ef49076825f2aeb99901b751eb00871bd04a38abf397014e6d7a1
-            value: Zeri discharges a nova of electricity and overcharges 
-              herself, gaining increased damage and stacking Move Speed that 
+            value: Zeri discharges a nova of electricity and overcharges
+              herself, gaining increased damage and stacking Move Speed that
               refreshes and gets stronger every time she hits an enemy champion.
-              While overcharged, Burst fire becomes a faster triple shot that 
+              While overcharged, Burst fire becomes a faster triple shot that
               chains lightning between enemies.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:7f1dd49106bc9f07d61d3a7671559d4cf157537c61036d69904c117c662c4de7
-            value: 
+            value:
               泽丽放出一道电能新星，并且自身进入超负荷状态，来获得伤害提升和可叠加的移动速度，并且这个状态可在她每次命中敌方英雄时刷新持续时间并变得更强。在超负荷状态下。【枪火迸射】会变成一个快速的3连发，并在敌人之间引发连锁闪电。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: W
     ids:
       - value: ZeriW
         sources:
           - source: data_dragon
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.5'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Ultrashock Laser
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.5'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 强穿激光
           sources:
             - source: data_dragon
               first_seen: 16.5.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:372d338ddc752c087a938bd49e746f49870585197d72600c99ae14ac1adbe29d
             value: Zeri fires an electric pulse that slows and damages the first
-              enemy hit. If the pulse hits a wall it expands into a long range 
+              enemy hit. If the pulse hits a wall it expands into a long range
               laser.
             first_seen: '16.5'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.5'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:9e866ed162bc1e707881089f111fa6624f44cafef6436024adea23dc373ed23c
             value: 泽丽发射一道电能脉冲，来对首个命中的敌人造成减速和伤害。如果脉冲命中了一个墙体，那么它会延伸为一道长程激光。
             first_seen: 16.5.1
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.5.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524

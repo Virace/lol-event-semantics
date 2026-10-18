@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, Callable
 
@@ -31,12 +32,36 @@ def download_game_data_snapshot_subset(
     languages: tuple[str, ...] = ("en_US", "zh_CN"),
     base_url: str = GAME_DATA_SNAPSHOT_BASE_URL,
     fetcher: Fetcher | None = None,
+    preserve_source_bytes: bool = False,
 ) -> None:
-    """按需下载 GAME data 的 champion summary、地图、皮肤系列、装备和英雄详情。"""
+    """按需下载 GAME data 的目录和英雄详情。
+
+    Args:
+        output_root: 只用于 source 缓存的输出根，不是累计 reference。
+        game_version: 本轮 GAME 版本标识；严格身份由调用方的校验读取器绑定。
+        languages: 需要完整准备的语言。
+        base_url: 快照根地址；严格模式使用固定提交。
+        fetcher: 字节读取器，英雄详情阶段最多六路并发调用。
+        preserve_source_bytes: 保留原始 JSON 字节，供后续摘要复核；否则保持原有格式化布局。
+
+    下载失败会传播异常；此前缓存可能保留，但不会由此发布累计 reference。
+    """
 
     fetch = fetcher or fetch_bytes
     base = base_url.rstrip("/")
     root = Path(output_root)
+
+    def read_source(url: str, target: Path) -> Any:
+        """解析来源 JSON；严格快照模式同时保留可复核的原始字节。"""
+
+        payload = fetch(url)
+        value = read_json_bytes(payload)
+        if preserve_source_bytes:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(payload)
+        else:
+            write_json_bytes(target, value)
+        return value
 
     for language in languages:
         locale = game_locale(language)
@@ -47,18 +72,17 @@ def download_game_data_snapshot_subset(
         remote_base = f"{base}/global/{remote_locale}/v1"
         local_base = root / "global" / locale / "v1"
 
-        summary = read_json_bytes(fetch(f"{remote_base}/champion-summary.json"))
-        maps = read_json_bytes(fetch(f"{remote_base}/maps.json"))
-        skinlines = read_json_bytes(fetch(f"{remote_base}/skinlines.json"))
-        items = read_json_bytes(fetch(f"{remote_base}/items.json"))
-        write_json_bytes(local_base / "champion-summary.json", summary)
-        write_json_bytes(local_base / "maps.json", maps)
-        write_json_bytes(local_base / "skinlines.json", skinlines)
-        write_json_bytes(local_base / "items.json", items)
+        summary = read_source(f"{remote_base}/champion-summary.json", local_base / "champion-summary.json")
+        for name in ("maps.json", "skinlines.json", "items.json"):
+            read_source(f"{remote_base}/{name}", local_base / name)
 
-        for champion_id in champion_ids(summary):
-            detail = read_json_bytes(fetch(f"{remote_base}/champions/{champion_id}.json"))
-            write_json_bytes(local_base / "champions" / f"{champion_id}.json", detail)
+        def download_champion(champion_id: int) -> None:
+            """下载并写入单个英雄，失败向调用方传播，不发布部分 reference。"""
+
+            read_source(f"{remote_base}/champions/{champion_id}.json", local_base / "champions" / f"{champion_id}.json")
+
+        with ThreadPoolExecutor(max_workers=6) as executor:
+            list(executor.map(download_champion, champion_ids(summary)))
 
 
 def game_locale(language: str) -> str:

@@ -1,0 +1,30 @@
+schema_version: 2
+entity:
+  type: skin
+  champion_alias: Jade_Fizz
+  champion_id: 60105
+  skin_number: 25
+  skin_token: Skin25
+  id: 60105025
+  alias: Jade_FizzSkin25
+  names:
+    en_US:
+      - value: Prestige Fuzz Fizz (2022)
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    zh_CN:
+      - value: 至臻 绒毛菲兹 (2022)
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+skinlines:
+  - id: 98
+    sources:
+      - source: game_data
+        first_seen: 16.20.8248524
+        last_seen: 16.20.8248524
+aliases:
+  - Jade_FizzSkin25

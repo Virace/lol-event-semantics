@@ -9,44 +9,44 @@ entity:
         sources:
           - source: data_dragon
             first_seen: 16.14.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.14'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     zh_CN:
       - value: 洛克
         sources:
           - source: data_dragon
             first_seen: 16.14.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: tencent_101
             first_seen: '16.14'
-            last_seen: '16.16'
+            last_seen: '16.20'
   title:
     zh_CN:
       - value: 灰烬驱魔人
         sources:
           - source: data_dragon
             first_seen: 16.14.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.14'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
           - source: tencent_101
             first_seen: '16.14'
-            last_seen: '16.16'
+            last_seen: '16.20'
   search_alias:
     zh_CN:
       - value: huijinqumoren
         sources:
           - source: tencent_101
             first_seen: '16.14'
-            last_seen: '16.16'
+            last_seen: '16.20'
       - value: luoke
         sources:
           - source: tencent_101
             first_seen: '16.14'
-            last_seen: '16.16'
+            last_seen: '16.20'
 spells:
   - slot: E
     ids:
@@ -54,241 +54,242 @@ spells:
         sources:
           - source: data_dragon
             first_seen: 16.14.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.14'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Ashen Pursuit
           sources:
             - source: data_dragon
               first_seen: 16.14.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 灰猎无影
           sources:
             - source: data_dragon
               first_seen: 16.14.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:89ce106a4703e67ed4127a349a933fe31a70f0c96416b62684e433f946e24862
-            value: Locke teleports to a location before dashing to attack his 
+            value: Locke teleports to a location before dashing to attack his
               next target, dealing damage to enemies passed through.
             first_seen: '16.14'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.14.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:8248e63bc3ef5bc10887fdfcff99eb0a9dd2ac7dd0fefd5a99110c1ec14e7bb8
             value: 洛克传送至目标位置，并在下一次攻击时朝目标冲刺，对途经的敌人们造成伤害。
             first_seen: '16.14'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.14.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: P
     ids:
       - value: LockePassive
         sources:
           - source: data_dragon
             first_seen: 16.14.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.14'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Silver Stake
           sources:
             - source: data_dragon
               first_seen: 16.14.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 圣银穿心
           sources:
             - source: data_dragon
               first_seen: 16.14.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:fdb4f32ebe8619163570e3d69713a4253f9ed484d999066028a3387aff51d07d
-            value: Locke's attacks deal additional magic damage On-Hit, 
+            value: Locke's attacks deal additional magic damage On-Hit,
               increased based on enemy missing Health.
             first_seen: '16.14'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.14.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:d6dfc56086042c9ecad8ea82caf9839ed7d7b7328331bd795da665ae63dd57d1
             value: 洛克的攻击会附带额外的魔法伤害，伤害值基于敌人的已损失生命值而提升。
             first_seen: '16.14'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.14.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
   - slot: Q
     ids:
       - value: LockeQ
         sources:
           - source: data_dragon
             first_seen: 16.14.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.14'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Ritual Nails
           sources:
             - source: data_dragon
               first_seen: 16.14.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 伏魔三钉
           sources:
             - source: data_dragon
               first_seen: 16.14.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:b085a6ff71a8b5f49e5ec98449f598cc6e83d98f65a88b6250e8982a888fba4a
             value: Locke readies a set of Soul Nails to throw, dealing damage to
               and marking enemies hit. Locke can consume the marks to deal bonus
               damage with his attacks.
             first_seen: '16.14'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.14.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:76cb7fbc2bea3da8ba78d35abc0bf08298e9496f445ff24fb16c5f15335cfaf2
             value: 洛克依次击出三颗驱魔大钉，对命中的敌人们造成伤害，并附上一层印记。洛克的攻击可以引爆印记，造成额外伤害。
             first_seen: '16.14'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.14.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
+            similarity_to_latest: 0.990476
   - slot: R
     ids:
       - value: LockeR
         sources:
           - source: data_dragon
             first_seen: 16.14.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.14'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Purgatory
           sources:
             - source: data_dragon
               first_seen: 16.14.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 万魔狱
           sources:
             - source: data_dragon
               first_seen: 16.14.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:d65aed9a5189d89d06d9552d2ec9062434872877a9957b45670b2829b4d7c6eb
-            value: Locke throws a binding artifact that deals damage and 
+            value: Locke throws a binding artifact that deals damage and
               potentially executes enemies hit. Locke gains additional power for
               sealing away enemy champions.
             first_seen: '16.14'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.14.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:167e516ae5bceeaf1c5e29ad8f578ce7fce49defeb639e5565c137867e4352bf
             value: 洛克扔出封印法器来对命中的敌人们造成伤害并且有可能将其处决。成功处决敌人会为洛克提供增益效果。
             first_seen: '16.14'
@@ -302,68 +303,82 @@ spells:
               - source: game_data
                 first_seen: '16.14'
                 last_seen: '16.16'
+          - hash:
+              sha256:4bb37062ff53c416ab392e3d17f6f10224638a2545ce864194097d28ba4e9d13
+            value: 洛克扔出封印法器来对命中的敌人们造成伤害并且有可能将其处决。成功封印敌方英雄会为洛克提供额外强度。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous: 0.833333
+            review_status: needs_review
+            sources:
+              - source: data_dragon
+                first_seen: 16.20.1
+                last_seen: 16.20.1
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
   - slot: W
     ids:
       - value: LockeW
         sources:
           - source: data_dragon
             first_seen: 16.14.1
-            last_seen: 16.16.1
+            last_seen: 16.20.1
           - source: game_data
             first_seen: '16.14'
-            last_seen: '16.16'
+            last_seen: 16.20.8248524
     names:
       en_US:
         - value: Soul Ignition
           sources:
             - source: data_dragon
               first_seen: 16.14.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
       zh_CN:
         - value: 灵焰仪式
           sources:
             - source: data_dragon
               first_seen: 16.14.1
-              last_seen: 16.16.1
+              last_seen: 16.20.1
             - source: game_data
               first_seen: '16.14'
-              last_seen: '16.16'
+              last_seen: 16.20.8248524
     descriptions:
       en_US:
         snapshots:
-          - hash: 
+          - hash:
               sha256:f64257877b766e823cbca557c97efc064d59648c41c952e3102ba00be6270803
-            value: Locke ignites his soul, gaining Attack Speed and Move Speed, 
-              and dealing damage to himself. At the end of the duration, Locke 
+            value: Locke ignites his soul, gaining Attack Speed and Move Speed,
+              and dealing damage to himself. At the end of the duration, Locke
               will heal back a portion of the damage he takes during the effect.
             first_seen: '16.14'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.14.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524
       zh_CN:
         snapshots:
-          - hash: 
+          - hash:
               sha256:e7dc7ae5bc592227f03a3682f0bc3e63effd9f838aa95d807a4a6d306a2ccf35
-            value: 
+            value:
               洛克点燃自己的灵魂，从而获得攻击速度和移动速度，但会不断对自身造成伤害。技能结束时，洛克将回复一部分在技能持续期间受到的伤害。
             first_seen: '16.14'
-            last_seen: 16.16.1
+            last_seen: 16.20.8248524
             similarity_to_previous:
             review_status: accepted
             sources:
               - source: data_dragon
                 first_seen: 16.14.1
-                last_seen: 16.16.1
+                last_seen: 16.20.1
               - source: game_data
                 first_seen: '16.14'
-                last_seen: '16.16'
+                last_seen: 16.20.8248524

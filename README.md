@@ -54,8 +54,15 @@ uv run python scripts/search_stringtable.py 厄塔汗 "first blood"
 `all` 为默认，`none` 关闭对应类别，不能同时关闭两类。范围是同轮目录声明的全部皮肤/炫彩
 与当前地图根 BIN，不宣称穷举任意 WAD 内的全部 BIN；TFT/TFTM 不进入事件语料。
 中断后保留输出目录再重跑，已完成实体会按身份和摘要复核后复用。
+受限网络环境中，同步 manifest/BIN 读取遵循已有 `HTTP_PROXY`、`HTTPS_PROXY` 与
+`NO_PROXY`，不关闭 TLS 校验，也不修改系统代理设置。
 新 live 版本要先建立并审阅对应 profile，才能进入累计更新和正式生成，见
 [`更新流程`](docs/UPDATE_WORKFLOW.md)。
+
+带 `catalog` 证据的采集轮次进入 online 更新时，会先核验本轮 raw 的文件集合与
+SHA-256，再把 reference 固定到同一快照提交，逐文件检查长度与摘要；同补丁但不同
+LCU manifest 的快照同样拒绝。新 profile 可通过 `require_catalog: true` 强制此合同。
+这不会修改历史 V1 profile、已接受样本或语义批准决定。
 
 `download_sources.py` 继续提供字符串表、大厅 JSON、RST 字典与本地下载兼容能力。
 其旧 raw-bins 路径仍按 `range(100)` 探测皮肤编号，不用于完整 raw 采集；完整采集使用
@@ -105,7 +112,7 @@ uv run python scripts/validate_consumption.py `
 
 版本策略：每轮只跟 live 最新版本，不提供指定历史版本下载、重建或回放；
 GAME 与 LCU manifest 成对校验（major.minor 一致），整轮下载出自同一份
-manifest，数据源之间天然同版本。`16.16` 是本轮 frozen acceptance profile，
+manifest，数据源之间天然同版本。当前累计输入使用独立 `16.20` V2 profile；`16.16` V1 保留为历史验收合同，
 不是长期固定的最新版本默认值。
 
 ## 目录契约
@@ -179,7 +186,7 @@ manifest，数据源之间天然同版本。`16.16` 是本轮 frozen acceptance 
 `manifest.json` 的 V2 内容身份不含生成时间、本机绝对路径或运行耗时。它记录
 冻结 profile、Git commit/dirty 状态、raw/reference/rules/overrides/契约资产与
 生成器源码的规范化摘要，并列出 manifest 之外每个 payload 文件的 SHA-256；
-`content_digest` 和 `dataset_id` 由这些稳定字段确定。当前 `16.16` profile 对
+`content_digest` 和 `dataset_id` 由这些稳定字段确定。历史 `16.16` profile 对
 缺失的 `lcu_version` 只接受一条例外：lobby snapshot 同为 16.16 且保留非空
 LCU manifest id。dirty 工作树可以生成候选，但后续 promotion 不得批准它。
 
@@ -281,10 +288,14 @@ uv run python "$root\examples\consumer.py" --root $root --query Play_vo_NotAReal
 只有本地完整流程验证通过且正式发布后，才评估并明确决定是否恢复 Actions；不自动恢复模板。
 提交或交付前仍按 `PROJECT_STANDARD.md` 在本地执行完整门禁。
 
-累计更新入口和保留的更新模板仍只接受 frozen V1 16.16；live 采集 CLI 不受此冻结范围限制。
+累计输入现使用 frozen V2 16.20；默认 full refresh 选择 `data/frozen-profile.v2.json` 和
+`data/frozen-sources-manifest.v2.json`。V1 文件保留不变；已停用的更新模板仍是历史 V1 16.16 定义。
 直接 online 更新入口在网络准备前验证同轮 GAME/LCU 的 portable remote contract，再对累计更新做
 staging preflight。清单参与候选内容身份，GAME manifest ID 也进入来源身份；仓库内的本地 frozen
-source manifest 不冒充在线采集。未来 live 版本须先建立并 Review 新的版本化 profile/来源合同。
+source manifest 不冒充在线采集。16.20 已完成真实目录范围采集及累计来源导入，包含 178 个实体、
+9207 个 BIN；新增 2265 个全局原名，累计唯一数为 109191。每实体新增来源条目为 10551，
+其中含已有原名的新来源，不能算成 10551 个新事件。来源接入不代表质量门禁或语义批准已完成。
+未来 live 版本须先建立并 Review 新的版本化 profile/来源合同。
 保留的更新模板记录 artifact 同 producer run、成功候选与失败诊断分离、完整门禁后才 push 的边界，
 模板本身不授予执行或 promotion 权限。更新流程详解见
 `docs/UPDATE_WORKFLOW.md`，贡献指引见 `CONTRIBUTING.md`，仓库分层说明见

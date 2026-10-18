@@ -1,0 +1,263 @@
+schema_version: 2
+entity:
+  type: champion
+  id: 60005
+  alias: Jade_XinZhao
+  names:
+    en_US:
+      - value: Xin Zhao
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+  title:
+    zh_CN:
+      - value: 德邦总管
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+spells:
+  - slot: E
+    ids:
+      - value: Jade_XinZhaoE
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Audacious Charge
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 无畏冲锋
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:f442ca6d71aa682e45983dd0b6def6ad0c21f4bf8d2fdc4f6170fa22a000c43f
+            value: Xin Zhao charges an enemy, dealing damage and slowing all
+              enemies in the area.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:9a9c9a9ddad738338ae1addeb86a83f5b4133f2bef1e6c1adef26fe88f728b69
+            value: 赵信对一名敌人发起冲锋，从而对区域内的所有敌人造成伤害和减速。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: P
+    ids:
+      - value: Jade_XinZhaoPassive
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Challenge
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 挑战
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:92f14aedc5525446a87e1e5a6cad4f89f7993e051cd01059da7fc2caea89e814
+            value: Xin Zhao challenges his target with his basic attacks and
+              Audacious Charge, reducing their armor.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:c9525ce3f1e520e7d273f33cfc1a0c8993b9020aa1326b507fd889a8de58e6d6
+            value: 赵信通过他的普攻和无畏冲锋来挑战他的目标，从而对其造成护甲削减。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: Q
+    ids:
+      - value: Jade_XinZhaoQ
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Three Talon Strike
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 三重爪击
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:affd13857a825eb1ec9fd8add2639ed7b077c1bbeeb973ddc624c8aba06c4739
+            value: Xin Zhao's next 3 standard attacks deal increased damage that
+              reduce his other ability cooldowns, with the third attack knocking
+              an opponent into the air.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:9a3ca1c28fb43904c0a58579a37e7377d06c1fcd8a746a7137a4878fe5b9b5d4
+            value: 赵信的下3次普攻将造成额外伤害并缩短他其它技能的冷却时间，且第三次攻击将击飞一个目标。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: R
+    ids:
+      - value: Jade_XinZhaoR
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Crescent Sweep
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 新月横扫
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:b30e2018ef9f67ed5e38564683dfb7e67f89e843ebe43722fd6160406f532cef
+            value: Xin Zhao deals damage to nearby enemies based on their
+              current Health and knocks non-challenged targets back. Xin Zhao
+              gains bonus Armor and Magic Resist based on number of champions
+              hit.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:0c6d2805497eebaf1fb4e2cc421375d5864621366ca85e4e2bdc3af72004959b
+            value: 赵信对附近的敌人造成基于目标当前生命值的伤害，并击退未被挑战的目标。赵信会基于命中的英雄数量获得额外护甲和魔法抗性。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+  - slot: W
+    ids:
+      - value: Jade_XinZhaoW
+        sources:
+          - source: game_data
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+    names:
+      en_US:
+        - value: Battle Cry
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+      zh_CN:
+        - value: 狂战怒吼
+          sources:
+            - source: game_data
+              first_seen: 16.20.8248524
+              last_seen: 16.20.8248524
+    descriptions:
+      en_US:
+        snapshots:
+          - hash:
+              sha256:e035be09138e45ef7408b7beb9accff31e07f6acbbc6afb3f9a24f4909444271
+            value: Xin Zhao passively heals every 3 attacks and can activate
+              this ability to attack faster.
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
+      zh_CN:
+        snapshots:
+          - hash:
+              sha256:932ddbe3863e86dee5479be77e2a2389d8d7d1454163854405897b81a14c0052
+            value: 赵信被动地每3次攻击治疗自身并且能够主动施放这个技能来攻击得更快。
+            first_seen: 16.20.8248524
+            last_seen: 16.20.8248524
+            similarity_to_previous:
+            review_status: accepted
+            sources:
+              - source: game_data
+                first_seen: 16.20.8248524
+                last_seen: 16.20.8248524
