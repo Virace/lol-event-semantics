@@ -13,8 +13,11 @@
 ## 数据流总览
 
 ```text
-scripts/download_sources.py        # 初始化/更新入口：一键下载全部数据源
-  -> dist/sources/                 # 字符串表 / 大厅 JSON / 皮肤 bin / RST key 字典
+scripts/collect_raw_events.py      # 当前 live 英雄/皮肤/地图事件采集
+  -> dist/collection/rounds/<run>/  # raw round / 同轮来源清单 / 计划与报告
+  -> 版本化 profile 与来源审查后，显式合并累计语料
+scripts/download_sources.py        # 字符串表 / 大厅 JSON / RST 等兼容下载入口
+  -> dist/sources/
 raw/events/ + rules/ + overrides/ + reference/
   -> decomposition JSONL + 审计报告
   -> dist/runs/completed/<run>/normalized/
@@ -25,29 +28,18 @@ raw/events/ + rules/ + overrides/ + reference/
 ## 快速开始
 
 ```powershell
-uv sync --extra download          # download 可选组含 riotmanifest（仅下载数据源时需要）
+uv sync --dev --extra download --locked
 
-# 1) 一键获取数据源（同版本重跑自动跳过）
-#    本地模式（推荐，秒级）：提供游戏安装目录，直接解包本地 WAD，无需联网
-uv run python scripts/download_sources.py --game-dir "<游戏安装根目录>" `
-  --sources stringtable,raw-bins --champions all --emit-raw-round .temp\raw-events-round
-uv run python scripts/download_sources.py --sources lobby,rst-hashes
-#    远程模式（无本地客户端时）：按 live manifest 局部下载（区服等价，默认 OC；
-#    注：远程全量英雄拉取偏慢，待优化）
-uv run python scripts/download_sources.py --sources stringtable,raw-bins --champions all
-#    增量模式（第二次执行起）：按上次锚定清单/本地 WAD 指纹做文件级 diff，
-#    只处理受影响英雄与判变语言；无锚自动回退全量并落锚（--force 强制全量）
-uv run python scripts/download_sources.py --changed-only
-uv run python scripts/download_sources.py --game-dir "<游戏安装根目录>" --changed-only `
-  --emit-raw-round .temp\raw-events-round
+# 1) 采集当前 live：默认全部英雄/皮肤与地图，可直接重复同一命令续跑
+uv run python scripts/collect_raw_events.py --output-root dist/collection `
+  --champions all --maps all
 
-# 2) 把本轮事件名并入累计语料（增量合并，旧事件永不删除）
-uv run python scripts/update_raw_events.py --mode local `
-  --reference-root reference --raw-root raw\events `
-  --state-file raw\update-state.json --raw-input-root .temp\raw-events-round `
-  --report-root .temp\update-report
+# 2) 只读检查新事件；采集不会自动合并 raw/reference
+$collection = Get-Content dist/collection/latest.json -Raw | ConvertFrom-Json
+uv run python scripts/check_raw_update.py --raw-root raw/events `
+  --input-root "dist/collection/rounds/$($collection.run)/raw"
 
-# 3) 全量刷新到隔离 run（含 validate、稳定支持gate、产品审阅站、趋势 ratchet）
+# 3) 对仓库当前累计输入生成候选（不自动使用上面的新采集结果）
 uv run python scripts/run_full_refresh.py
 
 # 4) 查询单个事件的已批准解析结果（P5 完成首个 approved-local 后可用）
@@ -56,6 +48,18 @@ uv run lookup-normalized-event --event Play_vo_AatroxSkin01_AatroxE_cast3D --mod
 # 辅助：客户端字符串表中英同键检索（词条核证工具）
 uv run python scripts/search_stringtable.py 厄塔汗 "first blood"
 ```
+
+云端全新环境使用 Python 3.13（`uv python install 3.13`，并设置 `UV_PYTHON=3.13`），
+再执行上述锁定安装。采集范围支持 `--champions Annie,Ahri` 或数字 ID、`--maps 11`；
+`all` 为默认，`none` 关闭对应类别，不能同时关闭两类。范围是同轮目录声明的全部皮肤/炫彩
+与当前地图根 BIN，不宣称穷举任意 WAD 内的全部 BIN；TFT/TFTM 不进入事件语料。
+中断后保留输出目录再重跑，已完成实体会按身份和摘要复核后复用。
+新 live 版本要先建立并审阅对应 profile，才能进入累计更新和正式生成，见
+[`更新流程`](docs/UPDATE_WORKFLOW.md)。
+
+`download_sources.py` 继续提供字符串表、大厅 JSON、RST 字典与本地下载兼容能力。
+其旧 raw-bins 路径仍按 `range(100)` 探测皮肤编号，不用于完整 raw 采集；完整采集使用
+`collect_raw_events.py`。
 
 ### 事件语义静态演示站
 
@@ -109,12 +113,17 @@ manifest，数据源之间天然同版本。`16.16` 是本轮 frozen acceptance 
 - `src/lol_event_semantics/`：共享 Python 包代码。
 - `scripts/`：薄入口脚本（下载、导入、拆解、构建、校验、检索）。
 - `raw/events/`：累积 raw 事件名语料（`champions/{数字id}.txt`、`maps/{id}.txt`）。
-  **事件名获取已脚本化**（`download_sources.py --sources raw-bins --emit-raw-round`），
+  **事件名获取已脚本化**（`collect_raw_events.py`），
   不再需要手动解包提供；`raw/update-state.json` 是最后成功处理游标。
 - `rules/` 与 `overrides/`：人工维护的规则、词典、上下文别名与精确覆盖。
 - `reference/`：累计精简参考合集（`champions/`、`maps/`、`skinlines/`、`skins/`、`items/`），解释阶段只读取这里。
 - `data/`：小型 schema、质量基线与样例数据。
 - `dist/`（整体不入库）：
+  - `dist/collection/rounds/<digest>/`：本轮 `raw/{champions,maps}/*.txt`、`source-manifest.json`、
+    `collection-plan.json` 与 `collection-report.json`；成功后 `dist/collection/latest.json` 的 `run`
+    指向该目录名。失败不推进指针，来源中的 `raw-bins` 保持 `pending`。
+    `dist/collection/cache/entities/` 按 WAD 内容、BIN 计划及解析器身份复用实体结果，复用前校验摘要；
+    其他目录快照、manifest 与提取缓存也只保留在采集输出根内。
   - `dist/sources/`：数据源下载落点。`manifest.json` 版本游标；
     `stringtable/Global.{locale}-lol.stringtable`（GAME WAD，原 in-WAD 路径
     `data/menu/en_us/lol.stringtable`）；`lobby/{locale}/*.json`
@@ -247,8 +256,8 @@ uv run python scripts/report_translation_patterns.py `
 分别表示尚需精确审阅和当前暂缓纳入支持。公共 manifest/record/catalog/quality Schema、已接受样本集、
 无项目源码 consumer 和最小样例位于 `data/`，生成时复制进 candidate 的 `normalized/`。
 确定性身份、事务 run、分层绝对门禁、全接受源审阅的版本化 decision importer 和原子 pointer
-机制已实现，首个真实 approved-local promotion 已完成；远端 workflow 只交付候选与审核证据，
-不会把 artifact 自动声明为已批准或稳定发布。
+机制已实现，首个真实 approved-local promotion 已完成；GitHub workflow 当前全部停用并保留为模板。
+候选与审核证据不会被自动声明为已批准或稳定发布。
 
 ### 无源码消费者快速验证
 
@@ -264,21 +273,20 @@ uv run python "$root\examples\consumer.py" --root $root --query Play_vo_Annie_Mo
 uv run python "$root\examples\consumer.py" --root $root --query Play_vo_NotARealEvent --expect miss
 ```
 
-## 自动更新与 Actions
+## 本地更新与停用的 Actions 模板
 
-`.github/workflows/update-raw-events.yml` 为手动触发的更新 workflow
-（在线最小子集 + 锁定依赖门禁 + 隔离 full refresh + candidate artifact）。选择提交数据时，
-workflow 先在 runner 本地形成提交，只有工作树干净的候选的完整门禁通过后才 push；未选择提交时
-只上传 review-only 候选。成功 run 使用 `candidate-dataset` artifact；失败 run 只进入
-`failed-run-diagnostics`，不会以候选数据集命名。artifact 不自动 promotion；本地权威消费入口仍是
-`approved-local.json`。Actions 的全新依赖安装固定使用 Python 3.13；push/PR 不再重复运行默认 test job，
+当前采集、更新、生成和验证均在本地或云电脑直接运行 CLI。GitHub Actions 全部停用，原定义保留为
+`.github/workflows/update-raw-events.yml.disabled` 和
+`.github/workflows/deploy-demo-pages.yml.disabled`，不会被 GitHub 识别为可执行 workflow。
+只有本地完整流程验证通过且正式发布后，才评估并明确决定是否恢复 Actions；不自动恢复模板。
 提交或交付前仍按 `PROJECT_STANDARD.md` 在本地执行完整门禁。
 
-当前 workflow 只接受 frozen V1 16.16。artifact 模式要求 raw round 与可移植来源清单来自同一个
-producer run；manifest 模式要求同轮 GAME/LCU 证据并生成运行时来源清单。workflow 和直接 online
-更新入口都会在网络准备前验证这份 portable remote contract。该清单同时进入累计更新
-的 staging preflight、候选内容身份和诊断 artifact，GAME manifest ID 也进入来源身份；仓库内的本地 frozen source manifest 不会被
-用来冒充在线采集。未来 live 版本须先建立并 Review 新的版本化 profile/来源合同。更新流程详解见
+累计更新入口和保留的更新模板仍只接受 frozen V1 16.16；live 采集 CLI 不受此冻结范围限制。
+直接 online 更新入口在网络准备前验证同轮 GAME/LCU 的 portable remote contract，再对累计更新做
+staging preflight。清单参与候选内容身份，GAME manifest ID 也进入来源身份；仓库内的本地 frozen
+source manifest 不冒充在线采集。未来 live 版本须先建立并 Review 新的版本化 profile/来源合同。
+保留的更新模板记录 artifact 同 producer run、成功候选与失败诊断分离、完整门禁后才 push 的边界，
+模板本身不授予执行或 promotion 权限。更新流程详解见
 `docs/UPDATE_WORKFLOW.md`，贡献指引见 `CONTRIBUTING.md`，仓库分层说明见
 `REPOSITORY.md`。
 

@@ -10,8 +10,8 @@ from ruamel.yaml import YAML
 
 
 ROOT = Path(__file__).resolve().parents[1]
-WORKFLOW_PATH = ROOT / ".github" / "workflows" / "update-raw-events.yml"
-DEMO_WORKFLOW_PATH = ROOT / ".github" / "workflows" / "deploy-demo-pages.yml"
+WORKFLOW_PATH = ROOT / ".github" / "workflows" / "update-raw-events.yml.disabled"
+DEMO_WORKFLOW_PATH = ROOT / ".github" / "workflows" / "deploy-demo-pages.yml.disabled"
 FROZEN_PROFILE_PATH = ROOT / "data" / "frozen-profile.v1.json"
 
 

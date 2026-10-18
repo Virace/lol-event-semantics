@@ -17,6 +17,7 @@
 ## 关键模块边界
 
 - 来源边界：`http_fetch.py`、`online_sources.py`、`game_manifest*.py`、`game_wad_events.py`、`data_dragon_source.py`、`tencent_hero_list_source.py` 负责获取并校验外部数据，不解释事件语义。
+- live 采集边界：`collection_sources.py` 获取固定提交的最小大厅目录及英雄详情，核验摘要、主版本与精确 LCU manifest；`collection_discovery.py` 将目录声明的皮肤/炫彩和当前地图根 BIN 与 WAD 索引核对；`collection.py` 按实体保存进度、校验并复用内容缓存，只输出独立 raw round 与来源证据，不写累计 raw/reference 或批准状态。请求范围不等于任意 WAD 内 BIN 的穷举。
 - 累积更新边界：`reference_ingestion.py`、`reference_collection.py`、`raw_update.py`、`source_sync.py`、`source_manifest.py`、`update_pipeline.py` 把外部输入转换为仓库内 reference/raw，并负责可移植来源身份、差集、游标、staging frozen preflight 和失败恢复；online 入口必须在网络准备前验证同轮 portable remote manifest 与 frozen profile。
 - 语义边界：`decomposition_*.py`、`rules.py`、`model.py`、`match_audit.py` 读取 raw/reference/rules/overrides，输出保留来源、置信度和未知项的结构化拆解。
 - 审计输出边界：`normalized_contract.py` 负责版本化 record/event identity、来源身份与 additive support/render/review 视图；`normalized_translation_*.py`、`normalized_output.py`、`normalized_validation.py`、`tiered_quality.py`、`quality_metrics.py`、`display_labels.py` 把拆解记录转换为完整 normalized 审计合同。`tiered_quality.py` 拥有稳定支持绝对门禁、已接受样本集和 support diff，并对带未解析 residual 的单字母技能键启发式 fail-closed；旧 `quality_metrics.py` 只保留全局趋势棘轮。champions/maps 分片中的等价拆解记录先合并 provenance；若最终 canonical identity 仍冲突则 fail-closed。
@@ -41,7 +42,8 @@
 
 ```text
 外部 GAME/LCU/Data Dragon/官网来源
-  -> 当轮 live 下载与来源校验
+  -> 当轮 live 下载与来源校验（collector 写 dist/collection/rounds/<digest>/）
+  -> 对应版本 profile / 来源审查与显式累计更新
   -> raw/events/ + reference/
 
 raw/events/ + reference/ + rules/ + overrides/
@@ -73,7 +75,8 @@ complete normalized audit contract
 
 ## 入口与组合方式
 
-- `uv run python scripts/download_sources.py`：准备字符串表、大厅 JSON、皮肤 BIN、RST hash 与 raw round。
+- `uv run python scripts/collect_raw_events.py --output-root dist/collection --champions all --maps all`：独立采集当前 live。成功轮次包含 raw、来源、计划、报告，`latest.json.run` 只在全轮成功后更新；失败来源保留 `raw-bins=pending`。缓存以 WAD 内容、BIN 计划和解析器身份为键，按摘要校验后跨轮复用。
+- `uv run python scripts/download_sources.py`：字符串表、大厅 JSON、RST hash 与本地下载兼容入口；旧 raw-bins 的 `range(100)` 探测不承担完整 raw 采集。
 - `uv run python scripts/update_raw_events.py`：合并 raw/reference 并写更新报告。
 - `uv run python scripts/run_full_refresh.py`：在单个隔离 run 内依次执行 decompose、build、validate、quality、review、metrics、ratchet；quality 阶段以冻结的 decision/pattern-set/record-count 检查稳定支持绝对范围，并将所有 support-level 新增、移除、晋级和降级写入结构化 diff（稳定支持降级阻断）；review 阶段生成与候选身份绑定的静态页面和 bundle。稳定支持/global/support-diff 任一自动门禁失败即固化 failed，成功固化已完成候选，但人工审阅前不自动 promotion。
 - `uv run python scripts/manage_review.py`：构建、校验并应用版本化人工决定；源审阅仅允许全接受时同时替换 decision source 与已接受样本集，其他 action fail-closed。
@@ -83,8 +86,11 @@ complete normalized audit contract
 - `uv run python scripts/build_consumption.py` / `validate_consumption.py`：导出 web/software/lookup，并复核单个 profile 的文件闭包及可选源投影。
 - `uv run python scripts/compare_event_identity.py`：显式比较前后 normalized，输出身份连续性、迁移与歧义报告。
 - `uv run python scripts/report_translation_patterns.py`：只读生成 Pattern Catalog JSON/Markdown 报告；默认规则输入为 `rules/translation_patterns.yaml`，输出路径必须由 `--output-json` 与 `--output-md` 显式指定。
-- `.github/workflows/deploy-demo-pages.yml`：仅手动触发；以 Python 3.13 的全新锁定环境从冻结输入完成完整 refresh 和静态 Demo 构建后，通过官方 Pages artifact 部署，不复用或提升本地 candidate。
-- `.github/workflows/update-raw-events.yml`：以 Python 3.13 的全新锁定环境手动更新 frozen V1 数据；artifact raw 与来源清单绑定同一 producer run，manifest 模式生成同轮可移植来源清单。runner 在累计源写入前做 staging preflight，随后运行正式隔离 full refresh；只有门禁通过后才 push。成功上传 `candidate-dataset`，失败只上传 `failed-run-diagnostics`，两者均携带来源身份与可用的 run/Review 证据。workflow 不自动 promotion，也不接纳未建立新 profile 的 live 版本。
+- `.github/workflows/deploy-demo-pages.yml.disabled`：已停用的静态 Demo 部署模板，保留从冻结输入完成完整 refresh、构建和 Pages artifact 部署的定义，不复用或提升本地 candidate。
+- `.github/workflows/update-raw-events.yml.disabled`：已停用的 frozen V1 更新模板，保留 Python 3.13、同 producer run 的 raw/来源、staging preflight、隔离 full refresh、门禁通过后才 push 及成功候选/失败诊断分离的定义；不自动 promotion，不接纳未建立新 profile 的 live 版本。
+
+当前没有可执行的 GitHub workflow，采集与完整验证直接运行本地或云电脑 CLI。
+本地完整流程验证通过且正式发布后，才另行决定是否恢复上述模板；文件保留不构成执行授权。
 
 ## 错误模型
 

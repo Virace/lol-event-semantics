@@ -5,6 +5,8 @@ from __future__ import annotations
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import Mock, patch
 
 from lol_event_semantics.source_sync import (
     champion_aliases,
@@ -12,7 +14,7 @@ from lol_event_semantics.source_sync import (
     find_ci,
     trim_rst_hashes,
 )
-from lol_event_semantics.wad_source import main_version
+from lol_event_semantics.wad_source import WadSourceError, main_version, resolve_pair
 from tests.test_rst_stringtable import build_rst
 
 
@@ -92,9 +94,7 @@ class TrimRstHashesTest(unittest.TestCase):
             "deadbeef",
         ]
         out_path = stringtable_dir / "out" / "trimmed.txt"
-        total, kept = trim_rst_hashes(
-            "\n".join(lines).encode("utf-8"), stringtable_dir, out_path
-        )
+        total, kept = trim_rst_hashes("\n".join(lines).encode("utf-8"), stringtable_dir, out_path)
         self.assertEqual((total, kept), (3, 2))
         content = out_path.read_text(encoding="utf-8").splitlines()
         self.assertEqual(content, lines[:2])
@@ -108,6 +108,73 @@ class MainVersionTest(unittest.TestCase):
 
         self.assertEqual(main_version("16.14.7945912"), "16.14")
         self.assertEqual(main_version("16.14"), "16.14")
+
+
+class ManifestPairTest(unittest.TestCase):
+    """真实 LCU 版本资源与 GAME 同补丁配对的离线回归。"""
+
+    def setUp(self) -> None:
+        """隔离网络边界，复用已核验的 Riot 16.20 版本证据。"""
+
+        root = tempfile.TemporaryDirectory()
+        self.addCleanup(root.cleanup)
+        self.cache = Path(root.name)
+        # 取自 888A240B868B4030.manifest 的 LeagueClient.exe，偏移 30769502。
+        # 2026-10-18 Windows VersionInfo 独立读取的 ProductVersion 为 16.20.827.198。
+        self.payload = bytes.fromhex(
+            "500072006f006400750063007400560065007200730069006f006e000000"
+            "310036002e00320030002e003800320037002e003100390038000000"
+        )
+        client = SimpleNamespace(
+            name="LeagueClient.exe",
+            size=len(self.payload),
+            chunks=[],
+            download_chunks=Mock(return_value=self.payload),
+        )
+        self.resolver = SimpleNamespace(
+            get_lcu_manifest=Mock(
+                return_value=SimpleNamespace(
+                    url="https://lol.secure.dyn.riotcdn.net/channels/public/releases/888A240B868B4030.manifest",
+                    manifest_id="888A240B868B4030",
+                )
+            ),
+            list_game_candidates=Mock(
+                return_value=[
+                    SimpleNamespace(
+                        version=SimpleNamespace(normalized_build="16.20.8248524"),
+                        url="https://lol.secure.dyn.riotcdn.net/channels/public/releases/CB4BCB7E1F5C1831.manifest",
+                        manifest_id="CB4BCB7E1F5C1831",
+                    )
+                ]
+            ),
+        )
+        self.backend = SimpleNamespace(
+            LeagueManifestResolver=Mock(return_value=self.resolver),
+            PatcherManifest=Mock(return_value=SimpleNamespace(files={"LeagueClient.exe": client})),
+        )
+
+    def test_pairs_three_digit_lcu_revision(self) -> None:
+        """接受真实三位修订号，并保留 manifest 身份与原始 LCU 版本。"""
+
+        with patch("lol_event_semantics.wad_source._riotmanifest", return_value=self.backend):
+            pair = resolve_pair(attempts=1, work_dir=self.cache)
+        self.assertEqual(pair.game_version, "16.20.8248524")
+        self.assertEqual(pair.lcu_version, "16.20.827.198")
+        self.assertEqual(pair.game_id, "CB4BCB7E1F5C1831")
+        self.assertEqual(pair.lcu_id, "888A240B868B4030")
+        carriers = list(self.cache.rglob("LeagueClient.exe"))
+        self.assertEqual(len(carriers), 1)
+        self.assertEqual(carriers[0].read_bytes(), self.payload)
+
+    def test_rejects_other_patch_series(self) -> None:
+        """LCU 修订号兼容不能让其他补丁的 GAME 通过同轮来源校验。"""
+
+        self.resolver.list_game_candidates.return_value[0].version.normalized_build = "16.14.7945912"
+        with (
+            patch("lol_event_semantics.wad_source._riotmanifest", return_value=self.backend),
+            self.assertRaisesRegex(WadSourceError, "未成对"),
+        ):
+            resolve_pair(attempts=1, work_dir=self.cache)
 
 
 if __name__ == "__main__":

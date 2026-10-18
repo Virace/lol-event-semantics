@@ -35,6 +35,7 @@ raw/events/
 - `overrides/`：人工 review 后的精确覆盖和兼容决策。
 - `reference/`：仓库维护的累计精简参考合集，包含 `champions/`、`maps/`、`skinlines/`、`skins/`、`items/`，解释阶段只读取这里。
 - `.temp/reference-sources/`：被忽略的版本敏感参考输入缓存，不对下游承诺稳定。
+- `dist/collection/`：本地或云电脑直接运行 `scripts/collect_raw_events.py` 的独立采集结果、来源证据和可复用缓存；成功轮次由 `latest.json.run` 指向，不自动合并累计源。
 - `dist/sources/`：`scripts/download_sources.py` 的数据源落点（字符串表 / 大厅 JSON / 皮肤 bin / RST key 字典 + 版本游标 `manifest.json`）；layout 与手工放置规范见根 README「目录契约」。
 - `dist/runs/`：事务性数据集运行根；`.staging` 隔离写入，`failed` 保留诊断，`completed` 保存不可变候选，`approved-local.json` 原子指向唯一默认消费数据集。每个 completed run 的 `normalized/` 以单流/catalog/quality-summary 为 V2 首选并保留兼容分片；manifest 固化输入树摘要、payload SHA-256 与 `content_digest`。
 - `dist/consumption/<export-id>/`：从明确 normalized 派生的 web/software/lookup 独立消费包，格式和校验方式见 `CONSUMPTION.md`。
@@ -103,15 +104,15 @@ V1 以 `zh_CN` 作为正式渲染 locale，并以 VO 为优先支持对象；SFX
 
 ## 自动更新边界
 
-自动 raw 更新入口和手动 GitHub Actions workflow 已纳入仓库；普通 push/PR 不再重复启动 test job，提交或交付门禁由本地命令负责。GAME manifest/WAD/BIN 抽取是可选更新来源，不是对外数据契约。每轮只采集当时的 live 输入；累计语料保留已合并事件，但不支持指定历史版本下载、重建或回放。`16.16` 仅是本轮 frozen acceptance profile，而非固定的最新版本默认值。
+raw 采集与更新入口可在本地或云电脑直接执行。GitHub Actions 当前全部停用，更新和部署定义保留为 `.github/workflows/*.yml.disabled` 模板；本地完整流程验证通过且正式发布后，再另行决定是否恢复。提交或交付门禁由本地命令负责。GAME manifest/WAD/BIN 抽取是可选更新来源，不是对外数据契约。每轮只采集当时的 live 输入；累计语料保留已合并事件，但不支持指定历史版本下载、重建或回放。`16.16` 仅是本轮 frozen acceptance profile，而非固定的最新版本默认值。
 
 自动更新的关键边界：
 
 - `lol-game-data-snapshot` 可提供英雄列表、皮肤列表和 LCU snapshot 状态。
-- 事件名来源必须是 GAME manifest 中的 WAD/BIN，例如 `DATA/FINAL/Champions/Aatrox.wad.client`。本地获取已脚本化：`scripts/download_sources.py --sources raw-bins --emit-raw-round <dir>` 按 manifest 局部提取皮肤 bin 并产出轮次 txt（league-tools 结构化提取，与既有语料生产方式同源），同时写出带 schema 版本的 producer 游标，供 `prepare_source_manifest.py` 投影来源身份并由 `update_raw_events --raw-input-root` 消费；不再需要手动解包提供事件名。
+- 事件名来源必须是 GAME manifest 中的 WAD/BIN，例如 `DATA/FINAL/Champions/Aatrox.wad.client`。`scripts/collect_raw_events.py` 按同轮目录声明的皮肤/炫彩及地图根 BIN 采集轮次 txt，直接保存来源清单并支持按实体续跑；它不穷举任意 WAD 内的所有 BIN。旧 `download_sources.py` 的 `range(100)` 皮肤探测只保留为兼容能力，不承担完整 raw 采集。
 - 整轮下载出自同一份 manifest，各数据源天然同版本；GAME/LCU manifest 成对校验（major.minor 一致）。
 - `raw/update-state.json` 只作为最后成功处理游标。
-- GAME/LCU 无变化时 workflow 不应生成空报告。
+- 重复采集应复核并复用身份未变的实体结果；成功报告与来源清单仍须反映本轮实际范围。
 
 ## 当前非目标
 

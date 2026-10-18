@@ -1,10 +1,52 @@
-# 更新流程开发者介绍：冻结 V1 如何更新，以及未来版本如何接入
+# 更新流程开发者介绍：live 采集、冻结 V1 更新与新版本接入
 
-本文说明事件数据怎样经过采集、语义处理和 Review。当前 GitHub workflow 只接受冻结 V1 的
-`16.16` 输入；它用于验证更新机制，不会把任意新 live 版本直接写入长期语料。新版本必须先建立并
-Review 新的版本化 frozen profile 与来源合同，再开放对应 workflow 输入。
+本文说明事件数据怎样经过采集、语义处理和 Review。live 采集入口可以独立准备当前版本的 raw round；
+当前累计更新入口只接受冻结 V1 的 `16.16` 输入，不会把任意新 live 版本直接写入长期语料。新版本必须先建立并
+Review 新的版本化 frozen profile 与来源合同，再进入正式更新。GitHub Actions 当前全部停用，
+采集与完整验证均在本地或云电脑直接执行；正式发布并完成本地完整流程验证后，才另行决定是否恢复。
 
 如果你想直接动手扩充词库，请读 [CONTRIBUTING.md](../CONTRIBUTING.md)；本文是它的背景知识。
+
+## 当前 live 采集：可独立放到云端执行
+
+干净云环境使用 Python 3.13 和 uv，设置 `UV_PYTHON=3.13` 后运行：
+
+```powershell
+uv sync --dev --extra download --locked
+uv run python scripts/collect_raw_events.py --output-root dist/collection `
+  --champions all --maps all
+```
+
+两类默认 `all`，可用 `none` 关闭一类；英雄支持逗号分隔的别名或数字 ID，地图支持数字 ID。
+采集器将当前 GAME/LCU 主版本配对，并要求固定提交的大厅快照与 LCU manifest ID 精确一致。
+快照 JSON 每次按 `metadata.files` 的长度和 SHA-256 核验。请求来自同轮目录声明的所有
+皮肤/炫彩及当前地图根 BIN，并与实际 WAD 索引交叉核对；它不宣称穷举任意 WAD 内的全部 BIN。
+TFT/TFTM 被排除，事件原名保持不变。
+
+输出布局为：
+
+```text
+dist/collection/
+  latest.json                    # run 字段是最后成功的轮次目录名
+  rounds/<digest>/
+    raw/champions/<id>.txt
+    raw/maps/<id>.txt
+    source-manifest.json
+    collection-plan.json
+    collection-report.json
+  cache/entities/                # 按 WAD 内容、BIN 清单、解析器身份复用
+```
+
+相同输出根互斥执行；每个实体完成后保存进度，重新运行原命令会校验已有文本摘要再复用，
+损坏缓存会重取。来源、请求或解析器变化会形成不同身份；跨轮缓存仅在实体身份仍匹配时复用。
+中途失败时来源中的 `raw-bins` 保持 `pending`，不会推进 `latest.json`；全部完成后才写为 `ok`。
+来源解析或目录发现阶段就失败时可能尚无轮次报告，应查看命令错误。
+
+采集在本地或云电脑直接执行 CLI；需要长期续跑时保留同一个输出根。
+新 live 结果仍会被现有更新器的 16.16 frozen profile 拒绝。
+采集完成只提供下一阶段可审查的输入；新增版本 profile、累计 reference 更新和语义复审是后续工作。
+旧 `download_sources.py` 继续服务字符串表、大厅 JSON、RST 和本地兼容路径，其 raw-bins 的
+`range(100)` 皮肤探测不用于完整 raw 采集。
 
 ## 总览：三层结构与一条流水线
 
@@ -31,7 +73,11 @@ uv run python scripts/run_full_refresh.py `
 
 任何一步失败即停（`FAILED at step: <步骤名>`）。
 
-GitHub 的手动更新 workflow 复用同一入口，不再旁路调用 build/validate。选择
+### 已停用更新模板的输入合同
+
+`.github/workflows/update-raw-events.yml.disabled` 仅保留供未来恢复时参考，当前不能触发。
+以下行为描述模板原定义，不表示已启用；本地完整流程验证通过且正式发布后才能另行决定恢复。
+模板复用同一入口，不旁路调用 build/validate。选择
 `commit_changes=true` 时，runner 会先在本地形成只包含 `raw/reference/state` 的提交，
 用 clean generator 跑完整候选；只有全部阻断门禁通过后才 fast-forward push。未选择提交时
 不会写远端，只上传明确用于 Review 的 candidate。成功与失败 artifact 均保留 run 身份、
@@ -40,9 +86,8 @@ normalized（若已生成）、Review Site 和诊断报告，但两者不会混�
 选择 `raw_source_mode=artifact` 时，必须提供实际产出 raw round 的 `raw_input_run_id`。同一 run
 还要上传来源清单 artifact，内部文件名固定为 `source-manifest.json`。workflow 使用当前仓库的
 Actions token、仓库身份和同一个 run ID 下载两项输入，防止 raw 与来源证据跨轮混用。
-仓库原生 `download_sources.py` 会在 producer 游标写入 `schema_version`；producer 应在同一 run
-内用 `prepare_source_manifest.py --input <游标>` 投影并校验后，再把结果以该固定文件名随 raw round
-分别上传。
+新 `collect_raw_events.py` 直接生成该清单并与 raw round 绑定；旧 `download_sources.py` producer
+仍须在同一 run 内用 `prepare_source_manifest.py --input <游标>` 投影并校验，再以固定文件名分别上传。
 
 选择 `raw_source_mode=manifest` 时，必须提供 GAME manifest URL、对应 manifest ID 与同轮
 `lcu_version`、`lcu_manifest_id`。本地冻结清单的 null LCU 例外不会放宽到远端采集。workflow 会生成不含机器路径和运行时间的
@@ -59,15 +104,15 @@ Actions token、仓库身份和同一个 run ID 下载两项输入，防止 raw 
 替换长期目标。仓库中的 `data/frozen-sources-manifest.v1.json` 只用于复现已冻结的本地 V1 输入，
 不冒充远端 workflow 本轮采集证明。
 
-Actions runner 使用 Python 3.13 做全新锁定安装，以避开当前传递依赖在 Python 3.14 无缓存环境中的
-构建兼容问题。push/PR 不再启动重复 test job；更新 workflow 自身仍在任何采集与写入前执行 Ruff、
-mypy 与完整 pytest。
+保留的模板指定 Python 3.13 做全新锁定安装，以避开当前传递依赖在 Python 3.14 无缓存环境中的
+构建兼容问题，并定义采集与写入前的 Ruff、mypy 与完整 pytest。所有 Actions 当前均停用，
+这些门禁需要通过本地命令执行，不能把保留模板视为已经运行的检查。
 
 ## 第 1 层：数据摄入（冻结 V1 自动化）
 
 输入事件名与参考数据进入仓库的路径：
 
-1. `scripts/extract_raw_events_from_game.py` 从本地 WAD/BIN 抽取本轮事件名；
+1. `scripts/collect_raw_events.py` 从当前 live 自动发现并采集本轮事件名；显式本地 WAD/BIN 请求仍可用 `scripts/extract_raw_events_from_game.py`；
 2. `scripts/check_raw_update.py` 只读对比本轮与累积 `raw/events/` 的差集；
 3. `scripts/update_raw_events.py` 把差集合并进累积语料，并可串起 reference 导入；
 4. `scripts/import_reference_data.py` 把三个官方数据源写进 `reference/`：

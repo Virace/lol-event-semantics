@@ -4,6 +4,22 @@
 
 ## 主流程
 
+采集当前 live 的英雄、皮肤与地图事件（云端全新环境使用 Python 3.13）：
+
+```powershell
+uv sync --dev --extra download --locked
+uv run python scripts/collect_raw_events.py --output-root dist/collection `
+  --champions all --maps all
+```
+
+`all` 是两类的默认范围；`none` 关闭一类，或用逗号分隔的英雄别名/数字 ID、地图 ID 指定子集。
+采集器把同轮目录声明的皮肤/炫彩及当前地图根 BIN 与真实 WAD 索引核对后提取，排除 TFT/TFTM。
+它不穷举任意 WAD 内所有 BIN，也不直接修改累计 `raw/reference`。
+成功输出 `dist/collection/rounds/<digest>/raw/{champions,maps}/*.txt`，同目录包含来源清单、
+采集计划与报告；`latest.json.run` 是最后成功目录名。保留整个输出根即可在重跑时复核并复用
+已完成实体；失败不更新 latest，缺失或损坏的缓存重新采集。新 live 结果导入前仍须建立并审阅对应
+版本化 profile，不能直接交给只接受 16.16 的冻结更新流程。
+
 准备 reference game-data JSON：
 
 ```powershell
@@ -53,7 +69,7 @@ uv run python scripts/update_raw_events.py `
   --raw-root raw\events `
   --state-file raw\update-state.json `
   --raw-input-root .temp\raw-events-round `
-  --game-version 16.12 `
+  --game-version 16.16 `
   --game-data-base-url <snapshot-root-containing-global> `
   --sources-manifest .temp\source-identity\source-manifest.json `
   --frozen-profile data\frozen-profile.v1.json `
@@ -156,14 +172,15 @@ uv run lookup-normalized-event `
 
 ## 当前入口脚本
 
+- `collect_raw_events.py`：当前 live raw 采集入口；自动核验成对 GAME/LCU、固定提交快照和 WAD 索引，发现目录声明范围并按实体续跑，输出 raw round、同轮来源和报告。共享逻辑在 `collection.py`、`collection_sources.py`、`collection_discovery.py`。
 - `export_raw_events.py`：从外部 `manifest/<version>/events` 导入 raw 的兼容入口；目标 raw 布局是累积式 `raw/events/`，后续会在 raw-update 工作中调整。
 - `extract_game_data_json.py`：从 WAD 提取已知 `rcp-be-lol-game-data` JSON 路径，并支持可选 CommunityDragon fallback。
 - `import_reference_data.py`：把本地或在线 GAME data 和 Data Dragon 导入仓库内部 `reference/` 精简合集，包括英雄、地图和皮肤系列分组。
 - `extract_raw_events_from_game.py`：从本地 GAME WAD/BIN 或已抽取事件 JSON 生成标准 raw round txt。
 - `check_raw_update.py`：只读检查本轮 raw round txt 相对累计 `raw/events/` 的差集。
-- `download_sources.py` 写出的 producer 游标带版本化 `schema_version`；`prepare_source_manifest.py` 把该游标规范化为可移植来源清单，或在 raw 抽取成功后从 manifest 模式的 GAME manifest ID/版本与 LCU 证据构建清单。入口先按版本化 frozen profile 校验，拒绝 `local` 来源冒充 workflow 采集。
+- `download_sources.py`：保留字符串表、大厅 JSON、RST 与本地下载兼容能力；旧 raw-bins 仍使用 `range(100)` 探测，不承担完整 raw 采集。其 producer 游标带版本化 `schema_version`；`prepare_source_manifest.py` 可把旧游标规范化为可移植来源清单，或在显式 manifest 抽取成功后构建清单。该适配入口按 frozen profile 校验，拒绝 `local` 来源冒充 workflow 采集；新 collector 直接生成同轮清单，无需旧游标转换。
 - `update_raw_events.py`：把本轮 raw round txt 差集合并进累计 `raw/events/`，并可串起 reference 导入；online 模式强制提供同轮可移植远端来源清单与 frozen profile，并在下载前验证来源合同；local 模式可成对提供二者。随后对 staging raw/reference 做 frozen preflight，再原子替换长期目标。
-- `.github/workflows/update-raw-events.yml`：以 Python 3.13 的全新锁定环境手动更新 frozen V1 16.16 raw/reference；artifact 模式用显式 `raw_input_run_id`、仓库身份和当前 Actions token 从同一 producer run 下载 raw round 与来源清单，manifest 模式生成同轮可移植来源清单。该清单显式传入 staged update 与 full refresh。选择提交时先在 runner 本地形成精确数据提交，隔离 full refresh 全绿且 `candidate-dataset` 上传完成后才 push；失败 run 只上传 `failed-run-diagnostics`，不自动 promotion。未来 live 版本必须先建立新的版本化 profile/来源合同。
+- `.github/workflows/update-raw-events.yml.disabled`：已停用的 frozen V1 16.16 更新模板，保留 Python 3.13 环境、同轮 raw/来源、隔离 full refresh、成功候选与失败诊断分离、完整门禁后才 push 的原定义。当前直接运行本地或云电脑 CLI；本地完整流程验证通过且正式发布后，才另行决定是否启用 Actions。未来 live 版本仍须先建立新的版本化 profile/来源合同，模板不自动 promotion。
 - `decompose_events.py`：把 raw event name 拆成 lexical atoms、semantic slots、JSONL 产物和 review reports；解释阶段只读取内部 `reference/`，可用 `--write-low-trust-rules` 额外导出低信任规则命中表。
 - `build_review_site.py`：从 decomposition JSONL 构建通用维护 review 页面；它不是 P5 产品批准入口。
 - `build_demo_site.py`：从 approved-local 或显式 normalized candidate 生成 `dist/demo-site/` 平台中立静态 Demo V3；显式 candidate 必须传同 run `--validation-json`，输入须带实体归属证据。六类实体与“全部 / 已确定 / 待反馈”独立筛选，轻量索引之后只加载当前实体分片；中文复用消费投影，详情保留身份、来源归属与问题。它不写回 Review 决定、不执行 promotion，完整说明见 `docs/DEMO_SITE.md`。
